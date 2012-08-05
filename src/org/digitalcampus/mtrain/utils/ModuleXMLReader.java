@@ -2,6 +2,7 @@ package org.digitalcampus.mtrain.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,11 +45,14 @@ public class ModuleXMLReader {
 		}
 	}
 	
-	public void getMeta(){
+	public HashMap<String, String> getMeta(){
+		HashMap<String, String> hm = new HashMap<String, String>();
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
+			hm.put(meta.item(j).getNodeName(), meta.item(j).getTextContent());
 			Log.v(TAG, meta.item(j).getNodeName() + ": " + meta.item(j).getTextContent());
 		}
+		return hm;
 	}
 }

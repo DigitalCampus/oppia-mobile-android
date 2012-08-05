@@ -1,11 +1,13 @@
 package org.digitalcampus.mtrain.application;
 
 import java.io.File;
+import java.util.HashMap;
 
 import org.digitalcampus.mtrain.utils.FileUtils;
 import org.digitalcampus.mtrain.utils.ModuleXMLReader;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -20,6 +22,12 @@ public class MTrain extends Application {
 	public static final String DOWNLOAD_PATH = MTRAIN_ROOT + "download/";
 	public static final String MODULE_XML = "module.xml";
 
+	private Context ctx;
+	
+	public MTrain(Context context){
+		this.ctx = context;
+	}
+	
 	public static void createMTrainDirs() throws RuntimeException {
 		String cardstatus = Environment.getExternalStorageState();
 		if (cardstatus.equals(Environment.MEDIA_REMOVED)
@@ -56,7 +64,7 @@ public class MTrain extends Application {
 	}
 
 	// Scan for any newly downloaded modules
-	public static boolean installNewDownloads() {
+	public boolean installNewDownloads() {
 		// get folder
 		File dir = new File(MTrain.DOWNLOAD_PATH);
 
@@ -82,10 +90,35 @@ public class MTrain extends Application {
 				Log.v(TAG, moduleXMLPath);
 
 				ModuleXMLReader mxr = new ModuleXMLReader(moduleXMLPath);
-				mxr.getMeta();
+				HashMap<String, String> hm = mxr.getMeta();
 				
-				// finally delete temp directory
+				String versionid = hm.get("versionid");
+				String title = hm.get("title");
+				String location = MTrain.MODULES_PATH + moddirs[0];
+				
+				DB db = new DB(ctx);
+				db.addModule(versionid, title, location);
+				db.close();
+				
+				// Delete old module 
+				File oldMod = new File(MTrain.MODULES_PATH + moddirs[0]);
+				FileUtils.deleteDir(oldMod);
+				
+				// move from temp to modules dir
+				File src = new File(tempdir + "/" + moddirs[0]);
+				File dest = new File(MTrain.MODULES_PATH);
+				boolean success = src.renameTo(new File(dest, src.getName()));
+
+		        if (success) {
+		            System.out.println("File was successfully moved.\n");
+		        } else {
+		            System.out.println("File was not successfully moved.\n");
+		        }
+		        
+				// delete temp directory
 				FileUtils.deleteDir(tempdir);
+				
+				// delete zip file from download dir 
 
 			}
 		}

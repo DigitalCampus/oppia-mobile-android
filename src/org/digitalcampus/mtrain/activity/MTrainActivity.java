@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.activity;
 
 import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.application.DB;
 import org.digitalcampus.mtrain.application.MTrain;
 
 import android.app.Activity;
@@ -37,12 +38,20 @@ public class MTrainActivity extends Activity {
 			e1.printStackTrace();
 		}*/
 
-        // install any new modules
-        // TODO show info to user that we're checking for new modules
-        MTrain.installNewDownloads();
+        
         
     }
 
+    protected void onStart(){
+    	super.onStart();
+    	
+    	// install any new modules
+        // TODO show info to user that we're checking for new modules
+    	MTrain mt = new MTrain(MTrainActivity.this);
+    	mt.installNewDownloads();
+    	
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
