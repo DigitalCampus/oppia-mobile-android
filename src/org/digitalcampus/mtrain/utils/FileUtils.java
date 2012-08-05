@@ -145,7 +145,7 @@ public class FileUtils {
 				if (!success) {
 					return false;
 				} else {
-					Log.v(TAG,delFile.getName() + " deleted");
+					//Log.v(TAG,delFile.getName() + " deleted");
 				}
 			}
 		}

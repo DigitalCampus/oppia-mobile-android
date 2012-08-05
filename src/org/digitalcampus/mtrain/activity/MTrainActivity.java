@@ -2,7 +2,6 @@ package org.digitalcampus.mtrain.activity;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.application.MTrain;
-import org.digitalcampus.mtrain.utils.FileUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
