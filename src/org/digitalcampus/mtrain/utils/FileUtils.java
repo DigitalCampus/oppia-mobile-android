@@ -24,27 +24,27 @@ public class FileUtils {
 		try {
 			// first make sure that all the arguments are valid and not null
 			if (srcDirectory == null) {
-				System.out.println(1);
+				Log.v(TAG,"1");
 				return false;
 			}
 			if (srcFile == null) {
-				System.out.println(2);
+				Log.v(TAG,"2");
 				return false;
 			}
 			if (destDirectory == null) {
-				System.out.println(3);
+				Log.v(TAG,"3");
 				return false;
 			}
 			if (srcDirectory.equals("")) {
-				System.out.println(4);
+				Log.v(TAG,"4");
 				return false;
 			}
 			if (srcFile.equals("")) {
-				System.out.println(5);
+				Log.v(TAG,"5");
 				return false;
 			}
 			if (destDirectory.equals("")) {
-				System.out.println(6);
+				Log.v(TAG,"6");
 				return false;
 			}
 			// now make sure that these directories exist
@@ -53,15 +53,15 @@ public class FileUtils {
 			File destinationDirectory = new File(destDirectory);
 
 			if (!sourceDirectory.exists()) {
-				System.out.println(7);
+				Log.v(TAG,"7");
 				return false;
 			}
 			if (!sourceFile.exists()) {
-				System.out.println(sourceFile);
+				Log.v(TAG,sourceFile.getName());
 				return false;
 			}
 			if (!destinationDirectory.exists()) {
-				System.out.println(9);
+				Log.v(TAG,"9");
 				return false;
 			}
 
@@ -78,7 +78,7 @@ public class FileUtils {
 				String outputFilename = destDirectory + File.separator
 						+ entry.getName();
 
-				System.out.println("Extracting file: " + entry.getName());
+				Log.v(TAG,"Extracting file: " + entry.getName());
 
 				createDirIfNeeded(destDirectory, entry);
 
@@ -119,7 +119,6 @@ public class FileUtils {
 		String name = entry.getName();
 
 		if (name.contains("/")) {
-			System.out.println("directory will need to be created");
 
 			int index = name.lastIndexOf("/");
 			String dirSequence = name.substring(0, index);
