@@ -1,4 +1,8 @@
-package org.digitalcampus.mtrain;
+package org.digitalcampus.mtrain.activity;
+
+import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.R.layout;
+import org.digitalcampus.mtrain.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;
