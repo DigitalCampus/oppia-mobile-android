@@ -1,17 +1,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:orientation="vertical">
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/module_activity_title"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_medium"
-        tools:context=".ModuleActivity" 
-        android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:gravity="right"
+        android:orientation="horizontal" >
+
+        <Button android:id="@+id/previous_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Previous" 
+            android:textSize="20dp"
+            android:textStyle="bold" 
+            android:layout_margin="5dp"/>
+        <TextView
+            android:id="@+id/module_activity_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:context=".ModuleActivity" />
+        
+        <Button android:id="@+id/next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next" 
+            android:textSize="20dp"
+            android:textStyle="bold" 
+            android:layout_margin="5dp"/>
+    </RelativeLayout>
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

@@ -12,9 +12,13 @@ import org.digitalcampus.mtrain.widgets.WidgetFactory;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
@@ -58,6 +62,4 @@ public class ModuleActivity extends Activity {
     		currentActivity = (PageWidget) new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo).getActivity());
     	}
     }
-
-    
 }
