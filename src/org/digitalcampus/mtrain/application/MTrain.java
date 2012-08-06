@@ -96,29 +96,34 @@ public class MTrain extends Application {
 				String title = hm.get("title");
 				String location = MTrain.MODULES_PATH + moddirs[0];
 				
-				DB db = new DB(ctx);
-				db.addModule(versionid, title, location);
+				DbHelper db = new DbHelper(ctx);
+				long added = db.addOrUpdateModule(versionid, title, location);
 				db.close();
 				
-				// Delete old module 
-				File oldMod = new File(MTrain.MODULES_PATH + moddirs[0]);
-				FileUtils.deleteDir(oldMod);
-				
-				// move from temp to modules dir
-				File src = new File(tempdir + "/" + moddirs[0]);
-				File dest = new File(MTrain.MODULES_PATH);
-				boolean success = src.renameTo(new File(dest, src.getName()));
+				if(added != -1){
+					// Delete old module 
+					File oldMod = new File(MTrain.MODULES_PATH + moddirs[0]);
+					FileUtils.deleteDir(oldMod);
+					
+					// move from temp to modules dir
+					File src = new File(tempdir + "/" + moddirs[0]);
+					File dest = new File(MTrain.MODULES_PATH);
+					boolean success = src.renameTo(new File(dest, src.getName()));
+	
+			        if (success) {
+			            Log.v(TAG,"File was successfully moved");
+			        } else {
+			        	Log.v(TAG,"File was not successfully moved");
+			        }
 
-		        if (success) {
-		            System.out.println("File was successfully moved.\n");
-		        } else {
-		            System.out.println("File was not successfully moved.\n");
-		        }
-		        
+				} else {
+					
+				}
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);
+				Log.v(TAG,"Temp directory deleted");
 				
-				// delete zip file from download dir 
+				// TODO delete zip file from download dir 
 
 			}
 		}

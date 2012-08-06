@@ -1,7 +1,7 @@
 package org.digitalcampus.mtrain.activity;
 
 import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.application.DB;
+import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
 
 import android.app.Activity;

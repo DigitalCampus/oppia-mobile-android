@@ -2,12 +2,14 @@ package org.digitalcampus.mtrain.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.digitalcampus.mtrain.model.Activity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -55,4 +57,12 @@ public class ModuleXMLReader {
 		}
 		return hm;
 	}
+	
+	public ArrayList<Activity> getActivities(){
+		ArrayList<Activity>  acts = new ArrayList();
+		
+		return acts;
+	}
+	
+	
 }
