@@ -1,6 +1,8 @@
 package org.digitalcampus.mtrain.model;
 
-public class Module {
+import java.io.Serializable;
+
+public class Module implements Serializable {
 	private int modId;
 	private String location;
 	private String title;

@@ -9,10 +9,14 @@ import org.digitalcampus.mtrain.model.Module;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class MTrainActivity extends Activity {
@@ -43,14 +47,7 @@ public class MTrainActivity extends Activity {
 			e1.printStackTrace();
 		}*/
 
-        
-        
-    }
-
-    protected void onStart(){
-    	super.onStart();
-    	
-    	// install any new modules
+     // install any new modules
         // TODO show info to user that we're checking for new modules
     	MTrain mt = new MTrain(MTrainActivity.this);
     	mt.installNewDownloads();
@@ -60,8 +57,30 @@ public class MTrainActivity extends Activity {
     	ArrayList<Module> modules = db.getModules();
     	for(Module m: modules){
     		Log.d(TAG,m.getTitle());
+    		Button b = new Button(this);
+    		b.setTag(m);
+    		b.setTypeface(Typeface.DEFAULT_BOLD);
+        	b.setTextSize(20);
+        	b.setText(m.getTitle());
+        	b.setOnClickListener(new View.OnClickListener() {
+             	public void onClick(View v) {
+             		Intent i = new Intent(MTrainActivity.this, ModuleIndexActivity.class);
+             		Bundle tb = new Bundle();
+             		tb.putSerializable("module", (Module) v.getTag());
+    				i.putExtras(tb);
+             		startActivity(i);
+             	}
+             });
+        	modulesLL.addView(b);
     	}
     	db.close();
+        
+    }
+
+    protected void onStart(){
+    	super.onStart();
+    	
+    	
     }
     
     @Override
