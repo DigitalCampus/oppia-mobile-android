@@ -4,38 +4,42 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
         android:orientation="horizontal" >
 
-        <Button android:id="@+id/previous_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Previous" 
-            android:textSize="20dp"
-            android:textStyle="bold" 
-            android:layout_margin="5dp"/>
+        <Button android:id="@+id/prev_btn" 
+			android:layout_height="50dp" 
+			android:layout_width="wrap_content"
+			android:layout_weight=".1" 
+			android:text="@string/activity_module_button_prev"
+			android:textSize="20dp" android:textStyle="bold"
+			/>
         <TextView
             android:id="@+id/module_activity_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight=".8" 
             android:padding="@dimen/padding_medium"
             android:textSize="20sp"
             android:textStyle="bold"
-            tools:context=".ModuleActivity" />
+            tools:context=".ModuleActivity"
+            android:gravity="center"
+            
+            />
         
-        <Button android:id="@+id/next_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Next" 
-            android:textSize="20dp"
-            android:textStyle="bold" 
-            android:layout_margin="5dp"/>
-    </RelativeLayout>
+        <Button android:id="@+id/next_btn" 
+			android:layout_width="wrap_content"
+			android:layout_height="50dp"
+			android:layout_weight=".1" 
+			android:text="@string/activity_module_button_next"
+			android:textSize="20dp" android:textStyle="bold"
+			/>
+    </LinearLayout>
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

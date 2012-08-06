@@ -53,6 +53,7 @@ public class ModuleActivity extends Activity {
     }
     
     private void loadActivity(){
+    	//TODO log that activity has been visited
     	ArrayList<org.digitalcampus.mtrain.model.Activity> acts = section.getActivities();
     	TextView tb = (TextView) this.findViewById(R.id.module_activity_title);
     	
@@ -61,5 +62,25 @@ public class ModuleActivity extends Activity {
     	if(acts.get(this.currentActivityNo).getActType().equals("page")){
     		currentActivity = (PageWidget) new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo).getActivity());
     	}
+    	this.setUpNav();
     }
+    
+    private void setUpNav(){
+    	if(this.hasPrev()){
+    		
+    	} else {
+    		
+    	}
+    }
+    
+    private boolean hasPrev(){
+    	if(this.currentActivityNo == 0){
+    		return false;
+    	}
+    	return true;
+    }
+    private boolean hasNext(){
+    	return true;
+    }
+    
 }

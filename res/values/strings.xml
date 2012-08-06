@@ -5,9 +5,10 @@
     <string name="title_activity_main">mTrain</string>
     <string name="main_logo_alt">DC Logo</string>
     <string name="main_tagline">by Digital Campus</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_module_index">ModuleIndexActivity</string>
     <string name="title_activity_module">ModuleActivity</string>
     
+    <string name="activity_module_button_prev">&lt;</string>
+    <string name="activity_module_button_next">&gt;</string>
 
 </resources>

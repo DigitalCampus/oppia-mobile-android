@@ -17,19 +17,13 @@ public class PageWidget extends WidgetFactory{
 
 	private static final String TAG = "PageWidget";
 	
-	private Context ctx;
-	
 	public PageWidget(Context context, Module module, HashMap<String,String> data) {
 		super(context, module, data);
-		this.ctx = context;
-		LinearLayout ll = (LinearLayout) ((Activity) this.ctx).findViewById(R.id.activity_widget);
-		ll.removeAllViews();
-		LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View vv = vi.inflate(R.layout.widget_page, null);
-		ll.addView(vv);
+		View vv = super.getLayoutInflater().inflate(R.layout.widget_page, null);
+		super.getLayout().addView(vv);
 		
 		// get the location data
-		WebView wv = (WebView) ((Activity) this.ctx).findViewById(R.id.page_webview);
+		WebView wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
 		String url = "file://"+ module.getLocation() + "/" + data.get("location");
 		Log.d(TAG,url);
 		wv.loadUrl(url);

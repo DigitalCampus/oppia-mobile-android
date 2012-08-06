@@ -47,13 +47,16 @@ public class MTrainActivity extends Activity {
 			e1.printStackTrace();
 		}*/
 
-     // install any new modules
+        // install any new modules
         // TODO show info to user that we're checking for new modules
+        // TODO? scan already extracted modules and install these
     	MTrain mt = new MTrain(MTrainActivity.this);
     	mt.installNewDownloads();
     	
     	LinearLayout modulesLL = (LinearLayout) findViewById(R.id.modules);
     	DbHelper db = new DbHelper(this);
+    	
+    	// TODO show message if no modules installed yet
     	ArrayList<Module> modules = db.getModules();
     	for(Module m: modules){
     		Log.d(TAG,m.getTitle());
@@ -75,12 +78,6 @@ public class MTrainActivity extends Activity {
     	}
     	db.close();
         
-    }
-
-    protected void onStart(){
-    	super.onStart();
-    	
-    	
     }
     
     @Override

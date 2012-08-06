@@ -122,6 +122,7 @@ public class DbHelper extends SQLiteOpenHelper{
 			c.close();
 			if(toUpdate != 0){
 				db.update(DbHelper.MODULE_TABLE, values, DbHelper.MODULE_C_ID + "=" + toUpdate, null);
+				// TODO remove all the old activities
 				Log.d(TAG,"Record updated");
 				return toUpdate;
 			} else {
