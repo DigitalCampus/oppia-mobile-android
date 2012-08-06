@@ -16,7 +16,7 @@ public class DbHelper extends SQLiteOpenHelper{
 
 	static final String TAG = "DbHelper";
 	static final String DB_NAME = "mtrain.db"; 
-	static final int DB_VERSION = 6; 
+	static final int DB_VERSION = 7; 
 	
 	private SQLiteDatabase db;
 	
@@ -132,5 +132,14 @@ public class DbHelper extends SQLiteOpenHelper{
 	
 	public void insertActivities(ArrayList<Activity> acts){
 		//acts.listIterator();
+		for(Activity a : acts){
+			ContentValues values = new ContentValues();
+			values.put(DbHelper.ACTIVITY_C_MODID, a.getModId());
+			values.put(DbHelper.ACTIVITY_C_SECTIONID, a.getSectionId());
+			values.put(DbHelper.ACTIVITY_C_ACTID, a.getActId());
+			values.put(DbHelper.ACTIVITY_C_ACTTYPE, a.getActType());
+			Log.d(TAG,"Inserted activity");
+			db.insertOrThrow(DbHelper.ACTIVITY_TABLE, null, values);
+		}
 	}
 }
