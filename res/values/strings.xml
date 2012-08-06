@@ -8,5 +8,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_module_index">ModuleIndexActivity</string>
     <string name="title_activity_module">ModuleActivity</string>
+    
 
 </resources>

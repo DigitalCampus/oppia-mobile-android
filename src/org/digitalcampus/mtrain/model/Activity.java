@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import org.w3c.dom.Node;
 
@@ -17,7 +18,7 @@ public class Activity implements Serializable{
 	private int sectionId;
 	private int actId;
 	private String actType;
-	private Node activity;
+	private HashMap<String, String> activity;
 	
 	public Activity(){
 	}
@@ -54,11 +55,11 @@ public class Activity implements Serializable{
 		this.actType = actType;
 	}
 
-	public Node getActivity() {
+	public HashMap<String, String> getActivity() {
 		return activity;
 	}
 
-	public void setActivity(Node activity) {
+	public void setActivity(HashMap<String, String> activity) {
 		this.activity = activity;
 	}
 

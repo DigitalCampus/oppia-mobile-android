@@ -110,7 +110,7 @@ public class ModuleXMLReader {
 				a.setActType(actType);
 				a.setModId(modId);
 				a.setSectionId(sectionId);
-				a.setActivity(acts.item(j));
+				a.setActivity(this.nodetoHashMap(acts.item(j)));
 				s.addActivity(a);
 			}
 			
@@ -129,5 +129,14 @@ public class ModuleXMLReader {
 			}
 		}
 		return null;
+	}
+	
+	private HashMap<String,String> nodetoHashMap(Node n){
+		HashMap<String,String> hm = new HashMap<String,String>();
+		NodeList nl = n.getChildNodes();
+		for (int i=0; i<nl.getLength(); i++){
+			hm.put(nl.item(i).getNodeName(), nl.item(i).getTextContent());
+		}
+		return hm;
 	}
 }

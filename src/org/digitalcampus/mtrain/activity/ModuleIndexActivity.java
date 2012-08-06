@@ -51,7 +51,7 @@ public class ModuleIndexActivity extends Activity {
                  	public void onClick(View v) {
                  		Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
                  		Bundle tb = new Bundle();
-                 		tb.putSerializable(Module.TAG, (Module) v.getTag());
+                 		tb.putSerializable(Section.TAG, (Section) v.getTag());
         				i.putExtras(tb);
                  		startActivity(i);
                  	}
