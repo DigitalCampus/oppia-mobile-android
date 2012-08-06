@@ -104,7 +104,7 @@ public class ModuleXMLReader {
 			NodeList acts = this.getChildNodeByName(sects.item(i),"activities").getChildNodes();
 			for(int j=0; j<acts.getLength();j++){
 				Activity a = new Activity();
-				a.setActId(Integer.parseInt(this.getChildNodeByName(acts.item(i),"id").getTextContent()));
+				a.setActId(Integer.parseInt(this.getChildNodeByName(acts.item(j),"id").getTextContent()));
 				NamedNodeMap nnm = acts.item(j).getAttributes();
 				String actType = nnm.getNamedItem("type").getTextContent();
 				a.setActType(actType);

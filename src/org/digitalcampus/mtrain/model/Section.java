@@ -9,7 +9,7 @@ public class Section {
 	private ArrayList<Activity> activities;
 	
 	public Section(){
-		
+		activities = new ArrayList<Activity>();
 	}
 
 	public int getSectionId() {
