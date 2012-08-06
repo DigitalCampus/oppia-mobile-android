@@ -1,7 +1,7 @@
 package org.digitalcampus.mtrain.model;
 
 public class Activity {
-	private int modId;
+	private long modId;
 	private int sectionId;
 	private int actId;
 	private String actType;
@@ -9,11 +9,11 @@ public class Activity {
 	public Activity(){
 	}
 
-	public int getModId() {
+	public long getModId() {
 		return modId;
 	}
 
-	public void setModId(int modId) {
+	public void setModId(long modId) {
 		this.modId = modId;
 	}
 

@@ -98,9 +98,9 @@ public class MTrain extends Application {
 				
 				DbHelper db = new DbHelper(ctx);
 				long added = db.addOrUpdateModule(versionid, title, location);
-				db.close();
-				
+
 				if(added != -1){
+					db.insertActivities(mxr.getActivities(added));
 					// Delete old module 
 					File oldMod = new File(MTrain.MODULES_PATH + moddirs[0]);
 					FileUtils.deleteDir(oldMod);
@@ -116,9 +116,8 @@ public class MTrain extends Application {
 			        	Log.v(TAG,"File was not successfully moved");
 			        }
 
-				} else {
-					
-				}
+				} 
+				db.close();
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);
 				Log.v(TAG,"Temp directory deleted");

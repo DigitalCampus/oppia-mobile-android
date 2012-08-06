@@ -131,6 +131,6 @@ public class DbHelper extends SQLiteOpenHelper{
 	}
 	
 	public void insertActivities(ArrayList<Activity> acts){
-		
+		//acts.listIterator();
 	}
 }
