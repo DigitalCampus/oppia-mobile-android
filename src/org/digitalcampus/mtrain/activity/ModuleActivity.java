@@ -22,6 +22,7 @@ public class ModuleActivity extends Activity {
 
 	public static final String TAG = "ModuleActivity";
 	private Section section;
+	private Module module;
 	private int currentActivityNo = 0;
 	private WidgetFactory currentActivity;
 	
@@ -32,6 +33,8 @@ public class ModuleActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	section = (Section) bundle.getSerializable(Section.TAG);
+        	module = (Module) bundle.getSerializable(Module.TAG);
+        	Log.d(TAG,"title:" + module.getTitle());
         	Log.d(TAG,"title:" + section.getTitle());
         	setTitle(section.getTitle());
         	loadActivity();
@@ -52,7 +55,7 @@ public class ModuleActivity extends Activity {
     	tb.setText(acts.get(this.currentActivityNo).getActivity().get("title"));
     	
     	if(acts.get(this.currentActivityNo).getActType().equals("page")){
-    		currentActivity = (PageWidget) new PageWidget(ModuleActivity.this);
+    		currentActivity = (PageWidget) new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo).getActivity());
     	}
     }
 

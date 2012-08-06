@@ -22,7 +22,7 @@ public class ModuleIndexActivity extends Activity {
 
 	public static final String TAG = "ModuleIndexActivity";
 	
-	private Module module;
+	protected Module module;
 	private ModuleXMLReader mxr;
 	
     @Override
@@ -52,6 +52,7 @@ public class ModuleIndexActivity extends Activity {
                  		Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
                  		Bundle tb = new Bundle();
                  		tb.putSerializable(Section.TAG, (Section) v.getTag());
+                 		tb.putSerializable(Module.TAG, (Module) ModuleIndexActivity.this.module);
         				i.putExtras(tb);
                  		startActivity(i);
                  	}
