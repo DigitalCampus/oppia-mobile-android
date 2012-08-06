@@ -3,6 +3,7 @@ package org.digitalcampus.mtrain.application;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.model.Activity;
+import org.digitalcampus.mtrain.model.Module;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -141,5 +142,22 @@ public class DbHelper extends SQLiteOpenHelper{
 			Log.d(TAG,"Inserted activity");
 			db.insertOrThrow(DbHelper.ACTIVITY_TABLE, null, values);
 		}
+	}
+	
+	public ArrayList<Module> getModules(){
+		ArrayList<Module> modules = new ArrayList<Module>();
+		String order = MODULE_C_TITLE + " ASC";
+		Cursor c = db.query(MODULE_TABLE, null, null , null, null, null, order);
+		c.moveToFirst();
+		while (c.isAfterLast() == false){
+			Module m = new Module();
+			m.setModId(c.getInt(c.getColumnIndex(DbHelper.MODULE_C_ID)));
+			m.setLocation(c.getString(c.getColumnIndex(DbHelper.MODULE_C_LOCATION)));
+			m.setTitle(c.getString(c.getColumnIndex(DbHelper.MODULE_C_TITLE)));
+			modules.add(m);
+			c.moveToNext();
+		}
+		c.close();
+		return modules;
 	}
 }

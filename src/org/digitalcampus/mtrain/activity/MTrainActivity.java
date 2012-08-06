@@ -1,14 +1,19 @@
 package org.digitalcampus.mtrain.activity;
 
+import java.util.ArrayList;
+
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
+import org.digitalcampus.mtrain.model.Module;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
+import android.widget.LinearLayout;
 
 public class MTrainActivity extends Activity {
 
@@ -50,6 +55,13 @@ public class MTrainActivity extends Activity {
     	MTrain mt = new MTrain(MTrainActivity.this);
     	mt.installNewDownloads();
     	
+    	LinearLayout modulesLL = (LinearLayout) findViewById(R.id.modules);
+    	DbHelper db = new DbHelper(this);
+    	ArrayList<Module> modules = db.getModules();
+    	for(Module m: modules){
+    		Log.d(TAG,m.getTitle());
+    	}
+    	db.close();
     }
     
     @Override
@@ -58,7 +70,4 @@ public class MTrainActivity extends Activity {
         return true;
     }
 
-    
-    
-	
 }

@@ -1,8 +1,9 @@
 <resources>
 
     <string name="app_name">mTrain</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">mTrain</string>
+    <string name="main_logo_alt">DC Logo</string>
+    <string name="main_tagline">by Digital Campus</string>
 
 </resources>
