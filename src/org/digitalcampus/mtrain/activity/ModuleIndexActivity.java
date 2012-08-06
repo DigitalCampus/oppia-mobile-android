@@ -1,21 +1,53 @@
 package org.digitalcampus.mtrain.activity;
 
-import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.R.layout;
-import org.digitalcampus.mtrain.R.menu;
+import java.util.ArrayList;
 
-import android.os.Bundle;
+import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.application.MTrain;
+import org.digitalcampus.mtrain.model.Module;
+import org.digitalcampus.mtrain.model.Section;
+import org.digitalcampus.mtrain.utils.ModuleXMLReader;
+
 import android.app.Activity;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class ModuleIndexActivity extends Activity {
 
+	public static final String TAG = "ModuleIndexActivity";
+	
+	private Module module;
+	private ModuleXMLReader mxr;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module_index);
+        
+        LinearLayout sectionsLL = (LinearLayout) findViewById(R.id.sections);
+        Bundle bundle = this.getIntent().getExtras(); 
+        if(bundle != null) {
+        	module = (Module) bundle.getSerializable(Module.TAG);
+        	Log.d(TAG,module.getLocation()+"/"+ MTrain.MODULE_XML);
+        	setTitle(module.getTitle());
+        	
+        	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
+        	
+        	ArrayList<Section> sections = mxr.getSections(module.getModId());
+        	for(Section s: sections){
+        		Log.d(TAG,s.getTitle());
+        		Button b = new Button(this);
+        		b.setTag(s);
+        		b.setTypeface(Typeface.DEFAULT_BOLD);
+            	b.setTextSize(20);
+            	b.setText(s.getTitle());
+            	sectionsLL.addView(b);
+        	}
+        }
     }
 
     @Override

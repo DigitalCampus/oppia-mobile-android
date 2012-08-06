@@ -66,7 +66,7 @@ public class MTrainActivity extends Activity {
              	public void onClick(View v) {
              		Intent i = new Intent(MTrainActivity.this, ModuleIndexActivity.class);
              		Bundle tb = new Bundle();
-             		tb.putSerializable("module", (Module) v.getTag());
+             		tb.putSerializable(Module.TAG, (Module) v.getTag());
     				i.putExtras(tb);
              		startActivity(i);
              	}

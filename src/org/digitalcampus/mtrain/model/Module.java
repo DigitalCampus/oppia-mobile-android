@@ -3,6 +3,8 @@ package org.digitalcampus.mtrain.model;
 import java.io.Serializable;
 
 public class Module implements Serializable {
+	
+	public static final String TAG = "Module";
 	private int modId;
 	private String location;
 	private String title;

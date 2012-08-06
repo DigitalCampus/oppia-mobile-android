@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.mtrain.model.Activity;
+import org.digitalcampus.mtrain.model.Section;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -90,5 +91,43 @@ public class ModuleXMLReader {
 		return acts;
 	}
 	
+	public ArrayList<Section> getSections(int modId){
+		ArrayList<Section> sections = new ArrayList<Section>();
+		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
+		for (int i=0; i<sects.getLength(); i++){
+			int sectionId = Integer.parseInt(this.getChildNodeByName(sects.item(i),"id").getTextContent());
+			String title = this.getChildNodeByName(sects.item(i),"title").getTextContent();
+			Section s = new Section();
+			s.setSectionId(sectionId);
+			s.setTitle(title);
+			//now get activities
+			NodeList acts = this.getChildNodeByName(sects.item(i),"activities").getChildNodes();
+			for(int j=0; j<acts.getLength();j++){
+				Activity a = new Activity();
+				a.setActId(Integer.parseInt(this.getChildNodeByName(acts.item(i),"id").getTextContent()));
+				NamedNodeMap nnm = acts.item(j).getAttributes();
+				String actType = nnm.getNamedItem("type").getTextContent();
+				a.setActType(actType);
+				a.setModId(modId);
+				a.setSectionId(sectionId);
+				a.setActivity(acts.item(j));
+				s.addActivity(a);
+			}
+			
+			sections.add(s);
+			
+			Log.d(TAG,"added: "+ s.getTitle());
+		}
+		return sections;
+	}
 	
+	private Node getChildNodeByName(Node parent, String nodeName){
+		NodeList nl = parent.getChildNodes();
+		for (int i=0; i<nl.getLength(); i++){
+			if(nl.item(i).getNodeName().equals(nodeName)){
+				return nl.item(i);
+			}
+		}
+		return null;
+	}
 }

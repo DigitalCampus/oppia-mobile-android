@@ -1,10 +1,13 @@
 package org.digitalcampus.mtrain.model;
 
+import org.w3c.dom.Node;
+
 public class Activity {
 	private long modId;
 	private int sectionId;
 	private int actId;
 	private String actType;
+	private Node activity;
 	
 	public Activity(){
 	}
@@ -39,6 +42,14 @@ public class Activity {
 
 	public void setActType(String actType) {
 		this.actType = actType;
+	}
+
+	public Node getActivity() {
+		return activity;
+	}
+
+	public void setActivity(Node activity) {
+		this.activity = activity;
 	}
 
 	
