@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 public class Module implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4412987572522420704L;
+	
 	public static final String TAG = "Module";
 	private int modId;
 	private String location;

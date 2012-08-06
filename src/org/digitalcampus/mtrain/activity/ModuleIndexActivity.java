@@ -9,10 +9,12 @@ import org.digitalcampus.mtrain.model.Section;
 import org.digitalcampus.mtrain.utils.ModuleXMLReader;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -45,6 +47,15 @@ public class ModuleIndexActivity extends Activity {
         		b.setTypeface(Typeface.DEFAULT_BOLD);
             	b.setTextSize(20);
             	b.setText(s.getTitle());
+            	b.setOnClickListener(new View.OnClickListener() {
+                 	public void onClick(View v) {
+                 		Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
+                 		Bundle tb = new Bundle();
+                 		tb.putSerializable(Module.TAG, (Module) v.getTag());
+        				i.putExtras(tb);
+                 		startActivity(i);
+                 	}
+                 });
             	sectionsLL.addView(b);
         	}
         }

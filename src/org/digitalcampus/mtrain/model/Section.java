@@ -1,9 +1,16 @@
 package org.digitalcampus.mtrain.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Section {
+public class Section implements Serializable  {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6360494638548755423L;
+	
+	public static final String TAG = "Section";
 	private int sectionId;
 	private String title;
 	private ArrayList<Activity> activities;
