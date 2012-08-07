@@ -152,5 +152,10 @@ public class FileUtils {
 		// The directory is now empty so delete it
 		return dir.delete();
 	}
+	
+	public static boolean mediaFileExists(String filename){
+		
+		return true;
+	}
 
 }

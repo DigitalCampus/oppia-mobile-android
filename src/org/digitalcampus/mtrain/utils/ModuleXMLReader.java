@@ -63,7 +63,7 @@ public class ModuleXMLReader {
 	public ArrayList<Activity> getActivities(long modId){
 		ArrayList<Activity>  acts = new ArrayList<Activity>();
 		Node struct = document.getFirstChild().getFirstChild().getNextSibling();
-		Log.d(TAG,struct.getNodeName());
+		Log.v(TAG,struct.getNodeName());
 		NodeList s = struct.getChildNodes();
 		for (int i=0; i<s.getLength(); i++) {
 			// get the id and acts

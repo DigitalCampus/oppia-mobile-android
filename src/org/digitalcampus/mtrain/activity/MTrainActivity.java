@@ -59,7 +59,7 @@ public class MTrainActivity extends Activity {
     	// TODO show message if no modules installed yet
     	ArrayList<Module> modules = db.getModules();
     	for(Module m: modules){
-    		Log.d(TAG,m.getTitle());
+    		Log.v(TAG,m.getTitle());
     		Button b = new Button(this);
     		b.setTag(m);
     		b.setTypeface(Typeface.DEFAULT_BOLD);

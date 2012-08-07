@@ -103,7 +103,7 @@ public class DbHelper extends SQLiteOpenHelper{
 		if(c.getCount() == 0){
 			c.close();
 			// just insert
-			Log.d(TAG,"Record added");
+			Log.v(TAG,"Record added");
 			return db.insertOrThrow(DbHelper.MODULE_TABLE, null, values);
 		} else {
 			// check that the version id of new module is greater than existing
@@ -111,8 +111,8 @@ public class DbHelper extends SQLiteOpenHelper{
 			
 			long toUpdate = 0;
 			while(c.isAfterLast() == false){
-				Log.d(TAG,c.getString(c.getColumnIndex(DbHelper.MODULE_C_VERSIONID)));
-				Log.d(TAG,versionid);
+				Log.v(TAG,"Installed version:" + c.getString(c.getColumnIndex(DbHelper.MODULE_C_VERSIONID)));
+				Log.v(TAG,"New version: "+ versionid);
 				if (Long.valueOf(versionid) > c.getLong(c.getColumnIndex(DbHelper.MODULE_C_VERSIONID))){
 					Log.d(TAG,"getting record to update");
 					toUpdate = c.getLong(c.getColumnIndex(DbHelper.MODULE_C_ID));
@@ -122,7 +122,13 @@ public class DbHelper extends SQLiteOpenHelper{
 			c.close();
 			if(toUpdate != 0){
 				db.update(DbHelper.MODULE_TABLE, values, DbHelper.MODULE_C_ID + "=" + toUpdate, null);
-				// TODO remove all the old activities
+				// remove all the old activities
+				String s = DbHelper.ACTIVITY_C_MODID +"=?";
+				String[] args = new String[] {String.valueOf(toUpdate)};
+				Log.d(TAG,s);
+				Log.d(TAG,args[0]);
+				db.delete(DbHelper.ACTIVITY_TABLE, s, args);
+				
 				Log.d(TAG,"Record updated");
 				return toUpdate;
 			} else {

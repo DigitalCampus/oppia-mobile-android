@@ -1,7 +1,5 @@
 package org.digitalcampus.mtrain.widgets;
 
-import java.util.HashMap;
-
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.model.Module;
 
@@ -15,7 +13,7 @@ public abstract class WidgetFactory extends LinearLayout{
 	private LayoutInflater li;
 	private LinearLayout ll;
 	
-	public WidgetFactory(Context context, Module module, HashMap<String,String> data ) {
+	public WidgetFactory(Context context, Module module, org.digitalcampus.mtrain.model.Activity activity ) {
 		super(context);
 		ll = (LinearLayout) ((Activity) context).findViewById(R.id.activity_widget);
 		ll.removeAllViews();

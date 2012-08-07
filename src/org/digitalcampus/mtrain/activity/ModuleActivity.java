@@ -3,28 +3,19 @@ package org.digitalcampus.mtrain.activity;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.R.layout;
-import org.digitalcampus.mtrain.R.menu;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.model.Section;
 import org.digitalcampus.mtrain.widgets.PageWidget;
 import org.digitalcampus.mtrain.widgets.QuizWidget;
 import org.digitalcampus.mtrain.widgets.WidgetFactory;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
-import android.util.DisplayMetrics;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.GestureDetector;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.support.v4.app.NavUtils;
 
 public class ModuleActivity extends Activity {
 
@@ -42,8 +33,8 @@ public class ModuleActivity extends Activity {
         if(bundle != null) {
         	section = (Section) bundle.getSerializable(Section.TAG);
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	Log.d(TAG,"title:" + module.getTitle());
-        	Log.d(TAG,"title:" + section.getTitle());
+        	Log.v(TAG,"title:" + module.getTitle());
+        	Log.v(TAG,"title:" + section.getTitle());
         	setTitle(section.getTitle());
         	loadActivity();
         }
@@ -64,10 +55,10 @@ public class ModuleActivity extends Activity {
     	tb.setText(acts.get(this.currentActivityNo).getActivity().get("title"));
     	
     	if(acts.get(this.currentActivityNo).getActType().equals("page")){
-    		currentActivity = (PageWidget) new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo).getActivity());
+    		currentActivity = (PageWidget) new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
     	}
     	if(acts.get(this.currentActivityNo).getActType().equals("quiz")){
-    		currentActivity = (QuizWidget) new QuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo).getActivity());
+    		currentActivity = (QuizWidget) new QuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
     	}
     	this.setUpNav();
     }
