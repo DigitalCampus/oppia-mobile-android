@@ -34,14 +34,14 @@ public class ModuleIndexActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	Log.d(TAG,module.getLocation()+"/"+ MTrain.MODULE_XML);
+        	Log.v(TAG,module.getLocation()+"/"+ MTrain.MODULE_XML);
         	setTitle(module.getTitle());
         	
         	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
         	
         	ArrayList<Section> sections = mxr.getSections(module.getModId());
         	for(Section s: sections){
-        		Log.d(TAG,s.getTitle());
+        		Log.v(TAG,s.getTitle());
         		Button b = new Button(this);
         		b.setTag(s);
         		b.setTypeface(Typeface.DEFAULT_BOLD);
