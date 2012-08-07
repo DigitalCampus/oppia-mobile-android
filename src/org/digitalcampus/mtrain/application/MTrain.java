@@ -10,6 +10,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 public class MTrain extends Application {
 
@@ -115,14 +116,21 @@ public class MTrain extends Application {
 			        } else {
 			        	Log.v(TAG,"File was not successfully moved");
 			        }
-
-				} 
+			        // Show user that modules has been installed
+			        // TODO change to use string param 
+			        Toast.makeText(ctx, "Module: '"+ title + "' successfully installed", Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(ctx, "Error installing module", Toast.LENGTH_SHORT).show();
+				}
 				db.close();
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);
-				Log.v(TAG,"Temp directory deleted");
+				Log.d(TAG,"Temp directory deleted");
 				
 				// TODO delete zip file from download dir 
+				File zip = new File(MTrain.DOWNLOAD_PATH + children[i]);
+				zip.delete();
+				Log.d(TAG,"Zip file deleted");
 
 			}
 		}
