@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.digitalcampus.mtrain.application.MTrain;
+
 import android.util.Log;
 
 public class FileUtils {
@@ -154,8 +156,13 @@ public class FileUtils {
 	}
 	
 	public static boolean mediaFileExists(String filename){
+		File media = new File(MTrain.MEDIA_PATH + filename);
+		if(media.exists()){
+			return true;
+		} else {
+			return false;
+		}
 		
-		return true;
 	}
 
 }
