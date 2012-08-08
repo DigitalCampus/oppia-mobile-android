@@ -34,6 +34,8 @@ public class MultiChoice implements Serializable, QuizQuestion {
 	}
 	
 	public void mark(){
+		// reset feedback back to nothing
+		this.feedback = "";
 		// loop through the responses
 		// find whichever are set as selected and add up the responses
 		float total = 0;

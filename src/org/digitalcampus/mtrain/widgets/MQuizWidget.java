@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MQuizWidget extends WidgetFactory{
 
@@ -76,9 +77,17 @@ public class MQuizWidget extends WidgetFactory{
 	private void setNav(){
 		Button prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
 		if(mQuiz.hasPrevious()){
-			//saveAnswer();
-			//mQuiz.movePrevious();
-			//showQuestion();
+			 prevBtn.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+		        		// save answer
+		        		saveAnswer();
+		        		
+		        		if(mQuiz.hasPrevious()){
+		        			mQuiz.movePrevious();
+		    				showQuestion();
+		    			}
+		        	}
+		        });
 			prevBtn.setEnabled(true);
 		} else {
 			prevBtn.setEnabled(false);
@@ -90,17 +99,20 @@ public class MQuizWidget extends WidgetFactory{
 	        		// save answer
 	        		if (saveAnswer()){
 	        			String feedback = mQuiz.getCurrentQuestion().getFeedback();
-		        		if(mQuiz.hasNext()){
-		        			if(feedback.equals("")){
-		        				mQuiz.moveNext();
-
-			    				showQuestion();
-		        			} else {
-		        				showFeedback(feedback);
-		        			}
-		        		}
+						if (!feedback.equals("")) {
+							showFeedback(feedback);
+						} else if (mQuiz.hasNext()) {
+							mQuiz.moveNext();
+							showQuestion();
+						} else {
+							showResults();
+						}
 	        		} else {
-	        			Log.d(TAG,"Response not saved... why not?");
+	        			CharSequence text = ((android.app.Activity) ctx).getString(R.string.widget_mquiz_noanswergiven);
+	        			int duration = Toast.LENGTH_SHORT;
+
+	        			Toast toast = Toast.makeText(ctx, text, duration);
+	        			toast.show();
 	        		}
 	        	}
 		});
@@ -133,17 +145,15 @@ public class MQuizWidget extends WidgetFactory{
 						mQuiz.moveNext();
 						showQuestion();
 					} else {
-						/*Intent i = new Intent(QuizActivity.this, QuizActivityEnd.class);
-	    				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-	    				Bundle rb = new Bundle();
-	    				rb.putSerializable("quiz",quiz);
-	    				i.putExtras(rb);
-	    				startActivity(i);
-	    				finish();*/
+						showResults();
 					}
 				}
 		     });
 			builder.show();
 	    }
+	 
+	 private void showResults(){
+		 Toast.makeText(ctx, "showing results", Toast.LENGTH_SHORT).show();
+	 }
 
 }

@@ -13,7 +13,8 @@
     
     <string name="widget_mquiz_next">Next &gt;&gt;</string>
     <string name="widget_mquiz_prev">&lt;&lt; Prev</string>
-    
+    <string name="widget_mquiz_getresults">Get Results</string>
+    <string name="widget_mquiz_noanswergiven">Please give an answer before moving to the next question</string>
     <string name="widget_mquiz_progress">Question %1$d of %2$d</string>
 
 </resources>
