@@ -116,6 +116,13 @@ public class MQuizWidget extends WidgetFactory{
 	        		}
 	        	}
 		});
+		
+		//set label on next button
+		if(mQuiz.hasNext()){
+			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_mquiz_next));
+		} else {
+			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_mquiz_getresults));
+		}
 	}
 	
 	private void setProgress(){

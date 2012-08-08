@@ -16,5 +16,5 @@
     <string name="widget_mquiz_getresults">Get Results</string>
     <string name="widget_mquiz_noanswergiven">Please give an answer before moving to the next question</string>
     <string name="widget_mquiz_progress">Question %1$d of %2$d</string>
-
+ 	<string name="widget_mquiz_results">Results</string>
 </resources>
