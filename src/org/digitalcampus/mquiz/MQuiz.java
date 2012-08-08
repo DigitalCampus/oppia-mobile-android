@@ -157,7 +157,6 @@ public class MQuiz implements Serializable{
 		} else {
 			userscore = total;
 		}
-		//Log.d(TAG,"Total score: " + String.valueOf(userscore) + " out of "+ String.valueOf(maxscore));
 	}
 	
 	public String getQRef() {

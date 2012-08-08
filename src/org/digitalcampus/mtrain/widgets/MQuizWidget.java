@@ -164,6 +164,7 @@ public class MQuizWidget extends WidgetFactory {
 	}
 
 	private void showResults() {
+		mQuiz.mark();
 		float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
 		Toast.makeText(ctx, "showing results" + String.valueOf(percent), Toast.LENGTH_SHORT).show();
 		ScrollView ll = (ScrollView) ((android.app.Activity) ctx).findViewById(R.id.quizScrollView);

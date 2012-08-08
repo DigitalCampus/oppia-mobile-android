@@ -7,11 +7,9 @@ import java.util.List;
 
 import org.digitalcampus.mquiz.model.Response;
 import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.widgets.MQuizWidget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;

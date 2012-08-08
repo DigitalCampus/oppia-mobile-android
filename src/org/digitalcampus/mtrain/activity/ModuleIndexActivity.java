@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -47,8 +48,9 @@ public class ModuleIndexActivity extends Activity {
         		Button b = new Button(this);
         		b.setTag(s);
         		b.setTypeface(Typeface.DEFAULT_BOLD);
+        		b.setGravity(Gravity.LEFT);
             	b.setTextSize(20);
-            	b.setText(s.getTitle());
+            	b.setText(String.valueOf(s.getSectionId()) + ". " + s.getTitle());
             	b.setOnClickListener(new View.OnClickListener() {
                  	public void onClick(View v) {
                  		Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
