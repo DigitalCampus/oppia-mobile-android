@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class ModuleIndexActivity extends Activity {
 
@@ -30,13 +31,14 @@ public class ModuleIndexActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module_index);
         
-        LinearLayout sectionsLL = (LinearLayout) findViewById(R.id.sections);
+        LinearLayout sectionsLL = (LinearLayout) this.findViewById(R.id.sections);
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	module = (Module) bundle.getSerializable(Module.TAG);
         	Log.v(TAG,module.getLocation()+"/"+ MTrain.MODULE_XML);
         	setTitle(module.getTitle());
-        	
+        	TextView tv = (TextView) this.findViewById(R.id.module_title);
+        	tv.setText(module.getTitle());
         	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
         	
         	ArrayList<Section> sections = mxr.getSections(module.getModId());
