@@ -20,7 +20,7 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 	private float userscore = 0;
 	private List<String> userResponses = new ArrayList<String>();
 	private HashMap<String,String> props = new HashMap<String,String>();
-	
+	private String feedback = "";
 	public void addResponseOption(Response r){
 		responseOptions.add(r);
 	}
@@ -37,6 +37,7 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 				String a = itr.next(); 
 				if (r.getText().toLowerCase().equals(a.toLowerCase())){
 					total += r.getScore();
+					// TODO return feedback
 				}
 			}
 		}
@@ -102,8 +103,11 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 	}
 	
 	public String getFeedback() {
-		// TODO return feedback
-		return "";
+		// reset feedback back to nothing
+		this.feedback = "";
+		this.mark();
+		
+		return this.feedback;
 	}
 	
 	public int getMaxScore() {

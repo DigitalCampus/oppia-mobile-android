@@ -56,7 +56,7 @@ public class Numerical implements Serializable, QuizQuestion {
 			for (Response r : responseOptions){
 				try{
 					Float respNumber = Float.parseFloat(r.getText());
-					//TODO check that tolerance is loadded as a property
+					//TODO check that tolerance is loaded as a property
 					Float tolerance = Float.parseFloat(r.getProp("tolerance"));
 					if ((respNumber - tolerance <= userAnswer) && (userAnswer <= respNumber + tolerance)){
 						if(r.getScore() > currMax){
@@ -126,6 +126,8 @@ public class Numerical implements Serializable, QuizQuestion {
 	}
 	
 	public String getFeedback() {
+		// reset feedback back to nothing
+		this.feedback = "";
 		this.mark();
 		return this.feedback;
 	}
