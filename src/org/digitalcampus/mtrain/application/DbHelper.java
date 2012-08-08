@@ -17,7 +17,7 @@ public class DbHelper extends SQLiteOpenHelper{
 
 	static final String TAG = "DbHelper";
 	static final String DB_NAME = "mtrain.db"; 
-	static final int DB_VERSION = 7; 
+	static final int DB_VERSION = 9; 
 	
 	private SQLiteDatabase db;
 	

@@ -67,14 +67,17 @@ public class ModuleXMLReader {
 		NodeList s = struct.getChildNodes();
 		for (int i=0; i<s.getLength(); i++) {
 			// get the id and acts
-			int sectionId = Integer.parseInt(s.item(i).getFirstChild().getTextContent());
+			NamedNodeMap sectionAttrs = s.item(i).getAttributes();
+			//TODO add error checking with conversion to ints
+			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("id").getTextContent());
 			Log.v(TAG,String.valueOf(sectionId));
 			NodeList activities = s.item(i).getLastChild().getChildNodes();
 			for (int j=0; j<activities.getLength(); j++) {
-				int actId = Integer.parseInt(activities.item(j).getFirstChild().getTextContent());
-				//String actType = activities.item(j).getAttributes();
-				NamedNodeMap nnm = activities.item(j).getAttributes();
-				String actType = nnm.getNamedItem("type").getTextContent();
+				
+				NamedNodeMap activityAttrs = activities.item(j).getAttributes();
+				String actType = activityAttrs.getNamedItem("type").getTextContent();
+				//TODO add error checking with conversion to ints
+				int actId = Integer.parseInt(activityAttrs.getNamedItem("id").getTextContent());
 				
 				Log.v(TAG,String.valueOf(actId));
 				Log.v(TAG,actType);
@@ -85,9 +88,7 @@ public class ModuleXMLReader {
 				a.setActType(actType);
 				acts.add(a);
 			}
-		
 		}
-		
 		return acts;
 	}
 	
@@ -95,7 +96,8 @@ public class ModuleXMLReader {
 		ArrayList<Section> sections = new ArrayList<Section>();
 		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
 		for (int i=0; i<sects.getLength(); i++){
-			int sectionId = Integer.parseInt(this.getChildNodeByName(sects.item(i),"id").getTextContent());
+			NamedNodeMap sectionAttrs = sects.item(i).getAttributes();
+			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("id").getTextContent());
 			String title = this.getChildNodeByName(sects.item(i),"title").getTextContent();
 			Section s = new Section();
 			s.setSectionId(sectionId);
@@ -104,7 +106,8 @@ public class ModuleXMLReader {
 			NodeList acts = this.getChildNodeByName(sects.item(i),"activities").getChildNodes();
 			for(int j=0; j<acts.getLength();j++){
 				Activity a = new Activity();
-				a.setActId(Integer.parseInt(this.getChildNodeByName(acts.item(j),"id").getTextContent()));
+				NamedNodeMap activityAttrs = acts.item(j).getAttributes();
+				a.setActId(Integer.parseInt(activityAttrs.getNamedItem("id").getTextContent()));
 				NamedNodeMap nnm = acts.item(j).getAttributes();
 				String actType = nnm.getNamedItem("type").getTextContent();
 				a.setActType(actType);

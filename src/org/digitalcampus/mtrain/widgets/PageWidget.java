@@ -54,6 +54,7 @@ public class PageWidget extends WidgetFactory {
 						// launch intent to play video
 						Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
 						Uri data = Uri.parse(MTrain.MEDIA_PATH + videoFileName);
+						// TODO check that the file really is video/mp4 and not another video type
 						intent.setDataAndType(data, "video/mp4");
 						ctx.startActivity(intent);
 					} else {
