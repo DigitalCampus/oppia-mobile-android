@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.digitalcampus.mquiz.model.Response;
 import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.widgets.QuizWidget;
+import org.digitalcampus.mtrain.widgets.MQuizWidget;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,7 +29,7 @@ public class MultiChoiceWidget extends QuestionWidget{
 		LinearLayout ll = (LinearLayout) ((Activity) ctx).findViewById(R.id.quizResponseWidget);
 		ll.removeAllViews();
 		LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View vv = vi.inflate(R.layout.widget_quiz_multichoice, null);
+		View vv = vi.inflate(R.layout.widget_mquiz_multichoice, null);
 		ll.addView(vv);
 	}
 

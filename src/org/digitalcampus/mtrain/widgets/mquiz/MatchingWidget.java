@@ -32,7 +32,7 @@ public class MatchingWidget extends QuestionWidget {
 		LinearLayout ll = (LinearLayout) ((Activity) ctx).findViewById(R.id.quizResponseWidget);
 		ll.removeAllViews();
 		LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View vv = vi.inflate(R.layout.widget_quiz_matching, null);
+		View vv = vi.inflate(R.layout.widget_mquiz_matching, null);
 		ll.addView(vv);
 	}
 

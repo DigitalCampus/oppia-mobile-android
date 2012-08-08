@@ -6,7 +6,7 @@ import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.model.Section;
 import org.digitalcampus.mtrain.widgets.PageWidget;
-import org.digitalcampus.mtrain.widgets.QuizWidget;
+import org.digitalcampus.mtrain.widgets.MQuizWidget;
 import org.digitalcampus.mtrain.widgets.WidgetFactory;
 
 import android.app.Activity;
@@ -58,7 +58,7 @@ public class ModuleActivity extends Activity {
     		currentActivity = (PageWidget) new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
     	}
     	if(acts.get(this.currentActivityNo).getActType().equals("quiz")){
-    		currentActivity = (QuizWidget) new QuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+    		currentActivity = (MQuizWidget) new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
     	}
     	this.setUpNav();
     }
