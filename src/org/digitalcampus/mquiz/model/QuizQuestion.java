@@ -9,7 +9,7 @@ public interface QuizQuestion extends Serializable {
 	
 	public void addResponseOption(Response r); //was addResponse
 	
-	public List<Response> getResponseOptions(); // was getRespones
+	public List<Response> getResponseOptions(); // was getResponse
 	
 	public void setUserResponses(List<String> str); // was setResponse
 	
@@ -23,21 +23,9 @@ public interface QuizQuestion extends Serializable {
 	
 	public void setRefid(String refid);
 	
-	public String getQuizRefid();
-	
-	public void setQuizRefid(String quizrefid);
-	
-	public int getOrderno();
-	
-	public void setOrderno(int orderno);
-	
 	public String getQtext();
 	
 	public void setQtext(String qtext);
-
-	public int getDbid();
-
-	public void setDbid(int dbid);
 
 	public float getUserscore();
 
@@ -50,5 +38,7 @@ public interface QuizQuestion extends Serializable {
 	public String getProp(String key);
 	
 	public String getFeedback();
+	
+	public int getMaxScore();
 	
 }

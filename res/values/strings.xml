@@ -10,5 +10,8 @@
     
     <string name="activity_module_button_prev">&lt;</string>
     <string name="activity_module_button_next">&gt;</string>
+    
+    <string name="widget_mquiz_next">Next &gt;&gt;</string>
+    <string name="widget_mquiz_prev">&lt;&lt; Prev</string>
 
 </resources>

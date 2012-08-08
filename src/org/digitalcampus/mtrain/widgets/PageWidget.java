@@ -30,7 +30,7 @@ public class PageWidget extends WidgetFactory {
 		// get the location data
 		WebView wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
 		// TODO error check here that the file really exists first
-
+		// TODO error check that location is in the hashmap
 		String url = "file://" + module.getLocation() + "/" + activity.getActivity().get("location");
 
 		Log.v(TAG, "Loading: " + url);

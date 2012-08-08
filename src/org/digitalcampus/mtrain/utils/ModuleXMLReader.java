@@ -119,7 +119,7 @@ public class ModuleXMLReader {
 			
 			sections.add(s);
 			
-			Log.d(TAG,"added: "+ s.getTitle());
+			Log.v(TAG,"added: "+ s.getTitle());
 		}
 		return sections;
 	}

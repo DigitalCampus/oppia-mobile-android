@@ -16,10 +16,7 @@ public class MultiChoice implements Serializable, QuizQuestion {
 	 */
 	private static final long serialVersionUID = -6605393327170759582L;
 	public static final String TAG = "MultiChoice";
-	private int dbid;
 	private String refid;
-	private String quizrefid;
-	private int orderno;
 	private String qtext;
 	private String qhint;
 	private List<Response> responseOptions = new ArrayList<Response>();
@@ -68,22 +65,6 @@ public class MultiChoice implements Serializable, QuizQuestion {
 		this.refid = refid;
 	}
 	
-	public String getQuizRefid() {
-		return quizrefid;
-	}
-	
-	public void setQuizRefid(String quizrefid) {
-		this.quizrefid = quizrefid;
-	}
-	
-	public int getOrderno() {
-		return orderno;
-	}
-	
-	public void setOrderno(int orderno) {
-		this.orderno = orderno;
-	}
-	
 	public String getQtext() {
 		return qtext;
 	}
@@ -92,13 +73,6 @@ public class MultiChoice implements Serializable, QuizQuestion {
 		this.qtext = qtext;
 	}
 
-	public int getDbid() {
-		return dbid;
-	}
-
-	public void setDbid(int dbid) {
-		this.dbid = dbid;
-	}
 
 	public void setResponseOptions(List<Response> responses) {
 		this.responseOptions = responses;
@@ -141,6 +115,10 @@ public class MultiChoice implements Serializable, QuizQuestion {
 	public String getFeedback() {
 		this.mark();
 		return this.feedback;
+	}
+	
+	public int getMaxScore() {
+		return Integer.parseInt(this.getProp("maxscore"));
 	}
 
 }

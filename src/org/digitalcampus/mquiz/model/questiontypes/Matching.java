@@ -13,10 +13,7 @@ public class Matching implements Serializable, QuizQuestion {
 
 	private static final long serialVersionUID = -7500128521011492086L;
 	public static final String TAG = "Matching";
-	private int dbid;
 	private String refid;
-	private String quizrefid;
-	private int orderno;
 	private String qtext;
 	private String qhint;
 	private List<Response> responseOptions = new ArrayList<Response>();
@@ -70,36 +67,12 @@ public class Matching implements Serializable, QuizQuestion {
 		this.refid = refid;
 	}
 	
-	public String getQuizRefid() {
-		return quizrefid;
-	}
-	
-	public void setQuizRefid(String quizrefid) {
-		this.quizrefid = quizrefid;
-	}
-	
-	public int getOrderno() {
-		return orderno;
-	}
-	
-	public void setOrderno(int orderno) {
-		this.orderno = orderno;
-	}
-	
 	public String getQtext() {
 		return qtext;
 	}
 	
 	public void setQtext(String qtext) {
 		this.qtext = qtext;
-	}
-
-	public int getDbid() {
-		return dbid;
-	}
-
-	public void setDbid(int dbid) {
-		this.dbid = dbid;
 	}
 
 	public void setResponseOptions(List<Response> responses) {
@@ -137,6 +110,10 @@ public class Matching implements Serializable, QuizQuestion {
 	
 	public String getFeedback() {
 		return "";
+	}
+	
+	public int getMaxScore() {
+		return Integer.parseInt(this.getProp("maxscore"));
 	}
 
 }
