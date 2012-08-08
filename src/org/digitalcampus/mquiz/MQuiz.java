@@ -55,7 +55,7 @@ public class MQuiz implements Serializable{
 		return true;
 	}
 	
-	public boolean addQuestion(JSONObject q) {
+	private boolean addQuestion(JSONObject q) {
 		//determine question type
 		QuizQuestion question;
 		String qtype;
@@ -85,12 +85,12 @@ public class MQuiz implements Serializable{
 			HashMap<String,String> qProps = new HashMap<String,String>();
 			for (int k = 0; k < questionProps.names().length(); k++) {
 				qProps.put(questionProps.names().getString(k), questionProps.getString(questionProps.names().getString(k)));
-				Log.d(TAG,"Adding question prop: "+ questionProps.names().getString(k) +" : "+questionProps.getString(questionProps.names().getString(k)));
+				Log.v(TAG,"Adding question prop: "+ questionProps.names().getString(k) +" : "+questionProps.getString(questionProps.names().getString(k)));
 			}
 			question.setProps(qProps);
 			
 			this.questions.add(question);
-			Log.d(TAG,"question added:"+question.getQtext());
+			Log.v(TAG,"question added:"+question.getQtext());
 			
 			// now add response options for this question
 			JSONArray responses = (JSONArray) q.get("r");
@@ -104,9 +104,10 @@ public class MQuiz implements Serializable{
 				if(responseProps.names() != null){
 					for (int m = 0; m < responseProps.names().length(); m++) {
 						rProps.put(responseProps.names().getString(m), responseProps.getString(responseProps.names().getString(m)));
-						Log.d(TAG,"Adding response prop: "+ responseProps.names().getString(m) +" : "+responseProps.getString(responseProps.names().getString(m)));
+						Log.v(TAG,"Adding response prop: "+ responseProps.names().getString(m) +" : "+responseProps.getString(responseProps.names().getString(m)));
 					}
 				}
+				responseOption.setProps(rProps);
 				question.addResponseOption(responseOption);
 			}
 			
@@ -185,11 +186,11 @@ public class MQuiz implements Serializable{
 	}
 	
 	public int getCurrentQuestionNo() {
-		return currentq + 1;
+		return this.currentq + 1;
 	}
 
 	public QuizQuestion getCurrentQuestion(){
-		return questions.get(currentq);
+		return questions.get(this.currentq);
 	}
 
 	public float getUserscore() {
@@ -204,5 +205,8 @@ public class MQuiz implements Serializable{
 		this.maxscore = maxscore;
 	}
 	
+	public int getTotalNoQuestions(){
+		return questions.size();
+	}
 	
 }

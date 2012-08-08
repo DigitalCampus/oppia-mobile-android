@@ -1,26 +1,26 @@
 package org.digitalcampus.mtrain.widgets;
 
+import java.util.List;
+
 import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.mquiz.model.QuizQuestion;
-import org.digitalcampus.mquiz.model.questiontypes.Essay;
-import org.digitalcampus.mquiz.model.questiontypes.Matching;
-import org.digitalcampus.mquiz.model.questiontypes.MultiChoice;
-import org.digitalcampus.mquiz.model.questiontypes.MultiSelect;
-import org.digitalcampus.mquiz.model.questiontypes.Numerical;
-import org.digitalcampus.mquiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.mquiz.model.questiontypes.*;
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.model.Activity;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.widgets.mquiz.*;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MQuizWidget extends WidgetFactory{
 
-	private static final String TAG = "QuizWidget";
+	private static final String TAG = "MQuizWidget";
 	
 	private Context ctx;
 	private MQuiz mQuiz;
@@ -69,11 +69,81 @@ public class MQuizWidget extends WidgetFactory{
     		qHint.setVisibility(View.VISIBLE);
     	}
 		qw.setQuestionResponses(q.getResponseOptions(), q.getUserResponses());
+		this.setProgress();
 		this.setNav();
 	}
 	
-	public void setNav(){
+	private void setNav(){
+		Button prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
+		if(mQuiz.hasPrevious()){
+			//saveAnswer();
+			//mQuiz.movePrevious();
+			//showQuestion();
+			prevBtn.setEnabled(true);
+		} else {
+			prevBtn.setEnabled(false);
+		}
+		
+		Button nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
+		nextBtn.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+	        		// save answer
+	        		if (saveAnswer()){
+	        			String feedback = mQuiz.getCurrentQuestion().getFeedback();
+		        		if(mQuiz.hasNext()){
+		        			if(feedback.equals("")){
+		        				mQuiz.moveNext();
+
+			    				showQuestion();
+		        			} else {
+		        				showFeedback(feedback);
+		        			}
+		        		}
+	        		} else {
+	        			Log.d(TAG,"Response not saved... why not?");
+	        		}
+	        	}
+		});
+	}
+	
+	private void setProgress(){
+		TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
+		progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_progress,mQuiz.getCurrentQuestionNo(),mQuiz.getTotalNoQuestions()));
 		
 	}
+	
+	private boolean saveAnswer(){
+    	List<String> answers = qw.getQuestionResponses(mQuiz.getCurrentQuestion().getResponseOptions());
+    	if(answers != null){
+    		mQuiz.getCurrentQuestion().setUserResponses(answers);
+    		return true;
+    	}
+		return false;
+    }
+	
+	 private void showFeedback(String msg){
+	    	AlertDialog.Builder builder = new AlertDialog.Builder((android.app.Activity) this.ctx);
+	    	// TODO change to proper strings
+			builder.setTitle("Feedback");
+			builder.setMessage(msg);
+			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface arg0, int arg1) {
+					if(mQuiz.hasNext()){
+						mQuiz.moveNext();
+						showQuestion();
+					} else {
+						/*Intent i = new Intent(QuizActivity.this, QuizActivityEnd.class);
+	    				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	    				Bundle rb = new Bundle();
+	    				rb.putSerializable("quiz",quiz);
+	    				i.putExtras(rb);
+	    				startActivity(i);
+	    				finish();*/
+					}
+				}
+		     });
+			builder.show();
+	    }
 
 }

@@ -11,6 +11,7 @@ import org.digitalcampus.mtrain.widgets.MQuizWidget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -40,7 +41,7 @@ public class MultiChoiceWidget extends QuestionWidget{
     	// TODO change to use getchild views (like the MultiSelect)
     	responsesRG.setId(234523465);
     	responsesLL.addView(responsesRG);
-    	int id = 1;
+    	int id = 1000;
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);
     		rb.setId(id);
