@@ -184,12 +184,12 @@ public class MQuiz implements Serializable{
 		this.checked = checked;
 	}
 	
-	public int getCurrentq() {
-		return currentq;
+	public int getCurrentQuestionNo() {
+		return currentq + 1;
 	}
 
-	public void setCurrentq(int currentq) {
-		this.currentq = currentq;
+	public QuizQuestion getCurrentQuestion(){
+		return questions.get(currentq);
 	}
 
 	public float getUserscore() {
