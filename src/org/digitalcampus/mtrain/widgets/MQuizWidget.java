@@ -14,11 +14,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,13 +32,20 @@ public class MQuizWidget extends WidgetFactory {
 	private Context ctx;
 	private MQuiz mQuiz;
 	private QuestionWidget qw;
-
+	private Button prevBtn;
+	private Button nextBtn;
+	private TextView qText;
+	
 	public MQuizWidget(Context context, Module module, Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
 		super.getLayout().addView(vv);
 
+		prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
+		nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
+		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
+		
 		// TODO error check that "content" is in the hashmap
 		String quiz = activity.getActivity().get("content");
 		mQuiz = new MQuiz();
@@ -46,7 +56,7 @@ public class MQuizWidget extends WidgetFactory {
 
 	public void showQuestion() {
 		QuizQuestion q = mQuiz.getCurrentQuestion();
-		TextView qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
+		qText.setVisibility(View.VISIBLE);
 		qText.setText(q.getQtext());
 
 		if (q instanceof MultiChoice) {
@@ -78,7 +88,9 @@ public class MQuizWidget extends WidgetFactory {
 	}
 
 	private void setNav() {
-		Button prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
+		nextBtn.setVisibility(View.VISIBLE);
+		prevBtn.setVisibility(View.VISIBLE);
+		
 		if (mQuiz.hasPrevious()) {
 			prevBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
@@ -96,7 +108,7 @@ public class MQuizWidget extends WidgetFactory {
 			prevBtn.setEnabled(false);
 		}
 
-		Button nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
+		
 		nextBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// save answer
@@ -113,7 +125,6 @@ public class MQuizWidget extends WidgetFactory {
 				} else {
 					CharSequence text = ((android.app.Activity) ctx).getString(R.string.widget_mquiz_noanswergiven);
 					int duration = Toast.LENGTH_SHORT;
-
 					Toast toast = Toast.makeText(ctx, text, duration);
 					toast.show();
 				}
@@ -166,19 +177,48 @@ public class MQuizWidget extends WidgetFactory {
 	private void showResults() {
 		mQuiz.mark();
 		float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
-		Toast.makeText(ctx, "showing results" + String.valueOf(percent), Toast.LENGTH_SHORT).show();
-		ScrollView ll = (ScrollView) ((android.app.Activity) ctx).findViewById(R.id.quizScrollView);
-		ll.removeAllViews();
-		Button nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
+		
+		// TODO save results somewhere ready to send back to the mquiz server
+		
+		LinearLayout responsesLL = (LinearLayout) ((android.app.Activity) ctx).findViewById(R.id.quizResponseWidget);
+    	responsesLL.removeAllViews();
 		nextBtn.setVisibility(View.GONE);
-		Button prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
 		prevBtn.setVisibility(View.GONE);
+		qText.setVisibility(View.GONE);
+		
+		// set page heading
 		TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
 		progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_results));
+		
+		// show final score
+		TextView intro = new TextView(this.ctx);
+		intro.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_results_intro));
+		intro.setGravity(Gravity.CENTER);
+		intro.setTextSize(20);
+		responsesLL.addView(intro);
+		
+		TextView score = new TextView(this.ctx);
+		score.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_results_score,percent));
+		score.setTextSize(60);
+		score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+		score.setGravity(Gravity.CENTER);
+		score.setPadding(0, 20, 0, 20);
+		responsesLL.addView(score);
+		
+		Button restartBtn = new Button(this.ctx);
+		restartBtn.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_results_restart));
+		restartBtn.setTextSize(20);
+		restartBtn.setTypeface(Typeface.DEFAULT_BOLD);
+		restartBtn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				restart();
+			}
+		});
+		responsesLL.addView(restartBtn);
 	}
 
 	private void restart() {
-
+		Log.d(TAG,"restarting");
 	}
 
 }

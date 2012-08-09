@@ -17,4 +17,7 @@
     <string name="widget_mquiz_noanswergiven">Please give an answer before moving to the next question</string>
     <string name="widget_mquiz_progress">Question %1$d of %2$d</string>
  	<string name="widget_mquiz_results">Results</string>
+ 	<string name="widget_mquiz_results_intro">You scored:</string>
+ 	<string name="widget_mquiz_results_score">%1$.0f%%</string>
+ 	<string name="widget_mquiz_results_restart">Retake this quiz</string>
 </resources>
