@@ -122,10 +122,13 @@ public class ModuleXMLReader {
 				a.setActId(Integer.parseInt(activityAttrs.getNamedItem("id").getTextContent()));
 				NamedNodeMap nnm = acts.item(j).getAttributes();
 				String actType = nnm.getNamedItem("type").getTextContent();
+				String digest = nnm.getNamedItem("digest").getTextContent();
 				a.setActType(actType);
 				a.setModId(modId);
 				a.setSectionId(sectionId);
-				a.setActivity(this.nodetoHashMap(acts.item(j)));
+				a.setActivityData(this.nodetoHashMap(acts.item(j)));
+				a.setDigest(digest);
+				Log.d(TAG,digest);
 				s.addActivity(a);
 			}
 			

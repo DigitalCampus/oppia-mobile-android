@@ -174,4 +174,12 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return modules;
 	}
+	
+	public long insertLog(int modId, String digest, String data){
+		ContentValues values = new ContentValues();
+		values.put(DbHelper.LOG_C_MODID, modId);
+		values.put(DbHelper.LOG_C_ACTIVITYDIGEST, digest);
+		values.put(DbHelper.LOG_C_DATA, data);
+		return db.insertOrThrow(DbHelper.LOG_TABLE, null, values);
+	}
 }

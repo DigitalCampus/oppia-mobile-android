@@ -18,7 +18,7 @@ public class Activity implements Serializable{
 	private int sectionId;
 	private int actId;
 	private String actType;
-	private HashMap<String, String> activity;
+	private HashMap<String, String> data;
 	private String digest;
 	
 	public String getDigest() {
@@ -64,12 +64,12 @@ public class Activity implements Serializable{
 		this.actType = actType;
 	}
 
-	public HashMap<String, String> getActivity() {
-		return activity;
+	public HashMap<String, String> getActivityData() {
+		return data;
 	}
 
-	public void setActivity(HashMap<String, String> activity) {
-		this.activity = activity;
+	public void setActivityData(HashMap<String, String> data) {
+		this.data = data;
 	}
 
 	

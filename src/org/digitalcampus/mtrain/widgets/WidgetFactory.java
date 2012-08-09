@@ -23,6 +23,7 @@ public abstract class WidgetFactory extends LinearLayout{
 	public LayoutInflater getLayoutInflater(){
 		return li;
 	}
+	
 	public LinearLayout getLayout(){
 		return ll;
 	}

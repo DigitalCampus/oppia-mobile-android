@@ -48,7 +48,7 @@ public class MQuizWidget extends WidgetFactory {
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
 		
 		// TODO error check that "content" is in the hashmap
-		quizContent = activity.getActivity().get("content");
+		quizContent = activity.getActivityData().get("content");
 		mQuiz = new MQuiz();
 		mQuiz.load(quizContent);
 

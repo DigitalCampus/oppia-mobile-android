@@ -52,7 +52,7 @@ public class ModuleActivity extends Activity {
     	ArrayList<org.digitalcampus.mtrain.model.Activity> acts = section.getActivities();
     	TextView tb = (TextView) this.findViewById(R.id.module_activity_title);
     	
-    	tb.setText(acts.get(this.currentActivityNo).getActivity().get("title"));
+    	tb.setText(acts.get(this.currentActivityNo).getActivityData().get("title"));
     	
     	if(acts.get(this.currentActivityNo).getActType().equals("page")){
     		currentActivity = (PageWidget) new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
