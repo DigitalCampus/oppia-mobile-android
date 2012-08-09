@@ -35,6 +35,7 @@ public class MQuizWidget extends WidgetFactory {
 	private Button prevBtn;
 	private Button nextBtn;
 	private TextView qText;
+	private String quizContent;
 	
 	public MQuizWidget(Context context, Module module, Activity activity) {
 		super(context, module, activity);
@@ -47,9 +48,9 @@ public class MQuizWidget extends WidgetFactory {
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
 		
 		// TODO error check that "content" is in the hashmap
-		String quiz = activity.getActivity().get("content");
+		quizContent = activity.getActivity().get("content");
 		mQuiz = new MQuiz();
-		mQuiz.load(quiz);
+		mQuiz.load(quizContent);
 
 		this.showQuestion();
 	}
@@ -219,6 +220,10 @@ public class MQuizWidget extends WidgetFactory {
 
 	private void restart() {
 		Log.d(TAG,"restarting");
+		mQuiz = new MQuiz();
+		mQuiz.load(quizContent);
+
+		this.showQuestion();
 	}
 
 }
