@@ -89,7 +89,7 @@ public class ModuleXMLReader {
 				String actType = activityAttrs.getNamedItem("type").getTextContent();
 				//TODO add error checking with conversion to ints
 				int actId = Integer.parseInt(activityAttrs.getNamedItem("id").getTextContent());
-				String hash = activityAttrs.getNamedItem("hash").getTextContent();
+				String digest = activityAttrs.getNamedItem("digest").getTextContent();
 				Log.v(TAG,String.valueOf(actId));
 				Log.v(TAG,actType);
 				Activity a = new Activity();
@@ -97,7 +97,7 @@ public class ModuleXMLReader {
 				a.setActId(actId);
 				a.setSectionId(sectionId);
 				a.setActType(actType);
-				a.setHash(hash);
+				a.setDigest(digest);
 				acts.add(a);
 			}
 		}

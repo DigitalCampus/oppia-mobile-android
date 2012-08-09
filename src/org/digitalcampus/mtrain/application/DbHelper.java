@@ -34,14 +34,14 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String ACTIVITY_C_SECTIONID = "sectionid";
 	public static final String ACTIVITY_C_ACTID = "activityid";
 	public static final String ACTIVITY_C_ACTTYPE = "activitytype";
-	public static final String ACTIVITY_C_ACTIVITYENCRYPT = "activityencrypt";
+	public static final String ACTIVITY_C_ACTIVITYDIGEST = "digest";
 
 	public static final String LOG_TABLE = "Log";
 	public static final String LOG_C_ID = BaseColumns._ID;
 	public static final String LOG_C_MODID = "modid"; // reference to
 														// MODULE_C_ID
 	public static final String LOG_C_DATETIME = "logdatetime";
-	public static final String LOG_C_ACTIVITYENCRYPT = "activityencrypt";
+	public static final String LOG_C_ACTIVITYDIGEST = "digest";
 	public static final String LOG_C_DATA = "logdata";
 	public static final String LOG_C_SUBMITTED = "logsubmitted";
 
@@ -72,7 +72,7 @@ public class DbHelper extends SQLiteOpenHelper {
 									ACTIVITY_C_SECTIONID + " int, " + 
 									ACTIVITY_C_ACTID + " int, " + 
 									ACTIVITY_C_ACTTYPE + " text, " + 
-									ACTIVITY_C_ACTIVITYENCRYPT + " text)";
+									ACTIVITY_C_ACTIVITYDIGEST + " text)";
 		Log.d(TAG, "Activity sql: " + a_sql);
 		db.execSQL(a_sql);
 	}
@@ -82,7 +82,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				LOG_C_ID + " integer primary key autoincrement, " + 
 				LOG_C_MODID + " integer, " + 
 				LOG_C_DATETIME + " datetime default current_timestamp, " + 
-				LOG_C_ACTIVITYENCRYPT + " text, " + 
+				LOG_C_ACTIVITYDIGEST + " text, " + 
 				LOG_C_DATA + " text, " + 
 				LOG_C_SUBMITTED + " integer default 0)";
 		Log.d(TAG, "Log sql: " + l_sql);
@@ -152,7 +152,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(DbHelper.ACTIVITY_C_SECTIONID, a.getSectionId());
 			values.put(DbHelper.ACTIVITY_C_ACTID, a.getActId());
 			values.put(DbHelper.ACTIVITY_C_ACTTYPE, a.getActType());
-			values.put(DbHelper.ACTIVITY_C_ACTIVITYENCRYPT, a.getHash());
+			values.put(DbHelper.ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
 			Log.d(TAG, "Inserted activity");
 			db.insertOrThrow(DbHelper.ACTIVITY_TABLE, null, values);
 		}

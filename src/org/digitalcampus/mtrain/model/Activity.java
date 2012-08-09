@@ -19,14 +19,14 @@ public class Activity implements Serializable{
 	private int actId;
 	private String actType;
 	private HashMap<String, String> activity;
-	private String hash;
+	private String digest;
 	
-	public String getHash() {
-		return hash;
+	public String getDigest() {
+		return digest;
 	}
 
-	public void setHash(String hash) {
-		this.hash = hash;
+	public void setDigest(String digest) {
+		this.digest = digest;
 	}
 
 	public Activity(){
