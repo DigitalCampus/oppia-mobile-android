@@ -89,7 +89,7 @@ public class ModuleXMLReader {
 				String actType = activityAttrs.getNamedItem("type").getTextContent();
 				//TODO add error checking with conversion to ints
 				int actId = Integer.parseInt(activityAttrs.getNamedItem("id").getTextContent());
-				
+				String hash = activityAttrs.getNamedItem("hash").getTextContent();
 				Log.v(TAG,String.valueOf(actId));
 				Log.v(TAG,actType);
 				Activity a = new Activity();
@@ -97,20 +97,7 @@ public class ModuleXMLReader {
 				a.setActId(actId);
 				a.setSectionId(sectionId);
 				a.setActType(actType);
-				//make md5 for activity (how depends on type of activity)
-				if(actType.equalsIgnoreCase("quiz")){
-					String content = this.getChildNodeByName(activities.item(j),"content").getTextContent();
-					String md5 = Utils.createMD5(content);
-					Log.d(TAG,"quiz:" + md5);
-					a.setMd5(md5);
-				}
-				if(actType.equalsIgnoreCase("page")){
-					String location = this.getChildNodeByName(activities.item(j),"location").getTextContent();
-					Log.d(TAG,this.getTempFilePath()+ "/" + location);
-					String md5 = Utils.createMD5FromFile(this.getTempFilePath()+ "/" + location);
-					Log.d(TAG,"page:" + md5);
-					a.setMd5(md5);
-				}
+				a.setHash(hash);
 				acts.add(a);
 			}
 		}

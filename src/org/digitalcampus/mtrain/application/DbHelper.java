@@ -152,7 +152,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(DbHelper.ACTIVITY_C_SECTIONID, a.getSectionId());
 			values.put(DbHelper.ACTIVITY_C_ACTID, a.getActId());
 			values.put(DbHelper.ACTIVITY_C_ACTTYPE, a.getActType());
-			values.put(DbHelper.ACTIVITY_C_ACTIVITYENCRYPT, a.getMd5());
+			values.put(DbHelper.ACTIVITY_C_ACTIVITYENCRYPT, a.getHash());
 			Log.d(TAG, "Inserted activity");
 			db.insertOrThrow(DbHelper.ACTIVITY_TABLE, null, values);
 		}
