@@ -3,7 +3,7 @@ package org.digitalcampus.mtrain.widgets;
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.model.Module;
-import org.digitalcampus.mtrain.utils.FileUtils;
+import org.digitalcampus.mtrain.utils.Utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -49,7 +49,7 @@ public class PageWidget extends WidgetFactory {
 					Log.d(TAG, videoFileName);
 
 					// check video file exists
-					boolean exists = FileUtils.mediaFileExists(videoFileName);
+					boolean exists = Utils.mediaFileExists(videoFileName);
 					if (exists) {
 						// launch intent to play video
 						Intent intent = new Intent(android.content.Intent.ACTION_VIEW);

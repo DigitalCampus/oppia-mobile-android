@@ -17,7 +17,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
 	static final String DB_NAME = "mtrain.db";
-	static final int DB_VERSION = 12;
+	static final int DB_VERSION = 1;
 
 	private SQLiteDatabase db;
 
@@ -66,9 +66,13 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void createActivityTable(SQLiteDatabase db){
-		String a_sql = "create table " + ACTIVITY_TABLE + " (" + ACTIVITY_C_ID + " integer primary key autoincrement, "
-				+ ACTIVITY_C_MODID + " int, " + ACTIVITY_C_SECTIONID + " int, " + ACTIVITY_C_ACTID + " int, "
-				+ ACTIVITY_C_ACTTYPE + " text)";
+		String a_sql = "create table " + ACTIVITY_TABLE + " (" + 
+									ACTIVITY_C_ID + " integer primary key autoincrement, " + 
+									ACTIVITY_C_MODID + " int, " + 
+									ACTIVITY_C_SECTIONID + " int, " + 
+									ACTIVITY_C_ACTID + " int, " + 
+									ACTIVITY_C_ACTTYPE + " text, " + 
+									ACTIVITY_C_ACTIVITYENCRYPT + " text)";
 		Log.d(TAG, "Activity sql: " + a_sql);
 		db.execSQL(a_sql);
 	}
@@ -87,11 +91,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-		if(oldVersion <= 11){
-			String a_sql = "alter table " + ACTIVITY_TABLE + " add column " + ACTIVITY_C_ACTIVITYENCRYPT + " text";
-			Log.d(TAG, "sql: " + a_sql);
-			db.execSQL(a_sql);
-		}
 
 	}
 
@@ -153,6 +152,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(DbHelper.ACTIVITY_C_SECTIONID, a.getSectionId());
 			values.put(DbHelper.ACTIVITY_C_ACTID, a.getActId());
 			values.put(DbHelper.ACTIVITY_C_ACTTYPE, a.getActType());
+			values.put(DbHelper.ACTIVITY_C_ACTIVITYENCRYPT, a.getMd5());
 			Log.d(TAG, "Inserted activity");
 			db.insertOrThrow(DbHelper.ACTIVITY_TABLE, null, values);
 		}

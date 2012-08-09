@@ -23,6 +23,9 @@ public class ModuleXMLReader {
 
 	public static final String TAG = "ModuleXMLReader";
 	private Document document;
+	private String tempFilePath;
+
+	
 
 	public ModuleXMLReader(String filename) {
 		// TODO check that it's a valid module xml file else throw error
@@ -47,6 +50,14 @@ public class ModuleXMLReader {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public String getTempFilePath() {
+		return tempFilePath;
+	}
+
+	public void setTempFilePath(String tempFilePath) {
+		this.tempFilePath = tempFilePath;
 	}
 	
 	public HashMap<String, String> getMeta(){
@@ -86,6 +97,20 @@ public class ModuleXMLReader {
 				a.setActId(actId);
 				a.setSectionId(sectionId);
 				a.setActType(actType);
+				//make md5 for activity (how depends on type of activity)
+				if(actType.equalsIgnoreCase("quiz")){
+					String content = this.getChildNodeByName(activities.item(j),"content").getTextContent();
+					String md5 = Utils.createMD5(content);
+					Log.d(TAG,"quiz:" + md5);
+					a.setMd5(md5);
+				}
+				if(actType.equalsIgnoreCase("page")){
+					String location = this.getChildNodeByName(activities.item(j),"location").getTextContent();
+					Log.d(TAG,this.getTempFilePath()+ "/" + location);
+					String md5 = Utils.createMD5FromFile(this.getTempFilePath()+ "/" + location);
+					Log.d(TAG,"page:" + md5);
+					a.setMd5(md5);
+				}
 				acts.add(a);
 			}
 		}

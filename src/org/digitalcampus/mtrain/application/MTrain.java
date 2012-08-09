@@ -3,7 +3,7 @@ package org.digitalcampus.mtrain.application;
 import java.io.File;
 import java.util.HashMap;
 
-import org.digitalcampus.mtrain.utils.FileUtils;
+import org.digitalcampus.mtrain.utils.Utils;
 import org.digitalcampus.mtrain.utils.ModuleXMLReader;
 
 import android.app.Application;
@@ -80,7 +80,7 @@ public class MTrain extends Application {
 				// extract to temp dir and check it's a valid package file
 				File tempdir = new File(MTrain.MTRAIN_ROOT + "temp/");
 				tempdir.mkdirs();
-				FileUtils.unzipFiles(MTrain.DOWNLOAD_PATH, children[i],
+				Utils.unzipFiles(MTrain.DOWNLOAD_PATH, children[i],
 						tempdir.getAbsolutePath());
 
 				String[] moddirs = tempdir.list(); // use this to get the module
@@ -101,16 +101,19 @@ public class MTrain extends Application {
 				long added = db.addOrUpdateModule(versionid, title, location);
 
 				if(added != -1){
-					db.insertActivities(mxr.getActivities(added));
-					// Delete old module 
-					File oldMod = new File(MTrain.MODULES_PATH + moddirs[0]);
-					FileUtils.deleteDir(oldMod);
-					
-					// move from temp to modules dir
 					File src = new File(tempdir + "/" + moddirs[0]);
 					File dest = new File(MTrain.MODULES_PATH);
+					mxr.setTempFilePath(tempdir + "/" + moddirs[0]);
+					
+					db.insertActivities(mxr.getActivities(added));
+					
+					// Delete old module 
+					File oldMod = new File(MTrain.MODULES_PATH + moddirs[0]);
+					Utils.deleteDir(oldMod);
+					
+					// move from temp to modules dir
 					boolean success = src.renameTo(new File(dest, src.getName()));
-	
+
 			        if (success) {
 			            Log.v(TAG,"File was successfully moved");
 			        } else {
@@ -124,7 +127,7 @@ public class MTrain extends Application {
 				}
 				db.close();
 				// delete temp directory
-				FileUtils.deleteDir(tempdir);
+				Utils.deleteDir(tempdir);
 				Log.d(TAG,"Temp directory deleted");
 				
 				// TODO delete zip file from download dir 
