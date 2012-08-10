@@ -3,6 +3,7 @@ package org.digitalcampus.mtrain.adapter;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.application.Tracker;
 import org.digitalcampus.mtrain.model.Module;
 
 import android.app.Activity;
@@ -30,11 +31,16 @@ public class ModuleListAdapter extends ArrayAdapter<Module> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    
 	    View rowView = inflater.inflate(R.layout.module_list_row, parent, false);
-	    TextView textView = (TextView) rowView.findViewById(R.id.module_title);
-	    textView.setText(moduleList.get(position).getTitle());
-	    rowView.setTag(moduleList.get(position));
+	    Module m = moduleList.get(position);
+	    rowView.setTag(m);
+	    
+	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.module_title);
+	    moduleTitle.setText(m.getTitle());
+	    
+	    TextView moduleProgress = (TextView) rowView.findViewById(R.id.module_progress);
+	    moduleProgress.setText(String.valueOf(m.getProgress()));
+	    
 	    return rowView;
 	}
 

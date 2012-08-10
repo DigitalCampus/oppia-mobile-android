@@ -7,7 +7,8 @@ import android.content.Context;
 
 public class Tracker {
 
-	private Context ctx;
+	private final Context ctx;
+	
 	public Tracker(Context context){
 		this.ctx = context;
 	}
@@ -42,25 +43,5 @@ public class Tracker {
 		db.insertLog(modId, digest, data);
 		db.close();
 	}
-	
-	/*
-	 * Returns percentage of module progress
-	 */
-	public float getModuleProgress(int modid){
-		return 0;
-	}
-	
-	/*
-	 * Returns percentage of section progress
-	 */
-	public float getSectionProgress(int modId, int sectionId){
-		return 0;
-	}
-	
-	/*
-	 * Find if activity has been completed
-	 */
-	public boolean getActivityComplete(int modId, String digest){
-		return false;
-	}
+
 }

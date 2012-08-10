@@ -14,6 +14,15 @@ public class Module implements Serializable {
 	private String location;
 	private String title;
 	private String shortname;
+	private float progress = 0;
+
+	public float getProgress() {
+		return progress;
+	}
+
+	public void setProgress(float progress) {
+		this.progress = progress;
+	}
 
 	public Module() {
 

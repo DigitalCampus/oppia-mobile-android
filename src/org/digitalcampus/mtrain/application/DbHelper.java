@@ -161,6 +161,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			m.setModId(c.getInt(c.getColumnIndex(DbHelper.MODULE_C_ID)));
 			m.setLocation(c.getString(c.getColumnIndex(DbHelper.MODULE_C_LOCATION)));
 			m.setTitle(c.getString(c.getColumnIndex(DbHelper.MODULE_C_TITLE)));
+			m.setProgress(this.getModuleProgress(m.getModId()));
 			modules.add(m);
 			c.moveToNext();
 		}
@@ -174,5 +175,26 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(DbHelper.LOG_C_ACTIVITYDIGEST, digest);
 		values.put(DbHelper.LOG_C_DATA, data);
 		return db.insertOrThrow(DbHelper.LOG_TABLE, null, values);
+	}
+	
+	public float getModuleProgress(int modId){
+		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
+							"l."+ LOG_C_ACTIVITYDIGEST + 
+					 " as d FROM "+MODULE_TABLE + " m " +
+					" INNER JOIN " + ACTIVITY_TABLE + " a ON a." + ACTIVITY_C_MODID + " = m."+ MODULE_C_ID +
+					" LEFT OUTER JOIN (SELECT DISTINCT " +LOG_C_ACTIVITYDIGEST +" FROM "+LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+LOG_C_ACTIVITYDIGEST + 
+					" WHERE m."+ MODULE_C_ID +"=" + String.valueOf(modId);
+		Cursor c = db.rawQuery(sql,null);
+		int noActs = c.getCount();
+		int noComplete = 0;
+		c.moveToFirst();
+		while (c.isAfterLast() == false) {
+			if(c.getString(c.getColumnIndex("d")) != null){
+				noComplete++;
+			}
+			c.moveToNext();
+		}
+		c.close();
+		return noComplete*100/noActs;
 	}
 }
