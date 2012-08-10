@@ -1,16 +1,9 @@
 package org.digitalcampus.mtrain.application;
 
 import java.io.File;
-import java.util.HashMap;
-
-import org.digitalcampus.mtrain.utils.FileUtils;
-import org.digitalcampus.mtrain.utils.ModuleXMLReader;
 
 import android.app.Application;
-import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
 
 public class MTrain extends Application {
 
@@ -23,10 +16,9 @@ public class MTrain extends Application {
 	public static final String DOWNLOAD_PATH = MTRAIN_ROOT + "download/";
 	public static final String MODULE_XML = "module.xml";
 
-	private Context ctx;
 	
-	public MTrain(Context context){
-		this.ctx = context;
+	public MTrain(){
+		
 	}
 	
 	public static void createMTrainDirs() throws RuntimeException {

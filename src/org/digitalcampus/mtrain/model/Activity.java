@@ -3,8 +3,6 @@ package org.digitalcampus.mtrain.model;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import org.w3c.dom.Node;
-
 public class Activity implements Serializable{
 	
 	/**

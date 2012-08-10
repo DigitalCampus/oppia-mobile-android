@@ -5,8 +5,6 @@ import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.application.Tracker;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.utils.FileUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;

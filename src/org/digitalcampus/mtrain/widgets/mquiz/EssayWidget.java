@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 
 public class EssayWidget extends QuestionWidget {
 
-	private static final String TAG = "EssayWidget";
+	public static final String TAG = "EssayWidget";
 	
 	private Context ctx;
 	

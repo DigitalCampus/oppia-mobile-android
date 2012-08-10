@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 public class MatchingWidget extends QuestionWidget {
 
-	private static final String TAG = "MatchingWidget";
+	public static final String TAG = "MatchingWidget";
 	private LinearLayout responsesLL;
 	private LinearLayout[] responseLayouts;
 	private Context ctx;

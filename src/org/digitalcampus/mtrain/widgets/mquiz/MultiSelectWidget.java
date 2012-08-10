@@ -9,17 +9,14 @@ import org.digitalcampus.mtrain.R;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 public class MultiSelectWidget extends QuestionWidget {
 
-	private static final String TAG = "MultiSelectWidget";
+	public static final String TAG = "MultiSelectWidget";
 	private Context ctx;
 	private LinearLayout responsesLL;
 	

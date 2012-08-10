@@ -5,11 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.digitalcampus.mquiz.model.Response;
-
 import org.digitalcampus.mtrain.R;
+
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -17,7 +16,7 @@ import android.widget.LinearLayout;
 
 public class NumericalWidget extends QuestionWidget {
 
-	private static final String TAG = "NumericalWidget";
+	public static final String TAG = "NumericalWidget";
 	
 	private Context ctx;
 	
