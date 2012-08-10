@@ -3,12 +3,14 @@ package org.digitalcampus.mtrain.activity;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.adapter.ModuleListAdapter;
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.task.InstallModules;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -16,8 +18,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 public class MTrainActivity extends Activity {
 
@@ -53,7 +57,8 @@ public class MTrainActivity extends Activity {
     	InstallModules imTask = new InstallModules(MTrainActivity.this);
     	imTask.execute();
     	
-    	LinearLayout modulesLL = (LinearLayout) findViewById(R.id.modules);
+    	
+    	/*LinearLayout modulesLL = (LinearLayout) findViewById(R.id.modules);
     	DbHelper db = new DbHelper(this);
     	
     	// TODO show message if no modules installed yet
@@ -75,8 +80,20 @@ public class MTrainActivity extends Activity {
              });
         	modulesLL.addView(b);
     	}
-    	db.close();
+    	db.close();*/
         
+    }
+    
+    @Override
+    public void onStart(){
+    	super.onStart();
+    	ListView listView = (ListView) findViewById(R.id.module_list);
+    	
+    	DbHelper db = new DbHelper(this);
+    	ArrayList<Module> modules = db.getModules();
+    	db.close();
+    	ModuleListAdapter mla = new ModuleListAdapter(this, modules);
+    	listView.setAdapter(mla); 
     }
     
     @Override
