@@ -10,17 +10,10 @@ import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.task.InstallModules;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class MTrainActivity extends Activity {
