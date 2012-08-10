@@ -36,7 +36,6 @@ public class ModuleIndexActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	Log.v(TAG,module.getLocation()+"/"+ MTrain.MODULE_XML);
         	setTitle(module.getTitle());
         	TextView tv = (TextView) this.findViewById(R.id.module_title);
         	tv.setText(module.getTitle());
@@ -44,7 +43,6 @@ public class ModuleIndexActivity extends Activity {
         	
         	ArrayList<Section> sections = mxr.getSections(module.getModId());
         	for(Section s: sections){
-        		Log.v(TAG,s.getTitle());
         		Button b = new Button(this);
         		b.setTag(s);
         		b.setTypeface(Typeface.DEFAULT_BOLD);

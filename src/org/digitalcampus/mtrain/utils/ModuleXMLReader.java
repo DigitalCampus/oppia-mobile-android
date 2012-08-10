@@ -66,7 +66,6 @@ public class ModuleXMLReader {
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
 			hm.put(meta.item(j).getNodeName(), meta.item(j).getTextContent());
-			Log.v(TAG, meta.item(j).getNodeName() + ": " + meta.item(j).getTextContent());
 		}
 		return hm;
 	}
@@ -74,14 +73,12 @@ public class ModuleXMLReader {
 	public ArrayList<Activity> getActivities(long modId){
 		ArrayList<Activity>  acts = new ArrayList<Activity>();
 		Node struct = document.getFirstChild().getFirstChild().getNextSibling();
-		Log.v(TAG,struct.getNodeName());
 		NodeList s = struct.getChildNodes();
 		for (int i=0; i<s.getLength(); i++) {
 			// get the id and acts
 			NamedNodeMap sectionAttrs = s.item(i).getAttributes();
 			//TODO add error checking with conversion to ints
 			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("id").getTextContent());
-			Log.v(TAG,String.valueOf(sectionId));
 			NodeList activities = s.item(i).getLastChild().getChildNodes();
 			for (int j=0; j<activities.getLength(); j++) {
 				
@@ -90,8 +87,6 @@ public class ModuleXMLReader {
 				//TODO add error checking with conversion to ints
 				int actId = Integer.parseInt(activityAttrs.getNamedItem("id").getTextContent());
 				String digest = activityAttrs.getNamedItem("digest").getTextContent();
-				Log.v(TAG,String.valueOf(actId));
-				Log.v(TAG,actType);
 				Activity a = new Activity();
 				a.setModId(modId);
 				a.setActId(actId);
@@ -128,13 +123,11 @@ public class ModuleXMLReader {
 				a.setSectionId(sectionId);
 				a.setActivityData(this.nodetoHashMap(acts.item(j)));
 				a.setDigest(digest);
-				Log.d(TAG,digest);
 				s.addActivity(a);
 			}
 			
 			sections.add(s);
 			
-			Log.v(TAG,"added: "+ s.getTitle());
 		}
 		return sections;
 	}

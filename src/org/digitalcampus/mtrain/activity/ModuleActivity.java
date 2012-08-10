@@ -33,8 +33,6 @@ public class ModuleActivity extends Activity {
         if(bundle != null) {
         	section = (Section) bundle.getSerializable(Section.TAG);
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	Log.v(TAG,"title:" + module.getTitle());
-        	Log.v(TAG,"title:" + section.getTitle());
         	setTitle(section.getTitle());
         	loadActivity();
         }

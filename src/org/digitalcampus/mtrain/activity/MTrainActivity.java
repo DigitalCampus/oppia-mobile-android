@@ -6,6 +6,7 @@ import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.model.Module;
+import org.digitalcampus.mtrain.task.InstallModules;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -50,8 +51,8 @@ public class MTrainActivity extends Activity {
         // install any new modules
         // TODO show info to user that we're checking for new modules
         // TODO? scan already extracted modules and install these
-    	MTrain mt = new MTrain(MTrainActivity.this);
-    	mt.installNewDownloads();
+    	InstallModules imTask = new InstallModules(MTrainActivity.this);
+    	imTask.execute();
     	
     	LinearLayout modulesLL = (LinearLayout) findViewById(R.id.modules);
     	DbHelper db = new DbHelper(this);
@@ -59,7 +60,6 @@ public class MTrainActivity extends Activity {
     	// TODO show message if no modules installed yet
     	ArrayList<Module> modules = db.getModules();
     	for(Module m: modules){
-    		Log.v(TAG,m.getTitle());
     		Button b = new Button(this);
     		b.setTag(m);
     		b.setTypeface(Typeface.DEFAULT_BOLD);
