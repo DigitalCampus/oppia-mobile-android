@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/module_row">
+    android:layout_height="match_parent" 
+    android:id="@+id/section_row">
     
-    <TextView android:text="@+id/module_title" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/module_title"
+    <TextView android:text="@+id/section_title" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/section_title"
 		android:textSize="20dp" 
 		android:padding="10dp"
 		android:textStyle="bold"
