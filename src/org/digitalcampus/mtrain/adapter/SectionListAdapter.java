@@ -30,8 +30,12 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    
 	    View rowView = inflater.inflate(R.layout.section_list_row, parent, false);
-	    TextView textView = (TextView) rowView.findViewById(R.id.section_title);
-	    textView.setText(sectionList.get(position).getTitle());
+	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
+	    sectionTitle.setText(sectionList.get(position).getTitle());
+	    
+	    TextView sectionNo = (TextView) rowView.findViewById(R.id.section_number);
+	    sectionNo.setText(String.valueOf(sectionList.get(position).getSectionId()));
+	    
 	    rowView.setTag(sectionList.get(position));
 	    return rowView;
 	}

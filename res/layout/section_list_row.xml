@@ -2,13 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:id="@+id/section_row">
+    android:id="@+id/section_row"
+    android:orientation="horizontal"
+    android:minHeight="40dp">
     
-    <TextView android:text="@+id/section_title" android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/section_title"
+    <TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/section_number"
 		android:textSize="20dp" 
 		android:padding="10dp"
 		android:textStyle="bold"
-		android:minHeight="40dp"/>	
+		/>	
+		
+    <TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/section_title"
+		android:textSize="20dp" 
+		android:padding="10dp"
+		android:textStyle="bold"/>	
 
 </LinearLayout>

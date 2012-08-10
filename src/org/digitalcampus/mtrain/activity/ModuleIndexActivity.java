@@ -23,8 +23,9 @@ public class ModuleIndexActivity extends Activity {
 
 	public static final String TAG = "ModuleIndexActivity";
 	
-	protected Module module;
+	private Module module;
 	private ModuleXMLReader mxr;
+	private ArrayList<Section> sections;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,28 +40,34 @@ public class ModuleIndexActivity extends Activity {
         	tv.setText(module.getTitle());
         	
         	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
-        	ArrayList<Section> sections = mxr.getSections(module.getModId());
+        	sections = mxr.getSections(module.getModId());
         	
-        	ListView listView = (ListView) findViewById(R.id.section_list);
-        	SectionListAdapter sla = new SectionListAdapter(this, sections);
-        	listView.setAdapter(sla); 
         	
-        	listView.setOnItemClickListener(new OnItemClickListener() {
-
-    			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    				view.setBackgroundResource(R.drawable.background_gradient);
-    				Section s = (Section) view.getTag();    				
-    				Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
-    				Bundle tb = new Bundle();
-    				tb.putSerializable(Section.TAG, (Section) s);
-    				tb.putSerializable(Module.TAG, (Module) module);
-    				i.putExtras(tb);
-             		startActivity(i);
-    			}
-    		});
         }
     }
 
+    @Override
+	public void onStart() {
+		super.onStart();
+		ListView listView = (ListView) findViewById(R.id.section_list);
+    	SectionListAdapter sla = new SectionListAdapter(this, sections);
+    	listView.setAdapter(sla); 
+    	
+    	listView.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				view.setBackgroundResource(R.drawable.background_gradient);
+				Section s = (Section) view.getTag();    				
+				Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
+				Bundle tb = new Bundle();
+				tb.putSerializable(Section.TAG, (Section) s);
+				tb.putSerializable(Module.TAG, (Module) module);
+				i.putExtras(tb);
+         		startActivity(i);
+			}
+		});
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_module_index, menu);
