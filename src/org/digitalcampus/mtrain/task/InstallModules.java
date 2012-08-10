@@ -11,7 +11,6 @@ import org.digitalcampus.mtrain.utils.ModuleXMLReader;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 public class InstallModules extends AsyncTask<Payload, Object, Payload>
 
@@ -77,12 +76,7 @@ public class InstallModules extends AsyncTask<Payload, Object, Payload>
 					} else {
 						Log.v(TAG, "File was not successfully moved");
 					}
-					// Show user that modules has been installed
-					// TODO change to use string param
-					Toast.makeText(ctx, "Module: '" + title + "' successfully installed", Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(ctx, "Error installing module", Toast.LENGTH_SHORT).show();
-				}
+				} 
 				db.close();
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);

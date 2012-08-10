@@ -117,10 +117,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
 			long toUpdate = 0;
 			while (c.isAfterLast() == false) {
-				Log.v(TAG, "Installed version:" + c.getString(c.getColumnIndex(DbHelper.MODULE_C_VERSIONID)));
+				Log.v(TAG, "Installed version: " + c.getString(c.getColumnIndex(DbHelper.MODULE_C_VERSIONID)));
 				Log.v(TAG, "New version: " + versionid);
 				if (Long.valueOf(versionid) > c.getLong(c.getColumnIndex(DbHelper.MODULE_C_VERSIONID))) {
-					Log.d(TAG, "getting record to update");
 					toUpdate = c.getLong(c.getColumnIndex(DbHelper.MODULE_C_ID));
 				}
 				c.moveToNext();
@@ -131,14 +130,9 @@ public class DbHelper extends SQLiteOpenHelper {
 				// remove all the old activities
 				String s = DbHelper.ACTIVITY_C_MODID + "=?";
 				String[] args = new String[] { String.valueOf(toUpdate) };
-				Log.d(TAG, s);
-				Log.d(TAG, args[0]);
 				db.delete(DbHelper.ACTIVITY_TABLE, s, args);
-
-				Log.d(TAG, "Record updated");
 				return toUpdate;
 			} else {
-				Log.d(TAG, "Record not updated");
 				return -1;
 			}
 		}
@@ -153,7 +147,6 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(DbHelper.ACTIVITY_C_ACTID, a.getActId());
 			values.put(DbHelper.ACTIVITY_C_ACTTYPE, a.getActType());
 			values.put(DbHelper.ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
-			Log.d(TAG, "Inserted activity");
 			db.insertOrThrow(DbHelper.ACTIVITY_TABLE, null, values);
 		}
 	}

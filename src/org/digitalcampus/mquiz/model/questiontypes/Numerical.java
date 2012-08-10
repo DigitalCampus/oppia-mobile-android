@@ -9,8 +9,6 @@ import java.util.List;
 import org.digitalcampus.mquiz.model.QuizQuestion;
 import org.digitalcampus.mquiz.model.Response;
 
-import android.util.Log;
-
 public class Numerical implements Serializable, QuizQuestion {
 	
 	private static final long serialVersionUID = 808485823168202643L;

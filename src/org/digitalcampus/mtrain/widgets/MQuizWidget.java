@@ -6,6 +6,7 @@ import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.mquiz.model.QuizQuestion;
 import org.digitalcampus.mquiz.model.questiontypes.*;
 import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.application.Tracker;
 import org.digitalcampus.mtrain.model.Activity;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.widgets.mquiz.*;
@@ -36,10 +37,15 @@ public class MQuizWidget extends WidgetFactory {
 	private Button nextBtn;
 	private TextView qText;
 	private String quizContent;
+	private Module module;
+	private Activity activity;
 	
 	public MQuizWidget(Context context, Module module, Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
+		this.module = module;
+		this.activity = activity;
+		
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
 		super.getLayout().addView(vv);
 
@@ -178,6 +184,10 @@ public class MQuizWidget extends WidgetFactory {
 	private void showResults() {
 		mQuiz.mark();
 		float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
+		
+		// log the activity as complete
+		Tracker t = new Tracker(this.ctx);
+		t.activityComplete(module.getModId(), activity.getDigest());
 		
 		// TODO save results somewhere ready to send back to the mquiz server
 		

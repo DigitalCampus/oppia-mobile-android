@@ -9,8 +9,6 @@ import java.util.List;
 import org.digitalcampus.mquiz.model.QuizQuestion;
 import org.digitalcampus.mquiz.model.Response;
 
-import android.util.Log;
-
 public class MultiSelect implements Serializable, QuizQuestion {
 
 	private static final long serialVersionUID = 936284577467681053L;
