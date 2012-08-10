@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.model.Activity;
 import org.digitalcampus.mtrain.model.Section;
 import org.w3c.dom.Document;
@@ -16,6 +17,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import android.content.Context;
 
 public class ModuleXMLReader {
 
@@ -97,7 +100,7 @@ public class ModuleXMLReader {
 		return acts;
 	}
 	
-	public ArrayList<Section> getSections(int modId){
+	public ArrayList<Section> getSections(int modId, Context ctx){
 		ArrayList<Section> sections = new ArrayList<Section>();
 		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
 		for (int i=0; i<sects.getLength(); i++){
@@ -107,6 +110,10 @@ public class ModuleXMLReader {
 			Section s = new Section();
 			s.setSectionId(sectionId);
 			s.setTitle(title);
+			DbHelper db = new DbHelper(ctx);
+			float progress = db.getSectionProgress(modId, sectionId);
+			db.close();
+			s.setProgress(progress);
 			//now get activities
 			NodeList acts = this.getChildNodeByName(sects.item(i),"activities").getChildNodes();
 			for(int j=0; j<acts.getLength();j++){

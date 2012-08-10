@@ -179,11 +179,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public float getModuleProgress(int modId){
 		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
-							"l."+ LOG_C_ACTIVITYDIGEST + 
-					 " as d FROM "+MODULE_TABLE + " m " +
-					" INNER JOIN " + ACTIVITY_TABLE + " a ON a." + ACTIVITY_C_MODID + " = m."+ MODULE_C_ID +
-					" LEFT OUTER JOIN (SELECT DISTINCT " +LOG_C_ACTIVITYDIGEST +" FROM "+LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+LOG_C_ACTIVITYDIGEST + 
-					" WHERE m."+ MODULE_C_ID +"=" + String.valueOf(modId);
+				"l."+ LOG_C_ACTIVITYDIGEST + 
+				" as d FROM "+ACTIVITY_TABLE + " a " +
+				" LEFT OUTER JOIN (SELECT DISTINCT " +LOG_C_ACTIVITYDIGEST +" FROM "+LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+LOG_C_ACTIVITYDIGEST + 
+				" WHERE a."+ ACTIVITY_C_MODID +"=" + String.valueOf(modId);
 		Cursor c = db.rawQuery(sql,null);
 		int noActs = c.getCount();
 		int noComplete = 0;
@@ -196,5 +195,28 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		c.close();
 		return noComplete*100/noActs;
+	}
+	
+	public float getSectionProgress(int modId, int sectionId){
+		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
+						"l."+ LOG_C_ACTIVITYDIGEST + 
+						" as d FROM "+ACTIVITY_TABLE + " a " +
+						" LEFT OUTER JOIN (SELECT DISTINCT " +LOG_C_ACTIVITYDIGEST +" FROM "+LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+LOG_C_ACTIVITYDIGEST + 
+						" WHERE a."+ ACTIVITY_C_MODID +"=" + String.valueOf(modId) +
+						" AND a."+ ACTIVITY_C_SECTIONID +"=" + String.valueOf(sectionId);
+		
+		Cursor c = db.rawQuery(sql,null);
+		int noActs = c.getCount();
+		int noComplete = 0;
+		c.moveToFirst();
+		while (c.isAfterLast() == false) {
+			if(c.getString(c.getColumnIndex("d")) != null){
+				noComplete++;
+			}
+			c.moveToNext();
+		}
+		c.close();
+		return noComplete*100/noActs;
+		
 	}
 }

@@ -31,10 +31,15 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    
 	    View rowView = inflater.inflate(R.layout.section_list_row, parent, false);
 	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
-	    sectionTitle.setText(sectionList.get(position).getTitle());
+	    
+	    Section s = sectionList.get(position);
+	    sectionTitle.setText(s.getTitle());
 	    
 	    TextView sectionNo = (TextView) rowView.findViewById(R.id.section_number);
-	    sectionNo.setText(String.valueOf(sectionList.get(position).getSectionId()));
+	    sectionNo.setText(String.valueOf(s.getSectionId()));
+	    
+	    TextView sectionProgress = (TextView) rowView.findViewById(R.id.section_progress);
+	    sectionProgress.setText(String.format("%.0f%%", s.getProgress()));
 	    
 	    rowView.setTag(sectionList.get(position));
 	    return rowView;

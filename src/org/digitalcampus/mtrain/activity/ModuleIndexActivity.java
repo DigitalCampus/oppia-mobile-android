@@ -38,17 +38,16 @@ public class ModuleIndexActivity extends Activity {
         	setTitle(module.getTitle());
         	TextView tv = (TextView) this.findViewById(R.id.module_title);
         	tv.setText(module.getTitle());
-        	
-        	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
-        	sections = mxr.getSections(module.getModId());
-        	
-        	
         }
     }
 
     @Override
 	public void onStart() {
 		super.onStart();
+		
+		mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
+    	sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
+    	
 		ListView listView = (ListView) findViewById(R.id.section_list);
     	SectionListAdapter sla = new SectionListAdapter(this, sections);
     	listView.setAdapter(sla); 

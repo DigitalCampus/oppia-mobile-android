@@ -3,7 +3,6 @@ package org.digitalcampus.mtrain.adapter;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.application.Tracker;
 import org.digitalcampus.mtrain.model.Module;
 
 import android.app.Activity;
@@ -39,8 +38,7 @@ public class ModuleListAdapter extends ArrayAdapter<Module> {
 	    moduleTitle.setText(m.getTitle());
 	    
 	    TextView moduleProgress = (TextView) rowView.findViewById(R.id.module_progress);
-	    moduleProgress.setText(String.valueOf(m.getProgress()));
-	    
+	    moduleProgress.setText(String.format("%.0f%%", m.getProgress()));
 	    return rowView;
 	}
 

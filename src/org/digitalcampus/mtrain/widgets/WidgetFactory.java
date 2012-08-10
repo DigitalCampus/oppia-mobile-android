@@ -5,6 +5,7 @@ import org.digitalcampus.mtrain.model.Module;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
@@ -19,6 +20,7 @@ public abstract class WidgetFactory extends LinearLayout{
 		ll.removeAllViews();
 		li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
+
 	
 	public LayoutInflater getLayoutInflater(){
 		return li;

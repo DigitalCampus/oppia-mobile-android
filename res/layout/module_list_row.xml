@@ -3,22 +3,28 @@
     android:id="@+id/module_row"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="40dp" >
+    android:orientation="horizontal"
+    android:minHeight="40dp" 
+    android:weightSum="1.0">
 
     <TextView
         android:id="@+id/module_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="0.75"
         android:padding="10dp"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:textStyle="bold" 
+        />
     
     <TextView
         android:id="@+id/module_progress"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="0.25"
         android:padding="10dp"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        />
 
 </LinearLayout>

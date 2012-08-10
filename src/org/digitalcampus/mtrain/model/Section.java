@@ -14,7 +14,16 @@ public class Section implements Serializable  {
 	private int sectionId;
 	private String title;
 	private ArrayList<Activity> activities;
+	private float progress = 0;
 	
+	public float getProgress() {
+		return progress;
+	}
+
+	public void setProgress(float progress) {
+		this.progress = progress;
+	}
+
 	public Section(){
 		activities = new ArrayList<Activity>();
 	}
