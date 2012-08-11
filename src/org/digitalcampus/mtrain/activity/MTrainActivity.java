@@ -122,6 +122,24 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 		return true;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.menu_about:
+	            return true;
+	        case R.id.menu_download:
+	        	Intent i = new Intent(MTrainActivity.this, DownloadActivity.class);
+	        	startActivity(i);
+	            return true;
+	        case R.id.menu_settings:
+	            return true;
+	        case R.id.menu_language:
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 	public void installComplete() {
 		Log.d(TAG,"Listener says install complete");
 		DbHelper db = new DbHelper(this);

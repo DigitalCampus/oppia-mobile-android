@@ -38,6 +38,11 @@
             android:label="@string/title_activity_module" >
         
         </activity>
+         <activity
+            android:name=".activity.DownloadActivity"
+            android:label="@string/title_download_activity" >
+        
+        </activity>
     </application>
 
 </manifest>
