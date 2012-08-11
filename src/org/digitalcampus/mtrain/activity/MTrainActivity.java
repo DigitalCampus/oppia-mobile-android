@@ -9,7 +9,7 @@ import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.listener.InstallModuleListener;
 import org.digitalcampus.mtrain.model.Module;
-import org.digitalcampus.mtrain.task.InstallModules;
+import org.digitalcampus.mtrain.task.InstallModulesTask;
 import org.digitalcampus.mtrain.utils.FileUtils;
 
 import android.app.Activity;
@@ -64,7 +64,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 		if (children == null) {
 			// Either dir does not exist or is not a directory
 		} else {
-			InstallModules imTask = new InstallModules(MTrainActivity.this);
+			InstallModulesTask imTask = new InstallModulesTask(MTrainActivity.this);
 			imTask.setInstallerListener(this);
 			imTask.execute();
 		}

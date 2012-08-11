@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_gradient"
+        android:minHeight="50dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:text="@string/menu_download"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".8" 
+            android:padding="@dimen/padding_medium"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            
+            />
+    </LinearLayout>
+
+    <ListView  
+         android:id="@+id/module_list"
+         android:layout_width="fill_parent" 
+         android:layout_height="wrap_content" 
+         />
+
+</LinearLayout>

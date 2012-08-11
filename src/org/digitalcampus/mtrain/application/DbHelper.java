@@ -248,10 +248,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.delete(DbHelper.MODULE_TABLE, s, args);
 	}
 	
-	// TODO change to use shortname
-	public boolean isInstalled(String title){
-		String s = DbHelper.MODULE_C_TITLE + "=?";
-		String[] args = new String[] { title };
+	public boolean isInstalled(String shortname){
+		String s = DbHelper.MODULE_C_SHORTNAME + "=?";
+		String[] args = new String[] { shortname };
 		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
 			c.close();
@@ -263,7 +262,15 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public boolean toUpdate(String shortname, Double version){
-		
-		return false;
+		String s = DbHelper.MODULE_C_SHORTNAME + "=? AND "+ MODULE_C_VERSIONID + "< ?";
+		String[] args = new String[] { shortname, String.format("%.0f", version) };
+		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		if(c.getCount() == 0){
+			c.close();
+			return false;
+		} else {
+			c.close();
+			return true;
+		}
 	}
 }

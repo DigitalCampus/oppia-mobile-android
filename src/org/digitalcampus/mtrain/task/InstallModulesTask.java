@@ -13,14 +13,14 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class InstallModules extends AsyncTask<Payload, Object, Payload>
+public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 
 {
 	private final static String TAG = "InstallModules";
 	private Context ctx;
 	private InstallModuleListener mStateListener;
 
-	public InstallModules(Context ctx) {
+	public InstallModulesTask(Context ctx) {
 		this.ctx = ctx;
 	}
 

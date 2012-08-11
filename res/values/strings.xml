@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">mTrain</string>
-    <string name="menu_download">Download</string>
+    <string name="menu_download">Add module</string>
     <string name="menu_language">Change language</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_about">About</string>
@@ -12,7 +12,7 @@
     <string name="main_tagline">by Digital Campus</string>
     <string name="title_activity_module_index">Module Index</string>
     <string name="title_activity_module">Activity</string>
-    <string name="title_download_activity">Download</string>
+    <string name="title_download_activity">Add module</string>
     
     <string name="activity_module_button_prev">&lt;</string>
     <string name="activity_module_button_next">&gt;</string>
