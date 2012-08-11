@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class FileUtils {
 	
-	public static final String TAG = "Utils";
+	public static final String TAG = "FileUtils";
 	public static final int BUFFER_SIZE = 1024;
 
 	// This function converts the zip file into uncompressed files which are
@@ -80,7 +80,7 @@ public class FileUtils {
 				String outputFilename = destDirectory + File.separator
 						+ entry.getName();
 
-				Log.v(TAG,"Extracting file: " + entry.getName());
+				//Log.v(TAG,"Extracting file: " + entry.getName());
 
 				createDirIfNeeded(destDirectory, entry);
 

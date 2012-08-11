@@ -26,7 +26,6 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 
 	protected Payload doInBackground(Payload... params) {
 
-		
 		// get folder
 		File dir = new File(MTrain.DOWNLOAD_PATH);
 
@@ -37,8 +36,6 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 			Log.d(TAG, "Installing new modules");
 			publishProgress("Installing new module");
 			for (int i = 0; i < children.length; i++) {
-				// Get filename of file or directory
-				Log.v(TAG, children[i]);
 
 				// extract to temp dir and check it's a valid package file
 				File tempdir = new File(MTrain.MTRAIN_ROOT + "temp/");
@@ -49,7 +46,6 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 													// name
 				// check a module.xml file exists and is a readable XML file
 				String moduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MTrain.MODULE_XML;
-				Log.v(TAG, moduleXMLPath);
 
 				ModuleXMLReader mxr = new ModuleXMLReader(moduleXMLPath);
 				HashMap<String, String> hm = mxr.getMeta();
@@ -102,10 +98,13 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 	}
 
 	protected void onProgressUpdate(String... obj) {
+		Log.d(TAG,"hello....");
 		synchronized (this) {
             if (mStateListener != null) {
                 // update progress and total
-                mStateListener.progressUpdate(obj[0]);
+                mStateListener.installProgressUpdate(obj[0]);
+            } else {
+            	Log.d(TAG,"listener is null?");
             }
         }
 	}

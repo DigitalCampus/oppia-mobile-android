@@ -26,7 +26,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.ListView;
 
 public class DownloadActivity extends Activity {
@@ -68,7 +67,7 @@ public class DownloadActivity extends Activity {
         task.execute(url);
 	}
 	
-	
+	// TODO move this task to be its own class
 	private class GetModuleListTask extends AsyncTask<String, String, String>{
     	
     	@Override
@@ -134,11 +133,9 @@ public class DownloadActivity extends Activity {
 				json = new JSONArray(response);
 				refreshModuleList();
 			} catch (JSONException e){
-				Log.d(TAG,response);
 				showAlert("Error", response);
 				e.printStackTrace();
 			}
-			Log.d(TAG,"Got list:" + response);
 			
     	}
     }
@@ -165,18 +162,10 @@ public class DownloadActivity extends Activity {
 			    modules.add(dm);
 			}
     		db.close();
-    		
-    		
+
     		DownloadListAdapter mla = new DownloadListAdapter(this, modules);
     		ListView listView = (ListView) findViewById(R.id.module_list);
     		listView.setAdapter(mla);
-    		/*
-    		    
-    		qa = new QuizAdapter(this, quizList);
-			
-			this.setListAdapter(qa);
-			*/
-		
 			
 		} catch (Exception e){
 			e.printStackTrace();

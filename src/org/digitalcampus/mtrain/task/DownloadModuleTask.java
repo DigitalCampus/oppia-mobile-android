@@ -47,7 +47,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
 		synchronized (this) {
             if (mStateListener != null) {
                 // update progress and total
-                mStateListener.progressUpdate(obj[0]);
+                mStateListener.downloadProgressUpdate(obj[0]);
             }
         }
 	}

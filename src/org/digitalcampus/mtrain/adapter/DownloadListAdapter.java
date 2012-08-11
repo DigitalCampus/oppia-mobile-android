@@ -92,26 +92,30 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements
 	}
 
 	public void downloadComplete() {
-		// TODO Auto-generated method stub
 		myProgress.setMessage("Download complete");
 		// now set task to install
 		InstallModulesTask imTask = new InstallModulesTask(context);
-		imTask.setInstallerListener(this);
+		imTask.setInstallerListener(DownloadListAdapter.this);
 		imTask.execute();
 	}
 
 	public void installComplete() {
-		// TODO Auto-generated method stub
 		Log.d(TAG,"install complete");
 		myProgress.setMessage("Install complete");
-		myProgress.cancel();
-		// new refresh the 
+		myProgress.dismiss();
+		// new refresh the module list
 		DownloadActivity da = (DownloadActivity) context;
 		da.refreshModuleList();
 	}
 
-	public void progressUpdate(String msg) {
+	public void downloadProgressUpdate(String msg) {
 		// TODO Auto-generated method stub
+		myProgress.setMessage(msg);
+		
+	}
+	public void installProgressUpdate(String msg) {
+		// TODO Auto-generated method stub
+		Log.d(TAG,"hello!");
 		myProgress.setMessage(msg);
 		
 	}

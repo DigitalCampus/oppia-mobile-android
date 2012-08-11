@@ -154,7 +154,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 		
 	}
 
-	public void progressUpdate(String msg) {
+	public void installProgressUpdate(String msg) {
 		Log.d(TAG,"Listener sent message:"+ msg);
 	}
 	
