@@ -11,7 +11,6 @@ import org.digitalcampus.mquiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mquiz.model.questiontypes.Numerical;
 import org.digitalcampus.mquiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.application.Tracker;
 import org.digitalcampus.mtrain.model.Activity;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.widgets.mquiz.EssayWidget;
@@ -47,14 +46,11 @@ public class MQuizWidget extends WidgetFactory {
 	private Button nextBtn;
 	private TextView qText;
 	private String quizContent;
-	private Module module;
-	private Activity activity;
+	private boolean isComplete = false;
 	
 	public MQuizWidget(Context context, Module module, Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
-		this.module = module;
-		this.activity = activity;
 		
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
 		super.getLayout().addView(vv);
@@ -196,8 +192,9 @@ public class MQuizWidget extends WidgetFactory {
 		float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
 		
 		// log the activity as complete
-		Tracker t = new Tracker(this.ctx);
-		t.activityComplete(module.getModId(), activity.getDigest());
+		//Tracker t = new Tracker(this.ctx);
+		//t.activityComplete(module.getModId(), activity.getDigest());
+		isComplete = true;
 		
 		// TODO save results somewhere ready to send back to the mquiz server
 		
@@ -244,6 +241,10 @@ public class MQuizWidget extends WidgetFactory {
 		mQuiz.load(quizContent);
 
 		this.showQuestion();
+	}
+	
+	public boolean isComplete(){
+		return isComplete;
 	}
 
 }

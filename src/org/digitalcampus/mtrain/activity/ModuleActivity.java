@@ -3,13 +3,16 @@ package org.digitalcampus.mtrain.activity;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.application.Tracker;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.model.Section;
 import org.digitalcampus.mtrain.widgets.MQuizWidget;
 import org.digitalcampus.mtrain.widgets.PageWidget;
+import org.digitalcampus.mtrain.widgets.WidgetFactory;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +24,7 @@ public class ModuleActivity extends Activity {
 	private Section section;
 	private Module module;
 	private int currentActivityNo = 0;
+	private WidgetFactory currentActivity;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,13 @@ public class ModuleActivity extends Activity {
         }
     }
 
-   
+    @Override
+    public void onPause(){
+    	super.onPause();
+    	ArrayList<org.digitalcampus.mtrain.model.Activity> acts = section.getActivities();
+    	markIfComplete(acts.get(this.currentActivityNo).getDigest());
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_module, menu);
@@ -50,10 +60,11 @@ public class ModuleActivity extends Activity {
     	tb.setText(acts.get(this.currentActivityNo).getActivityData().get("title"));
     	
     	if(acts.get(this.currentActivityNo).getActType().equals("page")){
-    		new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+    		currentActivity = new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
     	}
     	if(acts.get(this.currentActivityNo).getActType().equals("quiz")){
-    		new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+    		currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+    		
     	}
     	this.setUpNav();
     }
@@ -65,6 +76,8 @@ public class ModuleActivity extends Activity {
     		prevB.setEnabled(true);
     		prevB.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
+             		ArrayList<org.digitalcampus.mtrain.model.Activity> acts = section.getActivities();
+             		markIfComplete(acts.get(currentActivityNo).getDigest());
              		currentActivityNo--;
              		loadActivity();
              	}
@@ -77,6 +90,8 @@ public class ModuleActivity extends Activity {
     		nextB.setEnabled(true);
     		nextB.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
+             		ArrayList<org.digitalcampus.mtrain.model.Activity> acts = section.getActivities();
+             		markIfComplete(acts.get(currentActivityNo).getDigest());
              		currentActivityNo++;
              		loadActivity();
              	}
@@ -99,6 +114,14 @@ public class ModuleActivity extends Activity {
     	} else {
     		return true;
     	}
+    }
+    
+    private boolean markIfComplete(String digest){
+    	if(currentActivity != null && currentActivity.isComplete()){
+    		Tracker t = new Tracker(this);
+    		t.activityComplete(module.getModId(), digest);
+    	}    	
+    	return true;
     }
     
 }

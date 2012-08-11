@@ -28,4 +28,6 @@ public abstract class WidgetFactory extends Activity{
 		return ll;
 	}
 	
+	public abstract boolean isComplete();
+	
 }

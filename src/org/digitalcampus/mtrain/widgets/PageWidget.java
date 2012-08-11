@@ -19,10 +19,11 @@ import android.widget.Toast;
 public class PageWidget extends WidgetFactory {
 
 	private static final String TAG = "PageWidget";
-
+	private static final long PAGE_READ_TIME = 5;
 	private Context ctx;
 	private Module module;
 	private org.digitalcampus.mtrain.model.Activity activity;
+	private long startTimestamp = System.currentTimeMillis()/1000;
 
 	public PageWidget(Context context, Module module, org.digitalcampus.mtrain.model.Activity activity) {
 		super(context, module, activity);
@@ -42,8 +43,8 @@ public class PageWidget extends WidgetFactory {
 		wv.loadUrl(url);
 
 		// Track the page
-		Tracker t = new Tracker(this.ctx);
-		t.activityComplete(module.getModId(), activity.getDigest());
+		//Tracker t = new Tracker(this.ctx);
+		//t.activityComplete(module.getModId(), activity.getDigest());
 		
 		// set up the page to intercept videos
 		wv.setWebViewClient(new WebViewClient() {
@@ -83,4 +84,13 @@ public class PageWidget extends WidgetFactory {
 		});
 	}
 
+	public boolean isComplete(){
+		long endTimestamp = System.currentTimeMillis()/1000;
+		long diff = endTimestamp - startTimestamp;
+		if(diff >= PAGE_READ_TIME){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

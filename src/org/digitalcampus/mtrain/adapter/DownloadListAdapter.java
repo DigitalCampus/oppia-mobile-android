@@ -109,14 +109,10 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements
 	}
 
 	public void downloadProgressUpdate(String msg) {
-		// TODO Auto-generated method stub
 		myProgress.setMessage(msg);
-		
 	}
+	
 	public void installProgressUpdate(String msg) {
-		// TODO Auto-generated method stub
-		Log.d(TAG,"hello!");
 		myProgress.setMessage(msg);
-		
 	}
 }
