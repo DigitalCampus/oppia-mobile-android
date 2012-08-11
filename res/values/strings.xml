@@ -22,4 +22,6 @@
  	<string name="widget_mquiz_results_restart">Retake this quiz</string>
  	<string name="module_context_reset">Reset</string>
  	<string name="module_context_delete">Delete</string>
+ 	
+ 	<string name="no_modules">There are no modules currently installed</string>
 </resources>

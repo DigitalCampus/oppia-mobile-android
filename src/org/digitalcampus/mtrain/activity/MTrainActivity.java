@@ -27,7 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class MTrainActivity extends Activity implements InstallModuleListener{
@@ -88,6 +88,14 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 	}
 
 	private void displayModules(ArrayList<Module> modules){
+		
+		LinearLayout ll = (LinearLayout) this.findViewById(R.id.no_modules);
+		if(modules.size()>0){
+			ll.setVisibility(View.GONE);
+		} else {
+			ll.setVisibility(View.VISIBLE);
+		}
+		
 		ModuleListAdapter mla = new ModuleListAdapter(this, modules);
 		ListView listView = (ListView) findViewById(R.id.module_list);
 		listView.setAdapter(mla);
@@ -106,14 +114,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 				startActivity(i);
 			}
 		});
-		/*OnItemLongClickListener lcl = new OnItemLongClickListener() {
-
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				// TODO Auto-generated method stub
-				Log.d(TAG,"Long clicked");
-				return true;
-			}};
-		listView.setOnItemLongClickListener(lcl);*/
 	}
 	
 	@Override
