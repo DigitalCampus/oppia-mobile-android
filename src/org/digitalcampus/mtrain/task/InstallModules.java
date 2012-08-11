@@ -59,7 +59,7 @@ public class InstallModules extends AsyncTask<Payload, Object, Payload>
 				publishProgress("Installing:" + title);
 				
 				DbHelper db = new DbHelper(ctx);
-				long added = db.addOrUpdateModule(versionid, title, location);
+				long added = db.addOrUpdateModule(versionid, title, location, moddirs[0]);
 
 				if (added != -1) {
 					File src = new File(tempdir + "/" + moddirs[0]);

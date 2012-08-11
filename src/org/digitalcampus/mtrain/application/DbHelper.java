@@ -17,7 +17,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
 	static final String DB_NAME = "mtrain.db";
-	static final int DB_VERSION = 1;
+	static final int DB_VERSION = 2;
 
 	private SQLiteDatabase db;
 
@@ -25,6 +25,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public static final String MODULE_C_ID = BaseColumns._ID;
 	public static final String MODULE_C_VERSIONID = "versionid";
 	public static final String MODULE_C_TITLE = "title";
+	public static final String MODULE_C_SHORTNAME = "shortname";
 	public static final String MODULE_C_LOCATION = "location";
 
 	public static final String ACTIVITY_TABLE = "Activity";
@@ -60,7 +61,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	public void createModuleTable(SQLiteDatabase db){
 		String m_sql = "create table " + MODULE_TABLE + " (" + MODULE_C_ID + " integer primary key autoincrement, "
-				+ MODULE_C_VERSIONID + " int, " + MODULE_C_TITLE + " text, " + MODULE_C_LOCATION + " text)";
+				+ MODULE_C_VERSIONID + " int, " + MODULE_C_TITLE + " text, " + MODULE_C_LOCATION + " text, "
+				+ MODULE_C_SHORTNAME + " text)";
 		Log.d(TAG, "Module sql: " + m_sql);
 		db.execSQL(m_sql);
 	}
@@ -91,11 +93,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-
+		db.execSQL("drop table if exists " + MODULE_TABLE);
+		db.execSQL("drop table if exists " + ACTIVITY_TABLE);
+		db.execSQL("drop table if exists " + LOG_TABLE);
+		onCreate(db);
 	}
 
 	// returns id of the row
-	public long addOrUpdateModule(String versionid, String title, String location) {
+	// TODO tidy this up now have is installed and toUpdate options
+	public long addOrUpdateModule(String versionid, String title, String location, String shortname) {
 		// find if this is a new version or not
 		String selection = MODULE_C_LOCATION + "= ?";
 		String[] selArgs = new String[] { location };
@@ -105,6 +111,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(DbHelper.MODULE_C_VERSIONID, versionid);
 		values.put(DbHelper.MODULE_C_TITLE, title);
 		values.put(DbHelper.MODULE_C_LOCATION, location);
+		values.put(DbHelper.MODULE_C_SHORTNAME, shortname);
 
 		if (c.getCount() == 0) {
 			c.close();
@@ -239,5 +246,24 @@ public class DbHelper extends SQLiteOpenHelper {
 		s = DbHelper.MODULE_C_ID + "=?";
 		args = new String[] { String.valueOf(modId) };
 		db.delete(DbHelper.MODULE_TABLE, s, args);
+	}
+	
+	// TODO change to use shortname
+	public boolean isInstalled(String title){
+		String s = DbHelper.MODULE_C_TITLE + "=?";
+		String[] args = new String[] { title };
+		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		if(c.getCount() == 0){
+			c.close();
+			return false;
+		} else {
+			c.close();
+			return true;
+		}
+	}
+	
+	public boolean toUpdate(String shortname, Double version){
+		
+		return false;
 	}
 }
