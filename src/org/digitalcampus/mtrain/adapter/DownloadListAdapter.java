@@ -3,9 +3,16 @@ package org.digitalcampus.mtrain.adapter;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.activity.DownloadActivity;
 import org.digitalcampus.mtrain.activity.DownloadActivity.DownloadModule;
+import org.digitalcampus.mtrain.listener.DownloadModuleListener;
+import org.digitalcampus.mtrain.listener.InstallModuleListener;
+import org.digitalcampus.mtrain.task.DownloadModuleTask;
+import org.digitalcampus.mtrain.task.InstallModulesTask;
+import org.digitalcampus.mtrain.task.Payload;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,12 +22,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DownloadListAdapter extends ArrayAdapter<DownloadModule> {
+public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements DownloadModuleListener,InstallModuleListener{
 
-	public static final String TAG = "ModuleListAdapter";
+	public static final String TAG = "DownloadListAdapter";
 
 	private final Context context;
 	private final ArrayList<DownloadModule> moduleList;
+	private ProgressDialog myProgress;
 
 	public DownloadListAdapter(Activity context, ArrayList<DownloadModule> moduleList) {
 		super(context, R.layout.module_list_row, moduleList);
@@ -59,14 +67,52 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadModule> {
 	    }
 	    if(!m.installed || m.toUpdate){
 	    	actionBtn.setTag(m);
-	    	Log.d(TAG,"set tag on "+ m.title);
 	    	actionBtn.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
              		DownloadModule dm = (DownloadModule) v.getTag();
              		Log.d(TAG,dm.downloadUrl);
+             		DownloadModule[] s = new DownloadModule[1];
+             		s[0] = dm;
+             		Payload p = new Payload(0,s);
+             		
+             		myProgress = new ProgressDialog(context);
+                     // TODO change these to be lang strings
+             		myProgress.setTitle("Installing");
+             		myProgress.setMessage("Starting download");
+             		myProgress.setCancelable(true);
+             		myProgress.show();
+                     
+             		DownloadModuleTask dmt = new DownloadModuleTask();
+             		dmt.setInstallerListener(DownloadListAdapter.this);
+             		dmt.execute(p);
              	}
              });
 	    }
 	    return rowView;
+	}
+
+	public void downloadComplete() {
+		// TODO Auto-generated method stub
+		myProgress.setMessage("Download complete");
+		// now set task to install
+		InstallModulesTask imTask = new InstallModulesTask(context);
+		imTask.setInstallerListener(this);
+		imTask.execute();
+	}
+
+	public void installComplete() {
+		// TODO Auto-generated method stub
+		Log.d(TAG,"install complete");
+		myProgress.setMessage("Install complete");
+		myProgress.cancel();
+		// new refresh the 
+		DownloadActivity da = (DownloadActivity) context;
+		da.refreshModuleList();
+	}
+
+	public void progressUpdate(String msg) {
+		// TODO Auto-generated method stub
+		myProgress.setMessage(msg);
+		
 	}
 }

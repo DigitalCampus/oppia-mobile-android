@@ -16,7 +16,7 @@ import android.util.Log;
 public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 
 {
-	private final static String TAG = "InstallModules";
+	private final static String TAG = "InstallModulesTask";
 	private Context ctx;
 	private InstallModuleListener mStateListener;
 
@@ -35,6 +35,7 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 			// Either dir does not exist or is not a directory
 		} else {
 			Log.d(TAG, "Installing new modules");
+			publishProgress("Installing new module");
 			for (int i = 0; i < children.length; i++) {
 				// Get filename of file or directory
 				Log.v(TAG, children[i]);
@@ -107,11 +108,6 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
                 mStateListener.progressUpdate(obj[0]);
             }
         }
-		// if(notify){
-		// Toast.makeText(myCtx, "Finished downloading:" + strings[0],
-		// Toast.LENGTH_SHORT).show();
-		// }
-
 	}
 
 	protected void onPostExecute(Payload results) {

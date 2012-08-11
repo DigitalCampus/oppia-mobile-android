@@ -35,6 +35,7 @@ public class DownloadActivity extends Activity {
 	
 	private ProgressDialog pDialog;
 	private SharedPreferences prefs;
+	private JSONArray json;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,8 +131,8 @@ public class DownloadActivity extends Activity {
     		// close dialog and process results
     		pDialog.dismiss();
 			try {
-				JSONArray json = new JSONArray(response);
-				parseResponse(json);
+				json = new JSONArray(response);
+				refreshModuleList();
 			} catch (JSONException e){
 				Log.d(TAG,response);
 				showAlert("Error", response);
@@ -142,7 +143,7 @@ public class DownloadActivity extends Activity {
     	}
     }
 	
-    private void parseResponse(JSONArray json){
+    public void refreshModuleList(){
     	//process the response and display on screen in listview
     	// Create an array of Strings, that will be put to our ListActivity
     	
