@@ -4,35 +4,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minHeight="40dp"
-    android:orientation="horizontal" 
-    android:weightSum="1.0">
+    android:orientation="vertical"
+    android:padding="5dp" >
 
-    <TextView
-        android:id="@+id/section_number"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="20dp"
-        android:textStyle="bold" 
-        android:layout_weight="0.15"/>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="1.0" >
 
-    <TextView
-        android:id="@+id/section_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_weight="0.6"
-        />
+        <TextView
+            android:id="@+id/section_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/section_progress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_weight="0.25" />
+        <TextView
+            android:id="@+id/section_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/section_progress_bar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="5dp" 
+        android:progressDrawable="@drawable/progress_bar"/>
 
 </LinearLayout>

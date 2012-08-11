@@ -103,6 +103,7 @@ public class ModuleXMLReader {
 	public ArrayList<Section> getSections(int modId, Context ctx){
 		ArrayList<Section> sections = new ArrayList<Section>();
 		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
+		DbHelper db = new DbHelper(ctx);
 		for (int i=0; i<sects.getLength(); i++){
 			NamedNodeMap sectionAttrs = sects.item(i).getAttributes();
 			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("id").getTextContent());
@@ -110,9 +111,9 @@ public class ModuleXMLReader {
 			Section s = new Section();
 			s.setSectionId(sectionId);
 			s.setTitle(title);
-			DbHelper db = new DbHelper(ctx);
+			
 			float progress = db.getSectionProgress(modId, sectionId);
-			db.close();
+			
 			s.setProgress(progress);
 			//now get activities
 			NodeList acts = this.getChildNodeByName(sects.item(i),"activities").getChildNodes();
@@ -134,6 +135,7 @@ public class ModuleXMLReader {
 			sections.add(s);
 			
 		}
+		db.close();
 		return sections;
 	}
 	

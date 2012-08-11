@@ -1,13 +1,16 @@
 package org.digitalcampus.mtrain.activity;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.adapter.ModuleListAdapter;
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
+import org.digitalcampus.mtrain.listener.InstallModuleListener;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.task.InstallModules;
+import org.digitalcampus.mtrain.utils.FileUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -15,13 +18,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
-public class MTrainActivity extends Activity {
+public class MTrainActivity extends Activity implements InstallModuleListener{
 
 	static Handler myHandler;
 	ProgressDialog myProgress;
@@ -50,22 +59,40 @@ public class MTrainActivity extends Activity {
 		// install any new modules
 		// TODO show info to user that we're checking for new modules
 		// TODO? scan already extracted modules and install these
-		InstallModules imTask = new InstallModules(MTrainActivity.this);
-		imTask.execute();
+		File dir = new File(MTrain.DOWNLOAD_PATH);
+		String[] children = dir.list();
+		if (children == null) {
+			// Either dir does not exist or is not a directory
+		} else {
+			InstallModules imTask = new InstallModules(MTrainActivity.this);
+			imTask.setInstallerListener(this);
+			imTask.execute();
+		}
 
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		ListView listView = (ListView) findViewById(R.id.module_list);
-
+	
 		DbHelper db = new DbHelper(this);
 		ArrayList<Module> modules = db.getModules();
 		db.close();
 		
+		if(modules.size() > 0){
+			displayModules(modules);
+		} else {
+			// if no module installed
+			Log.d(TAG,"No modules installed");
+		}
+	}
+
+	private void displayModules(ArrayList<Module> modules){
 		ModuleListAdapter mla = new ModuleListAdapter(this, modules);
+		ListView listView = (ListView) findViewById(R.id.module_list);
 		listView.setAdapter(mla);
+		registerForContextMenu(listView);
+		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,12 +106,75 @@ public class MTrainActivity extends Activity {
 				startActivity(i);
 			}
 		});
-	}
+		/*OnItemLongClickListener lcl = new OnItemLongClickListener() {
 
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,"Long clicked");
+				return true;
+			}};
+		listView.setOnItemLongClickListener(lcl);*/
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
 
+	public void installComplete() {
+		Log.d(TAG,"Listener says install complete");
+		DbHelper db = new DbHelper(this);
+		ArrayList<Module> modules = db.getModules();
+		db.close();
+		if(modules.size() > 0){
+			displayModules(modules);
+		} else {
+			// if no module installed
+			Log.d(TAG,"No modules installed");
+		}
+		
+	}
+
+	public void progressUpdate(String msg) {
+		Log.d(TAG,"Listener sent message:"+ msg);
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+	                                ContextMenuInfo menuInfo) {
+	    super.onCreateContextMenu(menu, v, menuInfo);
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.module_context_menu, menu);
+	}
+
+	public boolean onContextItemSelected(MenuItem item) {
+	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    Module m = (Module) info.targetView.getTag();
+	    DbHelper db = new DbHelper(this);
+	    switch (item.getItemId()) {
+	        case R.id.module_context_delete:
+	        	Log.d(TAG,"deleting:" + m.getTitle());
+	        	// remove db records
+	        	db.deleteModule(m.getModId());
+	        	ArrayList<Module> modules = db.getModules();
+	        	db.close();
+	        	// remove files
+	        	Log.d(TAG,"deleting:" + m.getLocation());
+	        	File f = new File(m.getLocation());
+	        	FileUtils.deleteDir(f);
+	        	displayModules(modules);
+	            return true;
+	        case R.id.module_context_reset:
+	        	Log.d(TAG,"resetting:" + m.getTitle());
+	        	db.resetModule(m.getModId());
+	        	ArrayList<Module> ms = db.getModules();
+	        	db.close();
+	        	displayModules(ms);
+	            return true;
+	        default:
+	        	db.close();
+	            return super.onContextItemSelected(item);
+	    }
+	}
 }

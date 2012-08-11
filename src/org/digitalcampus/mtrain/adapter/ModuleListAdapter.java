@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ModuleListAdapter extends ArrayAdapter<Module> {
@@ -37,8 +38,8 @@ public class ModuleListAdapter extends ArrayAdapter<Module> {
 	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.module_title);
 	    moduleTitle.setText(m.getTitle());
 	    
-	    TextView moduleProgress = (TextView) rowView.findViewById(R.id.module_progress);
-	    moduleProgress.setText(String.format("%.0f%%", m.getProgress()));
+	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.module_progress_bar);
+	    pb.setProgress((int) m.getProgress());
 	    return rowView;
 	}
 

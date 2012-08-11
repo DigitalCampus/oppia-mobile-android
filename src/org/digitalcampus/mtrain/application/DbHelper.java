@@ -219,4 +219,25 @@ public class DbHelper extends SQLiteOpenHelper {
 		return noComplete*100/noActs;
 		
 	}
+	
+	public int resetModule(int modId){
+		String s = DbHelper.LOG_C_MODID + "=?";
+		String[] args = new String[] { String.valueOf(modId) };
+		return db.delete(DbHelper.LOG_TABLE, s, args);
+	}
+	
+	public void deleteModule(int modId){
+		// delete log
+		resetModule(modId);
+		
+		// delete activities
+		String s = DbHelper.ACTIVITY_C_MODID + "=?";
+		String[] args = new String[] { String.valueOf(modId) };
+		db.delete(DbHelper.ACTIVITY_TABLE, s, args);
+		
+		// delete module
+		s = DbHelper.MODULE_C_ID + "=?";
+		args = new String[] { String.valueOf(modId) };
+		db.delete(DbHelper.MODULE_TABLE, s, args);
+	}
 }

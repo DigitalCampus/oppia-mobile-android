@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
+import org.digitalcampus.mtrain.listener.InstallModuleListener;
 import org.digitalcampus.mtrain.utils.FileUtils;
 import org.digitalcampus.mtrain.utils.ModuleXMLReader;
 
@@ -17,6 +18,7 @@ public class InstallModules extends AsyncTask<Payload, Object, Payload>
 {
 	private final static String TAG = "InstallModules";
 	private Context ctx;
+	private InstallModuleListener mStateListener;
 
 	public InstallModules(Context ctx) {
 		this.ctx = ctx;
@@ -24,6 +26,7 @@ public class InstallModules extends AsyncTask<Payload, Object, Payload>
 
 	protected Payload doInBackground(Payload... params) {
 
+		
 		// get folder
 		File dir = new File(MTrain.DOWNLOAD_PATH);
 
@@ -53,7 +56,8 @@ public class InstallModules extends AsyncTask<Payload, Object, Payload>
 				String versionid = hm.get("versionid");
 				String title = hm.get("title");
 				String location = MTrain.MODULES_PATH + moddirs[0];
-
+				publishProgress("Installing:" + title);
+				
 				DbHelper db = new DbHelper(ctx);
 				long added = db.addOrUpdateModule(versionid, title, location);
 
@@ -73,10 +77,14 @@ public class InstallModules extends AsyncTask<Payload, Object, Payload>
 
 					if (success) {
 						Log.v(TAG, "File was successfully moved");
+						publishProgress(title + ": installed");
 					} else {
 						Log.v(TAG, "File was not successfully moved");
+						publishProgress(title + ": failed to install");
 					}
-				} 
+				}  else {
+					publishProgress(title + ": latest version already installed");
+				}
 				db.close();
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);
@@ -92,9 +100,13 @@ public class InstallModules extends AsyncTask<Payload, Object, Payload>
 		return null;
 	}
 
-	protected void onProgressUpdate(Object... obj) {
-		super.onProgressUpdate(obj);
-
+	protected void onProgressUpdate(String... obj) {
+		synchronized (this) {
+            if (mStateListener != null) {
+                // update progress and total
+                mStateListener.progressUpdate(obj[0]);
+            }
+        }
 		// if(notify){
 		// Toast.makeText(myCtx, "Finished downloading:" + strings[0],
 		// Toast.LENGTH_SHORT).show();
@@ -103,8 +115,17 @@ public class InstallModules extends AsyncTask<Payload, Object, Payload>
 	}
 
 	protected void onPostExecute(Payload results) {
-
+		synchronized (this) {
+            if (mStateListener != null) {
+               mStateListener.installComplete();
+            }
+        }
 	}
 
+	public void setInstallerListener(InstallModuleListener srl) {
+        synchronized (this) {
+            mStateListener = srl;
+        }
+    }
 	
 }

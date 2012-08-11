@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SectionListAdapter extends ArrayAdapter<Section> {
@@ -38,8 +39,8 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    TextView sectionNo = (TextView) rowView.findViewById(R.id.section_number);
 	    sectionNo.setText(String.valueOf(s.getSectionId()));
 	    
-	    TextView sectionProgress = (TextView) rowView.findViewById(R.id.section_progress);
-	    sectionProgress.setText(String.format("%.0f%%", s.getProgress()));
+	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.section_progress_bar);
+	    pb.setProgress((int) s.getProgress());
 	    
 	    rowView.setTag(sectionList.get(position));
 	    return rowView;
