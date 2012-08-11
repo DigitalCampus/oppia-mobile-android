@@ -44,18 +44,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 		// set up local dirs
 		MTrain.createMTrainDirs();
 
-		/*
-		 * grab the anc.zip (from 192.168.1.35) and unpack try { new
-		 * DefaultHttpClient().execute(new
-		 * HttpGet("http://192.168.1.35/mtrain/modules/anc.zip"
-		 * )).getEntity().writeTo(new FileOutputStream(new
-		 * File(mTrain.DOWNLOAD_PATH,"anc.zip"))); } catch
-		 * (ClientProtocolException e1) { // TODO Auto-generated catch block
-		 * e1.printStackTrace(); } catch (FileNotFoundException e1) { // TODO
-		 * Auto-generated catch block e1.printStackTrace(); } catch (IOException
-		 * e1) { // TODO Auto-generated catch block e1.printStackTrace(); }
-		 */
-
 		// install any new modules
 		// TODO show info to user that we're checking for new modules
 		// TODO? scan already extracted modules and install these

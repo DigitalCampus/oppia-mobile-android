@@ -20,7 +20,6 @@ public class Tracker {
 		try {
 			jsonObj.put("activity", "completed");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String data = jsonObj.toString();
@@ -36,7 +35,6 @@ public class Tracker {
 			jsonObj.put("media", "played");
 			jsonObj.put("mediafile", media);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String data = jsonObj.toString();

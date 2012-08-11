@@ -64,7 +64,6 @@ public class MQuiz implements Serializable{
 				question = new Essay();
 			} else if(qtype.toLowerCase().equals("multichoice")){
 				question = new MultiChoice();
-			// TODO add other question types
 			} else if(qtype.toLowerCase().equals("numerical")){
 				question = new Numerical();
 			} else if(qtype.toLowerCase().equals("matching")){

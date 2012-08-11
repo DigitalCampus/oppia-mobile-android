@@ -21,8 +21,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
 	
 	@Override
 	protected Payload doInBackground(Payload... params) {
-		// TODO Auto-generated method stub
-		
+		// TODO what to do when there is an error connecting - how to flag back to user
 		for (Payload payload : params) {
 			DownloadModule dm = (DownloadModule) payload.data[0];
 			Log.d(TAG,"Downloading:" + dm.downloadUrl);
@@ -32,10 +31,8 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
 				new DefaultHttpClient().execute(new HttpGet(dm.downloadUrl)).getEntity().writeTo(new FileOutputStream(new File(MTrain.DOWNLOAD_PATH,localFileName)));
 				publishProgress("Downloaded file");
 			} catch (ClientProtocolException e1) { 
-				// TODO Auto-generated catch block
 				e1.printStackTrace(); 
 			} catch (IOException e1) { 
-				// TODO Auto-generated catch block e1.printStackTrace(); }
 				e1.printStackTrace();
 			}
 			 

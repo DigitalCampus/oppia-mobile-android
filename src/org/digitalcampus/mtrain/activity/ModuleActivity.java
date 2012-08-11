@@ -12,7 +12,6 @@ import org.digitalcampus.mtrain.widgets.WidgetFactory;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -53,7 +52,6 @@ public class ModuleActivity extends Activity {
     }
     
     private void loadActivity(){
-    	//TODO log that activity has been visited
     	ArrayList<org.digitalcampus.mtrain.model.Activity> acts = section.getActivities();
     	TextView tb = (TextView) this.findViewById(R.id.module_activity_title);
     	
@@ -117,6 +115,7 @@ public class ModuleActivity extends Activity {
     }
     
     private boolean markIfComplete(String digest){
+    	// TODO also check any media has been played
     	if(currentActivity != null && currentActivity.isComplete()){
     		Tracker t = new Tracker(this);
     		t.activityComplete(module.getModId(), digest);

@@ -155,8 +155,6 @@ public class DownloadActivity extends Activity {
 			    dm.shortname = json_obj.getString("shortname");
 			    dm.version = json_obj.getDouble("version");
 			    dm.downloadUrl = json_obj.getString("url");
-			    
-			    //TODO check if module is already installed or can be updated
 			    dm.installed = db.isInstalled(dm.shortname);
 			    dm.toUpdate = db.toUpdate(dm.shortname, dm.version);
 			    modules.add(dm);

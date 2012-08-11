@@ -38,7 +38,6 @@ public class Essay implements Serializable, QuizQuestion {
 	}
 	
 	public String getRefid() {
-		// TODO Auto-generated method stub
 		return this.refid;
 	}
 	
