@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface QuizQuestion extends Serializable {
 	
-	public void addResponseOption(Response r); //was addResponse
+	public void addResponseOption(Response r); 
 	
-	public List<Response> getResponseOptions(); // was getResponse
+	public List<Response> getResponseOptions(); 
 	
-	public void setUserResponses(List<String> str); // was setResponse
+	public void setUserResponses(List<String> str);
 	
-	public List<String> getUserResponses(); //was getResponse
+	public List<String> getUserResponses();
 	
-	public void setResponseOptions(List<Response> responses); // setResponses
+	public void setResponseOptions(List<Response> responses); 
 	
 	public void mark();
 	

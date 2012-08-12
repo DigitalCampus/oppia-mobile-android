@@ -203,4 +203,25 @@ public class MQuiz implements Serializable{
 		return questions.size();
 	}
 	
+	public JSONObject getResultObject(){
+		JSONObject json = new JSONObject();
+		try {
+			json.put("quizid", this.getQRef());
+			// TODO add current date
+			// json.put("quizdate", this.get);
+			json.put("userscore", this.getUserscore());
+			json.put("maxscore", this.getMaxscore());
+			
+			JSONArray responses = new JSONArray();
+			
+			
+			json.put("responses", responses);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+	
 }

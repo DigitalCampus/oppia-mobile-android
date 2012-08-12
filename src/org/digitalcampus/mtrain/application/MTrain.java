@@ -16,6 +16,7 @@ public class MTrain extends Application {
 	public static final String DOWNLOAD_PATH = MTRAIN_ROOT + "download/";
 	public static final String MODULE_XML = "module.xml";
 
+	public static final String SERVER_MODULES_PATH = "/modules/list/";
 	
 	public MTrain(){
 		

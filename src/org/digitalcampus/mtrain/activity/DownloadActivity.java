@@ -14,6 +14,7 @@ import org.apache.http.params.HttpParams;
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.adapter.DownloadListAdapter;
 import org.digitalcampus.mtrain.application.DbHelper;
+import org.digitalcampus.mtrain.application.MTrain;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +27,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.ListView;
 
 public class DownloadActivity extends Activity {
@@ -63,7 +65,7 @@ public class DownloadActivity extends Activity {
         GetModuleListTask task = new GetModuleListTask();
         String[] url = new String[1];
         // TODO get this from preferences
-        url[0] = "http://192.168.1.35/mquiz/modules/list/";
+        url[0] = prefs.getString("prefServer", getString(R.string.prefServerDefault))+MTrain.SERVER_MODULES_PATH;
         task.execute(url);
 	}
 	
@@ -74,7 +76,7 @@ public class DownloadActivity extends Activity {
     	protected String doInBackground(String... urls){
     		
     		String toRet = "";
-    		for (String u : urls) {
+    		for (String url : urls) {
     			String response = "";
     			
     			HttpParams httpParameters = new BasicHttpParams();
@@ -96,7 +98,8 @@ public class DownloadActivity extends Activity {
     			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
     			DefaultHttpClient client = new DefaultHttpClient(httpParameters);
-    			HttpPost httpPost = new HttpPost(u);
+    			HttpPost httpPost = new HttpPost(url);
+    			Log.d(TAG,"connecting to: "+url);
     			try {
     				// add post params
     				//List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);

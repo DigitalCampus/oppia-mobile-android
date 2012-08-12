@@ -14,6 +14,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -31,18 +32,18 @@
         <activity
             android:name=".activity.ModuleIndexActivity"
             android:label="@string/title_activity_module_index" >
-           
         </activity>
         <activity
             android:name=".activity.ModuleActivity"
             android:label="@string/title_activity_module" >
-        
         </activity>
-         <activity
+        <activity
             android:name=".activity.DownloadActivity"
             android:label="@string/title_download_activity" >
-        
         </activity>
+        <activity
+            android:name=".activity.PrefsActivity"
+            android:label="@string/title_prefs" />
     </application>
 
 </manifest>

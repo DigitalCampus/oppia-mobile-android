@@ -13,10 +13,11 @@ import org.digitalcampus.mtrain.task.InstallModulesTask;
 import org.digitalcampus.mtrain.utils.FileUtils;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -30,17 +31,20 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-public class MTrainActivity extends Activity implements InstallModuleListener{
+public class MTrainActivity extends Activity implements InstallModuleListener, OnSharedPreferenceChangeListener{
 
-	static Handler myHandler;
-	ProgressDialog myProgress;
 	public static final String TAG = "MTrainActivity";
-
+	SharedPreferences prefs;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		prefs = PreferenceManager.getDefaultSharedPreferences(this); 
+        prefs.registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
+        
 		// set up local dirs
 		MTrain.createMTrainDirs();
 
@@ -56,7 +60,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 			imTask.setInstallerListener(this);
 			imTask.execute();
 		}
-
 	}
 
 	@Override
@@ -74,7 +77,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 			Log.d(TAG,"No modules installed");
 		}
 	}
-
+	  
 	private void displayModules(ArrayList<Module> modules){
 		
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.no_modules);
@@ -121,6 +124,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 	        	startActivity(i);
 	            return true;
 	        case R.id.menu_settings:
+	        	startActivity(new Intent(this, PrefsActivity.class)); 
 	            return true;
 	        case R.id.menu_language:
 	            return true;
@@ -183,4 +187,9 @@ public class MTrainActivity extends Activity implements InstallModuleListener{
 	            return super.onContextItemSelected(item);
 	    }
 	}
+
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		
+	}
+	
 }
