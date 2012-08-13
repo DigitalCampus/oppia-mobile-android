@@ -39,7 +39,6 @@ import android.widget.ListView;
 public class MTrainActivity extends Activity implements InstallModuleListener, OnSharedPreferenceChangeListener {
 
 	public static final String TAG = "MTrainActivity";
-	private TrackerService s;
 	private SharedPreferences prefs;
 
 	@Override
@@ -79,11 +78,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 
 		if (modules.size() > 0) {
 			displayModules(modules);
-		} else {
-			// if no module installed
-			Log.d(TAG, "No modules installed");
 		}
-
 	}
 
 	public void onDestroy() {
@@ -94,18 +89,15 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 	private ServiceConnection mConnection = new ServiceConnection() {
 
 		public void onServiceConnected(ComponentName className, IBinder binder) {
-			s = ((TrackerService.MyBinder) binder).getService();
-			Log.d(TAG, "connected");
+			((TrackerService.MyBinder) binder).getService();
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
-			Log.d(TAG, "disconnected");
-			s = null;
+			//s = null;
 		}
 	};
 
 	void doBindService() {
-		Log.d(TAG, "doBindService");
 		Intent i = new Intent(this, TrackerService.class);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 	}

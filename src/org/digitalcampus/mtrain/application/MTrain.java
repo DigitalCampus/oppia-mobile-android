@@ -17,6 +17,7 @@ public class MTrain extends Application {
 	public static final String MODULE_XML = "module.xml";
 
 	public static final String SERVER_MODULES_PATH = "/modules/list/";
+	public static final String TRACKER_PATH = "/api/?method=tracker";
 	
 	public MTrain(){
 		

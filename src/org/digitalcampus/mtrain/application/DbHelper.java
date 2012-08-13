@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.model.Activity;
 import org.digitalcampus.mtrain.model.Module;
+import org.digitalcampus.mtrain.task.Payload;
+import org.digitalcampus.mtrain.task.SubmitTrackerTask;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -274,7 +278,43 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public void getUnsentLog(){
+	public Payload getUnsentLog(){
+		String s = DbHelper.LOG_C_SUBMITTED + "=? ";
+		String[] args = new String[] { "0" };
+		Cursor c = db.query(LOG_TABLE, null, s, args, null, null, null);
+		int count = c.getCount();
+		c.moveToFirst();
+		int counter = 0;
+		org.digitalcampus.mtrain.model.Log[] sl = new org.digitalcampus.mtrain.model.Log[count];
+		while (c.isAfterLast() == false) {
+			org.digitalcampus.mtrain.model.Log so = new org.digitalcampus.mtrain.model.Log();
+			so.id = c.getLong(c.getColumnIndex(LOG_C_ID));
+			String content = "";
+			try {
+				JSONObject json = new JSONObject(c.getString(c.getColumnIndex(LOG_C_DATA)));
+				json.put("datetime", c.getString(c.getColumnIndex(LOG_C_DATETIME)));
+				json.put("digest", c.getString(c.getColumnIndex(LOG_C_ACTIVITYDIGEST)));
+				content = json.toString();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			so.content  = content;
+			sl[counter] = so;
+			counter++;
+			c.moveToNext();
+		}
+		Payload p = new Payload(SubmitTrackerTask.SUBMIT_LOG_TASK,sl);
+		c.close();
 		
+		return p;
+	}
+	
+	public int markLogSubmitted(long rowId){
+		ContentValues values = new ContentValues();
+		values.put(DbHelper.LOG_C_SUBMITTED, 1);
+		
+		return db.update(DbHelper.LOG_TABLE, values, DbHelper.LOG_C_ID + "=" + rowId, null);
 	}
 }
