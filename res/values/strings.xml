@@ -7,6 +7,8 @@
     <string name="menu_about">About</string>
     <string name="menu_activity_about">About</string>
     
+    <string name="title_about">About</string>
+     
     <string name="title_activity_main">mTrain</string>
     <string name="main_logo_alt">DC Logo</string>
     <string name="main_tagline">by Digital Campus</string>
@@ -14,6 +16,7 @@
     <string name="title_activity_module">Activity</string>
     <string name="title_download_activity">Manage Modules</string>
     <string name="title_prefs">Settings</string>
+    <string name="version">Version: %1$s</string>
     
     <string name="activity_module_button_prev">&lt;</string>
     <string name="activity_module_button_next">&gt;</string>

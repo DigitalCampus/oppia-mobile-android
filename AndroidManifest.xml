@@ -44,6 +44,9 @@
         <activity
             android:name=".activity.PrefsActivity"
             android:label="@string/title_prefs" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:label="@string/title_about" />
     </application>
 
 </manifest>

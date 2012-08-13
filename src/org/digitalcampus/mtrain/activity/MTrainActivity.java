@@ -118,10 +118,10 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	        case R.id.menu_about:
+	        	startActivity(new Intent(this, AboutActivity.class));
 	            return true;
 	        case R.id.menu_download:
-	        	Intent i = new Intent(MTrainActivity.this, DownloadActivity.class);
-	        	startActivity(i);
+	        	startActivity(new Intent(this, DownloadActivity.class));
 	            return true;
 	        case R.id.menu_settings:
 	        	startActivity(new Intent(this, PrefsActivity.class)); 

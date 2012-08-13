@@ -18,7 +18,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public class MQuiz implements Serializable{
+public class MQuiz implements Serializable {
 
 	private static final long serialVersionUID = -2416034891439585524L;
 	private static final String TAG = "MQuiz";
@@ -30,160 +30,169 @@ public class MQuiz implements Serializable{
 	private int currentq = 0;
 	private float userscore;
 	private List<QuizQuestion> questions = new ArrayList<QuizQuestion>();
-	
-	public MQuiz(){
-		
+
+	public MQuiz() {
+
 	}
-	
-	public boolean load(String quiz){
+
+	public boolean load(String quiz) {
 		try {
 			JSONObject json = new JSONObject(quiz);
 			qref = (String) json.get("qref");
 			title = (String) json.get("quiztitle");
+			Log.d(TAG, "Maxscore: " + (String) json.get("maxscore"));
 			maxscore = Integer.parseInt((String) json.get("maxscore"));
 			// add questions
 			JSONArray questions = (JSONArray) json.get("q");
-			for (int i=0; i<questions.length(); i++){
+			for (int i = 0; i < questions.length(); i++) {
 				this.addQuestion((JSONObject) questions.get(i));
 			}
-		} catch (JSONException e){
+		} catch (JSONException e) {
 			e.printStackTrace();
 			return false;
 		}
-		Log.d(TAG,"quiz loaded");
+		Log.d(TAG, "quiz loaded");
 		return true;
 	}
-	
+
 	private boolean addQuestion(JSONObject q) {
-		//determine question type
+		// determine question type
 		QuizQuestion question;
 		String qtype;
 		try {
 			qtype = (String) q.get("type");
-			if(qtype.toLowerCase().equals("essay")){
+			if (qtype.toLowerCase().equals("essay")) {
 				question = new Essay();
-			} else if(qtype.toLowerCase().equals("multichoice")){
+			} else if (qtype.toLowerCase().equals("multichoice")) {
 				question = new MultiChoice();
-			} else if(qtype.toLowerCase().equals("numerical")){
+			} else if (qtype.toLowerCase().equals("numerical")) {
 				question = new Numerical();
-			} else if(qtype.toLowerCase().equals("matching")){
+			} else if (qtype.toLowerCase().equals("matching")) {
 				question = new Matching();
-			} else if(qtype.toLowerCase().equals("shortanswer")){
+			} else if (qtype.toLowerCase().equals("shortanswer")) {
 				question = new ShortAnswer();
 			} else {
-				Log.d(TAG,"Question type "+qtype+" is not yet supported");
+				Log.d(TAG, "Question type " + qtype + " is not yet supported");
 				return false;
 			}
-			
+
 			question.setRefid((String) q.get("refid"));
 			question.setQtext((String) q.get("text"));
 			question.setQhint((String) q.optString("hint"));
 			JSONObject questionProps = (JSONObject) q.get("props");
-			
-			HashMap<String,String> qProps = new HashMap<String,String>();
+
+			HashMap<String, String> qProps = new HashMap<String, String>();
 			for (int k = 0; k < questionProps.names().length(); k++) {
-				qProps.put(questionProps.names().getString(k), questionProps.getString(questionProps.names().getString(k)));
+				qProps.put(questionProps.names().getString(k),
+						questionProps.getString(questionProps.names().getString(k)));
 			}
 			question.setProps(qProps);
-			
+
 			this.questions.add(question);
-			
+
 			// now add response options for this question
 			JSONArray responses = (JSONArray) q.get("r");
-			for (int j=0; j<responses.length(); j++){
+			for (int j = 0; j < responses.length(); j++) {
 				JSONObject r = (JSONObject) responses.get(j);
 				Response responseOption = new Response();
 				responseOption.setText((String) r.get("text"));
 				responseOption.setScore(Float.parseFloat((String) r.get("score")));
 				JSONObject responseProps = (JSONObject) r.get("props");
-				HashMap<String,String> rProps = new HashMap<String,String>();
-				if(responseProps.names() != null){
+				HashMap<String, String> rProps = new HashMap<String, String>();
+				if (responseProps.names() != null) {
 					for (int m = 0; m < responseProps.names().length(); m++) {
-						rProps.put(responseProps.names().getString(m), responseProps.getString(responseProps.names().getString(m)));
+						rProps.put(responseProps.names().getString(m),
+								responseProps.getString(responseProps.names().getString(m)));
 					}
 				}
 				responseOption.setProps(rProps);
 				question.addResponseOption(responseOption);
 			}
-			
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	public boolean hasNext(){
-		if (this.currentq+1 < questions.size()){
+
+	public boolean hasNext() {
+		if (this.currentq + 1 < questions.size()) {
 			return true;
 		}
 		return false;
 	}
-	
-	public boolean hasPrevious(){
-		if (this.currentq > 0){
+
+	public boolean hasPrevious() {
+		if (this.currentq > 0) {
 			return true;
 		}
 		return false;
 	}
-	
-	public void moveNext(){
-		if (currentq+1 < questions.size()){
+
+	public void moveNext() {
+		if (currentq + 1 < questions.size()) {
 			currentq++;
 		}
 	}
 
-	public void movePrevious(){
-		if (currentq > 0){
+	public void movePrevious() {
+		if (currentq > 0) {
 			currentq--;
 		}
 	}
-	
-	public void mark(){
+
+	public void mark() {
 		float total = 0;
-		for (QuizQuestion q : questions){
+		for (QuizQuestion q : questions) {
 			q.mark();
 			total += q.getUserscore();
 		}
-		if (total > maxscore){
+		if (total > maxscore) {
 			userscore = maxscore;
 		} else {
 			userscore = total;
 		}
 	}
-	
+
 	public String getQRef() {
 		return qref;
 	}
+
 	public void setQRef(String qref) {
 		this.qref = qref;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String t) {
 		this.title = t;
 	}
+
 	public String getUrl() {
 		return url;
 	}
+
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
 	public boolean isChecked() {
 		return checked;
 	}
+
 	public void setChecked(boolean checked) {
 		this.checked = checked;
 	}
-	
+
 	public int getCurrentQuestionNo() {
 		return this.currentq + 1;
 	}
 
-	public QuizQuestion getCurrentQuestion(){
+	public QuizQuestion getCurrentQuestion() {
 		return questions.get(this.currentq);
 	}
 
@@ -198,23 +207,33 @@ public class MQuiz implements Serializable{
 	public void setMaxscore(int maxscore) {
 		this.maxscore = maxscore;
 	}
-	
-	public int getTotalNoQuestions(){
+
+	public int getTotalNoQuestions() {
 		return questions.size();
 	}
-	
-	public JSONObject getResultObject(){
+
+	public JSONObject getResultObject() {
+		// exmaple response object:
+		/*
+		 * {"qref":"qt24ff2d08d26a4f","username":"alex","maxscore":"10","userscore"
+		 * :0,"quizdate":1344783510099,"responses":[{"qid":"qqt24ff2f6bdc4b34",
+		 * "score":0,"qrtext":
+		 * "<span class=\"multilang\" lang=\"en\">Spanish</span><span class=\"multilang\" lang=\"es\">Espanol</span>"
+		 * }],"quiztitle":
+		 * "<span class=\"multilang\" lang=\"en\">Question in English</span><span class=\"multilang\" lang=\"es\">Pregunta en Espanol</span>"
+		 * ,"sent":false}
+		 */
 		JSONObject json = new JSONObject();
 		try {
 			json.put("quizid", this.getQRef());
-			// TODO add current date
-			// json.put("quizdate", this.get);
+			// TODO add current date i unix timestamp format (eg 1344783510099)
+			System.currentTimeMillis();
+			json.put("quizdate", System.currentTimeMillis());
 			json.put("userscore", this.getUserscore());
 			json.put("maxscore", this.getMaxscore());
-			
+
 			JSONArray responses = new JSONArray();
-			
-			
+
 			json.put("responses", responses);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -223,5 +242,5 @@ public class MQuiz implements Serializable{
 
 		return json;
 	}
-	
+
 }
