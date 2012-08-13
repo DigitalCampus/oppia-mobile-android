@@ -47,6 +47,21 @@
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/title_about" />
+        
+        <service
+            android:name=".service.TrackerService"
+            android:icon="@drawable/dc_logo"
+            android:label="DC Tracker Service" >
+        </service>
+        
+		<receiver android:name=".service.TrackerScheduleReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".service.TrackerStartServiceReceiver" >
+        </receiver>
+
     </application>
 
 </manifest>

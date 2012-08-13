@@ -273,4 +273,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			return true;
 		}
 	}
+	
+	public void getUnsentLog(){
+		
+	}
 }
