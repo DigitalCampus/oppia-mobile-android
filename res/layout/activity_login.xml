@@ -67,7 +67,7 @@
 				android:layout_height="wrap_content" 
 				android:gravity="left"
 				android:textSize="20sp" 
-				android:id="@+id/mlogin_password_field"
+				android:id="@+id/login_password_field"
 				android:inputType="textPassword"
 				android:padding="5dp"/>
 				
@@ -78,7 +78,8 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:layout_margin="5dp"
-            android:gravity="center" />	
+            android:gravity="center"
+            android:onClick="onLoginClick" />	
             					
     <Button android:id="@+id/register_btn"
             android:layout_width="fill_parent"
@@ -87,6 +88,7 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:layout_margin="5dp"
-            android:gravity="center" />
+            android:gravity="center"
+            android:onClick="onRegisterClick" />
 
 </LinearLayout>
