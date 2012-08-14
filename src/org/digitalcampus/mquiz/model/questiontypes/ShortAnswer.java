@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.digitalcampus.mquiz.model.QuizQuestion;
 import org.digitalcampus.mquiz.model.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ShortAnswer implements Serializable, QuizQuestion {
 
@@ -112,6 +114,21 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 	
 	public int getMaxScore() {
 		return Integer.parseInt(this.getProp("maxscore"));
+	}
+	
+	public JSONObject responsesToJSON() {
+		JSONObject jo = new JSONObject();
+		for(String ur: userResponses ){
+			try {
+				jo.put("qid", refid);
+				jo.put("score",userscore);
+				jo.put("qrtext", ur);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return jo;
 	}
 
 }

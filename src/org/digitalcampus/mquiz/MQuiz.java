@@ -30,9 +30,18 @@ public class MQuiz implements Serializable {
 	private int currentq = 0;
 	private float userscore;
 	private List<QuizQuestion> questions = new ArrayList<QuizQuestion>();
+	private String username;
 
-	public MQuiz() {
+	public MQuiz(String username) {
+		this.username = username;
+	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public boolean load(String quiz) {
@@ -40,7 +49,6 @@ public class MQuiz implements Serializable {
 			JSONObject json = new JSONObject(quiz);
 			qref = (String) json.get("qref");
 			title = (String) json.get("quiztitle");
-			Log.d(TAG, "Maxscore: " + (String) json.get("maxscore"));
 			maxscore = Integer.parseInt((String) json.get("maxscore"));
 			// add questions
 			JSONArray questions = (JSONArray) json.get("q");
@@ -51,7 +59,6 @@ public class MQuiz implements Serializable {
 			e.printStackTrace();
 			return false;
 		}
-		Log.d(TAG, "quiz loaded");
 		return true;
 	}
 
@@ -213,16 +220,6 @@ public class MQuiz implements Serializable {
 	}
 
 	public JSONObject getResultObject() {
-		// exmaple response object:
-		/*
-		 * {"qref":"qt24ff2d08d26a4f","username":"alex","maxscore":"10","userscore"
-		 * :0,"quizdate":1344783510099,"responses":[{"qid":"qqt24ff2f6bdc4b34",
-		 * "score":0,"qrtext":
-		 * "<span class=\"multilang\" lang=\"en\">Spanish</span><span class=\"multilang\" lang=\"es\">Espanol</span>"
-		 * }],"quiztitle":
-		 * "<span class=\"multilang\" lang=\"en\">Question in English</span><span class=\"multilang\" lang=\"es\">Pregunta en Espanol</span>"
-		 * ,"sent":false}
-		 */
 		JSONObject json = new JSONObject();
 		try {
 			json.put("quizid", this.getQRef());
@@ -231,15 +228,18 @@ public class MQuiz implements Serializable {
 			json.put("quizdate", System.currentTimeMillis());
 			json.put("userscore", this.getUserscore());
 			json.put("maxscore", this.getMaxscore());
-
+			//getApplicationContext();
+			json.put("username", this.getUsername());
 			JSONArray responses = new JSONArray();
-
+			for(QuizQuestion q: questions){
+				JSONObject r = q.responsesToJSON();
+				responses.put(r);
+			}
 			json.put("responses", responses);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return json;
 	}
 

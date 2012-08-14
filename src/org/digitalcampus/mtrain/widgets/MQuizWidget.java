@@ -3,6 +3,7 @@ package org.digitalcampus.mtrain.widgets;
 import java.util.List;
 
 import org.digitalcampus.mquiz.MQuiz;
+import org.digitalcampus.mquiz.MQuizDb;
 import org.digitalcampus.mquiz.model.QuizQuestion;
 import org.digitalcampus.mquiz.model.questiontypes.Essay;
 import org.digitalcampus.mquiz.model.questiontypes.Matching;
@@ -25,6 +26,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -47,6 +49,7 @@ public class MQuizWidget extends WidgetFactory {
 	private TextView qText;
 	private String quizContent;
 	private boolean isComplete = false;
+	private String username;
 	
 	public MQuizWidget(Context context, Module module, Activity activity) {
 		super(context, module, activity);
@@ -61,7 +64,8 @@ public class MQuizWidget extends WidgetFactory {
 		
 		// TODO error check that "content" is in the hashmap
 		quizContent = activity.getActivityData().get("content");
-		mQuiz = new MQuiz();
+		username = PreferenceManager.getDefaultSharedPreferences(context).getString("prefUsername", "");
+		mQuiz = new MQuiz(username);
 		mQuiz.load(quizContent);
 
 		this.showQuestion();
@@ -192,11 +196,14 @@ public class MQuizWidget extends WidgetFactory {
 		float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
 		
 		// log the activity as complete
-		//Tracker t = new Tracker(this.ctx);
-		//t.activityComplete(module.getModId(), activity.getDigest());
 		isComplete = true;
 		
-		// TODO save results somewhere ready to send back to the mquiz server
+		// save results ready to send back to the mquiz server
+		String data = mQuiz.getResultObject().toString();
+		MQuizDb db = new MQuizDb(ctx);
+		db.insertResult(data);
+		db.close();
+		Log.d(TAG,data);
 		
 		LinearLayout responsesLL = (LinearLayout) ((android.app.Activity) ctx).findViewById(R.id.quizResponseWidget);
     	responsesLL.removeAllViews();
@@ -232,12 +239,14 @@ public class MQuizWidget extends WidgetFactory {
 				restart();
 			}
 		});
+		
+		
 		responsesLL.addView(restartBtn);
 	}
 
 	private void restart() {
 		Log.d(TAG,"restarting");
-		mQuiz = new MQuiz();
+		mQuiz = new MQuiz(username);
 		mQuiz.load(quizContent);
 
 		this.showQuestion();

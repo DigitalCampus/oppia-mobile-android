@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONObject;
+
 
 public interface QuizQuestion extends Serializable {
 	
@@ -40,5 +42,7 @@ public interface QuizQuestion extends Serializable {
 	public String getFeedback();
 	
 	public int getMaxScore();
+	
+	public JSONObject responsesToJSON();
 	
 }

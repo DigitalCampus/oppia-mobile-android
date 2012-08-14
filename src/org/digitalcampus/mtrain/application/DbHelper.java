@@ -53,7 +53,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	// Constructor
 	public DbHelper(Context context) { //
 		super(context, DB_NAME, null, DB_VERSION);
-		db = this.getReadableDatabase();
+		db = this.getWritableDatabase();
 	}
 
 	@Override

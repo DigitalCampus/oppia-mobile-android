@@ -14,6 +14,7 @@ import org.digitalcampus.mtrain.task.InstallModulesTask;
 import org.digitalcampus.mtrain.utils.FileUtils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -79,14 +80,11 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 			startActivity(new Intent(MTrainActivity.this, LoginActivity.class));
 		}
 		
-		
 		DbHelper db = new DbHelper(this);
 		ArrayList<Module> modules = db.getModules();
 		db.close();
-
-		if (modules.size() > 0) {
-			displayModules(modules);
-		}
+		displayModules(modules);
+		
 	}
 
 	public void onDestroy() {
@@ -165,7 +163,8 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 			startActivity(new Intent(this, DownloadActivity.class));
 			return true;
 		case R.id.menu_settings:
-			startActivity(new Intent(this, PrefsActivity.class));
+			Intent i = new Intent(this, PrefsActivity.class);
+			startActivity(i);
 			return true;
 		case R.id.menu_language:
 			return true;
@@ -230,7 +229,11 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		Log.d(TAG,"Check that any change to username/password still works");
+		
+	}
+	
+	public void manageBtnClick(View view){
+		startActivity(new Intent(this, DownloadActivity.class));
 	}
 	
 	public boolean isLoggedIn(){
@@ -242,5 +245,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 			return true;
 		}
 	}
+
 
 }

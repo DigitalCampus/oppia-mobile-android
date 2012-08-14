@@ -21,7 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-public class LoginActivity extends Activity implements OnSharedPreferenceChangeListener, LoginListener  {
+public class LoginActivity extends Activity implements LoginListener  {
 
 	public static final String TAG = "LoginActivity";
 	private SharedPreferences prefs;
@@ -35,7 +35,6 @@ public class LoginActivity extends Activity implements OnSharedPreferenceChangeL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		prefs.registerOnSharedPreferenceChangeListener(this);
 		
         emailField = (EditText) findViewById(R.id.login_email_field);
         passwordField = (EditText) findViewById(R.id.login_password_field);
