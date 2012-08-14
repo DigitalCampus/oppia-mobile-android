@@ -33,6 +33,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -72,6 +73,13 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 	public void onStart() {
 		super.onStart();
 
+		// TODO Check user is logged in
+		if(!isLoggedIn()){
+			Log.d(TAG,"not logged in");
+			startActivity(new Intent(MTrainActivity.this, LoginActivity.class));
+		}
+		
+		
 		DbHelper db = new DbHelper(this);
 		ArrayList<Module> modules = db.getModules();
 		db.close();
@@ -109,6 +117,15 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 			ll.setVisibility(View.GONE);
 		} else {
 			ll.setVisibility(View.VISIBLE);
+			Button manageBtn = (Button) this.findViewById(R.id.manage_modules_btn);
+			manageBtn.setOnClickListener(new View.OnClickListener() {
+
+				public void onClick(View v) {
+					startActivity(new Intent(MTrainActivity.this, DownloadActivity.class));
+             	}
+			});
+			
+			
 		}
 
 		ModuleListAdapter mla = new ModuleListAdapter(this, modules);
@@ -213,7 +230,17 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+		Log.d(TAG,"Check that any change to username/password still works");
+	}
+	
+	public boolean isLoggedIn(){
+		String username = prefs.getString("prefUsername", "");
+		String password = prefs.getString("prefPassword", "");
+		if(username.equals("") || password.equals("")){
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

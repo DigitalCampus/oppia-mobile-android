@@ -45,4 +45,10 @@
 	<string name="prefServerTimeoutConnectionDefault">10000</string>
 	<string name="prefServerTimeoutResponse">Response timeout</string>
 	<string name="prefServerTimeoutResponseDefault">20000</string>
+	
+	<string name="title_login">Login</string>
+	<string name="login_email_title">Email/Username</string>
+	<string name="login_password_title">Password</string>
+	<string name="title_register">Register</string>
+	
 </resources>

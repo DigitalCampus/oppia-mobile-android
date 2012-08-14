@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/background_gradient" >
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="48dip"
+            android:layout_height="48dip"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="2dip"
+            android:contentDescription="@string/main_logo_alt"
+            android:src="@drawable/dc_logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_margin="2dip"
+            android:layout_toRightOf="@id/icon"
+            android:gravity="center_vertical"
+            android:text="@string/app_name"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+    
+    <TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" 
+				android:gravity="center"
+				android:textSize="20sp" 
+				android:id="@+id/main_unregistered"
+				android:text="@string/title_login"
+				android:textStyle="bold"
+				android:layout_margin="10dp"/>
+				
+	<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" 
+				android:gravity="left"
+				android:textSize="20sp" 
+				android:id="@+id/main_email_title"
+				android:text="@string/login_email_title"
+				android:padding="5dp" />
+	
+	<EditText android:layout_width="fill_parent"
+				android:layout_height="wrap_content" 
+				android:gravity="left"
+				android:textSize="20sp" 
+				android:id="@+id/login_email_field"
+				android:inputType="text"
+				android:padding="5dp"/>
+				
+	<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content" 
+				android:gravity="left"
+				android:textSize="20sp" 
+				android:id="@+id/main_password_title"
+				android:text="@string/login_password_title" 
+				android:padding="5dp"/>
+	
+	<EditText android:layout_width="fill_parent"
+				android:layout_height="wrap_content" 
+				android:gravity="left"
+				android:textSize="20sp" 
+				android:id="@+id/mlogin_password_field"
+				android:inputType="textPassword"
+				android:padding="5dp"/>
+				
+	<Button android:id="@+id/login_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_login" 
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:gravity="center" />	
+            					
+    <Button android:id="@+id/register_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_register" 
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:gravity="center" />
+
+</LinearLayout>

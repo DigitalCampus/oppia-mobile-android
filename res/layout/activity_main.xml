@@ -35,7 +35,8 @@
         android:id="@+id/no_modules"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,8 +45,17 @@
             android:gravity="center"
             android:text="@string/no_modules"
             android:textSize="20dp" />
+        
+        <Button android:id="@+id/manage_modules_btn" 
+			android:layout_height="wrap_content" 
+			android:layout_width="wrap_content"
+			android:text="@string/title_download_activity"
+			android:textSize="20dp" 
+			android:gravity="center"
+			android:layout_margin="10dp"/>
+        
     </LinearLayout>
-
+    
     <ListView
         android:id="@+id/module_list"
         android:layout_width="fill_parent"

@@ -47,7 +47,11 @@
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/title_about" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:label="@string/title_login" />
         
+        <!-- TODO make label a proper string -->
         <service
             android:name=".service.TrackerService"
             android:icon="@drawable/dc_logo"
