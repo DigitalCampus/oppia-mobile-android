@@ -51,4 +51,10 @@
 	<string name="login_password_title">Password</string>
 	<string name="title_register">Register</string>
 	
+	<string name="register_form_email_title">Email address</string>
+	<string name="register_form_firstname_title">First name</string>
+	<string name="register_form_lastname_title">Last name</string>
+	<string name="register_form_password_title">Password</string>
+	<string name="register_form_password_again_title">Password (again)</string>
+	<string name="register_btn_text">Register</string>
 </resources>

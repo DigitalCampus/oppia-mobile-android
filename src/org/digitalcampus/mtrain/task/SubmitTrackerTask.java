@@ -64,7 +64,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				publishProgress("Sending log...." + l.id);
 				
 				// add post params
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
 				nameValuePairs.add(new BasicNameValuePair("password", prefs.getString("prefPassword", "")));
 				nameValuePairs.add(new BasicNameValuePair("content", l.content));

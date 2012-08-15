@@ -14,13 +14,11 @@ import org.digitalcampus.mtrain.task.InstallModulesTask;
 import org.digitalcampus.mtrain.utils.FileUtils;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -38,7 +36,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-public class MTrainActivity extends Activity implements InstallModuleListener, OnSharedPreferenceChangeListener {
+public class MTrainActivity extends Activity implements InstallModuleListener {
 
 	public static final String TAG = "MTrainActivity";
 	private SharedPreferences prefs;
@@ -49,7 +47,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		setContentView(R.layout.activity_main);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 
 		// set up local dirs
@@ -86,7 +83,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		displayModules(modules);
 		
 	}
-
+	
 	public void onDestroy() {
 		unbindService(mConnection);
 		super.onDestroy();
@@ -226,10 +223,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 			db.close();
 			return super.onContextItemSelected(item);
 		}
-	}
-
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		
 	}
 	
 	public void manageBtnClick(View view){

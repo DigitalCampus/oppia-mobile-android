@@ -31,15 +31,15 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class LoginTask extends AsyncTask<Payload, Object, Payload> {
+public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 
-	public static final String TAG = "LoginTask";
+	public static final String TAG = "RegisterTask";
 
 	private Context ctx;
 	private SharedPreferences prefs;
 	private SubmitListener mStateListener;
 	
-	public LoginTask(Context c) {
+	public RegisterTask(Context c) {
 		this.ctx = c;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
@@ -60,7 +60,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 							ctx.getString(R.string.prefServerTimeoutResponseDefault))));
 			DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 
-			String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MTrain.LOGIN_PATH;
+			String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MTrain.REGISTER_PATH;
 			HttpPost httpPost = new HttpPost(url);
 			try {
 				// update progress dialog
@@ -68,8 +68,11 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 				Log.d(TAG,"logging in ...." + u.username);
 				// add post params
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair("username", u.username));
+				nameValuePairs.add(new BasicNameValuePair("email", u.username));
 				nameValuePairs.add(new BasicNameValuePair("password", u.password));
+				nameValuePairs.add(new BasicNameValuePair("passwordagain", u.passwordAgain));
+				nameValuePairs.add(new BasicNameValuePair("firstname", u.firstname));
+				nameValuePairs.add(new BasicNameValuePair("lastname", u.lastname));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 				// make request

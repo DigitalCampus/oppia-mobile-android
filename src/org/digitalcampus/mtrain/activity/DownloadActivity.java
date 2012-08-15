@@ -102,7 +102,7 @@ public class DownloadActivity extends Activity {
     			Log.d(TAG,"connecting to: "+url);
     			try {
     				// add post params
-    				//List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+    				//List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
     				//nameValuePairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
     				//nameValuePairs.add(new BasicNameValuePair("password", prefs.getString("prefPassword", "")));
     				//httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));

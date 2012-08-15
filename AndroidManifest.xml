@@ -50,6 +50,9 @@
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/title_login" />
+         <activity
+            android:name=".activity.RegisterActivity"
+            android:label="@string/title_register" />
         
         <!-- TODO make label a proper string -->
         <service

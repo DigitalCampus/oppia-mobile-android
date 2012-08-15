@@ -2,7 +2,8 @@ package org.digitalcampus.mtrain.activity;
 
 import org.apache.commons.validator.EmailValidator;
 import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.listener.LoginListener;
+import org.digitalcampus.mtrain.application.MTrain;
+import org.digitalcampus.mtrain.listener.SubmitListener;
 import org.digitalcampus.mtrain.model.User;
 import org.digitalcampus.mtrain.task.LoginTask;
 import org.digitalcampus.mtrain.task.Payload;
@@ -14,14 +15,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-public class LoginActivity extends Activity implements LoginListener  {
+public class LoginActivity extends Activity implements SubmitListener  {
 
 	public static final String TAG = "LoginActivity";
 	private SharedPreferences prefs;
@@ -45,9 +47,9 @@ public class LoginActivity extends Activity implements LoginListener  {
 		String email = emailField.getText().toString();
 		Log.d(TAG,email);
     	//check valid email address format
-    	//boolean isValidEmail = EmailValidator.getInstance().isValid(email);
-    	//if(!isValidEmail){
-    	if(email.length()<4){
+    	boolean isValidEmail = EmailValidator.getInstance().isValid(email);
+    	if(!isValidEmail){
+    	//if(email.length()<4){
     		// TODO change to proper lang strings
     		this.showAlert("Error","Please enter a valid email address format");
     		return;
@@ -56,9 +58,9 @@ public class LoginActivity extends Activity implements LoginListener  {
     	// get text from email
     	String password = passwordField.getText().toString();
     	//check length
-    	if(password.length()<6){
+    	if(password.length()< MTrain.PASSWORD_MIN_LENGTH ){
     		// TODO change to proper lang strings
-    		this.showAlert("Error","You password should be 6 characters or more");
+    		this.showAlert("Error","You password should be "+MTrain.PASSWORD_MIN_LENGTH+" characters or more");
     		return;
     	}
     	
@@ -85,7 +87,9 @@ public class LoginActivity extends Activity implements LoginListener  {
 	}
 	
 	public void onRegisterClick(View view){
-		Log.d(TAG,"Registering");
+		Intent i = new Intent(this, RegisterActivity.class);
+		startActivity(i);
+		finish();
 		
 	}
 	
@@ -104,7 +108,7 @@ public class LoginActivity extends Activity implements LoginListener  {
 		builder.show();
     }
 
-	public void loginComplete(Payload response) {
+	public void submitComplete(Payload response) {
 		pDialog.dismiss();
 		Log.d(TAG,"Login activity reports: " + response.resultResponse);
 		if(response.result){
@@ -115,11 +119,28 @@ public class LoginActivity extends Activity implements LoginListener  {
 	    	editor.commit();
 	    	
 			// return to main activity
-	    	Intent i = new Intent(this,MTrainActivity.class);
-			startActivity(i);
 			finish();
 		} else {
 			showAlert("Login", response.resultResponse);
+		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_login, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			Intent i = new Intent(this, PrefsActivity.class);
+			startActivity(i);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 }

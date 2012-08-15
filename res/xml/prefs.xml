@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference 
-    	android:title="@string/prefServer" 
-    	android:key="prefServer" 
-    	android:defaultValue="@string/prefServerDefault"></EditTextPreference>
-    <EditTextPreference 
-    	android:title="@string/prefUsername"
-    	android:key="prefUsername"
-    	android:defaultValue=""></EditTextPreference>
-    <EditTextPreference 
-    	android:title="@string/prefPassword" 
-    	android:key="prefPassword"
-    	android:inputType="textPassword"
-    	android:defaultValue=""></EditTextPreference>
-    <PreferenceCategory
-		android:title="@string/prefAdvanced">
-		<EditTextPreference 
-	    	android:title="@string/prefServerTimeoutConnection" 
-	    	android:key="prefServerTimeoutConnection"
-	    	android:defaultValue="@string/prefServerTimeoutConnectionDefault"></EditTextPreference>
-	    <EditTextPreference 
-	    	android:title="@string/prefServerTimeoutResponse" 
-	    	android:key="prefServerTimeoutResponse"
-			android:defaultValue="@string/prefServerTimeoutResponseDefault"></EditTextPreference>
-	</PreferenceCategory>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
+        android:defaultValue=""
+        android:key="prefUsername"
+        android:title="@string/prefUsername" >
+    </EditTextPreference>
+    <EditTextPreference
+        android:defaultValue=""
+        android:inputType="textPassword"
+        android:key="prefPassword"
+        android:title="@string/prefPassword" >
+    </EditTextPreference>
+
+    <PreferenceCategory android:title="@string/prefAdvanced" >
+        <EditTextPreference
+            android:defaultValue="@string/prefServerDefault"
+            android:key="prefServer"
+            android:title="@string/prefServer" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:defaultValue="@string/prefServerTimeoutConnectionDefault"
+            android:key="prefServerTimeoutConnection"
+            android:title="@string/prefServerTimeoutConnection" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:defaultValue="@string/prefServerTimeoutResponseDefault"
+            android:key="prefServerTimeoutResponse"
+            android:title="@string/prefServerTimeoutResponse" >
+        </EditTextPreference>
+    </PreferenceCategory>
+
 </PreferenceScreen>
