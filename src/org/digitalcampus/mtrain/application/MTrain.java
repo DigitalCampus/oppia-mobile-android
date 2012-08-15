@@ -20,6 +20,7 @@ public class MTrain extends Application {
 	public static final String TRACKER_PATH = "/api/?method=tracker";
 	public static final String LOGIN_PATH = "/api/?method=login";
 	public static final String REGISTER_PATH = "/api/?method=register";
+	public static final String MQUIZ_SUBMIT_PATH = "/api/?method=submit";
 	
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	

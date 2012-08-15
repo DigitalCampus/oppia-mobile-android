@@ -2,6 +2,7 @@ package org.digitalcampus.mtrain.service;
 
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.task.Payload;
+import org.digitalcampus.mtrain.task.SubmitMQuizTask;
 import org.digitalcampus.mtrain.task.SubmitTrackerTask;
 
 import android.app.Service;
@@ -23,10 +24,17 @@ public class TrackerService extends Service {
 
 		if(isOnline()){
 			DbHelper db = new DbHelper(this);
+			
 			Payload p = db.getUnsentLog();
 			SubmitTrackerTask stt = new SubmitTrackerTask(this);
 			stt.execute(p);
+			
+			Payload mqp = db.getUnsentMquiz();
+			SubmitMQuizTask smqt = new SubmitMQuizTask(this);
+			smqt.execute(mqp);
+			
 			db.close();
+
 		}
 		return Service.START_NOT_STICKY;
 	}

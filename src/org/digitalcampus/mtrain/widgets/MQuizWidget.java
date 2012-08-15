@@ -3,7 +3,6 @@ package org.digitalcampus.mtrain.widgets;
 import java.util.List;
 
 import org.digitalcampus.mquiz.MQuiz;
-import org.digitalcampus.mquiz.MQuizDb;
 import org.digitalcampus.mquiz.model.QuizQuestion;
 import org.digitalcampus.mquiz.model.questiontypes.Essay;
 import org.digitalcampus.mquiz.model.questiontypes.Matching;
@@ -12,6 +11,7 @@ import org.digitalcampus.mquiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mquiz.model.questiontypes.Numerical;
 import org.digitalcampus.mquiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.model.Activity;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.widgets.mquiz.EssayWidget;
@@ -50,10 +50,12 @@ public class MQuizWidget extends WidgetFactory {
 	private String quizContent;
 	private boolean isComplete = false;
 	private String username;
+	private Module module; 
 	
 	public MQuizWidget(Context context, Module module, Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
+		this.module = module;
 		
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
 		super.getLayout().addView(vv);
@@ -200,8 +202,8 @@ public class MQuizWidget extends WidgetFactory {
 		
 		// save results ready to send back to the mquiz server
 		String data = mQuiz.getResultObject().toString();
-		MQuizDb db = new MQuizDb(ctx);
-		db.insertResult(data);
+		DbHelper db = new DbHelper(ctx);
+		db.insertMQuizResult(data, module.getModId());
 		db.close();
 		Log.d(TAG,data);
 		

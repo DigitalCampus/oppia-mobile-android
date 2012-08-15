@@ -30,15 +30,15 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
+public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 
-	public final static String TAG = "SubmitTrackerTask";
-	public final static int SUBMIT_LOG_TASK = 1001;
+	public final static String TAG = "SubmitMQuizTask";
+	public final static int SUBMIT_MQUIZ_TASK = 1002;
 	
 	private Context ctx;
 	private SharedPreferences prefs;
 	
-	public SubmitTrackerTask(Context c){
+	public SubmitMQuizTask(Context c){
 		this.ctx = c;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
@@ -56,12 +56,12 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 			HttpConnectionParams.setSoTimeout(httpParameters, Integer.parseInt(prefs.getString("prefServerTimeoutResponse", ctx.getString(R.string.prefServerTimeoutResponseDefault))));
 			DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 			
-			String url = prefs.getString("prefServer" , ctx.getString(R.string.prefServerDefault)) + MTrain.TRACKER_PATH;
+			String url = prefs.getString("prefServer" , ctx.getString(R.string.prefServerDefault)) + MTrain.MQUIZ_SUBMIT_PATH;
 			HttpPost httpPost = new HttpPost(url);
 			try {
 				// update progress dialog
 				Log.d(TAG,"Sending log...." + l.id);
-				
+				Log.d(TAG,"Sending content...." + l.content);
 				// add post params
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
@@ -85,8 +85,8 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				JSONObject json = new JSONObject(response);
 				if(json.has("result")){
 					if(json.getBoolean("result")){
-						Log.d(TAG,l.digest+ " marked as submitted");
-						db.markLogSubmitted(l.id);
+						Log.d(TAG,l.id+ " marked as submitted");
+						db.markMQuizSubmitted(l.id);
 					}
 				}
 				

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.digitalcampus.mtrain.model.Activity;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.task.Payload;
+import org.digitalcampus.mtrain.task.SubmitMQuizTask;
 import org.digitalcampus.mtrain.task.SubmitTrackerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,35 +22,43 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
 	static final String DB_NAME = "mtrain.db";
-	static final int DB_VERSION = 2;
+	static final int DB_VERSION = 3;
 
 	private SQLiteDatabase db;
 
-	public static final String MODULE_TABLE = "Module";
-	public static final String MODULE_C_ID = BaseColumns._ID;
-	public static final String MODULE_C_VERSIONID = "versionid";
-	public static final String MODULE_C_TITLE = "title";
-	public static final String MODULE_C_SHORTNAME = "shortname";
-	public static final String MODULE_C_LOCATION = "location";
+	private static final String MODULE_TABLE = "Module";
+	private static final String MODULE_C_ID = BaseColumns._ID;
+	private static final String MODULE_C_VERSIONID = "versionid";
+	private static final String MODULE_C_TITLE = "title";
+	private static final String MODULE_C_SHORTNAME = "shortname";
+	private static final String MODULE_C_LOCATION = "location";
 
-	public static final String ACTIVITY_TABLE = "Activity";
-	public static final String ACTIVITY_C_ID = BaseColumns._ID;
-	public static final String ACTIVITY_C_MODID = "modid"; // reference to
+	private static final String ACTIVITY_TABLE = "Activity";
+	private static final String ACTIVITY_C_ID = BaseColumns._ID;
+	private static final String ACTIVITY_C_MODID = "modid"; // reference to
 															// MODULE_C_ID
-	public static final String ACTIVITY_C_SECTIONID = "sectionid";
-	public static final String ACTIVITY_C_ACTID = "activityid";
-	public static final String ACTIVITY_C_ACTTYPE = "activitytype";
-	public static final String ACTIVITY_C_ACTIVITYDIGEST = "digest";
+	private static final String ACTIVITY_C_SECTIONID = "sectionid";
+	private static final String ACTIVITY_C_ACTID = "activityid";
+	private static final String ACTIVITY_C_ACTTYPE = "activitytype";
+	private static final String ACTIVITY_C_ACTIVITYDIGEST = "digest";
 
-	public static final String LOG_TABLE = "Log";
-	public static final String LOG_C_ID = BaseColumns._ID;
-	public static final String LOG_C_MODID = "modid"; // reference to
+	private static final String LOG_TABLE = "Log";
+	private static final String LOG_C_ID = BaseColumns._ID;
+	private static final String LOG_C_MODID = "modid"; // reference to
 														// MODULE_C_ID
-	public static final String LOG_C_DATETIME = "logdatetime";
-	public static final String LOG_C_ACTIVITYDIGEST = "digest";
-	public static final String LOG_C_DATA = "logdata";
-	public static final String LOG_C_SUBMITTED = "logsubmitted";
+	private static final String LOG_C_DATETIME = "logdatetime";
+	private static final String LOG_C_ACTIVITYDIGEST = "digest";
+	private static final String LOG_C_DATA = "logdata";
+	private static final String LOG_C_SUBMITTED = "logsubmitted";
 
+	
+	private static final String MQUIZRESULTS_TABLE = "results";
+	private static final String MQUIZRESULTS_C_ID = BaseColumns._ID;
+	private static final String MQUIZRESULTS_C_DATETIME = "resultdatetime";
+	private static final String MQUIZRESULTS_C_DATA = "content";
+	private static final String MQUIZRESULTS_C_SENT = "submitted";
+	private static final String MQUIZRESULTS_C_MODID = "moduleid";
+	
 	// Constructor
 	public DbHelper(Context context) { //
 		super(context, DB_NAME, null, DB_VERSION);
@@ -61,6 +70,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		createModuleTable(db);
 		createActivityTable(db);
 		createLogTable(db);
+		createMquizResultsTable(db);
 	}
 
 	public void createModuleTable(SQLiteDatabase db){
@@ -95,11 +105,23 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(l_sql);
 	}
 
+	public void createMquizResultsTable(SQLiteDatabase db){
+		String m_sql = "create table " + MQUIZRESULTS_TABLE + " (" + 
+							MQUIZRESULTS_C_ID + " integer primary key autoincrement, " + 
+							MQUIZRESULTS_C_DATETIME + " datetime default current_timestamp, " + 
+							MQUIZRESULTS_C_DATA + " text, " +  
+							MQUIZRESULTS_C_SENT + " integer default 0, "+
+							MQUIZRESULTS_C_MODID + " integer)";
+		Log.d(TAG, "MQuizr esults  sql: " + m_sql);
+		db.execSQL(m_sql);
+	}
+	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
 		db.execSQL("drop table if exists " + MODULE_TABLE);
 		db.execSQL("drop table if exists " + ACTIVITY_TABLE);
 		db.execSQL("drop table if exists " + LOG_TABLE);
+		db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
 		onCreate(db);
 	}
 
@@ -112,36 +134,36 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(MODULE_TABLE, null, selection, selArgs, null, null, null);
 
 		ContentValues values = new ContentValues();
-		values.put(DbHelper.MODULE_C_VERSIONID, versionid);
-		values.put(DbHelper.MODULE_C_TITLE, title);
-		values.put(DbHelper.MODULE_C_LOCATION, location);
-		values.put(DbHelper.MODULE_C_SHORTNAME, shortname);
+		values.put(MODULE_C_VERSIONID, versionid);
+		values.put(MODULE_C_TITLE, title);
+		values.put(MODULE_C_LOCATION, location);
+		values.put(MODULE_C_SHORTNAME, shortname);
 
 		if (c.getCount() == 0) {
 			c.close();
 			// just insert
 			Log.v(TAG, "Record added");
-			return db.insertOrThrow(DbHelper.MODULE_TABLE, null, values);
+			return db.insertOrThrow(MODULE_TABLE, null, values);
 		} else {
 			// check that the version id of new module is greater than existing
 			c.moveToFirst();
 
 			long toUpdate = 0;
 			while (c.isAfterLast() == false) {
-				Log.v(TAG, "Installed version: " + c.getString(c.getColumnIndex(DbHelper.MODULE_C_VERSIONID)));
+				Log.v(TAG, "Installed version: " + c.getString(c.getColumnIndex(MODULE_C_VERSIONID)));
 				Log.v(TAG, "New version: " + versionid);
-				if (Long.valueOf(versionid) > c.getLong(c.getColumnIndex(DbHelper.MODULE_C_VERSIONID))) {
-					toUpdate = c.getLong(c.getColumnIndex(DbHelper.MODULE_C_ID));
+				if (Long.valueOf(versionid) > c.getLong(c.getColumnIndex(MODULE_C_VERSIONID))) {
+					toUpdate = c.getLong(c.getColumnIndex(MODULE_C_ID));
 				}
 				c.moveToNext();
 			}
 			c.close();
 			if (toUpdate != 0) {
-				db.update(DbHelper.MODULE_TABLE, values, DbHelper.MODULE_C_ID + "=" + toUpdate, null);
+				db.update(MODULE_TABLE, values, MODULE_C_ID + "=" + toUpdate, null);
 				// remove all the old activities
-				String s = DbHelper.ACTIVITY_C_MODID + "=?";
+				String s = ACTIVITY_C_MODID + "=?";
 				String[] args = new String[] { String.valueOf(toUpdate) };
-				db.delete(DbHelper.ACTIVITY_TABLE, s, args);
+				db.delete(ACTIVITY_TABLE, s, args);
 				return toUpdate;
 			} else {
 				return -1;
@@ -153,12 +175,12 @@ public class DbHelper extends SQLiteOpenHelper {
 		// acts.listIterator();
 		for (Activity a : acts) {
 			ContentValues values = new ContentValues();
-			values.put(DbHelper.ACTIVITY_C_MODID, a.getModId());
-			values.put(DbHelper.ACTIVITY_C_SECTIONID, a.getSectionId());
-			values.put(DbHelper.ACTIVITY_C_ACTID, a.getActId());
-			values.put(DbHelper.ACTIVITY_C_ACTTYPE, a.getActType());
-			values.put(DbHelper.ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
-			db.insertOrThrow(DbHelper.ACTIVITY_TABLE, null, values);
+			values.put(ACTIVITY_C_MODID, a.getModId());
+			values.put(ACTIVITY_C_SECTIONID, a.getSectionId());
+			values.put(ACTIVITY_C_ACTID, a.getActId());
+			values.put(ACTIVITY_C_ACTTYPE, a.getActType());
+			values.put(ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
+			db.insertOrThrow(ACTIVITY_TABLE, null, values);
 		}
 	}
 
@@ -169,9 +191,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
 			Module m = new Module();
-			m.setModId(c.getInt(c.getColumnIndex(DbHelper.MODULE_C_ID)));
-			m.setLocation(c.getString(c.getColumnIndex(DbHelper.MODULE_C_LOCATION)));
-			m.setTitle(c.getString(c.getColumnIndex(DbHelper.MODULE_C_TITLE)));
+			m.setModId(c.getInt(c.getColumnIndex(MODULE_C_ID)));
+			m.setLocation(c.getString(c.getColumnIndex(MODULE_C_LOCATION)));
+			m.setTitle(c.getString(c.getColumnIndex(MODULE_C_TITLE)));
 			m.setProgress(this.getModuleProgress(m.getModId()));
 			modules.add(m);
 			c.moveToNext();
@@ -182,10 +204,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public long insertLog(int modId, String digest, String data){
 		ContentValues values = new ContentValues();
-		values.put(DbHelper.LOG_C_MODID, modId);
-		values.put(DbHelper.LOG_C_ACTIVITYDIGEST, digest);
-		values.put(DbHelper.LOG_C_DATA, data);
-		return db.insertOrThrow(DbHelper.LOG_TABLE, null, values);
+		values.put(LOG_C_MODID, modId);
+		values.put(LOG_C_ACTIVITYDIGEST, digest);
+		values.put(LOG_C_DATA, data);
+		return db.insertOrThrow(LOG_TABLE, null, values);
 	}
 	
 	public float getModuleProgress(int modId){
@@ -232,9 +254,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public int resetModule(int modId){
-		String s = DbHelper.LOG_C_MODID + "=?";
+		// delete quiz results
+		this.deleteMQuizResults(modId);
+		
+		String s = LOG_C_MODID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
-		return db.delete(DbHelper.LOG_TABLE, s, args);
+		return db.delete(LOG_TABLE, s, args);
 	}
 	
 	public void deleteModule(int modId){
@@ -242,18 +267,21 @@ public class DbHelper extends SQLiteOpenHelper {
 		resetModule(modId);
 		
 		// delete activities
-		String s = DbHelper.ACTIVITY_C_MODID + "=?";
+		String s = ACTIVITY_C_MODID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
-		db.delete(DbHelper.ACTIVITY_TABLE, s, args);
+		db.delete(ACTIVITY_TABLE, s, args);
 		
 		// delete module
-		s = DbHelper.MODULE_C_ID + "=?";
+		s = MODULE_C_ID + "=?";
 		args = new String[] { String.valueOf(modId) };
-		db.delete(DbHelper.MODULE_TABLE, s, args);
+		db.delete(MODULE_TABLE, s, args);
+		
+		// delete any quiz attempts
+		this.deleteMQuizResults(modId);
 	}
 	
 	public boolean isInstalled(String shortname){
-		String s = DbHelper.MODULE_C_SHORTNAME + "=?";
+		String s = MODULE_C_SHORTNAME + "=?";
 		String[] args = new String[] { shortname };
 		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
@@ -266,7 +294,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public boolean toUpdate(String shortname, Double version){
-		String s = DbHelper.MODULE_C_SHORTNAME + "=? AND "+ MODULE_C_VERSIONID + "< ?";
+		String s = MODULE_C_SHORTNAME + "=? AND "+ MODULE_C_VERSIONID + "< ?";
 		String[] args = new String[] { shortname, String.format("%.0f", version) };
 		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
@@ -279,7 +307,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public Payload getUnsentLog(){
-		String s = DbHelper.LOG_C_SUBMITTED + "=? ";
+		String s = LOG_C_SUBMITTED + "=? ";
 		String[] args = new String[] { "0" };
 		Cursor c = db.query(LOG_TABLE, null, s, args, null, null, null);
 		int count = c.getCount();
@@ -289,6 +317,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		while (c.isAfterLast() == false) {
 			org.digitalcampus.mtrain.model.Log so = new org.digitalcampus.mtrain.model.Log();
 			so.id = c.getLong(c.getColumnIndex(LOG_C_ID));
+			so.digest = c.getString(c.getColumnIndex(LOG_C_ACTIVITYDIGEST));
 			String content = "";
 			try {
 				JSONObject json = new JSONObject(c.getString(c.getColumnIndex(LOG_C_DATA)));
@@ -313,8 +342,51 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public int markLogSubmitted(long rowId){
 		ContentValues values = new ContentValues();
-		values.put(DbHelper.LOG_C_SUBMITTED, 1);
+		values.put(LOG_C_SUBMITTED, 1);
 		
-		return db.update(DbHelper.LOG_TABLE, values, DbHelper.LOG_C_ID + "=" + rowId, null);
+		return db.update(LOG_TABLE, values, LOG_C_ID + "=" + rowId, null);
+	}
+	
+	public long insertMQuizResult(String data, int modId){
+		ContentValues values = new ContentValues();
+		values.put(MQUIZRESULTS_C_DATA, data);
+		values.put(MQUIZRESULTS_C_MODID, modId);
+		return db.insertOrThrow(MQUIZRESULTS_TABLE, null, values);
+	}
+	
+	public Payload getUnsentMquiz(){
+		String s = MQUIZRESULTS_C_SENT + "=? ";
+		String[] args = new String[] { "0" };
+		Cursor c = db.query(MQUIZRESULTS_TABLE, null, s, args, null, null, null);
+		int count = c.getCount();
+		c.moveToFirst();
+		int counter = 0;
+		org.digitalcampus.mtrain.model.Log[] sl = new org.digitalcampus.mtrain.model.Log[count];
+		while (c.isAfterLast() == false) {
+			org.digitalcampus.mtrain.model.Log so = new org.digitalcampus.mtrain.model.Log();
+			so.id = c.getLong(c.getColumnIndex(MQUIZRESULTS_C_ID));
+			so.content  = c.getString(c.getColumnIndex(MQUIZRESULTS_C_DATA));
+			sl[counter] = so;
+			counter++;
+			c.moveToNext();
+		}
+		Payload p = new Payload(SubmitMQuizTask.SUBMIT_MQUIZ_TASK,sl);
+		c.close();
+		
+		return p;
+	}
+	
+	public int markMQuizSubmitted(long rowId){
+		ContentValues values = new ContentValues();
+		values.put(MQUIZRESULTS_C_SENT, 1);
+		
+		return db.update(MQUIZRESULTS_TABLE, values, MQUIZRESULTS_C_ID + "=" + rowId, null);
+	}
+	
+	public void deleteMQuizResults(int modId){
+		// delete any quiz attempts
+		String s = MQUIZRESULTS_C_MODID + "=?";
+		String[] args = new String[] { String.valueOf(modId) };
+		db.delete(MQUIZRESULTS_TABLE, s, args);
 	}
 }

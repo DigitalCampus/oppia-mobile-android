@@ -222,7 +222,7 @@ public class MQuiz implements Serializable {
 	public JSONObject getResultObject() {
 		JSONObject json = new JSONObject();
 		try {
-			json.put("quizid", this.getQRef());
+			json.put("qref", this.getQRef());
 			// TODO add current date i unix timestamp format (eg 1344783510099)
 			System.currentTimeMillis();
 			json.put("quizdate", System.currentTimeMillis());
