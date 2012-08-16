@@ -23,6 +23,7 @@ public class MTrain extends Application {
 	public static final String MQUIZ_SUBMIT_PATH = "/api/?method=submit";
 	
 	public static final int PASSWORD_MIN_LENGTH = 6;
+	public static final int PAGE_READ_TIME = 3;
 	
 	public MTrain(){
 		

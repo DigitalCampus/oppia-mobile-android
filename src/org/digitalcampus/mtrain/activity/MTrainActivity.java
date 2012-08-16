@@ -14,17 +14,16 @@ import org.digitalcampus.mtrain.task.InstallModulesTask;
 import org.digitalcampus.mtrain.utils.FileUtils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -44,6 +43,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 
 	public static final String TAG = "MTrainActivity";
 	private SharedPreferences prefs;
+	private Module tempMod;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -170,6 +170,9 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 			return true;
 		case R.id.menu_language:
 			return true;
+		case R.id.menu_help:
+			startActivity(new Intent(this, HelpActivity.class));
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -202,32 +205,69 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		Module m = (Module) info.targetView.getTag();
-		DbHelper db = new DbHelper(this);
+		tempMod = (Module) info.targetView.getTag();
 		switch (item.getItemId()) {
 		case R.id.module_context_delete:
-			Log.d(TAG, "deleting:" + m.getTitle());
-			// remove db records
-			db.deleteModule(m.getModId());
-			ArrayList<Module> modules = db.getModules();
-			db.close();
-			// remove files
-			Log.d(TAG, "deleting:" + m.getLocation());
-			File f = new File(m.getLocation());
-			FileUtils.deleteDir(f);
-			displayModules(modules);
+			confirmModuleDelete();
 			return true;
 		case R.id.module_context_reset:
-			Log.d(TAG, "resetting:" + m.getTitle());
-			db.resetModule(m.getModId());
-			ArrayList<Module> ms = db.getModules();
-			db.close();
-			displayModules(ms);
+			confirmModuleReset();
 			return true;
 		default:
-			db.close();
 			return super.onContextItemSelected(item);
 		}
+	}
+	
+	private void confirmModuleDelete(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setCancelable(false);
+		builder.setTitle(R.string.module_context_delete);
+		builder.setMessage(R.string.module_context_delete_confirm);
+		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	            // continue with delete
+	        	Log.d(TAG, "deleting:" + tempMod.getTitle());
+				// remove db records
+	        	DbHelper db = new DbHelper(MTrainActivity.this);
+				db.deleteModule(tempMod.getModId());
+				ArrayList<Module> modules = db.getModules();
+				db.close();
+				// remove files
+				Log.d(TAG, "deleting:" + tempMod.getLocation());
+				File f = new File(tempMod.getLocation());
+				FileUtils.deleteDir(f);
+				displayModules(modules);
+	        }
+	     });
+	    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	        	tempMod = null;
+	        }
+	     });
+	    builder.show();
+	}
+	
+	private void confirmModuleReset(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setCancelable(false);
+		builder.setTitle(R.string.module_context_reset);
+		builder.setMessage(R.string.module_context_reset_confirm);
+		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	        	Log.d(TAG, "resetting:" + tempMod.getTitle());
+	        	DbHelper db = new DbHelper(MTrainActivity.this);
+				db.resetModule(tempMod.getModId());
+				ArrayList<Module> ms = db.getModules();
+				db.close();
+				displayModules(ms);
+	        }
+	     });
+	    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	        	tempMod = null;
+	        }
+	     });
+	    builder.show();
 	}
 	
 	public void manageBtnClick(View view){
@@ -246,7 +286,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-	
 		Log.d(TAG,key + " changed");
 	}
 

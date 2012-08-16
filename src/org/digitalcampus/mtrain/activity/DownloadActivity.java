@@ -43,15 +43,10 @@ public class DownloadActivity extends Activity {
         super.onCreate(savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(this); 
         setContentView(R.layout.activity_download);
-       
-    }
-	
-	@Override
-	public void onStart(){
-		super.onStart();
 		// Get Module list
 		getModuleList();
-	}
+       
+    }
 	
 	private void getModuleList(){
 		// show progress dialog
@@ -64,7 +59,7 @@ public class DownloadActivity extends Activity {
         
         GetModuleListTask task = new GetModuleListTask();
         String[] url = new String[1];
-        // TODO get this from preferences
+
         url[0] = prefs.getString("prefServer", getString(R.string.prefServerDefault))+MTrain.SERVER_MODULES_PATH;
         task.execute(url);
 	}

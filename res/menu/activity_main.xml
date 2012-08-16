@@ -15,4 +15,8 @@
         android:title="@string/menu_about"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_info_details" />
+    <item android:id="@+id/menu_help"
+        android:title="@string/menu_help"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_help" />
 </menu>
