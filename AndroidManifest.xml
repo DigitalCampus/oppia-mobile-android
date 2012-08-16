@@ -56,6 +56,9 @@
          <activity
             android:name=".activity.RegisterActivity"
             android:label="@string/title_register" />
+         <activity
+            android:name=".activity.ModuleAboutActivity"
+            android:label="@string/title_module_about" />
         
         <!-- TODO make label a proper string -->
         <service

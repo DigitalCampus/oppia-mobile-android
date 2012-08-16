@@ -1,5 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_settings"
-        android:title="@string/menu_settings"
-        android:orderInCategory="100" />
+    
+    <item android:id="@+id/menu_language"
+        android:title="@string/menu_language"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_menu_start_conversation" />
+    <item android:id="@+id/menu_module_about"
+        android:title="@string/menu_module_about"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_info_details" />
+    <item android:id="@+id/menu_help"
+        android:title="@string/menu_help"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_help" />
 </menu>

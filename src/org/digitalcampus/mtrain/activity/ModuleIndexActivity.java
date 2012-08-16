@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -72,6 +73,28 @@ public class ModuleIndexActivity extends Activity {
         getMenuInflater().inflate(R.menu.activity_module_index, menu);
         return true;
     }
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+    	Intent i;
+		// Handle item selection
+		switch (item.getItemId()) {
+			case R.id.menu_module_about:
+				i = new Intent(this, ModuleAboutActivity.class);
+				Bundle tb = new Bundle();
+				tb.putSerializable(Module.TAG, module);
+				i.putExtras(tb);
+				startActivity(i);
+				return true;
+			case R.id.menu_language:
+				return true;
+			case R.id.menu_help:
+				startActivity(new Intent(this, HelpActivity.class));
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
 
     
 }

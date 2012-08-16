@@ -12,6 +12,7 @@ import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.service.TrackerService;
 import org.digitalcampus.mtrain.task.InstallModulesTask;
 import org.digitalcampus.mtrain.utils.FileUtils;
+import org.digitalcampus.mtrain.utils.ModuleXMLReader;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -76,19 +77,15 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 	public void onStart() {
 		super.onStart();
 
-		// TODO Check user is logged in
-		if(!isLoggedIn()){
-			Log.d(TAG,"not logged in");
+		if (!isLoggedIn()) {
+			Log.d(TAG, "not logged in");
 			startActivity(new Intent(MTrainActivity.this, LoginActivity.class));
+			return;
 		}
-		
-		DbHelper db = new DbHelper(this);
-		ArrayList<Module> modules = db.getModules();
-		db.close();
-		displayModules(modules);
-		
+		displayModules();
+
 	}
-	
+
 	public void onDestroy() {
 		unbindService(mConnection);
 		super.onDestroy();
@@ -101,7 +98,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
-			//s = null;
+			// s = null;
 		}
 	};
 
@@ -110,8 +107,15 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 	}
 
-	private void displayModules(ArrayList<Module> modules) {
+	private void displayModules() {
 
+		DbHelper db = new DbHelper(this);
+		ArrayList<Module> modules = db.getModules();
+		db.close();
+		for(Module m: modules){
+			ModuleXMLReader mxr = new ModuleXMLReader(m.getLocation()+"/"+MTrain.MODULE_XML);
+			m.setProps(mxr.getMeta());
+		}
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.no_modules);
 		if (modules.size() > 0) {
 			ll.setVisibility(View.GONE);
@@ -122,10 +126,9 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 
 				public void onClick(View v) {
 					startActivity(new Intent(MTrainActivity.this, DownloadActivity.class));
-             	}
+				}
 			});
-			
-			
+
 		}
 
 		ModuleListAdapter mla = new ModuleListAdapter(this, modules);
@@ -180,15 +183,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 
 	public void installComplete() {
 		Log.d(TAG, "Listener says install complete");
-		DbHelper db = new DbHelper(this);
-		ArrayList<Module> modules = db.getModules();
-		db.close();
-		if (modules.size() > 0) {
-			displayModules(modules);
-		} else {
-			// if no module installed
-			Log.d(TAG, "No modules installed");
-		}
+		displayModules();
 
 	}
 
@@ -217,77 +212,73 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 			return super.onContextItemSelected(item);
 		}
 	}
-	
-	private void confirmModuleDelete(){
+
+	private void confirmModuleDelete() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
 		builder.setTitle(R.string.module_context_delete);
 		builder.setMessage(R.string.module_context_delete_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int which) { 
-	            // continue with delete
-	        	Log.d(TAG, "deleting:" + tempMod.getTitle());
+			public void onClick(DialogInterface dialog, int which) {
+				// continue with delete
+				Log.d(TAG, "deleting:" + tempMod.getTitle());
 				// remove db records
-	        	DbHelper db = new DbHelper(MTrainActivity.this);
+				DbHelper db = new DbHelper(MTrainActivity.this);
 				db.deleteModule(tempMod.getModId());
-				ArrayList<Module> modules = db.getModules();
 				db.close();
 				// remove files
 				Log.d(TAG, "deleting:" + tempMod.getLocation());
 				File f = new File(tempMod.getLocation());
 				FileUtils.deleteDir(f);
-				displayModules(modules);
-	        }
-	     });
-	    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int which) { 
-	        	tempMod = null;
-	        }
-	     });
-	    builder.show();
+				displayModules();
+			}
+		});
+		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				tempMod = null;
+			}
+		});
+		builder.show();
 	}
-	
-	private void confirmModuleReset(){
+
+	private void confirmModuleReset() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
 		builder.setTitle(R.string.module_context_reset);
 		builder.setMessage(R.string.module_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int which) { 
-	        	Log.d(TAG, "resetting:" + tempMod.getTitle());
-	        	DbHelper db = new DbHelper(MTrainActivity.this);
+			public void onClick(DialogInterface dialog, int which) {
+				Log.d(TAG, "resetting:" + tempMod.getTitle());
+				DbHelper db = new DbHelper(MTrainActivity.this);
 				db.resetModule(tempMod.getModId());
-				ArrayList<Module> ms = db.getModules();
 				db.close();
-				displayModules(ms);
-	        }
-	     });
-	    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int which) { 
-	        	tempMod = null;
-	        }
-	     });
-	    builder.show();
+				displayModules();
+			}
+		});
+		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				tempMod = null;
+			}
+		});
+		builder.show();
 	}
-	
-	public void manageBtnClick(View view){
+
+	public void manageBtnClick(View view) {
 		startActivity(new Intent(this, DownloadActivity.class));
 	}
-	
-	public boolean isLoggedIn(){
+
+	public boolean isLoggedIn() {
 		String username = prefs.getString("prefUsername", "");
 		String password = prefs.getString("prefPassword", "");
-		if(username.equals("") || password.equals("")){
+		if (username.equals("") || password.equals("")) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 
-	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		Log.d(TAG,key + " changed");
+		Log.d(TAG, key + " changed");
 	}
-
 
 }

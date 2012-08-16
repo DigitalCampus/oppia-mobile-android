@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class Module implements Serializable {
 	
@@ -15,6 +16,15 @@ public class Module implements Serializable {
 	private String title;
 	private String shortname;
 	private float progress = 0;
+	private HashMap<String,String> props;
+
+	public HashMap<String, String> getProps() {
+		return props;
+	}
+
+	public void setProps(HashMap<String, String> props) {
+		this.props = props;
+	}
 
 	public float getProgress() {
 		return progress;
