@@ -3,13 +3,14 @@ package org.digitalcampus.mquiz.model.questiontypes;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
+import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.mquiz.model.QuizQuestion;
 import org.digitalcampus.mquiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 public class Matching implements Serializable, QuizQuestion {
 
@@ -37,19 +38,17 @@ public class Matching implements Serializable, QuizQuestion {
 		// find whichever are set as selected and add up the responses
 		
 		float total = 0;
+		
 		for (Response r : responseOptions){
-			Iterator<String> itr = this.userResponses.iterator();
-			while(itr.hasNext()) {
-				String a = itr.next(); 
-				if (r.getText().equals(a)){
+			for(String ur: userResponses){
+				
+				if(ur.equals(r.getText())){
 					total += r.getScore();
-				}
+				}  
 			}
 			// fix marking so that if one of the incorrect scores is selected final mark is 0
-			Iterator<String> itr2 = this.userResponses.iterator();
-			while(itr2.hasNext()) {
-				String a = itr2.next(); 
-				if (r.getText().equals(a) && r.getScore() == 0){
+			for(String ur: userResponses){
+				if (r.getText().equals(ur) && r.getScore() == 0){
 					total = 0;
 				}
 			}
@@ -95,8 +94,7 @@ public class Matching implements Serializable, QuizQuestion {
 	}
 
 	public void setUserResponses(List<String> str) {
-		this.userResponses= str;
-		
+		this.userResponses= str;	
 	}
 
 	public void setProps(HashMap<String,String> props) {
@@ -123,15 +121,17 @@ public class Matching implements Serializable, QuizQuestion {
 	
 	public JSONObject responsesToJSON() {
 		JSONObject jo = new JSONObject();
-		for(String ur: userResponses ){
-			try {
-				jo.put("qid", refid);
-				jo.put("score",userscore);
-				jo.put("qrtext", ur);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		try {
+			jo.put("qid", refid);
+			jo.put("score",userscore);
+			String qrtext = "";
+			for(String ur: userResponses ){
+				qrtext += ur + MQuiz.RESPONSE_SEPARATOR;
 			}
+			jo.put("qrtext", qrtext);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return jo;
 	}

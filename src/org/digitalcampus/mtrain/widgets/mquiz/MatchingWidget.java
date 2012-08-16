@@ -22,6 +22,9 @@ import android.widget.TextView;
 public class MatchingWidget extends QuestionWidget {
 
 	public static final String TAG = "MatchingWidget";
+	// TODO add props for matching item separators
+	private static final String MATCHING_SEPARATOR = "->";
+	
 	private LinearLayout responsesLL;
 	private LinearLayout[] responseLayouts;
 	private Context ctx;
@@ -45,7 +48,7 @@ public class MatchingWidget extends QuestionWidget {
     	HashMap<String,String> possibleAnswers = new HashMap<String,String>();
     	int noresponses = 0;
     	for (Response r : responses){
-    		String[] temp = r.getText().split("-&gt;",-1);
+    		String[] temp = r.getText().split(MATCHING_SEPARATOR,-1);
     		if(!temp[0].equals("")){
     			noresponses++;
     		}
@@ -83,7 +86,7 @@ public class MatchingWidget extends QuestionWidget {
 	    		
 	    		// set the selected item based on current responses
 	    		for (String s : currentAnswer){
-	        		String[] temp = s.split("-&gt;",-1);
+	        		String[] temp = s.split(MATCHING_SEPARATOR,-1);
 	        		if(temp[0].trim().equals(responsePairs.getKey())){
 	        			int i = responseAdapter.getPosition(temp[1].trim());
 	        			spinner.setSelection(i);	
@@ -104,7 +107,7 @@ public class MatchingWidget extends QuestionWidget {
 			TextView tv = (TextView) ll.getChildAt(0);
 			Spinner sp = (Spinner) ll.getChildAt(1);
 			if(!sp.getSelectedItem().toString().trim().equals("")){
-				String response = tv.getText().toString().trim() + " -&gt; " + sp.getSelectedItem().toString().trim();
+				String response = tv.getText().toString().trim() + " "+ MATCHING_SEPARATOR+ " " + sp.getSelectedItem().toString().trim();
 				userResponses.add(response);
 			}
 		}

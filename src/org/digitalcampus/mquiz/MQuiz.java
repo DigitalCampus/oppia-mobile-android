@@ -10,6 +10,7 @@ import org.digitalcampus.mquiz.model.Response;
 import org.digitalcampus.mquiz.model.questiontypes.Essay;
 import org.digitalcampus.mquiz.model.questiontypes.Matching;
 import org.digitalcampus.mquiz.model.questiontypes.MultiChoice;
+import org.digitalcampus.mquiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mquiz.model.questiontypes.Numerical;
 import org.digitalcampus.mquiz.model.questiontypes.ShortAnswer;
 import org.json.JSONArray;
@@ -20,8 +21,9 @@ import android.util.Log;
 
 public class MQuiz implements Serializable {
 
+	public static final String TAG = "MQuiz";
 	private static final long serialVersionUID = -2416034891439585524L;
-	private static final String TAG = "MQuiz";
+	public static final String RESPONSE_SEPARATOR = "|";
 	private String qref;
 	private String title;
 	private String url;
@@ -78,6 +80,8 @@ public class MQuiz implements Serializable {
 				question = new Matching();
 			} else if (qtype.toLowerCase().equals("shortanswer")) {
 				question = new ShortAnswer();
+			} else if (qtype.toLowerCase().equals("multiselect")) {
+					question = new MultiSelect();
 			} else {
 				Log.d(TAG, "Question type " + qtype + " is not yet supported");
 				return false;
