@@ -9,9 +9,7 @@ import org.digitalcampus.mtrain.task.LoginTask;
 import org.digitalcampus.mtrain.task.Payload;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -49,9 +47,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
     	//check valid email address format
     	boolean isValidEmail = EmailValidator.getInstance().isValid(email);
     	if(!isValidEmail){
-    	//if(email.length()<4){
-    		// TODO change to proper lang strings
-    		this.showAlert("Error","Please enter a valid email address format");
+    		MTrain.showAlert(this,R.string.error,R.string.error_invalid_email_format);
     		return;
     	}
     	
@@ -59,8 +55,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
     	String password = passwordField.getText().toString();
     	//check length
     	if(password.length()< MTrain.PASSWORD_MIN_LENGTH ){
-    		// TODO change to proper lang strings
-    		this.showAlert("Error","You password should be "+MTrain.PASSWORD_MIN_LENGTH+" characters or more");
+    		MTrain.showAlert(this,R.string.error,getString(R.string.error_password_length,MTrain.PASSWORD_MIN_LENGTH));
     		return;
     	}
     	
@@ -92,21 +87,6 @@ public class LoginActivity extends Activity implements SubmitListener  {
 		finish();
 		
 	}
-	
-    private void showAlert(String title, String msg){
-    	AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-		builder.setTitle(title);
-		builder.setMessage(msg);
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				
-			}
-
-	     });
-		builder.show();
-    }
 
 	public void submitComplete(Payload response) {
 		pDialog.dismiss();
@@ -121,7 +101,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
 			// return to main activity
 			finish();
 		} else {
-			showAlert("Login", response.resultResponse);
+			MTrain.showAlert(this, R.string.title_login, response.resultResponse);
 		}
 	}
 	

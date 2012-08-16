@@ -22,8 +22,10 @@ import android.util.Log;
 public class MQuiz implements Serializable {
 
 	public static final String TAG = "MQuiz";
-	private static final long serialVersionUID = -2416034891439585524L;
+	
 	public static final String RESPONSE_SEPARATOR = "|";
+	
+	private static final long serialVersionUID = -2416034891439585524L;
 	private String qref;
 	private String title;
 	private String url;
@@ -70,17 +72,17 @@ public class MQuiz implements Serializable {
 		String qtype;
 		try {
 			qtype = (String) q.get("type");
-			if (qtype.toLowerCase().equals("essay")) {
+			if (qtype.toLowerCase().equals(Essay.TAG.toLowerCase())) {
 				question = new Essay();
-			} else if (qtype.toLowerCase().equals("multichoice")) {
+			} else if (qtype.toLowerCase().equals(MultiChoice.TAG.toLowerCase())) {
 				question = new MultiChoice();
-			} else if (qtype.toLowerCase().equals("numerical")) {
+			} else if (qtype.toLowerCase().equals(Numerical.TAG.toLowerCase())) {
 				question = new Numerical();
-			} else if (qtype.toLowerCase().equals("matching")) {
+			} else if (qtype.toLowerCase().equals(Matching.TAG.toLowerCase())) {
 				question = new Matching();
-			} else if (qtype.toLowerCase().equals("shortanswer")) {
+			} else if (qtype.toLowerCase().equals(ShortAnswer.TAG.toLowerCase())) {
 				question = new ShortAnswer();
-			} else if (qtype.toLowerCase().equals("multiselect")) {
+			} else if (qtype.toLowerCase().equals(MultiSelect.TAG.toLowerCase())) {
 					question = new MultiSelect();
 			} else {
 				Log.d(TAG, "Question type " + qtype + " is not yet supported");

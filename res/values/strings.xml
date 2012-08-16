@@ -66,4 +66,32 @@
 	
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
+	<string name="close">Close</string>
+	<string name="error">Error</string>
+	<string name="loading">Loading</string>
+	<string name="ok">OK</string>
+	
+	<string name="update">Update</string>
+	<string name="installed">Installed</string>
+	<string name="install">Install</string>
+	
+	<string name="download_starting">Download starting</string>
+	<string name="downloading">Downloading..</string>
+	<string name="download_complete">Download complete</string>
+	
+	<string name="install_starting">Installation starting</string>
+	<string name="installing">Installing module</string>
+	<string name="installing_module">Installing: %1$s</string>
+	<string name="install_complete">Installation complete</string>
+	
+	<string name="install_module_complete">%1$s: installed</string>
+	
+	<string name="error_connection">Error connecting to server</string>
+	<string name="error_processing_response">Error processing response</string>
+	<string name="error_invalid_email_format">Please enter a valid email address format</string>
+	<string name="error_password_length">You password should be %1$d characters or more</string>
+	<string name="error_installing_module">%1$s: failed to install</string>
+	<string name="error_latest_already_installed">%1$s: latest version already installed</string>
+	
+	<string name="loading_module_list">Getting list of modules</string>
 </resources>

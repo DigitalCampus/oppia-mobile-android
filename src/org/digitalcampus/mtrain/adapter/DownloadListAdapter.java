@@ -52,17 +52,16 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements
 	    
 	    Button actionBtn = (Button) rowView.findViewById(R.id.action_btn);
 	    
-	    // TODO use proper lang strings
 	    if(m.installed){
 	    	if(m.toUpdate){
-	    		actionBtn.setText("Update");
+	    		actionBtn.setText(R.string.update);
 		    	actionBtn.setEnabled(true);
 	    	} else {
-	    		actionBtn.setText("Installed");
+	    		actionBtn.setText(R.string.installed);
 		    	actionBtn.setEnabled(false);
 	    	}
 	    } else {
-	    	actionBtn.setText("Install");
+	    	actionBtn.setText(R.string.install);
 	    	actionBtn.setEnabled(true);
 	    }
 	    if(!m.installed || m.toUpdate){
@@ -76,9 +75,8 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements
              		Payload p = new Payload(0,s);
              		
              		myProgress = new ProgressDialog(context);
-                     // TODO change these to be lang strings
-             		myProgress.setTitle("Installing");
-             		myProgress.setMessage("Starting download");
+             		myProgress.setTitle(R.string.install);
+             		myProgress.setMessage(context.getString(R.string.download_starting));
              		myProgress.setCancelable(true);
              		myProgress.show();
                      
@@ -92,7 +90,7 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements
 	}
 
 	public void downloadComplete() {
-		myProgress.setMessage("Download complete");
+		myProgress.setMessage(context.getString(R.string.download_complete));
 		// now set task to install
 		InstallModulesTask imTask = new InstallModulesTask(context);
 		imTask.setInstallerListener(DownloadListAdapter.this);
@@ -101,7 +99,7 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements
 
 	public void installComplete() {
 		Log.d(TAG,"install complete");
-		myProgress.setMessage("Install complete");
+		myProgress.setMessage(context.getString(R.string.install_complete));
 		myProgress.dismiss();
 		// new refresh the module list
 		DownloadActivity da = (DownloadActivity) context;

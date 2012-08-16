@@ -112,7 +112,7 @@ public class DbHelper extends SQLiteOpenHelper {
 							MQUIZRESULTS_C_DATA + " text, " +  
 							MQUIZRESULTS_C_SENT + " integer default 0, "+
 							MQUIZRESULTS_C_MODID + " integer)";
-		Log.d(TAG, "MQuizr esults  sql: " + m_sql);
+		Log.d(TAG, "MQuiz results  sql: " + m_sql);
 		db.execSQL(m_sql);
 	}
 	

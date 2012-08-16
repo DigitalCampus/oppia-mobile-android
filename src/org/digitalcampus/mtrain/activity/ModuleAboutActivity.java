@@ -1,15 +1,12 @@
 package org.digitalcampus.mtrain.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.adapter.ModuleAboutAdapter;
-import org.digitalcampus.mtrain.adapter.ModuleListAdapter;
 import org.digitalcampus.mtrain.model.Module;
 
 import android.app.Activity;

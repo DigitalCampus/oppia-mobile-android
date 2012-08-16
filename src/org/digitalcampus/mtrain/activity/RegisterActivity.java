@@ -138,7 +138,7 @@ public class RegisterActivity extends Activity implements SubmitListener, OnShar
 		builder.setMessage(msg);
 		switch (onClickTask) {
 			case ONCLICK_TASK_NULL:
-				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 	
 					public void onClick(DialogInterface dialog, int which) {
 						// do nothing
@@ -148,7 +148,7 @@ public class RegisterActivity extends Activity implements SubmitListener, OnShar
 				});
 				break;
 			case ONCLICK_TASK_REGISTERED :
-				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 					
 					public void onClick(DialogInterface dialog, int which) {
 						// return to main activity

@@ -3,9 +3,7 @@ package org.digitalcampus.mtrain.adapter;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.activity.DownloadActivity.DownloadModule;
 import org.digitalcampus.mtrain.activity.ModuleAboutActivity.Prop;
-import org.digitalcampus.mtrain.model.Module;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ModuleAboutAdapter extends ArrayAdapter<Prop> {

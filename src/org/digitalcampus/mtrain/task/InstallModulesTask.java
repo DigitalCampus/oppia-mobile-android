@@ -3,6 +3,7 @@ package org.digitalcampus.mtrain.task;
 import java.io.File;
 import java.util.HashMap;
 
+import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.listener.InstallModuleListener;
@@ -34,7 +35,7 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 			// Either dir does not exist or is not a directory
 		} else {
 			Log.d(TAG, "Installing new modules");
-			publishProgress("Installing new module");
+			publishProgress(ctx.getString(R.string.installing));
 			for (int i = 0; i < children.length; i++) {
 
 				// extract to temp dir and check it's a valid package file
@@ -53,7 +54,7 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 				String versionid = hm.get("versionid");
 				String title = hm.get("title");
 				String location = MTrain.MODULES_PATH + moddirs[0];
-				publishProgress("Installing:" + title);
+				publishProgress(ctx.getString(R.string.installing_module, title));
 				
 				DbHelper db = new DbHelper(ctx);
 				long added = db.addOrUpdateModule(versionid, title, location, moddirs[0]);
@@ -74,20 +75,20 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 
 					if (success) {
 						Log.v(TAG, "File was successfully moved");
-						publishProgress(title + ": installed");
+						publishProgress(ctx.getString(R.string.install_module_complete, title));
 					} else {
 						Log.v(TAG, "File was not successfully moved");
-						publishProgress(title + ": failed to install");
+						publishProgress(ctx.getString(R.string.error_installing_module, title));
 					}
 				}  else {
-					publishProgress(title + ": latest version already installed");
+					publishProgress(ctx.getString(R.string.error_latest_already_installed, title));
 				}
 				db.close();
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);
 				Log.d(TAG, "Temp directory deleted");
 
-				// TODO delete zip file from download dir
+				// delete zip file from download dir
 				File zip = new File(MTrain.DOWNLOAD_PATH + children[i]);
 				zip.delete();
 				Log.d(TAG, "Zip file deleted");
@@ -98,13 +99,10 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 	}
 
 	protected void onProgressUpdate(String... obj) {
-		Log.d(TAG,"hello....");
 		synchronized (this) {
             if (mStateListener != null) {
                 // update progress and total
                 mStateListener.installProgressUpdate(obj[0]);
-            } else {
-            	Log.d(TAG,"listener is null?");
             }
         }
 	}

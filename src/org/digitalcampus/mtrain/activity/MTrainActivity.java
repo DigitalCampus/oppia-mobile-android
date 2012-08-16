@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -168,6 +167,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 			startActivity(i);
 			return true;
 		case R.id.menu_language:
+			MTrain.showAlert(this, "Under development", "Language switching not yet available");
 			return true;
 		case R.id.menu_help:
 			startActivity(new Intent(this, HelpActivity.class));
