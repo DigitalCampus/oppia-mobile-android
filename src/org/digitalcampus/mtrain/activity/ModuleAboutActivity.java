@@ -42,11 +42,6 @@ public class ModuleAboutActivity extends Activity {
 		TextView shortnameTV = (TextView) findViewById(R.id.module_shortname);
 		shortnameTV.setText(module.getProps().get("shortname"));
 		
-		//HashMap<String,String> temp = (HashMap<String,String>) module.getProps().clone();
-		//temp.remove("title");
-		//temp.remove("shortname");
-		//temp.remove("versionid");
-		
 		ArrayList<Prop> list = new ArrayList<Prop>();
 
 		Iterator<Entry<String,String>> it = module.getProps().entrySet().iterator();
@@ -64,7 +59,6 @@ public class ModuleAboutActivity extends Activity {
 	    ModuleAboutAdapter mla = new ModuleAboutAdapter(this, list);
 		ListView listView = (ListView) findViewById(R.id.module_about_list);
 		listView.setAdapter(mla);
-
 	}
 	
 	public class Prop{

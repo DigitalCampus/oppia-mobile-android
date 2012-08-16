@@ -40,13 +40,7 @@ public class ModuleIndexActivity extends Activity {
         	TextView tv = (TextView) this.findViewById(R.id.module_title);
         	tv.setText(module.getTitle());
         }
-    }
-
-    @Override
-	public void onStart() {
-		super.onStart();
-		
-		mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
+    	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
     	sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
     	
 		ListView listView = (ListView) findViewById(R.id.section_list);
@@ -56,7 +50,6 @@ public class ModuleIndexActivity extends Activity {
     	listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				view.setBackgroundResource(R.drawable.background_gradient);
 				Section s = (Section) view.getTag();    				
 				Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
 				Bundle tb = new Bundle();
@@ -66,6 +59,13 @@ public class ModuleIndexActivity extends Activity {
          		startActivity(i);
 			}
 		});
+    }
+
+    @Override
+	public void onStart() {
+		super.onStart();
+		
+	
     }
     
     @Override

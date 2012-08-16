@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -63,9 +64,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		// TODO? scan already extracted modules and install these
 		File dir = new File(MTrain.DOWNLOAD_PATH);
 		String[] children = dir.list();
-		if (children == null) {
-			// Either dir does not exist or is not a directory
-		} else {
+		if (children != null) {
 			InstallModulesTask imTask = new InstallModulesTask(MTrainActivity.this);
 			imTask.setInstallerListener(this);
 			imTask.execute();
@@ -76,14 +75,12 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 	@Override
 	public void onStart() {
 		super.onStart();
-
 		if (!isLoggedIn()) {
 			Log.d(TAG, "not logged in");
 			startActivity(new Intent(MTrainActivity.this, LoginActivity.class));
 			return;
 		}
 		displayModules();
-
 	}
 
 	public void onDestroy() {
@@ -140,7 +137,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Module m = (Module) view.getTag();
-				view.setBackgroundResource(R.drawable.background_gradient);
 				Log.d(TAG, m.getTitle());
 				Intent i = new Intent(MTrainActivity.this, ModuleIndexActivity.class);
 				Bundle tb = new Bundle();
