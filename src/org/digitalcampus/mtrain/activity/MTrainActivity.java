@@ -19,8 +19,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -36,7 +40,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-public class MTrainActivity extends Activity implements InstallModuleListener {
+public class MTrainActivity extends Activity implements InstallModuleListener, OnSharedPreferenceChangeListener {
 
 	public static final String TAG = "MTrainActivity";
 	private SharedPreferences prefs;
@@ -47,6 +51,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener {
 		setContentView(R.layout.activity_main);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 
 		// set up local dirs
@@ -237,6 +242,12 @@ public class MTrainActivity extends Activity implements InstallModuleListener {
 		} else {
 			return true;
 		}
+	}
+
+	
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+	
+		Log.d(TAG,key + " changed");
 	}
 
 

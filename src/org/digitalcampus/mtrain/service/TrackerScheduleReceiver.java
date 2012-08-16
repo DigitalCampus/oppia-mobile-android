@@ -23,6 +23,7 @@ public class TrackerScheduleReceiver extends BroadcastReceiver {
 		Intent i = new Intent(context, TrackerStartServiceReceiver.class);
 		PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 		Calendar cal = Calendar.getInstance();
+		
 		// Start 30 seconds after boot completed
 		cal.add(Calendar.SECOND, 30);
 		//

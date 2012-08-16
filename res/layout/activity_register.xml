@@ -4,120 +4,109 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <include
+        android:id="@+id/header"
+        layout="@layout/header" />
+
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/background_gradient" >
+        android:layout_height="fill_parent"
+        android:layout_margin="10dp"  >
 
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="48dip"
-            android:layout_height="48dip"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="2dip"
-            android:contentDescription="@string/main_logo_alt"
-            android:src="@drawable/dc_logo" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="left" 
+            >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_margin="2dip"
-            android:layout_toRightOf="@id/icon"
-            android:gravity="center_vertical"
-            android:text="@string/app_name"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+             <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="@string/title_register"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+             
+            <TextView
+                android:id="@+id/register_form_email_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_form_email_title"
+                android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/register_form_email_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="@string/register_form_email_title"
-        android:textSize="20sp" />
+            <EditText
+                android:id="@+id/register_form_email_field"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" 
+                android:textSize="20sp"/>
 
-    <EditText
-        android:id="@+id/register_form_email_field"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:textSize="20sp"
-        android:inputType="text" />
+            <TextView
+                android:id="@+id/register_form_password_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_form_password_title"
+                android:textSize="20sp"/>
 
-    <TextView
-        android:id="@+id/register_form_password_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="@string/register_form_password_title"
-        android:textSize="20sp" />
+            <EditText
+                android:id="@+id/register_form_password_field"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/register_form_password_field"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:inputType="textPassword"
-        android:textSize="20sp" />
+            <TextView
+                android:id="@+id/register_form_password_again_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_form_password_again_title" 
+                android:textSize="20sp"/>
 
-    <TextView
-        android:id="@+id/register_form_password_again_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="@string/register_form_password_again_title"
-        android:textSize="20sp" />
+            <EditText
+                android:id="@+id/register_form_password_again_field"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textSize="20sp"/>
 
-    <EditText
-        android:id="@+id/register_form_password_again_field"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:inputType="textPassword"
-        android:textSize="20sp" />
+            <TextView
+                android:id="@+id/register_form_firstname_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_form_firstname_title" 
+                android:textSize="20sp"/>
 
-    <TextView
-        android:id="@+id/register_form_firstname_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="@string/register_form_firstname_title"
-        android:textSize="20sp" />
+            <EditText
+                android:id="@+id/register_form_firstname_field"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textSize="20sp"/>
 
-    <EditText
-        android:id="@+id/register_form_firstname_field"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:textSize="20sp"
-        android:inputType="text" />
+            <TextView
+                android:id="@+id/register_form_lastname_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_form_lastname_title"
+                android:textSize="20sp"/>
 
-    <TextView
-        android:id="@+id/register_form_lastname_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="@string/register_form_lastname_title"
-        android:textSize="20sp" />
+            <EditText
+                android:id="@+id/register_form_lastname_field"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/register_form_lastname_field"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        android:textSize="20sp" 
-        android:inputType="text" />
-
-    <Button
-        android:id="@+id/register_btn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:text="@string/register_btn_text"
-        android:textSize="20dp"
-        android:textStyle="bold" 
-        android:onClick="onRegisterClick"/>
+            <Button
+                android:id="@+id/register_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onRegisterClick"
+                android:text="@string/register_btn_text"
+                android:textStyle="bold" 
+                android:textSize="20sp"/>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

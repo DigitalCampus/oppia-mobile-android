@@ -4,31 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/background_gradient" >
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="48dip"
-            android:layout_height="48dip"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="2dip"
-            android:contentDescription="@string/main_logo_alt"
-            android:src="@drawable/dc_logo" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_margin="2dip"
-            android:layout_toRightOf="@id/icon"
-            android:gravity="center_vertical"
-            android:text="@string/app_name"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+    <include android:id="@+id/header" layout="@layout/header" />
 
     <TextView
         android:id="@+id/about_versionno"
