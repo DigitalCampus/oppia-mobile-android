@@ -3,9 +3,9 @@ package org.digitalcampus.mquiz.model.questiontypes;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
+import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.mquiz.model.QuizQuestion;
 import org.digitalcampus.mquiz.model.Response;
 import org.json.JSONException;
@@ -39,19 +39,23 @@ public class MultiSelect implements Serializable, QuizQuestion {
 		float total = 0;
 		
 		for (Response r : responseOptions){
-			Iterator<String> itr = this.userResponses.iterator();
-			while(itr.hasNext()) {
-				String a = itr.next(); 
-				if (r.getText().equals(a)){
+			for (String ur : userResponses) {
+				//Log.d(TAG,"ur: "+ ur);
+				//Log.d(TAG,"r.getText(): "+ r.getText());
+				if (ur.equals(r.getText())) {
 					total += r.getScore();
-					this.feedback += r.getProp("feedback");
+					if(!r.getProp("feedback").equals("")){
+						this.feedback += ur + ": " + r.getProp("feedback") + "\n\n";
+					}
+					//Log.d(TAG,"match");
+				}  else {
+					//Log.d(TAG," no match");
 				}
 			}
+			//Log.d(TAG,"-----------");
 			// fix marking so that if one of the incorrect scores is selected final mark is 0
-			Iterator<String> itr2 = this.userResponses.iterator();
-			while(itr2.hasNext()) {
-				String a = itr2.next(); 
-				if (r.getText().equals(a) && r.getScore() == 0){
+			for(String ur: userResponses){
+				if (r.getText().equals(ur) && r.getScore() == 0){
 					total = 0;
 				}
 			}
@@ -125,15 +129,17 @@ public class MultiSelect implements Serializable, QuizQuestion {
 	
 	public JSONObject responsesToJSON() {
 		JSONObject jo = new JSONObject();
-		for(String ur: userResponses ){
-			try {
-				jo.put("qid", refid);
-				jo.put("score",userscore);
-				jo.put("qrtext", ur);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		try {
+			jo.put("qid", refid);
+			jo.put("score",userscore);
+			String qrtext = "";
+			for(String ur: userResponses ){
+				qrtext += ur + MQuiz.RESPONSE_SEPARATOR;
 			}
+			jo.put("qrtext", qrtext);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return jo;
 	}

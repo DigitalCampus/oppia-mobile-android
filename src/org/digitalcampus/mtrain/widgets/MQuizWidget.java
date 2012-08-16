@@ -166,11 +166,9 @@ public class MQuizWidget extends WidgetFactory {
 	}
 
 	private boolean saveAnswer() {
-		mQuiz.mark();
 		List<String> answers = qw.getQuestionResponses(mQuiz.getCurrentQuestion().getResponseOptions());
 		if (answers != null) {
 			mQuiz.getCurrentQuestion().setUserResponses(answers);
-			Log.d(TAG,mQuiz.getResultObject().toString());
 			return true;
 		}
 		return false;

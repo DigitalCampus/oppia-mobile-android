@@ -41,11 +41,16 @@ public class Matching implements Serializable, QuizQuestion {
 		
 		for (Response r : responseOptions){
 			for(String ur: userResponses){
-				
+				//Log.d(TAG,"ur: "+ ur);
+				//Log.d(TAG,"r.getText(): "+ r.getText());
 				if(ur.equals(r.getText())){
 					total += r.getScore();
-				}  
+					//Log.d(TAG,"match");
+				}  else {
+					//Log.d(TAG," no match");
+				}
 			}
+			
 			// fix marking so that if one of the incorrect scores is selected final mark is 0
 			for(String ur: userResponses){
 				if (r.getText().equals(ur) && r.getScore() == 0){
@@ -122,8 +127,8 @@ public class Matching implements Serializable, QuizQuestion {
 	public JSONObject responsesToJSON() {
 		JSONObject jo = new JSONObject();
 		try {
-			jo.put("qid", refid);
-			jo.put("score",userscore);
+			jo.put("qid", this.getRefid());
+			jo.put("score",this.getUserscore());
 			String qrtext = "";
 			for(String ur: userResponses ){
 				qrtext += ur + MQuiz.RESPONSE_SEPARATOR;
