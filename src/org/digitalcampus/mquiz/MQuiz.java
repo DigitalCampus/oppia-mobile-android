@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.util.Log;
 
 public class MQuiz implements Serializable {
@@ -61,6 +63,7 @@ public class MQuiz implements Serializable {
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
+			BugSenseHandler.log(TAG, e);
 			return false;
 		}
 		return true;
@@ -124,6 +127,7 @@ public class MQuiz implements Serializable {
 
 		} catch (JSONException e) {
 			e.printStackTrace();
+			BugSenseHandler.log(TAG, e);
 			return false;
 		}
 
@@ -229,8 +233,6 @@ public class MQuiz implements Serializable {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("qref", this.getQRef());
-			// TODO add current date i unix timestamp format (eg 1344783510099)
-			System.currentTimeMillis();
 			json.put("quizdate", System.currentTimeMillis());
 			json.put("userscore", this.getUserscore());
 			json.put("maxscore", this.getMaxscore());
@@ -243,8 +245,8 @@ public class MQuiz implements Serializable {
 			}
 			json.put("responses", responses);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			BugSenseHandler.log(TAG, e);
 		}
 		return json;
 	}

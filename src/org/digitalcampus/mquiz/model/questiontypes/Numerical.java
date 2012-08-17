@@ -11,6 +11,8 @@ import org.digitalcampus.mquiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bugsense.trace.BugSenseHandler;
+
 public class Numerical implements Serializable, QuizQuestion {
 	
 	private static final long serialVersionUID = 808485823168202643L;
@@ -46,7 +48,7 @@ public class Numerical implements Serializable, QuizQuestion {
 			try{
 				userAnswer = Float.parseFloat(a);
 			} catch (NumberFormatException nfe){
-				
+				BugSenseHandler.log(TAG, nfe);
 			}
 		}
 		float score = 0;
@@ -68,7 +70,7 @@ public class Numerical implements Serializable, QuizQuestion {
 						} 
 					}
 				} catch (NumberFormatException nfe){
-					
+					BugSenseHandler.log(TAG, nfe);
 				}
 			}
 		}
@@ -146,6 +148,7 @@ public class Numerical implements Serializable, QuizQuestion {
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				BugSenseHandler.log(TAG, e);
 			}
 		}
 		return jo;

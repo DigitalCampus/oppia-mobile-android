@@ -2,6 +2,8 @@ package org.digitalcampus.mtrain.activity;
 
 import org.digitalcampus.mtrain.R;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.app.Activity;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -26,8 +28,8 @@ public class AboutActivity extends Activity {
 			String no = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
 			versionNo.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			BugSenseHandler.log(TAG, e);
 		}
 		
 	}

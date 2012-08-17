@@ -18,6 +18,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.content.Context;
 
 public class ModuleXMLReader {
@@ -41,10 +43,13 @@ public class ModuleXMLReader {
 				document = builder.parse(moduleXML);
 
 			} catch (ParserConfigurationException e) {
+				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 			} catch (SAXException e) {
+				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 			} catch (IOException e) {
+				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 			}
 		}

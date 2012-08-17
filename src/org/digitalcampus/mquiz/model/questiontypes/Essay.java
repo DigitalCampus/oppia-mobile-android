@@ -10,6 +10,8 @@ import org.digitalcampus.mquiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bugsense.trace.BugSenseHandler;
+
 public class Essay implements Serializable, QuizQuestion {
 	
 	/**
@@ -99,8 +101,8 @@ public class Essay implements Serializable, QuizQuestion {
 				jo.put("score",userscore);
 				jo.put("qrtext", ur);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				 BugSenseHandler.log(TAG, e);
 			}
 		}
 		return jo;

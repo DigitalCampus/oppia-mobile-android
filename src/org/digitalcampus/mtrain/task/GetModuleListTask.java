@@ -13,6 +13,8 @@ import org.apache.http.params.HttpParams;
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.listener.GetModuleListListener;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -45,6 +47,7 @@ public class GetModuleListTask extends AsyncTask<String, String, String>{
 			} catch (NumberFormatException e){
 				// do nothing - will remain as default as above
 				e.printStackTrace();
+				BugSenseHandler.log(TAG, e);
 			}
 			HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 			int timeoutSocket = 10000;
@@ -53,6 +56,7 @@ public class GetModuleListTask extends AsyncTask<String, String, String>{
 			} catch (NumberFormatException e){
 				// do nothing - will remain as default as above
 				e.printStackTrace();
+				BugSenseHandler.log(TAG, e);
 			}
 			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 

@@ -10,6 +10,8 @@ import java.util.zip.ZipInputStream;
 
 import org.digitalcampus.mtrain.application.MTrain;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.util.Log;
 
 public class FileUtils {
@@ -111,6 +113,7 @@ public class FileUtils {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			BugSenseHandler.log(TAG, e);
 			return false;
 		}
 

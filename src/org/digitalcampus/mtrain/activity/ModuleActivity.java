@@ -3,16 +3,21 @@ package org.digitalcampus.mtrain.activity;
 import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
+import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.application.Tracker;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.model.Section;
+import org.digitalcampus.mtrain.service.TrackerService;
 import org.digitalcampus.mtrain.widgets.MQuizWidget;
 import org.digitalcampus.mtrain.widgets.PageWidget;
 import org.digitalcampus.mtrain.widgets.WidgetFactory;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -43,6 +48,10 @@ public class ModuleActivity extends Activity {
     	super.onPause();
     	ArrayList<org.digitalcampus.mtrain.model.Activity> acts = section.getActivities();
     	markIfComplete(acts.get(this.currentActivityNo).getDigest());
+    	// start a new tracker service
+    	Log.d(TAG,"Starting tracker service");
+    	Intent service = new Intent(this, TrackerService.class);
+		this.startService(service);
     }
     
     @Override
@@ -50,6 +59,29 @@ public class ModuleActivity extends Activity {
         getMenuInflater().inflate(R.menu.activity_module, menu);
         return true;
     }
+    
+    @Override
+   	public boolean onOptionsItemSelected(MenuItem item) {
+       	Intent i;
+   		// Handle item selection
+   		switch (item.getItemId()) {
+   			case R.id.menu_module_about:
+   				i = new Intent(this, ModuleAboutActivity.class);
+   				Bundle tb = new Bundle();
+   				tb.putSerializable(Module.TAG, module);
+   				i.putExtras(tb);
+   				startActivity(i);
+   				return true;
+   			case R.id.menu_language:
+   				MTrain.showAlert(this, "Under development", "Language switching not yet available");
+   				return true;
+   			case R.id.menu_help:
+   				startActivity(new Intent(this, HelpActivity.class));
+   				return true;
+   			default:
+   				return super.onOptionsItemSelected(item);
+   		}
+   	}
     
     private void loadActivity(){
     	ArrayList<org.digitalcampus.mtrain.model.Activity> acts = section.getActivities();
@@ -118,7 +150,8 @@ public class ModuleActivity extends Activity {
     	// TODO also check any media has been played
     	if(currentActivity != null && currentActivity.isComplete()){
     		Tracker t = new Tracker(this);
-    		t.activityComplete(module.getModId(), digest);
+    		long timeTaken = currentActivity.getTimeTaken();
+    		t.activityComplete(module.getModId(), digest, timeTaken);
     	}    	
     	return true;
     }

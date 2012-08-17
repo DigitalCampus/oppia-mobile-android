@@ -11,6 +11,8 @@ import org.digitalcampus.mquiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bugsense.trace.BugSenseHandler;
+
 public class MultiChoice implements Serializable, QuizQuestion {
 
 	/**
@@ -134,8 +136,8 @@ public class MultiChoice implements Serializable, QuizQuestion {
 				jo.put("score",userscore);
 				jo.put("qrtext", ur);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				BugSenseHandler.log(TAG, e);
 			}
 		}
 		return jo;

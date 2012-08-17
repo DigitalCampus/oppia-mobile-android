@@ -2,6 +2,7 @@ package org.digitalcampus.mtrain.activity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.adapter.ModuleListAdapter;
@@ -13,6 +14,8 @@ import org.digitalcampus.mtrain.service.TrackerService;
 import org.digitalcampus.mtrain.task.InstallModulesTask;
 import org.digitalcampus.mtrain.utils.FileUtils;
 import org.digitalcampus.mtrain.utils.ModuleXMLReader;
+
+import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -51,10 +54,14 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		BugSenseHandler.setup(this,"84d61fd0");
+		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 
+		Log.d(TAG,"Current lang is:" + Locale.getDefault().getLanguage());
+		
 		// set up local dirs
 		MTrain.createMTrainDirs();
 

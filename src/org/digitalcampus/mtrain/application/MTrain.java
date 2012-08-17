@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.digitalcampus.mtrain.R;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
@@ -43,6 +45,7 @@ public class MTrain extends Application {
 			RuntimeException e = new RuntimeException(
 					"mTrain reports :: SDCard error: "
 							+ Environment.getExternalStorageState());
+			BugSenseHandler.log(TAG, e);
 			throw e;
 		}
 
@@ -55,6 +58,7 @@ public class MTrain extends Application {
 					RuntimeException e = new RuntimeException(
 							"mTrain reports :: Cannot create directory: "
 									+ dirName);
+					BugSenseHandler.log(TAG, e);
 					throw e;
 				}
 			} else {
@@ -62,6 +66,7 @@ public class MTrain extends Application {
 					RuntimeException e = new RuntimeException(
 							"mTrain reports :: " + dirName
 									+ " exists, but is not a directory");
+					BugSenseHandler.log(TAG, e);
 					throw e;
 				}
 			}

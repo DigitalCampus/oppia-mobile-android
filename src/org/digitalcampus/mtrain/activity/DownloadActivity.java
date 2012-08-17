@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
@@ -80,6 +82,7 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			BugSenseHandler.log(TAG, e);
 			MTrain.showAlert(this, R.string.close, R.string.error_processing_response);
 		}
 
@@ -102,6 +105,7 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 			json = new JSONArray(response);
 			refreshModuleList();
 		} catch (JSONException e) {
+			BugSenseHandler.log(TAG, e);
 			MTrain.showAlert(this, R.string.close, response);
 			e.printStackTrace();
 		}

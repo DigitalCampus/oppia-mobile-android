@@ -11,6 +11,8 @@ import org.digitalcampus.mtrain.activity.DownloadActivity.DownloadModule;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.listener.DownloadModuleListener;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -32,8 +34,10 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
 				publishProgress("Downloaded file");
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 
+				BugSenseHandler.log(TAG, e1);
 			} catch (IOException e1) { 
 				e1.printStackTrace();
+				BugSenseHandler.log(TAG, e1);
 			}
 			 
 		}

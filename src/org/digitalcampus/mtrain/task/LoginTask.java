@@ -25,6 +25,8 @@ import org.digitalcampus.mtrain.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -101,22 +103,22 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 				}
 
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				BugSenseHandler.log(TAG, e);
 				payload.result = false;
 				payload.resultResponse = "Error connecting to server";
 			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
+				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
 				payload.resultResponse = "Error connecting to server";
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
 				payload.resultResponse = "Error connecting to server";
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
+				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
 				payload.resultResponse = "Invalid response server";

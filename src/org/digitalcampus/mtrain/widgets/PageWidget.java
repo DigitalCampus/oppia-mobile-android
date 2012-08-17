@@ -92,4 +92,14 @@ public class PageWidget extends WidgetFactory {
 			return false;
 		}
 	}
+	
+	public long getTimeTaken(){
+		long endTimestamp = System.currentTimeMillis()/1000;
+		long diff = endTimestamp - startTimestamp;
+		if(diff >= MTrain.PAGE_READ_TIME){
+			return diff;
+		} else {
+			return 0;
+		}
+	}
 }

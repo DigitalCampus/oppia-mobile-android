@@ -51,6 +51,8 @@ public class MQuizWidget extends WidgetFactory {
 	private boolean isComplete = false;
 	private String username;
 	private Module module; 
+	private long startTimestamp = System.currentTimeMillis()/1000;
+	private long endTimestamp = System.currentTimeMillis()/1000;
 	
 	public MQuizWidget(Context context, Module module, Activity activity) {
 		super(context, module, activity);
@@ -200,6 +202,9 @@ public class MQuizWidget extends WidgetFactory {
 		// log the activity as complete
 		isComplete = true;
 		
+		// make end time
+		endTimestamp = System.currentTimeMillis()/1000;
+		
 		// save results ready to send back to the mquiz server
 		String data = mQuiz.getResultObject().toString();
 		DbHelper db = new DbHelper(ctx);
@@ -250,12 +255,17 @@ public class MQuizWidget extends WidgetFactory {
 		Log.d(TAG,"restarting");
 		mQuiz = new MQuiz(username);
 		mQuiz.load(quizContent);
-
+		startTimestamp = System.currentTimeMillis()/1000;
+		endTimestamp = System.currentTimeMillis()/1000;
 		this.showQuestion();
 	}
 	
 	public boolean isComplete(){
 		return isComplete;
+	}
+	
+	public long getTimeTaken(){
+		return (endTimestamp - startTimestamp);
 	}
 
 }

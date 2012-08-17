@@ -30,4 +30,6 @@ public abstract class WidgetFactory extends Activity{
 	
 	public abstract boolean isComplete();
 	
+	public abstract long getTimeTaken();
+	
 }

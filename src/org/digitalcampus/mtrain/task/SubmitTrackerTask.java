@@ -24,6 +24,8 @@ import org.digitalcampus.mtrain.application.MTrain;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -91,19 +93,20 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				}
 				
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
+				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
+				publishProgress("Error connecting to server");
 			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
+				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				publishProgress("Error connecting to server");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				publishProgress("Error connecting to server");
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				BugSenseHandler.log(TAG, e);
+				e.printStackTrace();
 				publishProgress("Invalid response from server");
 			} finally {
 				

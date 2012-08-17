@@ -10,6 +10,8 @@ import org.digitalcampus.mtrain.task.SubmitTrackerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -325,8 +327,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				json.put("digest", c.getString(c.getColumnIndex(LOG_C_ACTIVITYDIGEST)));
 				content = json.toString();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				BugSenseHandler.log(TAG, e);
 			}
 			
 			so.content  = content;

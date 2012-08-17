@@ -5,6 +5,8 @@ import org.digitalcampus.mtrain.task.Payload;
 import org.digitalcampus.mtrain.task.SubmitMQuizTask;
 import org.digitalcampus.mtrain.task.SubmitTrackerTask;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -20,19 +22,25 @@ public class TrackerService extends Service {
 	private final IBinder mBinder = new MyBinder();
 
 	@Override
+	public void onCreate() {
+		super.onCreate();
+		BugSenseHandler.setup(this, "84d61fd0");
+	}
+
+	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
-		if(isOnline()){
+		if (isOnline()) {
 			DbHelper db = new DbHelper(this);
-			
+
 			Payload p = db.getUnsentLog();
 			SubmitTrackerTask stt = new SubmitTrackerTask(this);
 			stt.execute(p);
-			
+
 			Payload mqp = db.getUnsentMquiz();
 			SubmitMQuizTask smqt = new SubmitMQuizTask(this);
 			smqt.execute(mqp);
-			
+
 			db.close();
 
 		}
@@ -49,15 +57,15 @@ public class TrackerService extends Service {
 			return TrackerService.this;
 		}
 	}
-	
+
 	public boolean isOnline() {
-	    getApplicationContext();
+		getApplicationContext();
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-	    if (netInfo != null && netInfo.isConnected()) {
-	        return true;
-	    }
-	    return false;
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnected()) {
+			return true;
+		}
+		return false;
 	}
 
 }

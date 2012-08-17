@@ -11,6 +11,7 @@ import org.digitalcampus.mquiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.bugsense.trace.BugSenseHandler;
 
 public class Matching implements Serializable, QuizQuestion {
 
@@ -22,62 +23,63 @@ public class Matching implements Serializable, QuizQuestion {
 	private List<Response> responseOptions = new ArrayList<Response>();
 	private float userscore = 0;
 	private List<String> userResponses = new ArrayList<String>();
-	private HashMap<String,String> props = new HashMap<String,String>();
+	private HashMap<String, String> props = new HashMap<String, String>();
 	private String feedback = "";
-	
-	public void addResponseOption(Response r){
+
+	public void addResponseOption(Response r) {
 		responseOptions.add(r);
 	}
-	
-	public List<Response> getResponseOptions(){
+
+	public List<Response> getResponseOptions() {
 		return responseOptions;
 	}
-	
-	public void mark(){
+
+	public void mark() {
 		// loop through the responses
 		// find whichever are set as selected and add up the responses
-		
+
 		float total = 0;
-		
-		for (Response r : responseOptions){
-			for(String ur: userResponses){
-				//Log.d(TAG,"ur: "+ ur);
-				//Log.d(TAG,"r.getText(): "+ r.getText());
-				if(ur.equals(r.getText())){
+
+		for (Response r : responseOptions) {
+			for (String ur : userResponses) {
+				// Log.d(TAG,"ur: "+ ur);
+				// Log.d(TAG,"r.getText(): "+ r.getText());
+				if (ur.equals(r.getText())) {
 					total += r.getScore();
-					//Log.d(TAG,"match");
-				}  else {
-					//Log.d(TAG," no match");
+					// Log.d(TAG,"match");
+				} else {
+					// Log.d(TAG," no match");
 				}
 			}
-			
-			// fix marking so that if one of the incorrect scores is selected final mark is 0
-			for(String ur: userResponses){
-				if (r.getText().equals(ur) && r.getScore() == 0){
+
+			// fix marking so that if one of the incorrect scores is selected
+			// final mark is 0
+			for (String ur : userResponses) {
+				if (r.getText().equals(ur) && r.getScore() == 0) {
 					total = 0;
 				}
 			}
 		}
 		int maxscore = Integer.parseInt(this.getProp("maxscore"));
-		if (total > maxscore){
+		if (total > maxscore) {
 			userscore = maxscore;
 		} else {
 			userscore = total;
 		}
 	}
-	
+
 	public String getRefid() {
 		return refid;
 	}
-	
+
 	public void setRefid(String refid) {
 		this.refid = refid;
 	}
-	
+
 	public String getQtext() {
 		return qtext;
 	}
-	
+
 	public void setQtext(String qtext) {
 		this.qtext = qtext;
 	}
@@ -99,13 +101,13 @@ public class Matching implements Serializable, QuizQuestion {
 	}
 
 	public void setUserResponses(List<String> str) {
-		this.userResponses= str;	
+		this.userResponses = str;
 	}
 
-	public void setProps(HashMap<String,String> props) {
+	public void setProps(HashMap<String, String> props) {
 		this.props = props;
 	}
-	
+
 	public String getProp(String key) {
 		return props.get(key);
 	}
@@ -113,30 +115,30 @@ public class Matching implements Serializable, QuizQuestion {
 	public List<String> getUserResponses() {
 		return this.userResponses;
 	}
-	
+
 	public String getFeedback() {
 		this.feedback = "";
 		this.mark();
 		return this.feedback;
 	}
-	
+
 	public int getMaxScore() {
 		return Integer.parseInt(this.getProp("maxscore"));
 	}
-	
+
 	public JSONObject responsesToJSON() {
 		JSONObject jo = new JSONObject();
 		try {
 			jo.put("qid", this.getRefid());
-			jo.put("score",this.getUserscore());
+			jo.put("score", this.getUserscore());
 			String qrtext = "";
-			for(String ur: userResponses ){
+			for (String ur : userResponses) {
 				qrtext += ur + MQuiz.RESPONSE_SEPARATOR;
 			}
 			jo.put("qrtext", qrtext);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			BugSenseHandler.log(TAG, e);
 		}
 		return jo;
 	}
