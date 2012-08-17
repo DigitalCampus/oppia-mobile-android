@@ -2,11 +2,14 @@ package org.digitalcampus.mtrain.service;
 
 import java.util.Calendar;
 
+import org.digitalcampus.mtrain.model.Module;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 public class TrackerScheduleReceiver extends BroadcastReceiver {
@@ -21,6 +24,7 @@ public class TrackerScheduleReceiver extends BroadcastReceiver {
 		Log.d(TAG, "running onReceive service");
 		AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		Intent i = new Intent(context, TrackerStartServiceReceiver.class);
+		
 		PendingIntent pending = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 		Calendar cal = Calendar.getInstance();
 		

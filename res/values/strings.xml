@@ -52,6 +52,10 @@
 	<string name="prefServerTimeoutResponse">Response timeout</string>
 	<string name="prefServerTimeoutResponseDefault">20000</string>
 	
+	<string name="prefBackgroudDataConnect">Background activity tracker</string>
+	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
+	
+	
 	<string name="title_login">Login</string>
 	<string name="login_email_title">Email/Username</string>
 	<string name="login_password_title">Password</string>

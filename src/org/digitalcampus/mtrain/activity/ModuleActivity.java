@@ -51,6 +51,11 @@ public class ModuleActivity extends Activity {
     	// start a new tracker service
     	Log.d(TAG,"Starting tracker service");
     	Intent service = new Intent(this, TrackerService.class);
+    	
+    	Bundle tb = new Bundle();
+		tb.putBoolean("backgroundData", true);
+		service.putExtras(tb);
+		
 		this.startService(service);
     }
     

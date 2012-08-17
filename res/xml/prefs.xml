@@ -29,6 +29,11 @@
             android:key="prefServerTimeoutResponse"
             android:title="@string/prefServerTimeoutResponse" >
         </EditTextPreference>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/prefBackgroudDataConnect"
+            android:summary="@string/prefBackgroudDataConnect_summary"
+            android:key="prefBackgroundDataConnect" />
     </PreferenceCategory>
 
 </PreferenceScreen>
