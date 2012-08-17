@@ -40,7 +40,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 	private Context ctx;
 	private SharedPreferences prefs;
 	private SubmitListener mStateListener;
-	
+
 	public RegisterTask(Context c) {
 		this.ctx = c;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -62,12 +62,14 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 							ctx.getString(R.string.prefServerTimeoutResponseDefault))));
 			DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 
-			String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MTrain.REGISTER_PATH;
+			String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault))
+					+ MTrain.REGISTER_PATH;
 			HttpPost httpPost = new HttpPost(url);
 			try {
 				// update progress dialog
+				// TODO lang string
 				publishProgress("logging in ...." + u.username);
-				Log.d(TAG,"logging in ...." + u.username);
+				Log.d(TAG, "logging in ...." + u.username);
 				// add post params
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair("email", u.username));
@@ -89,18 +91,20 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 				while ((s = buffer.readLine()) != null) {
 					response += s;
 				}
-				Log.d(TAG,response);
-				
+				Log.d(TAG, response);
+
 				JSONObject json = new JSONObject(response);
 				if (json.has("login")) {
 					if (json.getBoolean("login")) {
 						payload.result = true;
+						// TODO lang string
 						payload.resultResponse = "Logged in";
 					} else {
 						payload.result = false;
+						// TODO lang string
 						payload.resultResponse = "Error logging in";
 					}
-				} else if (json.has("error")){
+				} else if (json.has("error")) {
 					payload.result = false;
 					payload.resultResponse = json.getString("error");
 				}
@@ -109,22 +113,22 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
-				payload.resultResponse = "Error connecting to server";
+				payload.resultResponse = ctx.getString(R.string.error_connection);
 			} catch (ClientProtocolException e) {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
-				payload.resultResponse = "Error connecting to server";
+				payload.resultResponse = ctx.getString(R.string.error_connection);
 			} catch (IOException e) {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
-				payload.resultResponse = "Error connecting to server";
+				payload.resultResponse = ctx.getString(R.string.error_connection);
 			} catch (JSONException e) {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
-				payload.resultResponse = "Invalid response server";
+				payload.resultResponse = ctx.getString(R.string.error_processing_response);
 			} finally {
 
 			}
@@ -135,15 +139,15 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 	@Override
 	protected void onPostExecute(Payload response) {
 		synchronized (this) {
-            if (mStateListener != null) {
-               mStateListener.submitComplete(response);
-            }
-        }
+			if (mStateListener != null) {
+				mStateListener.submitComplete(response);
+			}
+		}
 	}
-	
+
 	public void setLoginListener(SubmitListener srl) {
-        synchronized (this) {
-            mStateListener = srl;
-        }
-    }
+		synchronized (this) {
+			mStateListener = srl;
+		}
+	}
 }

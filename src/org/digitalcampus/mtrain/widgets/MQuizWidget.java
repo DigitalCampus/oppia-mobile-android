@@ -181,7 +181,7 @@ public class MQuizWidget extends WidgetFactory {
 		// TODO change to proper strings
 		builder.setTitle("Feedback");
 		builder.setMessage(msg);
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface arg0, int arg1) {
 				if (mQuiz.hasNext()) {

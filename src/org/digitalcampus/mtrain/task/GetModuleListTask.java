@@ -40,6 +40,7 @@ public class GetModuleListTask extends AsyncTask<String, String, String>{
 		for (String url : urls) {
 			String response = "";
 			
+			// TODO change to be like the other tasks
 			HttpParams httpParameters = new BasicHttpParams();
 			int timeoutConnection = 10000;
 			try {

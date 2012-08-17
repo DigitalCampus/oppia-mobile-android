@@ -70,6 +70,7 @@ public class PageWidget extends WidgetFactory {
 						t.mediaPlayed(PageWidget.this.module.getModId(), PageWidget.this.activity.getDigest(), videoFileName);
 						ctx.startActivity(intent);
 					} else {
+						// TODO lang string
 						Toast.makeText(ctx, "Media file: '" + videoFileName + "' not found.", Toast.LENGTH_LONG).show();
 					}
 					return true;

@@ -66,6 +66,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 			HttpPost httpPost = new HttpPost(url);
 			try {
 				// update progress dialog
+				// TODO lang string
 				publishProgress("logging in ...." + u.username);
 				Log.d(TAG,"logging in ...." + u.username);
 				// add post params
@@ -92,9 +93,11 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 				if (json.has("login")) {
 					if (json.getBoolean("login")) {
 						payload.result = true;
+						// TODO lang string
 						payload.resultResponse = "Logged in";
 					} else {
 						payload.result = false;
+						// TODO lang string
 						payload.resultResponse = "Error logging in";
 					}
 				} else if (json.has("error")){
@@ -106,22 +109,22 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 				e.printStackTrace();
 				BugSenseHandler.log(TAG, e);
 				payload.result = false;
-				payload.resultResponse = "Error connecting to server";
+				payload.resultResponse = ctx.getString(R.string.error_connection);
 			} catch (ClientProtocolException e) {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
-				payload.resultResponse = "Error connecting to server";
+				payload.resultResponse = ctx.getString(R.string.error_connection);
 			} catch (IOException e) {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
-				payload.resultResponse = "Error connecting to server";
+				payload.resultResponse = ctx.getString(R.string.error_connection);
 			} catch (JSONException e) {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				payload.result = false;
-				payload.resultResponse = "Invalid response server";
+				payload.resultResponse = ctx.getString(R.string.error_processing_response);
 			} finally {
 
 			}
