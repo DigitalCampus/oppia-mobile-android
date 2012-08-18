@@ -7,9 +7,9 @@ import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.digitalcampus.mtrain.activity.DownloadActivity.DownloadModule;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.listener.DownloadModuleListener;
+import org.digitalcampus.mtrain.model.Module;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -25,12 +25,12 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
 	protected Payload doInBackground(Payload... params) {
 		// TODO what to do when there is an error connecting - how to flag back to user
 		for (Payload payload : params) {
-			DownloadModule dm = (DownloadModule) payload.data[0];
-			Log.d(TAG,"Downloading:" + dm.downloadUrl);
+			Module dm = (Module) payload.data[0];
+			Log.d(TAG,"Downloading:" + dm.getDownloadUrl());
 			try { 
-				String localFileName = dm.shortname+"-"+String.format("%.0f",dm.version)+".zip";
+				String localFileName = dm.getShortname()+"-"+String.format("%.0f",dm.getVersionId())+".zip";
 				Log.d(TAG,"saving to: "+localFileName);
-				new DefaultHttpClient().execute(new HttpGet(dm.downloadUrl)).getEntity().writeTo(new FileOutputStream(new File(MTrain.DOWNLOAD_PATH,localFileName)));
+				new DefaultHttpClient().execute(new HttpGet(dm.getDownloadUrl())).getEntity().writeTo(new FileOutputStream(new File(MTrain.DOWNLOAD_PATH,localFileName)));
 				publishProgress("Downloaded file");
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 

@@ -17,6 +17,48 @@ public class Module implements Serializable {
 	private String shortname;
 	private float progress = 0;
 	private HashMap<String,String> props;
+	private Double versionId;
+	private boolean installed;
+	private boolean toUpdate;
+	private String downloadUrl;
+
+	public Module() {
+
+	}
+	
+	public String getDownloadUrl() {
+		return downloadUrl;
+	}
+
+	public void setDownloadUrl(String downloadUrl) {
+		this.downloadUrl = downloadUrl;
+	}
+
+	
+	
+	public Double getVersionId() {
+		return versionId;
+	}
+
+	public void setVersionId(Double versionId) {
+		this.versionId = versionId;
+	}
+
+	public boolean isInstalled() {
+		return installed;
+	}
+
+	public void setInstalled(boolean installed) {
+		this.installed = installed;
+	}
+
+	public boolean isToUpdate() {
+		return toUpdate;
+	}
+
+	public void setToUpdate(boolean toUpdate) {
+		this.toUpdate = toUpdate;
+	}
 
 	public HashMap<String, String> getProps() {
 		return props;
@@ -32,10 +74,6 @@ public class Module implements Serializable {
 
 	public void setProgress(float progress) {
 		this.progress = progress;
-	}
-
-	public Module() {
-
 	}
 
 	public String getShortname() {

@@ -7,6 +7,7 @@ import org.digitalcampus.mtrain.adapter.DownloadListAdapter;
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.listener.GetModuleListListener;
+import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.task.GetModuleListTask;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,17 +62,17 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 
 		try {
 
-			ArrayList<DownloadModule> modules = new ArrayList<DownloadModule>();
+			ArrayList<Module> modules = new ArrayList<Module>();
 			DbHelper db = new DbHelper(this);
 			for (int i = 0; i < (json.length()); i++) {
 				JSONObject json_obj = json.getJSONObject(i);
-				DownloadModule dm = new DownloadModule();
-				dm.title = json_obj.getString("title");
-				dm.shortname = json_obj.getString("shortname");
-				dm.version = json_obj.getDouble("version");
-				dm.downloadUrl = json_obj.getString("url");
-				dm.installed = db.isInstalled(dm.shortname);
-				dm.toUpdate = db.toUpdate(dm.shortname, dm.version);
+				Module dm = new Module();
+				dm.setTitle(json_obj.getString("title"));
+				dm.setShortname(json_obj.getString("shortname"));
+				dm.setVersionId(json_obj.getDouble("version"));
+				dm.setDownloadUrl(json_obj.getString("url"));
+				dm.setInstalled(db.isInstalled(dm.getShortname()));
+				dm.setToUpdate(db.toUpdate(dm.getShortname(), dm.getVersionId()));
 				modules.add(dm);
 			}
 			db.close();
@@ -86,16 +87,6 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 			MTrain.showAlert(this, R.string.close, R.string.error_processing_response);
 		}
 
-	}
-
-	// TODO make this into proper class (with getters/setters etc)
-	public class DownloadModule {
-		public String title;
-		public Double version;
-		public String shortname;
-		public String downloadUrl;
-		public boolean installed = false;
-		public boolean toUpdate = false;
 	}
 
 	public void moduleListComplete(String response) {

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.activity.DownloadActivity;
-import org.digitalcampus.mtrain.activity.DownloadActivity.DownloadModule;
 import org.digitalcampus.mtrain.listener.DownloadModuleListener;
 import org.digitalcampus.mtrain.listener.InstallModuleListener;
+import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.task.DownloadModuleTask;
 import org.digitalcampus.mtrain.task.InstallModulesTask;
 import org.digitalcampus.mtrain.task.Payload;
@@ -22,15 +22,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements DownloadModuleListener,InstallModuleListener{
+public class DownloadListAdapter extends ArrayAdapter<Module> implements DownloadModuleListener,InstallModuleListener{
 
 	public static final String TAG = "DownloadListAdapter";
 
 	private final Context context;
-	private final ArrayList<DownloadModule> moduleList;
+	private final ArrayList<Module> moduleList;
 	private ProgressDialog myProgress;
 
-	public DownloadListAdapter(Activity context, ArrayList<DownloadModule> moduleList) {
+	public DownloadListAdapter(Activity context, ArrayList<Module> moduleList) {
 		super(context, R.layout.module_list_row, moduleList);
 		this.context = context;
 		this.moduleList = moduleList;
@@ -41,19 +41,19 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    View rowView = inflater.inflate(R.layout.module_download_row, parent, false);
-	    DownloadModule m = moduleList.get(position);
+	    Module m = moduleList.get(position);
 	    rowView.setTag(m);
 	    
 	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.module_title);
-	    moduleTitle.setText(m.title);
+	    moduleTitle.setText(m.getTitle());
 	    
 	    TextView moduleVersion = (TextView) rowView.findViewById(R.id.module_version);
-	    moduleVersion.setText(String.format("%.0f",m.version));
+	    moduleVersion.setText(String.format("%.0f",m.getVersionId()));
 	    
 	    Button actionBtn = (Button) rowView.findViewById(R.id.action_btn);
 	    
-	    if(m.installed){
-	    	if(m.toUpdate){
+	    if(m.isInstalled()){
+	    	if(m.isToUpdate()){
 	    		actionBtn.setText(R.string.update);
 		    	actionBtn.setEnabled(true);
 	    	} else {
@@ -64,13 +64,13 @@ public class DownloadListAdapter extends ArrayAdapter<DownloadModule> implements
 	    	actionBtn.setText(R.string.install);
 	    	actionBtn.setEnabled(true);
 	    }
-	    if(!m.installed || m.toUpdate){
+	    if(!m.isInstalled() || m.isToUpdate()){
 	    	actionBtn.setTag(m);
 	    	actionBtn.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
-             		DownloadModule dm = (DownloadModule) v.getTag();
-             		Log.d(TAG,dm.downloadUrl);
-             		DownloadModule[] s = new DownloadModule[1];
+             		Module dm = (Module) v.getTag();
+             		Log.d(TAG,dm.getDownloadUrl());
+             		Module[] s = new Module[1];
              		s[0] = dm;
              		Payload p = new Payload(0,s);
              		
