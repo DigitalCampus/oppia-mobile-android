@@ -22,7 +22,6 @@ import android.widget.TextView;
 public class MatchingWidget extends QuestionWidget {
 
 	public static final String TAG = "MatchingWidget";
-	// TODO add props for matching item separators
 	private static final String MATCHING_SEPARATOR = "->";
 	
 	private LinearLayout responsesLL;
@@ -64,9 +63,7 @@ public class MatchingWidget extends QuestionWidget {
     		// only add if there is question text
     		if(!responsePairs.getKey().equals("")){
 	    		LinearLayout responseLayout = new LinearLayout(ctx);
-	    		responseLayout.setOrientation(LinearLayout.VERTICAL); 
-	    		// TODO check layout params
-	    		//responseLayout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT)); 
+	    		responseLayout.setOrientation(LinearLayout.VERTICAL);  
 	    		TextView tv = new TextView(ctx);
 	    		
 	    		tv.setText(responsePairs.getKey());
@@ -95,8 +92,8 @@ public class MatchingWidget extends QuestionWidget {
 	    		responsesLL.addView(responseLayout);
 	    		responseLayouts[counter] = responseLayout;
 	    		counter++;
-    		} // end if
-    	} // end while
+    		} 
+    	} 
 	}
 	
 	public List<String> getQuestionResponses(List<Response> responses){

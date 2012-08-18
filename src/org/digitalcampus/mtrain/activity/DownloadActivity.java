@@ -58,7 +58,7 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 
 	public void refreshModuleList() {
 		// process the response and display on screen in listview
-		// Create an array of Strings, that will be put to our ListActivity
+		// Create an array of Modules, that will be put to our ListActivity
 
 		try {
 

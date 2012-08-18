@@ -65,7 +65,7 @@ public class PageWidget extends WidgetFactory {
 						Uri data = Uri.parse(MTrain.MEDIA_PATH + videoFileName);
 						// TODO check that the file really is video/mp4 and not another video type
 						intent.setDataAndType(data, "video/mp4");
-						// TODO track that the video has been played (or at least clicked on)
+						// track that the video has been played (or at least clicked on)
 						Tracker t = new Tracker(ctx);
 						t.mediaPlayed(PageWidget.this.module.getModId(), PageWidget.this.activity.getDigest(), videoFileName);
 						ctx.startActivity(intent);

@@ -24,7 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-public class RegisterActivity extends Activity implements SubmitListener, OnSharedPreferenceChangeListener {
+public class RegisterActivity extends Activity implements SubmitListener {
 
 	public static final String TAG = "RegisterActivity";
 
@@ -125,11 +125,6 @@ public class RegisterActivity extends Activity implements SubmitListener, OnShar
 		RegisterTask lt = new RegisterTask(this);
 		lt.setLoginListener(this);
 		lt.execute(p);
-	}
-
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void showAlert(String title, String msg, int onClickTask) {

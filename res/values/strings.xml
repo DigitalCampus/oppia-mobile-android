@@ -1,6 +1,9 @@
 <resources>
 	<!-- TODO - organise these a bit better -->
     <string name="app_name">mTrain</string>
+    <string name="app_logo_alt">DC Logo</string>
+    <string name="app_tagline">by Digital Campus</string>
+    
     <string name="menu_download">Manage Modules</string>
     <string name="menu_language">Change language</string>
     <string name="menu_settings">Settings</string>
@@ -13,8 +16,6 @@
     <string name="title_help">Help</string>
      
     <string name="title_activity_main">mTrain</string>
-    <string name="main_logo_alt">DC Logo</string>
-    <string name="main_tagline">by Digital Campus</string>
     <string name="title_activity_module_index">Module Index</string>
     <string name="title_activity_module">Activity</string>
     <string name="title_download_activity">Manage Modules</string>

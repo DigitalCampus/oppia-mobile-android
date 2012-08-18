@@ -60,11 +60,10 @@
             android:name=".activity.ModuleAboutActivity"
             android:label="@string/title_module_about" />
         
-        <!-- TODO make label a proper string -->
         <service
             android:name=".service.TrackerService"
             android:icon="@drawable/dc_logo"
-            android:label="DC Tracker Service" >
+            android:label="@string/service_tracker" >
         </service>
         
 		<receiver android:name=".service.TrackerScheduleReceiver" >

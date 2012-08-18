@@ -31,6 +31,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
 				String localFileName = dm.getShortname()+"-"+String.format("%.0f",dm.getVersionId())+".zip";
 				Log.d(TAG,"saving to: "+localFileName);
 				new DefaultHttpClient().execute(new HttpGet(dm.getDownloadUrl())).getEntity().writeTo(new FileOutputStream(new File(MTrain.DOWNLOAD_PATH,localFileName)));
+				// TODO lang string
 				publishProgress("Downloaded file");
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 

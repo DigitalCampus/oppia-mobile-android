@@ -62,7 +62,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
     	// show progress dialog
     	// TODO set proper lang strings
         pDialog = new ProgressDialog(this);
-        pDialog.setTitle("Login");
+        pDialog.setTitle(R.string.title_login);
         pDialog.setMessage("Logging in...");
         pDialog.setCancelable(true);
         pDialog.show();
@@ -75,10 +75,6 @@ public class LoginActivity extends Activity implements SubmitListener  {
     	LoginTask lt = new LoginTask(this);
     	lt.setLoginListener(this);
     	lt.execute(p);
-	}
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public void onRegisterClick(View view){
