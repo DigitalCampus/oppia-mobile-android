@@ -2,14 +2,11 @@ package org.digitalcampus.mtrain.service;
 
 import java.util.Calendar;
 
-import org.digitalcampus.mtrain.model.Module;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
 public class TrackerScheduleReceiver extends BroadcastReceiver {

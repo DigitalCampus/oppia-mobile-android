@@ -115,11 +115,10 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_processing_response));
-			} finally {
-
-			}
+			} 
+			db.close();
 		}
-		db.close();
+		
 		return null;
 	}
 

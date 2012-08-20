@@ -97,6 +97,14 @@
 	<string name="error_password_length">You password should be %1$d characters or more</string>
 	<string name="error_installing_module">%1$s: failed to install</string>
 	<string name="error_latest_already_installed">%1$s: latest version already installed</string>
+	<string name="error_login">Error logging in</string>
+	<string name="error_register">Error registering</string>
 	
 	<string name="loading_module_list">Getting list of modules</string>
+	
+	<string name="login_process">Logging in</string>
+	<string name="login_complete">Logged in</string>
+	
+	<string name="register_process">Registering</string>
+	<string name="register_complete">Successfully registered</string>
 </resources>

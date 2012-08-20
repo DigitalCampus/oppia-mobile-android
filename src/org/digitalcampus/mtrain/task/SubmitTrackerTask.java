@@ -114,11 +114,10 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				publishProgress("Invalid response from server");
-			} finally {
-
 			}
+			db.close();
 		}
-		db.close();
+		
 		return null;
 	}
 

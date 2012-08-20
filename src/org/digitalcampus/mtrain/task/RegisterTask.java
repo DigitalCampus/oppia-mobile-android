@@ -68,8 +68,8 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 			try {
 				// update progress dialog
 				// TODO lang string
-				publishProgress("logging in ...." + u.username);
-				Log.d(TAG, "logging in ...." + u.username);
+				publishProgress(ctx.getString(R.string.register_process));
+				Log.d(TAG, "Registering... " + u.username);
 				// add post params
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				nameValuePairs.add(new BasicNameValuePair("email", u.username));
@@ -97,12 +97,10 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 				if (json.has("login")) {
 					if (json.getBoolean("login")) {
 						payload.result = true;
-						// TODO lang string
-						payload.resultResponse = "Logged in";
+						payload.resultResponse = ctx.getString(R.string.register_complete);
 					} else {
 						payload.result = false;
-						// TODO lang string
-						payload.resultResponse = "Error logging in";
+						payload.resultResponse = ctx.getString(R.string.error_register);
 					}
 				} else if (json.has("error")) {
 					payload.result = false;
@@ -129,8 +127,6 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 				e.printStackTrace();
 				payload.result = false;
 				payload.resultResponse = ctx.getString(R.string.error_processing_response);
-			} finally {
-
 			}
 		}
 		return payload;

@@ -15,7 +15,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -82,28 +81,28 @@ public class RegisterActivity extends Activity implements SubmitListener {
 		// check valid email address format
 		boolean isValidEmail = EmailValidator.getInstance().isValid(email);
 		if (!isValidEmail) {
-			this.showAlert("Error", "Please enter a valid email address format", ONCLICK_TASK_NULL);
+			this.showAlert(getString(R.string.error), "Please enter a valid email address format", ONCLICK_TASK_NULL);
 			return;
 		}
 		// check password length
 		if (password.length() < MTrain.PASSWORD_MIN_LENGTH) {
-			this.showAlert("Error", "Your password must be "+ MTrain.PASSWORD_MIN_LENGTH +" or more characters", ONCLICK_TASK_NULL);
+			this.showAlert(getString(R.string.error), "Your password must be "+ MTrain.PASSWORD_MIN_LENGTH +" or more characters", ONCLICK_TASK_NULL);
 			return;
 		}
 		// check password match
 		if (!password.equals(passwordAgain)) {
-			this.showAlert("Error", "Your passwords don't match", ONCLICK_TASK_NULL);
+			this.showAlert(getString(R.string.error), "Your passwords don't match", ONCLICK_TASK_NULL);
 			return;
 		}
 		// check firstname
 		if (firstname.length() < 2) {
-			this.showAlert("Error", "Please enter your firstname", ONCLICK_TASK_NULL);
+			this.showAlert(getString(R.string.error), "Please enter your firstname", ONCLICK_TASK_NULL);
 			return;
 		}
 
 		// check lastname
 		if (lastname.length() < 2) {
-			this.showAlert("Error", "Please enter your lastname", ONCLICK_TASK_NULL);
+			this.showAlert(getString(R.string.error), "Please enter your lastname", ONCLICK_TASK_NULL);
 			return;
 		}
 

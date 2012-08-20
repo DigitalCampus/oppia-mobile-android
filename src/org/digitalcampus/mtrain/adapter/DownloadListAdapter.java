@@ -26,20 +26,20 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Downloa
 
 	public static final String TAG = "DownloadListAdapter";
 
-	private final Context context;
+	private final Context ctx;
 	private final ArrayList<Module> moduleList;
 	private ProgressDialog myProgress;
 
 	public DownloadListAdapter(Activity context, ArrayList<Module> moduleList) {
 		super(context, R.layout.module_list_row, moduleList);
-		this.context = context;
+		this.ctx = context;
 		this.moduleList = moduleList;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    View rowView = inflater.inflate(R.layout.module_download_row, parent, false);
 	    Module m = moduleList.get(position);
 	    rowView.setTag(m);
@@ -74,13 +74,13 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Downloa
              		s[0] = dm;
              		Payload p = new Payload(0,s);
              		
-             		myProgress = new ProgressDialog(context);
+             		myProgress = new ProgressDialog(ctx);
              		myProgress.setTitle(R.string.install);
-             		myProgress.setMessage(context.getString(R.string.download_starting));
+             		myProgress.setMessage(ctx.getString(R.string.download_starting));
              		myProgress.setCancelable(true);
              		myProgress.show();
                      
-             		DownloadModuleTask dmt = new DownloadModuleTask();
+             		DownloadModuleTask dmt = new DownloadModuleTask(ctx);
              		dmt.setInstallerListener(DownloadListAdapter.this);
              		dmt.execute(p);
              	}
@@ -90,19 +90,19 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Downloa
 	}
 
 	public void downloadComplete() {
-		myProgress.setMessage(context.getString(R.string.download_complete));
+		myProgress.setMessage(ctx.getString(R.string.download_complete));
 		// now set task to install
-		InstallModulesTask imTask = new InstallModulesTask(context);
+		InstallModulesTask imTask = new InstallModulesTask(ctx);
 		imTask.setInstallerListener(DownloadListAdapter.this);
 		imTask.execute();
 	}
 
 	public void installComplete() {
 		Log.d(TAG,"install complete");
-		myProgress.setMessage(context.getString(R.string.install_complete));
+		myProgress.setMessage(ctx.getString(R.string.install_complete));
 		myProgress.dismiss();
 		// new refresh the module list
-		DownloadActivity da = (DownloadActivity) context;
+		DownloadActivity da = (DownloadActivity) ctx;
 		da.refreshModuleList();
 	}
 
