@@ -76,6 +76,7 @@
 	<string name="error">Error</string>
 	<string name="loading">Loading</string>
 	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
 	
 	<string name="update">Update</string>
 	<string name="installed">Installed</string>
@@ -108,4 +109,6 @@
 	
 	<string name="register_process">Registering</string>
 	<string name="register_complete">Successfully registered</string>
+	
+	<string name="change_language">Change Language</string>
 </resources>

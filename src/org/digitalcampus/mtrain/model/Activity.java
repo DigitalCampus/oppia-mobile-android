@@ -2,7 +2,6 @@ package org.digitalcampus.mtrain.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Activity implements Serializable{
 	

@@ -2,7 +2,11 @@ package org.digitalcampus.mtrain.activity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeSet;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.adapter.ModuleListAdapter;
@@ -14,8 +18,6 @@ import org.digitalcampus.mtrain.service.TrackerService;
 import org.digitalcampus.mtrain.task.InstallModulesTask;
 import org.digitalcampus.mtrain.utils.FileUtils;
 import org.digitalcampus.mtrain.utils.ModuleXMLReader;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,33 +46,37 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.bugsense.trace.BugSenseHandler;
+
 public class MTrainActivity extends Activity implements InstallModuleListener, OnSharedPreferenceChangeListener {
 
 	public static final String TAG = "MTrainActivity";
 	private SharedPreferences prefs;
 	private Module tempMod;
-	private ArrayList<String> availableLangs;
+	private TreeSet<String> langSet = new TreeSet<String>();
+	private HashMap<String, String> langMap = new HashMap<String, String>();
+	private String[] langArray;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		BugSenseHandler.setup(this,MTrain.BUGSENSE_API_KEY);
-		
+		BugSenseHandler.setup(this, MTrain.BUGSENSE_API_KEY);
+
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 
-		Log.d(TAG,"Current lang is:" + Locale.getDefault().getLanguage());
+		Log.d(TAG, "Current lang is:" + Locale.getDefault().getLanguage());
 		// set preferred lang to the deafult lang
-		if(prefs.getString("prefLanguage", "").equals("")){
+		if (prefs.getString("prefLanguage", "").equals("")) {
 			Editor editor = prefs.edit();
-	    	editor.putString("prefLanguage",Locale.getDefault().getLanguage());
-	    	editor.commit();
-	    	Log.d(TAG,"preferred lang set to:" + Locale.getDefault().getLanguage());
+			editor.putString("prefLanguage", Locale.getDefault().getLanguage());
+			editor.commit();
+			Log.d(TAG, "preferred lang set to:" + Locale.getDefault().getLanguage());
 		}
-		
+
 		// set up local dirs
 		MTrain.createMTrainDirs();
 
@@ -124,11 +130,19 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		DbHelper db = new DbHelper(this);
 		ArrayList<Module> modules = db.getModules();
 		db.close();
-		for(Module m: modules){
-			ModuleXMLReader mxr = new ModuleXMLReader(m.getLocation()+"/"+MTrain.MODULE_XML);
+		for (Module m : modules) {
+			ModuleXMLReader mxr = new ModuleXMLReader(m.getLocation() + "/" + MTrain.MODULE_XML);
 			m.setTitles(mxr.getTitles());
+			TreeSet<String> mLangs = mxr.getLangs();
+			m.setAvailableLangs(mLangs);
+			// add these langs to the global available langs
+			langSet.addAll(mLangs);
 			m.setProps(mxr.getMeta());
 		}
+
+		// rebuild Langs
+		rebuildLangs();
+
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.no_modules);
 		if (modules.size() > 0) {
 			ll.setVisibility(View.GONE);
@@ -153,7 +167,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Module m = (Module) view.getTag();
-				Log.d(TAG, m.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 				Intent i = new Intent(MTrainActivity.this, ModuleIndexActivity.class);
 				Bundle tb = new Bundle();
 				tb.putSerializable(Module.TAG, m);
@@ -161,6 +174,20 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 				startActivity(i);
 			}
 		});
+	}
+
+	private void rebuildLangs() {
+		// recreate langMap
+		langMap = new HashMap<String, String>();
+		Iterator<String> itr = langSet.iterator();
+		while (itr.hasNext()) {
+			String lang = itr.next();
+			Locale l = new Locale(lang);
+			String langDisp = l.getDisplayLanguage(new Locale(prefs.getString("prefLanguage", Locale.getDefault()
+					.getLanguage())));
+			langMap.put(langDisp, lang);
+		}
+
 	}
 
 	@Override
@@ -184,7 +211,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 			startActivity(i);
 			return true;
 		case R.id.menu_language:
-			MTrain.showAlert(this, "Under development", "Language switching not yet available");
+			createLanguageDialog();
 			return true;
 		case R.id.menu_help:
 			startActivity(new Intent(this, HelpActivity.class));
@@ -192,6 +219,43 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void createLanguageDialog() {
+		int selected = -1;
+		// TODO this is all quite untidy - fix it up!
+
+		langArray = new String[langMap.size()];
+		int i = 0;
+		for (Map.Entry<String, String> entry : langMap.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			langArray[i] = key;
+			if (value.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
+				selected = i;
+			}
+			i++;
+		}
+
+		AlertDialog mAlertDialog = new AlertDialog.Builder(this)
+				.setSingleChoiceItems(langArray, selected, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String newLang = langMap.get(langArray[whichButton]);
+						Editor editor = prefs.edit();
+						editor.putString("prefLanguage", newLang);
+						editor.commit();
+						dialog.dismiss();
+						displayModules();
+					}
+				}).setTitle(getString(R.string.change_language))
+				.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						// do nothing
+					}
+
+				}).create();
+		mAlertDialog.show();
 	}
 
 	public void installComplete() {
@@ -234,7 +298,9 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				// continue with delete
-				Log.d(TAG, "deleting:" + tempMod.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+				Log.d(TAG,
+						"deleting:"
+								+ tempMod.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 				// remove db records
 				DbHelper db = new DbHelper(MTrainActivity.this);
 				db.deleteModule(tempMod.getModId());
@@ -261,7 +327,9 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		builder.setMessage(R.string.module_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.d(TAG, "resetting:" + tempMod.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+				Log.d(TAG,
+						"resetting:"
+								+ tempMod.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 				DbHelper db = new DbHelper(MTrainActivity.this);
 				db.resetModule(tempMod.getModId());
 				db.close();

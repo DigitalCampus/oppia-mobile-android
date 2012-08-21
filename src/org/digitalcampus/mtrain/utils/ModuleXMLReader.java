@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,7 +23,6 @@ import org.xml.sax.SAXException;
 import com.bugsense.trace.BugSenseHandler;
 
 import android.content.Context;
-import android.util.Log;
 
 public class ModuleXMLReader {
 
@@ -77,6 +77,21 @@ public class ModuleXMLReader {
 			}
 		}
 		return titles;
+	}
+	
+	public TreeSet<String> getLangs(){
+		TreeSet<String> langs = new TreeSet<String>();
+		Node m = document.getFirstChild().getFirstChild();
+		NodeList meta = m.getChildNodes();
+		for (int j=0; j<meta.getLength(); j++) {
+			if(meta.item(j).getNodeName().equals("langs")){
+				NodeList langsNode = meta.item(j).getChildNodes();
+				for(int k=0; k<langsNode.getLength(); k++){
+					langs.add(langsNode.item(k).getTextContent());
+				}
+			}
+		}
+		return langs;
 	}
 	
 	public HashMap<String, String> getMeta(){

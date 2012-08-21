@@ -3,6 +3,7 @@ package org.digitalcampus.mtrain.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 public class Module implements Serializable {
 	
@@ -22,6 +23,15 @@ public class Module implements Serializable {
 	private boolean installed;
 	private boolean toUpdate;
 	private String downloadUrl;
+	private TreeSet<String> availableLangs = new TreeSet<String>();
+
+	public TreeSet<String> getAvailableLangs() {
+		return availableLangs;
+	}
+
+	public void setAvailableLangs(TreeSet<String> availableLangs) {
+		this.availableLangs = availableLangs;
+	}
 
 	public Module() {
 
