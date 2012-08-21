@@ -1,5 +1,7 @@
 package org.digitalcampus.mtrain.widgets;
 
+import java.util.Locale;
+
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.application.Tracker;
@@ -9,7 +11,9 @@ import org.digitalcampus.mtrain.utils.FileUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -23,12 +27,15 @@ public class PageWidget extends WidgetFactory {
 	private Module module;
 	private org.digitalcampus.mtrain.model.Activity activity;
 	private long startTimestamp = System.currentTimeMillis()/1000;
+	private SharedPreferences prefs;
 
 	public PageWidget(Context context, Module module, org.digitalcampus.mtrain.model.Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
 		this.module = module;
 		this.activity = activity;
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_page, null);
 		super.getLayout().addView(vv);
 
@@ -36,7 +43,7 @@ public class PageWidget extends WidgetFactory {
 		WebView wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
 		// TODO error check here that the file really exists first
 		// TODO error check that location is in the hashmap
-		String url = "file://" + module.getLocation() + "/" + activity.getActivityData().get("location");
+		String url = "file://" + module.getLocation() + "/" + activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 
 		Log.v(TAG, "Loading: " + url);
 		wv.loadUrl(url);

@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Activity implements Serializable{
@@ -16,7 +17,9 @@ public class Activity implements Serializable{
 	private int sectionId;
 	private int actId;
 	private String actType;
-	private HashMap<String, String> data;
+	private ArrayList<Lang> titles = new ArrayList<Lang>();
+	private ArrayList<Lang> locations = new ArrayList<Lang>();
+	private ArrayList<Lang> contents = new ArrayList<Lang>();
 	private String digest;
 	
 	public String getDigest() {
@@ -62,13 +65,52 @@ public class Activity implements Serializable{
 		this.actType = actType;
 	}
 
-	public HashMap<String, String> getActivityData() {
-		return data;
-	}
 
-	public void setActivityData(HashMap<String, String> data) {
-		this.data = data;
+	public String getTitle(String lang) {
+		for(Lang l: titles){
+			if(l.getLang().equals(lang)){
+				return l.getContent();
+			}
+		}
+		if(titles.size() > 0){
+			return titles.get(0).getContent();
+		}
+		return "No title set";
 	}
-
 	
+	public void setTitles(ArrayList<Lang> titles) {
+		this.titles = titles;
+	}
+	
+	public String getLocation(String lang) {
+		for(Lang l: locations){
+			if(l.getLang().equals(lang)){
+				return l.getContent();
+			}
+		}
+		if(locations.size() > 0){
+			return locations.get(0).getContent();
+		}
+		return "No location set";
+	}
+	
+	public void setLocations(ArrayList<Lang> locations) {
+		this.locations = locations;
+	}
+	
+	public String getContents(String lang) {
+		for(Lang l: contents){
+			if(l.getLang().equals(lang)){
+				return l.getContent();
+			}
+		}
+		if(contents.size() > 0){
+			return contents.get(0).getContent();
+		}
+		return "No content set";
+	}
+	
+	public void setContents(ArrayList<Lang> contents) {
+		this.contents = contents;
+	}
 }

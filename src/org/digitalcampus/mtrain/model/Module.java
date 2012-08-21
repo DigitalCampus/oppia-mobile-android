@@ -112,11 +112,6 @@ public class Module implements Serializable {
 		}
 		return "No title set";
 	}
-
-	public void addTitle(String lang, String title) {
-		// TODO check that this lang isn't already in list
-		this.titles.add(new Lang(lang,title));
-	}
 	
 	public void setTitles(ArrayList<Lang> titles) {
 		this.titles = titles;

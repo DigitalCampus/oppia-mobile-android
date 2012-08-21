@@ -74,7 +74,6 @@ public class ModuleXMLReader {
 				NamedNodeMap attrs = meta.item(j).getAttributes();
 				String lang = attrs.getNamedItem("lang").getTextContent();
 				titles.add(new Lang(lang, meta.item(j).getTextContent()));
-				Log.d(TAG,"added: " + lang + " : "+ meta.item(j).getTextContent());
 			}
 		}
 		return titles;
@@ -126,22 +125,20 @@ public class ModuleXMLReader {
 		for (int i=0; i<sects.getLength(); i++){
 			NamedNodeMap sectionAttrs = sects.item(i).getAttributes();
 			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("id").getTextContent());
-			//String title = this.getChildNodeByName(sects.item(i),"title").getTextContent();
 			Section s = new Section();
 			s.setSectionId(sectionId);
 			
 			//get section titles
 			NodeList nodes = sects.item(i).getChildNodes();
-			ArrayList<Lang> titles = new ArrayList<Lang>();
+			ArrayList<Lang> sectTitles = new ArrayList<Lang>();
 			for (int j=0; j<nodes.getLength(); j++) {
 				if(nodes.item(j).getNodeName().equals("title")){
 					NamedNodeMap attrs = nodes.item(j).getAttributes();
 					String lang = attrs.getNamedItem("lang").getTextContent();
-					titles.add(new Lang(lang, nodes.item(j).getTextContent()));
-					Log.d(TAG,"added: " + lang + " : "+ nodes.item(j).getTextContent());
+					sectTitles.add(new Lang(lang, nodes.item(j).getTextContent()));
 				}
 			}
-			s.setTitles(titles);
+			s.setTitles(sectTitles);
 			
 			float progress = db.getSectionProgress(modId, sectionId);
 			
@@ -158,7 +155,28 @@ public class ModuleXMLReader {
 				a.setActType(actType);
 				a.setModId(modId);
 				a.setSectionId(sectionId);
-				a.setActivityData(this.nodetoHashMap(acts.item(j)));
+				
+				ArrayList<Lang> actTitles = new ArrayList<Lang>();
+				ArrayList<Lang> actLocations = new ArrayList<Lang>();
+				ArrayList<Lang> actContents = new ArrayList<Lang>();
+				NodeList act = acts.item(j).getChildNodes();
+				for (int k=0; k<act.getLength(); k++) {
+					NamedNodeMap attrs = act.item(k).getAttributes();
+					if(act.item(k).getNodeName().equals("title")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actTitles.add(new Lang(lang, act.item(k).getTextContent()));
+					} else if(act.item(k).getNodeName().equals("location")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actLocations.add(new Lang(lang, act.item(k).getTextContent()));
+					} else if(act.item(k).getNodeName().equals("content")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actContents.add(new Lang(lang, act.item(k).getTextContent()));
+					} 
+				}
+				a.setTitles(actTitles);
+				a.setLocations(actLocations);
+				a.setContents(actContents);
+				
 				a.setDigest(digest);
 				s.addActivity(a);
 			}
@@ -178,14 +196,5 @@ public class ModuleXMLReader {
 			}
 		}
 		return null;
-	}
-	
-	private HashMap<String,String> nodetoHashMap(Node n){
-		HashMap<String,String> hm = new HashMap<String,String>();
-		NodeList nl = n.getChildNodes();
-		for (int i=0; i<nl.getLength(); i++){
-			hm.put(nl.item(i).getNodeName(), nl.item(i).getTextContent());
-		}
-		return hm;
 	}
 }

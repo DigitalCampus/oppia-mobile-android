@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.widgets;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.mquiz.model.QuizQuestion;
@@ -25,6 +26,7 @@ import org.digitalcampus.mtrain.widgets.mquiz.ShortAnswerWidget;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -40,7 +42,7 @@ import android.widget.Toast;
 public class MQuizWidget extends WidgetFactory {
 
 	private static final String TAG = "MQuizWidget";
-
+	private SharedPreferences prefs;
 	private Context ctx;
 	private MQuiz mQuiz;
 	private QuestionWidget qw;
@@ -58,7 +60,7 @@ public class MQuizWidget extends WidgetFactory {
 		super(context, module, activity);
 		this.ctx = context;
 		this.module = module;
-		
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
 		super.getLayout().addView(vv);
 
@@ -67,7 +69,7 @@ public class MQuizWidget extends WidgetFactory {
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
 		
 		// TODO error check that "content" is in the hashmap
-		quizContent = activity.getActivityData().get("content");
+		quizContent = activity.getContents(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 		username = PreferenceManager.getDefaultSharedPreferences(context).getString("prefUsername", "");
 		mQuiz = new MQuiz(username);
 		mQuiz.load(quizContent);

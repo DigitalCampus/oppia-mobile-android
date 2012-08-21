@@ -49,6 +49,7 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 				String moduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MTrain.MODULE_XML;
 
 				ModuleXMLReader mxr = new ModuleXMLReader(moduleXMLPath);
+				
 				HashMap<String, String> hm = mxr.getMeta();
 
 				String versionid = hm.get("versionid");
