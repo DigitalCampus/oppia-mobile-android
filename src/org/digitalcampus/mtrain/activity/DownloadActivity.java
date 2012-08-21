@@ -8,6 +8,7 @@ import org.digitalcampus.mtrain.adapter.DownloadListAdapter;
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.listener.GetModuleListListener;
+import org.digitalcampus.mtrain.model.Lang;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.task.GetModuleListTask;
 import org.json.JSONArray;
@@ -69,8 +70,10 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 				JSONObject json_obj = json.getJSONObject(i);
 				Module dm = new Module();
 				// TODO LANG
-				HashMap<String,String> titles = new HashMap<String,String>();
-				//dm.setTitle(json_obj.getString("title"));
+				ArrayList<Lang> titles = new ArrayList<Lang>();
+				Lang l = new Lang("en",json_obj.getString("title"));
+				titles.add(l);
+				dm.setTitles(titles);
 				dm.setShortname(json_obj.getString("shortname"));
 				dm.setVersionId(json_obj.getDouble("version"));
 				dm.setDownloadUrl(json_obj.getString("url"));

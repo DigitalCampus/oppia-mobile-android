@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.mtrain.application.DbHelper;
+import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.model.Activity;
 import org.digitalcampus.mtrain.model.Lang;
 import org.digitalcampus.mtrain.model.Section;
@@ -72,8 +73,12 @@ public class ModuleXMLReader {
 		for (int j=0; j<meta.getLength(); j++) {
 			if(meta.item(j).getNodeName().equals("title")){
 				NamedNodeMap attrs = meta.item(j).getAttributes();
-				String lang = attrs.getNamedItem("lang").getTextContent();
-				titles.add(new Lang(lang, meta.item(j).getTextContent()));
+				if(attrs.getNamedItem("lang") != null){
+					String lang = attrs.getNamedItem("lang").getTextContent();
+					titles.add(new Lang(lang, meta.item(j).getTextContent()));
+				} else {
+					titles.add(new Lang(MTrain.DEFAULT_LANG, meta.item(j).getTextContent()));
+				}
 			}
 		}
 		return titles;
