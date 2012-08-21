@@ -1,12 +1,15 @@
 package org.digitalcampus.mtrain.adapter;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.model.Module;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,25 +21,27 @@ public class ModuleListAdapter extends ArrayAdapter<Module> {
 
 	public static final String TAG = "ModuleListAdapter";
 
-	private final Context context;
+	private final Context ctx;
 	private final ArrayList<Module> moduleList;
-
+	private SharedPreferences prefs;
+	
 	public ModuleListAdapter(Activity context, ArrayList<Module> moduleList) {
 		super(context, R.layout.module_list_row, moduleList);
-		this.context = context;
+		this.ctx = context;
 		this.moduleList = moduleList;
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    View rowView = inflater.inflate(R.layout.module_list_row, parent, false);
 	    Module m = moduleList.get(position);
 	    rowView.setTag(m);
 	    
 	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.module_title);
-	    moduleTitle.setText(m.getTitle());
+	    moduleTitle.setText(m.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.module_progress_bar);
 	    pb.setProgress((int) m.getProgress());

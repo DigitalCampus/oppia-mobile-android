@@ -3,10 +3,16 @@ package org.digitalcampus.mtrain.task;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -66,10 +72,11 @@ public class GetModuleListTask extends AsyncTask<String, String, String>{
 			Log.d(TAG,"connecting to: "+url);
 			try {
 				// add post params
-				//List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair("username", prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 				//nameValuePairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
 				//nameValuePairs.add(new BasicNameValuePair("password", prefs.getString("prefPassword", "")));
-				//httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				
 				// make request
 				HttpResponse execute = client.execute(httpPost);

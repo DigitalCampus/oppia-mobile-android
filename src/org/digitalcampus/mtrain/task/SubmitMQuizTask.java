@@ -49,7 +49,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 
-		DbHelper db = new DbHelper(ctx);
+		
 
 		for (org.digitalcampus.mtrain.model.Log l : (org.digitalcampus.mtrain.model.Log[]) payload.data) {
 
@@ -95,7 +95,9 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				if (json.has("result")) {
 					if (json.getBoolean("result")) {
 						Log.d(TAG, l.id + " marked as submitted");
+						DbHelper db = new DbHelper(ctx);
 						db.markMQuizSubmitted(l.id);
+						db.close();
 					}
 				}
 
@@ -116,12 +118,12 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_processing_response));
 			} 
-			db.close();
+			
 		}
 		
 		return null;
 	}
-
+	
 	protected void onProgressUpdate(String... obj) {
 		Log.d(TAG, obj[0]);
 

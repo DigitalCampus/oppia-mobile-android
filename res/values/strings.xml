@@ -46,6 +46,7 @@
 	<string name="prefUsername">Email</string>
 	<string name="prefPassword">Password</string>
 	<string name="prefServerDefault">http://mquiz.org/</string>
+	<string name="prefLanguage">Preferred Language</string>
 	<string name="prefAdvanced">Advanced settings</string>
 	
 	<string name="prefServerTimeoutConnection">Connection timeout</string>

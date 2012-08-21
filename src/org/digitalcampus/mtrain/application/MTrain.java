@@ -32,6 +32,7 @@ public class MTrain extends Application {
 	public static final String MQUIZ_SUBMIT_PATH = "/api/?method=submit";
 	
 	// general other settings
+	public static final String BUGSENSE_API_KEY = "84d61fd0";
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
 	

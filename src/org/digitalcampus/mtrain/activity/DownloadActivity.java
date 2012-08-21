@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.adapter.DownloadListAdapter;
@@ -60,14 +61,16 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 		// process the response and display on screen in listview
 		// Create an array of Modules, that will be put to our ListActivity
 
+		DbHelper db = new DbHelper(this);
 		try {
-
 			ArrayList<Module> modules = new ArrayList<Module>();
-			DbHelper db = new DbHelper(this);
+			
 			for (int i = 0; i < (json.length()); i++) {
 				JSONObject json_obj = json.getJSONObject(i);
 				Module dm = new Module();
-				dm.setTitle(json_obj.getString("title"));
+				// TODO LANG
+				HashMap<String,String> titles = new HashMap<String,String>();
+				//dm.setTitle(json_obj.getString("title"));
 				dm.setShortname(json_obj.getString("shortname"));
 				dm.setVersionId(json_obj.getDouble("version"));
 				dm.setDownloadUrl(json_obj.getString("url"));
@@ -75,7 +78,7 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 				dm.setToUpdate(db.toUpdate(dm.getShortname(), dm.getVersionId()));
 				modules.add(dm);
 			}
-			db.close();
+			
 
 			DownloadListAdapter mla = new DownloadListAdapter(this, modules);
 			ListView listView = (ListView) findViewById(R.id.module_list);
@@ -86,6 +89,7 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 			BugSenseHandler.log(TAG, e);
 			MTrain.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
+		db.close();
 
 	}
 

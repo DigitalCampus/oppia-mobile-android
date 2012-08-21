@@ -12,6 +12,11 @@
         android:key="prefPassword"
         android:title="@string/prefPassword" >
     </EditTextPreference>
+    <EditTextPreference
+        android:defaultValue=""
+        android:key="prefLanguage"
+        android:title="@string/prefLanguage" >
+    </EditTextPreference>
 
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference

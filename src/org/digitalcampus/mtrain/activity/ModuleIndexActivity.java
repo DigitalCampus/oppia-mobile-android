@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.activity;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.adapter.SectionListAdapter;
@@ -11,7 +12,9 @@ import org.digitalcampus.mtrain.utils.ModuleXMLReader;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,18 +30,21 @@ public class ModuleIndexActivity extends Activity {
 	private Module module;
 	private ModuleXMLReader mxr;
 	private ArrayList<Section> sections;
+	private SharedPreferences prefs;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module_index);
         
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	setTitle(module.getTitle());
+        	setTitle(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
         	TextView tv = (TextView) this.findViewById(R.id.module_title);
-        	tv.setText(module.getTitle());
+        	tv.setText(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
         }
     	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
     	

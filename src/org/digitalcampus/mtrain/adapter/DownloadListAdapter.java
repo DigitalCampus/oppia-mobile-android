@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.adapter;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.activity.DownloadActivity;
@@ -14,6 +15,8 @@ import org.digitalcampus.mtrain.task.Payload;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +32,13 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Downloa
 	private final Context ctx;
 	private final ArrayList<Module> moduleList;
 	private ProgressDialog myProgress;
+	private SharedPreferences prefs;
 
 	public DownloadListAdapter(Activity context, ArrayList<Module> moduleList) {
 		super(context, R.layout.module_list_row, moduleList);
 		this.ctx = context;
 		this.moduleList = moduleList;
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
 	@Override
@@ -45,7 +50,7 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Downloa
 	    rowView.setTag(m);
 	    
 	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.module_title);
-	    moduleTitle.setText(m.getTitle());
+	    moduleTitle.setText(m.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 	    
 	    TextView moduleVersion = (TextView) rowView.findViewById(R.id.module_version);
 	    moduleVersion.setText(String.format("%.0f",m.getVersionId()));

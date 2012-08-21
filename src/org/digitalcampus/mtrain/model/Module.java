@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Module implements Serializable {
@@ -13,7 +14,7 @@ public class Module implements Serializable {
 	public static final String TAG = "Module";
 	private int modId;
 	private String location;
-	private String title;
+	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private String shortname;
 	private float progress = 0;
 	private HashMap<String,String> props;
@@ -100,11 +101,24 @@ public class Module implements Serializable {
 		this.location = location;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getTitle(String lang) {
+		for(Lang l: titles){
+			if(l.getLang().equals(lang)){
+				return l.getContent();
+			}
+		}
+		if(titles.size() > 0){
+			return titles.get(0).getContent();
+		}
+		return "No title set";
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void addTitle(String lang, String title) {
+		// TODO check that this lang isn't already in list
+		this.titles.add(new Lang(lang,title));
+	}
+	
+	public void setTitles(ArrayList<Lang> titles) {
+		this.titles = titles;
 	}
 }

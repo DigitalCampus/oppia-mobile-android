@@ -11,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.mtrain.application.DbHelper;
 import org.digitalcampus.mtrain.model.Activity;
+import org.digitalcampus.mtrain.model.Lang;
 import org.digitalcampus.mtrain.model.Section;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -21,6 +22,7 @@ import org.xml.sax.SAXException;
 import com.bugsense.trace.BugSenseHandler;
 
 import android.content.Context;
+import android.util.Log;
 
 public class ModuleXMLReader {
 
@@ -61,6 +63,21 @@ public class ModuleXMLReader {
 
 	public void setTempFilePath(String tempFilePath) {
 		this.tempFilePath = tempFilePath;
+	}
+	
+	public ArrayList<Lang> getTitles(){
+		ArrayList<Lang> titles = new ArrayList<Lang>();
+		Node m = document.getFirstChild().getFirstChild();
+		NodeList meta = m.getChildNodes();
+		for (int j=0; j<meta.getLength(); j++) {
+			if(meta.item(j).getNodeName().equals("title")){
+				NamedNodeMap attrs = meta.item(j).getAttributes();
+				String lang = attrs.getNamedItem("lang").getTextContent();
+				titles.add(new Lang(lang, meta.item(j).getTextContent()));
+				Log.d(TAG,"added: " + lang + " : "+ meta.item(j).getTextContent());
+			}
+		}
+		return titles;
 	}
 	
 	public HashMap<String, String> getMeta(){

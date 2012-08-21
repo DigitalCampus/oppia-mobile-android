@@ -195,7 +195,6 @@ public class DbHelper extends SQLiteOpenHelper {
 			Module m = new Module();
 			m.setModId(c.getInt(c.getColumnIndex(MODULE_C_ID)));
 			m.setLocation(c.getString(c.getColumnIndex(MODULE_C_LOCATION)));
-			m.setTitle(c.getString(c.getColumnIndex(MODULE_C_TITLE)));
 			m.setProgress(this.getModuleProgress(m.getModId()));
 			modules.add(m);
 			c.moveToNext();

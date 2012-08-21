@@ -2,6 +2,7 @@ package org.digitalcampus.mtrain.activity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -10,7 +11,9 @@ import org.digitalcampus.mtrain.adapter.ModuleAboutAdapter;
 import org.digitalcampus.mtrain.model.Module;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,19 +22,24 @@ public class ModuleAboutActivity extends Activity {
 
 	public static final String TAG = "ModuleAboutActivity";
 	private Module module;
+	private SharedPreferences prefs;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_module_about);
+		
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			module = (Module) bundle.getSerializable(Module.TAG);
-			setTitle(module.getTitle());
+			setTitle(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 		}
 		Log.d(TAG,module.getLocation());
 		
 		TextView titleTV = (TextView) findViewById(R.id.module_title);
-		titleTV.setText(module.getTitle());
+		titleTV.setText(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 		
 		TextView versionTV = (TextView) findViewById(R.id.module_versionid);
 		versionTV.setText(module.getProps().get("versionid"));

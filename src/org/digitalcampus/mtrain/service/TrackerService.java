@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.service;
 
 import org.digitalcampus.mtrain.application.DbHelper;
+import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.task.Payload;
 import org.digitalcampus.mtrain.task.SubmitMQuizTask;
 import org.digitalcampus.mtrain.task.SubmitTrackerTask;
@@ -25,7 +26,7 @@ public class TrackerService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		BugSenseHandler.setup(this, "84d61fd0");
+		BugSenseHandler.setup(this, MTrain.BUGSENSE_API_KEY);
 	}
 
 	@Override

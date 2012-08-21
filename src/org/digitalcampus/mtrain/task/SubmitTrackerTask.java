@@ -49,7 +49,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 
-		DbHelper db = new DbHelper(ctx);
+		
 
 		for (org.digitalcampus.mtrain.model.Log l : (org.digitalcampus.mtrain.model.Log[]) payload.data) {
 
@@ -94,7 +94,9 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				if (json.has("result")) {
 					if (json.getBoolean("result")) {
 						Log.d(TAG, l.digest + " marked as submitted");
+						DbHelper db = new DbHelper(ctx);
 						db.markLogSubmitted(l.id);
+						db.close();
 					}
 				}
 
@@ -115,7 +117,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				e.printStackTrace();
 				publishProgress("Invalid response from server");
 			}
-			db.close();
+			
 		}
 		
 		return null;
