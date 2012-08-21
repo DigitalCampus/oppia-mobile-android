@@ -1,6 +1,7 @@
 package org.digitalcampus.mtrain.activity;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.application.MTrain;
@@ -14,7 +15,9 @@ import org.digitalcampus.mtrain.widgets.WidgetFactory;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,16 +32,20 @@ public class ModuleActivity extends Activity {
 	private Module module;
 	private int currentActivityNo = 0;
 	private WidgetFactory currentActivity;
+	private SharedPreferences prefs;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module);
+        
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	section = (Section) bundle.getSerializable(Section.TAG);
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	setTitle(section.getTitle());
+        	setTitle(section.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
         	loadActivity();
         }
     }

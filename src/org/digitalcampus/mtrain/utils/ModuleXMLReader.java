@@ -126,10 +126,22 @@ public class ModuleXMLReader {
 		for (int i=0; i<sects.getLength(); i++){
 			NamedNodeMap sectionAttrs = sects.item(i).getAttributes();
 			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("id").getTextContent());
-			String title = this.getChildNodeByName(sects.item(i),"title").getTextContent();
+			//String title = this.getChildNodeByName(sects.item(i),"title").getTextContent();
 			Section s = new Section();
 			s.setSectionId(sectionId);
-			s.setTitle(title);
+			
+			//get section titles
+			NodeList nodes = sects.item(i).getChildNodes();
+			ArrayList<Lang> titles = new ArrayList<Lang>();
+			for (int j=0; j<nodes.getLength(); j++) {
+				if(nodes.item(j).getNodeName().equals("title")){
+					NamedNodeMap attrs = nodes.item(j).getAttributes();
+					String lang = attrs.getNamedItem("lang").getTextContent();
+					titles.add(new Lang(lang, nodes.item(j).getTextContent()));
+					Log.d(TAG,"added: " + lang + " : "+ nodes.item(j).getTextContent());
+				}
+			}
+			s.setTitles(titles);
 			
 			float progress = db.getSectionProgress(modId, sectionId);
 			

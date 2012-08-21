@@ -12,7 +12,7 @@ public class Section implements Serializable  {
 	
 	public static final String TAG = "Section";
 	private int sectionId;
-	private String title;
+	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private ArrayList<Activity> activities;
 	private float progress = 0;
 	
@@ -36,12 +36,25 @@ public class Section implements Serializable  {
 		this.sectionId = sectionId;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getTitle(String lang) {
+		for(Lang l: titles){
+			if(l.getLang().equals(lang)){
+				return l.getContent();
+			}
+		}
+		if(titles.size() > 0){
+			return titles.get(0).getContent();
+		}
+		return "No title set";
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void addTitle(String lang, String title) {
+		// TODO check that this lang isn't already in list
+		this.titles.add(new Lang(lang,title));
+	}
+	
+	public void setTitles(ArrayList<Lang> titles) {
+		this.titles = titles;
 	}
 
 	public ArrayList<Activity> getActivities() {
