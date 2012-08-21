@@ -179,7 +179,8 @@ public class ModuleActivity extends Activity {
     	if(currentActivity != null && currentActivity.isComplete()){
     		Tracker t = new Tracker(this);
     		long timeTaken = currentActivity.getTimeTaken();
-    		t.activityComplete(module.getModId(), digest, timeTaken);
+    		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+    		t.activityComplete(module.getModId(), digest, timeTaken, lang);
     	}    	
     	return true;
     }
@@ -191,8 +192,7 @@ public class ModuleActivity extends Activity {
 		while (itr.hasNext()) {
 			String lang = itr.next();
 			Locale l = new Locale(lang);
-			String langDisp = l.getDisplayLanguage(new Locale(prefs.getString("prefLanguage", Locale.getDefault()
-					.getLanguage())));
+			String langDisp = l.getDisplayLanguage(l);
 			langMap.put(langDisp, lang);
 		}
 

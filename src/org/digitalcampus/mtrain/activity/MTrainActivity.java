@@ -67,14 +67,12 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
-
-		Log.d(TAG, "Current lang is:" + Locale.getDefault().getLanguage());
+		
 		// set preferred lang to the deafult lang
 		if (prefs.getString("prefLanguage", "").equals("")) {
 			Editor editor = prefs.edit();
 			editor.putString("prefLanguage", Locale.getDefault().getLanguage());
 			editor.commit();
-			Log.d(TAG, "preferred lang set to:" + Locale.getDefault().getLanguage());
 		}
 
 		// set up local dirs
@@ -97,7 +95,6 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 	public void onStart() {
 		super.onStart();
 		if (!isLoggedIn()) {
-			Log.d(TAG, "not logged in");
 			startActivity(new Intent(MTrainActivity.this, LoginActivity.class));
 			return;
 		}
@@ -183,8 +180,7 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		while (itr.hasNext()) {
 			String lang = itr.next();
 			Locale l = new Locale(lang);
-			String langDisp = l.getDisplayLanguage(new Locale(prefs.getString("prefLanguage", Locale.getDefault()
-					.getLanguage())));
+			String langDisp = l.getDisplayLanguage(l);
 			langMap.put(langDisp, lang);
 		}
 
