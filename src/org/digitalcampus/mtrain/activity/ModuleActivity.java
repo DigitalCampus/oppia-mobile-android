@@ -1,7 +1,10 @@
 package org.digitalcampus.mtrain.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.application.MTrain;
@@ -14,8 +17,11 @@ import org.digitalcampus.mtrain.widgets.PageWidget;
 import org.digitalcampus.mtrain.widgets.WidgetFactory;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -34,6 +40,9 @@ public class ModuleActivity extends Activity {
 	private WidgetFactory currentActivity;
 	private SharedPreferences prefs;
 	
+	private HashMap<String, String> langMap = new HashMap<String, String>();
+	private String[] langArray;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,11 +54,17 @@ public class ModuleActivity extends Activity {
         if(bundle != null) {
         	section = (Section) bundle.getSerializable(Section.TAG);
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	setTitle(section.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
-        	loadActivity();
         }
     }
-
+    
+    @Override
+    public void onStart(){
+    	super.onStart();
+    	rebuildLangs();
+    	setTitle(section.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+    	loadActivity();
+    	
+    }
     @Override
     public void onPause(){
     	super.onPause();
@@ -85,7 +100,8 @@ public class ModuleActivity extends Activity {
    				startActivity(i);
    				return true;
    			case R.id.menu_language:
-   				MTrain.showAlert(this, "Under development", "Language switching not yet available");
+   				createLanguageDialog();
+   				//MTrain.showAlert(this, "Under development", "Language switching not yet available");
    				return true;
    			case R.id.menu_help:
    				startActivity(new Intent(this, HelpActivity.class));
@@ -168,4 +184,54 @@ public class ModuleActivity extends Activity {
     	return true;
     }
     
+    private void rebuildLangs() {
+		// recreate langMap
+		langMap = new HashMap<String, String>();
+		Iterator<String> itr = module.getAvailableLangs().iterator();
+		while (itr.hasNext()) {
+			String lang = itr.next();
+			Locale l = new Locale(lang);
+			String langDisp = l.getDisplayLanguage(new Locale(prefs.getString("prefLanguage", Locale.getDefault()
+					.getLanguage())));
+			langMap.put(langDisp, lang);
+		}
+
+	}
+    
+    private void createLanguageDialog() {
+		int selected = -1;
+		// TODO this is all quite untidy - fix it up!
+		
+		langArray = new String[langMap.size()];
+		int i = 0;
+		for (Map.Entry<String, String> entry : langMap.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			langArray[i] = key;
+			if (value.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
+				selected = i;
+			}
+			i++;
+		}
+
+		AlertDialog mAlertDialog = new AlertDialog.Builder(this)
+				.setSingleChoiceItems(langArray, selected, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String newLang = langMap.get(langArray[whichButton]);
+						Editor editor = prefs.edit();
+						editor.putString("prefLanguage", newLang);
+						editor.commit();
+						dialog.dismiss();
+						onStart();
+					}
+				}).setTitle(getString(R.string.change_language))
+				.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						// do nothing
+					}
+
+				}).create();
+		mAlertDialog.show();
+	}
 }
