@@ -1,7 +1,10 @@
 package org.digitalcampus.mtrain.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.adapter.SectionListAdapter;
@@ -11,8 +14,11 @@ import org.digitalcampus.mtrain.model.Section;
 import org.digitalcampus.mtrain.utils.ModuleXMLReader;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -32,6 +38,9 @@ public class ModuleIndexActivity extends Activity {
 	private ArrayList<Section> sections;
 	private SharedPreferences prefs;
 	
+	private HashMap<String, String> langMap = new HashMap<String, String>();
+	private String[] langArray;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +51,7 @@ public class ModuleIndexActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	setTitle(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
-        	TextView tv = (TextView) this.findViewById(R.id.module_title);
-        	tv.setText(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+        	
         }
     	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MTrain.MODULE_XML);
     	
@@ -55,8 +62,12 @@ public class ModuleIndexActivity extends Activity {
 	public void onStart() {
 		super.onStart();
 		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
+		rebuildLangs();
+		setTitle(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+    	TextView tv = (TextView) this.findViewById(R.id.module_title);
+    	tv.setText(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 		
-		ListView listView = (ListView) findViewById(R.id.section_list);
+    	ListView listView = (ListView) findViewById(R.id.section_list);
     	SectionListAdapter sla = new SectionListAdapter(this, sections);
     	listView.setAdapter(sla); 
     	
@@ -94,7 +105,8 @@ public class ModuleIndexActivity extends Activity {
 				startActivity(i);
 				return true;
 			case R.id.menu_language:
-				MTrain.showAlert(this, "Under development", "Language switching not yet available");
+				//MTrain.showAlert(this, "Under development", "Language switching not yet available");
+				createLanguageDialog();
 				return true;
 			case R.id.menu_help:
 				startActivity(new Intent(this, HelpActivity.class));
@@ -102,6 +114,57 @@ public class ModuleIndexActivity extends Activity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+    
+    private void rebuildLangs() {
+		// recreate langMap
+		langMap = new HashMap<String, String>();
+		Iterator<String> itr = module.getAvailableLangs().iterator();
+		while (itr.hasNext()) {
+			String lang = itr.next();
+			Locale l = new Locale(lang);
+			String langDisp = l.getDisplayLanguage(new Locale(prefs.getString("prefLanguage", Locale.getDefault()
+					.getLanguage())));
+			langMap.put(langDisp, lang);
+		}
+
+	}
+    
+    private void createLanguageDialog() {
+		int selected = -1;
+		// TODO this is all quite untidy - fix it up!
+		
+		langArray = new String[langMap.size()];
+		int i = 0;
+		for (Map.Entry<String, String> entry : langMap.entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+			langArray[i] = key;
+			if (value.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
+				selected = i;
+			}
+			i++;
+		}
+
+		AlertDialog mAlertDialog = new AlertDialog.Builder(this)
+				.setSingleChoiceItems(langArray, selected, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String newLang = langMap.get(langArray[whichButton]);
+						Editor editor = prefs.edit();
+						editor.putString("prefLanguage", newLang);
+						editor.commit();
+						dialog.dismiss();
+						onStart();
+					}
+				}).setTitle(getString(R.string.change_language))
+				.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						// do nothing
+					}
+
+				}).create();
+		mAlertDialog.show();
 	}
 
     
