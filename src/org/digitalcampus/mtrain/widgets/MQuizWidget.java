@@ -22,6 +22,10 @@ import org.digitalcampus.mtrain.widgets.mquiz.MultiSelectWidget;
 import org.digitalcampus.mtrain.widgets.mquiz.NumericalWidget;
 import org.digitalcampus.mtrain.widgets.mquiz.QuestionWidget;
 import org.digitalcampus.mtrain.widgets.mquiz.ShortAnswerWidget;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.bugsense.trace.BugSenseHandler;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -270,4 +274,19 @@ public class MQuizWidget extends WidgetFactory {
 		return (endTimestamp - startTimestamp);
 	}
 
+	public JSONObject getActivityCompleteData(){
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("activity", "completed");
+			obj.put("timetaken", this.getTimeTaken());
+			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			obj.put("lang", lang);
+			obj.put("qref", mQuiz.getQRef());
+		} catch (JSONException e) {
+			e.printStackTrace();
+			BugSenseHandler.log(TAG, e);
+		}
+		
+		return obj;
+	}
 }

@@ -7,7 +7,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.digitalcampus.mtrain.R;
-import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.application.Tracker;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.model.Section;
@@ -15,6 +14,7 @@ import org.digitalcampus.mtrain.service.TrackerService;
 import org.digitalcampus.mtrain.widgets.MQuizWidget;
 import org.digitalcampus.mtrain.widgets.PageWidget;
 import org.digitalcampus.mtrain.widgets.WidgetFactory;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -178,9 +178,8 @@ public class ModuleActivity extends Activity {
     	// TODO also check any media has been played
     	if(currentActivity != null && currentActivity.isComplete()){
     		Tracker t = new Tracker(this);
-    		long timeTaken = currentActivity.getTimeTaken();
-    		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
-    		t.activityComplete(module.getModId(), digest, timeTaken, lang);
+    		JSONObject json = currentActivity.getActivityCompleteData();
+    		t.activityComplete(module.getModId(), digest, json);
     	}    	
     	return true;
     }

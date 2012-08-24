@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import com.bugsense.trace.BugSenseHandler;
 
 import android.content.Context;
+import android.util.Log;
 
 public class Tracker {
 
@@ -16,21 +17,11 @@ public class Tracker {
 		this.ctx = context;
 	}
 	
-	public void activityComplete(int modId, String digest, long timeTaken, String lang){
+	public void activityComplete(int modId, String digest, JSONObject data){
 		// add to the db log
-		DbHelper db = new DbHelper(this.ctx); 
-		JSONObject jsonObj = new JSONObject();
-		try {
-			jsonObj.put("activity", "completed");
-			jsonObj.put("timetaken", timeTaken);
-			jsonObj.put("lang", lang);
-			String data = jsonObj.toString();
-			db.insertLog(modId, digest, data);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			BugSenseHandler.log(TAG, e);
-		}
-		
+		DbHelper db = new DbHelper(this.ctx);
+		Log.d(TAG,data.toString());
+		db.insertLog(modId, digest, data.toString());
 		db.close();
 	}
 	

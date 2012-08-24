@@ -24,7 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
 	static final String DB_NAME = "mtrain.db";
-	static final int DB_VERSION = 3;
+	static final int DB_VERSION = 4;
 
 	private SQLiteDatabase db;
 
@@ -52,7 +52,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String LOG_C_ACTIVITYDIGEST = "digest";
 	private static final String LOG_C_DATA = "logdata";
 	private static final String LOG_C_SUBMITTED = "logsubmitted";
-
+	private static final String LOG_C_INPROGRESS = "loginprogress";
 	
 	private static final String MQUIZRESULTS_TABLE = "results";
 	private static final String MQUIZRESULTS_C_ID = BaseColumns._ID;
@@ -102,7 +102,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				LOG_C_DATETIME + " datetime default current_timestamp, " + 
 				LOG_C_ACTIVITYDIGEST + " text, " + 
 				LOG_C_DATA + " text, " + 
-				LOG_C_SUBMITTED + " integer default 0)";
+				LOG_C_SUBMITTED + " integer default 0, " + 
+				LOG_C_INPROGRESS + " integer default 0)";
 		Log.d(TAG, "Log sql: " + l_sql);
 		db.execSQL(l_sql);
 	}
@@ -120,11 +121,11 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-		db.execSQL("drop table if exists " + MODULE_TABLE);
-		db.execSQL("drop table if exists " + ACTIVITY_TABLE);
+		//db.execSQL("drop table if exists " + MODULE_TABLE);
+		//db.execSQL("drop table if exists " + ACTIVITY_TABLE);
 		db.execSQL("drop table if exists " + LOG_TABLE);
-		db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
-		onCreate(db);
+		createLogTable(db);
+		//db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
 	}
 
 	// returns id of the row

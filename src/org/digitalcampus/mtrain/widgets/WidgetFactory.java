@@ -2,6 +2,7 @@ package org.digitalcampus.mtrain.widgets;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.model.Module;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,5 +32,7 @@ public abstract class WidgetFactory extends Activity{
 	public abstract boolean isComplete();
 	
 	public abstract long getTimeTaken();
+	
+	public abstract JSONObject getActivityCompleteData();
 	
 }

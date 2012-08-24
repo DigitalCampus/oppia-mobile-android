@@ -7,6 +7,10 @@ import org.digitalcampus.mtrain.application.MTrain;
 import org.digitalcampus.mtrain.application.Tracker;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.utils.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
 import android.content.Context;
@@ -47,10 +51,6 @@ public class PageWidget extends WidgetFactory {
 
 		Log.v(TAG, "Loading: " + url);
 		wv.loadUrl(url);
-
-		// Track the page
-		//Tracker t = new Tracker(this.ctx);
-		//t.activityComplete(module.getModId(), activity.getDigest());
 		
 		// set up the page to intercept videos
 		wv.setWebViewClient(new WebViewClient() {
@@ -109,5 +109,20 @@ public class PageWidget extends WidgetFactory {
 		} else {
 			return 0;
 		}
+	}
+	
+	public JSONObject getActivityCompleteData(){
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("activity", "completed");
+			obj.put("timetaken", this.getTimeTaken());
+			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			obj.put("lang", lang);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			BugSenseHandler.log(TAG, e);
+		}
+		
+		return obj;
 	}
 }
