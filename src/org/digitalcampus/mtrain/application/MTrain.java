@@ -25,16 +25,17 @@ public class MTrain extends Application {
 	public static final String MODULE_XML = "module.xml";
 
 	// server path vars
-	public static final String SERVER_MODULES_PATH = "/modules/list/";
-	public static final String TRACKER_PATH = "/api/?method=tracker";
-	public static final String LOGIN_PATH = "/api/?method=login";
-	public static final String REGISTER_PATH = "/api/?method=register";
-	public static final String MQUIZ_SUBMIT_PATH = "/api/?method=submit";
+	public static final String SERVER_MODULES_PATH = "/api/module/";
+	public static final String TRACKER_PATH = "/api/tracker";
+	public static final String LOGIN_PATH = "/api/login";
+	public static final String REGISTER_PATH = "/api/register";
+	public static final String MQUIZ_SUBMIT_PATH = "/api/submit";
 	
 	// general other settings
 	public static final String BUGSENSE_API_KEY = "84d61fd0";
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
+	
 	// only used in case a module doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
 	
