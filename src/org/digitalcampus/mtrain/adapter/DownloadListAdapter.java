@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.activity.DownloadActivity;
-import org.digitalcampus.mtrain.listener.DownloadModuleListener;
 import org.digitalcampus.mtrain.listener.InstallModuleListener;
 import org.digitalcampus.mtrain.model.Module;
 import org.digitalcampus.mtrain.task.DownloadModuleTask;
@@ -25,7 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DownloadListAdapter extends ArrayAdapter<Module> implements DownloadModuleListener,InstallModuleListener{
+public class DownloadListAdapter extends ArrayAdapter<Module> implements InstallModuleListener{
 
 	public static final String TAG = "DownloadListAdapter";
 

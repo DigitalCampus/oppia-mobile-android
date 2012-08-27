@@ -358,4 +358,14 @@ public class MTrainActivity extends Activity implements InstallModuleListener, O
 		Log.d(TAG, key + " changed");
 	}
 
+	public void downloadComplete() {
+		// do nothing
+		
+	}
+
+	public void downloadProgressUpdate(String msg) {
+		// do nothing
+		
+	}
+
 }

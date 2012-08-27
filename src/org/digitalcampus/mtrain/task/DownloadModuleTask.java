@@ -9,7 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.application.MTrain;
-import org.digitalcampus.mtrain.listener.DownloadModuleListener;
+import org.digitalcampus.mtrain.listener.InstallModuleListener;
 import org.digitalcampus.mtrain.model.Module;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -21,7 +21,7 @@ import android.util.Log;
 public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
 
 	private final static String TAG = "DownloadModuleTask";
-	private DownloadModuleListener mStateListener;
+	private InstallModuleListener mStateListener;
 	private Context ctx;
 	
 	public DownloadModuleTask(Context ctx) {
@@ -67,7 +67,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
         }
 	}
 
-	public void setInstallerListener(DownloadModuleListener srl) {
+	public void setInstallerListener(InstallModuleListener srl) {
         synchronized (this) {
             mStateListener = srl;
         }
