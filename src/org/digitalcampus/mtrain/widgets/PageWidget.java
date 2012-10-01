@@ -82,9 +82,15 @@ public class PageWidget extends WidgetFactory {
 					}
 					return true;
 				} else {
-					Log.d(TAG, "Not doing anything with click");
-					// return false so should not override url loading
-					return false;
+					Log.d(TAG, "launching in standard browser");
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					Uri data = Uri.parse(url);
+					intent.setData(data);
+					ctx.startActivity(intent);
+
+					// launch action in mobile browser - not the webview
+					// return true so doesn't follow link
+					return true;
 				}
 
 			}

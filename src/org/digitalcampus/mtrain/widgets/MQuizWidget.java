@@ -36,6 +36,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -47,7 +48,7 @@ public class MQuizWidget extends WidgetFactory {
 
 	private static final String TAG = "MQuizWidget";
 	private SharedPreferences prefs;
-	private Context ctx;
+	private android.app.Activity ctx;
 	private MQuiz mQuiz;
 	private QuestionWidget qw;
 	private Button prevBtn;
@@ -60,7 +61,7 @@ public class MQuizWidget extends WidgetFactory {
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private long endTimestamp = System.currentTimeMillis()/1000;
 	
-	public MQuizWidget(Context context, Module module, Activity activity) {
+	public MQuizWidget(android.app.Activity context, Module module, Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
 		this.module = module;
@@ -82,6 +83,9 @@ public class MQuizWidget extends WidgetFactory {
 	}
 
 	public void showQuestion() {
+		//Log.d(TAG,"hiding keyboard1");
+		//ctx.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		//Log.d(TAG,"hiding keyboard2");
 		QuizQuestion q = mQuiz.getCurrentQuestion();
 		qText.setVisibility(View.VISIBLE);
 		qText.setText(q.getQtext());

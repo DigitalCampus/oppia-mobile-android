@@ -1,7 +1,6 @@
 package org.digitalcampus.mtrain.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.digitalcampus.mtrain.R;
 import org.digitalcampus.mtrain.adapter.DownloadListAdapter;

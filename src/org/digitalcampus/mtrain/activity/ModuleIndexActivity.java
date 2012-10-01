@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,7 +75,9 @@ public class ModuleIndexActivity extends Activity {
     	listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Section s = (Section) view.getTag();    				
+				
+				Section s = (Section) view.getTag();    
+				Log.d("TAG","clicked..." + s.getTitle("en"));
 				Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
 				Bundle tb = new Bundle();
 				tb.putSerializable(Section.TAG, (Section) s);

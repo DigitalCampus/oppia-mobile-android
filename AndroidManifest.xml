@@ -35,7 +35,8 @@
         </activity>
         <activity
             android:name=".activity.ModuleActivity"
-            android:label="@string/title_activity_module" >
+            android:label="@string/title_activity_module" 
+            android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
             android:name=".activity.DownloadActivity"

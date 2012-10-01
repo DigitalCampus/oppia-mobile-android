@@ -8,7 +8,6 @@
     android:padding="5dp" >
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -35,8 +34,21 @@
         android:id="@+id/section_progress_bar"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="5dp" 
-        android:progressDrawable="@drawable/progress_bar"
-        android:layout_margin="5dp"/>
+        android:layout_height="5dp"
+        android:layout_margin="5dp"
+        android:progressDrawable="@drawable/progress_bar" />
+
+    <!-- HorizontalScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="50dp" >
+
+        <LinearLayout
+            android:id="@+id/section_activities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+        </LinearLayout>
+    </HorizontalScrollView -->
 
 </LinearLayout>

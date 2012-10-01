@@ -10,10 +10,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -46,6 +49,27 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.section_progress_bar);
 	    pb.setProgress((int) s.getProgress());
+	    
+	    /*LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);
+	    ArrayList<org.digitalcampus.mtrain.model.Activity> activities = s.getActivities();
+	    for(org.digitalcampus.mtrain.model.Activity a: activities){
+	    	Log.d(TAG,a.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+	    	
+	    	TextView tv = new TextView(ctx);
+	    	tv.setTag(s);
+	    	tv.setMinWidth(75);
+	    	tv.setMinHeight(50);
+	    	tv.setText(a.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+	    	tv.setOnClickListener(new OnClickListener() {
+				
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Section s = (Section) v.getTag();
+					Log.d(TAG,"clicked..."+s.getSectionId());
+				}
+			} );
+	    	ll.addView(tv);
+	    }*/
 	    
 	    rowView.setTag(sectionList.get(position));
 	    return rowView;
