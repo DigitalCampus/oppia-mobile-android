@@ -108,7 +108,6 @@ public class ModuleIndexActivity extends Activity {
 				startActivity(i);
 				return true;
 			case R.id.menu_language:
-				//MTrain.showAlert(this, "Under development", "Language switching not yet available");
 				createLanguageDialog();
 				return true;
 			case R.id.menu_help:

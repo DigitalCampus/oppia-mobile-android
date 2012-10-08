@@ -101,7 +101,6 @@ public class ModuleActivity extends Activity {
    				return true;
    			case R.id.menu_language:
    				createLanguageDialog();
-   				//MTrain.showAlert(this, "Under development", "Language switching not yet available");
    				return true;
    			case R.id.menu_help:
    				startActivity(new Intent(this, HelpActivity.class));

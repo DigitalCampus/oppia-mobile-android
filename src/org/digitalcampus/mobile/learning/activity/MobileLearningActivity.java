@@ -50,7 +50,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class MobileLearningActivity extends Activity implements InstallModuleListener, OnSharedPreferenceChangeListener {
 
-	public static final String TAG = "MTrainActivity";
+	public static final String TAG = "MobileLearningActivity";
 	private SharedPreferences prefs;
 	private Module tempMod;
 	private TreeSet<String> langSet = new TreeSet<String>();
@@ -76,7 +76,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		}
 
 		// set up local dirs
-		MobileLearning.createMTrainDirs();
+		MobileLearning.createDirs();
 
 		// install any new modules
 		// TODO show info to user that we're checking for new modules

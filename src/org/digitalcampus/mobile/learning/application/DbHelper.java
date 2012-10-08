@@ -23,8 +23,8 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
-	static final String DB_NAME = "mtrain.db";
-	static final int DB_VERSION = 4;
+	static final String DB_NAME = "mobilelearning.db";
+	static final int DB_VERSION = 5;
 
 	private SQLiteDatabase db;
 
@@ -121,11 +121,15 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-		//db.execSQL("drop table if exists " + MODULE_TABLE);
-		//db.execSQL("drop table if exists " + ACTIVITY_TABLE);
+		db.execSQL("drop table if exists " + MODULE_TABLE);
+		db.execSQL("drop table if exists " + ACTIVITY_TABLE);
 		db.execSQL("drop table if exists " + LOG_TABLE);
+		db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
+		createModuleTable(db);
+		createActivityTable(db);
 		createLogTable(db);
-		//db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
+		createMquizResultsTable(db);
+		
 	}
 
 	// returns id of the row

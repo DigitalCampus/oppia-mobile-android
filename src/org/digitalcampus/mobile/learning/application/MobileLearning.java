@@ -14,14 +14,14 @@ import android.os.Environment;
 
 public class MobileLearning extends Application {
 
-	public static final String TAG = "MTrain";
+	public static final String TAG = "MobileLearning";
 
 	// local storage vars
-	public static final String MTRAIN_ROOT = Environment
+	public static final String MLEARN_ROOT = Environment
 			.getExternalStorageDirectory() + "/digitalcampus/";
-	public static final String MODULES_PATH = MTRAIN_ROOT + "modules/";
-	public static final String MEDIA_PATH = MTRAIN_ROOT + "media/";
-	public static final String DOWNLOAD_PATH = MTRAIN_ROOT + "download/";
+	public static final String MODULES_PATH = MLEARN_ROOT + "modules/";
+	public static final String MEDIA_PATH = MLEARN_ROOT + "media/";
+	public static final String DOWNLOAD_PATH = MLEARN_ROOT + "download/";
 	public static final String MODULE_XML = "module.xml";
 
 	// server path vars
@@ -39,7 +39,7 @@ public class MobileLearning extends Application {
 	// only used in case a module doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
 	
-	public static void createMTrainDirs() throws RuntimeException {
+	public static void createDirs() throws RuntimeException {
 		String cardstatus = Environment.getExternalStorageState();
 		if (cardstatus.equals(Environment.MEDIA_REMOVED)
 				|| cardstatus.equals(Environment.MEDIA_UNMOUNTABLE)
@@ -47,20 +47,20 @@ public class MobileLearning extends Application {
 				|| cardstatus.equals(Environment.MEDIA_MOUNTED_READ_ONLY)
 				|| cardstatus.equals(Environment.MEDIA_SHARED)) {
 			RuntimeException e = new RuntimeException(
-					"mTrain reports :: SDCard error: "
+					TAG + " reports : SDCard error: "
 							+ Environment.getExternalStorageState());
 			BugSenseHandler.log(TAG, e);
 			throw e;
 		}
 
-		String[] dirs = { MTRAIN_ROOT, MODULES_PATH, MEDIA_PATH, DOWNLOAD_PATH };
+		String[] dirs = { MLEARN_ROOT, MODULES_PATH, MEDIA_PATH, DOWNLOAD_PATH };
 
 		for (String dirName : dirs) {
 			File dir = new File(dirName);
 			if (!dir.exists()) {
 				if (!dir.mkdirs()) {
 					RuntimeException e = new RuntimeException(
-							"mTrain reports :: Cannot create directory: "
+							TAG + " reports : Cannot create directory: "
 									+ dirName);
 					BugSenseHandler.log(TAG, e);
 					throw e;
@@ -68,7 +68,7 @@ public class MobileLearning extends Application {
 			} else {
 				if (!dir.isDirectory()) {
 					RuntimeException e = new RuntimeException(
-							"mTrain reports :: " + dirName
+							TAG + " reports : " + dirName
 									+ " exists, but is not a directory");
 					BugSenseHandler.log(TAG, e);
 					throw e;

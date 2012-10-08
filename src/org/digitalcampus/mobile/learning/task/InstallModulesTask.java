@@ -39,7 +39,7 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 			for (int i = 0; i < children.length; i++) {
 
 				// extract to temp dir and check it's a valid package file
-				File tempdir = new File(MobileLearning.MTRAIN_ROOT + "temp/");
+				File tempdir = new File(MobileLearning.MLEARN_ROOT + "temp/");
 				tempdir.mkdirs();
 				FileUtils.unzipFiles(MobileLearning.DOWNLOAD_PATH, children[i], tempdir.getAbsolutePath());
 
