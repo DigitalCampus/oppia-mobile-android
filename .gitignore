@@ -3,3 +3,4 @@
 /gen
 .project
 .settings
+.classpath
