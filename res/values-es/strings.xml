@@ -1,0 +1,114 @@
+<resources>
+	<!-- TODO - organise these a bit better -->
+    <string name="app_name">DC Training</string>
+    <string name="app_logo_alt">DC Logo</string>
+    <string name="app_tagline">by Digital Campus</string>
+    
+    <string name="menu_download">Gestionar cursos</string>
+    <string name="menu_language">Cambiar idioma</string>
+    <string name="menu_settings">Ajustes</string>
+    <string name="menu_about">Sobre</string>
+    <string name="menu_module_about">Sobre el curso</string>
+    <string name="menu_activity_about">Sobre</string>
+    <string name="menu_help">Ayuda</string>
+    <string name="service_tracker">DC buscador de servicio</string>
+    <string name="title_about">Sobre</string>
+    <string name="title_help">Ayuda</string>
+     
+    <string name="title_activity_main">DC Training</string>
+    <string name="title_activity_module_index">Indice del curso</string>
+    <string name="title_activity_module">Actividad</string>
+    <string name="title_download_activity">Gestionar cursos</string>
+    <string name="title_prefs">Ajustes</string>
+    <string name="version">Version: %1$s</string>
+    <string name="title_module_about">Sobre el curso</string>
+    
+    <string name="activity_module_button_prev">&lt;</string>
+    <string name="activity_module_button_next">&gt;</string>
+    
+    <string name="widget_mquiz_next">Próximo &gt;&gt;</string>
+    <string name="widget_mquiz_prev">&lt;&lt; Anterior</string>
+    <string name="widget_mquiz_getresults">Obterner resultados</string>
+    <string name="widget_mquiz_noanswergiven">Por favor dé una respuesta antes de pasar a la siguiente pregunta</string>
+    <string name="widget_mquiz_progress">Pregunta %1$d de %2$d</string>
+ 	<string name="widget_mquiz_results">Resultados</string>
+ 	<string name="widget_mquiz_results_intro">Su puntuación:</string>
+ 	<string name="widget_mquiz_results_score">%1$.0f%%</string>
+ 	<string name="widget_mquiz_results_restart">Vuelva a pasar el test</string>
+ 	<string name="module_context_reset">Reajustar</string>
+ 	<string name="module_context_delete">Borrar</string>
+ 	<string name="module_context_reset_confirm">¿Está seguro de que desea restablecer este curso? Se eliminarán todos los registros de progreso para este curso.</string>
+ 	<string name="module_context_delete_confirm">A¿Está seguro que desea eliminar este curso? Se eliminará completamente el curso de la aplicación.</string>
+ 	
+ 	<string name="no_modules">No hay cursos instalados</string>
+ 	
+ 	<string name="prefServer">Servidor</string>
+	<string name="prefUsername">Email</string>
+	<string name="prefPassword">Contraseña</string>
+	<string name="prefServerDefault">http://mquiz.org/</string>
+	<string name="prefLanguage">Idioma preferido</string>
+	<string name="prefAdvanced">Configuración avanzada</string>
+	
+	<string name="prefServerTimeoutConnection">Tiempo de espera de conexión superado</string>
+	<string name="prefServerTimeoutConnectionDefault">10000</string>
+	<string name="prefServerTimeoutResponse">Tiempo de espera de respuesta superado</string>
+	<string name="prefServerTimeoutResponseDefault">20000</string>
+	
+	<string name="prefBackgroudDataConnect">Buscador de actividad previa</string>
+	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando esta aplicación no se esté ejecutando.</string>
+	
+	
+	<string name="title_login">Inicio sesión</string>
+	<string name="login_email_title">E-mail/Usuario</string>
+	<string name="login_password_title">Contraseña</string>
+	<string name="title_register">Registrar</string>
+	
+	<string name="register_form_email_title">Dirección e-mail</string>
+	<string name="register_form_firstname_title">Nombre</string>
+	<string name="register_form_lastname_title">Apellidos</string>
+	<string name="register_form_password_title">Contraseña</string>
+	<string name="register_form_password_again_title">Contraseña (repetir)</string>
+	<string name="register_btn_text">Registrar</string>
+	
+	<string name="yes">Sí</string>
+	<string name="no">No</string>
+	<string name="close">Cerrar</string>
+	<string name="error">Error</string>
+	<string name="loading">Cargando</string>
+	<string name="ok">OK</string>
+	<string name="cancel">Cancelar</string>
+	
+	<string name="update">Actualización</string>
+	<string name="installed">Instalado</string>
+	<string name="install">Instalar</string>
+	
+	<string name="download_starting">Inicio descarga</string>
+	<string name="downloading">Descargando..</string>
+	<string name="download_complete">Descarga completa</string>
+	
+	<string name="install_starting">Inicio instala</string>
+	<string name="installing">Instalando el curso</string>
+	<string name="installing_module">Instalando: %1$s</string>
+	<string name="install_complete">Instalación completa</string>
+	
+	<string name="install_module_complete">%1$s: instalado</string>
+	
+	<string name="error_connection">Error conectando al servidor</string>
+	<string name="error_processing_response">Error procesando respuesta</string>
+	<string name="error_invalid_email_format">Porfavor, introduzca una dirección de correo válida</string>
+	<string name="error_password_length">Su contraseña debe ser %1$d caracteres o más</string>
+	<string name="error_installing_module">%1$s: no se pudo instalar</string>
+	<string name="error_latest_already_installed">%1$s: ultima versión ya está instalada</string>
+	<string name="error_login">Error en el acceso</string>
+	<string name="error_register">Identtificación errónea</string>
+	
+	<string name="loading_module_list">Obteniendo la lista de cursos</string>
+	
+	<string name="login_process">Accediendo</string>
+	<string name="login_complete">Registrado</string>
+	
+	<string name="register_process">Identificando</string>
+	<string name="register_complete">Identificación correcta</string>
+	
+	<string name="change_language">Cambiar idioma</string>
+</resources>
