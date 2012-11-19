@@ -78,16 +78,6 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		// set up local dirs
 		MobileLearning.createDirs();
 
-		// install any new modules
-		// TODO show info to user that we're checking for new modules
-		// TODO? scan already extracted modules and install these
-		File dir = new File(MobileLearning.DOWNLOAD_PATH);
-		String[] children = dir.list();
-		if (children != null) {
-			InstallModulesTask imTask = new InstallModulesTask(MobileLearningActivity.this);
-			imTask.setInstallerListener(this);
-			imTask.execute();
-		}
 		doBindService();
 	}
 
@@ -99,6 +89,17 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			return;
 		}
 		displayModules();
+		
+		// install any new modules
+		// TODO show info to user that we're checking for new modules
+		// TODO? scan already extracted modules and install these
+		File dir = new File(MobileLearning.DOWNLOAD_PATH);
+		String[] children = dir.list();
+		if (children != null) {
+			InstallModulesTask imTask = new InstallModulesTask(MobileLearningActivity.this);
+			imTask.setInstallerListener(this);
+			imTask.execute();
+		}
 	}
 
 	public void onDestroy() {
