@@ -43,7 +43,7 @@
  	<string name="no_modules">There are no modules currently installed</string>
  	
  	<string name="prefServer">Server</string>
-	<string name="prefUsername">Email</string>
+	<string name="prefUsername">Username</string>
 	<string name="prefPassword">Password</string>
 	<string name="prefServerDefault">http://mquiz.org/</string>
 	<string name="prefLanguage">Preferred Language</string>
@@ -59,10 +59,11 @@
 	
 	
 	<string name="title_login">Login</string>
-	<string name="login_email_title">Email/Username</string>
+	<string name="login_username_title">Username</string>
 	<string name="login_password_title">Password</string>
 	<string name="title_register">Register</string>
 	
+	<string name="register_form_username_title">Username</string>
 	<string name="register_form_email_title">Email address</string>
 	<string name="register_form_firstname_title">First name</string>
 	<string name="register_form_lastname_title">Last name</string>
@@ -95,7 +96,7 @@
 	
 	<string name="error_connection">Error connecting to server</string>
 	<string name="error_processing_response">Error processing response</string>
-	<string name="error_invalid_email_format">Please enter a valid email address format</string>
+	<string name="error_no_username">Please enter your username</string>
 	<string name="error_password_length">You password should be %1$d characters or more</string>
 	<string name="error_installing_module">%1$s: failed to install</string>
 	<string name="error_latest_already_installed">%1$s: latest version already installed</string>

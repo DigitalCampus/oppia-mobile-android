@@ -43,7 +43,7 @@
  	<string name="no_modules">No hay cursos instalados</string>
  	
  	<string name="prefServer">Servidor</string>
-	<string name="prefUsername">Email</string>
+	<string name="prefUsername">Usuario</string>
 	<string name="prefPassword">Contraseña</string>
 	<string name="prefServerDefault">http://mquiz.org/</string>
 	<string name="prefLanguage">Idioma preferido</string>
@@ -59,10 +59,11 @@
 	
 	
 	<string name="title_login">Inicio sesión</string>
-	<string name="login_email_title">E-mail/Usuario</string>
+	<string name="login_username_title">Usuario</string>
 	<string name="login_password_title">Contraseña</string>
 	<string name="title_register">Registrar</string>
 	
+	<string name="register_form_username_title">Usuario</string>
 	<string name="register_form_email_title">Dirección e-mail</string>
 	<string name="register_form_firstname_title">Nombre</string>
 	<string name="register_form_lastname_title">Apellidos</string>
@@ -95,7 +96,7 @@
 	
 	<string name="error_connection">Error conectando al servidor</string>
 	<string name="error_processing_response">Error procesando respuesta</string>
-	<string name="error_invalid_email_format">Porfavor, introduzca una dirección de correo válida</string>
+	<string name="error_no_username">Porfavor, introduzca un usuario</string>
 	<string name="error_password_length">Su contraseña debe ser %1$d caracteres o más</string>
 	<string name="error_installing_module">%1$s: no se pudo instalar</string>
 	<string name="error_latest_already_installed">%1$s: ultima versión ya está instalada</string>

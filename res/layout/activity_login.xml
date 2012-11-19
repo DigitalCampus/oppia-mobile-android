@@ -33,11 +33,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="@string/login_email_title"
+                android:text="@string/login_username_title"
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/login_email_field"
+                android:id="@+id/login_username_field"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"

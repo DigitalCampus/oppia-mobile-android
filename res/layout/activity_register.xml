@@ -30,7 +30,21 @@
                 android:textStyle="bold" />
              
             <TextView
-                android:id="@+id/register_form_email_title"
+                android:id="@+id/register_form_username_title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_form_username_title"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/register_form_username_field"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" 
+                android:textSize="20sp"/>
+            
+            <TextView
+                android:id="@+id/register_form_username_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/register_form_email_title"

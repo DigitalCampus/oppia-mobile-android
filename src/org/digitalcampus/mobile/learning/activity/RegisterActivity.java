@@ -31,6 +31,7 @@ public class RegisterActivity extends Activity implements SubmitListener {
 	private static final int ONCLICK_TASK_REGISTERED = 10;
 
 	private SharedPreferences prefs;
+	private EditText usernameField;
 	private EditText emailField;
 	private EditText passwordField;
 	private EditText passwordAgainField;
@@ -44,6 +45,7 @@ public class RegisterActivity extends Activity implements SubmitListener {
 		setContentView(R.layout.activity_register);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+		usernameField = (EditText) findViewById(R.id.register_form_username_field);
 		emailField = (EditText) findViewById(R.id.register_form_email_field);
 		passwordField = (EditText) findViewById(R.id.register_form_password_field);
 		passwordAgainField = (EditText) findViewById(R.id.register_form_password_again_field);
@@ -57,7 +59,7 @@ public class RegisterActivity extends Activity implements SubmitListener {
 		if (response.result) {
 			// set params
 			Editor editor = prefs.edit();
-			editor.putString("prefUsername", emailField.getText().toString());
+			editor.putString("prefUsername", usernameField.getText().toString());
 			editor.putString("prefPassword", passwordField.getText().toString());
 			editor.commit();
 
@@ -71,6 +73,7 @@ public class RegisterActivity extends Activity implements SubmitListener {
 
 	public void onRegisterClick(View view) {
 		// get form fields
+		String username = (String) usernameField.getText().toString();
 		String email = (String) emailField.getText().toString();
 		String password = (String) passwordField.getText().toString();
 		String passwordAgain = (String) passwordAgainField.getText().toString();
@@ -78,6 +81,12 @@ public class RegisterActivity extends Activity implements SubmitListener {
 		String lastname = (String) lastnameField.getText().toString();
 
 		// do validation
+		// check firstname
+		if (username.length() == 0) {
+			this.showAlert(getString(R.string.error), "Please enter a username", ONCLICK_TASK_NULL);
+			return;
+		}
+				
 		// check valid email address format
 		boolean isValidEmail = EmailValidator.getInstance().isValid(email);
 		if (!isValidEmail) {
@@ -114,12 +123,13 @@ public class RegisterActivity extends Activity implements SubmitListener {
 
 		User[] u = new User[1];
 		u[0] = new User();
-		u[0].username = email;
+		u[0].username = username;
 		u[0].password = password;
 		u[0].passwordAgain = passwordAgain;
 		u[0].firstname = firstname;
 		u[0].lastname = lastname;
-
+		u[0].email = email;
+		
 		Payload p = new Payload(0, u);
 		RegisterTask lt = new RegisterTask(this);
 		lt.setLoginListener(this);

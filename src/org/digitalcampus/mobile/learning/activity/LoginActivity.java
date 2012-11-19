@@ -26,7 +26,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
 	public static final String TAG = "LoginActivity";
 	private SharedPreferences prefs;
 	
-	private EditText emailField;
+	private EditText usernameField;
 	private EditText passwordField;
 	private ProgressDialog pDialog;
 	
@@ -36,18 +36,15 @@ public class LoginActivity extends Activity implements SubmitListener  {
 		setContentView(R.layout.activity_login);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
-        emailField = (EditText) findViewById(R.id.login_email_field);
+		usernameField = (EditText) findViewById(R.id.login_username_field);
         passwordField = (EditText) findViewById(R.id.login_password_field);
 	}
 	
 	public void onLoginClick(View view){
-		Log.d(TAG,"Logging in");
-		String email = emailField.getText().toString();
-		Log.d(TAG,email);
+		String username = usernameField.getText().toString();
     	//check valid email address format
-    	boolean isValidEmail = EmailValidator.getInstance().isValid(email);
-    	if(!isValidEmail){
-    		MobileLearning.showAlert(this,R.string.error,R.string.error_invalid_email_format);
+    	if(username.length() == 0){
+    		MobileLearning.showAlert(this,R.string.error,R.string.error_no_username);
     		return;
     	}
     	
@@ -69,7 +66,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
         
     	User[] u = new User[1];
     	u[0] = new User();
-    	u[0].username = email;
+    	u[0].username = username;
     	u[0].password = password;
     	Payload p = new Payload(0,u);
     	LoginTask lt = new LoginTask(this);
@@ -90,7 +87,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
 		if(response.result){
 			// set params
 			Editor editor = prefs.edit();
-	    	editor.putString("prefUsername", emailField.getText().toString());
+	    	editor.putString("prefUsername", usernameField.getText().toString());
 	    	editor.putString("prefPassword", passwordField.getText().toString());
 	    	editor.commit();
 	    	
