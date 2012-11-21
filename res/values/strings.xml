@@ -44,7 +44,7 @@
  	
  	<string name="prefServer">Server</string>
 	<string name="prefUsername">Username</string>
-	<string name="prefPassword">Password</string>
+	<string name="prefApiKey">API Key</string>
 	<string name="prefServerDefault">http://mquiz.org/</string>
 	<string name="prefLanguage">Preferred Language</string>
 	<string name="prefAdvanced">Advanced settings</string>
@@ -100,7 +100,7 @@
 	<string name="error_password_length">You password should be %1$d characters or more</string>
 	<string name="error_installing_module">%1$s: failed to install</string>
 	<string name="error_latest_already_installed">%1$s: latest version already installed</string>
-	<string name="error_login">Error logging in</string>
+	<string name="error_login">Invalid username/password\nPlease try again</string>
 	<string name="error_register">Error registering</string>
 	
 	<string name="loading_module_list">Getting list of modules</string>

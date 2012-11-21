@@ -25,9 +25,11 @@ public class MobileLearning extends Application {
 	public static final String MODULE_XML = "module.xml";
 
 	// server path vars
+	// TODO check that pref server already had trailing '/'
+	// TODO tidy these up
 	public static final String SERVER_MODULES_PATH = "/api/module/";
 	public static final String TRACKER_PATH = "/api/tracker";
-	public static final String LOGIN_PATH = "/api/login";
+	public static final String LOGIN_PATH = "api/v1/user/";
 	public static final String REGISTER_PATH = "/api/register";
 	public static final String MQUIZ_SUBMIT_PATH = "/api/submit";
 	

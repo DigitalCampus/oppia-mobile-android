@@ -4,13 +4,14 @@
     <EditTextPreference
         android:defaultValue=""
         android:key="prefUsername"
-        android:title="@string/prefUsername" >
+        android:title="@string/prefUsername" 
+        android:enabled="false" >
     </EditTextPreference>
     <EditTextPreference
         android:defaultValue=""
-        android:inputType="textPassword"
-        android:key="prefPassword"
-        android:title="@string/prefPassword" >
+        android:key="prefApiKey"
+        android:title="@string/prefApiKey"
+        android:enabled="false" >
     </EditTextPreference>
     <EditTextPreference
         android:defaultValue=""
