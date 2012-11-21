@@ -5,33 +5,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.SubmitListener;
 import org.digitalcampus.mobile.learning.model.User;
-import org.digitalcampus.mobile.learning.R;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.bugsense.trace.BugSenseHandler;
 
 public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 
@@ -63,44 +61,53 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 			DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 
 			String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.LOGIN_PATH;
+			Log.d(TAG,url);
+			JSONObject json = new JSONObject();
+			
 			HttpPost httpPost = new HttpPost(url);
 			try {
 				// update progress dialog
 				publishProgress(ctx.getString(R.string.login_process));
 				Log.d(TAG,"logging in ...." + u.username);
 				// add post params
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs.add(new BasicNameValuePair("username", u.username));
-				nameValuePairs.add(new BasicNameValuePair("password", u.password));
-				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				json.put("username", u.username);
+                json.put("password", u.password);
+                StringEntity se = new StringEntity( json.toString());
+                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                httpPost.setEntity(se);
 
 				// make request
-				HttpResponse execute = client.execute(httpPost);
+				HttpResponse response = client.execute(httpPost);
 
 				// read response
-				InputStream content = execute.getEntity().getContent();
+				InputStream content = response.getEntity().getContent();
 				BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
-				String response = "";
+				String responseStr = "";
 				String s = "";
 
 				while ((s = buffer.readLine()) != null) {
-					response += s;
+					responseStr += s;
 				}
-				Log.d(TAG,response);
+				Log.d(TAG,responseStr);
+				Log.d(TAG,String.valueOf(response.getStatusLine().getStatusCode()));
 				
-				JSONObject json = new JSONObject(response);
-				if (json.has("login")) {
-					if (json.getBoolean("login")) {
-						payload.result = true;
-						payload.resultResponse = ctx.getString(R.string.login_complete);
-					} else {
+				// check status code
+				switch (response.getStatusLine().getStatusCode()){
+					case 400: // unauthorised
 						payload.result = false;
 						payload.resultResponse = ctx.getString(R.string.error_login);
-					}
-				} else if (json.has("error")){
-					payload.result = false;
-					payload.resultResponse = json.getString("error");
+						break;
+					case 201: // logged in
+						JSONObject jsonResp = new JSONObject(responseStr);
+						u.api_key = jsonResp.getString("api_key");
+						payload.result = true;
+						payload.resultResponse = ctx.getString(R.string.login_complete);
+						break;
+					default:
+						payload.result = false;
+						payload.resultResponse = ctx.getString(R.string.error_connection);
 				}
+				
 
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();

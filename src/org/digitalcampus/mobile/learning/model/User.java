@@ -8,5 +8,6 @@ public class User {
 	public String passwordAgain;
 	public String firstname;
 	public String lastname;
+	public String api_key;
 	
 }

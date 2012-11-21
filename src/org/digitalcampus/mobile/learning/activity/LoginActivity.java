@@ -1,12 +1,11 @@
 package org.digitalcampus.mobile.learning.activity;
 
-import org.apache.commons.validator.EmailValidator;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.SubmitListener;
 import org.digitalcampus.mobile.learning.model.User;
 import org.digitalcampus.mobile.learning.task.LoginTask;
 import org.digitalcampus.mobile.learning.task.Payload;
-import org.digitalcampus.mobile.learning.R;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -48,13 +47,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
     		return;
     	}
     	
-    	// get text from email
     	String password = passwordField.getText().toString();
-    	//check length
-    	if(password.length()< MobileLearning.PASSWORD_MIN_LENGTH ){
-    		MobileLearning.showAlert(this,R.string.error,getString(R.string.error_password_length,MobileLearning.PASSWORD_MIN_LENGTH));
-    		return;
-    	}
     	
     	// show progress dialog
     	// TODO set proper lang strings
@@ -83,12 +76,14 @@ public class LoginActivity extends Activity implements SubmitListener  {
 
 	public void submitComplete(Payload response) {
 		pDialog.dismiss();
+		
 		Log.d(TAG,"Login activity reports: " + response.resultResponse);
 		if(response.result){
+			User u = (User) response.data[0];
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString("prefUsername", usernameField.getText().toString());
-	    	editor.putString("prefPassword", passwordField.getText().toString());
+	    	editor.putString("prefApiKey", u.api_key);
 	    	editor.commit();
 	    	
 			// return to main activity
