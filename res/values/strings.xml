@@ -11,6 +11,8 @@
     <string name="menu_module_about">About Module</string>
     <string name="menu_activity_about">About</string>
     <string name="menu_help">Help</string>
+    <string name="menu_logout">Logout</string>
+    
     <string name="service_tracker">DC Tracker Service</string>
     <string name="title_about">About</string>
     <string name="title_help">Help</string>
@@ -78,6 +80,7 @@
 	<string name="loading">Loading</string>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
+	<string name="logout">Logout</string>
 	
 	<string name="update">Update</string>
 	<string name="installed">Installed</string>
@@ -107,6 +110,8 @@
 	
 	<string name="login_process">Logging in</string>
 	<string name="login_complete">Logged in</string>
+	
+	<string name="logout_confirm">Are you sure you want to logout?\n\nLogging out will remove all your activity logs from this phone. You will need an active internet connection to log in again.</string>
 	
 	<string name="register_process">Registering</string>
 	<string name="register_complete">Successfully registered</string>

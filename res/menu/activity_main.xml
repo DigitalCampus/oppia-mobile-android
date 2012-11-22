@@ -19,4 +19,8 @@
         android:title="@string/menu_help"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_help" />
+    <item android:id="@+id/menu_logout"
+        android:title="@string/menu_logout"
+        android:orderInCategory="100"
+        android:icon="@drawable/logout" />
 </menu>
