@@ -132,6 +132,10 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 	}
 
+	public void onLogout(){
+		db.execSQL("DELETE FROM "+ LOG_TABLE);
+		db.execSQL("DELETE FROM "+ MQUIZRESULTS_TABLE);
+	}
 	// returns id of the row
 	// TODO tidy this up now have is installed and toUpdate options
 	public long addOrUpdateModule(String versionid, String title, String location, String shortname) {

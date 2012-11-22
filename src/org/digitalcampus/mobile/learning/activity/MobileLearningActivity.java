@@ -213,6 +213,9 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		case R.id.menu_help:
 			startActivity(new Intent(this, HelpActivity.class));
 			return true;
+		case R.id.menu_logout:
+			logout();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -233,28 +236,61 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			}
 			i++;
 		}
-
-		AlertDialog mAlertDialog = new AlertDialog.Builder(this)
-				.setSingleChoiceItems(langArray, selected, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String newLang = langMap.get(langArray[whichButton]);
-						Editor editor = prefs.edit();
-						editor.putString("prefLanguage", newLang);
-						editor.commit();
-						dialog.dismiss();
-						displayModules();
-					}
-				}).setTitle(getString(R.string.change_language))
-				.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-
-					public void onClick(DialogInterface dialog, int which) {
-						// do nothing
-					}
-
-				}).create();
-		mAlertDialog.show();
+		// only show if at least one language
+		if(i > 0){
+			AlertDialog mAlertDialog = new AlertDialog.Builder(this)
+					.setSingleChoiceItems(langArray, selected, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							String newLang = langMap.get(langArray[whichButton]);
+							Editor editor = prefs.edit();
+							editor.putString("prefLanguage", newLang);
+							editor.commit();
+							dialog.dismiss();
+							displayModules();
+						}
+					}).setTitle(getString(R.string.change_language))
+					.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+	
+						public void onClick(DialogInterface dialog, int which) {
+							// do nothing
+						}
+	
+					}).create();
+			mAlertDialog.show();
+		}
 	}
 
+	private void logout(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setCancelable(false);
+		builder.setTitle(R.string.logout);
+		builder.setMessage(R.string.logout_confirm);
+		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				// wipe activity data 
+				DbHelper db = new DbHelper(MobileLearningActivity.this);
+				db.onLogout();
+				db.close();
+				
+				// wipe user prefs
+				Editor editor = prefs.edit();
+				editor.putString("prefsUsername", "");
+				editor.putString("prefApiKey", "");
+				editor.commit();
+				
+				// restart this activity
+				MobileLearningActivity.this.onStart();
+				
+			}
+		});
+		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				return; // do nothing
+			}
+		});
+		builder.show();
+	}
+	
 	public void installComplete() {
 		Log.d(TAG, "Listener says install complete");
 		displayModules();
@@ -347,8 +383,8 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 
 	public boolean isLoggedIn() {
 		String username = prefs.getString("prefUsername", "");
-		String password = prefs.getString("prefPassword", "");
-		if (username.equals("") || password.equals("")) {
+		String apiKey = prefs.getString("prefApiKey", "");
+		if (username.equals("") || apiKey.equals("")) {
 			return false;
 		} else {
 			return true;
