@@ -2,6 +2,7 @@ package org.digitalcampus.mobile.learning.activity;
 
 import java.util.ArrayList;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.DownloadListAdapter;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
@@ -9,32 +10,27 @@ import org.digitalcampus.mobile.learning.listener.GetModuleListListener;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.GetModuleListTask;
-import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.task.Payload;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.ListView;
+
+import com.bugsense.trace.BugSenseHandler;
 
 public class DownloadActivity extends Activity implements GetModuleListListener {
 
 	public static final String TAG = "DownloadActivity";
 
 	private ProgressDialog pDialog;
-	private SharedPreferences prefs;
-	private JSONArray json;
-
+	private JSONObject json;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		setContentView(R.layout.activity_download);
 		// Get Module list
 		getModuleList();
@@ -50,11 +46,9 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 		pDialog.show();
 
 		GetModuleListTask task = new GetModuleListTask(this);
-		String[] url = new String[1];
-
-		url[0] = prefs.getString("prefServer", getString(R.string.prefServerDefault)) + MobileLearning.SERVER_MODULES_PATH;
+		Payload p = new Payload(0,null);
 		task.setGetModuleListListener(this);
-		task.execute(url);
+		task.execute(p);
 	}
 
 	public void refreshModuleList() {
@@ -65,8 +59,8 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 		try {
 			ArrayList<Module> modules = new ArrayList<Module>();
 			
-			for (int i = 0; i < (json.length()); i++) {
-				JSONObject json_obj = json.getJSONObject(i);
+			for (int i = 0; i < (json.getJSONArray("modules").length()); i++) {
+				JSONObject json_obj = (JSONObject) json.getJSONArray("modules").get(i);
 				Module dm = new Module();
 				// TODO LANG
 				ArrayList<Lang> titles = new ArrayList<Lang>();
@@ -95,16 +89,20 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 
 	}
 
-	public void moduleListComplete(String response) {
+	public void moduleListComplete(Payload response) {
 		// close dialog and process results
 		pDialog.dismiss();
-		try {
-			json = new JSONArray(response);
-			refreshModuleList();
-		} catch (JSONException e) {
-			BugSenseHandler.log(TAG, e);
-			MobileLearning.showAlert(this, R.string.loading, response);
-			e.printStackTrace();
+		if(response.result){
+			try {
+				json = new JSONObject(response.resultResponse);
+				refreshModuleList();
+			} catch (JSONException e) {
+				BugSenseHandler.log(TAG, e);
+				MobileLearning.showAlert(this, R.string.loading, R.string.error_connection);
+				e.printStackTrace();
+			}
+		} else {
+			MobileLearning.showAlert(this, R.string.loading, response.resultResponse);
 		}
 
 	}

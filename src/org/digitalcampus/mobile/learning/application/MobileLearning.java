@@ -27,9 +27,9 @@ public class MobileLearning extends Application {
 	// server path vars
 	// TODO check that pref server already had trailing '/'
 	// TODO tidy these up
-	public static final String SERVER_MODULES_PATH = "/api/module/";
+	public static final String SERVER_MODULES_PATH = "modules/api/v1/module/";
 	public static final String TRACKER_PATH = "/api/tracker";
-	public static final String LOGIN_PATH = "api/v1/user/";
+	public static final String LOGIN_PATH = "mquiz/api/v1/user/";
 	public static final String REGISTER_PATH = "/api/register";
 	public static final String MQUIZ_SUBMIT_PATH = "/api/submit";
 	
