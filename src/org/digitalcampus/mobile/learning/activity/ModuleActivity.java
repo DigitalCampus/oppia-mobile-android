@@ -164,6 +164,7 @@ public class ModuleActivity extends Activity {
     	}
     	return true;
     }
+    
     private boolean hasNext(){
     	int noActs = section.getActivities().size();
     	if(this.currentActivityNo + 1 == noActs){

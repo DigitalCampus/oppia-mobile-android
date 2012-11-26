@@ -1,6 +1,7 @@
 package org.digitalcampus.mobile.learning.activity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.DownloadListAdapter;
@@ -63,8 +64,14 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 				Module dm = new Module();
 				// TODO LANG
 				ArrayList<Lang> titles = new ArrayList<Lang>();
-				Lang l = new Lang("en",json_obj.getString("title"));
-				titles.add(l);
+				
+				JSONObject jsonTitles = json_obj.getJSONObject("title");
+				Iterator<?> keys = jsonTitles.keys();
+		        while( keys.hasNext() ){
+		            String key = (String) keys.next();
+		            Lang l = new Lang(key,jsonTitles.getString(key));
+					titles.add(l);
+		        }
 				dm.setTitles(titles);
 				dm.setShortname(json_obj.getString("shortname"));
 				dm.setVersionId(json_obj.getDouble("version"));
@@ -74,7 +81,6 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 				modules.add(dm);
 			}
 			
-
 			DownloadListAdapter mla = new DownloadListAdapter(this, modules);
 			ListView listView = (ListView) findViewById(R.id.module_list);
 			listView.setAdapter(mla);

@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 	
@@ -66,7 +65,6 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 		url += paramString;
 		
 		HttpGet httpGet = new HttpGet(url);
-		Log.d(TAG,"connecting to: "+url);
 		try {
 			
 			// make request
@@ -74,13 +72,11 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 		
 			// read response
 			InputStream content = response.getEntity().getContent();
-			BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 1024);
 			String s = "";
 			while ((s = buffer.readLine()) != null) {
 				responseStr += s;
 			}
-			
-			Log.d(TAG,String.valueOf(response.getStatusLine().getStatusCode()));
 			
 			switch (response.getStatusLine().getStatusCode()){
 				case 400: // unauthorised
@@ -105,15 +101,11 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 	
 	@Override
 	protected void onPostExecute(Payload response) {
-		
 		synchronized (this) {
             if (mStateListener != null) {
                mStateListener.moduleListComplete(response);
             }
         }
-		
-		
-		
 	}
 	
 	public void setGetModuleListListener(GetModuleListListener srl) {
