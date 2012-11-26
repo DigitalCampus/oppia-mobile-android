@@ -11,7 +11,6 @@ import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.GetModuleListTask;
 import org.digitalcampus.mobile.learning.task.Payload;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

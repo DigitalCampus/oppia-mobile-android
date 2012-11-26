@@ -57,11 +57,12 @@ public class RegisterActivity extends Activity implements SubmitListener {
 		pDialog.dismiss();
 		Log.d(TAG, "Login activity reports: " + response.resultResponse);
 		if (response.result) {
+			User u = (User) response.data[0];
 			// set params
 			Editor editor = prefs.edit();
-			editor.putString("prefUsername", usernameField.getText().toString());
-			editor.putString("prefPassword", passwordField.getText().toString());
-			editor.commit();
+	    	editor.putString("prefUsername", usernameField.getText().toString());
+	    	editor.putString("prefApiKey", u.api_key);
+	    	editor.commit();
 
 			showAlert("Register", "Registration successful", ONCLICK_TASK_REGISTERED);
 
