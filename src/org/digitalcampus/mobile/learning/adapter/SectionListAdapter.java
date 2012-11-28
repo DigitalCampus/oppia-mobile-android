@@ -42,7 +42,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    sectionTitle.setText(s.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 	    
 	    TextView sectionNo = (TextView) rowView.findViewById(R.id.section_number);
-	    sectionNo.setText(String.valueOf(s.getSectionId()));
+	    sectionNo.setText(String.valueOf(s.getOrder()));
 	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.section_progress_bar);
 	    pb.setProgress((int) s.getProgress());

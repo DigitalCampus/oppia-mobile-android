@@ -20,7 +20,16 @@ public class Activity implements Serializable{
 	private ArrayList<Lang> locations = new ArrayList<Lang>();
 	private ArrayList<Lang> contents = new ArrayList<Lang>();
 	private String digest;
+	private String imageFile;
 	
+	public String getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(String imageFile) {
+		this.imageFile = imageFile;
+	}
+
 	public String getDigest() {
 		return digest;
 	}

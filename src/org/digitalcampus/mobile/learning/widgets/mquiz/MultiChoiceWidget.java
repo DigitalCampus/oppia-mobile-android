@@ -44,12 +44,12 @@ public class MultiChoiceWidget extends QuestionWidget{
     		RadioButton rb = new RadioButton(ctx);
     		rb.setId(id);
     	
-			rb.setText(r.getText());
+			rb.setText(r.getTitle());
 			responsesRG.addView(rb);
 			Iterator<String> itr = currentAnswer.iterator();
 			while(itr.hasNext()) {
 				String answer = itr.next(); 
-				if (r.getText() == answer){
+				if (r.getTitle() == answer){
 					rb.setChecked(true);
 				}
 			}
@@ -66,7 +66,7 @@ public class MultiChoiceWidget extends QuestionWidget{
     	int idx = responsesRG.indexOfChild(rb);
     	if (idx >= 0){
     		List<String> response = new ArrayList<String>();
-			response.add(responses.get(idx).getText());
+			response.add(responses.get(idx).getTitle());
     		return response;
     	}
     	return null;

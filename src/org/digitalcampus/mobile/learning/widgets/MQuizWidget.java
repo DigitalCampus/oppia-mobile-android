@@ -43,7 +43,6 @@ public class MQuizWidget extends WidgetFactory {
 	private TextView qText;
 	private String quizContent;
 	private boolean isComplete = false;
-	private String username;
 	private Module module; 
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private long endTimestamp = System.currentTimeMillis()/1000;
@@ -62,20 +61,16 @@ public class MQuizWidget extends WidgetFactory {
 		
 		// TODO error check that "content" is in the hashmap
 		quizContent = activity.getContents(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
-		username = PreferenceManager.getDefaultSharedPreferences(context).getString("prefUsername", "");
-		mQuiz = new MQuiz(username);
+		mQuiz = new MQuiz();
 		mQuiz.load(quizContent);
 
 		this.showQuestion();
 	}
 
 	public void showQuestion() {
-		//Log.d(TAG,"hiding keyboard1");
-		//ctx.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-		//Log.d(TAG,"hiding keyboard2");
 		QuizQuestion q = mQuiz.getCurrentQuestion();
 		qText.setVisibility(View.VISIBLE);
-		qText.setText(q.getQtext());
+		qText.setText(q.getTitle());
 
 		if (q instanceof MultiChoice) {
 			qw = new MultiChoiceWidget(this.ctx);
@@ -92,13 +87,6 @@ public class MQuizWidget extends WidgetFactory {
 		} else {
 			Log.d(TAG, "Class for question type not found");
 			return;
-		}
-		TextView qHint = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questionhint);
-		if (q.getQhint().equals("")) {
-			qHint.setVisibility(View.GONE);
-		} else {
-			qHint.setText(q.getQhint());
-			qHint.setVisibility(View.VISIBLE);
 		}
 		qw.setQuestionResponses(q.getResponseOptions(), q.getUserResponses());
 		this.setProgress();
@@ -250,7 +238,7 @@ public class MQuizWidget extends WidgetFactory {
 
 	private void restart() {
 		Log.d(TAG,"restarting");
-		mQuiz = new MQuiz(username);
+		mQuiz = new MQuiz();
 		mQuiz.load(quizContent);
 		startTimestamp = System.currentTimeMillis()/1000;
 		endTimestamp = System.currentTimeMillis()/1000;
@@ -272,7 +260,7 @@ public class MQuizWidget extends WidgetFactory {
 			obj.put("timetaken", this.getTimeTaken());
 			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
-			obj.put("qref", mQuiz.getQRef());
+			obj.put("id", mQuiz.getID());
 		} catch (JSONException e) {
 			e.printStackTrace();
 			BugSenseHandler.log(TAG, e);

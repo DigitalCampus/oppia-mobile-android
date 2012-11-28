@@ -11,11 +11,20 @@ public class Section implements Serializable  {
 	private static final long serialVersionUID = 6360494638548755423L;
 	
 	public static final String TAG = "Section";
-	private int sectionId;
+	private int order;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private ArrayList<Activity> activities;
 	private float progress = 0;
+	private String imageFile;
 	
+	public String getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(String imageFile) {
+		this.imageFile = imageFile;
+	}
+
 	public float getProgress() {
 		return progress;
 	}
@@ -28,12 +37,12 @@ public class Section implements Serializable  {
 		activities = new ArrayList<Activity>();
 	}
 
-	public int getSectionId() {
-		return sectionId;
+	public int getOrder() {
+		return order;
 	}
 
-	public void setSectionId(int sectionId) {
-		this.sectionId = sectionId;
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 	public String getTitle(String lang) {

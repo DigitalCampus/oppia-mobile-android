@@ -17,9 +17,8 @@ public class Numerical implements Serializable, QuizQuestion {
 
 	private static final long serialVersionUID = 808485823168202643L;
 	public static final String TAG = "Numerical";
-	private String refid;
-	private String qtext;
-	private String qhint;
+	private String title;
+	private int id;
 	private List<Response> responseOptions = new ArrayList<Response>();
 	private float userscore = 0;
 	private List<String> userResponses = new ArrayList<String>();
@@ -56,14 +55,17 @@ public class Numerical implements Serializable, QuizQuestion {
 			// loop through the valid answers and check against these
 			for (Response r : responseOptions) {
 				try {
-					Float respNumber = Float.parseFloat(r.getText());
-					// TODO check that tolerance is loaded as a property
-					Float tolerance = Float.parseFloat(r.getProp("tolerance"));
+					Float respNumber = Float.parseFloat(r.getTitle());
+					Float tolerance = (float) 0.0;
+					if(r.getProp("tolerance") != null){
+						tolerance = Float.parseFloat(r.getProp("tolerance"));
+					}
+					 
 					if ((respNumber - tolerance <= userAnswer) && (userAnswer <= respNumber + tolerance)) {
 						if (r.getScore() > currMax) {
 							score = r.getScore();
 							currMax = r.getScore();
-							if (!(r.getProp("feedback") == null)) {
+							if (r.getProp("feedback") != null && !r.getProp("feedback").equals("")){
 								this.feedback = r.getProp("feedback");
 							}
 						}
@@ -82,20 +84,20 @@ public class Numerical implements Serializable, QuizQuestion {
 		}
 	}
 
-	public String getRefid() {
-		return this.refid;
+	public int getID() {
+		return this.id;
+	}
+	
+	public void setID(int id) {
+		this.id = id;	
 	}
 
-	public void setRefid(String refid) {
-		this.refid = refid;
+	public String getTitle() {
+		return this.title;
 	}
-
-	public String getQtext() {
-		return this.qtext;
-	}
-
-	public void setQtext(String qtext) {
-		this.qtext = qtext;
+	
+	public void setTitle(String title) {
+		this.title = title;	
 	}
 
 	public void setResponseOptions(List<Response> responses) {
@@ -104,14 +106,6 @@ public class Numerical implements Serializable, QuizQuestion {
 
 	public float getUserscore() {
 		return this.userscore;
-	}
-
-	public String getQhint() {
-		return this.qhint;
-	}
-
-	public void setQhint(String qhint) {
-		this.qhint = qhint;
 	}
 
 	public void setProps(HashMap<String, String> props) {
@@ -140,10 +134,10 @@ public class Numerical implements Serializable, QuizQuestion {
 	public JSONObject responsesToJSON() {
 		JSONObject jo = new JSONObject();
 		try {
-			jo.put("qid", refid);
+			jo.put("question_id", this.id);
 			jo.put("score", userscore);
 			for (String ur : userResponses) {
-				jo.put("qrtext", ur);
+				jo.put("text", ur);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -7,8 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.digitalcampus.mquiz.model.Response;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mquiz.MQuiz;
+import org.digitalcampus.mquiz.model.Response;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,7 +23,7 @@ import android.widget.TextView;
 public class MatchingWidget extends QuestionWidget {
 
 	public static final String TAG = "MatchingWidget";
-	private static final String MATCHING_SEPARATOR = "->";
+	
 	
 	private LinearLayout responsesLL;
 	private LinearLayout[] responseLayouts;
@@ -47,7 +48,7 @@ public class MatchingWidget extends QuestionWidget {
     	HashMap<String,String> possibleAnswers = new HashMap<String,String>();
     	int noresponses = 0;
     	for (Response r : responses){
-    		String[] temp = r.getText().split(MATCHING_SEPARATOR,-1);
+    		String[] temp = r.getTitle().split(MQuiz.MATCHING_REGEX,-1);
     		if(!temp[0].equals("")){
     			noresponses++;
     		}
@@ -83,7 +84,7 @@ public class MatchingWidget extends QuestionWidget {
 	    		
 	    		// set the selected item based on current responses
 	    		for (String s : currentAnswer){
-	        		String[] temp = s.split(MATCHING_SEPARATOR,-1);
+	        		String[] temp = s.split(MQuiz.MATCHING_REGEX,-1);
 	        		if(temp[0].trim().equals(responsePairs.getKey())){
 	        			int i = responseAdapter.getPosition(temp[1].trim());
 	        			spinner.setSelection(i);	
@@ -104,7 +105,7 @@ public class MatchingWidget extends QuestionWidget {
 			TextView tv = (TextView) ll.getChildAt(0);
 			Spinner sp = (Spinner) ll.getChildAt(1);
 			if(!sp.getSelectedItem().toString().trim().equals("")){
-				String response = tv.getText().toString().trim() + " "+ MATCHING_SEPARATOR+ " " + sp.getSelectedItem().toString().trim();
+				String response = tv.getText().toString().trim() + MQuiz.MATCHING_SEPARATOR + sp.getSelectedItem().toString().trim();
 				userResponses.add(response);
 			}
 		}
