@@ -50,7 +50,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    /*LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);
 	    ArrayList<org.digitalcampus.mobile.learning.model.Activity> activities = s.getActivities();
 	    for(org.digitalcampus.mobile.learning.model.Activity a: activities){
-	    	Log.d(TAG,a.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+	    	TrackerLog.d(TAG,a.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 	    	
 	    	TextView tv = new TextView(ctx);
 	    	tv.setTag(s);
@@ -62,7 +62,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Section s = (Section) v.getTag();
-					Log.d(TAG,"clicked..."+s.getSectionId());
+					TrackerLog.d(TAG,"clicked..."+s.getSectionId());
 				}
 			} );
 	    	ll.addView(tv);

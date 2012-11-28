@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Module;
+import org.digitalcampus.mobile.learning.model.TrackerLog;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.SubmitMQuizTask;
 import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
@@ -24,7 +25,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 6;
+	static final int DB_VERSION = 7;
 
 	private SQLiteDatabase db;
 
@@ -44,15 +45,14 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String ACTIVITY_C_ACTTYPE = "activitytype";
 	private static final String ACTIVITY_C_ACTIVITYDIGEST = "digest";
 
-	private static final String LOG_TABLE = "Log";
-	private static final String LOG_C_ID = BaseColumns._ID;
-	private static final String LOG_C_MODID = "modid"; // reference to
-														// MODULE_C_ID
-	private static final String LOG_C_DATETIME = "logdatetime";
-	private static final String LOG_C_ACTIVITYDIGEST = "digest";
-	private static final String LOG_C_DATA = "logdata";
-	private static final String LOG_C_SUBMITTED = "logsubmitted";
-	private static final String LOG_C_INPROGRESS = "loginprogress";
+	private static final String TRACKER_LOG_TABLE = "TrackerLog";
+	private static final String TRACKER_LOG_C_ID = BaseColumns._ID;
+	private static final String TRACKER_LOG_C_MODID = "modid"; // reference to MODULE_C_ID
+	private static final String TRACKER_LOG_C_DATETIME = "logdatetime";
+	private static final String TRACKER_LOG_C_ACTIVITYDIGEST = "digest";
+	private static final String TRACKER_LOG_C_DATA = "logdata";
+	private static final String TRACKER_LOG_C_SUBMITTED = "logsubmitted";
+	private static final String TRACKER_LOG_C_INPROGRESS = "loginprogress";
 	
 	private static final String MQUIZRESULTS_TABLE = "results";
 	private static final String MQUIZRESULTS_C_ID = BaseColumns._ID;
@@ -96,15 +96,15 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void createLogTable(SQLiteDatabase db){
-		String l_sql = "create table " + LOG_TABLE + " (" + 
-				LOG_C_ID + " integer primary key autoincrement, " + 
-				LOG_C_MODID + " integer, " + 
-				LOG_C_DATETIME + " datetime default current_timestamp, " + 
-				LOG_C_ACTIVITYDIGEST + " text, " + 
-				LOG_C_DATA + " text, " + 
-				LOG_C_SUBMITTED + " integer default 0, " + 
-				LOG_C_INPROGRESS + " integer default 0)";
-		Log.d(TAG, "Log sql: " + l_sql);
+		String l_sql = "create table " + TRACKER_LOG_TABLE + " (" + 
+				TRACKER_LOG_C_ID + " integer primary key autoincrement, " + 
+				TRACKER_LOG_C_MODID + " integer, " + 
+				TRACKER_LOG_C_DATETIME + " datetime default current_timestamp, " + 
+				TRACKER_LOG_C_ACTIVITYDIGEST + " text, " + 
+				TRACKER_LOG_C_DATA + " text, " + 
+				TRACKER_LOG_C_SUBMITTED + " integer default 0, " + 
+				TRACKER_LOG_C_INPROGRESS + " integer default 0)";
+		Log.d(TAG, "TrackerLog sql: " + l_sql);
 		db.execSQL(l_sql);
 	}
 
@@ -123,7 +123,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		db.execSQL("drop table if exists " + MODULE_TABLE);
 		db.execSQL("drop table if exists " + ACTIVITY_TABLE);
-		db.execSQL("drop table if exists " + LOG_TABLE);
+		db.execSQL("drop table if exists " + TRACKER_LOG_TABLE);
 		db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
 		createModuleTable(db);
 		createActivityTable(db);
@@ -133,7 +133,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 
 	public void onLogout(){
-		db.execSQL("DELETE FROM "+ LOG_TABLE);
+		db.execSQL("DELETE FROM "+ TRACKER_LOG_TABLE);
 		db.execSQL("DELETE FROM "+ MQUIZRESULTS_TABLE);
 	}
 	
@@ -215,17 +215,17 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public long insertLog(int modId, String digest, String data){
 		ContentValues values = new ContentValues();
-		values.put(LOG_C_MODID, modId);
-		values.put(LOG_C_ACTIVITYDIGEST, digest);
-		values.put(LOG_C_DATA, data);
-		return db.insertOrThrow(LOG_TABLE, null, values);
+		values.put(TRACKER_LOG_C_MODID, modId);
+		values.put(TRACKER_LOG_C_ACTIVITYDIGEST, digest);
+		values.put(TRACKER_LOG_C_DATA, data);
+		return db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 	}
 	
 	public float getModuleProgress(int modId){
 		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
-				"l."+ LOG_C_ACTIVITYDIGEST + 
+				"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
 				" as d FROM "+ACTIVITY_TABLE + " a " +
-				" LEFT OUTER JOIN (SELECT DISTINCT " +LOG_C_ACTIVITYDIGEST +" FROM "+LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+LOG_C_ACTIVITYDIGEST + 
+				" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM "+TRACKER_LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
 				" WHERE a."+ ACTIVITY_C_MODID +"=" + String.valueOf(modId);
 		Cursor c = db.rawQuery(sql,null);
 		int noActs = c.getCount();
@@ -243,9 +243,9 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public float getSectionProgress(int modId, int sectionId){
 		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
-						"l."+ LOG_C_ACTIVITYDIGEST + 
+						"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
 						" as d FROM "+ACTIVITY_TABLE + " a " +
-						" LEFT OUTER JOIN (SELECT DISTINCT " +LOG_C_ACTIVITYDIGEST +" FROM "+LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+LOG_C_ACTIVITYDIGEST + 
+						" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM "+TRACKER_LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
 						" WHERE a."+ ACTIVITY_C_MODID +"=" + String.valueOf(modId) +
 						" AND a."+ ACTIVITY_C_SECTIONID +"=" + String.valueOf(sectionId);
 		
@@ -268,9 +268,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		// delete quiz results
 		this.deleteMQuizResults(modId);
 		
-		String s = LOG_C_MODID + "=?";
+		String s = TRACKER_LOG_C_MODID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
-		return db.delete(LOG_TABLE, s, args);
+		return db.delete(TRACKER_LOG_TABLE, s, args);
 	}
 	
 	public void deleteModule(int modId){
@@ -318,22 +318,23 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public Payload getUnsentLog(){
-		String s = LOG_C_SUBMITTED + "=? ";
+		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
 		String[] args = new String[] { "0" };
-		Cursor c = db.query(LOG_TABLE, null, s, args, null, null, null);
+		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		int count = c.getCount();
 		c.moveToFirst();
 		int counter = 0;
-		org.digitalcampus.mobile.learning.model.Log[] sl = new org.digitalcampus.mobile.learning.model.Log[count];
+		TrackerLog[] sl = new TrackerLog[count];
 		while (c.isAfterLast() == false) {
-			org.digitalcampus.mobile.learning.model.Log so = new org.digitalcampus.mobile.learning.model.Log();
-			so.id = c.getLong(c.getColumnIndex(LOG_C_ID));
-			so.digest = c.getString(c.getColumnIndex(LOG_C_ACTIVITYDIGEST));
+			TrackerLog so = new TrackerLog();
+			so.id = c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID));
+			so.digest = c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST));
 			String content = "";
 			try {
-				JSONObject json = new JSONObject(c.getString(c.getColumnIndex(LOG_C_DATA)));
-				json.put("datetime", c.getString(c.getColumnIndex(LOG_C_DATETIME)));
-				json.put("digest", c.getString(c.getColumnIndex(LOG_C_ACTIVITYDIGEST)));
+				JSONObject json = new JSONObject();
+				json.put("data", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA)));
+				json.put("tracker_date", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
+				json.put("digest", c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 				content = json.toString();
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -353,9 +354,9 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public int markLogSubmitted(long rowId){
 		ContentValues values = new ContentValues();
-		values.put(LOG_C_SUBMITTED, 1);
+		values.put(TRACKER_LOG_C_SUBMITTED, 1);
 		
-		return db.update(LOG_TABLE, values, LOG_C_ID + "=" + rowId, null);
+		return db.update(TRACKER_LOG_TABLE, values, TRACKER_LOG_C_ID + "=" + rowId, null);
 	}
 	
 	public long insertMQuizResult(String data, int modId){
@@ -372,9 +373,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		int count = c.getCount();
 		c.moveToFirst();
 		int counter = 0;
-		org.digitalcampus.mobile.learning.model.Log[] sl = new org.digitalcampus.mobile.learning.model.Log[count];
+		org.digitalcampus.mobile.learning.model.TrackerLog[] sl = new org.digitalcampus.mobile.learning.model.TrackerLog[count];
 		while (c.isAfterLast() == false) {
-			org.digitalcampus.mobile.learning.model.Log so = new org.digitalcampus.mobile.learning.model.Log();
+			org.digitalcampus.mobile.learning.model.TrackerLog so = new org.digitalcampus.mobile.learning.model.TrackerLog();
 			so.id = c.getLong(c.getColumnIndex(MQUIZRESULTS_C_ID));
 			so.content  = c.getString(c.getColumnIndex(MQUIZRESULTS_C_DATA));
 			sl[counter] = so;

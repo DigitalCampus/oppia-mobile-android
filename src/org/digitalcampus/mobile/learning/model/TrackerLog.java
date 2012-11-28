@@ -2,7 +2,7 @@ package org.digitalcampus.mobile.learning.model;
 
 import java.util.Date;
 
-public class Log {
+public class TrackerLog {
 
 	public Date datetime;
 	public long id;

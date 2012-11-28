@@ -82,7 +82,7 @@ public class FileUtils {
 				String outputFilename = destDirectory + File.separator
 						+ entry.getName();
 
-				//Log.v(TAG,"Extracting file: " + entry.getName());
+				//TrackerLog.v(TAG,"Extracting file: " + entry.getName());
 
 				createDirIfNeeded(destDirectory, entry);
 
@@ -149,7 +149,7 @@ public class FileUtils {
 				if (!success) {
 					return false;
 				} else {
-					//Log.v(TAG,delFile.getName() + " deleted");
+					//TrackerLog.v(TAG,delFile.getName() + " deleted");
 				}
 			}
 		}
