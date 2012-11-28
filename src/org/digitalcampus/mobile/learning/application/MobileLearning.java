@@ -33,7 +33,7 @@ public class MobileLearning extends Application {
 	public static final String MQUIZ_SUBMIT_PATH = "mquiz/api/v1/quizattempt/";
 	
 	public static final String SERVER_MODULES_PATH = "modules/api/v1/module/";
-	public static final String TRACKER_PATH = "/api/tracker";
+	public static final String TRACKER_PATH = "modules/api/v1/tracker/";
 	
 	// general other settings
 	public static final String BUGSENSE_API_KEY = "84d61fd0";
