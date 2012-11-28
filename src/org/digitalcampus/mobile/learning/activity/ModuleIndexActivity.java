@@ -55,8 +55,6 @@ public class ModuleIndexActivity extends Activity {
         	
         }
     	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MobileLearning.MODULE_XML);
-    	
-    	
     }
 
     @Override
@@ -77,7 +75,6 @@ public class ModuleIndexActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
 				Section s = (Section) view.getTag();    
-				Log.d("TAG","clicked..." + s.getTitle("en"));
 				Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
 				Bundle tb = new Bundle();
 				tb.putSerializable(Section.TAG, (Section) s);

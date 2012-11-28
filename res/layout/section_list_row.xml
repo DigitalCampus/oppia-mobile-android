@@ -15,12 +15,19 @@
 
         <TextView
             android:id="@+id/section_number"
-            android:layout_width="0dp"
+            android:layout_width="10dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:textSize="20dp"
+            android:textSize="10dp"
             android:textStyle="bold" />
-
+        
+		<ImageView
+            android:id="@+id/section_image"
+            android:layout_width="48dip"
+            android:layout_height="48dip"
+            android:layout_margin="4dip"
+            android:contentDescription="@string/app_logo_alt" 
+            android:src="@drawable/section_default_icon" />
+		
         <TextView
             android:id="@+id/section_title"
             android:layout_width="0dp"
@@ -37,18 +44,5 @@
         android:layout_height="5dp"
         android:layout_margin="5dp"
         android:progressDrawable="@drawable/progress_bar" />
-
-    <!-- HorizontalScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="50dp" >
-
-        <LinearLayout
-            android:id="@+id/section_activities"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-        </LinearLayout>
-    </HorizontalScrollView -->
 
 </LinearLayout>

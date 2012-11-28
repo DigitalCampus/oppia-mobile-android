@@ -151,14 +151,18 @@ public class ModuleXMLReader {
 			//get section titles
 			NodeList nodes = sects.item(i).getChildNodes();
 			ArrayList<Lang> sectTitles = new ArrayList<Lang>();
+			String image = null;
 			for (int j=0; j<nodes.getLength(); j++) {
+				NamedNodeMap attrs = nodes.item(j).getAttributes();
 				if(nodes.item(j).getNodeName().equals("title")){
-					NamedNodeMap attrs = nodes.item(j).getAttributes();
 					String lang = attrs.getNamedItem("lang").getTextContent();
 					sectTitles.add(new Lang(lang, nodes.item(j).getTextContent()));
+				} else if(nodes.item(j).getNodeName().equals("image")){
+					image = attrs.getNamedItem("filename").getTextContent();
 				}
 			}
 			s.setTitles(sectTitles);
+			s.setImageFile(image);
 			
 			float progress = db.getSectionProgress(modId, order);
 			

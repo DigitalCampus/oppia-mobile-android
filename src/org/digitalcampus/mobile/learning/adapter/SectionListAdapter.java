@@ -47,27 +47,6 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.section_progress_bar);
 	    pb.setProgress((int) s.getProgress());
 	    
-	    /*LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);
-	    ArrayList<org.digitalcampus.mobile.learning.model.Activity> activities = s.getActivities();
-	    for(org.digitalcampus.mobile.learning.model.Activity a: activities){
-	    	TrackerLog.d(TAG,a.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
-	    	
-	    	TextView tv = new TextView(ctx);
-	    	tv.setTag(s);
-	    	tv.setMinWidth(75);
-	    	tv.setMinHeight(50);
-	    	tv.setText(a.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
-	    	tv.setOnClickListener(new OnClickListener() {
-				
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Section s = (Section) v.getTag();
-					TrackerLog.d(TAG,"clicked..."+s.getSectionId());
-				}
-			} );
-	    	ll.addView(tv);
-	    }*/
-	    
 	    rowView.setTag(sectionList.get(position));
 	    return rowView;
 	}
