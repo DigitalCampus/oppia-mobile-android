@@ -260,7 +260,7 @@ public class MQuizWidget extends WidgetFactory {
 			obj.put("timetaken", this.getTimeTaken());
 			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
-			obj.put("id", mQuiz.getID());
+			obj.put("quiz_id", mQuiz.getID());
 		} catch (JSONException e) {
 			e.printStackTrace();
 			BugSenseHandler.log(TAG, e);

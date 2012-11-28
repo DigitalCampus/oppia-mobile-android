@@ -21,6 +21,7 @@ public class Activity implements Serializable{
 	private ArrayList<Lang> contents = new ArrayList<Lang>();
 	private String digest;
 	private String imageFile;
+	private ArrayList<Media> media = new ArrayList<Media>();
 	
 	public String getImageFile() {
 		return imageFile;
@@ -120,5 +121,13 @@ public class Activity implements Serializable{
 	
 	public void setContents(ArrayList<Lang> contents) {
 		this.contents = contents;
+	}
+	
+	public boolean hasMedia(){
+		if(media.size() == 0){
+			return false;
+		} else {
+			return true;
+		}
 	}
 }
