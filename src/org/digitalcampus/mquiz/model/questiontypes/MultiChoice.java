@@ -20,9 +20,8 @@ public class MultiChoice implements Serializable, QuizQuestion {
 	 */
 	private static final long serialVersionUID = -6605393327170759582L;
 	public static final String TAG = "MultiChoice";
-	private String refid;
-	private String qtext;
-	private String qhint;
+	private int id;
+	private String title;
 	private List<Response> responseOptions = new ArrayList<Response>();
 	private float userscore = 0;
 	private List<String> userResponses = new ArrayList<String>();
@@ -46,9 +45,9 @@ public class MultiChoice implements Serializable, QuizQuestion {
 			Iterator<String> itr = this.userResponses.iterator();
 			while(itr.hasNext()) {
 				String a = itr.next(); 
-				if (r.getText().equals(a)){
+				if (r.getTitle().equals(a)){
 					total += r.getScore();
-					if(!(r.getProp("feedback").equals(""))){
+					if(r.getProp("feedback") != null && !(r.getProp("feedback").equals(""))){
 						this.feedback = r.getProp("feedback");
 					}
 				}
@@ -62,22 +61,21 @@ public class MultiChoice implements Serializable, QuizQuestion {
 		}
 	}
 	
-	public String getRefid() {
-		return refid;
+	public int getID() {
+		return this.id;
 	}
 	
-	public void setRefid(String refid) {
-		this.refid = refid;
+	public void setID(int id) {
+		this.id = id;	
 	}
 	
-	public String getQtext() {
-		return qtext;
+	public String getTitle() {
+		return this.title;
 	}
 	
-	public void setQtext(String qtext) {
-		this.qtext = qtext;
+	public void setTitle(String title) {
+		this.title = title;	
 	}
-
 
 	public void setResponseOptions(List<Response> responses) {
 		this.responseOptions = responses;
@@ -85,14 +83,6 @@ public class MultiChoice implements Serializable, QuizQuestion {
 
 	public float getUserscore() {
 		return this.userscore;
-	}
-
-	public String getQhint() {
-		return qhint;
-	}
-
-	public void setQhint(String qhint) {
-		this.qhint = qhint;
 	}
 
 	public void setUserResponse(List<String> str) {
@@ -132,9 +122,9 @@ public class MultiChoice implements Serializable, QuizQuestion {
 		JSONObject jo = new JSONObject();
 		for(String ur: userResponses ){
 			try {
-				jo.put("qid", refid);
+				jo.put("question_id", this.id);
 				jo.put("score",userscore);
-				jo.put("qrtext", ur);
+				jo.put("text", ur);
 			} catch (JSONException e) {
 				e.printStackTrace();
 				BugSenseHandler.log(TAG, e);

@@ -24,7 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = "DbHelper";
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 5;
+	static final int DB_VERSION = 6;
 
 	private SQLiteDatabase db;
 
@@ -136,6 +136,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL("DELETE FROM "+ LOG_TABLE);
 		db.execSQL("DELETE FROM "+ MQUIZRESULTS_TABLE);
 	}
+	
 	// returns id of the row
 	// TODO tidy this up now have is installed and toUpdate options
 	public long addOrUpdateModule(String versionid, String title, String location, String shortname) {

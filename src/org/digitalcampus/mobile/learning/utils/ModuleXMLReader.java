@@ -117,14 +117,14 @@ public class ModuleXMLReader {
 			// get the id and acts
 			NamedNodeMap sectionAttrs = s.item(i).getAttributes();
 			//TODO add error checking with conversion to ints
-			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("id").getTextContent());
+			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("order").getTextContent());
 			NodeList activities = s.item(i).getLastChild().getChildNodes();
 			for (int j=0; j<activities.getLength(); j++) {
 				
 				NamedNodeMap activityAttrs = activities.item(j).getAttributes();
 				String actType = activityAttrs.getNamedItem("type").getTextContent();
 				//TODO add error checking with conversion to ints
-				int actId = Integer.parseInt(activityAttrs.getNamedItem("id").getTextContent());
+				int actId = Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent());
 				String digest = activityAttrs.getNamedItem("digest").getTextContent();
 				Activity a = new Activity();
 				a.setModId(modId);
@@ -144,9 +144,9 @@ public class ModuleXMLReader {
 		DbHelper db = new DbHelper(ctx);
 		for (int i=0; i<sects.getLength(); i++){
 			NamedNodeMap sectionAttrs = sects.item(i).getAttributes();
-			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("id").getTextContent());
+			int order = Integer.parseInt(sectionAttrs.getNamedItem("order").getTextContent());
 			Section s = new Section();
-			s.setSectionId(sectionId);
+			s.setOrder(order);
 			
 			//get section titles
 			NodeList nodes = sects.item(i).getChildNodes();
@@ -160,7 +160,7 @@ public class ModuleXMLReader {
 			}
 			s.setTitles(sectTitles);
 			
-			float progress = db.getSectionProgress(modId, sectionId);
+			float progress = db.getSectionProgress(modId, order);
 			
 			s.setProgress(progress);
 			//now get activities
@@ -168,13 +168,13 @@ public class ModuleXMLReader {
 			for(int j=0; j<acts.getLength();j++){
 				Activity a = new Activity();
 				NamedNodeMap activityAttrs = acts.item(j).getAttributes();
-				a.setActId(Integer.parseInt(activityAttrs.getNamedItem("id").getTextContent()));
+				a.setActId(Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent()));
 				NamedNodeMap nnm = acts.item(j).getAttributes();
 				String actType = nnm.getNamedItem("type").getTextContent();
 				String digest = nnm.getNamedItem("digest").getTextContent();
 				a.setActType(actType);
 				a.setModId(modId);
-				a.setSectionId(sectionId);
+				a.setSectionId(order);
 				
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
 				ArrayList<Lang> actLocations = new ArrayList<Lang>();
@@ -191,7 +191,9 @@ public class ModuleXMLReader {
 					} else if(act.item(k).getNodeName().equals("content")){
 						String lang = attrs.getNamedItem("lang").getTextContent();
 						actContents.add(new Lang(lang, act.item(k).getTextContent()));
-					} 
+					} else if(act.item(k).getNodeName().equals("image")){
+						a.setImageFile(act.item(k).getTextContent());
+					}
 				}
 				a.setTitles(actTitles);
 				a.setLocations(actLocations);

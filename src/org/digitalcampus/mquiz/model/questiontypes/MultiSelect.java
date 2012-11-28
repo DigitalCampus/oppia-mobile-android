@@ -17,9 +17,8 @@ public class MultiSelect implements Serializable, QuizQuestion {
 
 	private static final long serialVersionUID = 936284577467681053L;
 	public static final String TAG = "MultiSelect";
-	private String refid;
-	private String qtext;
-	private String qhint;
+	private int id;
+	private String title;
 	private List<Response> responseOptions = new ArrayList<Response>();
 	private float userscore = 0;
 	private List<String> userResponses = new ArrayList<String>();
@@ -42,22 +41,16 @@ public class MultiSelect implements Serializable, QuizQuestion {
 		
 		for (Response r : responseOptions){
 			for (String ur : userResponses) {
-				//Log.d(TAG,"ur: "+ ur);
-				//Log.d(TAG,"r.getText(): "+ r.getText());
-				if (ur.equals(r.getText())) {
+				if (ur.equals(r.getTitle())) {
 					total += r.getScore();
-					if(!r.getProp("feedback").equals("")){
+					if(r.getProp("feedback") != null && !r.getProp("feedback").equals("")){
 						this.feedback += ur + ": " + r.getProp("feedback") + "\n\n";
 					}
-					//Log.d(TAG,"match");
-				}  else {
-					//Log.d(TAG," no match");
-				}
+				}  
 			}
-			//Log.d(TAG,"-----------");
 			// fix marking so that if one of the incorrect scores is selected final mark is 0
 			for(String ur: userResponses){
-				if (r.getText().equals(ur) && r.getScore() == 0){
+				if (r.getTitle().equals(ur) && r.getScore() == 0){
 					total = 0;
 				}
 			}
@@ -70,20 +63,20 @@ public class MultiSelect implements Serializable, QuizQuestion {
 		}
 	}
 	
-	public String getRefid() {
-		return refid;
+	public int getID() {
+		return this.id;
 	}
 	
-	public void setRefid(String refid) {
-		this.refid = refid;
+	public void setID(int id) {
+		this.id = id;	
 	}
 	
-	public String getQtext() {
-		return qtext;
+	public String getTitle() {
+		return this.title;
 	}
 	
-	public void setQtext(String qtext) {
-		this.qtext = qtext;
+	public void setTitle(String title) {
+		this.title = title;	
 	}
 
 	public void setResponseOptions(List<Response> responses) {
@@ -92,14 +85,6 @@ public class MultiSelect implements Serializable, QuizQuestion {
 
 	public float getUserscore() {
 		return this.userscore;
-	}
-
-	public String getQhint() {
-		return qhint;
-	}
-
-	public void setQhint(String qhint) {
-		this.qhint = qhint;
 	}
 
 	public List<String> getUserResponses() {
@@ -132,13 +117,13 @@ public class MultiSelect implements Serializable, QuizQuestion {
 	public JSONObject responsesToJSON() {
 		JSONObject jo = new JSONObject();
 		try {
-			jo.put("qid", refid);
+			jo.put("question_id", this.id);
 			jo.put("score",userscore);
 			String qrtext = "";
 			for(String ur: userResponses ){
 				qrtext += ur + MQuiz.RESPONSE_SEPARATOR;
 			}
-			jo.put("qrtext", qrtext);
+			jo.put("text", qrtext);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			BugSenseHandler.log(TAG, e);

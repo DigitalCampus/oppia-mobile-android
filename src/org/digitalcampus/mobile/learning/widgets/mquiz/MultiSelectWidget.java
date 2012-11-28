@@ -37,12 +37,12 @@ public class MultiSelectWidget extends QuestionWidget {
     	
     	for (Response r : responses){
     		CheckBox chk= new CheckBox(ctx);  
-    		chk.setText(r.getText());
+    		chk.setText(r.getTitle());
     		responsesLL.addView(chk);
     		Iterator<String> itr = currentAnswer.iterator();
     		while(itr.hasNext()){
     			String a = itr.next(); 
-    			if(a.equals(r.getText())){
+    			if(a.equals(r.getTitle())){
     				chk.setChecked(true);
     			}
     		}

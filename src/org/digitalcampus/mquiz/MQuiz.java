@@ -1,7 +1,9 @@
 package org.digitalcampus.mquiz;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,39 +27,32 @@ public class MQuiz implements Serializable {
 
 	public static final String TAG = "MQuiz";
 	
-	public static final String RESPONSE_SEPARATOR = "|";
+	public static final String RESPONSE_SEPARATOR = "||";
+	public static final String MATCHING_SEPARATOR = "|";
+	public static final String MATCHING_REGEX = "\\|";
 	
 	private static final long serialVersionUID = -2416034891439585524L;
-	private String qref;
+	private String id;
 	private String title;
 	private String url;
-	private int maxscore;
+	private float maxscore;
 	private boolean checked;
 	private int currentq = 0;
 	private float userscore;
 	private List<QuizQuestion> questions = new ArrayList<QuizQuestion>();
-	private String username;
 
-	public MQuiz(String username) {
-		this.username = username;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
+	public MQuiz() {
 	}
 
 	public boolean load(String quiz) {
 		try {
 			JSONObject json = new JSONObject(quiz);
-			qref = (String) json.get("qref");
-			title = (String) json.get("quiztitle");
-			maxscore = Integer.parseInt((String) json.get("maxscore"));
+			this.id = (String) json.get("id");
+			this.title = (String) json.get("title");
+			JSONObject props = json.getJSONObject("props");
+			this.maxscore = props.getLong("maxscore");
 			// add questions
-			JSONArray questions = (JSONArray) json.get("q");
+			JSONArray questions = (JSONArray) json.get("questions");
 			for (int i = 0; i < questions.length(); i++) {
 				this.addQuestion((JSONObject) questions.get(i));
 			}
@@ -69,11 +64,13 @@ public class MQuiz implements Serializable {
 		return true;
 	}
 
-	private boolean addQuestion(JSONObject q) {
+	private boolean addQuestion(JSONObject qObj) {
+		
 		// determine question type
 		QuizQuestion question;
 		String qtype;
 		try {
+			JSONObject q = qObj.getJSONObject("question");
 			qtype = (String) q.get("type");
 			if (qtype.toLowerCase().equals(Essay.TAG.toLowerCase())) {
 				question = new Essay();
@@ -92,9 +89,8 @@ public class MQuiz implements Serializable {
 				return false;
 			}
 
-			question.setRefid((String) q.get("refid"));
-			question.setQtext((String) q.get("text"));
-			question.setQhint((String) q.optString("hint"));
+			question.setID(q.getInt("id"));
+			question.setTitle((String) q.get("title"));
 			JSONObject questionProps = (JSONObject) q.get("props");
 
 			HashMap<String, String> qProps = new HashMap<String, String>();
@@ -107,11 +103,11 @@ public class MQuiz implements Serializable {
 			this.questions.add(question);
 
 			// now add response options for this question
-			JSONArray responses = (JSONArray) q.get("r");
+			JSONArray responses = (JSONArray) q.get("responses");
 			for (int j = 0; j < responses.length(); j++) {
 				JSONObject r = (JSONObject) responses.get(j);
 				Response responseOption = new Response();
-				responseOption.setText((String) r.get("text"));
+				responseOption.setTitle((String) r.get("title"));
 				responseOption.setScore(Float.parseFloat((String) r.get("score")));
 				JSONObject responseProps = (JSONObject) r.get("props");
 				HashMap<String, String> rProps = new HashMap<String, String>();
@@ -173,12 +169,12 @@ public class MQuiz implements Serializable {
 		}
 	}
 
-	public String getQRef() {
-		return qref;
+	public String getID() {
+		return this.id;
 	}
 
-	public void setQRef(String qref) {
-		this.qref = qref;
+	public void setID(String id) {
+		this.id = id;
 	}
 
 	public String getTitle() {
@@ -217,11 +213,11 @@ public class MQuiz implements Serializable {
 		return this.userscore;
 	}
 
-	public int getMaxscore() {
+	public float getMaxscore() {
 		return maxscore;
 	}
 
-	public void setMaxscore(int maxscore) {
+	public void setMaxscore(float maxscore) {
 		this.maxscore = maxscore;
 	}
 
@@ -232,12 +228,12 @@ public class MQuiz implements Serializable {
 	public JSONObject getResultObject() {
 		JSONObject json = new JSONObject();
 		try {
-			json.put("qref", this.getQRef());
-			json.put("quizdate", System.currentTimeMillis());
-			json.put("userscore", this.getUserscore());
+			json.put("id", this.getID());
+			Date now = new Date();
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			json.put("attempt_date", simpleDateFormat.format(now));
+			json.put("score", this.getUserscore());
 			json.put("maxscore", this.getMaxscore());
-			//getApplicationContext();
-			json.put("username", this.getUsername());
 			JSONArray responses = new JSONArray();
 			for(QuizQuestion q: questions){
 				JSONObject r = q.responsesToJSON();

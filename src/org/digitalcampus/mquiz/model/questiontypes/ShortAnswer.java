@@ -17,9 +17,8 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 
 	private static final long serialVersionUID = 3539362553016059321L;
 	public static final String TAG = "ShortAnswer";
-	private String refid;
-	private String qtext;
-	private String qhint;
+	private int id;
+	private String title;
 	private List<Response> responseOptions = new ArrayList<Response>();
 	private float userscore = 0;
 	private List<String> userResponses = new ArrayList<String>();
@@ -39,7 +38,7 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 			Iterator<String> itr = this.userResponses.iterator();
 			while(itr.hasNext()) {
 				String a = itr.next(); 
-				if (r.getText().toLowerCase().equals(a.toLowerCase())){
+				if (r.getTitle().toLowerCase().equals(a.toLowerCase())){
 					total += r.getScore();
 					// TODO return feedback
 				}
@@ -53,20 +52,20 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 		}
 	}
 	
-	public String getRefid() {
-		return refid;
+	public int getID() {
+		return this.id;
 	}
 	
-	public void setRefid(String refid) {
-		this.refid = refid;
+	public void setID(int id) {
+		this.id = id;	
 	}
 	
-	public String getQtext() {
-		return qtext;
+	public String getTitle() {
+		return this.title;
 	}
 	
-	public void setQtext(String qtext) {
-		this.qtext = qtext;
+	public void setTitle(String title) {
+		this.title = title;	
 	}
 
 	public void setResponseOptions(List<Response> responses) {
@@ -75,14 +74,6 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 
 	public float getUserscore() {
 		return this.userscore;
-	}
-
-	public String getQhint() {
-		return qhint;
-	}
-
-	public void setQhint(String qhint) {
-		this.qhint = qhint;
 	}
 
 	public void setUserResponses(List<String> str) {
@@ -122,9 +113,9 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 		JSONObject jo = new JSONObject();
 		for(String ur: userResponses ){
 			try {
-				jo.put("qid", refid);
+				jo.put("question_id", this.id);
 				jo.put("score",userscore);
-				jo.put("qrtext", ur);
+				jo.put("text", ur);
 			} catch (JSONException e) {
 				e.printStackTrace();
 				BugSenseHandler.log(TAG, e);

@@ -21,20 +21,16 @@ public interface QuizQuestion extends Serializable {
 	
 	public void mark();
 	
-	public String getRefid();
+	public int getID();
 	
-	public void setRefid(String refid);
+	public void setID(int id);
 	
-	public String getQtext();
+	public String getTitle();
 	
-	public void setQtext(String qtext);
+	public void setTitle(String title);
 
 	public float getUserscore();
 
-	public String getQhint();
-
-	public void setQhint(String qhint);
-	
 	public void setProps(HashMap<String,String> props);
 	
 	public String getProp(String key);
