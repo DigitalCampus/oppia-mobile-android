@@ -3,26 +3,39 @@
     android:id="@+id/module_row"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:minHeight="40dp"
+    android:orientation="vertical"
     android:padding="5dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="1.0" >
+        
+    <ImageView
+        android:id="@+id/module_image"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        android:layout_margin="4dip"
+        android:contentDescription="@string/app_logo_alt"
+        android:src="@drawable/module_default_icon" />
 
     <TextView
         android:id="@+id/module_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        android:textStyle="bold" 
-        />
+        android:textStyle="bold" />
     
-
+	</LinearLayout>
+	
     <ProgressBar
         android:id="@+id/module_progress_bar"
-         android:layout_width="fill_parent"
-         android:layout_height="5dp"
-         style="@android:style/Widget.ProgressBar.Horizontal"
-         android:progressDrawable="@drawable/progress_bar"
-         android:layout_margin="5dp"
-     />
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:layout_margin="5dp"
+        android:progressDrawable="@drawable/progress_bar" />
 
 </LinearLayout>
