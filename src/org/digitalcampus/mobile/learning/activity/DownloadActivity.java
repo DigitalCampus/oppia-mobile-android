@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -62,9 +63,8 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 			for (int i = 0; i < (json.getJSONArray("modules").length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("modules").get(i);
 				Module dm = new Module();
-				// TODO LANG
-				ArrayList<Lang> titles = new ArrayList<Lang>();
 				
+				ArrayList<Lang> titles = new ArrayList<Lang>();
 				JSONObject jsonTitles = json_obj.getJSONObject("title");
 				Iterator<?> keys = jsonTitles.keys();
 		        while( keys.hasNext() ){

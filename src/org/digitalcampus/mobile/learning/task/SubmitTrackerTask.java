@@ -1,9 +1,6 @@
 package org.digitalcampus.mobile.learning.task;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
@@ -75,12 +72,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 			        url += "?";
 				url += paramString;
 				
-				Log.d(TAG,url);
 				HttpPost httpPost = new HttpPost(url);
-			
-				// update progress dialog
-				Log.d(TAG, "Sending log...." + l.id);
-				Log.d(TAG, "Sending content...." + l.content);
 				
 				StringEntity se = new StringEntity(l.content);
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
@@ -93,20 +85,8 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
                 // make request
 				HttpResponse response = client.execute(httpPost);				
 				
-				// read response
-				InputStream content = response.getEntity().getContent();
-				BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 1024);
-				String responseStr = "";
-				String s = "";
-
-				while ((s = buffer.readLine()) != null) {
-					responseStr += s;
-				}
-				Log.d(TAG, responseStr);
-				
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
-						Log.d(TAG, l.digest + " marked as submitted");
 						DbHelper db = new DbHelper(ctx);
 						db.markLogSubmitted(l.id);
 						db.close();
