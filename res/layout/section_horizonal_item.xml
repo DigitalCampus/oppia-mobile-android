@@ -2,25 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/module_row"
     android:layout_width="50dp"
-    android:layout_height="50dp"
-    android:minHeight="40dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:layout_margin="2dp" >
 
     <ImageView
         android:id="@+id/activity_image"
         android:layout_width="24dip"
         android:layout_height="24dip"
-        android:layout_margin="4dip"
+        android:layout_margin="2dip"
+        android:layout_gravity="center_horizontal"
         android:contentDescription="@string/app_logo_alt"
         android:src="@drawable/default_icon_activity" />
 
     <TextView
-        android:id="@+id/demo"
-        android:layout_width="match_parent"
+        android:id="@+id/activity_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="10dp"
         android:textStyle="bold"
-        android:text="Demo with some text" />
+        android:text="Activity" />
 
 </LinearLayout>

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.Tracker;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
@@ -54,6 +55,7 @@ public class ModuleActivity extends Activity {
         if(bundle != null) {
         	section = (Section) bundle.getSerializable(Section.TAG);
         	module = (Module) bundle.getSerializable(Module.TAG);
+        	currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
         }
     }
     

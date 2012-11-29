@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.activity.ModuleActivity;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.utils.ImageUtils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -25,7 +29,8 @@ import android.widget.TextView;
 public class SectionListAdapter extends ArrayAdapter<Section> {
 
 	public static final String TAG = "SectionListAdapter";
-
+	public static final String TAG_PLACEHOLDER = "placeholder";
+	
 	private final Context ctx;
 	private final ArrayList<Section> sectionList;
 	private SharedPreferences prefs;
@@ -65,7 +70,27 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);
 	    for(int i=0 ; i<s.getActivities().size(); i++){
 		    View horizRowItem = inflater.inflate(R.layout.section_horizonal_item, parent, false);
+		    horizRowItem.setTag(R.id.TAG_SECTION_ID, s);
+		    horizRowItem.setTag(R.id.TAG_PLACEHOLDER_ID, i);
 		    ll.addView(horizRowItem);
+		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
+		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+		    
+		    horizRowItem.setClickable(true);
+		    horizRowItem.setOnClickListener(new OnClickListener() {
+
+				public void onClick(View v) {
+					Section s = (Section) v.getTag(R.id.TAG_SECTION_ID); 
+					int placeholder = (Integer) v.getTag(R.id.TAG_PLACEHOLDER_ID);
+					Intent i = new Intent(ctx, ModuleActivity.class);
+					Bundle tb = new Bundle();
+					tb.putSerializable(Section.TAG, (Section) s);
+					tb.putSerializable(Module.TAG, (Module) module);
+					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) placeholder);
+					i.putExtras(tb);
+	         		ctx.startActivity(i);
+				}
+		    });
 	    }
 	    
 	    return rowView;

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="TAG_SECTION_ID"/> 
+    <item type="id" name="TAG_PLACEHOLDER_ID"/> 
+</resources>
