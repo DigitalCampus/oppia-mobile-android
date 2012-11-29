@@ -11,6 +11,7 @@ import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
+import org.digitalcampus.mobile.learning.utils.ImageUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 
 import android.app.Activity;
@@ -19,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -26,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -62,9 +65,18 @@ public class ModuleIndexActivity extends Activity {
 		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
 		rebuildLangs();
 		setTitle(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
-    	TextView tv = (TextView) this.findViewById(R.id.module_title);
+    	
+		TextView tv = (TextView) this.findViewById(R.id.module_title);
     	tv.setText(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 		
+    	// set image
+		if(module.getImageFile() != null){
+			ImageView iv = (ImageView) this.findViewById(R.id.module_image);
+			String path = module.getLocation() + "/" + module.getImageFile();
+			Bitmap bm = ImageUtils.LoadBMPsdcard(path, this.getResources(), R.drawable.default_icon_module);
+			iv.setImageBitmap(bm);
+		}
+    	
     	ListView listView = (ListView) findViewById(R.id.section_list);
     	SectionListAdapter sla = new SectionListAdapter(this, module, sections);
     	listView.setAdapter(sla); 

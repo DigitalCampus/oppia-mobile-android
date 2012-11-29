@@ -53,7 +53,7 @@ public class ModuleListAdapter extends ArrayAdapter<Module> {
 		if(m.getImageFile() != null){
 			ImageView iv = (ImageView) rowView.findViewById(R.id.module_image);
 			String path = m.getLocation() + "/" + m.getImageFile();
-			Bitmap bm = ImageUtils.LoadBMPsdcard(path, ctx.getResources(), R.drawable.module_default_icon);
+			Bitmap bm = ImageUtils.LoadBMPsdcard(path, ctx.getResources(), R.drawable.default_icon_module);
 			iv.setImageBitmap(bm);
 		}
 	    return rowView;

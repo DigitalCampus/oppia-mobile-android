@@ -19,7 +19,7 @@
         android:layout_height="48dip"
         android:layout_margin="4dip"
         android:contentDescription="@string/app_logo_alt"
-        android:src="@drawable/module_default_icon" />
+        android:src="@drawable/default_icon_module" />
         
         <TextView
             android:id="@+id/module_title"
