@@ -195,7 +195,7 @@ public class MQuizWidget extends WidgetFactory {
 		DbHelper db = new DbHelper(ctx);
 		db.insertMQuizResult(data, module.getModId());
 		db.close();
-		Log.d(TAG,data);
+		//Log.d(TAG,data);
 		
 		LinearLayout responsesLL = (LinearLayout) ((android.app.Activity) ctx).findViewById(R.id.quizResponseWidget);
     	responsesLL.removeAllViews();
@@ -231,7 +231,6 @@ public class MQuizWidget extends WidgetFactory {
 				restart();
 			}
 		});
-		
 		
 		responsesLL.addView(restartBtn);
 	}

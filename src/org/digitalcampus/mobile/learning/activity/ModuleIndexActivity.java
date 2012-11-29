@@ -6,12 +6,12 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
-import org.digitalcampus.mobile.learning.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,14 +21,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class ModuleIndexActivity extends Activity {
 

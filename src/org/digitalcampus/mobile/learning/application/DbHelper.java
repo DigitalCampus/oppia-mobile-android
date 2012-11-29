@@ -149,7 +149,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(MODULE_C_VERSIONID, versionid);
 		values.put(MODULE_C_TITLE, title);
 		values.put(MODULE_C_LOCATION, location);
-		values.put(MODULE_C_SHORTNAME, shortname);
+		values.put(MODULE_C_SHORTNAME, shortname.toLowerCase());
 
 		if (c.getCount() == 0) {
 			c.close();

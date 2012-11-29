@@ -77,8 +77,8 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				HttpPost httpPost = new HttpPost(url);
 			
 				// update progress dialog
-				Log.d(TAG, "Sending log...." + l.id);
-				Log.d(TAG, "Sending content...." + l.content);
+				//Log.d(TAG, "Sending log...." + l.id);
+				//Log.d(TAG, "Sending content...." + l.content);
 				
 				StringEntity se = new StringEntity(l.content);
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
@@ -89,7 +89,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
-						Log.d(TAG, l.id + " marked as submitted");
+						//Log.d(TAG, l.id + " marked as submitted");
 						DbHelper db = new DbHelper(ctx);
 						db.markMQuizSubmitted(l.id);
 						db.close();

@@ -92,7 +92,7 @@ public class Module implements Serializable {
 	}
 
 	public void setShortname(String shortname) {
-		this.shortname = shortname;
+		this.shortname = shortname.toLowerCase();
 	}
 
 	public int getModId() {
