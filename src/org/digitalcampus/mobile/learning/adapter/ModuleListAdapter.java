@@ -45,6 +45,9 @@ public class ModuleListAdapter extends ArrayAdapter<Module> {
 	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.module_progress_bar);
 	    pb.setProgress((int) m.getProgress());
+	    
+	    // TODO set image
+	    
 	    return rowView;
 	}
 

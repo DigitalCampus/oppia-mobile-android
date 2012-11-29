@@ -66,7 +66,7 @@ public class ModuleIndexActivity extends Activity {
     	tv.setText(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 		
     	ListView listView = (ListView) findViewById(R.id.section_list);
-    	SectionListAdapter sla = new SectionListAdapter(this, sections);
+    	SectionListAdapter sla = new SectionListAdapter(this, module, sections);
     	listView.setAdapter(sla); 
     	
     	listView.setOnItemClickListener(new OnItemClickListener() {

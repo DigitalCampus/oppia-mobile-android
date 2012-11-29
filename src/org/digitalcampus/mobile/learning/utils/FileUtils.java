@@ -148,9 +148,7 @@ public class FileUtils {
 				boolean success = deleteDir(delFile);
 				if (!success) {
 					return false;
-				} else {
-					//TrackerLog.v(TAG,delFile.getName() + " deleted");
-				}
+				} 
 			}
 		}
 		
