@@ -73,9 +73,15 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 		    horizRowItem.setTag(R.id.TAG_SECTION_ID, s);
 		    horizRowItem.setTag(R.id.TAG_PLACEHOLDER_ID, i);
 		    ll.addView(horizRowItem);
+		    
 		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
 		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 		    
+		    // set image
+		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);
+	    	iv.setImageBitmap(s.getActivities().get(i).getImageFile(module.getLocation(), ctx.getResources()));
+	    	
+		    // set clicker
 		    horizRowItem.setClickable(true);
 		    horizRowItem.setOnClickListener(new OnClickListener() {
 

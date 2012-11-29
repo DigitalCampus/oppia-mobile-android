@@ -120,6 +120,10 @@ public class ModuleXMLReader {
 		return image;
 	}
 	
+	/*
+	 * This is used when installing a new module
+	 * and so adding all the activities to the db
+	 */
 	public ArrayList<Activity> getActivities(long modId){
 		ArrayList<Activity>  acts = new ArrayList<Activity>();
 		Node struct = document.getFirstChild().getFirstChild().getNextSibling();
@@ -207,14 +211,15 @@ public class ModuleXMLReader {
 						String lang = attrs.getNamedItem("lang").getTextContent();
 						actContents.add(new Lang(lang, act.item(k).getTextContent()));
 					} else if(act.item(k).getNodeName().equals("image")){
-						a.setImageFile(act.item(k).getTextContent());
+						a.setImageFile(attrs.getNamedItem("filename").getTextContent());
 					}
 				}
 				a.setTitles(actTitles);
 				a.setLocations(actLocations);
 				a.setContents(actContents);
-				
 				a.setDigest(digest);
+				
+				// TODO add media
 				s.addActivity(a);
 			}
 			

@@ -81,7 +81,7 @@ public class ModuleIndexActivity extends Activity {
     	SectionListAdapter sla = new SectionListAdapter(this, module, sections);
     	listView.setAdapter(sla); 
     	
-    	listView.setOnItemClickListener(new OnItemClickListener() {
+    	/*listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
@@ -93,7 +93,7 @@ public class ModuleIndexActivity extends Activity {
 				i.putExtras(tb);
          		startActivity(i);
 			}
-		});
+		});*/
 	
     }
     

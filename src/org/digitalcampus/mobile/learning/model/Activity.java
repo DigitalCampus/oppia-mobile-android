@@ -3,6 +3,12 @@ package org.digitalcampus.mobile.learning.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.utils.ImageUtils;
+
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+
 public class Activity implements Serializable{
 	
 	/**
@@ -23,8 +29,17 @@ public class Activity implements Serializable{
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
 	
-	public String getImageFile() {
-		return imageFile;
+	public Activity(){
+	}
+	
+	public Bitmap getImageFile(String prefix, Resources res) {
+		int defaultImage = R.drawable.default_icon_activity;
+		if(actType.equals("quiz")){
+			defaultImage = R.drawable.default_icon_quiz;
+		} else if (actType.equals("page") && this.hasMedia()){
+			defaultImage = R.drawable.default_icon_video;
+		}
+		return ImageUtils.LoadBMPsdcard(prefix + this.imageFile, res, defaultImage);
 	}
 
 	public void setImageFile(String imageFile) {
@@ -38,10 +53,7 @@ public class Activity implements Serializable{
 	public void setDigest(String digest) {
 		this.digest = digest;
 	}
-
-	public Activity(){
-	}
-
+	
 	public long getModId() {
 		return modId;
 	}
