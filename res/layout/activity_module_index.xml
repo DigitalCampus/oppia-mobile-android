@@ -10,19 +10,26 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_gradient"
         android:minHeight="50dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:weightSum="1.0" >
 
+        <ImageView
+        android:id="@+id/module_image"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        android:layout_margin="4dip"
+        android:contentDescription="@string/app_logo_alt"
+        android:src="@drawable/module_default_icon" />
+        
         <TextView
             android:id="@+id/module_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".8" 
+            android:layout_weight=".8"
             android:padding="@dimen/padding_medium"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            
-            />
+            android:textStyle="bold" />
+
     </LinearLayout>
 
     <ListView  
