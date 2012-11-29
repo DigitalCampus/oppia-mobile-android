@@ -5,15 +5,18 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.model.Module;
+import org.digitalcampus.mobile.learning.utils.ImageUtils;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -46,8 +49,13 @@ public class ModuleListAdapter extends ArrayAdapter<Module> {
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.module_progress_bar);
 	    pb.setProgress((int) m.getProgress());
 	    
-	    // TODO set image
-	    
+		// set image
+		if(m.getImageFile() != null){
+			ImageView iv = (ImageView) rowView.findViewById(R.id.module_image);
+			String path = m.getLocation() + "/" + m.getImageFile();
+			Bitmap bm = ImageUtils.LoadBMPsdcard(path, ctx.getResources(), R.drawable.module_default_icon);
+			iv.setImageBitmap(bm);
+		}
 	    return rowView;
 	}
 

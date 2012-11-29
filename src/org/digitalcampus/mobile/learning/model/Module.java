@@ -24,7 +24,16 @@ public class Module implements Serializable {
 	private boolean toUpdate;
 	private String downloadUrl;
 	private TreeSet<String> availableLangs = new TreeSet<String>();
+	private String imageFile;
+	
+	public String getImageFile() {
+		return imageFile;
+	}
 
+	public void setImageFile(String imageFile) {
+		this.imageFile = imageFile;
+	}
+	
 	public TreeSet<String> getAvailableLangs() {
 		return availableLangs;
 	}

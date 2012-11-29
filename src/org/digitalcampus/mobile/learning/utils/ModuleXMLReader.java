@@ -21,17 +21,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import android.content.Context;
+
+import com.bugsense.trace.BugSenseHandler;
 
 public class ModuleXMLReader {
 
 	public static final String TAG = "ModuleXMLReader";
 	private Document document;
 	private String tempFilePath;
-
-	
 
 	public ModuleXMLReader(String filename) {
 		// TODO check that it's a valid module xml file else throw error
@@ -107,6 +105,19 @@ public class ModuleXMLReader {
 			hm.put(meta.item(j).getNodeName(), meta.item(j).getTextContent());
 		}
 		return hm;
+	}
+	public String getModuleImage(){
+		// TODO must be better way to do this???
+		String image = null;
+		Node m = document.getFirstChild().getFirstChild();
+		NodeList meta = m.getChildNodes();
+		for (int j=0; j<meta.getLength(); j++) {
+			if(meta.item(j).getNodeName().equals("image")){
+				NamedNodeMap attrs = meta.item(j).getAttributes();
+				image = attrs.getNamedItem("filename").getTextContent();
+			}
+		}
+		return image;
 	}
 	
 	public ArrayList<Activity> getActivities(long modId){

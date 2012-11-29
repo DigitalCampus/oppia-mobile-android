@@ -136,6 +136,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			// add these langs to the global available langs
 			langSet.addAll(mLangs);
 			m.setProps(mxr.getMeta());
+			m.setImageFile(mxr.getModuleImage());
 		}
 
 		// rebuild Langs
