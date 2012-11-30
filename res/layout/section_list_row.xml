@@ -36,6 +36,7 @@
         android:layout_width="fill_parent"
         android:layout_height="5dp"
         android:layout_margin="5dp"
-        android:progressDrawable="@drawable/progress_bar" />
+        android:progressDrawable="@drawable/progress_bar"
+        android:visibility="gone" />
 
 </LinearLayout>

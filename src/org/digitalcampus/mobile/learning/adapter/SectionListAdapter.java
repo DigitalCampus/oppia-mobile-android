@@ -68,8 +68,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);
 	    for(int i=0 ; i<s.getActivities().size(); i++){
 		    View horizRowItem = inflater.inflate(R.layout.section_horizonal_item, parent, false);
-		    horizRowItem.setTag(R.id.TAG_SECTION_ID, s);
-		    horizRowItem.setTag(R.id.TAG_PLACEHOLDER_ID, i);
+		    
 		    ll.addView(horizRowItem);
 		    
 		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
@@ -79,9 +78,13 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);
 	    	iv.setImageBitmap(s.getActivities().get(i).getImageFile(module.getLocation(), ctx.getResources()));
 	    	
+	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
+	    	activityObject.setTag(R.id.TAG_SECTION_ID, s);
+	    	activityObject.setTag(R.id.TAG_PLACEHOLDER_ID, i);
 		    // set clicker
-		    horizRowItem.setClickable(true);
-		    horizRowItem.setOnClickListener(new OnClickListener() {
+	    	activityObject.setClickable(true);
+	    	activityObject.setSelected(true);
+	    	activityObject.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
 					Section s = (Section) v.getTag(R.id.TAG_SECTION_ID); 
