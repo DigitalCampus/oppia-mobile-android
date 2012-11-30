@@ -23,7 +23,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -107,6 +106,27 @@ public class ModuleXMLReader {
 			hm.put(meta.item(j).getNodeName(), meta.item(j).getTextContent());
 		}
 		return hm;
+	}
+	
+	public ArrayList<Media> getMedia(){
+		ArrayList<Media> media = new ArrayList<Media>();
+		NodeList m = document.getFirstChild().getChildNodes();
+		for (int i=0; i<m.getLength(); i++) {
+			if(m.item(i).getNodeName().equals("media")){
+				NodeList files = m.item(i).getChildNodes();
+				for (int j=0; j<files.getLength(); j++) {
+					if (files.item(j).getNodeName().equals("file")){
+						NamedNodeMap fileAttrs = files.item(j).getAttributes();
+						Media mObj = new Media();
+						mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
+						mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
+						mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
+						media.add(mObj);
+					}
+				}
+			}
+		}
+		return media;
 	}
 	public String getModuleImage(){
 		// TODO must be better way to do this???
@@ -217,7 +237,7 @@ public class ModuleXMLReader {
 					} else if(act.item(k).getNodeName().equals("image")){
 						a.setImageFile(attrs.getNamedItem("filename").getTextContent());
 					} else if (act.item(k).getNodeName().equals("media")){
-						// TODO add media
+						// add media
 						NodeList files = act.item(k).getChildNodes();
 						for (int m=0; m<files.getLength(); m++) {
 							if (files.item(m).getNodeName().equals("file")){

@@ -25,7 +25,16 @@ public class Module implements Serializable {
 	private String downloadUrl;
 	private TreeSet<String> availableLangs = new TreeSet<String>();
 	private String imageFile;
+	private ArrayList<Media> media = new ArrayList<Media>();
 	
+	public ArrayList<Media> getMedia() {
+		return media;
+	}
+
+	public void setMedia(ArrayList<Media> media) {
+		this.media = media;
+	}
+
 	public String getImageFile() {
 		return imageFile;
 	}
@@ -134,5 +143,13 @@ public class Module implements Serializable {
 	
 	public void setTitles(ArrayList<Lang> titles) {
 		this.titles = titles;
+	}
+	
+	public boolean hasMedia(){
+		if(media.size() == 0){
+			return false;
+		} else {
+			return true;
+		}
 	}
 }

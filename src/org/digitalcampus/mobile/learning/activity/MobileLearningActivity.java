@@ -137,11 +137,14 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			langSet.addAll(mLangs);
 			m.setProps(mxr.getMeta());
 			m.setImageFile(mxr.getModuleImage());
+			m.setMedia(mxr.getMedia());
 		}
 
 		// rebuild Langs
 		rebuildLangs();
 
+		// TODO scan media
+		
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.no_modules);
 		if (modules.size() > 0) {
 			ll.setVisibility(View.GONE);
