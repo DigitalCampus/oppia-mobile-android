@@ -58,13 +58,13 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    
 	    rowView.setTag(sectionList.get(position));
 	    
-	    // set image
+	    /* set image
 	    if(s.getImageFile() != null){
 	    	ImageView iv = (ImageView) rowView.findViewById(R.id.section_image);
 	    	String path = module.getLocation() + "/" + s.getImageFile();
 	    	Bitmap bm = ImageUtils.LoadBMPsdcard(path, ctx.getResources(), R.drawable.default_icon_section);
 	    	iv.setImageBitmap(bm);
-	    }
+	    }*/
 	    
 	    // now set up the hozontal activity list
 	    LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);

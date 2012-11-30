@@ -10,17 +10,17 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_gradient"
         android:minHeight="50dp"
-        android:orientation="horizontal" 
+        android:orientation="horizontal"
         android:weightSum="1.0" >
 
         <ImageView
-        android:id="@+id/module_image"
-        android:layout_width="48dip"
-        android:layout_height="48dip"
-        android:layout_margin="4dip"
-        android:contentDescription="@string/app_logo_alt"
-        android:src="@drawable/default_icon_module" />
-        
+            android:id="@+id/module_image"
+            android:layout_width="48dip"
+            android:layout_height="48dip"
+            android:layout_margin="4dip"
+            android:contentDescription="@string/app_logo_alt"
+            android:src="@drawable/default_icon_module" />
+
         <TextView
             android:id="@+id/module_title"
             android:layout_width="0dp"
@@ -29,13 +29,12 @@
             android:padding="@dimen/padding_medium"
             android:textSize="20sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
-    <ListView  
-         android:id="@+id/section_list"
-         android:layout_width="fill_parent" 
-         android:layout_height="wrap_content" 
-         android:listSelector="@drawable/background" />
+    <ListView
+        android:id="@+id/section_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:listSelector="@drawable/background" />
 
 </LinearLayout>

@@ -7,35 +7,12 @@
     android:orientation="vertical"
     android:padding="5dp" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="30dp" >
-
-        <ImageView
-            android:id="@+id/section_image"
-            android:layout_width="24dip"
-            android:layout_height="24dip"
-            android:layout_margin="2dip"
-            android:contentDescription="@string/app_logo_alt"
-            android:src="@drawable/default_icon_section" />
-
-        <TextView
-            android:id="@+id/section_title"
-            android:layout_height="fill_parent"
-            android:layout_width="wrap_content"
-            android:gravity="center_vertical"
-            android:textSize="12dp"
-            android:textStyle="bold"
-            android:layout_toRightOf="@+id/section_image" />
-    </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/section_progress_bar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="5dp"
-        android:layout_margin="5dp"
-        android:progressDrawable="@drawable/progress_bar" />
+    <TextView
+        android:id="@+id/section_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
     <HorizontalScrollView
         android:id="@+id/section_activities_scroll"
@@ -48,11 +25,16 @@
             android:id="@+id/section_activities"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="5dp" >
-
-            
+            android:orientation="horizontal" >
         </LinearLayout>
     </HorizontalScrollView>
+
+    <ProgressBar
+        android:id="@+id/section_progress_bar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:layout_margin="5dp"
+        android:progressDrawable="@drawable/progress_bar" />
 
 </LinearLayout>

@@ -14,6 +14,7 @@ import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Lang;
+import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -22,6 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -154,6 +156,7 @@ public class ModuleXMLReader {
 	}
 	
 	public ArrayList<Section> getSections(int modId, Context ctx){
+		// TODO - must be better way of navigating the nodes??
 		ArrayList<Section> sections = new ArrayList<Section>();
 		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
 		DbHelper db = new DbHelper(ctx);
@@ -198,6 +201,7 @@ public class ModuleXMLReader {
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
 				ArrayList<Lang> actLocations = new ArrayList<Lang>();
 				ArrayList<Lang> actContents = new ArrayList<Lang>();
+				ArrayList<Media> actMedia = new ArrayList<Media>();
 				NodeList act = acts.item(j).getChildNodes();
 				for (int k=0; k<act.getLength(); k++) {
 					NamedNodeMap attrs = act.item(k).getAttributes();
@@ -212,14 +216,27 @@ public class ModuleXMLReader {
 						actContents.add(new Lang(lang, act.item(k).getTextContent()));
 					} else if(act.item(k).getNodeName().equals("image")){
 						a.setImageFile(attrs.getNamedItem("filename").getTextContent());
+					} else if (act.item(k).getNodeName().equals("media")){
+						// TODO add media
+						NodeList files = act.item(k).getChildNodes();
+						for (int m=0; m<files.getLength(); m++) {
+							if (files.item(m).getNodeName().equals("file")){
+								NamedNodeMap fileAttrs = files.item(m).getAttributes();
+								Media mObj = new Media();
+								mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
+								mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
+								mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
+								actMedia.add(mObj);
+							}
+						}
 					}
 				}
 				a.setTitles(actTitles);
 				a.setLocations(actLocations);
 				a.setContents(actContents);
 				a.setDigest(digest);
+				a.setMedia(actMedia);
 				
-				// TODO add media
 				s.addActivity(a);
 			}
 			

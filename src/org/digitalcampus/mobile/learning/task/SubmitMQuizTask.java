@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
@@ -24,6 +25,7 @@ import org.digitalcampus.mobile.learning.application.MobileLearning;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -84,6 +86,10 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPost.setEntity(se);
 
+                // add user agent 
+                String v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+                client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, "mQuiz Android app: " + v);
+                
 				// make request
 				HttpResponse response = client.execute(httpPost);				
 				
@@ -111,6 +117,9 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
+			} catch (NameNotFoundException e) {
+				BugSenseHandler.log(TAG, e);
+				e.printStackTrace();
 			} 
 			
 		}

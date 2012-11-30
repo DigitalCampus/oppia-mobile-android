@@ -31,9 +31,7 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 		File dir = new File(MobileLearning.DOWNLOAD_PATH);
 
 		String[] children = dir.list();
-		if (children == null) {
-			// Either dir does not exist or is not a directory
-		} else {
+		if (children != null) {
 			Log.d(TAG, "Installing new modules");
 			publishProgress(ctx.getString(R.string.installing));
 			for (int i = 0; i < children.length; i++) {

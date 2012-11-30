@@ -39,12 +39,25 @@ public class Activity implements Serializable{
 		} else if (actType.equals("page") && this.hasMedia()){
 			defaultImage = R.drawable.default_icon_video;
 		}
+		if(!prefix.endsWith("/")){
+			prefix += "/";
+		}
 		return ImageUtils.LoadBMPsdcard(prefix + this.imageFile, res, defaultImage);
 	}
 
 	public void setImageFile(String imageFile) {
 		this.imageFile = imageFile;
 	}
+	
+	public ArrayList<Media> getMedia() {
+		return media;
+	}
+
+	public void setMedia(ArrayList<Media> media) {
+		this.media = media;
+	}
+
+	
 
 	public String getDigest() {
 		return digest;
