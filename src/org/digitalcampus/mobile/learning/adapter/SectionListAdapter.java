@@ -7,13 +7,11 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.activity.ModuleActivity;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
-import org.digitalcampus.mobile.learning.utils.ImageUtils;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
