@@ -14,7 +14,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
+public class InstallModulesTask extends AsyncTask<Payload, String, Payload>
 
 {
 	private final static String TAG = "InstallModulesTask";
@@ -25,6 +25,7 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 		this.ctx = ctx;
 	}
 
+	@Override
 	protected Payload doInBackground(Payload... params) {
 
 		// get folder
@@ -97,6 +98,7 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
 		return null;
 	}
 
+	@Override
 	protected void onProgressUpdate(String... obj) {
 		synchronized (this) {
             if (mStateListener != null) {
@@ -106,6 +108,7 @@ public class InstallModulesTask extends AsyncTask<Payload, Object, Payload>
         }
 	}
 
+	@Override
 	protected void onPostExecute(Payload results) {
 		synchronized (this) {
             if (mStateListener != null) {

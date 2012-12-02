@@ -28,7 +28,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
+public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 
 	private final static String TAG = "DownloadModuleTask";
 	private InstallModuleListener mStateListener;
@@ -92,6 +92,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
 		return null;
 	}
 	
+	@Override
 	protected void onProgressUpdate(String... obj) {
 		synchronized (this) {
             if (mStateListener != null) {
@@ -100,6 +101,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
         }
 	}
 
+	@Override
 	protected void onPostExecute(Payload results) {
 		synchronized (this) {
             if (mStateListener != null) {
