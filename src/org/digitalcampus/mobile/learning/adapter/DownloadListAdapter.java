@@ -74,9 +74,10 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
              	public void onClick(View v) {
              		Module dm = (Module) v.getTag();
              		Log.d(TAG,dm.getDownloadUrl());
-             		Module[] s = new Module[1];
-             		s[0] = dm;
-             		Payload p = new Payload(0,s);
+             		
+             		ArrayList<Object> data = new ArrayList<Object>();
+             		data.add(dm);
+             		Payload p = new Payload(0,data);
              		
              		myProgress = new ProgressDialog(ctx);
              		myProgress.setTitle(R.string.install);

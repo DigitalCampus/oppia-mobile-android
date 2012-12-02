@@ -321,10 +321,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
 		String[] args = new String[] { "0" };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
-		int count = c.getCount();
 		c.moveToFirst();
-		int counter = 0;
-		TrackerLog[] sl = new TrackerLog[count];
+
+		ArrayList<Object> sl = new ArrayList<Object>();
 		while (c.isAfterLast() == false) {
 			TrackerLog so = new TrackerLog();
 			so.id = c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID));
@@ -342,8 +341,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			}
 			
 			so.content  = content;
-			sl[counter] = so;
-			counter++;
+			sl.add(so);
 			c.moveToNext();
 		}
 		Payload p = new Payload(SubmitTrackerTask.SUBMIT_LOG_TASK,sl);
@@ -370,16 +368,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = MQUIZRESULTS_C_SENT + "=? ";
 		String[] args = new String[] { "0" };
 		Cursor c = db.query(MQUIZRESULTS_TABLE, null, s, args, null, null, null);
-		int count = c.getCount();
 		c.moveToFirst();
-		int counter = 0;
-		org.digitalcampus.mobile.learning.model.TrackerLog[] sl = new org.digitalcampus.mobile.learning.model.TrackerLog[count];
+		ArrayList<Object> sl = new ArrayList<Object>();
 		while (c.isAfterLast() == false) {
 			org.digitalcampus.mobile.learning.model.TrackerLog so = new org.digitalcampus.mobile.learning.model.TrackerLog();
 			so.id = c.getLong(c.getColumnIndex(MQUIZRESULTS_C_ID));
 			so.content  = c.getString(c.getColumnIndex(MQUIZRESULTS_C_DATA));
-			sl[counter] = so;
-			counter++;
+			sl.add(so);
 			c.moveToNext();
 		}
 		Payload p = new Payload(SubmitMQuizTask.SUBMIT_MQUIZ_TASK,sl);

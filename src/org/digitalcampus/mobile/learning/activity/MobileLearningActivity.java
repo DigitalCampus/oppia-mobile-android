@@ -12,9 +12,14 @@ import org.digitalcampus.mobile.learning.adapter.ModuleListAdapter;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
+import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
+import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.service.TrackerService;
+import org.digitalcampus.mobile.learning.task.GetModuleListTask;
 import org.digitalcampus.mobile.learning.task.InstallModulesTask;
+import org.digitalcampus.mobile.learning.task.Payload;
+import org.digitalcampus.mobile.learning.task.ScanMediaTask;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 import org.digitalcampus.mobile.learning.R;
@@ -48,7 +53,7 @@ import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class MobileLearningActivity extends Activity implements InstallModuleListener, OnSharedPreferenceChangeListener {
+public class MobileLearningActivity extends Activity implements InstallModuleListener, OnSharedPreferenceChangeListener, ScanMediaListener {
 
 	public static final String TAG = "MobileLearningActivity";
 	private SharedPreferences prefs;
@@ -68,7 +73,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 		
-		// set preferred lang to the deafult lang
+		// set preferred lang to the default lang
 		if (prefs.getString("prefLanguage", "").equals("")) {
 			Editor editor = prefs.edit();
 			editor.putString("prefLanguage", Locale.getDefault().getLanguage());
@@ -140,10 +145,8 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			m.setMedia(mxr.getMedia());
 		}
 
-		// rebuild Langs
+		// rebuild langs
 		rebuildLangs();
-
-		// TODO scan media
 		
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.no_modules);
 		if (modules.size() > 0) {
@@ -176,8 +179,24 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 				startActivity(i);
 			}
 		});
+		
+		// TODO scan media
+		this.scanMedia(modules);
 	}
 
+	private void scanMedia(ArrayList<Module> modules){
+		ArrayList<Object> media = new ArrayList<Object>();
+		
+		for(Module m: modules){
+			media.addAll(m.getMedia());
+		}
+		ScanMediaTask task = new ScanMediaTask(this);
+		Payload p = new Payload(0, media);
+		task.setScanMediaListener(this);
+		task.execute(p);
+		
+	}
+	
 	private void rebuildLangs() {
 		// recreate langMap
 		langMap = new HashMap<String, String>();
@@ -388,7 +407,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 	public boolean isLoggedIn() {
 		String username = prefs.getString("prefUsername", "");
 		String apiKey = prefs.getString("prefApiKey", "");
-		if (username.equals("") || apiKey.equals("")) {
+		if (username.trim().equals("") || apiKey.trim().equals("")) {
 			return false;
 		} else {
 			return true;
@@ -407,6 +426,21 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 	public void downloadProgressUpdate(String msg) {
 		// do nothing
 		
+	}
+
+	public void scanStart() {
+		// TODO Auto-generated method stub
+		Log.d(TAG,"starting scan");
+	}
+
+	public void scanProgressUpdate(String msg) {
+		// TODO Auto-generated method stub
+		Log.d(TAG,"checking for: "+msg);
+	}
+
+	public void scanComplete() {
+		// TODO Auto-generated method stub
+		Log.d(TAG,"scan media complete");
 	}
 
 }

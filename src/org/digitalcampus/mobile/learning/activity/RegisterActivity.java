@@ -1,5 +1,7 @@
 package org.digitalcampus.mobile.learning.activity;
 
+import java.util.ArrayList;
+
 import org.apache.commons.validator.EmailValidator;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.SubmitListener;
@@ -57,7 +59,7 @@ public class RegisterActivity extends Activity implements SubmitListener {
 		pDialog.dismiss();
 		Log.d(TAG, "Login activity reports: " + response.resultResponse);
 		if (response.result) {
-			User u = (User) response.data[0];
+			User u = (User) response.data.get(0);
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString("prefUsername", usernameField.getText().toString());
@@ -122,16 +124,16 @@ public class RegisterActivity extends Activity implements SubmitListener {
 		pDialog.setCancelable(true);
 		pDialog.show();
 
-		User[] u = new User[1];
-		u[0] = new User();
-		u[0].username = username;
-		u[0].password = password;
-		u[0].passwordAgain = passwordAgain;
-		u[0].firstname = firstname;
-		u[0].lastname = lastname;
-		u[0].email = email;
-		
-		Payload p = new Payload(0, u);
+		ArrayList<Object> users = new ArrayList<Object>();
+    	User u = new User();
+		u.username = username;
+		u.password = password;
+		u.passwordAgain = passwordAgain;
+		u.firstname = firstname;
+		u.lastname = lastname;
+		u.email = email;
+		users.add(u);
+		Payload p = new Payload(0, users);
 		RegisterTask lt = new RegisterTask(this);
 		lt.setLoginListener(this);
 		lt.execute(p);

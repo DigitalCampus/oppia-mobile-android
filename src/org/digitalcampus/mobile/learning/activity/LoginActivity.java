@@ -1,5 +1,7 @@
 package org.digitalcampus.mobile.learning.activity;
 
+import java.util.ArrayList;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.SubmitListener;
@@ -57,11 +59,13 @@ public class LoginActivity extends Activity implements SubmitListener  {
         pDialog.setCancelable(true);
         pDialog.show();
         
-    	User[] u = new User[1];
-    	u[0] = new User();
-    	u[0].username = username;
-    	u[0].password = password;
-    	Payload p = new Payload(0,u);
+    	ArrayList<Object> users = new ArrayList<Object>();
+    	User u = new User();
+    	u.username = username;
+    	u.password = password;
+    	users.add(u);
+    	
+    	Payload p = new Payload(0,users);
     	LoginTask lt = new LoginTask(this);
     	lt.setLoginListener(this);
     	lt.execute(p);
@@ -79,7 +83,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
 		
 		Log.d(TAG,"Login activity reports: " + response.resultResponse);
 		if(response.result){
-			User u = (User) response.data[0];
+			User u = (User) response.data.get(0);
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString("prefUsername", usernameField.getText().toString());

@@ -44,7 +44,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, Object, Payload>{
 	protected Payload doInBackground(Payload... params) {
 		// TODO what to do when there is an error connecting - how to flag back to user
 		for (Payload payload : params) {
-			Module dm = (Module) payload.data[0];
+			Module dm = (Module) payload.data.get(0);
 
 			try { 
 				HttpParams httpParameters = new BasicHttpParams();

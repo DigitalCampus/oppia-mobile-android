@@ -48,89 +48,88 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
-		for (User u : (User[]) payload.data) {
-			HttpParams httpParameters = new BasicHttpParams();
-			HttpConnectionParams.setConnectionTimeout(
-					httpParameters,
-					Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
-							ctx.getString(R.string.prefServerTimeoutConnection))));
-			HttpConnectionParams.setSoTimeout(
-					httpParameters,
-					Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
-							ctx.getString(R.string.prefServerTimeoutResponseDefault))));
-			DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+		User u = (User) payload.data.get(0);
+		HttpParams httpParameters = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(
+				httpParameters,
+				Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
+						ctx.getString(R.string.prefServerTimeoutConnection))));
+		HttpConnectionParams.setSoTimeout(
+				httpParameters,
+				Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
+						ctx.getString(R.string.prefServerTimeoutResponseDefault))));
+		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 
-			String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault))
-					+ MobileLearning.REGISTER_PATH;
-			HttpPost httpPost = new HttpPost(url);
-			try {
-				// update progress dialog
-				// TODO lang string
-				publishProgress(ctx.getString(R.string.register_process));
-				Log.d(TAG, "Registering... " + u.username);
-				// add post params
-				JSONObject json = new JSONObject();
-				json.put("username", u.username);
-                json.put("password", u.password);
-                json.put("passwordagain",u.passwordAgain);
-                json.put("email",u.email);
-                json.put("firstname",u.firstname);
-                json.put("lastname",u.lastname);
-                StringEntity se = new StringEntity(json.toString());
-                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-                httpPost.setEntity(se);
+		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault))
+				+ MobileLearning.REGISTER_PATH;
+		HttpPost httpPost = new HttpPost(url);
+		try {
+			// update progress dialog
+			// TODO lang string
+			publishProgress(ctx.getString(R.string.register_process));
+			Log.d(TAG, "Registering... " + u.username);
+			// add post params
+			JSONObject json = new JSONObject();
+			json.put("username", u.username);
+            json.put("password", u.password);
+            json.put("passwordagain",u.passwordAgain);
+            json.put("email",u.email);
+            json.put("firstname",u.firstname);
+            json.put("lastname",u.lastname);
+            StringEntity se = new StringEntity(json.toString());
+            se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            httpPost.setEntity(se);
 
-				// make request
-				HttpResponse response = client.execute(httpPost);
+			// make request
+			HttpResponse response = client.execute(httpPost);
 
-				// read response
-				InputStream content = response.getEntity().getContent();
-				BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
-				String responseStr = "";
-				String s = "";
+			// read response
+			InputStream content = response.getEntity().getContent();
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
+			String responseStr = "";
+			String s = "";
 
-				while ((s = buffer.readLine()) != null) {
-					responseStr += s;
-				}
-				Log.d(TAG, responseStr);
-
-				switch (response.getStatusLine().getStatusCode()){
-					case 400: // unauthorised
-						payload.result = false;
-						payload.resultResponse = responseStr;
-						break;
-					case 201: // logged in
-						JSONObject jsonResp = new JSONObject(responseStr);
-						u.api_key = jsonResp.getString("api_key");
-						payload.result = true;
-						payload.resultResponse = ctx.getString(R.string.register_complete);
-						break;
-					default:
-						payload.result = false;
-						payload.resultResponse = ctx.getString(R.string.error_connection);
-				}
-
-			} catch (UnsupportedEncodingException e) {
-				BugSenseHandler.log(TAG, e);
-				e.printStackTrace();
-				payload.result = false;
-				payload.resultResponse = ctx.getString(R.string.error_connection);
-			} catch (ClientProtocolException e) {
-				BugSenseHandler.log(TAG, e);
-				e.printStackTrace();
-				payload.result = false;
-				payload.resultResponse = ctx.getString(R.string.error_connection);
-			} catch (IOException e) {
-				BugSenseHandler.log(TAG, e);
-				e.printStackTrace();
-				payload.result = false;
-				payload.resultResponse = ctx.getString(R.string.error_connection);
-			} catch (JSONException e) {
-				BugSenseHandler.log(TAG, e);
-				e.printStackTrace();
-				payload.result = false;
-				payload.resultResponse = ctx.getString(R.string.error_processing_response);
+			while ((s = buffer.readLine()) != null) {
+				responseStr += s;
 			}
+			Log.d(TAG, responseStr);
+
+			switch (response.getStatusLine().getStatusCode()){
+				case 400: // unauthorised
+					payload.result = false;
+					payload.resultResponse = responseStr;
+					break;
+				case 201: // logged in
+					JSONObject jsonResp = new JSONObject(responseStr);
+					u.api_key = jsonResp.getString("api_key");
+					payload.result = true;
+					payload.resultResponse = ctx.getString(R.string.register_complete);
+					break;
+				default:
+					payload.result = false;
+					payload.resultResponse = ctx.getString(R.string.error_connection);
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			BugSenseHandler.log(TAG, e);
+			e.printStackTrace();
+			payload.result = false;
+			payload.resultResponse = ctx.getString(R.string.error_connection);
+		} catch (ClientProtocolException e) {
+			BugSenseHandler.log(TAG, e);
+			e.printStackTrace();
+			payload.result = false;
+			payload.resultResponse = ctx.getString(R.string.error_connection);
+		} catch (IOException e) {
+			BugSenseHandler.log(TAG, e);
+			e.printStackTrace();
+			payload.result = false;
+			payload.resultResponse = ctx.getString(R.string.error_connection);
+		} catch (JSONException e) {
+			BugSenseHandler.log(TAG, e);
+			e.printStackTrace();
+			payload.result = false;
+			payload.resultResponse = ctx.getString(R.string.error_processing_response);
 		}
 		return payload;
 	}

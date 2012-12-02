@@ -22,6 +22,7 @@ import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.model.TrackerLog;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -49,8 +50,8 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 
-		for (org.digitalcampus.mobile.learning.model.TrackerLog l : (org.digitalcampus.mobile.learning.model.TrackerLog[]) payload.data) {
-
+		for (Object o : payload.data) {
+			TrackerLog l = (TrackerLog) o;
 			HttpParams httpParameters = new BasicHttpParams();
 			HttpConnectionParams.setConnectionTimeout(
 					httpParameters,

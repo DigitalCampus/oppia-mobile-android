@@ -22,6 +22,7 @@ import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.model.TrackerLog;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -48,11 +49,8 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 	@Override
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
-
-		
-
-		for (org.digitalcampus.mobile.learning.model.TrackerLog l : (org.digitalcampus.mobile.learning.model.TrackerLog[]) payload.data) {
-
+		for (Object l : payload.data) {
+			TrackerLog tl = (TrackerLog) l;
 			HttpParams httpParameters = new BasicHttpParams();
 			HttpConnectionParams.setConnectionTimeout(
 					httpParameters,
@@ -82,7 +80,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				//Log.d(TAG, "Sending log...." + l.id);
 				//Log.d(TAG, "Sending content...." + l.content);
 				
-				StringEntity se = new StringEntity(l.content);
+				StringEntity se = new StringEntity(tl.content);
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPost.setEntity(se);
 
@@ -97,7 +95,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 					case 201: // submitted
 						//Log.d(TAG, l.id + " marked as submitted");
 						DbHelper db = new DbHelper(ctx);
-						db.markMQuizSubmitted(l.id);
+						db.markMQuizSubmitted(tl.id);
 						db.close();
 						payload.result = true;
 						break;
@@ -129,7 +127,6 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 	
 	protected void onProgressUpdate(String... obj) {
 		Log.d(TAG, obj[0]);
-
 	}
 
 }
