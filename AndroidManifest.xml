@@ -60,7 +60,9 @@
          <activity
             android:name=".activity.ModuleAboutActivity"
             android:label="@string/title_module_about" />
-        
+         <activity
+            android:name=".activity.DownloadMediaActivity"
+            android:label="@string/title_download_media" />
         <service
             android:name=".service.TrackerService"
             android:icon="@drawable/dc_logo"

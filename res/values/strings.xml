@@ -24,6 +24,7 @@
     <string name="title_prefs">Settings</string>
     <string name="version">Version: %1$s</string>
     <string name="title_module_about">About Module</string>
+    <string name="title_download_media">Download Media</string>
     
     <string name="activity_module_button_prev">&lt;</string>
     <string name="activity_module_button_next">&gt;</string>
@@ -96,6 +97,9 @@
 	<string name="install_complete">Installation complete</string>
 	
 	<string name="install_module_complete">%1$s: installed</string>
+	
+	<string name="info_scan_media_start">Scanning for media</string>
+	<string name="info_scan_media_checking">Checking for: %1$s</string>
 	
 	<string name="error_connection">Error connecting to server</string>
 	<string name="error_processing_response">Error processing response</string>

@@ -8,21 +8,20 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeSet;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.R.id;
 import org.digitalcampus.mobile.learning.adapter.ModuleListAdapter;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
-import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.service.TrackerService;
-import org.digitalcampus.mobile.learning.task.GetModuleListTask;
 import org.digitalcampus.mobile.learning.task.InstallModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.ScanMediaTask;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
-import org.digitalcampus.mobile.learning.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,6 +49,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -93,7 +93,6 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			startActivity(new Intent(MobileLearningActivity.this, LoginActivity.class));
 			return;
 		}
-		displayModules();
 		
 		// install any new modules
 		// TODO show info to user that we're checking for new modules
@@ -190,7 +189,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		for(Module m: modules){
 			media.addAll(m.getMedia());
 		}
-		ScanMediaTask task = new ScanMediaTask(this);
+		ScanMediaTask task = new ScanMediaTask();
 		Payload p = new Payload(0, media);
 		task.setScanMediaListener(this);
 		task.execute(p);
@@ -429,17 +428,21 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 	}
 
 	public void scanStart() {
-		// TODO Auto-generated method stub
 		Log.d(TAG,"starting scan");
+		LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
+		ll.setVisibility(View.VISIBLE);
+		TextView tv = (TextView) this.findViewById(id.home_message);
+		tv.setText(this.getString(R.string.info_scan_media_start));
 	}
 
 	public void scanProgressUpdate(String msg) {
-		// TODO Auto-generated method stub
 		Log.d(TAG,"checking for: "+msg);
+		TextView tv = (TextView) this.findViewById(id.home_message);
+		tv.setText(this.getString(R.string.info_scan_media_checking,msg));
 	}
 
-	public void scanComplete() {
-		// TODO Auto-generated method stub
+	public void scanComplete(Payload response) {
+		// Auto-generated method stub
 		Log.d(TAG,"scan media complete");
 	}
 
