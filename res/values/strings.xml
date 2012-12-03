@@ -88,7 +88,7 @@
 	<string name="install">Install</string>
 	
 	<string name="download_starting">Download starting</string>
-	<string name="downloading">Downloading..</string>
+	<string name="downloading">Downloading...</string>
 	<string name="download_complete">Download complete</string>
 	
 	<string name="install_starting">Installation starting</string>

@@ -30,7 +30,7 @@ import android.util.Log;
 
 public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 
-	private final static String TAG = "DownloadModuleTask";
+	public final static String TAG = "DownloadModuleTask";
 	private InstallModuleListener mStateListener;
 	private Context ctx;
 	private SharedPreferences prefs;
