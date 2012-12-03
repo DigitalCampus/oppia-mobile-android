@@ -53,7 +53,8 @@ import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class MobileLearningActivity extends Activity implements InstallModuleListener, OnSharedPreferenceChangeListener, ScanMediaListener {
+public class MobileLearningActivity extends Activity implements InstallModuleListener,
+		OnSharedPreferenceChangeListener, ScanMediaListener {
 
 	public static final String TAG = "MobileLearningActivity";
 	private SharedPreferences prefs;
@@ -72,7 +73,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
-		
+
 		// set preferred lang to the default lang
 		if (prefs.getString("prefLanguage", "").equals("")) {
 			Editor editor = prefs.edit();
@@ -93,7 +94,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			startActivity(new Intent(MobileLearningActivity.this, LoginActivity.class));
 			return;
 		}
-		
+
 		// install any new modules
 		// TODO show info to user that we're checking for new modules
 		// TODO? scan already extracted modules and install these
@@ -146,7 +147,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 
 		// rebuild langs
 		rebuildLangs();
-		
+
 		LinearLayout ll = (LinearLayout) this.findViewById(R.id.no_modules);
 		if (modules.size() > 0) {
 			ll.setVisibility(View.GONE);
@@ -178,24 +179,24 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 				startActivity(i);
 			}
 		});
-		
+
 		// TODO scan media
 		this.scanMedia(modules);
 	}
 
-	private void scanMedia(ArrayList<Module> modules){
+	private void scanMedia(ArrayList<Module> modules) {
 		ArrayList<Object> media = new ArrayList<Object>();
-		
-		for(Module m: modules){
+
+		for (Module m : modules) {
 			media.addAll(m.getMedia());
 		}
 		ScanMediaTask task = new ScanMediaTask();
 		Payload p = new Payload(0, media);
 		task.setScanMediaListener(this);
 		task.execute(p);
-		
+
 	}
-	
+
 	private void rebuildLangs() {
 		// recreate langMap
 		langMap = new HashMap<String, String>();
@@ -259,7 +260,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			i++;
 		}
 		// only show if at least one language
-		if(i > 0){
+		if (i > 0) {
 			AlertDialog mAlertDialog = new AlertDialog.Builder(this)
 					.setSingleChoiceItems(langArray, selected, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
@@ -272,37 +273,37 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 						}
 					}).setTitle(getString(R.string.change_language))
 					.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-	
+
 						public void onClick(DialogInterface dialog, int which) {
 							// do nothing
 						}
-	
+
 					}).create();
 			mAlertDialog.show();
 		}
 	}
 
-	private void logout(){
+	private void logout() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
 		builder.setTitle(R.string.logout);
 		builder.setMessage(R.string.logout_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				// wipe activity data 
+				// wipe activity data
 				DbHelper db = new DbHelper(MobileLearningActivity.this);
 				db.onLogout();
 				db.close();
-				
+
 				// wipe user prefs
 				Editor editor = prefs.edit();
 				editor.putString("prefsUsername", "");
 				editor.putString("prefApiKey", "");
 				editor.commit();
-				
+
 				// restart this activity
 				MobileLearningActivity.this.onStart();
-				
+
 			}
 		});
 		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -312,7 +313,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		});
 		builder.show();
 	}
-	
+
 	public void installComplete() {
 		Log.d(TAG, "Listener says install complete");
 		displayModules();
@@ -419,16 +420,15 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 
 	public void downloadComplete() {
 		// do nothing
-		
+
 	}
 
 	public void downloadProgressUpdate(String msg) {
 		// do nothing
-		
+
 	}
 
 	public void scanStart() {
-		Log.d(TAG,"starting scan");
 		LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
 		ll.setVisibility(View.VISIBLE);
 		TextView tv = (TextView) this.findViewById(id.home_message);
@@ -436,14 +436,19 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 	}
 
 	public void scanProgressUpdate(String msg) {
-		Log.d(TAG,"checking for: "+msg);
 		TextView tv = (TextView) this.findViewById(id.home_message);
-		tv.setText(this.getString(R.string.info_scan_media_checking,msg));
+		tv.setText(this.getString(R.string.info_scan_media_checking, msg));
 	}
 
 	public void scanComplete(Payload response) {
-		// Auto-generated method stub
-		Log.d(TAG,"scan media complete");
+		LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
+		TextView tv = (TextView) this.findViewById(id.home_message);
+		if (response.responseData.size() > 0) {
+			tv.setText(this.getString(R.string.info_scan_media_missing));
+		} else {
+			ll.setVisibility(View.GONE);
+			tv.setText("");
+		}
 	}
 
 }

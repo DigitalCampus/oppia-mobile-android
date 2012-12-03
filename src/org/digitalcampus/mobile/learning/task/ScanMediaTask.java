@@ -7,25 +7,20 @@ import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
 import org.digitalcampus.mobile.learning.model.Media;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-public class ScanMediaTask extends AsyncTask<Payload, Media, Payload>{
+public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
-	private final static String TAG = "ScanMediaTask";
+	public final static String TAG = "ScanMediaTask";
 	private ScanMediaListener mStateListener;
 	
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		for (Object o: payload.data){
 			Media m = (Media) o;
-			Log.d(TAG,m.getFilename());
-			publishProgress(m);
+			publishProgress(m.getFilename());
 			String filename = MobileLearning.MEDIA_PATH + m.getFilename();
 			File mediaFile = new File(filename);
-			if(mediaFile.exists()){
-				Log.d(TAG,"found: "+m.getFilename());
-			} else {
-				Log.d(TAG,"missing: "+m.getFilename());
+			if(!mediaFile.exists()){
 				payload.responseData.add(m);
 			}
 		}
@@ -42,11 +37,11 @@ public class ScanMediaTask extends AsyncTask<Payload, Media, Payload>{
 	}
 	
 	@Override
-	protected void onProgressUpdate(Media... progress){
+	protected void onProgressUpdate(String... progress){
 		synchronized (this) {
             if (mStateListener != null) {
                 // update progress
-                mStateListener.scanProgressUpdate(progress[0].getFilename());
+                mStateListener.scanProgressUpdate(progress[0]);
             }
         }
 	}

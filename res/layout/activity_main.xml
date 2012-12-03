@@ -10,28 +10,42 @@
 
     <LinearLayout
         android:id="@+id/home_messages"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="2dip"
-        android:visibility="gone" 
-        android:orientation="vertical">
-        
-        <TextView
-            android:id="@+id/home_message"
-            android:layout_width="wrap_content"
+        android:background="@drawable/message_background"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:weightSum="1.0" >
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="2dip"
-            android:gravity="center"
+            android:layout_weight="0.65" >
+
+            <TextView
+                android:id="@+id/home_message"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/message_action_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".35"
+            android:gravity="center_vertical|center"
+            android:text="Download"
             android:textSize="14dp" />
-        
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/no_modules"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" 
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,17 +54,17 @@
             android:gravity="center"
             android:text="@string/no_modules"
             android:textSize="20dp" />
-        
-        <Button android:id="@+id/manage_modules_btn" 
-			android:layout_height="wrap_content" 
-			android:layout_width="wrap_content"
-			android:text="@string/title_download_activity"
-			android:textSize="20dp" 
-			android:gravity="center"
-			android:layout_margin="10dp"/>
-        
+
+        <Button
+            android:id="@+id/manage_modules_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="@string/title_download_activity"
+            android:textSize="20dp" />
     </LinearLayout>
-    
+
     <ListView
         android:id="@+id/module_list"
         android:layout_width="fill_parent"
