@@ -28,13 +28,13 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 
 	private ProgressDialog pDialog;
 	private JSONObject json;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
 		// Get Module list
 		getModuleList();
-
 	}
 
 	private void getModuleList() {

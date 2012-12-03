@@ -100,7 +100,9 @@
 	
 	<string name="info_scan_media_start">Scanning for media</string>
 	<string name="info_scan_media_checking">Checking for: %1$s</string>
-	<string name="info_scan_media_missing">Some media (videos etc) are missing for your modules.</string>
+	<string name="info_scan_media_missing">Some media files (videos etc) are missing for your modules.</string>
+	
+	<string name="scan_media_download_button">Download</string>
 	
 	<string name="error_connection">Error connecting to server</string>
 	<string name="error_processing_response">Error processing response</string>

@@ -43,6 +43,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -443,11 +444,31 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 	public void scanComplete(Payload response) {
 		LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
 		TextView tv = (TextView) this.findViewById(id.home_message);
+		Button btn = (Button) this.findViewById(R.id.message_action_button);
+		
 		if (response.responseData.size() > 0) {
 			tv.setText(this.getString(R.string.info_scan_media_missing));
+			btn.setText(this.getString(R.string.scan_media_download_button));
+			btn.setTag(response.responseData);
+			btn.setOnClickListener(new OnClickListener() {
+
+				public void onClick(View view) {
+					@SuppressWarnings("unchecked")
+					ArrayList<Object> m = (ArrayList<Object>) view.getTag();
+					Intent i = new Intent(MobileLearningActivity.this, DownloadMediaActivity.class);
+					Bundle tb = new Bundle();
+					tb.putSerializable(DownloadMediaActivity.TAG, m);
+					i.putExtras(tb);
+					startActivity(i);
+				}
+			});
+
 		} else {
 			ll.setVisibility(View.GONE);
 			tv.setText("");
+			btn.setText("");
+			btn.setOnClickListener(null);
+			btn.setTag(null);
 		}
 	}
 
