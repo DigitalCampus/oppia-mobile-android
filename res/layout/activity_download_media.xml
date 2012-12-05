@@ -47,7 +47,7 @@
             android:layout_gravity="center"
             android:layout_weight="0.5"
             android:text="@string/scan_media_download_via_pc_button"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="normal" />
         <Button
             android:id="@+id/download_media_btn"
@@ -56,7 +56,7 @@
             android:layout_gravity="center"
             android:layout_weight="0.5"
             android:text="@string/scan_media_download_button"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textStyle="normal" />
     </LinearLayout>
 

@@ -1,5 +1,11 @@
 package org.digitalcampus.mobile.learning.activity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
@@ -10,13 +16,15 @@ import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.task.DownloadMediaTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,10 +60,16 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 		}
 		strData += "</ul>";
 		wvml.loadData(strData,"text/html","utf-8");
-		Button btn = (Button) this.findViewById(R.id.download_media_btn);
-		btn.setOnClickListener(new OnClickListener() {
+		Button downloadBtn = (Button) this.findViewById(R.id.download_media_btn);
+		downloadBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				download();
+			}
+		});
+		Button downloadViaPCBtn = (Button) this.findViewById(R.id.download_media_via_pc_btn);
+		downloadViaPCBtn.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				downloadViaPC();
 			}
 		});
 	}
@@ -90,6 +104,40 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 				task.cancel(true);
 			}
 		});*/
+	}
+	
+	private void downloadViaPC(){
+		String filename = "mobile-learning-media.html";
+		String strData = "<html>";
+		strData += "<head><title>"+this.getString(R.string.download_via_pc_title)+"</title></head>";
+		strData += "<body>";
+		strData += "<h3>"+this.getString(R.string.download_via_pc_title)+"</h3>";
+		strData += "<p>"+this.getString(R.string.download_via_pc_intro)+"</p>";
+		strData += "<ul>";
+		for(Object o: missingMedia){
+			Media m = (Media) o;
+			strData += "<li><a href='"+m.getDownloadUrl()+"'>"+m.getFilename()+"</a></li>";
+		}
+		strData += "</ul>";
+		strData += "</body></html>";
+		strData += "<p>"+this.getString(R.string.download_via_pc_final,"/digitalcampus/media/")+"</p>";
+		
+		File file = new File(Environment.getExternalStorageDirectory(),filename);
+		try {
+			FileOutputStream f = new FileOutputStream(file);
+			Writer out = new OutputStreamWriter(new FileOutputStream(file));
+			out.write(strData);
+			out.close();
+			f.close();
+			MobileLearning.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message,filename));
+			this.finish();
+		} catch (FileNotFoundException e) {
+			BugSenseHandler.log(TAG, e);
+			e.printStackTrace();
+		} catch (IOException e) {
+			BugSenseHandler.log(TAG, e);
+			e.printStackTrace();
+		}
 	}
 	
 	public void downloadStarting() {

@@ -28,7 +28,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	static final int DB_VERSION = 7;
 
 	private SQLiteDatabase db;
-
+	
 	private static final String MODULE_TABLE = "Module";
 	private static final String MODULE_C_ID = BaseColumns._ID;
 	private static final String MODULE_C_VERSIONID = "versionid";
@@ -62,8 +62,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String MQUIZRESULTS_C_MODID = "moduleid";
 	
 	// Constructor
-	public DbHelper(Context context) { //
-		super(context, DB_NAME, null, DB_VERSION);
+	public DbHelper(Context ctx) { //
+		super(ctx, DB_NAME, null, DB_VERSION);
 		db = this.getWritableDatabase();
 	}
 
@@ -128,8 +128,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		createModuleTable(db);
 		createActivityTable(db);
 		createLogTable(db);
-		createMquizResultsTable(db);
-		
+		createMquizResultsTable(db);		
 	}
 
 	public void onLogout(){
