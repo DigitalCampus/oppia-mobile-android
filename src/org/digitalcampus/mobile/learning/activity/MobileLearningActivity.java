@@ -83,7 +83,18 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		}
 
 		// set up local dirs
-		MobileLearning.createDirs();
+		if(!MobileLearning.createDirs()){
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setCancelable(false);
+			builder.setTitle(R.string.error);
+			builder.setMessage(R.string.error_sdcard);
+			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					MobileLearningActivity.this.finish();
+				}
+			});
+			builder.show();
+		}
 
 		doBindService();
 	}
@@ -181,7 +192,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			}
 		});
 
-		// TODO scan media
+		// scan media
 		this.scanMedia(modules);
 	}
 
@@ -417,6 +428,14 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Log.d(TAG, key + " changed");
+		if(key.equalsIgnoreCase("prefServer")){
+			Editor editor = sharedPreferences.edit();
+			if(!sharedPreferences.getString("prefServer", "").endsWith("/")){
+				String newServer = sharedPreferences.getString("prefServer", "")+"/";
+				editor.putString("prefServer", newServer);
+		    	editor.commit();
+			}
+		}
 	}
 
 	public void downloadComplete() {

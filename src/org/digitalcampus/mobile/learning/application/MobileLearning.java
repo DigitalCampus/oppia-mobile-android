@@ -4,8 +4,6 @@ import java.io.File;
 
 import org.digitalcampus.mobile.learning.R;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
@@ -42,18 +40,14 @@ public class MobileLearning extends Application {
 	// only used in case a module doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
 	
-	public static void createDirs() throws RuntimeException {
+	public static boolean createDirs() {
 		String cardstatus = Environment.getExternalStorageState();
 		if (cardstatus.equals(Environment.MEDIA_REMOVED)
 				|| cardstatus.equals(Environment.MEDIA_UNMOUNTABLE)
 				|| cardstatus.equals(Environment.MEDIA_UNMOUNTED)
 				|| cardstatus.equals(Environment.MEDIA_MOUNTED_READ_ONLY)
 				|| cardstatus.equals(Environment.MEDIA_SHARED)) {
-			RuntimeException e = new RuntimeException(
-					TAG + " reports : SDCard error: "
-							+ Environment.getExternalStorageState());
-			BugSenseHandler.log(TAG, e);
-			throw e;
+			return false;
 		}
 
 		String[] dirs = { MLEARN_ROOT, MODULES_PATH, MEDIA_PATH, DOWNLOAD_PATH };
@@ -62,22 +56,15 @@ public class MobileLearning extends Application {
 			File dir = new File(dirName);
 			if (!dir.exists()) {
 				if (!dir.mkdirs()) {
-					RuntimeException e = new RuntimeException(
-							TAG + " reports : Cannot create directory: "
-									+ dirName);
-					BugSenseHandler.log(TAG, e);
-					throw e;
+					return false;
 				}
 			} else {
 				if (!dir.isDirectory()) {
-					RuntimeException e = new RuntimeException(
-							TAG + " reports : " + dirName
-									+ " exists, but is not a directory");
-					BugSenseHandler.log(TAG, e);
-					throw e;
+					return false;
 				}
 			}
 		}
+		return true;
 	}
 	
 	public static void showAlert(Context ctx, int t, int m){

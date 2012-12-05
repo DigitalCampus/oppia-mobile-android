@@ -112,6 +112,7 @@
 	<string name="error_latest_already_installed">%1$s: latest version already installed</string>
 	<string name="error_login">Invalid username/password\nPlease try again</string>
 	<string name="error_register">Error registering</string>
+	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
 	
 	<string name="loading_module_list">Getting list of modules</string>
 	

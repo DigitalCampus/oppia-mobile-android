@@ -11,7 +11,6 @@ import org.digitalcampus.mobile.learning.task.Payload;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -66,7 +65,7 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 		pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		pDialog.setProgress(0);
 		pDialog.setMax(100);
-		pDialog.setCancelable(true);
+		pDialog.setCancelable(false);
 		pDialog.show();
 		
 	
@@ -74,16 +73,15 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 		Payload p = new Payload(0,missingMedia);
 		task.setDownloadListener(this);
 		task.execute(p);
-		pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+		/*pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			public void onCancel(DialogInterface dialog) {
 				task.cancel(true);
 			}
-		});
+		});*/
 	}
 	
 	public void downloadStarting() {
 		Log.d(TAG,"download starting");
-		
 	}
 
 	public void downloadProgressUpdate(DownloadProgress msg) {
