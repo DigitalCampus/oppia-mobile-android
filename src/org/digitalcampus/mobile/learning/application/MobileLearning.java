@@ -23,7 +23,6 @@ public class MobileLearning extends Application {
 	public static final String MODULE_XML = "module.xml";
 
 	// server path vars
-	// TODO check that pref server already had trailing '/'
 	
 	public static final String LOGIN_PATH = "api/v1/user/";
 	public static final String REGISTER_PATH = "api/v1/register/";
@@ -67,8 +66,8 @@ public class MobileLearning extends Application {
 		return true;
 	}
 	
-	public static void showAlert(Context ctx, int t, int m){
-    	MobileLearning.showAlert(ctx, ctx.getString(t), ctx.getString(m));
+	public static void showAlert(Context ctx, int title, int msg){
+    	MobileLearning.showAlert(ctx, ctx.getString(title), ctx.getString(msg));
     }
 	
 	public static void showAlert(Context ctx, int R, String msg){

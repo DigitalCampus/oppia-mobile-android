@@ -78,6 +78,7 @@
 	<string name="no">No</string>
 	<string name="close">Close</string>
 	<string name="error">Error</string>
+	<string name="warning">Warning</string>
 	<string name="loading">Loading</string>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
@@ -103,6 +104,7 @@
 	<string name="info_scan_media_missing">Some media files (videos etc) are missing for your modules.</string>
 	
 	<string name="scan_media_download_button">Download</string>
+	<string name="scan_media_download_via_pc_button">Download via PC</string>
 	
 	<string name="error_connection">Error connecting to server</string>
 	<string name="error_processing_response">Error processing response</string>
@@ -113,6 +115,7 @@
 	<string name="error_login">Invalid username/password\nPlease try again</string>
 	<string name="error_register">Error registering</string>
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
+	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
 	
 	<string name="loading_module_list">Getting list of modules</string>
 	

@@ -3,6 +3,7 @@ package org.digitalcampus.mobile.learning.activity;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.DownloadMediaListener;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.Media;
@@ -11,6 +12,10 @@ import org.digitalcampus.mobile.learning.task.Payload;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -56,7 +61,14 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 	}
 
 	private void download(){
-		// TODO check the user is on a wifi network connection
+		//check the user is on a wifi network connection
+		ConnectivityManager conMan = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE); 
+        NetworkInfo netInfo = conMan.getActiveNetworkInfo();
+        if (netInfo == null || netInfo.getType() != ConnectivityManager.TYPE_WIFI){
+			MobileLearning.showAlert(this, R.string.warning, R.string.warning_wifi_required);
+			return;
+		}
+		
 		// TODO how to kill the task...
 		// show progress dialog
 		pDialog = new ProgressDialog(this);
