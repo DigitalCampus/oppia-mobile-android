@@ -449,8 +449,6 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 	}
 
 	public void scanStart() {
-		LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
-		ll.setVisibility(View.VISIBLE);
 		TextView tv = (TextView) this.findViewById(id.home_message);
 		tv.setText(this.getString(R.string.info_scan_media_start));
 	}
@@ -466,6 +464,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		Button btn = (Button) this.findViewById(R.id.message_action_button);
 		
 		if (response.responseData.size() > 0) {
+			ll.setVisibility(View.VISIBLE);
 			tv.setText(this.getString(R.string.info_scan_media_missing));
 			btn.setText(this.getString(R.string.scan_media_download_button));
 			btn.setTag(response.responseData);
