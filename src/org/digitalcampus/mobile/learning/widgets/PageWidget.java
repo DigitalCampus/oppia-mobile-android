@@ -1,5 +1,6 @@
 package org.digitalcampus.mobile.learning.widgets;
 
+import java.lang.reflect.Method;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.application.MobileLearning;
@@ -16,7 +17,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +48,16 @@ public class PageWidget extends WidgetFactory {
 
 		// get the location data
 		WebView wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
+		wv.setBackgroundColor(0x00000000);
+		// hack to get transparent background on webviews
+		if (Build.VERSION.SDK_INT >= 11){ // Android v3.0+
+			try {
+				Method method = View.class.getMethod("setLayerType", int.class, Paint.class);
+				method.invoke(wv, 1, new Paint()); // 1 = LAYER_TYPE_SOFTWARE (API11)
+			} catch (Exception e) {
+				
+			}
+		}
 		// TODO error check here that the file really exists first
 		// TODO error check that location is in the hashmap
 		String url = "file://" + module.getLocation() + "/" + activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));

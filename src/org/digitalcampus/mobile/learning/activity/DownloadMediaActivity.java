@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
@@ -21,8 +22,10 @@ import com.bugsense.trace.BugSenseHandler;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -49,10 +52,30 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 		}
 		
 		WebView wv = (WebView) findViewById(R.id.download_media_webview);
+		wv.setBackgroundColor(0x00000000);
+		// hack to get transparent background on webviews
+		if (Build.VERSION.SDK_INT >= 11){ // Android v3.0+
+			try {
+				Method method = View.class.getMethod("setLayerType", int.class, Paint.class);
+				method.invoke(wv, 1, new Paint()); // 1 = LAYER_TYPE_SOFTWARE (API11)
+			} catch (Exception e) {
+				
+			}
+		}
 		String url = "file:///android_asset/www/download_media.html";
 		wv.loadUrl(url);
 		
 		WebView wvml = (WebView) findViewById(R.id.download_media_list_webview);
+		wvml.setBackgroundColor(0x00000000);
+		// hack to get transparent background on webviews
+		if (Build.VERSION.SDK_INT >= 11){ // Android v3.0+
+			try {
+				Method method = View.class.getMethod("setLayerType", int.class, Paint.class);
+				method.invoke(wvml, 1, new Paint()); // 1 = LAYER_TYPE_SOFTWARE (API11)
+			} catch (Exception e) {
+				
+			}
+		}
 		String strData = "<ul>";
 		for(Object o: missingMedia){
 			Media m = (Media) o;
