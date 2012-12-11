@@ -77,20 +77,6 @@ public class ModuleIndexActivity extends Activity {
     	ListView listView = (ListView) findViewById(R.id.section_list);
     	SectionListAdapter sla = new SectionListAdapter(this, module, sections);
     	listView.setAdapter(sla); 
-    	
-    	/*listView.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
-				Section s = (Section) view.getTag();    
-				Intent i = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
-				Bundle tb = new Bundle();
-				tb.putSerializable(Section.TAG, (Section) s);
-				tb.putSerializable(Module.TAG, (Module) module);
-				i.putExtras(tb);
-         		startActivity(i);
-			}
-		});*/
 	
     }
     

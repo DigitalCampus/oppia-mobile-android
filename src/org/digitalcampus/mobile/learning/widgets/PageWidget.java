@@ -1,10 +1,13 @@
 package org.digitalcampus.mobile.learning.widgets;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Locale;
 
+import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.application.Tracker;
+import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
 import org.digitalcampus.mobile.learning.R;
@@ -62,7 +65,6 @@ public class PageWidget extends WidgetFactory {
 		// TODO error check that location is in the hashmap
 		String url = "file://" + module.getLocation() + "/" + activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 
-		Log.v(TAG, "Loading: " + url);
 		wv.loadUrl(url);
 		
 		// set up the page to intercept videos
@@ -75,7 +77,6 @@ public class PageWidget extends WidgetFactory {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
 					String videoFileName = url.substring(startPos, url.length());
-					Log.d(TAG, videoFileName);
 
 					// check video file exists
 					boolean exists = FileUtils.mediaFileExists(videoFileName);
@@ -87,7 +88,13 @@ public class PageWidget extends WidgetFactory {
 						intent.setDataAndType(data, "video/mp4");
 						// track that the video has been played (or at least clicked on)
 						Tracker t = new Tracker(ctx);
-						t.mediaPlayed(PageWidget.this.module.getModId(), PageWidget.this.activity.getDigest(), videoFileName);
+						// digest should be that of the video not the page
+						for(Media m: PageWidget.this.activity.getMedia()){
+							if(m.getFilename().equals(videoFileName)){
+								t.mediaPlayed(PageWidget.this.module.getModId(), m.getDigest(), videoFileName);
+							}
+						}
+						
 						ctx.startActivity(intent);
 					} else {
 						// TODO lang string
@@ -100,7 +107,7 @@ public class PageWidget extends WidgetFactory {
 					intent.setData(data);
 					ctx.startActivity(intent);
 					// launch action in mobile browser - not the webview
-					// return true so doesn't follow link
+					// return true so doesn't follow link within webview
 					return true;
 				}
 
@@ -109,7 +116,22 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	public boolean isComplete(){
-		// TODO - only show as being complete if all the videos on this page have been played
+		// only show as being complete if all the videos on this page have been played
+		if(this.activity.hasMedia()){
+			ArrayList<Media> mediaList = this.activity.getMedia();
+			boolean completed = true;
+			DbHelper db = new DbHelper(this.ctx);
+			for (Media m: mediaList){
+				if(!db.digestInLog(this.module.getModId(), m.getDigest())){
+					completed = false;
+				}
+			}
+			db.close();
+			if(!completed){
+				return false;
+			}
+		}
+		
 		long endTimestamp = System.currentTimeMillis()/1000;
 		long diff = endTimestamp - startTimestamp;
 		if(diff >= MobileLearning.PAGE_READ_TIME){

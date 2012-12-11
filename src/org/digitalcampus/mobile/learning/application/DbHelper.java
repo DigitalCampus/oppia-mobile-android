@@ -395,4 +395,17 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { String.valueOf(modId) };
 		db.delete(MQUIZRESULTS_TABLE, s, args);
 	}
+	
+	public boolean digestInLog(int modId, String digest){
+		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_MODID + "=?";
+		String[] args = new String[] { digest, String.valueOf(modId) };
+		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+		if(c.getCount() == 0){
+			c.close();
+			return false;
+		} else {
+			c.close();
+			return true;
+		}
+	}
 }
