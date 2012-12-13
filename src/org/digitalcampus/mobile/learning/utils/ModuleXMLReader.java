@@ -23,6 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -217,6 +218,7 @@ public class ModuleXMLReader {
 				a.setActType(actType);
 				a.setModId(modId);
 				a.setSectionId(order);
+				a.setCompleted(db.digestInLog(modId, digest));				
 				
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
 				ArrayList<Lang> actLocations = new ArrayList<Lang>();

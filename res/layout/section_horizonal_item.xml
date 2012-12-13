@@ -2,32 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="106dp"
     android:layout_height="fill_parent"
+    android:layout_marginRight="5dp"
     android:orientation="vertical"
-    android:padding="3dp"
-    android:layout_marginRight="5dp">
+    android:padding="3dp" >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/activity_object"
-	    android:layout_width="100dp"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical"
-	    android:padding="4dp"
-	    android:background="@drawable/activity_background">
-    <ImageView
-        android:id="@+id/activity_image"
-        android:layout_width="48dip"
-        android:layout_height="48dip"
-        android:layout_margin="2dip"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/app_logo_alt"
-        android:src="@drawable/default_icon_activity" />
+        android:layout_width="100dp"
+        android:layout_height="fill_parent"
+        android:background="@drawable/activity_background"
+        android:orientation="vertical"
+        android:padding="4dp" >
 
-    <TextView
-        android:id="@+id/activity_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textSize="14dp"
-        android:textStyle="normal"/>
-</LinearLayout>
+        <ImageView
+            android:id="@+id/activity_image"
+            android:layout_width="48dip"
+            android:layout_height="48dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="2dip"
+            android:src="@drawable/default_icon_activity" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/activity_title"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="14dp"
+                android:textStyle="normal" />
+            
+            <ImageView
+                android:id="@+id/activity_completed_image"
+                android:layout_width="16dip"
+                android:layout_height="16dip"
+                android:layout_marginTop="2dip"
+                android:layout_marginRight="4dip"
+                android:gravity="center_horizontal"
+                android:src="@drawable/activity_completed"
+                android:visibility="gone"/>
+            
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>

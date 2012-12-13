@@ -55,16 +55,9 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    pb.setProgress((int) s.getProgress());
 	    
 	    rowView.setTag(sectionList.get(position));
+	   
 	    
-	    /* set image
-	    if(s.getImageFile() != null){
-	    	ImageView iv = (ImageView) rowView.findViewById(R.id.section_image);
-	    	String path = module.getLocation() + "/" + s.getImageFile();
-	    	Bitmap bm = ImageUtils.LoadBMPsdcard(path, ctx.getResources(), R.drawable.default_icon_section);
-	    	iv.setImageBitmap(bm);
-	    }*/
-	    
-	    // now set up the hozontal activity list
+	    // now set up the horizontal activity list
 	    LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);
 	    for(int i=0 ; i<s.getActivities().size(); i++){
 		    View horizRowItem = inflater.inflate(R.layout.section_horizonal_item, parent, false);
@@ -78,6 +71,11 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);
 	    	iv.setImageBitmap(s.getActivities().get(i).getImageFile(module.getLocation(), ctx.getResources()));
 	    	
+	    	// set if completed image
+	    	if(s.getActivities().get(i).getCompleted()){
+	    		ImageView ivc = (ImageView) horizRowItem.findViewById(R.id.activity_completed_image);
+	    		ivc.setVisibility(View.VISIBLE);
+	    	}
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
 	    	activityObject.setTag(R.id.TAG_SECTION_ID, s);
 	    	activityObject.setTag(R.id.TAG_PLACEHOLDER_ID, i);
