@@ -28,6 +28,7 @@ public class Activity implements Serializable{
 	private String digest;
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
+	private boolean completed = false;
 	
 	public Activity(){
 	}
@@ -154,5 +155,13 @@ public class Activity implements Serializable{
 		} else {
 			return true;
 		}
+	}
+	
+	public void setCompleted(boolean completed){
+		this.completed = completed;
+	}
+	
+	public boolean getCompleted(){
+		return this.completed;
 	}
 }
