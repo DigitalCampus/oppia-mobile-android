@@ -1,6 +1,9 @@
 package org.digitalcampus.mobile.learning.task;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,9 +26,12 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.TrackerLog;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -89,7 +95,17 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
                 client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, "mQuiz Android app: " + v);
                 
 				// make request
-				HttpResponse response = client.execute(httpPost);				
+				HttpResponse response = client.execute(httpPost);
+				
+				InputStream content = response.getEntity().getContent();
+				BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
+				String responseStr = "";
+				String s = "";
+
+				while ((s = buffer.readLine()) != null) {
+					responseStr += s;
+				}
+				Log.d(TAG,responseStr);
 				
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
@@ -98,6 +114,11 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 						db.markMQuizSubmitted(tl.id);
 						db.close();
 						payload.result = true;
+						// update points
+						JSONObject jsonResp = new JSONObject(responseStr);
+						Editor editor = prefs.edit();
+						editor.putInt("prefPoints", jsonResp.getInt("points"));
+				    	editor.commit();
 						break;
 					default:
 						payload.result = false;
@@ -116,6 +137,9 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (NameNotFoundException e) {
+				BugSenseHandler.log(TAG, e);
+				e.printStackTrace();
+			} catch (JSONException e) {
 				BugSenseHandler.log(TAG, e);
 				e.printStackTrace();
 			} 

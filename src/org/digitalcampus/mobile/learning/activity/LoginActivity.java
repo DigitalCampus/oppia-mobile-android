@@ -88,6 +88,8 @@ public class LoginActivity extends Activity implements SubmitListener  {
 			Editor editor = prefs.edit();
 	    	editor.putString("prefUsername", usernameField.getText().toString());
 	    	editor.putString("prefApiKey", u.api_key);
+	    	editor.putString("prefDisplayName", u.displayName);
+	    	editor.putInt("prefPoints", u.points);
 	    	editor.commit();
 	    	
 			// return to main activity

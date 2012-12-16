@@ -4,11 +4,15 @@ import java.io.File;
 
 import org.digitalcampus.mobile.learning.R;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.widget.TextView;
 
 public class MobileLearning extends Application {
 
@@ -84,5 +88,13 @@ public class MobileLearning extends Application {
 			}});
 		alertDialog.show();
     }
+	
+	public static void showUserData(Activity act){
+		TextView username = (TextView) act.findViewById(R.id.username);
+		TextView points = (TextView) act.findViewById(R.id.userpoints);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
+		username.setText(prefs.getString("prefDisplayName", ""));
+		points.setText(String.valueOf(prefs.getInt("prefPoints", 100)));
+	}
 
 }

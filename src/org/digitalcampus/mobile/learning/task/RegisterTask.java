@@ -39,8 +39,8 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 	private SharedPreferences prefs;
 	private SubmitListener mStateListener;
 
-	public RegisterTask(Context c) {
-		this.ctx = c;
+	public RegisterTask(Context ctx) {
+		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
@@ -102,6 +102,8 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 				case 201: // logged in
 					JSONObject jsonResp = new JSONObject(responseStr);
 					u.api_key = jsonResp.getString("api_key");
+					u.points = jsonResp.getInt("points");
+					u.displayName = u.firstname + " " +u.lastname;
 					payload.result = true;
 					payload.resultResponse = ctx.getString(R.string.register_complete);
 					break;

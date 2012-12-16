@@ -117,6 +117,8 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			imTask.setInstallerListener(this);
 			imTask.execute();
 		}
+		
+		MobileLearning.showUserData(this);
 	}
 
 	public void onDestroy() {
