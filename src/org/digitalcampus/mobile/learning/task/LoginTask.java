@@ -88,8 +88,6 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 			while ((s = buffer.readLine()) != null) {
 				responseStr += s;
 			}
-			Log.d(TAG,responseStr);
-			Log.d(TAG,String.valueOf(response.getStatusLine().getStatusCode()));
 			
 			// check status code
 			switch (response.getStatusLine().getStatusCode()){

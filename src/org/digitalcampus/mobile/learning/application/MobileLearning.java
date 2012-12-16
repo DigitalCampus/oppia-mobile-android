@@ -93,7 +93,8 @@ public class MobileLearning extends Application {
 		TextView username = (TextView) act.findViewById(R.id.username);
 		TextView points = (TextView) act.findViewById(R.id.userpoints);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
-		username.setText(prefs.getString("prefDisplayName", ""));
+		String uname = prefs.getString("prefUsername", "");
+		username.setText(prefs.getString("prefDisplayName", uname));
 		points.setText(String.valueOf(prefs.getInt("prefPoints", 100)));
 	}
 

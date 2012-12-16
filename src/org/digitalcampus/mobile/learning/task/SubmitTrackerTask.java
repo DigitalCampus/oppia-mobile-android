@@ -100,7 +100,6 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				while ((s = buffer.readLine()) != null) {
 					responseStr += s;
 				}
-				Log.d(TAG,responseStr);
 				
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
