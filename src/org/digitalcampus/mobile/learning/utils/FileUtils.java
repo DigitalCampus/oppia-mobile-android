@@ -113,7 +113,7 @@ public class FileUtils {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 			return false;
 		}
 

@@ -67,10 +67,9 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		BugSenseHandler.initAndStartSession(this, MobileLearning.BUGSENSE_API_KEY);
 		setContentView(R.layout.activity_main);
-
-		BugSenseHandler.setup(this, MobileLearning.BUGSENSE_API_KEY);
-
+		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);

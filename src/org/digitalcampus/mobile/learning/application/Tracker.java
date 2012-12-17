@@ -34,7 +34,7 @@ public class Tracker {
 			jsonObj.put("mediafile", media);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 		}
 		String data = jsonObj.toString();
 		db.insertLog(modId, digest, data);

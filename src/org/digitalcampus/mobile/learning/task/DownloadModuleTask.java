@@ -83,10 +83,10 @@ public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 				publishProgress(ctx.getString(R.string.download_complete));
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 
-				BugSenseHandler.log(TAG, e1);
+				BugSenseHandler.sendException(e1);
 			} catch (IOException e1) { 
 				e1.printStackTrace();
-				BugSenseHandler.log(TAG, e1);
+				BugSenseHandler.sendException(e1);
 			}
 		}
 		return null;

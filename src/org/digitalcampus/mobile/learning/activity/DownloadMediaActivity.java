@@ -154,10 +154,10 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 			f.close();
 			MobileLearning.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message,filename));
 		} catch (FileNotFoundException e) {
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 			e.printStackTrace();
 		} catch (IOException e) {
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 			e.printStackTrace();
 		}
 	}

@@ -336,7 +336,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				content = json.toString();
 			} catch (JSONException e) {
 				e.printStackTrace();
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 			}
 			
 			so.content  = content;

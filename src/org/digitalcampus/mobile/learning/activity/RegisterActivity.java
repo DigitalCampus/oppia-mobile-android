@@ -2,7 +2,6 @@ package org.digitalcampus.mobile.learning.activity;
 
 import java.util.ArrayList;
 
-import org.apache.commons.validator.EmailValidator;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.SubmitListener;
 import org.digitalcampus.mobile.learning.model.User;
@@ -92,10 +91,9 @@ public class RegisterActivity extends Activity implements SubmitListener {
 			return;
 		}
 				
-		// check valid email address format
-		boolean isValidEmail = EmailValidator.getInstance().isValid(email);
-		if (!isValidEmail) {
-			this.showAlert(getString(R.string.error), "Please enter a valid email address format", ONCLICK_TASK_NULL);
+		// TODO check valid email address format
+		if (email.length() == 0) {
+			this.showAlert(getString(R.string.error), "Please enter an email address", ONCLICK_TASK_NULL);
 			return;
 		}
 		// check password length

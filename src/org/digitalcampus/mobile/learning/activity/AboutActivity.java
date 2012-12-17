@@ -45,7 +45,7 @@ public class AboutActivity extends Activity {
 			versionNo.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 		}
 		
 	}

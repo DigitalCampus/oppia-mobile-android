@@ -86,7 +86,7 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 			MobileLearning.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
 		db.close();
@@ -101,7 +101,7 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 				json = new JSONObject(response.resultResponse);
 				refreshModuleList();
 			} catch (JSONException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				MobileLearning.showAlert(this, R.string.loading, R.string.error_connection);
 				e.printStackTrace();
 			}

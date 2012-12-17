@@ -99,12 +99,12 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				}
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 
-				BugSenseHandler.log(TAG, e1);
+				BugSenseHandler.sendException(e1);
 			} catch (IOException e1) { 
 				e1.printStackTrace();
-				BugSenseHandler.log(TAG, e1);
+				BugSenseHandler.sendException(e1);
 			} catch (NoSuchAlgorithmException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			}
 			

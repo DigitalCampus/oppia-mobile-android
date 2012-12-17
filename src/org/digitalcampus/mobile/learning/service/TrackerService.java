@@ -26,7 +26,7 @@ public class TrackerService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		BugSenseHandler.setup(this, MobileLearning.BUGSENSE_API_KEY);
+		BugSenseHandler.initAndStartSession(this,MobileLearning.BUGSENSE_API_KEY);
 	}
 
 	@Override

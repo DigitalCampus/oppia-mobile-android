@@ -111,21 +111,21 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 			payload.result = false;
 			payload.resultResponse = ctx.getString(R.string.error_connection);
 		} catch (ClientProtocolException e) {
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 			e.printStackTrace();
 			payload.result = false;
 			payload.resultResponse = ctx.getString(R.string.error_connection);
 		} catch (IOException e) {
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 			e.printStackTrace();
 			payload.result = false;
 			payload.resultResponse = ctx.getString(R.string.error_connection);
 		} catch (JSONException e) {
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 			e.printStackTrace();
 			payload.result = false;
 			payload.resultResponse = ctx.getString(R.string.error_processing_response);

@@ -118,19 +118,19 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				}
 
 			} catch (UnsupportedEncodingException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} catch (ClientProtocolException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} catch (IOException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} catch (NameNotFoundException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} catch (JSONException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			}
 		}

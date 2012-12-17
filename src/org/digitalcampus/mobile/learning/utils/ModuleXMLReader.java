@@ -23,7 +23,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -46,13 +45,13 @@ public class ModuleXMLReader {
 				document = builder.parse(moduleXML);
 
 			} catch (ParserConfigurationException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} catch (SAXException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} catch (IOException e) {
-				BugSenseHandler.log(TAG, e);
+				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			}
 		}

@@ -262,7 +262,7 @@ public class MQuizWidget extends WidgetFactory {
 			obj.put("quiz_id", mQuiz.getID());
 		} catch (JSONException e) {
 			e.printStackTrace();
-			BugSenseHandler.log(TAG, e);
+			BugSenseHandler.sendException(e);
 		}
 		
 		return obj;
