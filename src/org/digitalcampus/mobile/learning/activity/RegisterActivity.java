@@ -62,9 +62,9 @@ public class RegisterActivity extends Activity implements SubmitListener {
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString("prefUsername", usernameField.getText().toString());
-	    	editor.putString("prefApiKey", u.api_key);
-	    	editor.putString("prefDisplayName", u.displayName);
-	    	editor.putInt("prefPoints", u.points);
+	    	editor.putString("prefApiKey", u.getApi_key());
+	    	editor.putString("prefDisplayName", u.getDisplayName());
+	    	editor.putInt("prefPoints", u.getPoints());
 	    	editor.commit();
 
 			showAlert("Register", "Registration successful", ONCLICK_TASK_REGISTERED);
@@ -126,12 +126,12 @@ public class RegisterActivity extends Activity implements SubmitListener {
 
 		ArrayList<Object> users = new ArrayList<Object>();
     	User u = new User();
-		u.username = username;
-		u.password = password;
-		u.passwordAgain = passwordAgain;
-		u.firstname = firstname;
-		u.lastname = lastname;
-		u.email = email;
+		u.setUsername(username);
+		u.setPassword(password);
+		u.setPasswordAgain(passwordAgain);
+		u.setFirstname(firstname);
+		u.setLastname(lastname);
+		u.setEmail(email);
 		users.add(u);
 		Payload p = new Payload(0, users);
 		RegisterTask lt = new RegisterTask(this);

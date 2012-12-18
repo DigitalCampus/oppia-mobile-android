@@ -67,15 +67,15 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 			// update progress dialog
 			// TODO lang string
 			publishProgress(ctx.getString(R.string.register_process));
-			Log.d(TAG, "Registering... " + u.username);
+			Log.d(TAG, "Registering... " + u.getUsername());
 			// add post params
 			JSONObject json = new JSONObject();
-			json.put("username", u.username);
-            json.put("password", u.password);
-            json.put("passwordagain",u.passwordAgain);
-            json.put("email",u.email);
-            json.put("firstname",u.firstname);
-            json.put("lastname",u.lastname);
+			json.put("username", u.getUsername());
+            json.put("password", u.getPassword());
+            json.put("passwordagain",u.getPasswordAgain());
+            json.put("email",u.getEmail());
+            json.put("firstname",u.getFirstname());
+            json.put("lastname",u.getLastname());
             StringEntity se = new StringEntity(json.toString());
             se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             httpPost.setEntity(se);
@@ -100,9 +100,10 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 					break;
 				case 201: // logged in
 					JSONObject jsonResp = new JSONObject(responseStr);
-					u.api_key = jsonResp.getString("api_key");
-					u.points = jsonResp.getInt("points");
-					u.displayName = u.firstname + " " +u.lastname;
+					u.setApi_key(jsonResp.getString("api_key"));
+					u.setPoints(jsonResp.getInt("points"));
+					u.setFirstname(jsonResp.getString("first_name"));
+					u.setLastname(jsonResp.getString("last_name"));
 					payload.result = true;
 					payload.resultResponse = ctx.getString(R.string.register_complete);
 					break;

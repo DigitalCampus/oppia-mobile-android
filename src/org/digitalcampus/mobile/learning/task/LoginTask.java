@@ -68,10 +68,10 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 		try {
 			// update progress dialog
 			publishProgress(ctx.getString(R.string.login_process));
-			Log.d(TAG,"logging in ...." + u.username);
+			Log.d(TAG,"logging in ...." + u.getUsername());
 			// add post params
-			json.put("username", u.username);
-            json.put("password", u.password);
+			json.put("username", u.getUsername());
+            json.put("password", u.getPassword());
             StringEntity se = new StringEntity( json.toString());
             se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             httpPost.setEntity(se);
@@ -97,9 +97,10 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 					break;
 				case 201: // logged in
 					JSONObject jsonResp = new JSONObject(responseStr);
-					u.api_key = jsonResp.getString("api_key");
-					u.displayName = jsonResp.getString("first_name") + " " + jsonResp.getString("last_name");
-					u.points = jsonResp.getInt("points");
+					u.setApi_key(jsonResp.getString("api_key"));
+					u.setFirstname(jsonResp.getString("first_name"));
+					u.setLastname(jsonResp.getString("last_name"));
+					u.setPoints(jsonResp.getInt("points"));
 					payload.result = true;
 					payload.resultResponse = ctx.getString(R.string.login_complete);
 					break;

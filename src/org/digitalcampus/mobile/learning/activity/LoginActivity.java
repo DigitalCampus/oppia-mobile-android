@@ -61,8 +61,8 @@ public class LoginActivity extends Activity implements SubmitListener  {
         
     	ArrayList<Object> users = new ArrayList<Object>();
     	User u = new User();
-    	u.username = username;
-    	u.password = password;
+    	u.setUsername(username);
+    	u.setPassword(password);
     	users.add(u);
     	
     	Payload p = new Payload(0,users);
@@ -87,9 +87,9 @@ public class LoginActivity extends Activity implements SubmitListener  {
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString("prefUsername", usernameField.getText().toString());
-	    	editor.putString("prefApiKey", u.api_key);
-	    	editor.putString("prefDisplayName", u.displayName);
-	    	editor.putInt("prefPoints", u.points);
+	    	editor.putString("prefApiKey", u.getApi_key());
+	    	editor.putString("prefDisplayName", u.getDisplayName());
+	    	editor.putInt("prefPoints", u.getPoints());
 	    	editor.commit();
 	    	
 			// return to main activity
