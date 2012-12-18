@@ -7,7 +7,7 @@ import org.digitalcampus.mobile.learning.activity.DownloadActivity;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.DownloadModuleTask;
-import org.digitalcampus.mobile.learning.task.InstallModulesTask;
+import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.R;
 
@@ -97,7 +97,7 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 	public void downloadComplete() {
 		myProgress.setMessage(ctx.getString(R.string.download_complete));
 		// now set task to install
-		InstallModulesTask imTask = new InstallModulesTask(ctx);
+		InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(ctx);
 		imTask.setInstallerListener(DownloadListAdapter.this);
 		imTask.execute();
 	}

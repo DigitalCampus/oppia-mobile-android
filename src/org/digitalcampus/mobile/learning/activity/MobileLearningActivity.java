@@ -17,7 +17,7 @@ import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.service.TrackerService;
-import org.digitalcampus.mobile.learning.task.InstallModulesTask;
+import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.ScanMediaTask;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
@@ -112,7 +112,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		File dir = new File(MobileLearning.DOWNLOAD_PATH);
 		String[] children = dir.list();
 		if (children != null) {
-			InstallModulesTask imTask = new InstallModulesTask(MobileLearningActivity.this);
+			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(MobileLearningActivity.this);
 			imTask.setInstallerListener(this);
 			imTask.execute();
 		}
