@@ -52,10 +52,9 @@ public class LoginActivity extends Activity implements SubmitListener  {
     	String password = passwordField.getText().toString();
     	
     	// show progress dialog
-    	// TODO set proper lang strings
         pDialog = new ProgressDialog(this);
         pDialog.setTitle(R.string.title_login);
-        pDialog.setMessage("Logging in...");
+        pDialog.setMessage(this.getString(R.string.login_process));
         pDialog.setCancelable(true);
         pDialog.show();
         

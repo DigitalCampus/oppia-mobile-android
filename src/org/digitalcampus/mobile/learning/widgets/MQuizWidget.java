@@ -163,8 +163,7 @@ public class MQuizWidget extends WidgetFactory {
 
 	private void showFeedback(String msg) {
 		AlertDialog.Builder builder = new AlertDialog.Builder((android.app.Activity) this.ctx);
-		// TODO change to proper strings
-		builder.setTitle("Feedback");
+		builder.setTitle(ctx.getString(R.string.feedback));
 		builder.setMessage(msg);
 		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 

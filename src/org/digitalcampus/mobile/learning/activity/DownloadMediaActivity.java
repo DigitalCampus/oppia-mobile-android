@@ -106,7 +106,6 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 			return;
 		}
 		
-		// TODO how to kill the task...
 		// show progress dialog
 		pDialog = new ProgressDialog(this);
 		pDialog.setTitle(R.string.downloading);
@@ -116,17 +115,11 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 		pDialog.setMax(100);
 		pDialog.setCancelable(false);
 		pDialog.show();
-		
-	
+
 		task = new DownloadMediaTask(this);
 		Payload p = new Payload(0,missingMedia);
 		task.setDownloadListener(this);
 		task.execute(p);
-		/*pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			public void onCancel(DialogInterface dialog) {
-				task.cancel(true);
-			}
-		});*/
 	}
 	
 	private void downloadViaPC(){

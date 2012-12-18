@@ -177,7 +177,6 @@ public class ModuleActivity extends Activity {
     }
     
     private boolean markIfComplete(String digest){
-    	// TODO also check any media has been played
     	if(currentActivity != null && currentActivity.isComplete()){
     		Tracker t = new Tracker(this);
     		JSONObject json = currentActivity.getActivityCompleteData();

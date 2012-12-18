@@ -153,14 +153,12 @@ public class ModuleXMLReader {
 		for (int i=0; i<s.getLength(); i++) {
 			// get the id and acts
 			NamedNodeMap sectionAttrs = s.item(i).getAttributes();
-			//TODO add error checking with conversion to ints
 			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("order").getTextContent());
 			NodeList activities = s.item(i).getLastChild().getChildNodes();
 			for (int j=0; j<activities.getLength(); j++) {
 				
 				NamedNodeMap activityAttrs = activities.item(j).getAttributes();
 				String actType = activityAttrs.getNamedItem("type").getTextContent();
-				//TODO add error checking with conversion to ints
 				int actId = Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent());
 				String digest = activityAttrs.getNamedItem("digest").getTextContent();
 				Activity a = new Activity();

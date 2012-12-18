@@ -97,8 +97,7 @@ public class PageWidget extends WidgetFactory {
 						
 						ctx.startActivity(intent);
 					} else {
-						// TODO lang string
-						Toast.makeText(ctx, "Media file: '" + videoFileName + "' not found.", Toast.LENGTH_LONG).show();
+						Toast.makeText(ctx, ctx.getString(R.string.error_media_not_found,videoFileName), Toast.LENGTH_LONG).show();
 					}
 					return true;
 				} else {

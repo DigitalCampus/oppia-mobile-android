@@ -65,7 +65,6 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 		HttpPost httpPost = new HttpPost(url);
 		try {
 			// update progress dialog
-			// TODO lang string
 			publishProgress(ctx.getString(R.string.register_process));
 			Log.d(TAG, "Registering... " + u.getUsername());
 			// add post params

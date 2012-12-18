@@ -84,6 +84,7 @@
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
 	<string name="logout">Logout</string>
+	<string name="feedback">Feedback</string>
 	
 	<string name="update">Update</string>
 	<string name="installed">Installed</string>
@@ -116,6 +117,7 @@
 	<string name="error_login">Invalid username/password\nPlease try again</string>
 	<string name="error_register">Error registering</string>
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
+	<string name="error_media_not_found">Media file: \'%1$d\' not found.</string>
 	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
 	
 	<string name="loading_module_list">Getting list of modules</string>
