@@ -112,17 +112,14 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 			}
 
 		} catch (UnsupportedEncodingException e) {
-			BugSenseHandler.sendException(e);
 			e.printStackTrace();
 			payload.result = false;
 			payload.resultResponse = ctx.getString(R.string.error_connection);
 		} catch (ClientProtocolException e) {
-			BugSenseHandler.sendException(e);
 			e.printStackTrace();
 			payload.result = false;
 			payload.resultResponse = ctx.getString(R.string.error_connection);
 		} catch (IOException e) {
-			BugSenseHandler.sendException(e);
 			e.printStackTrace();
 			payload.result = false;
 			payload.resultResponse = ctx.getString(R.string.error_connection);

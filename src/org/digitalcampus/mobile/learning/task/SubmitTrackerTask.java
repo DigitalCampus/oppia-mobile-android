@@ -118,13 +118,10 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				}
 
 			} catch (UnsupportedEncodingException e) {
-				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} catch (ClientProtocolException e) {
-				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} catch (IOException e) {
-				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} catch (NameNotFoundException e) {
 				BugSenseHandler.sendException(e);
