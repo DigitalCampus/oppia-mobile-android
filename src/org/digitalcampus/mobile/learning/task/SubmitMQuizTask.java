@@ -116,6 +116,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 						JSONObject jsonResp = new JSONObject(responseStr);
 						Editor editor = prefs.edit();
 						editor.putInt("prefPoints", jsonResp.getInt("points"));
+						editor.putInt("prefBadges", jsonResp.getInt("badges"));
 				    	editor.commit();
 						break;
 					default:

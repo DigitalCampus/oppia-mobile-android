@@ -17,10 +17,10 @@
 
         <ImageView
             android:id="@+id/activity_image"
-            android:layout_width="85dip"
-            android:layout_height="48dip"
+            android:layout_width="70dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="2dip"
+            android:layout_margin="0dp"
             android:src="@drawable/default_icon_activity" />
 
         <LinearLayout

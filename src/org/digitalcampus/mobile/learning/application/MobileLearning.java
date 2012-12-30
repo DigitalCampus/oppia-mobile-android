@@ -92,10 +92,12 @@ public class MobileLearning extends Application {
 	public static void showUserData(Activity act){
 		TextView username = (TextView) act.findViewById(R.id.username);
 		TextView points = (TextView) act.findViewById(R.id.userpoints);
+		TextView badges = (TextView) act.findViewById(R.id.userbadges);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
 		String uname = prefs.getString("prefUsername", "");
 		username.setText(prefs.getString("prefDisplayName", uname));
 		points.setText(String.valueOf(prefs.getInt("prefPoints", 100)));
+		badges.setText(String.valueOf(prefs.getInt("prefBadges", 0)));
 	}
 
 }

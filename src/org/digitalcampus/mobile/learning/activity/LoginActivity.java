@@ -89,6 +89,7 @@ public class LoginActivity extends Activity implements SubmitListener  {
 	    	editor.putString("prefApiKey", u.getApi_key());
 	    	editor.putString("prefDisplayName", u.getDisplayName());
 	    	editor.putInt("prefPoints", u.getPoints());
+	    	editor.putInt("prefBadges", u.getBadges());
 	    	editor.commit();
 	    	
 			// return to main activity

@@ -9,8 +9,8 @@ public class User {
 	private String firstname;
 	private String lastname;
 	private String api_key;
-	private int points;
-	private int badges;
+	private int points = 0;
+	private int badges = 0;
 	
 	public String getUsername() {
 		return username;

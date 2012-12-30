@@ -65,6 +65,7 @@ public class RegisterActivity extends Activity implements SubmitListener {
 	    	editor.putString("prefApiKey", u.getApi_key());
 	    	editor.putString("prefDisplayName", u.getDisplayName());
 	    	editor.putInt("prefPoints", u.getPoints());
+	    	editor.putInt("prefBadges", u.getBadges());
 	    	editor.commit();
 
 			showAlert("Register", "Registration successful", ONCLICK_TASK_REGISTERED);

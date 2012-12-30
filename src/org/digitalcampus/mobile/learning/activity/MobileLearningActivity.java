@@ -16,7 +16,6 @@ import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
 import org.digitalcampus.mobile.learning.model.Module;
-import org.digitalcampus.mobile.learning.service.TrackerService;
 import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.ScanMediaTask;
@@ -25,16 +24,12 @@ import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -95,7 +90,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 			builder.show();
 		}
 
-		doBindService();
+		//doBindService();
 	}
 
 	@Override
@@ -120,8 +115,8 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		MobileLearning.showUserData(this);
 	}
 
-	public void onDestroy() {
-		unbindService(mConnection);
+	/*public void onDestroy() {
+		//unbindService(mConnection);
 		super.onDestroy();
 	}
 
@@ -139,7 +134,7 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 	void doBindService() {
 		Intent i = new Intent(this, TrackerService.class);
 		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
-	}
+	}*/
 
 	private void displayModules() {
 

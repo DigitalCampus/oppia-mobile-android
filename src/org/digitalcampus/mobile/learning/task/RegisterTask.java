@@ -101,6 +101,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 					JSONObject jsonResp = new JSONObject(responseStr);
 					u.setApi_key(jsonResp.getString("api_key"));
 					u.setPoints(jsonResp.getInt("points"));
+					u.setBadges(jsonResp.getInt("badges"));
 					u.setFirstname(jsonResp.getString("first_name"));
 					u.setLastname(jsonResp.getString("last_name"));
 					payload.result = true;
