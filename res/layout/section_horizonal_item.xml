@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/activity_image"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="0dp"
@@ -31,10 +31,10 @@
 
             <TextView
                 android:id="@+id/activity_title"
-                android:layout_width="80dp"
+                android:layout_width="84dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textSize="14dp"
+                android:textSize="12dp"
                 android:textStyle="normal" />
             
             <ImageView
