@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.Tracker;
 import org.digitalcampus.mobile.learning.model.Module;
@@ -14,7 +15,6 @@ import org.digitalcampus.mobile.learning.service.TrackerService;
 import org.digitalcampus.mobile.learning.widgets.MQuizWidget;
 import org.digitalcampus.mobile.learning.widgets.PageWidget;
 import org.digitalcampus.mobile.learning.widgets.WidgetFactory;
-import org.digitalcampus.mobile.learning.R;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -26,13 +26,17 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ModuleActivity extends Activity {
+public class ModuleActivity extends Activity{
 
 	public static final String TAG = "ModuleActivity";
 	private Section section;
@@ -43,6 +47,12 @@ public class ModuleActivity extends Activity {
 	
 	private HashMap<String, String> langMap = new HashMap<String, String>();
 	private String[] langArray;
+	
+	private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    private GestureDetector pageGestureDetector;
+    View.OnTouchListener pageGestureListener;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +67,14 @@ public class ModuleActivity extends Activity {
         	module = (Module) bundle.getSerializable(Module.TAG);
         	currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
         }
+        
+        // Gesture detection
+        pageGestureDetector = new GestureDetector(new PageGestureDetector());
+        pageGestureListener = new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                return pageGestureDetector.onTouchEvent(event);
+            }
+        };
     }
     
     @Override
@@ -120,10 +138,11 @@ public class ModuleActivity extends Activity {
     	
     	if(acts.get(this.currentActivityNo).getActType().equals("page")){
     		currentActivity = new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+    		WebView wv = (WebView) this.findViewById(R.id.page_webview);
+    		wv.setOnTouchListener(pageGestureListener);
     	}
     	if(acts.get(this.currentActivityNo).getActType().equals("quiz")){
     		currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
-    		
     	}
     	this.setUpNav();
     }
@@ -135,10 +154,7 @@ public class ModuleActivity extends Activity {
     		prevB.setEnabled(true);
     		prevB.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
-             		ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
-             		markIfComplete(acts.get(currentActivityNo).getDigest());
-             		currentActivityNo--;
-             		loadActivity();
+             		movePrev();
              	}
              });
     	} else {
@@ -149,10 +165,7 @@ public class ModuleActivity extends Activity {
     		nextB.setEnabled(true);
     		nextB.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
-             		ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
-             		markIfComplete(acts.get(currentActivityNo).getDigest());
-             		currentActivityNo++;
-             		loadActivity();
+             		moveNext();
              	}
              });
     	} else {
@@ -174,6 +187,20 @@ public class ModuleActivity extends Activity {
     	} else {
     		return true;
     	}
+    }
+    
+    private void moveNext(){
+    	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
+ 		markIfComplete(acts.get(currentActivityNo).getDigest());
+ 		currentActivityNo++;
+ 		loadActivity();
+    }
+    
+    private void movePrev(){
+    	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
+ 		markIfComplete(acts.get(currentActivityNo).getDigest());
+ 		currentActivityNo--;
+ 		loadActivity();
     }
     
     private boolean markIfComplete(String digest){
@@ -234,4 +261,28 @@ public class ModuleActivity extends Activity {
 				}).create();
 		mAlertDialog.show();
 	}
+    
+    class PageGestureDetector extends SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                    return false;
+                // right to left swipe
+                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                	if(ModuleActivity.this.hasNext()){
+                		ModuleActivity.this.moveNext();
+                	}
+                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                	if(ModuleActivity.this.hasPrev()){
+                		ModuleActivity.this.movePrev();
+                	}
+                }
+            } catch (Exception e) {
+                // nothing
+            }
+            return false;
+        }
+
+    }
 }
