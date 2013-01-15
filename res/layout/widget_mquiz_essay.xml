@@ -5,5 +5,6 @@
 		<EditText android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:gravity="left"
 				android:textSize="20sp" 
-				android:id="@+id/responsetext"/>
+				android:id="@+id/responsetext"
+				android:inputType="textMultiLine"/>
 </LinearLayout>

@@ -22,7 +22,6 @@ import org.digitalcampus.mobile.learning.task.ScanMediaTask;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -49,7 +48,7 @@ import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class MobileLearningActivity extends Activity implements InstallModuleListener,
+public class MobileLearningActivity extends AppActivity implements InstallModuleListener,
 		OnSharedPreferenceChangeListener, ScanMediaListener {
 
 	public static final String TAG = "MobileLearningActivity";
@@ -64,6 +63,8 @@ public class MobileLearningActivity extends Activity implements InstallModuleLis
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(this, MobileLearning.BUGSENSE_API_KEY);
 		setContentView(R.layout.activity_main);
+		
+		this.drawHeader();
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);

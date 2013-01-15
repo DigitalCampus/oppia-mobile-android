@@ -15,14 +15,14 @@ import org.digitalcampus.mobile.learning.task.Payload;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class DownloadActivity extends Activity implements GetModuleListListener {
+public class DownloadActivity extends AppActivity implements GetModuleListListener {
 
 	public static final String TAG = "DownloadActivity";
 
@@ -33,6 +33,10 @@ public class DownloadActivity extends Activity implements GetModuleListListener 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
+		this.drawHeader();
+		
+		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
+		tv.setText(R.string.title_download_activity);
 		// Get Module list
 		getModuleList();
 	}

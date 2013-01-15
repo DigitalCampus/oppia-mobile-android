@@ -9,19 +9,20 @@
     <string name="menu_settings">Ajustes</string>
     <string name="menu_about">Sobre</string>
     <string name="menu_module_about">Sobre el curso</string>
-    <string name="menu_activity_about">Sobre</string>
     <string name="menu_help">Ayuda</string>
+    <string name="menu_logout">Logout</string>
+    
     <string name="service_tracker">DC buscador de servicio</string>
     <string name="title_about">Sobre</string>
     <string name="title_help">Ayuda</string>
      
-    <string name="title_activity_main">Digital Campus Training</string>
     <string name="title_activity_module_index">Indice del curso</string>
     <string name="title_activity_module">Actividad</string>
     <string name="title_download_activity">Gestionar cursos</string>
     <string name="title_prefs">Ajustes</string>
     <string name="version">Version: %1$s</string>
     <string name="title_module_about">Sobre el curso</string>
+    <string name="title_download_media">Download Media</string>
     
     <string name="activity_module_button_prev">&lt;</string>
     <string name="activity_module_button_next">&gt;</string>
@@ -43,8 +44,6 @@
  	<string name="no_modules">No hay cursos instalados</string>
  	
  	<string name="prefServer">Servidor</string>
-	<string name="prefUsername">Usuario</string>
-	<string name="prefPassword">Contraseña</string>
 	<string name="prefServerDefault">http://mquiz.org/</string>
 	<string name="prefLanguage">Idioma preferido</string>
 	<string name="prefAdvanced">Configuración avanzada</string>
@@ -75,9 +74,15 @@
 	<string name="no">No</string>
 	<string name="close">Cerrar</string>
 	<string name="error">Error</string>
+	<string name="info">Info</string>
+	<string name="warning">Warning</string>
 	<string name="loading">Cargando</string>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancelar</string>
+	<string name="logout">Logout</string>
+	<string name="feedback">Feedback</string>
+	
+	<string name="alt_activity_icon">Activity icon</string>
 	
 	<string name="update">Actualización</string>
 	<string name="installed">Instalado</string>
@@ -87,29 +92,44 @@
 	<string name="downloading">Descargando..</string>
 	<string name="download_complete">Descarga completa</string>
 	
-	<string name="install_starting">Inicio instala</string>
 	<string name="installing">Instalando el curso</string>
 	<string name="installing_module">Instalando: %1$s</string>
 	<string name="install_complete">Instalación completa</string>
 	
 	<string name="install_module_complete">%1$s: instalado</string>
 	
+	<string name="info_scan_media_start">Scanning for media</string>
+	<string name="info_scan_media_checking">Checking for: %1$s</string>
+	<string name="info_scan_media_missing">Some media files (videos etc) are missing for your modules.</string>
+	
+	<string name="scan_media_download_button">Download</string>
+	<string name="scan_media_download_via_pc_button">Download via PC</string>
+	
 	<string name="error_connection">Error conectando al servidor</string>
 	<string name="error_processing_response">Error procesando respuesta</string>
 	<string name="error_no_username">Porfavor, introduzca un usuario</string>
-	<string name="error_password_length">Su contraseña debe ser %1$d caracteres o más</string>
 	<string name="error_installing_module">%1$s: no se pudo instalar</string>
 	<string name="error_latest_already_installed">%1$s: ultima versión ya está instalada</string>
 	<string name="error_login">Error en el acceso</string>
-	<string name="error_register">Identtificación errónea</string>
+	
+	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
+	<string name="error_media_not_found">Media file: \'%1$d\' not found.</string>
+	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
 	
 	<string name="loading_module_list">Obteniendo la lista de cursos</string>
 	
 	<string name="login_process">Accediendo</string>
 	<string name="login_complete">Registrado</string>
 	
+	<string name="logout_confirm">Are you sure you want to logout?\n\nLogging out will remove all your activity logs from this phone. You will need an active internet connection to log in again.</string>
+	
 	<string name="register_process">Identificando</string>
 	<string name="register_complete">Identificación correcta</string>
 	
 	<string name="change_language">Cambiar idioma</string>
+	
+	<string name="download_via_pc_message">A small file \'%1$s\' has been placed on your phone SD card, open this on your computer and follow the instructions to download the media files and copy them to onto your phone SD card.</string>
+	<string name="download_via_pc_title">Download Media Files</string>
+	<string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
+	<string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
 </resources>

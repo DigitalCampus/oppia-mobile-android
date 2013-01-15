@@ -9,7 +9,6 @@ import org.digitalcampus.mobile.learning.model.User;
 import org.digitalcampus.mobile.learning.task.LoginTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,7 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-public class LoginActivity extends Activity implements SubmitListener  {
+public class LoginActivity extends AppActivity implements SubmitListener  {
 
 	public static final String TAG = "LoginActivity";
 	private SharedPreferences prefs;
@@ -35,6 +34,8 @@ public class LoginActivity extends Activity implements SubmitListener  {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		this.drawHeader();
+		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		usernameField = (EditText) findViewById(R.id.login_username_field);

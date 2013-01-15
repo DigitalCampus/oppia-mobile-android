@@ -17,9 +17,6 @@ import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.task.DownloadMediaTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 
-import com.bugsense.trace.BugSenseHandler;
-
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Paint;
@@ -34,7 +31,9 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
 
-public class DownloadMediaActivity extends Activity implements DownloadMediaListener{
+import com.bugsense.trace.BugSenseHandler;
+
+public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener{
 
 	public static final String TAG = "DownloadMediaActivity";
 	private ArrayList<Object> missingMedia = new ArrayList<Object>();
@@ -46,6 +45,8 @@ public class DownloadMediaActivity extends Activity implements DownloadMediaList
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download_media);
+		this.drawHeader();
+		
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			missingMedia = (ArrayList<Object>) bundle.getSerializable(DownloadMediaActivity.TAG);

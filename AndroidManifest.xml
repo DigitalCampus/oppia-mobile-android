@@ -20,10 +20,10 @@
     <application
         android:icon="@drawable/dc_logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme.Light" >
         <activity
             android:name=".activity.MobileLearningActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,6 +64,12 @@
          <activity
             android:name=".activity.DownloadMediaActivity"
             android:label="@string/title_download_media" />
+         <activity
+            android:name=".widgets.PageWidget"
+            android:label="@string/title_activity_module" />
+         <activity
+            android:name=".widgets.MQuizWidget"
+            android:label="@string/title_activity_module" />
         <service
             android:name=".service.TrackerService"
             android:icon="@drawable/dc_logo"

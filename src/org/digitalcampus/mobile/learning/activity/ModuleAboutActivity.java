@@ -6,11 +6,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.ModuleAboutAdapter;
 import org.digitalcampus.mobile.learning.model.Module;
-import org.digitalcampus.mobile.learning.R;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,7 +17,7 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ModuleAboutActivity extends Activity {
+public class ModuleAboutActivity extends AppActivity {
 
 	public static final String TAG = "ModuleAboutActivity";
 	private Module module;
@@ -28,7 +27,7 @@ public class ModuleAboutActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_module_about);
-		
+		this.drawHeader();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		Bundle bundle = this.getIntent().getExtras();

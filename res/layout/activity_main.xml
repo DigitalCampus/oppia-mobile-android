@@ -2,11 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@drawable/background_dark">
 
-    <include
-        android:id="@+id/header"
-        layout="@layout/header" />
+    <org.digitalcampus.mobile.learning.application.Header android:id="@+id/header" android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="40dp"
+        android:background="@drawable/green_background_gradient" 
+        android:orientation="horizontal"/>
+   
 
     <include
         android:id="@+id/userdata"
@@ -57,7 +61,8 @@
             android:layout_margin="2dip"
             android:gravity="center"
             android:text="@string/no_modules"
-            android:textSize="20dp" />
+            android:textSize="18dp" 
+            android:textColor="@drawable/text_light"/>
 
         <Button
             android:id="@+id/manage_modules_btn"
@@ -66,13 +71,16 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:text="@string/title_download_activity"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/module_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:listSelector="@drawable/background" />
+        android:listSelector="@drawable/background_change_pressed" 
+        android:background="@drawable/background_dark"
+        android:divider="@drawable/list_divider"
+        android:dividerHeight="1dp"/>
 
 </LinearLayout>

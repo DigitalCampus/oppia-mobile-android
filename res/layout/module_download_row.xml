@@ -18,14 +18,16 @@
             android:id="@+id/module_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textSize="18dp"
+            android:textStyle="normal" 
+            android:textColor="@drawable/text_light" />
 
         <TextView
             android:id="@+id/module_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10dp" />
+            android:textSize="8dp"
+            android:textColor="@drawable/text_light" />
     </LinearLayout>
 
     <Button

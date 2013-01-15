@@ -17,7 +17,6 @@ import org.digitalcampus.mobile.learning.widgets.PageWidget;
 import org.digitalcampus.mobile.learning.widgets.WidgetFactory;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,7 +35,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ModuleActivity extends Activity{
+public class ModuleActivity extends AppActivity{
 
 	public static final String TAG = "ModuleActivity";
 	private Section section;
@@ -58,6 +57,7 @@ public class ModuleActivity extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module);
+        this.drawHeader();
         
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         

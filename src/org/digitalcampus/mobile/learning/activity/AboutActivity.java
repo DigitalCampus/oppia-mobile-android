@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 
 import org.digitalcampus.mobile.learning.R;
 
-import android.app.Activity;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Paint;
 import android.os.Build;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends AppActivity {
 
 	public static final String TAG = "AboutActivity";
 	
@@ -23,6 +22,7 @@ public class AboutActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
+		this.drawHeader();
 		
 		WebView wv = (WebView) findViewById(R.id.about_webview);
 		wv.setBackgroundColor(0x00000000);

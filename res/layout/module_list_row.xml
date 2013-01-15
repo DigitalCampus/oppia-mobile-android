@@ -12,25 +12,25 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:weightSum="1.0" >
-        
-    <ImageView
-        android:id="@+id/module_image"
-        android:layout_width="48dip"
-        android:layout_height="48dip"
-        android:layout_margin="4dip"
-        android:contentDescription="@string/app_logo_alt"
-        android:src="@drawable/default_icon_module" />
 
-    <TextView
-        android:id="@+id/module_title"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="20dp"
-        android:textStyle="bold" 
-        android:gravity="center_vertical"/>
-    
-	</LinearLayout>
-	
+        <ImageView
+            android:id="@+id/module_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/app_logo_alt"
+            android:src="@drawable/default_icon_module" />
+
+        <TextView
+            android:id="@+id/module_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@drawable/text_light"
+            android:textSize="18dp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/module_progress_bar"
         style="@android:style/Widget.ProgressBar.Horizontal"

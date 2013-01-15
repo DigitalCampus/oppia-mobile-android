@@ -29,8 +29,13 @@ public class Activity implements Serializable{
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
 	private boolean completed = false;
+	private boolean customImage = false;
 	
 	public Activity(){
+	}
+	
+	public boolean hasCustomImage(){
+		return this.customImage;
 	}
 	
 	public Bitmap getImageFile(String prefix, Resources res) {
@@ -48,6 +53,7 @@ public class Activity implements Serializable{
 
 	public void setImageFile(String imageFile) {
 		this.imageFile = imageFile;
+		this.customImage = true;
 	}
 	
 	public ArrayList<Media> getMedia() {

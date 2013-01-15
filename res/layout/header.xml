@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/background_gradient" >
 
         <ImageView
-            android:id="@+id/icon"
-            android:layout_width="48dip"
-            android:layout_height="48dip"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="2dip"
+            android:id="@+id/page_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="4dp"
             android:contentDescription="@string/app_logo_alt"
-            android:src="@drawable/dc_logo" />
+            android:src="@drawable/dc_logo"/>
 
         <TextView
+            android:id="@+id/page_title"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_margin="2dip"
-            android:layout_toRightOf="@id/icon"
-            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_gravity="center_vertical"
             android:text="@string/app_name"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
+            android:textSize="18dp"
+            android:textStyle="bold" 
+            android:textColor="@drawable/text_dark"/>
 </merge>

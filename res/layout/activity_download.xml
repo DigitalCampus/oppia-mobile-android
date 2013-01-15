@@ -1,34 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background_dark"
     android:orientation="vertical" >
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <org.digitalcampus.mobile.learning.application.Header
+        android:id="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_gradient"
-        android:minHeight="50dp"
-        android:orientation="horizontal" >
+        android:background="@drawable/green_background_gradient"
+        android:minHeight="40dp"
+        android:orientation="horizontal" />
 
-        <TextView
-            android:text="@string/menu_download"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".8" 
-            android:padding="@dimen/padding_medium"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            
-            />
-    </LinearLayout>
-
-    <ListView  
-         android:id="@+id/module_list"
-         android:layout_width="fill_parent" 
-         android:layout_height="wrap_content" 
-         />
+    <ListView
+        android:id="@+id/module_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/list_divider"
+        android:dividerHeight="1dp" />
 
 </LinearLayout>

@@ -1,15 +1,14 @@
 <resources>
 	<!-- TODO - organise these a bit better -->
     <string name="app_name">Mobile Learning</string>
-    <string name="app_logo_alt">DC Logo</string>
-    <string name="app_tagline">by Digital Campus</string>
+    <string name="app_logo_alt">Digital Campus Logo</string>
+    <string name="app_tagline">Mobile Learning by Digital Campus</string>
     
     <string name="menu_download">Manage Modules</string>
     <string name="menu_language">Change language</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_about">About</string>
     <string name="menu_module_about">About Module</string>
-    <string name="menu_activity_about">About</string>
     <string name="menu_help">Help</string>
     <string name="menu_logout">Logout</string>
     
@@ -17,7 +16,6 @@
     <string name="title_about">About</string>
     <string name="title_help">Help</string>
      
-    <string name="title_activity_main">Digital Campus Training</string>
     <string name="title_activity_module_index">Module Index</string>
     <string name="title_activity_module">Activity</string>
     <string name="title_download_activity">Manage Modules</string>
@@ -46,8 +44,6 @@
  	<string name="no_modules">There are no modules currently installed</string>
  	
  	<string name="prefServer">Server</string>
-	<string name="prefUsername">Username</string>
-	<string name="prefApiKey">API Key</string>
 	<string name="prefServerDefault">http://mquiz.org/</string>
 	<string name="prefLanguage">Preferred Language</string>
 	<string name="prefAdvanced">Advanced settings</string>
@@ -86,15 +82,16 @@
 	<string name="logout">Logout</string>
 	<string name="feedback">Feedback</string>
 	
+	<string name="alt_activity_icon">Activity icon</string>
+	
 	<string name="update">Update</string>
 	<string name="installed">Installed</string>
 	<string name="install">Install</string>
 	
 	<string name="download_starting">Download starting</string>
-	<string name="downloading">Downloading...</string>
+	<string name="downloading">Downloading &#8230;</string>
 	<string name="download_complete">Download complete</string>
 	
-	<string name="install_starting">Installation starting</string>
 	<string name="installing">Installing module</string>
 	<string name="installing_module">Installing: %1$s</string>
 	<string name="install_complete">Installation complete</string>
@@ -111,11 +108,9 @@
 	<string name="error_connection">Error connecting to server</string>
 	<string name="error_processing_response">Error processing response</string>
 	<string name="error_no_username">Please enter your username</string>
-	<string name="error_password_length">You password should be %1$d characters or more</string>
 	<string name="error_installing_module">%1$s: failed to install</string>
 	<string name="error_latest_already_installed">%1$s: latest version already installed</string>
 	<string name="error_login">Invalid username/password\nPlease try again</string>
-	<string name="error_register">Error registering</string>
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
 	<string name="error_media_not_found">Media file: \'%1$d\' not found.</string>
 	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>

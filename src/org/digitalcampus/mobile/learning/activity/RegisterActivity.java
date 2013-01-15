@@ -24,7 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-public class RegisterActivity extends Activity implements SubmitListener {
+public class RegisterActivity extends AppActivity implements SubmitListener {
 
 	public static final String TAG = "RegisterActivity";
 
@@ -44,6 +44,8 @@ public class RegisterActivity extends Activity implements SubmitListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
+		this.drawHeader();
+		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		usernameField = (EditText) findViewById(R.id.register_form_username_field);

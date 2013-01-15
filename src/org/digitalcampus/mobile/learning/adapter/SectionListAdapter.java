@@ -69,12 +69,15 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 		    
 		    // set image
 		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);
+	    	if(!s.getActivities().get(i).hasCustomImage()){
+	    		iv.setScaleType(ImageView.ScaleType.CENTER);
+	    	}
 	    	iv.setImageBitmap(s.getActivities().get(i).getImageFile(module.getLocation(), ctx.getResources()));
 	    	
 	    	// set if completed image
 	    	if(s.getActivities().get(i).getCompleted()){
-	    		ImageView ivc = (ImageView) horizRowItem.findViewById(R.id.activity_completed_image);
-	    		ivc.setVisibility(View.VISIBLE);
+	    		//ImageView ivc = (ImageView) horizRowItem.findViewById(R.id.activity_completed_image);
+	    		//ivc.setVisibility(View.VISIBLE);
 	    	}
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
 	    	activityObject.setTag(R.id.TAG_SECTION_ID, s);

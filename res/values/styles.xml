@@ -1,4 +1,6 @@
-<resources>
-
-    <style name="AppTheme" parent="android:Theme.Light" />
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="AppTheme.Light" parent="android:Theme.Light"/>
+    <style name="AppTheme.Dark" parent="@android:style/Theme.Black">
+        <item name="android:background">@drawable/background_dark</item>
+    </style>
 </resources>

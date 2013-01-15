@@ -1,40 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
+    android:background="@drawable/background_dark"
     android:orientation="vertical" >
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="fill_parent"
+    <org.digitalcampus.mobile.learning.application.Header android:id="@+id/header" android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_gradient"
-        android:minHeight="50dp"
-        android:orientation="horizontal"
-        android:weightSum="1.0" >
-
-        <ImageView
-            android:id="@+id/module_image"
-            android:layout_width="48dip"
-            android:layout_height="48dip"
-            android:layout_margin="4dip"
-            android:contentDescription="@string/app_logo_alt"
-            android:src="@drawable/default_icon_module" />
-
-        <TextView
-            android:id="@+id/module_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".8"
-            android:padding="@dimen/padding_medium"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+        android:minHeight="40dp"
+        android:background="@drawable/green_background_gradient" 
+        android:orientation="horizontal"/>
 
     <ListView
         android:id="@+id/section_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:listSelector="@drawable/background" />
+        android:divider="@drawable/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/background_change_pressed" />
 
 </LinearLayout>

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
@@ -10,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/background_gradient"
+        android:background="@drawable/green_background_gradient"
         android:padding="0dp" 
         android:layout_margin="0dp">
 
@@ -30,9 +31,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             tools:context=".ModuleActivity"
-            android:gravity="center"
-            
-            />
+            android:gravity="center"/>
         
         <Button android:id="@+id/next_btn" 
 			android:layout_width="wrap_content"
@@ -44,11 +43,11 @@
     </LinearLayout>
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/activity_widget"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="fill_parent"
+        android:orientation="vertical" 
+        android:background="@drawable/background_light">
     </LinearLayout>
 
 </LinearLayout>

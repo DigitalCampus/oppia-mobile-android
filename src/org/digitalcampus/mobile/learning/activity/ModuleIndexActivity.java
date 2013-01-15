@@ -8,13 +8,13 @@ import java.util.Map;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
+import org.digitalcampus.mobile.learning.application.Header;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.utils.ImageUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,7 +29,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ModuleIndexActivity extends Activity {
+public class ModuleIndexActivity extends AppActivity {
 
 	public static final String TAG = "ModuleIndexActivity";
 	
@@ -37,7 +37,6 @@ public class ModuleIndexActivity extends Activity {
 	private ModuleXMLReader mxr;
 	private ArrayList<Section> sections;
 	private SharedPreferences prefs;
-	
 	private HashMap<String, String> langMap = new HashMap<String, String>();
 	private String[] langArray;
 	
@@ -46,6 +45,8 @@ public class ModuleIndexActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module_index);
         
+        this.drawHeader();
+	    
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
         Bundle bundle = this.getIntent().getExtras(); 
@@ -63,12 +64,12 @@ public class ModuleIndexActivity extends Activity {
 		rebuildLangs();
 		setTitle(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
     	
-		TextView tv = (TextView) this.findViewById(R.id.module_title);
+		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
     	tv.setText(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 		
     	// set image
 		if(module.getImageFile() != null){
-			ImageView iv = (ImageView) this.findViewById(R.id.module_image);
+			ImageView iv = (ImageView) getHeader().findViewById(R.id.page_icon);
 			String path = module.getLocation() + "/" + module.getImageFile();
 			Bitmap bm = ImageUtils.LoadBMPsdcard(path, this.getResources(), R.drawable.default_icon_module);
 			iv.setImageBitmap(bm);
