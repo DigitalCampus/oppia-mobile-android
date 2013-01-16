@@ -9,7 +9,6 @@ import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.RegisterTask;
 import org.digitalcampus.mobile.learning.R;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;

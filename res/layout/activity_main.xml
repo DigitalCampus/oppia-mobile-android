@@ -8,11 +8,6 @@
     <org.digitalcampus.mobile.learning.application.Header
         android:id="@+id/header"
         style="@style/Header" />
-   
-
-    <include
-        android:id="@+id/userdata"
-        layout="@layout/userdata" />
     
     <LinearLayout
         android:id="@+id/home_messages"

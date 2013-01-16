@@ -64,12 +64,12 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		BugSenseHandler.initAndStartSession(this, MobileLearning.BUGSENSE_API_KEY);
 		setContentView(R.layout.activity_main);
 		
-		this.drawHeader();
-		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
-
+		
+		this.drawHeader();
+		
 		// set preferred lang to the default lang
 		if (prefs.getString("prefLanguage", "").equals("")) {
 			Editor editor = prefs.edit();
@@ -97,11 +97,12 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	@Override
 	public void onStart() {
 		super.onStart();
-		if (!isLoggedIn()) {
+		if (!MobileLearning.isLoggedIn(this)) {
 			startActivity(new Intent(MobileLearningActivity.this, LoginActivity.class));
 			return;
 		}
-
+		
+		
 		// install any new modules
 		// TODO show info to user that we're checking for new modules
 		// TODO? scan already extracted modules and install these
@@ -113,30 +114,14 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			imTask.execute();
 		}
 		
-		MobileLearning.showUserData(this);
+		//MobileLearning.showUserData(this);
 	}
 
-	/*public void onDestroy() {
-		//unbindService(mConnection);
-		super.onDestroy();
+	@Override
+	public void onResume(){
+		super.onResume();
+		this.updateHeader();
 	}
-
-	private ServiceConnection mConnection = new ServiceConnection() {
-
-		public void onServiceConnected(ComponentName className, IBinder binder) {
-			((TrackerService.MyBinder) binder).getService();
-		}
-
-		public void onServiceDisconnected(ComponentName className) {
-			// s = null;
-		}
-	};
-
-	void doBindService() {
-		Intent i = new Intent(this, TrackerService.class);
-		bindService(i, mConnection, Context.BIND_AUTO_CREATE);
-	}*/
-
 	private void displayModules() {
 
 		DbHelper db = new DbHelper(this);
@@ -411,16 +396,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 	public void manageBtnClick(View view) {
 		startActivity(new Intent(this, DownloadActivity.class));
-	}
-
-	public boolean isLoggedIn() {
-		String username = prefs.getString("prefUsername", "");
-		String apiKey = prefs.getString("prefApiKey", "");
-		if (username.trim().equals("") || apiKey.trim().equals("")) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

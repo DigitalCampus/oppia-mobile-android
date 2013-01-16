@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.TextView;
 
 public class MobileLearning extends Application {
@@ -90,14 +91,28 @@ public class MobileLearning extends Application {
     }
 	
 	public static void showUserData(Activity act){
-		TextView username = (TextView) act.findViewById(R.id.username);
+		//TextView username = (TextView) act.findViewById(R.id.username);
 		TextView points = (TextView) act.findViewById(R.id.userpoints);
 		TextView badges = (TextView) act.findViewById(R.id.userbadges);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
-		String uname = prefs.getString("prefUsername", "");
-		username.setText(prefs.getString("prefDisplayName", uname));
-		points.setText(String.valueOf(prefs.getInt("prefPoints", 100)));
-		badges.setText(String.valueOf(prefs.getInt("prefBadges", 0)));
+		if(MobileLearning.isLoggedIn(act)){
+			points.setVisibility(View.VISIBLE);
+			badges.setVisibility(View.VISIBLE);
+			//username.setText(prefs.getString("prefDisplayName", uname));
+			points.setText(String.valueOf(prefs.getInt("prefPoints", 100)));
+			badges.setText(String.valueOf(prefs.getInt("prefBadges", 0)));
+		}
+	}
+	
+	public static boolean isLoggedIn(Activity act) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
+		String username = prefs.getString("prefUsername", "");
+		String apiKey = prefs.getString("prefApiKey", "");
+		if (username.trim().equals("") || apiKey.trim().equals("")) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

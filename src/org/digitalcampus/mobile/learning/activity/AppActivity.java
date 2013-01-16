@@ -4,7 +4,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.Header;
 
 import android.app.Activity;
-import android.util.Log;
 
 public class AppActivity extends Activity {
 	
@@ -15,15 +14,22 @@ public class AppActivity extends Activity {
 	public void drawHeader() {
 		try {
 			header = (Header) findViewById(R.id.header);
-			header.initHeader();
+			header.initHeader(this);
 		} catch (NullPointerException npe) {
 			// do nothing
-			Log.d(TAG,"header not found");
 		}
 	}
 	
 	public Header getHeader(){
 		return this.header;
+	}
+	
+	public void updateHeader(){
+		try {
+			header.updateHeader(this);
+		} catch (Exception npe) {
+			// do nothing
+		}
 	}
 
 }
