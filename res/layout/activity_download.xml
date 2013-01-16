@@ -7,11 +7,7 @@
 
     <org.digitalcampus.mobile.learning.application.Header
         android:id="@+id/header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/green_background_gradient"
-        android:minHeight="40dp"
-        android:orientation="horizontal" />
+        style="@style/Header" />
 
     <ListView
         android:id="@+id/module_list"

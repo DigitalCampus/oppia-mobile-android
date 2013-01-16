@@ -51,9 +51,6 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.module_title);
 	    moduleTitle.setText(m.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 	    
-	    TextView moduleVersion = (TextView) rowView.findViewById(R.id.module_version);
-	    moduleVersion.setText(String.format("%.0f",m.getVersionId()));
-	    
 	    Button actionBtn = (Button) rowView.findViewById(R.id.action_btn);
 	    
 	    if(m.isInstalled()){

@@ -5,11 +5,9 @@
     android:orientation="vertical" 
     android:background="@drawable/background_dark">
 
-    <org.digitalcampus.mobile.learning.application.Header android:id="@+id/header" android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="40dp"
-        android:background="@drawable/green_background_gradient" 
-        android:orientation="horizontal"/>
+    <org.digitalcampus.mobile.learning.application.Header
+        android:id="@+id/header"
+        style="@style/Header" />
    
 
     <include
@@ -45,7 +43,7 @@
             android:layout_weight=".3"
             android:gravity="center_vertical|center"
             android:text="@string/scan_media_download_button"
-            android:textSize="14dp" />
+            style="@style/ButtonText" />
     </LinearLayout>
 
     <LinearLayout
@@ -71,7 +69,7 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:text="@string/title_download_activity"
-            android:textSize="18dp" />
+            style="@style/ButtonText"  />
     </LinearLayout>
 
     <ListView

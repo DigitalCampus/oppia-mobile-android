@@ -4,11 +4,9 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <org.digitalcampus.mobile.learning.application.Header android:id="@+id/header" android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="40dp"
-        android:background="@drawable/green_background_gradient" 
-        android:orientation="horizontal"/>
+    <org.digitalcampus.mobile.learning.application.Header
+        android:id="@+id/header"
+        style="@style/Header" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -49,8 +47,7 @@
             android:layout_gravity="center"
             android:layout_weight="0.5"
             android:text="@string/scan_media_download_via_pc_button"
-            android:textSize="16dp"
-            android:textStyle="normal" />
+            style="@style/ButtonText"/>
         <Button
             android:id="@+id/download_media_btn"
             android:layout_width="fill_parent"
@@ -58,8 +55,7 @@
             android:layout_gravity="center"
             android:layout_weight="0.5"
             android:text="@string/scan_media_download_button"
-            android:textSize="16dp"
-            android:textStyle="normal" />
+            style="@style/ButtonText" />
     </LinearLayout>
 
 </LinearLayout>

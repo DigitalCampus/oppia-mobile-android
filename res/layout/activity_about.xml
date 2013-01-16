@@ -4,11 +4,9 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <org.digitalcampus.mobile.learning.application.Header android:id="@+id/header" android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="40dp"
-        android:background="@drawable/green_background_gradient" 
-        android:orientation="horizontal"/>
+    <org.digitalcampus.mobile.learning.application.Header
+        android:id="@+id/header"
+        style="@style/Header" />
 
     <TextView
         android:id="@+id/about_versionno"

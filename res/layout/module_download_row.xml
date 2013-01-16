@@ -10,31 +10,24 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_weight="0.65"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"  >
 
         <TextView
             android:id="@+id/module_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:textStyle="normal" 
-            android:textColor="@drawable/text_light" />
-
-        <TextView
-            android:id="@+id/module_version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="8dp"
-            android:textColor="@drawable/text_light" />
+            style="@style/FieldLabelText"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
 
     <Button
         android:id="@+id/action_btn"
+        style="@style/ButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight=".35"
-        android:textSize="20dp" />
+        android:layout_weight=".35" />
 
 </LinearLayout>

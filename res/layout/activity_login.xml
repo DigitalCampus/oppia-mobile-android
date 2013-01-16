@@ -2,33 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/background_dark"
     android:orientation="vertical" >
 
-    <org.digitalcampus.mobile.learning.application.Header android:id="@+id/header" android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="40dp"
-        android:background="@drawable/green_background_gradient" 
-        android:orientation="horizontal"/>
+    <org.digitalcampus.mobile.learning.application.Header
+        android:id="@+id/header"
+        style="@style/Header" />
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="10dp" >
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:gravity="left"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:padding="10dp" >
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:gravity="center"
                 android:text="@string/title_login"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                style="@style/PageHeadingText"/>
 
             <TextView
                 android:id="@+id/main_email_title"
@@ -36,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/login_username_title"
-                android:textSize="20sp" />
+                style="@style/FieldLabelText" />
 
             <EditText
                 android:id="@+id/login_username_field"
@@ -44,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:padding="5dp"
-                android:textSize="20sp" />
+                style="@style/FieldText" />
 
             <TextView
                 android:id="@+id/main_password_title"
@@ -52,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/login_password_title"
-                android:textSize="20sp" />
+                style="@style/FieldLabelText" />
 
             <EditText
                 android:id="@+id/login_password_field"
@@ -60,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:padding="5dp"
-                android:textSize="20sp" />
+                style="@style/FieldText" />
 
             <Button
                 android:id="@+id/login_btn"
@@ -68,8 +66,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onLoginClick"
                 android:text="@string/title_login"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                style="@style/ButtonText"  />
 
             <Button
                 android:id="@+id/register_btn"
@@ -77,8 +74,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onRegisterClick"
                 android:text="@string/title_register"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                style="@style/ButtonText" />
         </LinearLayout>
     </ScrollView>
 

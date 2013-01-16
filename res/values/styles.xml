@@ -1,6 +1,50 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="AppTheme.Light" parent="android:Theme.Light"/>
-    <style name="AppTheme.Dark" parent="@android:style/Theme.Black">
-        <item name="android:background">@drawable/background_dark</item>
+
+    <style name="AppTheme.Light" parent="android:Theme.Light">
+        <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="Header">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/green_background_gradient</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="HeaderText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/text_dark</item>
+    </style>
+
+    <style name="ButtonText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@drawable/text_dark</item>
+    </style>
+    
+    <style name="PageHeadingText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/text_light</item>
+    </style>
+
+    <style name="FieldLabelText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@drawable/text_light</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="FieldText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    
+    <style name="SmallText">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@drawable/text_light</item>
+    </style>
+
 </resources>
