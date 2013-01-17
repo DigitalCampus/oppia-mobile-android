@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 public class ModuleAboutActivity extends AppActivity {
 
-	public static final String TAG = "ModuleAboutActivity";
+	public static final String TAG = ModuleAboutActivity.class.getSimpleName();
 	private Module module;
 	private SharedPreferences prefs;
 	

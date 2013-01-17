@@ -23,7 +23,7 @@ import android.widget.EditText;
 
 public class LoginActivity extends AppActivity implements SubmitListener  {
 
-	public static final String TAG = "LoginActivity";
+	public static final String TAG = LoginActivity.class.getSimpleName();
 	private SharedPreferences prefs;
 	
 	private EditText usernameField;

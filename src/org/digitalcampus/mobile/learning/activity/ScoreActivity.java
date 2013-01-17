@@ -78,22 +78,20 @@ public class ScoreActivity extends AppActivity implements GetPointsListener{
 		pDialog.dismiss();
 		if(response.result){
 			try {
-				Log.d(TAG,response.resultResponse);
 				json = new JSONObject(response.resultResponse);
 				refreshPointsList();
 			} catch (JSONException e) {
 				BugSenseHandler.sendException(e);
-				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, new Callable<Boolean>() {
-					
-					public Boolean call() throws Exception {
-						
-						return true;
-					}
-				});
+				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);
 				e.printStackTrace();
 			}
 		} else {
-			UIUtils.showAlert(this, R.string.loading, response.resultResponse);
+			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, new Callable<Boolean>() {
+				public Boolean call() throws Exception {
+					ScoreActivity.this.finish();
+					return true;
+				}
+			});
 		}
 		
 	}

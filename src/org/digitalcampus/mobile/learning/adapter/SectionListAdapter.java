@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,7 +27,7 @@ import android.widget.TextView;
 
 public class SectionListAdapter extends ArrayAdapter<Section> {
 
-	public static final String TAG = "SectionListAdapter";
+	public static final String TAG = SectionListAdapter.class.getSimpleName();
 	public static final String TAG_PLACEHOLDER = "placeholder";
 	
 	private final Context ctx;
@@ -74,12 +75,14 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    	}
 	    	iv.setImageBitmap(s.getActivities().get(i).getImageFile(module.getLocation(), ctx.getResources()));
 	    	
-	    	// set if completed image
-	    	if(s.getActivities().get(i).getCompleted()){
-	    		//ImageView ivc = (ImageView) horizRowItem.findViewById(R.id.activity_completed_image);
-	    		//ivc.setVisibility(View.VISIBLE);
-	    	}
+	    	
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
+	    	
+	    	// set if completed
+	    	if(s.getActivities().get(i).getCompleted()){
+	    		activityObject.setBackgroundResource(R.drawable.activity_background_completed);
+	    	}
+	    	
 	    	activityObject.setTag(R.id.TAG_SECTION_ID, s);
 	    	activityObject.setTag(R.id.TAG_PLACEHOLDER_ID, i);
 		    // set clicker

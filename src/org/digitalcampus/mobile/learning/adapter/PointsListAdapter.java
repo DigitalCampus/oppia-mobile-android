@@ -36,6 +36,9 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
 	    TextView pointsDescription = (TextView) rowView.findViewById(R.id.points_description);
 	    pointsDescription.setText(p.getDescription());
 	    
+	    TextView pointsTime = (TextView) rowView.findViewById(R.id.points_time);
+	    pointsTime.setText(p.getTime());
+	    
 	    TextView pointsDate = (TextView) rowView.findViewById(R.id.points_date);
 	    pointsDate.setText(p.getDate());
 	    

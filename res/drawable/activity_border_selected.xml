@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"> 
     <stroke android:width="1px" android:color="@drawable/green_light" /> 
+
     <gradient
-                android:startColor="@drawable/green_mid"
-                android:endColor="@drawable/green_light"
-                android:angle="270"/>
+        android:angle="270"
+        android:endColor="@drawable/green_light"
+        android:startColor="@drawable/green_mid" />
+
 </shape> 

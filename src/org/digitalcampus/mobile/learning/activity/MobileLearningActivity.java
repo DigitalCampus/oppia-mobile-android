@@ -51,7 +51,7 @@ import com.bugsense.trace.BugSenseHandler;
 public class MobileLearningActivity extends AppActivity implements InstallModuleListener,
 		OnSharedPreferenceChangeListener, ScanMediaListener {
 
-	public static final String TAG = "MobileLearningActivity";
+	public static final String TAG = MobileLearningActivity.class.getSimpleName();
 	private SharedPreferences prefs;
 	private Module tempMod;
 	private TreeSet<String> langSet = new TreeSet<String>();

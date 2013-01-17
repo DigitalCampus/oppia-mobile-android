@@ -16,7 +16,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class AboutActivity extends AppActivity {
 
-	public static final String TAG = "AboutActivity";
+	public static final String TAG = AboutActivity.class.getSimpleName();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

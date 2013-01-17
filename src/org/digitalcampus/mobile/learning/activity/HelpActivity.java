@@ -7,7 +7,7 @@ import android.webkit.WebView;
 
 public class HelpActivity extends AppActivity {
 
-	public static final String TAG = "HelpActivity";
+	public static final String TAG = HelpActivity.class.getSimpleName();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

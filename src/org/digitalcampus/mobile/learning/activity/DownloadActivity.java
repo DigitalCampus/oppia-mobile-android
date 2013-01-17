@@ -112,7 +112,7 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 				e.printStackTrace();
 			}
 		} else {
-			UIUtils.showAlert(this, R.string.loading, response.resultResponse, new Callable<Boolean>() {
+			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, new Callable<Boolean>() {
 				
 				public Boolean call() throws Exception {
 					DownloadActivity.this.finish();
