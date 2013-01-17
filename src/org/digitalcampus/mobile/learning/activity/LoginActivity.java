@@ -3,11 +3,11 @@ package org.digitalcampus.mobile.learning.activity;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.SubmitListener;
 import org.digitalcampus.mobile.learning.model.User;
 import org.digitalcampus.mobile.learning.task.LoginTask;
 import org.digitalcampus.mobile.learning.task.Payload;
+import org.digitalcampus.mobile.learning.utils.UIUtils;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -46,7 +46,7 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 		String username = usernameField.getText().toString();
     	//check valid email address format
     	if(username.length() == 0){
-    		MobileLearning.showAlert(this,R.string.error,R.string.error_no_username);
+    		UIUtils.showAlert(this,R.string.error,R.string.error_no_username);
     		return;
     	}
     	
@@ -96,7 +96,7 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 			// return to main activity
 			finish();
 		} else {
-			MobileLearning.showAlert(this, R.string.title_login, response.resultResponse);
+			UIUtils.showAlert(this, R.string.title_login, response.resultResponse);
 		}
 	}
 	

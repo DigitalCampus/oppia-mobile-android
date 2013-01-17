@@ -17,21 +17,21 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
-import org.digitalcampus.mobile.learning.listener.GetModuleListListener;
+import org.digitalcampus.mobile.learning.listener.GetPointsListener;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
+public class GetPointsTask extends AsyncTask<Payload, Object, Payload>{
 	
-	public static final String TAG = GetModuleListTask.class.getSimpleName();
+	public static final String TAG = GetPointsTask.class.getSimpleName();
 	protected Context ctx;
 	private SharedPreferences prefs;
-	private GetModuleListListener mStateListener;
+	private GetPointsListener mStateListener;
 	
-	public GetModuleListTask(Context ctx) {
+	public GetPointsTask(Context ctx) {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
@@ -58,7 +58,7 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 		pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
 		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
 		
-		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.SERVER_MODULES_PATH;
+		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.SERVER_POINTS_PATH;
 		String paramString = URLEncodedUtils.format(pairs, "utf-8");
 		if(!url.endsWith("?"))
 	        url += "?";
@@ -103,14 +103,15 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 	protected void onPostExecute(Payload response) {
 		synchronized (this) {
             if (mStateListener != null) {
-               mStateListener.moduleListComplete(response);
+               mStateListener.pointsComplete(response);
             }
         }
 	}
 	
-	public void setGetModuleListListener(GetModuleListListener srl) {
+	public void setGetPointsListener(GetPointsListener srl) {
         synchronized (this) {
             mStateListener = srl;
         }
     }
+
 }

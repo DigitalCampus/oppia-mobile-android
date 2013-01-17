@@ -2,8 +2,9 @@
 
     <style name="AppTheme.Light" parent="android:Theme.Light">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/background_dark</item>
     </style>
-
+  
     <style name="Header">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

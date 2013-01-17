@@ -3,12 +3,11 @@ package org.digitalcampus.mobile.learning.application;
 import java.io.File;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.activity.ScoreActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Application;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -35,6 +34,8 @@ public class MobileLearning extends Application {
 	
 	public static final String SERVER_MODULES_PATH = "modules/api/v1/module/";
 	public static final String TRACKER_PATH = "modules/api/v1/tracker/";
+	
+	public static final String SERVER_POINTS_PATH = "badges/api/v1/points/";
 	
 	// general other settings
 	public static final String BUGSENSE_API_KEY = "84d61fd0";
@@ -69,39 +70,6 @@ public class MobileLearning extends Application {
 			}
 		}
 		return true;
-	}
-	
-	public static void showAlert(Context ctx, int title, int msg){
-    	MobileLearning.showAlert(ctx, ctx.getString(title), ctx.getString(msg));
-    }
-	
-	public static void showAlert(Context ctx, int R, String msg){
-    	MobileLearning.showAlert(ctx, ctx.getString(R), msg);
-    }
-	
-	public static void showAlert(Context ctx, String title, String msg){
-    	AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
-		alertDialog.setTitle(title);
-		alertDialog.setMessage(msg);
-		alertDialog.setButton(ctx.getString(R.string.close), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}});
-		alertDialog.show();
-    }
-	
-	public static void showUserData(Activity act){
-		//TextView username = (TextView) act.findViewById(R.id.username);
-		TextView points = (TextView) act.findViewById(R.id.userpoints);
-		TextView badges = (TextView) act.findViewById(R.id.userbadges);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
-		if(MobileLearning.isLoggedIn(act)){
-			points.setVisibility(View.VISIBLE);
-			badges.setVisibility(View.VISIBLE);
-			//username.setText(prefs.getString("prefDisplayName", uname));
-			points.setText(String.valueOf(prefs.getInt("prefPoints", 100)));
-			badges.setText(String.valueOf(prefs.getInt("prefBadges", 0)));
-		}
 	}
 	
 	public static boolean isLoggedIn(Activity act) {

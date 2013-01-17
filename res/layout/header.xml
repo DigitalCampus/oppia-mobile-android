@@ -31,7 +31,6 @@
             android:background="@drawable/points_background"
             style="@style/PointsText"
             android:layout_margin="4dp"
-            android:text="1234"
             android:visibility="gone"/>
 
         <TextView

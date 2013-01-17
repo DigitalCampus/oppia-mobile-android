@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:background="@drawable/background_dark">
+    android:orientation="vertical" >
 
     <org.digitalcampus.mobile.learning.application.Header
         android:id="@+id/header"
@@ -72,7 +71,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:listSelector="@drawable/background_change_pressed" 
-        android:background="@drawable/background_dark"
         android:divider="@drawable/list_divider"
         android:dividerHeight="1dp"/>
 

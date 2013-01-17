@@ -7,13 +7,20 @@
     <org.digitalcampus.mobile.learning.application.Header
         android:id="@+id/header"
         style="@style/Header" />
-
+	
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="@string/title_points"
+        style="@style/PageHeadingText" />
+    
     <ListView
-        android:id="@+id/section_list"
+        android:id="@+id/points_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="@drawable/list_divider"
-        android:dividerHeight="1dp"
-        android:listSelector="@drawable/background_change_pressed" />
+        android:dividerHeight="1dp" />
 
 </LinearLayout>

@@ -23,6 +23,8 @@
     <string name="version">Version: %1$s</string>
     <string name="title_module_about">Sobre el curso</string>
     <string name="title_download_media">Download Media</string>
+    <string name="title_points">Your Points</string>
+    <string name="title_badges">Your Badges</string>
     
     <string name="activity_module_button_prev">&lt;</string>
     <string name="activity_module_button_next">&gt;</string>
@@ -117,6 +119,7 @@
 	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
 	
 	<string name="loading_module_list">Obteniendo la lista de cursos</string>
+	<string name="loading_points">Getting points</string>
 	
 	<string name="login_process">Accediendo</string>
 	<string name="login_complete">Registrado</string>

@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 public class ModuleListAdapter extends ArrayAdapter<Module> {
 
-	public static final String TAG = "ModuleListAdapter";
+	public static final String TAG = ModuleListAdapter.class.getSimpleName();
 
 	private final Context ctx;
 	private final ArrayList<Module> moduleList;

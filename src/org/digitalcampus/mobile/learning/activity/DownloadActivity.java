@@ -2,21 +2,23 @@ package org.digitalcampus.mobile.learning.activity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.DownloadListAdapter;
 import org.digitalcampus.mobile.learning.application.DbHelper;
-import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.GetModuleListListener;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.GetModuleListTask;
 import org.digitalcampus.mobile.learning.task.Payload;
+import org.digitalcampus.mobile.learning.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +26,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class DownloadActivity extends AppActivity implements GetModuleListListener {
 
-	public static final String TAG = "DownloadActivity";
+	public static final String TAG = DownloadActivity.class.getSimpleName();
 
 	private ProgressDialog pDialog;
 	private JSONObject json;
@@ -91,7 +93,7 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 		} catch (Exception e) {
 			e.printStackTrace();
 			BugSenseHandler.sendException(e);
-			MobileLearning.showAlert(this, R.string.loading, R.string.error_processing_response);
+			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
 		db.close();
 
@@ -106,11 +108,17 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 				refreshModuleList();
 			} catch (JSONException e) {
 				BugSenseHandler.sendException(e);
-				MobileLearning.showAlert(this, R.string.loading, R.string.error_connection);
+				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);
 				e.printStackTrace();
 			}
 		} else {
-			MobileLearning.showAlert(this, R.string.loading, response.resultResponse);
+			UIUtils.showAlert(this, R.string.loading, response.resultResponse, new Callable<Boolean>() {
+				
+				public Boolean call() throws Exception {
+					DownloadActivity.this.finish();
+					return true;
+				}
+			});
 		}
 
 	}

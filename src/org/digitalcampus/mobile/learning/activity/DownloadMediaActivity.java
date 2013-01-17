@@ -10,12 +10,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.DownloadMediaListener;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.task.DownloadMediaTask;
 import org.digitalcampus.mobile.learning.task.Payload;
+import org.digitalcampus.mobile.learning.utils.UIUtils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -35,7 +35,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener{
 
-	public static final String TAG = "DownloadMediaActivity";
+	public static final String TAG = DownloadMediaActivity.class.getSimpleName();
 	private ArrayList<Object> missingMedia = new ArrayList<Object>();
 	private ProgressDialog pDialog;
 	private DownloadMediaTask task;
@@ -103,7 +103,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		ConnectivityManager conMan = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE); 
         NetworkInfo netInfo = conMan.getActiveNetworkInfo();
         if (netInfo == null || netInfo.getType() != ConnectivityManager.TYPE_WIFI){
-			MobileLearning.showAlert(this, R.string.warning, R.string.warning_wifi_required);
+        	UIUtils.showAlert(this, R.string.warning, R.string.warning_wifi_required);
 			return;
 		}
 		
@@ -146,7 +146,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 			out.write(strData);
 			out.close();
 			f.close();
-			MobileLearning.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message,filename));
+			UIUtils.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message,filename));
 		} catch (FileNotFoundException e) {
 			BugSenseHandler.sendException(e);
 			e.printStackTrace();
