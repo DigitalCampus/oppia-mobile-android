@@ -12,9 +12,9 @@
         android:background="@drawable/activity_background"
         android:orientation="vertical"
         android:paddingBottom="4dp"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
-        android:paddingTop="1dp" >
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:paddingTop="2dp" >
 
         <ImageView
             android:id="@+id/activity_image"
