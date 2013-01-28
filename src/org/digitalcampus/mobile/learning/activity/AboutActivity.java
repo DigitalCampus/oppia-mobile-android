@@ -25,16 +25,6 @@ public class AboutActivity extends AppActivity {
 		this.drawHeader();
 		
 		WebView wv = (WebView) findViewById(R.id.about_webview);
-		wv.setBackgroundColor(0x00000000);
-		// hack to get transparent background on webviews
-		if (Build.VERSION.SDK_INT >= 11){ // Android v3.0+
-			try {
-				Method method = View.class.getMethod("setLayerType", int.class, Paint.class);
-				method.invoke(wv, 1, new Paint()); // 1 = LAYER_TYPE_SOFTWARE (API11)
-			} catch (Exception e) {
-				
-			}
-		}
 		String url = "file:///android_asset/www/about.html";
 		wv.loadUrl(url);
 		

@@ -41,6 +41,7 @@ public class MobileLearning extends Application {
 	public static final String BUGSENSE_API_KEY = "84d61fd0";
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
+	public static final String USER_AGENT = "Mobile Learning Android app: ";
 	
 	// only used in case a module doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";

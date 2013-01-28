@@ -92,7 +92,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 
                 // add user agent 
                 String v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
-                client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, "mQuiz Android app: " + v);
+                client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, MobileLearning.USER_AGENT + v);
                 
 				// make request
 				HttpResponse response = client.execute(httpPost);
