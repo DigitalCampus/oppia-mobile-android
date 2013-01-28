@@ -44,9 +44,23 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, String, Pay
 
 				String[] moddirs = tempdir.list(); // use this to get the module
 													// name
-				// check a module.xml file exists and is a readable XML file
-				String moduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_XML;
+				
+				String moduleXMLPath = "";
+				// check that it's unzipped etc correctly
+				try {
+					moduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_XML;
+				} catch (ArrayIndexOutOfBoundsException aioobe){
+					FileUtils.deleteDir(tempdir);
+					Log.d(TAG, "Temp directory deleted");
 
+					// delete zip file from download dir
+					File zip = new File(MobileLearning.DOWNLOAD_PATH + children[i]);
+					zip.delete();
+					Log.d(TAG, "Zip file deleted");
+					break;
+				}
+				
+				// check a module.xml file exists and is a readable XML file
 				ModuleXMLReader mxr = new ModuleXMLReader(moduleXMLPath);
 				
 				HashMap<String, String> hm = mxr.getMeta();
