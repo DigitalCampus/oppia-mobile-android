@@ -79,7 +79,11 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 	}
 
 	public void submitComplete(Payload response) {
-		pDialog.dismiss();
+		try {
+			pDialog.dismiss();
+		} catch (IllegalArgumentException iae){
+			//
+		}
 		
 		Log.d(TAG,"Login activity reports: " + response.resultResponse);
 		if(response.result){

@@ -103,7 +103,7 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 		try {
 			pDialog.dismiss();
 		} catch (IllegalArgumentException iae){
-			return;
+			//
 		}
 		if(response.result){
 			try {
