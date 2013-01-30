@@ -1,14 +1,9 @@
 package org.digitalcampus.mobile.learning.activity;
 
-import java.lang.reflect.Method;
-
 import org.digitalcampus.mobile.learning.R;
 
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Paint;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 

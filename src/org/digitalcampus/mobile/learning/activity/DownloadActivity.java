@@ -18,7 +18,6 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -101,7 +100,11 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 
 	public void moduleListComplete(Payload response) {
 		// close dialog and process results
-		pDialog.dismiss();
+		try {
+			pDialog.dismiss();
+		} catch (IllegalArgumentException iae){
+			return;
+		}
 		if(response.result){
 			try {
 				json = new JSONObject(response.resultResponse);
