@@ -13,6 +13,7 @@ import org.digitalcampus.mobile.learning.R.id;
 import org.digitalcampus.mobile.learning.adapter.ModuleListAdapter;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
 import org.digitalcampus.mobile.learning.model.Module;
@@ -127,16 +128,29 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		DbHelper db = new DbHelper(this);
 		ArrayList<Module> modules = db.getModules();
 		db.close();
+		ArrayList<Module> removeModules = new ArrayList<Module>();
 		for (Module m : modules) {
-			ModuleXMLReader mxr = new ModuleXMLReader(m.getLocation() + "/" + MobileLearning.MODULE_XML);
-			m.setTitles(mxr.getTitles());
-			TreeSet<String> mLangs = mxr.getLangs();
-			m.setAvailableLangs(mLangs);
-			// add these langs to the global available langs
-			langSet.addAll(mLangs);
-			m.setProps(mxr.getMeta());
-			m.setImageFile(mxr.getModuleImage());
-			m.setMedia(mxr.getMedia());
+			try {
+				ModuleXMLReader mxr = new ModuleXMLReader(m.getLocation() + "/" + MobileLearning.MODULE_XML);
+				m.setTitles(mxr.getTitles());
+				TreeSet<String> mLangs = mxr.getLangs();
+				m.setAvailableLangs(mLangs);
+				// add these langs to the global available langs
+				langSet.addAll(mLangs);
+				m.setProps(mxr.getMeta());
+				m.setImageFile(mxr.getModuleImage());
+				m.setMedia(mxr.getMedia());
+			} catch (ModuleNotFoundException mnfe){
+				// remove from database
+				mnfe.deleteModule(this, m.getModId());
+				removeModules.add(m);
+			}
+		}
+		
+		for(Module m: removeModules){
+			// remove from current list
+			modules.remove(m);
+			
 		}
 
 		// rebuild langs

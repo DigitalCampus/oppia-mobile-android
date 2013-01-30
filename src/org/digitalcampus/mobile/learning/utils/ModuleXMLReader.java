@@ -12,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Media;
@@ -65,9 +66,14 @@ public class ModuleXMLReader {
 		this.tempFilePath = tempFilePath;
 	}
 	
-	public ArrayList<Lang> getTitles(){
+	public ArrayList<Lang> getTitles() throws ModuleNotFoundException {
 		ArrayList<Lang> titles = new ArrayList<Lang>();
-		Node m = document.getFirstChild().getFirstChild();
+		Node m = null;
+		try {
+			m = document.getFirstChild().getFirstChild();
+		} catch (NullPointerException npe){
+			throw new ModuleNotFoundException();
+		}
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
 			if(meta.item(j).getNodeName().equals("title")){
