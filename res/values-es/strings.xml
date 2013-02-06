@@ -11,6 +11,7 @@
     <string name="menu_module_about">Sobre el curso</string>
     <string name="menu_help">Ayuda</string>
     <string name="menu_logout">Logout</string>
+    <string name="menu_read_aloud">Read aloud</string>
     
     <string name="service_tracker">DC buscador de servicio</string>
     <string name="title_about">Sobre</string>
@@ -108,6 +109,7 @@
 	<string name="scan_media_download_via_pc_button">Download via PC</string>
 	
 	<string name="error_connection">Error conectando al servidor</string>
+	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
 	<string name="error_processing_response">Error procesando respuesta</string>
 	<string name="error_no_username">Porfavor, introduzca un usuario</string>
 	<string name="error_installing_module">%1$s: no se pudo instalar</string>

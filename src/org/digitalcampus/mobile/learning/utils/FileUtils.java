@@ -16,7 +16,7 @@ import android.util.Log;
 
 public class FileUtils {
 	
-	public static final String TAG = "FileUtils";
+	public static final String TAG = FileUtils.class.getSimpleName();
 	public static final int BUFFER_SIZE = 1024;
 
 	// This function converts the zip file into uncompressed files which are
@@ -97,8 +97,17 @@ public class FileUtils {
 					FileOutputStream fos = new FileOutputStream(f);
 					dest = new BufferedOutputStream(fos, BUFFER_SIZE);
 
+					// this counter is a hack to prevent getting stuck when installing corrupted or not fully downloaded module packages
+					// it will prevent any module being installed with files larger than around 500kb
+					int counter = 0;
 					while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {
 						dest.write(data, 0, count);
+						counter++;
+						if (counter > 5000){
+							dest.flush();
+							dest.close();
+							return false;
+						}
 					}
 
 					// close the output streams
@@ -164,5 +173,15 @@ public class FileUtils {
 			return false;
 		}
 		
+	}
+	
+	public static void cleanUp(File tempDir, String path){
+		FileUtils.deleteDir(tempDir);
+		Log.d(TAG, "Temp directory deleted");
+
+		// delete zip file from download dir
+		File zip = new File(path);
+		zip.delete();
+		Log.d(TAG, "Zip file deleted");
 	}
 }

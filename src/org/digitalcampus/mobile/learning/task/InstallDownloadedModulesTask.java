@@ -40,8 +40,13 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, String, Pay
 				// extract to temp dir and check it's a valid package file
 				File tempdir = new File(MobileLearning.MLEARN_ROOT + "temp/");
 				tempdir.mkdirs();
-				FileUtils.unzipFiles(MobileLearning.DOWNLOAD_PATH, children[i], tempdir.getAbsolutePath());
-
+				boolean unzipResult = FileUtils.unzipFiles(MobileLearning.DOWNLOAD_PATH, children[i], tempdir.getAbsolutePath());
+				
+				if (!unzipResult){
+					//then was invalid zip file and should be removed
+					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
+					break;
+				}
 				String[] moddirs = tempdir.list(); // use this to get the module
 													// name
 				
@@ -50,13 +55,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, String, Pay
 				try {
 					moduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
-					FileUtils.deleteDir(tempdir);
-					Log.d(TAG, "Temp directory deleted");
-
-					// delete zip file from download dir
-					File zip = new File(MobileLearning.DOWNLOAD_PATH + children[i]);
-					zip.delete();
-					Log.d(TAG, "Zip file deleted");
+					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
 					break;
 				}
 				

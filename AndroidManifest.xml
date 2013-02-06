@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.digitalcampus.mobile.learning"
-    android:versionCode="10"
-    android:versionName="1.9">
+    android:versionCode="11"
+    android:versionName="1.10">
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -40,7 +40,8 @@
         </activity>
         <activity
             android:name=".activity.DownloadActivity"
-            android:label="@string/title_download_activity" >
+            android:label="@string/title_download_activity"
+            android:configChanges="orientation|keyboardHidden" >
         </activity>
         <activity
             android:name=".activity.PrefsActivity"

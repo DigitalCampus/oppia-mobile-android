@@ -47,7 +47,7 @@
             android:layout_gravity="center"
             android:layout_weight="0.5"
             android:text="@string/scan_media_download_via_pc_button"
-            style="@style/ButtonText"/>
+            style="@style/ButtonTextSmall"/>
         <Button
             android:id="@+id/download_media_btn"
             android:layout_width="fill_parent"
@@ -55,7 +55,7 @@
             android:layout_gravity="center"
             android:layout_weight="0.5"
             android:text="@string/scan_media_download_button"
-            style="@style/ButtonText" />
+            style="@style/ButtonTextSmall" />
     </LinearLayout>
 
 </LinearLayout>

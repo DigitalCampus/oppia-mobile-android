@@ -25,6 +25,12 @@
         <item name="android:textColor">@drawable/text_dark</item>
     </style>
     
+    <style name="ButtonTextSmall">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@drawable/text_dark</item>
+    </style>
+    
     <style name="PageHeadingText">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>

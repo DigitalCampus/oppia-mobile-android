@@ -103,7 +103,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			return;
 		}
 		
-		
 		// install any new modules
 		// TODO show info to user that we're checking for new modules
 		// TODO? scan already extracted modules and install these
@@ -114,8 +113,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			imTask.setInstallerListener(this);
 			imTask.execute();
 		}
-		
-		//MobileLearning.showUserData(this);
 	}
 
 	@Override
@@ -123,6 +120,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		super.onResume();
 		this.updateHeader();
 	}
+	
 	private void displayModules() {
 
 		DbHelper db = new DbHelper(this);
@@ -163,7 +161,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			ll.setVisibility(View.VISIBLE);
 			Button manageBtn = (Button) this.findViewById(R.id.manage_modules_btn);
 			manageBtn.setOnClickListener(new View.OnClickListener() {
-
 				public void onClick(View v) {
 					startActivity(new Intent(MobileLearningActivity.this, DownloadActivity.class));
 				}
