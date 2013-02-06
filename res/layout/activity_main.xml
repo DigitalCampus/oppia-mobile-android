@@ -72,6 +72,7 @@
         android:layout_height="wrap_content"
         android:listSelector="@drawable/background_change_pressed" 
         android:divider="@drawable/list_divider"
-        android:dividerHeight="1dp"/>
+        android:dividerHeight="1dp"
+        android:cacheColorHint="#00000000"/>
 
 </LinearLayout>
