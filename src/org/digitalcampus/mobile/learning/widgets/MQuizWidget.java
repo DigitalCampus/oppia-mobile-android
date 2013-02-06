@@ -266,4 +266,9 @@ public class MQuizWidget extends WidgetFactory {
 		
 		return obj;
 	}
+	
+	@Override
+	public String getContentToRead() {
+		return "";
+	}
 }

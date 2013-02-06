@@ -34,8 +34,11 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 
-public class ModuleActivity extends AppActivity{
+public class ModuleActivity extends AppActivity implements OnInitListener{
 
 	public static final String TAG = "ModuleActivity";
 	private Section section;
@@ -53,9 +56,18 @@ public class ModuleActivity extends AppActivity{
     private GestureDetector pageGestureDetector;
     View.OnTouchListener pageGestureListener;
 	
+    private static int TTS_CHECK = 0;
+    static TextToSpeech myTTS;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+     // check for TTS data
+        Intent checkTTSIntent = new Intent();
+        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkTTSIntent, TTS_CHECK); 
+        
         setContentView(R.layout.activity_module);
         this.drawHeader();
         
@@ -85,6 +97,7 @@ public class ModuleActivity extends AppActivity{
     	loadActivity();
     	
     }
+    
     @Override
     public void onPause(){
     	super.onPause();
@@ -99,6 +112,14 @@ public class ModuleActivity extends AppActivity{
 		service.putExtras(tb);
 		
 		this.startService(service);
+    }
+    
+    @Override
+    protected void onDestroy() {
+    	if (myTTS != null) {
+    		myTTS.shutdown();
+        }
+        super.onDestroy();
     }
     
     @Override
@@ -124,6 +145,11 @@ public class ModuleActivity extends AppActivity{
    				return true;
    			case R.id.menu_help:
    				startActivity(new Intent(this, HelpActivity.class));
+   				return true;
+   			case R.id.menu_tts:
+   				if(myTTS != null){
+   					myTTS.speak(currentActivity.getContentToRead(),TextToSpeech.QUEUE_FLUSH, null);
+   				}
    				return true;
    			default:
    				return super.onOptionsItemSelected(item);
@@ -190,6 +216,9 @@ public class ModuleActivity extends AppActivity{
     }
     
     private void moveNext(){
+    	if(myTTS != null){
+    		myTTS.stop();
+    	}
     	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
  		markIfComplete(acts.get(currentActivityNo).getDigest());
  		currentActivityNo++;
@@ -197,6 +226,9 @@ public class ModuleActivity extends AppActivity{
     }
     
     private void movePrev(){
+    	if(myTTS != null){
+    		myTTS.stop();
+    	}
     	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
  		markIfComplete(acts.get(currentActivityNo).getDigest());
  		currentActivityNo--;
@@ -285,4 +317,38 @@ public class ModuleActivity extends AppActivity{
         }
 
     }
+
+	public void onInit(int status) {
+
+	        // check for successful instantiation
+	        if (status == TextToSpeech.SUCCESS) {
+	        	Log.d(TAG,"tts success");
+	            //if (myTTS.isLanguageAvailable(Locale.ENGLISH) == TextToSpeech.LANG_AVAILABLE){
+	             //   myTTS.setLanguage(Locale.ENGLISH);
+	            //    Log.d(TAG,"tts set lang");
+	                
+	           // }
+	        } else if (status == TextToSpeech.ERROR) {
+	            Toast.makeText(this, "Sorry! Text To Speech failed...",
+	                    Toast.LENGTH_LONG).show();
+	        }
+	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TTS_CHECK) {
+            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                // the user has the necessary data - create the TTS
+                myTTS = new TextToSpeech(this, this);
+            } else {
+                // no data - install it now
+                Intent installTTSIntent = new Intent();
+                installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(installTTSIntent);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+	
+
 }

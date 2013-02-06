@@ -11,4 +11,8 @@
         android:title="@string/menu_help"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_help" />
+    <item android:id="@+id/menu_tts"
+        android:title="@string/menu_read_aloud"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_lock_silent_mode_off" />
 </menu>

@@ -35,4 +35,6 @@ public abstract class WidgetFactory extends Activity{
 	
 	public abstract JSONObject getActivityCompleteData();
 	
+	public abstract String getContentToRead();
+	
 }

@@ -1,20 +1,22 @@
 package org.digitalcampus.mobile.learning.widgets;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.application.Tracker;
 import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
-import org.digitalcampus.mobile.learning.R;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,15 +32,19 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
+
 public class PageWidget extends WidgetFactory {
 
-	private static final String TAG = "PageWidget";
+	private static final String TAG = PageWidget.class.getSimpleName();
 	private Context ctx;
 	private Module module;
 	private org.digitalcampus.mobile.learning.model.Activity activity;
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private SharedPreferences prefs;
-
+	private WebView wv;
+	private BufferedReader br;
+	
 	public PageWidget(Context context, Module module, org.digitalcampus.mobile.learning.model.Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
@@ -48,9 +54,9 @@ public class PageWidget extends WidgetFactory {
 		
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_page, null);
 		super.getLayout().addView(vv);
-
+	
 		// get the location data
-		WebView wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
+		wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
 		wv.setBackgroundColor(0x00000000);
 		// hack to get transparent background on webviews
 		if (Build.VERSION.SDK_INT >= 11){ // Android v3.0+
@@ -164,4 +170,24 @@ public class PageWidget extends WidgetFactory {
 		
 		return obj;
 	}
+
+	@Override
+	public String getContentToRead() {
+		File f = new File ("/"+ module.getLocation() + "/" + activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+		StringBuilder text = new StringBuilder();
+		try {
+		    br = new BufferedReader(new FileReader(f));
+		    String line;
+
+		    while ((line = br.readLine()) != null) {
+		        text.append(line);
+		    }
+		}
+		catch (IOException e) {
+		    return "";
+		}
+		return android.text.Html.fromHtml(text.toString()).toString();
+	}
+
+
 }

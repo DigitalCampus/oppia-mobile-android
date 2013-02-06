@@ -11,6 +11,7 @@
     <string name="menu_module_about">About Module</string>
     <string name="menu_help">Help</string>
     <string name="menu_logout">Logout</string>
+    <string name="menu_read_aloud">Read aloud</string>
     
     <string name="service_tracker">DC Tracker Service</string>
     <string name="title_about">About</string>
