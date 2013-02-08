@@ -41,6 +41,9 @@ public class PageWidget extends WidgetFactory {
 	private Module module;
 	private org.digitalcampus.mobile.learning.model.Activity activity;
 	private long startTimestamp = System.currentTimeMillis()/1000;
+	private long mediaStartTimeStamp;
+	private boolean mediaPlaying = false;
+	private String mediaFileName;
 	private SharedPreferences prefs;
 	private WebView wv;
 	private BufferedReader br;
@@ -82,28 +85,25 @@ public class PageWidget extends WidgetFactory {
 					Log.d(TAG, "Intercepting click on video url: " + url);
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
-					String videoFileName = url.substring(startPos, url.length());
+					mediaFileName = url.substring(startPos, url.length());
 
 					// check video file exists
-					boolean exists = FileUtils.mediaFileExists(videoFileName);
+					boolean exists = FileUtils.mediaFileExists(mediaFileName);
 					if (exists) {
 						// launch intent to play video
 						Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-						Uri data = Uri.parse(MobileLearning.MEDIA_PATH + videoFileName);
-						// TODO check that the file really is video/mp4 and not another video type
-						intent.setDataAndType(data, "video/mp4");
-						// track that the video has been played (or at least clicked on)
-						Tracker t = new Tracker(ctx);
-						// digest should be that of the video not the page
-						for(Media m: PageWidget.this.activity.getMedia()){
-							if(m.getFilename().equals(videoFileName)){
-								t.mediaPlayed(PageWidget.this.module.getModId(), m.getDigest(), videoFileName);
-							}
-						}
+						Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
 						
+						// TODO check that the file really is video/mp4 and not another video type
+						
+						intent.setDataAndType(data, "video/mp4");
+						
+						mediaPlaying = true;
+						mediaStartTimeStamp = System.currentTimeMillis()/1000;
+	
 						ctx.startActivity(intent);
 					} else {
-						Toast.makeText(ctx, ctx.getString(R.string.error_media_not_found,videoFileName), Toast.LENGTH_LONG).show();
+						Toast.makeText(ctx, ctx.getString(R.string.error_media_not_found,mediaFileName), Toast.LENGTH_LONG).show();
 					}
 					return true;
 				} else {
@@ -119,7 +119,7 @@ public class PageWidget extends WidgetFactory {
 			}
 		});
 	}
-
+	
 	public boolean isComplete(){
 		// only show as being complete if all the videos on this page have been played
 		if(this.activity.hasMedia()){
@@ -187,6 +187,59 @@ public class PageWidget extends WidgetFactory {
 		    return "";
 		}
 		return android.text.Html.fromHtml(text.toString()).toString();
+	}
+
+
+	public void mediaStopped() {
+		if(mediaPlaying){
+			long mediaEndTimeStamp = System.currentTimeMillis()/1000;
+			long timeTaken = mediaEndTimeStamp - mediaStartTimeStamp;
+			Log.d(TAG,"video playing for:" + String.valueOf(timeTaken));
+			mediaPlaying = false;
+			// track that the video has been played (or at least clicked on)
+			Tracker t = new Tracker(ctx);
+			// digest should be that of the video not the page
+			for(Media m: PageWidget.this.activity.getMedia()){
+				if(m.getFilename().equals(mediaFileName)){
+					Log.d(TAG,"media digest:" + m.getDigest());
+					Log.d(TAG,"media file:" + mediaFileName);
+					t.mediaPlayed(PageWidget.this.module.getModId(), m.getDigest(), mediaFileName, timeTaken);
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public boolean getMediaPlaying() {
+		return this.mediaPlaying;
+	}
+
+	@Override
+	public long getMediaStartTime() {
+		return this.mediaStartTimeStamp;
+	}
+
+	@Override
+	public void setMediaPlaying(boolean playing) {
+		this.mediaPlaying = playing;
+		
+	}
+
+	@Override
+	public void setMediaStartTime(long mediaStartTime) {
+		this.mediaStartTimeStamp = mediaStartTime;
+		
+	}
+
+	@Override
+	public String getMediaFileName() {
+		return this.mediaFileName;
+	}
+
+	@Override
+	public void setMediaFileName(String mediaFileName) {
+		this.mediaFileName = mediaFileName;	
 	}
 
 

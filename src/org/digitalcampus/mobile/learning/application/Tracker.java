@@ -25,13 +25,14 @@ public class Tracker {
 		db.close();
 	}
 	
-	public void mediaPlayed(int modId, String digest, String media){
+	public void mediaPlayed(int modId, String digest, String media, long timetaken){
 		// add to the db log
 		DbHelper db = new DbHelper(this.ctx); 
 		JSONObject jsonObj = new JSONObject();
 		try {
 			jsonObj.put("media", "played");
 			jsonObj.put("mediafile", media);
+			jsonObj.put("timetaken", timetaken);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			BugSenseHandler.sendException(e);

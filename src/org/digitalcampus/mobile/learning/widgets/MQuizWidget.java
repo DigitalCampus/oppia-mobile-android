@@ -271,4 +271,41 @@ public class MQuizWidget extends WidgetFactory {
 	public String getContentToRead() {
 		return "";
 	}
+
+	@Override
+	public void mediaStopped() {
+		// do nothing
+	}
+
+	@Override
+	public boolean getMediaPlaying() {
+		return false;
+	}
+	
+	@Override
+	public long getMediaStartTime() {
+		return 0;
+	}
+
+	@Override
+	public void setMediaPlaying(boolean playing) {
+		// do nothing
+		
+	}
+
+	@Override
+	public void setMediaStartTime(long mediaStartTime) {
+		// do nothing
+		
+	}
+
+	@Override
+	public String getMediaFileName() {
+		return null;
+	}
+
+	@Override
+	public void setMediaFileName(String mediaFileName) {
+		// do nothing
+	}
 }

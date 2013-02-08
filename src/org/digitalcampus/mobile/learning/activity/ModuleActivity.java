@@ -38,7 +38,7 @@ import android.widget.Toast;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 
-public class ModuleActivity extends AppActivity implements OnInitListener{
+public class ModuleActivity extends AppActivity implements OnInitListener {
 
 	public static final String TAG = ModuleActivity.class.getSimpleName();
 	private Section section;
@@ -58,6 +58,8 @@ public class ModuleActivity extends AppActivity implements OnInitListener{
 	
     private static int TTS_CHECK = 0;
     static TextToSpeech myTTS;
+    
+    private HashMap<String, Object> mediaPlayingState = new HashMap<String, Object>();
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +114,28 @@ public class ModuleActivity extends AppActivity implements OnInitListener{
 		service.putExtras(tb);
 		
 		this.startService(service);
+		if(currentActivity != null){
+			mediaPlayingState.put("Media_Playing", currentActivity.getMediaPlaying());
+			mediaPlayingState.put("Media_StartTime", currentActivity.getMediaStartTime());
+			mediaPlayingState.put("Media_File", currentActivity.getMediaFileName());
+    	}
+    }
+    
+    @Override
+    public void onResume(){
+    	super.onResume();
+    	if(currentActivity != null){
+    		if(mediaPlayingState.containsKey("Media_Playing")){
+    			currentActivity.setMediaPlaying((Boolean) mediaPlayingState.get("Media_Playing"));
+    		}
+    		if(mediaPlayingState.containsKey("Media_StartTime")){
+    			currentActivity.setMediaStartTime((Long) mediaPlayingState.get("Media_StartTime"));
+    		}
+    		if(mediaPlayingState.containsKey("Media_File")){
+    			currentActivity.setMediaFileName((String) mediaPlayingState.get("Media_File"));
+    		}
+    		currentActivity.mediaStopped();
+    	}
     }
     
     @Override
@@ -349,6 +373,29 @@ public class ModuleActivity extends AppActivity implements OnInitListener{
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-	
 
+	/*@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Log.d(TAG,"saving state....");
+		if (currentActivity != null) {
+			Log.d(TAG,"activity not null");
+			outState.putBoolean("Media_Playing", currentActivity.getMediaPlaying());
+			outState.putLong("Media_StartTime", currentActivity.getMediaStartTime());
+		}
+		
+	}
+	 
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		Log.d(TAG,"restoring state....");
+		if (savedInstanceState != null) {
+			Log.d(TAG,"savedInstanceState not null....");
+			currentActivity.setMediaPlaying(savedInstanceState.getBoolean("Media_Playing"));
+			currentActivity.setMediaStartTime(savedInstanceState.getLong("Media_StartTime"));
+		}
+		
+	}*/
+	
 }

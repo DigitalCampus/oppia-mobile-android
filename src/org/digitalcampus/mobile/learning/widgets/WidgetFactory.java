@@ -9,7 +9,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
-public abstract class WidgetFactory extends Activity{
+public abstract class WidgetFactory extends Activity {
 	
 	private LayoutInflater li;
 	private LinearLayout ll;
@@ -36,5 +36,13 @@ public abstract class WidgetFactory extends Activity{
 	public abstract JSONObject getActivityCompleteData();
 	
 	public abstract String getContentToRead();
+	
+	public abstract String getMediaFileName();
+	public abstract void setMediaFileName(String mediaFileName);
+	public abstract void mediaStopped();
+	public abstract boolean getMediaPlaying();
+	public abstract long getMediaStartTime();
+	public abstract void setMediaPlaying(boolean playing);
+	public abstract void setMediaStartTime(long mediaStartTime);
 	
 }
