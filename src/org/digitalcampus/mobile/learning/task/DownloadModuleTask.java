@@ -16,12 +16,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.Module;
-import org.digitalcampus.mobile.learning.R;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -89,7 +87,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (IOException e1) { 
 				e1.printStackTrace();
-				BugSenseHandler.sendException(e1);
+				publishProgress(ctx.getString(R.string.error_connection));
 			}
 		}
 		return null;
