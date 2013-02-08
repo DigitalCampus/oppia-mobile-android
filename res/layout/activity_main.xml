@@ -42,11 +42,29 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/no_modules"
+        android:id="@+id/loading_modules"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dip"
+            android:gravity="center"
+            android:text="@string/loading_modules"
+            android:textSize="18dp" 
+            android:textColor="@drawable/text_light"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/no_modules"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <TextView
             android:layout_width="wrap_content"

@@ -154,11 +154,13 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		// rebuild langs
 		rebuildLangs();
 
-		LinearLayout ll = (LinearLayout) this.findViewById(R.id.no_modules);
+		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_modules);
+		llLoading.setVisibility(View.GONE);
+		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_modules);
 		if (modules.size() > 0) {
-			ll.setVisibility(View.GONE);
+			llNone.setVisibility(View.GONE);
 		} else {
-			ll.setVisibility(View.VISIBLE);
+			llNone.setVisibility(View.VISIBLE);
 			Button manageBtn = (Button) this.findViewById(R.id.manage_modules_btn);
 			manageBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {

@@ -105,6 +105,8 @@
 	<string name="info_scan_media_checking">Checking for: %1$s</string>
 	<string name="info_scan_media_missing">Some media files (videos etc) are missing for your modules.</string>
 	
+	<string name="loading_modules">Loading modules</string>
+	
 	<string name="scan_media_download_button">Download</string>
 	<string name="scan_media_download_via_pc_button">Download via PC</string>
 	
