@@ -33,7 +33,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class MQuizWidget extends WidgetFactory {
 
-	private static final String TAG = "MQuizWidget";
+	private static final String TAG = MQuizWidget.class.getSimpleName();
 	private SharedPreferences prefs;
 	private android.app.Activity ctx;
 	private MQuiz mQuiz;

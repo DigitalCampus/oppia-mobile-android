@@ -12,7 +12,7 @@ public class Module implements Serializable {
 	 */
 	private static final long serialVersionUID = 4412987572522420704L;
 	
-	public static final String TAG = "Module";
+	public static final String TAG = Module.class.getSimpleName();
 	private int modId;
 	private String location;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();

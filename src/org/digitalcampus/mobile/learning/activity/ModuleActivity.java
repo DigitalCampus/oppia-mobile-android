@@ -40,7 +40,7 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 
 public class ModuleActivity extends AppActivity implements OnInitListener{
 
-	public static final String TAG = "ModuleActivity";
+	public static final String TAG = ModuleActivity.class.getSimpleName();
 	private Section section;
 	private Module module;
 	private int currentActivityNo = 0;

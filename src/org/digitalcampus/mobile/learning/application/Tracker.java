@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class Tracker {
 
-	public static final String TAG = "Tracker"; 
+	public static final String TAG = Tracker.class.getSimpleName(); 
 	private final Context ctx;
 	
 	public Tracker(Context context){

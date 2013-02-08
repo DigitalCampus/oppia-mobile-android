@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 
 public class MultiSelectWidget extends QuestionWidget {
 
-	public static final String TAG = "MultiSelectWidget";
+	public static final String TAG = MultiSelectWidget.class.getSimpleName();
 	private Context ctx;
 	private LinearLayout responsesLL;
 	

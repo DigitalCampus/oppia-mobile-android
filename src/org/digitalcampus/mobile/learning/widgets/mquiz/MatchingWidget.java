@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 public class MatchingWidget extends QuestionWidget {
 
-	public static final String TAG = "MatchingWidget";
+	public static final String TAG = MatchingWidget.class.getSimpleName();
 	
 	
 	private LinearLayout responsesLL;

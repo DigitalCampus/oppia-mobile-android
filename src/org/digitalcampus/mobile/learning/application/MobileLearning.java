@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 
 public class MobileLearning extends Application {
 
-	public static final String TAG = "MobileLearning";
+	public static final String TAG = MobileLearning.class.getSimpleName();
 
 	// local storage vars
 	public static final String MLEARN_ROOT = Environment

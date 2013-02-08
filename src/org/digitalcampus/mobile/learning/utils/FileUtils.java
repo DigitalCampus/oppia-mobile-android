@@ -82,8 +82,6 @@ public class FileUtils {
 				String outputFilename = destDirectory + File.separator
 						+ entry.getName();
 
-				//TrackerLog.v(TAG,"Extracting file: " + entry.getName());
-
 				createDirIfNeeded(destDirectory, entry);
 
 				int count;

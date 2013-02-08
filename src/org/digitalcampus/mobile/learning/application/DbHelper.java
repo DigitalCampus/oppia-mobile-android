@@ -23,7 +23,7 @@ import android.util.Log;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-	static final String TAG = "DbHelper";
+	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
 	static final int DB_VERSION = 7;
 

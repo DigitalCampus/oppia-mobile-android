@@ -16,7 +16,7 @@ public class Activity implements Serializable{
 	 */
 	private static final long serialVersionUID = -1548943805902073988L;
 
-	public static final String TAG = "Activity";
+	public static final String TAG = Activity.class.getSimpleName();
 	
 	private long modId;
 	private int sectionId;

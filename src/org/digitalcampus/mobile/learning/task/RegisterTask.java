@@ -33,7 +33,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 
-	public static final String TAG = "RegisterTask";
+	public static final String TAG = RegisterTask.class.getSimpleName();
 
 	private Context ctx;
 	private SharedPreferences prefs;

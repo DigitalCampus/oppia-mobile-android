@@ -19,7 +19,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class TrackerService extends Service {
 
-	public static final String TAG = "TrackerService";
+	public static final String TAG = TrackerService.class.getSimpleName();
 
 	private final IBinder mBinder = new MyBinder();
 

@@ -25,7 +25,7 @@ import android.widget.EditText;
 
 public class RegisterActivity extends AppActivity implements SubmitListener {
 
-	public static final String TAG = "RegisterActivity";
+	public static final String TAG = RegisterActivity.class.getSimpleName();
 
 	private static final int ONCLICK_TASK_NULL = 0;
 	private static final int ONCLICK_TASK_REGISTERED = 10;

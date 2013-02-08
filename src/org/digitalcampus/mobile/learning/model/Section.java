@@ -10,7 +10,7 @@ public class Section implements Serializable  {
 	 */
 	private static final long serialVersionUID = 6360494638548755423L;
 	
-	public static final String TAG = "Section";
+	public static final String TAG = Section.class.getSimpleName();
 	private int order;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private ArrayList<Activity> activities;

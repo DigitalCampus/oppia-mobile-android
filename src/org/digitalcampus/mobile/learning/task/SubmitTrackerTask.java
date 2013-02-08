@@ -41,7 +41,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 
-	public final static String TAG = "SubmitTrackerTask";
+	public final static String TAG = SubmitTrackerTask.class.getSimpleName();
 	public final static int SUBMIT_LOG_TASK = 1001;
 
 	private Context ctx;

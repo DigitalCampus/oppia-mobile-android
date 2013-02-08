@@ -17,7 +17,7 @@ import android.util.Log;
 public class InstallDownloadedModulesTask extends AsyncTask<Payload, String, Payload>
 
 {
-	private final static String TAG = "InstallDownloadedModulesTask";
+	private final static String TAG = InstallDownloadedModulesTask.class.getSimpleName();
 	private Context ctx;
 	private InstallModuleListener mStateListener;
 

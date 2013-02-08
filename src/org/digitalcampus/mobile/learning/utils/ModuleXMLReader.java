@@ -29,7 +29,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class ModuleXMLReader {
 
-	public static final String TAG = "ModuleXMLReader";
+	public static final String TAG = ModuleXMLReader.class.getSimpleName();
 	private Document document;
 	private String tempFilePath;
 

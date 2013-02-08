@@ -28,7 +28,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
-	public final static String TAG = "DownloadMediaTask";
+	public final static String TAG = DownloadMediaTask.class.getSimpleName();
 	private DownloadMediaListener mStateListener;
 	private Context ctx;
 	private SharedPreferences prefs;

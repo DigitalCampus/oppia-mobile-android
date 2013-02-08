@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class TrackerScheduleReceiver extends BroadcastReceiver {
 
-	public static final String TAG = "TrackerScheduleReceiver";
+	public static final String TAG = TrackerScheduleReceiver.class.getSimpleName();
 
 	// Restart service every 1 hour
 	private static final long REPEAT_TIME = 1000 * 3600;

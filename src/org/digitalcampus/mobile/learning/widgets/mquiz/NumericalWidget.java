@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 
 public class NumericalWidget extends QuestionWidget {
 
-	public static final String TAG = "NumericalWidget";
+	public static final String TAG = NumericalWidget.class.getSimpleName();
 	
 	private Context ctx;
 	

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 public class ModuleAboutAdapter extends ArrayAdapter<Prop> {
 
-	public static final String TAG = "ModuleAboutAdapter";
+	public static final String TAG = ModuleAboutAdapter.class.getSimpleName();
 
 	private final Context context;
 	private ArrayList<Prop> propsList;

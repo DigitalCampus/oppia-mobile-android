@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 
 public class TrackerStartServiceReceiver extends BroadcastReceiver {
 
-	public final static String TAG = "TrackerStartServiceReceiver";
+	public final static String TAG = TrackerStartServiceReceiver.class.getSimpleName();
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {

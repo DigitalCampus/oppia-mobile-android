@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 public class ModuleIndexActivity extends AppActivity {
 
-	public static final String TAG = "ModuleIndexActivity";
+	public static final String TAG = ModuleIndexActivity.class.getSimpleName();
 	
 	private Module module;
 	private ModuleXMLReader mxr;

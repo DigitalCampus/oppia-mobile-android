@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
 
 public class ImageUtils {
 	
-	public static final String TAG = "ImageUtils";
+	public static final String TAG = ImageUtils.class.getSimpleName();
 	
 	public static Bitmap LoadBMPsdcard(String path, Resources res, int defaultImageResource){  
         File imageFile = new File(path);  

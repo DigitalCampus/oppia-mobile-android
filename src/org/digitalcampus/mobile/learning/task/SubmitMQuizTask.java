@@ -41,7 +41,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 
-	public final static String TAG = "SubmitMQuizTask";
+	public final static String TAG = SubmitMQuizTask.class.getSimpleName();
 	public final static int SUBMIT_MQUIZ_TASK = 1002;
 
 	private Context ctx;

@@ -9,7 +9,7 @@ public class Media implements Serializable{
 	 */
 	private static final long serialVersionUID = -7381597814535579028L;
 	
-	public static final String TAG = "Media";
+	public static final String TAG = Media.class.getSimpleName();
 	private String filename;
 	private String downloadUrl;
 	private String digest;

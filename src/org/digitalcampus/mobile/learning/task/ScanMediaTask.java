@@ -10,7 +10,7 @@ import android.os.AsyncTask;
 
 public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
-	public final static String TAG = "ScanMediaTask";
+	public final static String TAG = ScanMediaTask.class.getSimpleName();
 	private ScanMediaListener mStateListener;
 	
 	protected Payload doInBackground(Payload... params) {

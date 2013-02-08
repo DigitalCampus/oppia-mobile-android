@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 public class DownloadListAdapter extends ArrayAdapter<Module> implements InstallModuleListener{
 
-	public static final String TAG = "DownloadListAdapter";
+	public static final String TAG = DownloadListAdapter.class.getSimpleName();
 
 	private final Context ctx;
 	private final ArrayList<Module> moduleList;
