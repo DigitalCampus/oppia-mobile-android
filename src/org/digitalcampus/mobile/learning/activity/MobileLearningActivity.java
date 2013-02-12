@@ -91,8 +91,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			});
 			builder.show();
 		}
-
-		//doBindService();
 	}
 
 	@Override

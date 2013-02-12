@@ -59,6 +59,8 @@
 	<string name="prefBackgroudDataConnect">Background activity tracker</string>
 	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
 	
+	<string name="notification_module_update_title">New module updates</string>
+	<string name="notification_module_update_text">Updates are available for your course modules.</string>
 	
 	<string name="title_login">Login</string>
 	<string name="login_username_title">Username</string>

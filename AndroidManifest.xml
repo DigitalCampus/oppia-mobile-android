@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.digitalcampus.mobile.learning"
-    android:versionCode="11"
-    android:versionName="1.10">
+    android:versionCode="12"
+    android:versionName="1.11">
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="10"
         android:targetSdkVersion="15" />
 
     <uses-permission
