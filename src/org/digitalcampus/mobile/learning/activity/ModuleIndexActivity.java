@@ -10,6 +10,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.Module;
+import org.digitalcampus.mobile.learning.model.ModuleMetaPage;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.utils.ImageUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
@@ -51,9 +52,10 @@ public class ModuleIndexActivity extends AppActivity {
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	
+        	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MobileLearning.MODULE_XML);
+        	module.setMetaPages(mxr.getMetaPages());
         }
-    	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MobileLearning.MODULE_XML);
+    	
     }
 
     @Override
@@ -81,23 +83,25 @@ public class ModuleIndexActivity extends AppActivity {
     }
     
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(Menu menu) {
+    	menu.clear();
         getMenuInflater().inflate(R.menu.activity_module_index, menu);
+        ArrayList<ModuleMetaPage> ammp = module.getMetaPages();
+        int order = 104;
+        for(ModuleMetaPage mmp: ammp){
+        	String title = mmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getTitle();
+        	menu.add(0,mmp.getId(),order, title).setIcon(android.R.drawable.ic_menu_info_details);
+        	order++;
+        }
         return true;
     }
     
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
     	Intent i;
+    	Bundle tb = new Bundle();
 		// Handle item selection
 		switch (item.getItemId()) {
-			case R.id.menu_module_about:
-				i = new Intent(this, ModuleAboutActivity.class);
-				Bundle tb = new Bundle();
-				tb.putSerializable(Module.TAG, module);
-				i.putExtras(tb);
-				startActivity(i);
-				return true;
 			case R.id.menu_language:
 				createLanguageDialog();
 				return true;
@@ -105,7 +109,14 @@ public class ModuleIndexActivity extends AppActivity {
 				startActivity(new Intent(this, HelpActivity.class));
 				return true;
 			default:
-				return super.onOptionsItemSelected(item);
+				i = new Intent(this, ModuleMetaPageActivity.class);
+				tb.putSerializable(Module.TAG, module);
+				tb.putSerializable(ModuleMetaPage.TAG, item.getItemId());
+				i.putExtras(tb);
+				startActivity(i);
+				return true;
+				
+				//return super.onOptionsItemSelected(item);
 		}
 	}
     

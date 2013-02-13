@@ -154,16 +154,8 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     
     @Override
    	public boolean onOptionsItemSelected(MenuItem item) {
-       	Intent i;
    		// Handle item selection
    		switch (item.getItemId()) {
-   			case R.id.menu_module_about:
-   				i = new Intent(this, ModuleAboutActivity.class);
-   				Bundle tb = new Bundle();
-   				tb.putSerializable(Module.TAG, module);
-   				i.putExtras(tb);
-   				startActivity(i);
-   				return true;
    			case R.id.menu_language:
    				createLanguageDialog();
    				return true;

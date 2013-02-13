@@ -59,7 +59,7 @@
             android:name=".activity.RegisterActivity"
             android:label="@string/title_register" />
          <activity
-            android:name=".activity.ModuleAboutActivity"
+            android:name="org.digitalcampus.mobile.learning.activity.ModuleMetaPageActivity"
             android:label="@string/title_module_about" />
          <activity
             android:name=".activity.DownloadMediaActivity"

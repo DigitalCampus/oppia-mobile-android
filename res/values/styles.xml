@@ -48,10 +48,16 @@
         <item name="android:textStyle">normal</item>
     </style>
     
-    <style name="SmallText">
+    <style name="SmallTextLight">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@drawable/text_light</item>
+    </style>
+    
+    <style name="SmallTextDark">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@drawable/text_dark</item>
     </style>
     
     <style name="PointsText">

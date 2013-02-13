@@ -26,6 +26,7 @@ public class Module implements Serializable {
 	private TreeSet<String> availableLangs = new TreeSet<String>();
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
+	private ArrayList<ModuleMetaPage> metaPages = new ArrayList<ModuleMetaPage>();
 	
 	public ArrayList<Media> getMedia() {
 		return media;
@@ -152,4 +153,23 @@ public class Module implements Serializable {
 			return true;
 		}
 	}
+	
+	public void setMetaPages(ArrayList<ModuleMetaPage> ammp){
+		this.metaPages = ammp;
+	}
+	
+	public ArrayList<ModuleMetaPage> getMetaPages(){
+		return this.metaPages;
+	}
+	
+	public ModuleMetaPage getMetaPage(int id){
+		for(ModuleMetaPage mmp: this.metaPages){
+			if(id == mmp.getId()){
+				return mmp;
+			}
+		}
+		return null;
+	}
+	
+	
 }

@@ -16,6 +16,7 @@ import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Media;
+import org.digitalcampus.mobile.learning.model.ModuleMetaPage;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -112,6 +113,52 @@ public class ModuleXMLReader {
 			hm.put(meta.item(j).getNodeName(), meta.item(j).getTextContent());
 		}
 		return hm;
+	}
+	
+	
+	public ArrayList<ModuleMetaPage> getMetaPages(){
+		ArrayList<ModuleMetaPage> ammp = new ArrayList<ModuleMetaPage>();
+		Node m = document.getFirstChild().getFirstChild();
+		NodeList meta = m.getChildNodes();
+		for (int j=0; j<meta.getLength(); j++) {
+			if(meta.item(j).getNodeName().toLowerCase().equals("page")){
+				ModuleMetaPage mmp = new ModuleMetaPage();
+				
+				NamedNodeMap pageAttrs = meta.item(j).getAttributes();
+				NodeList pages = meta.item(j).getChildNodes();
+				String key = pageAttrs.getNamedItem("id").getTextContent();
+				mmp.setId(Integer.parseInt(key));
+				
+				// get all the langs
+				ArrayList<String> langList = new ArrayList<String>();
+				for(int p=0; p<pages.getLength(); p++){
+					NamedNodeMap nodeAttrs = pages.item(p).getAttributes();
+					String lang = nodeAttrs.getNamedItem("lang").getTextContent();
+					if(!langList.contains(lang)){
+						langList.add(lang);
+					}
+				}
+				
+				// loop through the langs and set the titles/filenames
+				for(String lang: langList){
+					String title = "";
+					String location = "";
+					for(int p=0; p<pages.getLength(); p++){
+						NamedNodeMap nodeAttrs = pages.item(p).getAttributes();
+						if(pages.item(p).getNodeName().toLowerCase().equals("title") && nodeAttrs.getNamedItem("lang").getTextContent().equals(lang)){
+							title = pages.item(p).getTextContent();
+						} 
+						if(pages.item(p).getNodeName().toLowerCase().equals("location") && nodeAttrs.getNamedItem("lang").getTextContent().equals(lang)){
+							location = pages.item(p).getTextContent();
+						} 
+					}
+					Lang l = new Lang(lang,title,location);
+					mmp.addLang(l);
+				}
+				ammp.add(mmp);
+			}
+		}
+		return ammp;
 	}
 	
 	public ArrayList<Media> getMedia(){
