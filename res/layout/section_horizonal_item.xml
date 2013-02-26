@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textColor="@drawable/text_light"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="normal" />
     </LinearLayout>
 

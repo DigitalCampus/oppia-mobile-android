@@ -8,7 +8,6 @@
     <string name="menu_language">Cambiar idioma</string>
     <string name="menu_settings">Ajustes</string>
     <string name="menu_about">Sobre</string>
-    <string name="menu_module_about">Sobre el curso</string>
     <string name="menu_help">Ayuda</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_read_aloud">Read aloud</string>
@@ -17,7 +16,7 @@
     <string name="title_about">Sobre</string>
     <string name="title_help">Ayuda</string>
      
-    <string name="title_activity_module_index">Indice del curso</string>
+    <string name="title_activity_module_index">Índice del curso</string>
     <string name="title_activity_module">Actividad</string>
     <string name="title_download_activity">Gestionar cursos</string>
     <string name="title_prefs">Ajustes</string>
@@ -59,6 +58,8 @@
 	<string name="prefBackgroudDataConnect">Buscador de actividad previa</string>
 	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando esta aplicación no se esté ejecutando.</string>
 	
+	<string name="notification_module_update_title">New module updates</string>
+	<string name="notification_module_update_text">Updates are available for your course modules.</string>
 	
 	<string name="title_login">Inicio sesión</string>
 	<string name="login_username_title">Usuario</string>
@@ -104,6 +105,8 @@
 	<string name="info_scan_media_start">Scanning for media</string>
 	<string name="info_scan_media_checking">Checking for: %1$s</string>
 	<string name="info_scan_media_missing">Some media files (videos etc) are missing for your modules.</string>
+	
+	<string name="loading_modules">Loading modules</string>
 	
 	<string name="scan_media_download_button">Download</string>
 	<string name="scan_media_download_via_pc_button">Download via PC</string>

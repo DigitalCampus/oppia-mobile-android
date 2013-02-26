@@ -17,6 +17,7 @@ public class AboutActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
+		
 		this.drawHeader();
 		
 		WebView wv = (WebView) findViewById(R.id.about_webview);

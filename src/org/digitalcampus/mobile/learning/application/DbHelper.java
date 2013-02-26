@@ -1,6 +1,7 @@
 package org.digitalcampus.mobile.learning.application;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Module;
@@ -148,7 +149,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(MODULE_C_VERSIONID, versionid);
 		values.put(MODULE_C_TITLE, title);
 		values.put(MODULE_C_LOCATION, location);
-		values.put(MODULE_C_SHORTNAME, shortname.toLowerCase());
+		values.put(MODULE_C_SHORTNAME, shortname.toLowerCase(Locale.US));
 
 		if (c.getCount() == 0) {
 			c.close();

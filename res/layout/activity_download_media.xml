@@ -20,14 +20,12 @@
             android:orientation="vertical">
 
             <WebView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/download_media_webview"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" >
             </WebView>
 
             <WebView
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/download_media_list_webview"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" >

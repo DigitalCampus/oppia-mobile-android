@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeSet;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -90,17 +90,11 @@ public class ModuleXMLReader {
 		return titles;
 	}
 	
-	public TreeSet<String> getLangs(){
-		TreeSet<String> langs = new TreeSet<String>();
-		Node m = document.getFirstChild().getFirstChild();
-		NodeList meta = m.getChildNodes();
-		for (int j=0; j<meta.getLength(); j++) {
-			if(meta.item(j).getNodeName().equals("langs")){
-				NodeList langsNode = meta.item(j).getChildNodes();
-				for(int k=0; k<langsNode.getLength(); k++){
-					langs.add(langsNode.item(k).getTextContent());
-				}
-			}
+	public ArrayList<String> getLangs(){
+		ArrayList<String> langs = new ArrayList<String>();
+		NodeList ls = document.getElementsByTagName("langs").item(0).getChildNodes();
+		for (int j=0; j<ls.getLength(); j++) {
+			langs.add(ls.item(j).getTextContent());
 		}
 		return langs;
 	}
@@ -121,7 +115,7 @@ public class ModuleXMLReader {
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
-			if(meta.item(j).getNodeName().toLowerCase().equals("page")){
+			if(meta.item(j).getNodeName().toLowerCase(Locale.US).equals("page")){
 				ModuleMetaPage mmp = new ModuleMetaPage();
 				
 				NamedNodeMap pageAttrs = meta.item(j).getAttributes();
@@ -145,10 +139,10 @@ public class ModuleXMLReader {
 					String location = "";
 					for(int p=0; p<pages.getLength(); p++){
 						NamedNodeMap nodeAttrs = pages.item(p).getAttributes();
-						if(pages.item(p).getNodeName().toLowerCase().equals("title") && nodeAttrs.getNamedItem("lang").getTextContent().equals(lang)){
+						if(pages.item(p).getNodeName().toLowerCase(Locale.US).equals("title") && nodeAttrs.getNamedItem("lang").getTextContent().equals(lang)){
 							title = pages.item(p).getTextContent();
 						} 
-						if(pages.item(p).getNodeName().toLowerCase().equals("location") && nodeAttrs.getNamedItem("lang").getTextContent().equals(lang)){
+						if(pages.item(p).getNodeName().toLowerCase(Locale.US).equals("location") && nodeAttrs.getNamedItem("lang").getTextContent().equals(lang)){
 							location = pages.item(p).getTextContent();
 						} 
 					}

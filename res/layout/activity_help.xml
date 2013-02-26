@@ -9,7 +9,6 @@
         style="@style/Header" />
 
     <WebView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/about_webview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >

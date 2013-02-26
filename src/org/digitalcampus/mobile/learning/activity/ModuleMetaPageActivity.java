@@ -1,10 +1,12 @@
 package org.digitalcampus.mobile.learning.activity;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.ModuleMetaPage;
+import org.digitalcampus.mobile.learning.utils.FileUtils;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -51,8 +53,21 @@ public class ModuleMetaPageActivity extends AppActivity {
 		
 		WebView wv = (WebView) this.findViewById(R.id.metapage_webview);
 		wv.setBackgroundColor(0x00000000);
-		String url = "file://" + module.getLocation() + "/" +mmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getContent();
-		wv.loadUrl(url);
+		String url = module.getLocation() + "/" +mmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getContent();
+		
+		try {
+			String content =  "<html><head>";
+			content += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
+			content += "<link href='file:///android_asset/www/style.css' rel='stylesheet' type='text/css'/>";
+			content += "</head>";
+			content += FileUtils.readFile(url);
+			content += "</html>";
+			wv.loadDataWithBaseURL("file://" + module.getLocation() + "/", content, "text/html", "utf-8", null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			wv.loadUrl("file://" + url);
+		}
 	    
 	}
 	

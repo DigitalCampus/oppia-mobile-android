@@ -2,6 +2,7 @@ package org.digitalcampus.mobile.learning.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ModuleMetaPage implements Serializable{
 
@@ -27,7 +28,7 @@ public class ModuleMetaPage implements Serializable{
 	
 	public Lang getLang(String langStr){
 		for(Lang l: langs){
-			if(l.getLang().toLowerCase().equals(langStr.toLowerCase())){
+			if(l.getLang().toLowerCase(Locale.US).equals(langStr.toLowerCase(Locale.US))){
 				return l;
 			}
 		}

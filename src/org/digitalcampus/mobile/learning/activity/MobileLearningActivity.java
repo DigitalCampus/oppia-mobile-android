@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeSet;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.R.id;
@@ -55,7 +54,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	public static final String TAG = MobileLearningActivity.class.getSimpleName();
 	private SharedPreferences prefs;
 	private Module tempMod;
-	private TreeSet<String> langSet = new TreeSet<String>();
+	private ArrayList<String> langSet = new ArrayList<String>();
 	private HashMap<String, String> langMap = new HashMap<String, String>();
 	private String[] langArray;
 
@@ -129,7 +128,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			try {
 				ModuleXMLReader mxr = new ModuleXMLReader(m.getLocation() + "/" + MobileLearning.MODULE_XML);
 				m.setTitles(mxr.getTitles());
-				TreeSet<String> mLangs = mxr.getLangs();
+				ArrayList<String> mLangs = mxr.getLangs();
 				m.setAvailableLangs(mLangs);
 				// add these langs to the global available langs
 				langSet.addAll(mLangs);

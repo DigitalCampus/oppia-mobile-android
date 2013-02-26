@@ -28,7 +28,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textSize="14dp" />
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <Button
@@ -54,7 +54,7 @@
             android:layout_margin="2dip"
             android:gravity="center"
             android:text="@string/loading_modules"
-            android:textSize="18dp" 
+            android:textSize="18sp" 
             android:textColor="@drawable/text_light"/>
     </LinearLayout>
     
@@ -72,7 +72,7 @@
             android:layout_margin="2dip"
             android:gravity="center"
             android:text="@string/no_modules"
-            android:textSize="18dp" 
+            android:textSize="18sp" 
             android:textColor="@drawable/text_light"/>
 
         <Button

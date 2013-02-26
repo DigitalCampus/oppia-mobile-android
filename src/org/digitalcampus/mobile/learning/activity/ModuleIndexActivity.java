@@ -23,6 +23,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -126,9 +127,16 @@ public class ModuleIndexActivity extends AppActivity {
 		Iterator<String> itr = module.getAvailableLangs().iterator();
 		while (itr.hasNext()) {
 			String lang = itr.next();
+			String[] langCountry = lang.split("_");
 			Locale l = new Locale(lang);
-			String langDisp = l.getDisplayLanguage(l);
-			langMap.put(langDisp, lang);
+			if(langCountry.length == 2){
+				l = new Locale(langCountry[0],langCountry[1]);
+				String langDisp = l.getDisplayName();
+				langMap.put(langDisp, lang);
+			} else {
+				String langDisp = l.getDisplayLanguage();
+				langMap.put(langDisp, lang);
+			}
 		}
 
 	}
@@ -143,8 +151,11 @@ public class ModuleIndexActivity extends AppActivity {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			langArray[i] = key;
+			Log.d(TAG,key + ":" + value);
+			Log.d(TAG,"pref: " + prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 			if (value.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
 				selected = i;
+				Log.d(TAG,"selected:" + value);
 			}
 			i++;
 		}

@@ -72,9 +72,21 @@ public class PageWidget extends WidgetFactory {
 		}
 		// TODO error check here that the file really exists first
 		// TODO error check that location is in the hashmap
-		String url = "file://" + module.getLocation() + "/" + activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
-
-		wv.loadUrl(url);
+		String url = module.getLocation() + "/" + activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+		try {
+			String content =  "<html><head>";
+			content += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
+			content += "<link href='file:///android_asset/www/style.css' rel='stylesheet' type='text/css'/>";
+			content += "</head>";
+			content += FileUtils.readFile(url);
+			content += "</html>";
+			wv.loadDataWithBaseURL("file://" + module.getLocation() + "/", content, "text/html", "utf-8", null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			wv.loadUrl("file://" + url);
+		}
+		
 		
 		// set up the page to intercept videos
 		wv.setWebViewClient(new WebViewClient() {

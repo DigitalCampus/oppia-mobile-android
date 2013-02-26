@@ -3,6 +3,7 @@ package org.digitalcampus.mobile.learning.model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Points {
 
@@ -12,8 +13,8 @@ public class Points {
 	
 	public String getDate() {
 		try {
-			Date dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
-			return new SimpleDateFormat("dd-MMM-yyyy").format(dt);
+			Date dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",Locale.US).parse(date);
+			return new SimpleDateFormat("dd-MMM-yyyy",Locale.US).format(dt);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -23,8 +24,8 @@ public class Points {
 	
 	public String getTime() {
 		try {
-			Date dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
-			return new SimpleDateFormat("H:mm").format(dt);
+			Date dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",Locale.US).parse(date);
+			return new SimpleDateFormat("H:mm",Locale.US).format(dt);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

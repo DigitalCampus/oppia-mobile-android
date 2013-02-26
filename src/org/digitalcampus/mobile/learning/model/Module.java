@@ -3,7 +3,7 @@ package org.digitalcampus.mobile.learning.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeSet;
+import java.util.Locale;
 
 public class Module implements Serializable {
 	
@@ -23,7 +23,7 @@ public class Module implements Serializable {
 	private boolean installed;
 	private boolean toUpdate;
 	private String downloadUrl;
-	private TreeSet<String> availableLangs = new TreeSet<String>();
+	private ArrayList<String> availableLangs = new ArrayList<String>();
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
 	private ArrayList<ModuleMetaPage> metaPages = new ArrayList<ModuleMetaPage>();
@@ -44,11 +44,11 @@ public class Module implements Serializable {
 		this.imageFile = imageFile;
 	}
 	
-	public TreeSet<String> getAvailableLangs() {
+	public ArrayList<String> getAvailableLangs() {
 		return availableLangs;
 	}
 
-	public void setAvailableLangs(TreeSet<String> availableLangs) {
+	public void setAvailableLangs(ArrayList<String> availableLangs) {
 		this.availableLangs = availableLangs;
 	}
 
@@ -111,7 +111,7 @@ public class Module implements Serializable {
 	}
 
 	public void setShortname(String shortname) {
-		this.shortname = shortname.toLowerCase();
+		this.shortname = shortname.toLowerCase(Locale.US);
 	}
 
 	public int getModId() {

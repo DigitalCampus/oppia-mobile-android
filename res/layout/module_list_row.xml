@@ -27,8 +27,8 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textColor="@drawable/text_light"
-            android:textSize="18dp"
-            android:textStyle="normal" />
+            android:textSize="18sp"
+            android:textStyle="normal"/>
     </LinearLayout>
 
     <ProgressBar

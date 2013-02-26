@@ -336,18 +336,18 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 
 	public void onInit(int status) {
 
-	        // check for successful instantiation
-	        if (status == TextToSpeech.SUCCESS) {
-	        	Log.d(TAG,"tts success");
-	            //if (myTTS.isLanguageAvailable(Locale.ENGLISH) == TextToSpeech.LANG_AVAILABLE){
-	             //   myTTS.setLanguage(Locale.ENGLISH);
-	            //    Log.d(TAG,"tts set lang");
-	                
-	           // }
-	        } else if (status == TextToSpeech.ERROR) {
-	            Toast.makeText(this, "Sorry! Text To Speech failed...",
-	                    Toast.LENGTH_LONG).show();
-	        }
+		// check for successful instantiation
+		if (status == TextToSpeech.SUCCESS) {
+			Log.d(TAG, "tts success");
+			/*
+			 * if (myTTS.isLanguageAvailable(Locale.ENGLISH) == TextToSpeech.LANG_AVAILABLE){ 
+			 * 		myTTS.setLanguage(Locale.ENGLISH);
+			 * 		Log.d(TAG,"tts set lang");
+			 * }
+			 */
+		} else if (status == TextToSpeech.ERROR) {
+			//Toast.makeText(this, "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	@Override
@@ -364,30 +364,5 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-	/*@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		Log.d(TAG,"saving state....");
-		if (currentActivity != null) {
-			Log.d(TAG,"activity not null");
-			outState.putBoolean("Media_Playing", currentActivity.getMediaPlaying());
-			outState.putLong("Media_StartTime", currentActivity.getMediaStartTime());
-		}
-		
-	}
-	 
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		Log.d(TAG,"restoring state....");
-		if (savedInstanceState != null) {
-			Log.d(TAG,"savedInstanceState not null....");
-			currentActivity.setMediaPlaying(savedInstanceState.getBoolean("Media_Playing"));
-			currentActivity.setMediaStartTime(savedInstanceState.getLong("Media_StartTime"));
-		}
-		
-	}*/
-	
+    }	
 }

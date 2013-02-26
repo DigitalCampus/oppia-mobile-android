@@ -33,7 +33,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:gravity="left"
-                android:textSize="20sp" />
+                android:textSize="20sp"/>
 
             <LinearLayout
                 android:id="@+id/quizResponseWidget"
@@ -55,7 +55,7 @@
             android:layout_height="50dp"
             android:layout_weight=".5"
             android:text="@string/widget_mquiz_prev"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <Button
@@ -64,7 +64,7 @@
             android:layout_height="50dp"
             android:layout_weight=".5"
             android:text="@string/widget_mquiz_next"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
 
