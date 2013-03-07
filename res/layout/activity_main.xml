@@ -8,6 +8,13 @@
         android:id="@+id/header"
         style="@style/Header" />
     
+    <org.digitalcampus.mobile.learning.application.UserMessage
+        android:id="@+id/user_messages"
+        android:background="@drawable/message_background"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/home_messages"
         android:layout_width="fill_parent"

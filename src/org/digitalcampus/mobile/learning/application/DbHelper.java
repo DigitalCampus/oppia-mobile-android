@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.model.Activity;
+import org.digitalcampus.mobile.learning.model.MessageFeed;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.TrackerLog;
 import org.digitalcampus.mobile.learning.task.Payload;
@@ -122,14 +123,20 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-		db.execSQL("drop table if exists " + MODULE_TABLE);
-		db.execSQL("drop table if exists " + ACTIVITY_TABLE);
-		db.execSQL("drop table if exists " + TRACKER_LOG_TABLE);
-		db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
-		createModuleTable(db);
-		createActivityTable(db);
-		createLogTable(db);
-		createMquizResultsTable(db);		
+		if(oldVersion < 7){
+			db.execSQL("drop table if exists " + MODULE_TABLE);
+			db.execSQL("drop table if exists " + ACTIVITY_TABLE);
+			db.execSQL("drop table if exists " + TRACKER_LOG_TABLE);
+			db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
+			createModuleTable(db);
+			createActivityTable(db);
+			createLogTable(db);
+			createMquizResultsTable(db);		
+		}
+		
+		if(newVersion <= 8){
+			
+		}
 	}
 
 	public void onLogout(){
@@ -408,5 +415,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			c.close();
 			return true;
 		}
+	}
+	
+	public MessageFeed getMessageFeed(){
+		MessageFeed mf = new MessageFeed();
+		// TODO get messages from db...
+		return mf;
 	}
 }

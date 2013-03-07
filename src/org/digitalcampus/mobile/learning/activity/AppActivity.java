@@ -2,6 +2,8 @@ package org.digitalcampus.mobile.learning.activity;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.Header;
+import org.digitalcampus.mobile.learning.application.UserMessage;
+import org.digitalcampus.mobile.learning.model.MessageFeed;
 
 import android.app.Activity;
 
@@ -10,6 +12,7 @@ public class AppActivity extends Activity {
 	public static final String TAG = AppActivity.class.getSimpleName();
 	
 	private Header header;
+	private UserMessage messages;
 	
 	public void drawHeader() {
 		try {
@@ -30,6 +33,23 @@ public class AppActivity extends Activity {
 		} catch (Exception npe) {
 			// do nothing
 		}
+	}
+	
+	public void drawMessages(){
+		try {
+			messages = (UserMessage) findViewById(R.id.user_messages);
+			messages.initUserMessage();
+		} catch (NullPointerException npe) {
+			// do nothing
+		}
+	}
+	
+	public void updateMessages(MessageFeed mf){
+		messages.updateUserMessages(mf);
+	}
+	
+	public void stopMessages(){
+		messages.stopMessages();
 	}
 
 }

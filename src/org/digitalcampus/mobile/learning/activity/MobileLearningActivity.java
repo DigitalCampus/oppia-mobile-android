@@ -15,6 +15,7 @@ import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
+import org.digitalcampus.mobile.learning.model.MessageFeed;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
@@ -69,6 +70,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 		
 		this.drawHeader();
+		this.drawMessages();
 		
 		// set preferred lang to the default lang
 		if (prefs.getString("prefLanguage", "").equals("")) {
@@ -115,7 +117,17 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	@Override
 	public void onResume(){
 		super.onResume();
+		DbHelper db = new DbHelper(this);
+		MessageFeed mf = db.getMessageFeed();
+		db.close();
+		this.updateMessages(mf);
 		this.updateHeader();
+	}
+	
+	@Override
+	public void onPause(){
+		this.stopMessages();
+		super.onPause();
 	}
 	
 	private void displayModules() {
