@@ -102,6 +102,10 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     @Override
     public void onPause(){
     	super.onPause();
+    	if (myTTS != null) {
+    		myTTS.shutdown();
+        }
+    	
     	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
     	markIfComplete(acts.get(this.currentActivityNo).getDigest());
     	// start a new tracker service
@@ -112,12 +116,12 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 		tb.putBoolean("backgroundData", true);
 		service.putExtras(tb);
 		
-		this.startService(service);
 		if(currentActivity != null){
 			mediaPlayingState.put("Media_Playing", currentActivity.getMediaPlaying());
 			mediaPlayingState.put("Media_StartTime", currentActivity.getMediaStartTime());
 			mediaPlayingState.put("Media_File", currentActivity.getMediaFileName());
     	}
+		this.startService(service);
     }
     
     @Override
