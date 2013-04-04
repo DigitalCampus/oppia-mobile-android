@@ -87,9 +87,11 @@ public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 				BugSenseHandler.sendException(e1);
 			} catch (SocketTimeoutException ste){
 				ste.printStackTrace();
+				BugSenseHandler.sendException(ste);
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (IOException e1) { 
 				e1.printStackTrace();
+				BugSenseHandler.sendException(e1);
 				publishProgress(ctx.getString(R.string.error_connection));
 			}
 		}
