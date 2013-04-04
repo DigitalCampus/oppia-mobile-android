@@ -21,6 +21,8 @@ import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.Module;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -82,6 +84,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 				publishProgress(ctx.getString(R.string.download_complete));
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 
+				BugSenseHandler.sendException(e1);
 			} catch (SocketTimeoutException ste){
 				ste.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
