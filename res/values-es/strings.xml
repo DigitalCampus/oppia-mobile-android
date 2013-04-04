@@ -1,8 +1,8 @@
 <resources>
 	<!-- TODO - organise these a bit better -->
-    <string name="app_name">Mobile Learning</string>
-    <string name="app_logo_alt">DC Logo</string>
-    <string name="app_tagline">by Digital Campus</string>
+    <string name="app_name">OppiaMobile</string>
+    <string name="app_logo_alt">Digital Campus Logo</string>
+    <string name="app_tagline">Mobile Learning by Digital Campus</string>
     
     <string name="menu_download">Gestionar cursos</string>
     <string name="menu_language">Cambiar idioma</string>
@@ -12,7 +12,7 @@
     <string name="menu_logout">Logout</string>
     <string name="menu_read_aloud">Read aloud</string>
     
-    <string name="service_tracker">DC buscador de servicio</string>
+    <string name="service_tracker">OppiaMobile buscador de servicio</string>
     <string name="title_about">Sobre</string>
     <string name="title_help">Ayuda</string>
      
