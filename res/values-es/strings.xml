@@ -136,7 +136,7 @@
 	
 	<string name="change_language">Cambiar idioma</string>
 	
-	<string name="download_via_pc_message">A small file \'%1$s\' has been placed on your phone SD card, open this on your computer and follow the instructions to download the media files and copy them to onto your phone SD card.</string>
+	<string name="download_via_pc_message">A small file \'%1$s\' has been placed on your phone SD card, open this on your computer and follow the instructions to download the media files and copy them onto your phone SD card.</string>
 	<string name="download_via_pc_title">Download Media Files</string>
 	<string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
 	<string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
