@@ -86,13 +86,22 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				
 				dp.setProgress(100);
 				publishProgress(dp);
+				
 				// check the file digest matches, otherwise delete the file 
 				// (it's either been a corrupted download or it's the wrong file)
 				byte[] digest = md.digest();
-				BigInteger number = new BigInteger(1,digest);
+				String resultMD5 = "";
+				
+				for (int i=0; i < digest.length; i++) {
+					resultMD5 += Integer.toString( ( digest[i] & 0xff ) + 0x100, 16).substring( 1 );
+			    }
+				
 				Log.d(TAG,"supplied   digest: " + m.getDigest());
-				Log.d(TAG,"calculated digest: " + number.toString(16));
-				if(!m.getDigest().equals(number.toString(16))){
+				Log.d(TAG,"calculated digest: " + resultMD5);
+				
+				// TODO - this should be changed to .equals once the updated modules have been published and users 
+				// are using the updated module versions
+				if(!resultMD5.contains(m.getDigest())){
 					if (file.exists() && !file.isDirectory()){
 				        file.delete();
 				    }
