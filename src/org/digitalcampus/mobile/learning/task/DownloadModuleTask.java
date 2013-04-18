@@ -80,6 +80,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 				List<NameValuePair> pairs = new LinkedList<NameValuePair>();
 				pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
 				pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
+				pairs.add(new BasicNameValuePair("format", "json"));
 				String paramString = URLEncodedUtils.format(pairs, "utf-8");
 				
 				String url = dm.getDownloadUrl();

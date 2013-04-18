@@ -79,6 +79,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 
 		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault))
 				+ MobileLearning.REGISTER_PATH;
+		
 		HttpPost httpPost = new HttpPost(url);
 		try {
 			// update progress dialog

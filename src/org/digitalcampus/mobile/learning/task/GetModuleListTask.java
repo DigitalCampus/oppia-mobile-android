@@ -74,6 +74,7 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
 		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
+		pairs.add(new BasicNameValuePair("format", "json"));
 		
 		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.SERVER_MODULES_PATH;
 		String paramString = URLEncodedUtils.format(pairs, "utf-8");
