@@ -276,6 +276,9 @@ public class MQuizWidget extends WidgetFactory {
 			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("quiz_id", mQuiz.getID());
+			mQuiz.mark();
+			float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
+			obj.put("score", percent);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			BugSenseHandler.sendException(e);
