@@ -21,7 +21,8 @@
         android:icon="@drawable/dc_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.Dark"
-        android:allowBackup="true">
+        android:allowBackup="true"
+        android:name=".application.MobileLearning">
         <activity
             android:name=".activity.MobileLearningActivity"
             android:label="@string/app_name">

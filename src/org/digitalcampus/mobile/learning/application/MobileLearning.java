@@ -19,6 +19,8 @@ package org.digitalcampus.mobile.learning.application;
 
 import java.io.File;
 
+import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -56,6 +58,9 @@ public class MobileLearning extends Application {
 	
 	// only used in case a module doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
+	
+	// for tracking if SubmitTrackerTask is already running
+	public SubmitTrackerTask omSubmitTrackerTask = null;
 	
 	public static boolean createDirs() {
 		String cardstatus = Environment.getExternalStorageState();

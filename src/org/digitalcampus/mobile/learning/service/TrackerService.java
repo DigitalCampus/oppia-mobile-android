@@ -92,10 +92,12 @@ public class TrackerService extends Service implements GetModuleListListener{
 			}
 
 			// send activity trackers
-			p = db.getUnsentLog();
-			SubmitTrackerTask stt = new SubmitTrackerTask(this);
-			stt.execute(p);
-
+			MobileLearning app = (MobileLearning) this.getApplication();
+			if(app.omSubmitTrackerTask == null){
+				app.omSubmitTrackerTask = new SubmitTrackerTask(this);
+				app.omSubmitTrackerTask.execute();
+			}
+			
 			// send quiz results
 			Payload mqp = db.getUnsentMquiz();
 			SubmitMQuizTask smqt = new SubmitMQuizTask(this);

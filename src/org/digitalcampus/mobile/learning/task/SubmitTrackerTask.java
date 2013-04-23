@@ -71,8 +71,10 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 
 	@Override
 	protected Payload doInBackground(Payload... params) {
-		Payload payload = params[0];
-
+		DbHelper db = new DbHelper(ctx);
+		Payload payload = db.getUnsentLog();
+		db.close();
+		
 		for (Object o : payload.data) {
 			TrackerLog l = (TrackerLog) o;
 			HttpParams httpParameters = new BasicHttpParams();
@@ -121,9 +123,9 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
-						DbHelper db = new DbHelper(ctx);
-						db.markLogSubmitted(l.id);
-						db.close();
+						DbHelper dbh = new DbHelper(ctx);
+						dbh.markLogSubmitted(l.id);
+						dbh.close();
 						payload.result = true;
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
@@ -131,6 +133,12 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 						editor.putInt("prefPoints", jsonResp.getInt("points"));
 						editor.putInt("prefBadges", jsonResp.getInt("badges"));
 				    	editor.commit();
+						break;
+					case 404: // submitted but invalid digest - so record as submitted so doesn't keep trying
+						DbHelper dbh1 = new DbHelper(ctx);
+						dbh1.markLogSubmitted(l.id);
+						dbh1.close();
+						payload.result = true;
 						break;
 					default:
 						payload.result = false;
@@ -157,5 +165,12 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 	protected void onProgressUpdate(String... obj) {
 		Log.d(TAG, obj[0]);
 	}
+	
+	@Override
+    protected void onPostExecute(Payload p) {
+		// reset submittask back to null after completion - so next call can run properly
+		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+		app.omSubmitTrackerTask = null;
+    }
 
 }
