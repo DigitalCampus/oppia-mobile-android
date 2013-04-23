@@ -155,7 +155,7 @@ public class TrackerService extends Service implements GetModuleListListener{
 	                R.drawable.dc_logo);
 			NotificationCompat.Builder mBuilder =
 				    new NotificationCompat.Builder(this)
-				    .setSmallIcon(R.drawable.dc_notification)
+				    .setSmallIcon(R.drawable.ic_stat_notification)
 				    .setLargeIcon(icon)
 				    .setContentTitle(getString(R.string.notification_module_update_title))
 				    .setContentText(getString(R.string.notification_module_update_text));

@@ -108,8 +108,8 @@
 	
 	<string name="loading_modules">Loading modules</string>
 	
-	<string name="scan_media_download_button">Download</string>
-	<string name="scan_media_download_via_pc_button">Download via PC</string>
+	<string name="scan_media_download_button">Descarga</string>
+	<string name="scan_media_download_via_pc_button">Descarga vía PC</string>
 	
 	<string name="error_connection">Error conectando al servidor</string>
 	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
@@ -120,8 +120,8 @@
 	<string name="error_login">Error en el acceso</string>
 	
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
-	<string name="error_media_not_found">Media file: \'%1$d\' not found.</string>
-	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
+	<string name="error_media_not_found">Media file: \'%1$s\' not found.</string>
+	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files vía your PC.</string>
 	
 	<string name="loading_module_list">Obteniendo la lista de cursos</string>
 	<string name="loading_points">Getting points</string>
