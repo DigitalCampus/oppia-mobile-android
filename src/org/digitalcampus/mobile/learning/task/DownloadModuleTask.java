@@ -20,7 +20,10 @@ package org.digitalcampus.mobile.learning.task;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,17 +31,12 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
+import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.Module;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -46,7 +44,9 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
+import com.bugsense.trace.BugSenseHandler;
+
+public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
 	public final static String TAG = DownloadModuleTask.class.getSimpleName();
 	private InstallModuleListener mStateListener;
@@ -63,18 +63,8 @@ public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 		// TODO what to do when there is an error connecting - how to flag back to user
 		for (Payload payload : params) {
 			Module dm = (Module) payload.data.get(0);
-
+			DownloadProgress dp = new DownloadProgress();
 			try { 
-				HttpParams httpParameters = new BasicHttpParams();
-				HttpConnectionParams.setConnectionTimeout(
-						httpParameters,
-						Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
-								ctx.getString(R.string.prefServerTimeoutConnection))));
-				HttpConnectionParams.setSoTimeout(
-						httpParameters,
-						Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
-								ctx.getString(R.string.prefServerTimeoutResponseDefault))));
-				DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 
 				// add api_key/username params
 				List<NameValuePair> pairs = new LinkedList<NameValuePair>();
@@ -84,6 +74,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 				String paramString = URLEncodedUtils.format(pairs, "utf-8");
 				
 				String url = dm.getDownloadUrl();
+
 				
 				if(!url.endsWith("?"))
 			        url += "?";
@@ -91,33 +82,71 @@ public class DownloadModuleTask extends AsyncTask<Payload, String, Payload>{
 				
 				Log.d(TAG,"Downloading:" + url);
 				
+				URL u = new URL(url);
+                HttpURLConnection c = (HttpURLConnection) u.openConnection();
+                c.setRequestMethod("GET");
+                c.setDoOutput(true);
+                c.connect();
+                c.setConnectTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
+								ctx.getString(R.string.prefServerTimeoutConnection))));
+                c.setReadTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
+								ctx.getString(R.string.prefServerTimeoutResponse))));
+                
 				HttpGet httpGet = new HttpGet(url);
 				
+				int fileLength = c.getContentLength();
+				
 				String localFileName = dm.getShortname()+"-"+String.format("%.0f",dm.getVersionId())+".zip";
+                
+				dp.setMessage(localFileName);
+				dp.setProgress(0);
+				publishProgress(dp);
+					
+				
 				Log.d(TAG,"saving to: "+localFileName);
 				
-				FileOutputStream fos = new FileOutputStream(new File(MobileLearning.DOWNLOAD_PATH,localFileName));
-				client.execute(httpGet).getEntity().writeTo(fos);
-				fos.close();
-				publishProgress(ctx.getString(R.string.download_complete));
+				FileOutputStream f = new FileOutputStream(new File(MobileLearning.DOWNLOAD_PATH,localFileName));
+				InputStream in = c.getInputStream();
+				
+                byte[] buffer = new byte[1024];
+                int len1 = 0;
+                long total = 0;
+                int progress = 0;
+                while ((len1 = in.read(buffer)) > 0) {
+                    total += len1; 
+                    progress = (int)(total*100)/fileLength;
+                    if(progress > 0){
+	                    dp.setProgress(progress);
+	                    publishProgress(dp);
+                    }
+                    f.write(buffer, 0, len1);
+                }
+                f.close();
+				
+				dp.setProgress(100);
+				publishProgress(dp);
+				dp.setProgress(ctx.getString(R.string.download_complete));
+				publishProgress(dp);
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 
 				BugSenseHandler.sendException(e1);
 			} catch (SocketTimeoutException ste){
 				ste.printStackTrace();
 				BugSenseHandler.sendException(ste);
-				publishProgress(ctx.getString(R.string.error_connection));
+				dp.setProgress(ctx.getString(R.string.download_complete));
+				publishProgress(dp);
 			} catch (IOException e1) { 
 				e1.printStackTrace();
 				BugSenseHandler.sendException(e1);
-				publishProgress(ctx.getString(R.string.error_connection));
+				dp.setProgress(ctx.getString(R.string.error_connection));
+				publishProgress(dp);
 			}
 		}
 		return null;
 	}
 	
 	@Override
-	protected void onProgressUpdate(String... obj) {
+	protected void onProgressUpdate(DownloadProgress... obj) {
 		synchronized (this) {
             if (mStateListener != null) {
                 mStateListener.downloadProgressUpdate(obj[0]);

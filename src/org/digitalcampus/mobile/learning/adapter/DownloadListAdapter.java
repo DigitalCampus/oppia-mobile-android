@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.activity.DownloadActivity;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
+import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.DownloadModuleTask;
 import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
@@ -96,6 +97,9 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
              		myProgress = new ProgressDialog(ctx);
              		myProgress.setTitle(R.string.install);
              		myProgress.setMessage(ctx.getString(R.string.download_starting));
+             		myProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+             		myProgress.setProgress(0);
+             		myProgress.setMax(100);
              		myProgress.setCancelable(true);
              		myProgress.show();
                      
@@ -118,18 +122,21 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 
 	public void installComplete() {
 		Log.d(TAG,"install complete");
+		myProgress.setProgress(100);
 		myProgress.setMessage(ctx.getString(R.string.install_complete));
 		myProgress.dismiss();
 		// new refresh the module list
 		DownloadActivity da = (DownloadActivity) ctx;
 		da.refreshModuleList();
 	}
-
-	public void downloadProgressUpdate(String msg) {
-		myProgress.setMessage(msg);
-	}
 	
-	public void installProgressUpdate(String msg) {
-		myProgress.setMessage(msg);
+	public void downloadProgressUpdate(DownloadProgress dp) {
+		myProgress.setMessage(dp.getMessage());	
+		myProgress.setProgress(dp.getProgress());
+	}
+
+	public void installProgressUpdate(DownloadProgress dp) {
+		myProgress.setMessage(dp.getMessage());
+		myProgress.setProgress(dp.getProgress());
 	}
 }

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
+import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 import org.digitalcampus.mobile.learning.R;
@@ -31,7 +32,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class InstallDownloadedModulesTask extends AsyncTask<Payload, String, Payload>
+public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadProgress, Payload>
 
 {
 	private final static String TAG = InstallDownloadedModulesTask.class.getSimpleName();
@@ -47,11 +48,12 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, String, Pay
 
 		// get folder
 		File dir = new File(MobileLearning.DOWNLOAD_PATH);
-
+		DownloadProgress dp = new DownloadProgress();
 		String[] children = dir.list();
 		if (children != null) {
 			Log.d(TAG, "Installing new modules");
-			publishProgress(ctx.getString(R.string.installing));
+			dp.setProgress(ctx.getString(R.string.installing));
+			publishProgress(dp);
 			for (int i = 0; i < children.length; i++) {
 
 				// extract to temp dir and check it's a valid package file
@@ -84,18 +86,23 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, String, Pay
 				String versionid = hm.get("versionid");
 				String title = hm.get("title");
 				String location = MobileLearning.MODULES_PATH + moddirs[0];
-				publishProgress(ctx.getString(R.string.installing_module, title));
+				dp.setProgress(ctx.getString(R.string.installing_module, title));
+				publishProgress(dp);
 				
 				DbHelper db = new DbHelper(ctx);
 				long added = db.addOrUpdateModule(versionid, title, location, moddirs[0]);
-
+				dp.setProgress(10);
+				publishProgress(dp);
+				
 				if (added != -1) {
 					File src = new File(tempdir + "/" + moddirs[0]);
 					File dest = new File(MobileLearning.MODULES_PATH);
 					mxr.setTempFilePath(tempdir + "/" + moddirs[0]);
 
 					db.insertActivities(mxr.getActivities(added));
-
+					dp.setProgress(70);
+					publishProgress(dp);
+					
 					// Delete old module
 					File oldMod = new File(MobileLearning.MODULES_PATH + moddirs[0]);
 					FileUtils.deleteDir(oldMod);
@@ -105,13 +112,16 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, String, Pay
 
 					if (success) {
 						Log.v(TAG, "File was successfully moved");
-						publishProgress(ctx.getString(R.string.install_module_complete, title));
+						dp.setProgress(ctx.getString(R.string.install_module_complete, title));
+						publishProgress(dp);
 					} else {
 						Log.v(TAG, "File was not successfully moved");
-						publishProgress(ctx.getString(R.string.error_installing_module, title));
+						dp.setProgress(ctx.getString(R.string.error_installing_module, title));
+						publishProgress(dp);
 					}
 				}  else {
-					publishProgress(ctx.getString(R.string.error_latest_already_installed, title));
+					dp.setProgress(ctx.getString(R.string.error_latest_already_installed, title));
+					publishProgress(dp);
 				}
 				db.close();
 				// delete temp directory
@@ -122,14 +132,15 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, String, Pay
 				File zip = new File(MobileLearning.DOWNLOAD_PATH + children[i]);
 				zip.delete();
 				Log.d(TAG, "Zip file deleted");
-
+				dp.setProgress(90);
+				publishProgress(dp);
 			}
 		}
 		return null;
 	}
 
 	@Override
-	protected void onProgressUpdate(String... obj) {
+	protected void onProgressUpdate(DownloadProgress... obj) {
 		synchronized (this) {
             if (mStateListener != null) {
                 // update progress and total

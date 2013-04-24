@@ -237,6 +237,12 @@ public class ModuleXMLReader {
 		return acts;
 	}
 	
+	public int getNoActivities(long modId){
+		Node struct = document.getFirstChild().getFirstChild().getNextSibling();
+		NodeList s = struct.getChildNodes();
+		return s.getLength();
+	}
+	
 	public ArrayList<Section> getSections(int modId, Context ctx){
 		// TODO - must be better way of navigating the nodes??
 		ArrayList<Section> sections = new ArrayList<Section>();

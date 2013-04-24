@@ -34,4 +34,8 @@ public class DownloadProgress {
 	public void setProgress(int progress) {
 		this.progress = progress;
 	}
+	
+	public void setProgress(String progress) {
+		this.message = progress;
+	}
 }

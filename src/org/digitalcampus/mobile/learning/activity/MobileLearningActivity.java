@@ -32,6 +32,7 @@ import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
+import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.MessageFeed;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
@@ -353,8 +354,8 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 	}
 
-	public void installProgressUpdate(String msg) {
-		Log.d(TAG, "Listener sent message:" + msg);
+	public void installProgressUpdate(DownloadProgress dp) {
+		Log.d(TAG, "Listener sent message:" + dp.getMessage());
 	}
 
 	@Override
@@ -499,6 +500,11 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			btn.setOnClickListener(null);
 			btn.setTag(null);
 		}
+	}
+
+	public void downloadProgressUpdate(DownloadProgress dp) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
