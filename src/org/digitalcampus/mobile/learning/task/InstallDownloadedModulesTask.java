@@ -20,22 +20,21 @@ package org.digitalcampus.mobile.learning.task;
 import java.io.File;
 import java.util.HashMap;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
-import org.digitalcampus.mobile.learning.R;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadProgress, Payload>
 
 {
-	private final static String TAG = InstallDownloadedModulesTask.class.getSimpleName();
+	public final static String TAG = InstallDownloadedModulesTask.class.getSimpleName();
 	private Context ctx;
 	private InstallModuleListener mStateListener;
 
@@ -46,14 +45,14 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 	@Override
 	protected Payload doInBackground(Payload... params) {
 
+		Payload payload = params[0];
+		
 		// get folder
 		File dir = new File(MobileLearning.DOWNLOAD_PATH);
 		DownloadProgress dp = new DownloadProgress();
 		String[] children = dir.list();
 		if (children != null) {
-			Log.d(TAG, "Installing new modules");
-			dp.setProgress(ctx.getString(R.string.installing));
-			publishProgress(dp);
+
 			for (int i = 0; i < children.length; i++) {
 
 				// extract to temp dir and check it's a valid package file
@@ -91,8 +90,6 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				
 				DbHelper db = new DbHelper(ctx);
 				long added = db.addOrUpdateModule(versionid, title, location, moddirs[0]);
-				dp.setProgress(10);
-				publishProgress(dp);
 				
 				if (added != -1) {
 					File src = new File(tempdir + "/" + moddirs[0]);
@@ -100,8 +97,6 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 					mxr.setTempFilePath(tempdir + "/" + moddirs[0]);
 
 					db.insertActivities(mxr.getActivities(added));
-					dp.setProgress(70);
-					publishProgress(dp);
 					
 					// Delete old module
 					File oldMod = new File(MobileLearning.MODULES_PATH + moddirs[0]);
@@ -111,32 +106,26 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 					boolean success = src.renameTo(new File(dest, src.getName()));
 
 					if (success) {
-						Log.v(TAG, "File was successfully moved");
-						dp.setProgress(ctx.getString(R.string.install_module_complete, title));
-						publishProgress(dp);
+						payload.result = true;
+						payload.resultResponse = ctx.getString(R.string.install_module_complete, title);
 					} else {
-						Log.v(TAG, "File was not successfully moved");
-						dp.setProgress(ctx.getString(R.string.error_installing_module, title));
-						publishProgress(dp);
+						payload.result = false;
+						payload.resultResponse = ctx.getString(R.string.error_installing_module, title);
 					}
 				}  else {
-					dp.setProgress(ctx.getString(R.string.error_latest_already_installed, title));
-					publishProgress(dp);
+					payload.result = false;
+					payload.resultResponse = ctx.getString(R.string.error_latest_already_installed, title);
 				}
 				db.close();
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);
-				Log.d(TAG, "Temp directory deleted");
 
 				// delete zip file from download dir
 				File zip = new File(MobileLearning.DOWNLOAD_PATH + children[i]);
 				zip.delete();
-				Log.d(TAG, "Zip file deleted");
-				dp.setProgress(90);
-				publishProgress(dp);
 			}
 		}
-		return null;
+		return payload;
 	}
 
 	@Override
@@ -150,10 +139,10 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 	}
 
 	@Override
-	protected void onPostExecute(Payload results) {
+	protected void onPostExecute(Payload p) {
 		synchronized (this) {
             if (mStateListener != null) {
-               mStateListener.installComplete();
+               mStateListener.installComplete(p);
             }
         }
 	}

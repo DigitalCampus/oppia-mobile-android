@@ -18,12 +18,13 @@
 package org.digitalcampus.mobile.learning.listener;
 
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
+import org.digitalcampus.mobile.learning.task.Payload;
 
 public interface InstallModuleListener {
 	
-	void downloadComplete();
+	void downloadComplete(Payload p);
     void downloadProgressUpdate(DownloadProgress dp);
     
-	void installComplete();
+	void installComplete(Payload p);
     void installProgressUpdate(DownloadProgress dp);
 }

@@ -29,7 +29,6 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.digitalcampus.mobile.learning.R;
@@ -60,89 +59,90 @@ public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Pay
 	
 	@Override
 	protected Payload doInBackground(Payload... params) {
-		// TODO what to do when there is an error connecting - how to flag back to user
-		for (Payload payload : params) {
-			Module dm = (Module) payload.data.get(0);
-			DownloadProgress dp = new DownloadProgress();
-			try { 
+		Payload payload = params[0];
+		
+		Module dm = (Module) payload.data.get(0);
+		DownloadProgress dp = new DownloadProgress();
+		try { 
 
-				// add api_key/username params
-				List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-				pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
-				pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
-				pairs.add(new BasicNameValuePair("format", "json"));
-				String paramString = URLEncodedUtils.format(pairs, "utf-8");
-				
-				String url = dm.getDownloadUrl();
+			// add api_key/username params
+			List<NameValuePair> pairs = new LinkedList<NameValuePair>();
+			pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
+			pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
+			pairs.add(new BasicNameValuePair("format", "json"));
+			String paramString = URLEncodedUtils.format(pairs, "utf-8");
+			
+			String url = dm.getDownloadUrl();
 
+			
+			if(!url.endsWith("?"))
+		        url += "?";
+			url += paramString;
+			
+			Log.d(TAG,"Downloading:" + url);
+			
+			URL u = new URL(url);
+            HttpURLConnection c = (HttpURLConnection) u.openConnection();
+            c.setRequestMethod("GET");
+            c.setDoOutput(true);
+            c.connect();
+            c.setConnectTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
+							ctx.getString(R.string.prefServerTimeoutConnection))));
+            c.setReadTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
+							ctx.getString(R.string.prefServerTimeoutResponse))));
+			
+			int fileLength = c.getContentLength();
+			
+			String localFileName = dm.getShortname()+"-"+String.format("%.0f",dm.getVersionId())+".zip";
+            
+			dp.setMessage(localFileName);
+			dp.setProgress(0);
+			publishProgress(dp);
 				
-				if(!url.endsWith("?"))
-			        url += "?";
-				url += paramString;
-				
-				Log.d(TAG,"Downloading:" + url);
-				
-				URL u = new URL(url);
-                HttpURLConnection c = (HttpURLConnection) u.openConnection();
-                c.setRequestMethod("GET");
-                c.setDoOutput(true);
-                c.connect();
-                c.setConnectTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
-								ctx.getString(R.string.prefServerTimeoutConnection))));
-                c.setReadTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
-								ctx.getString(R.string.prefServerTimeoutResponse))));
-                
-				HttpGet httpGet = new HttpGet(url);
-				
-				int fileLength = c.getContentLength();
-				
-				String localFileName = dm.getShortname()+"-"+String.format("%.0f",dm.getVersionId())+".zip";
-                
-				dp.setMessage(localFileName);
-				dp.setProgress(0);
-				publishProgress(dp);
-					
-				
-				Log.d(TAG,"saving to: "+localFileName);
-				
-				FileOutputStream f = new FileOutputStream(new File(MobileLearning.DOWNLOAD_PATH,localFileName));
-				InputStream in = c.getInputStream();
-				
-                byte[] buffer = new byte[1024];
-                int len1 = 0;
-                long total = 0;
-                int progress = 0;
-                while ((len1 = in.read(buffer)) > 0) {
-                    total += len1; 
-                    progress = (int)(total*100)/fileLength;
-                    if(progress > 0){
-	                    dp.setProgress(progress);
-	                    publishProgress(dp);
-                    }
-                    f.write(buffer, 0, len1);
+			
+			Log.d(TAG,"saving to: "+localFileName);
+			
+			FileOutputStream f = new FileOutputStream(new File(MobileLearning.DOWNLOAD_PATH,localFileName));
+			InputStream in = c.getInputStream();
+			
+            byte[] buffer = new byte[1024];
+            int len1 = 0;
+            long total = 0;
+            int progress = 0;
+            while ((len1 = in.read(buffer)) > 0) {
+                total += len1; 
+                progress = (int)(total*100)/fileLength;
+                if(progress > 0){
+                    dp.setProgress(progress);
+                    publishProgress(dp);
                 }
-                f.close();
-				
-				dp.setProgress(100);
-				publishProgress(dp);
-				dp.setProgress(ctx.getString(R.string.download_complete));
-				publishProgress(dp);
-			} catch (ClientProtocolException e1) { 
-				e1.printStackTrace(); 
-				BugSenseHandler.sendException(e1);
-			} catch (SocketTimeoutException ste){
-				ste.printStackTrace();
-				BugSenseHandler.sendException(ste);
-				dp.setProgress(ctx.getString(R.string.download_complete));
-				publishProgress(dp);
-			} catch (IOException e1) { 
-				e1.printStackTrace();
-				BugSenseHandler.sendException(e1);
-				dp.setProgress(ctx.getString(R.string.error_connection));
-				publishProgress(dp);
-			}
+                f.write(buffer, 0, len1);
+            }
+            f.close();
+			
+			dp.setProgress(100);
+			publishProgress(dp);
+			dp.setProgress(ctx.getString(R.string.download_complete));
+			publishProgress(dp);
+			payload.result = true;
+		} catch (ClientProtocolException e1) { 
+			e1.printStackTrace(); 
+			BugSenseHandler.sendException(e1);
+			payload.result = false;
+			payload.resultResponse = ctx.getString(R.string.error_connection);
+		} catch (SocketTimeoutException ste){
+			ste.printStackTrace();
+			BugSenseHandler.sendException(ste);
+			payload.result = false;
+			payload.resultResponse = ctx.getString(R.string.error_connection);
+		} catch (IOException e1) { 
+			e1.printStackTrace();
+			BugSenseHandler.sendException(e1);
+			payload.result = false;
+			payload.resultResponse = ctx.getString(R.string.error_connection);
 		}
-		return null;
+		
+		return payload;
 	}
 	
 	@Override
@@ -158,7 +158,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Pay
 	protected void onPostExecute(Payload results) {
 		synchronized (this) {
             if (mStateListener != null) {
-               mStateListener.downloadComplete();
+               mStateListener.downloadComplete(results);
             }
         }
 	}

@@ -20,20 +20,15 @@ package org.digitalcampus.mobile.learning.application;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.Activity;
-import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.MessageFeed;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.TrackerLog;
-import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.SubmitMQuizTask;
 import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -42,6 +37,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
+
+import com.bugsense.trace.BugSenseHandler;
 
 public class DbHelper extends SQLiteOpenHelper {
 

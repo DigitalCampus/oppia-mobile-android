@@ -111,7 +111,7 @@
 	<string name="scan_media_download_button">Download</string>
 	<string name="scan_media_download_via_pc_button">Download via PC</string>
 	
-	<string name="error_connection">Error connecting to server</string>
+	<string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
 	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
 	<string name="error_processing_response">Error processing response</string>
 	<string name="error_no_username">Please enter your username</string>
@@ -120,6 +120,8 @@
 	<string name="error_login">Invalid username/password\nPlease try again</string>
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
 	<string name="error_media_not_found">Media file: \'%1$s\' not found.</string>
+	<string name="error_download_failure">Download failed</string>
+	<string name="error_install_failure">Install failed</string>
 	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
 	
 	<string name="loading_module_list">Getting list of modules</string>

@@ -121,14 +121,15 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		}
 		
 		// install any new modules
-		// TODO show info to user that we're checking for new modules
-		// TODO? scan already extracted modules and install these
 		File dir = new File(MobileLearning.DOWNLOAD_PATH);
 		String[] children = dir.list();
 		if (children != null) {
+			ArrayList<Object> data = new ArrayList<Object>();
+     		Payload p = new Payload(0,data);
+     		
 			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(MobileLearningActivity.this);
 			imTask.setInstallerListener(this);
-			imTask.execute();
+			imTask.execute(p);
 		}
 	}
 
@@ -348,7 +349,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		builder.show();
 	}
 
-	public void installComplete() {
+	public void installComplete(Payload p) {
 		Log.d(TAG, "Listener says install complete");
 		displayModules();
 
@@ -450,12 +451,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		}
 	}
 
-	public void downloadComplete() {
-		// do nothing
-
-	}
-
-	public void downloadProgressUpdate(String msg) {
+	public void downloadComplete(Payload p) {
 		// do nothing
 
 	}
@@ -503,7 +499,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	public void downloadProgressUpdate(DownloadProgress dp) {
-		// TODO Auto-generated method stub
+		// do nothing
 		
 	}
 

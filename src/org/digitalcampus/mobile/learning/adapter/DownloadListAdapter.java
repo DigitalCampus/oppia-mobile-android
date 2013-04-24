@@ -20,6 +20,7 @@ package org.digitalcampus.mobile.learning.adapter;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.activity.DownloadActivity;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
@@ -27,7 +28,7 @@ import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.DownloadModuleTask;
 import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
-import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.utils.UIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -112,22 +113,32 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 	    return rowView;
 	}
 
-	public void downloadComplete() {
-		myProgress.setMessage(ctx.getString(R.string.download_complete));
-		// now set task to install
-		InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(ctx);
-		imTask.setInstallerListener(DownloadListAdapter.this);
-		imTask.execute();
+	public void downloadComplete(Payload p) {
+		if (p.result){
+			// now set task to install
+			myProgress.setMessage(ctx.getString(R.string.download_complete));
+			myProgress.setIndeterminate(true);
+			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(ctx);
+			imTask.setInstallerListener(DownloadListAdapter.this);
+			imTask.execute(p);
+		} else {
+			myProgress.dismiss();
+			UIUtils.showAlert(ctx, ctx.getString(R.string.error_download_failure), p.resultResponse);
+		}
 	}
 
-	public void installComplete() {
-		Log.d(TAG,"install complete");
-		myProgress.setProgress(100);
-		myProgress.setMessage(ctx.getString(R.string.install_complete));
+	public void installComplete(Payload p) {
 		myProgress.dismiss();
-		// new refresh the module list
-		DownloadActivity da = (DownloadActivity) ctx;
-		da.refreshModuleList();
+		
+		if(p.result){
+			UIUtils.showAlert(ctx, ctx.getString(R.string.install_complete), p.resultResponse);
+			// new refresh the module list
+			DownloadActivity da = (DownloadActivity) ctx;
+			da.refreshModuleList();
+		} else {
+			UIUtils.showAlert(ctx, ctx.getString(R.string.error_install_failure), p.resultResponse);
+		}
+		
 	}
 	
 	public void downloadProgressUpdate(DownloadProgress dp) {
