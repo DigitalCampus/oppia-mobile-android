@@ -74,6 +74,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 	
     private static int TTS_CHECK = 0;
     static TextToSpeech myTTS;
+    private boolean ttsRunning = false;
     
     private HashMap<String, Object> mediaPlayingState = new HashMap<String, Object>();
     
@@ -173,6 +174,17 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     }
     
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+         MenuItem item = (MenuItem) menu.findItem(R.id.menu_tts);
+         if(ttsRunning){
+        	 item.setTitle(R.string.menu_stop_read_aloud);
+         } else {
+        	 item.setTitle(R.string.menu_read_aloud);
+         }
+         return super.onPrepareOptionsMenu(menu);
+    }
+    
+    @Override
    	public boolean onOptionsItemSelected(MenuItem item) {
    		// Handle item selection
    		switch (item.getItemId()) {
@@ -183,8 +195,11 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
    				startActivity(new Intent(this, HelpActivity.class));
    				return true;
    			case R.id.menu_tts:
-   				if(myTTS != null){
+   				if(myTTS != null && !ttsRunning){
+   					ttsRunning = true;
    					myTTS.speak(currentActivity.getContentToRead(),TextToSpeech.QUEUE_FLUSH, null);
+   				} else {
+   					this.stopReading();
    				}
    				return true;
    			default:
@@ -252,9 +267,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     }
     
     private void moveNext(){
-    	if(myTTS != null){
-    		myTTS.stop();
-    	}
+    	this.stopReading();
     	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
  		markIfComplete(acts.get(currentActivityNo).getDigest());
  		currentActivityNo++;
@@ -262,9 +275,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     }
     
     private void movePrev(){
-    	if(myTTS != null){
-    		myTTS.stop();
-    	}
+    	this.stopReading();
     	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
  		markIfComplete(acts.get(currentActivityNo).getDigest());
  		currentActivityNo--;
@@ -385,4 +396,11 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }	
+	
+	private void stopReading(){
+		if(myTTS != null){
+    		myTTS.stop();
+    	}	
+		ttsRunning = false;
+	}
 }
