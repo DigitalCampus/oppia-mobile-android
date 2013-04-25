@@ -80,7 +80,6 @@ public class MQuizWidget extends WidgetFactory {
 		quizContent = activity.getContents(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 		mQuiz = new MQuiz();
 		mQuiz.load(quizContent);
-		Log.d(TAG,mQuiz.getInstanceID());
 
 		this.showQuestion();
 	}
@@ -277,7 +276,6 @@ public class MQuizWidget extends WidgetFactory {
 			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("quiz_id", mQuiz.getID());
-			Log.d(TAG,mQuiz.getInstanceID());
 			obj.put("instance_id", mQuiz.getInstanceID());
 			mQuiz.mark();
 			float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();

@@ -118,8 +118,13 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 				case 201: // logged in
 					JSONObject jsonResp = new JSONObject(responseStr);
 					u.setApi_key(jsonResp.getString("api_key"));
-					u.setPoints(jsonResp.getInt("points"));
-					u.setBadges(jsonResp.getInt("badges"));
+					try {
+						u.setPoints(jsonResp.getInt("points"));
+						u.setBadges(jsonResp.getInt("badges"));
+					} catch (JSONException e){
+						u.setPoints(0);
+						u.setBadges(0);
+					}
 					u.setFirstname(jsonResp.getString("first_name"));
 					u.setLastname(jsonResp.getString("last_name"));
 					payload.result = true;

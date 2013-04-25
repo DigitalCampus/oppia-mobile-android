@@ -117,8 +117,13 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 					u.setApi_key(jsonResp.getString("api_key"));
 					u.setFirstname(jsonResp.getString("first_name"));
 					u.setLastname(jsonResp.getString("last_name"));
-					u.setPoints(jsonResp.getInt("points"));
-					u.setBadges(jsonResp.getInt("badges"));
+					try {
+						u.setPoints(jsonResp.getInt("points"));
+						u.setBadges(jsonResp.getInt("badges"));
+					} catch (JSONException e){
+						u.setPoints(0);
+						u.setBadges(0);
+					}
 					payload.result = true;
 					payload.resultResponse = ctx.getString(R.string.login_complete);
 					break;
