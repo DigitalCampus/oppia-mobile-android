@@ -272,6 +272,17 @@ public class PageWidget extends WidgetFactory {
 	public void setMediaFileName(String mediaFileName) {
 		this.mediaFileName = mediaFileName;	
 	}
+	
+	@Override
+	public void setStartTime(long startTime) {
+		this.startTimestamp = startTime;
+		
+	}
+
+	@Override
+	public long getStartTime() {
+		return this.startTimestamp;
+	}
 
 
 }

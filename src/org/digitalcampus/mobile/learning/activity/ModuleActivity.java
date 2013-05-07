@@ -111,29 +111,31 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     @Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putLong("activityStartTimeStamp", currentActivity.getStartTime());
 		savedInstanceState.putBoolean("mediaPlaying", currentActivity.getMediaPlaying());
 		savedInstanceState.putLong("mediaStartTimeStamp", currentActivity.getMediaStartTime());
 		savedInstanceState.putString("mediaFileName", currentActivity.getMediaFileName());
-		Log.d(TAG,"saving mediaplaying:" + currentActivity.getMediaPlaying());
+		savedInstanceState.putInt("currentActivityNo", this.currentActivityNo);
+		Log.d(TAG,"saving mediaplaying:" + this.currentActivityNo);
 	}
 	
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		// Restore UI state from the savedInstanceState.
-		// This bundle has also been passed to onCreate.
 		currentActivity.setMediaPlaying(savedInstanceState.getBoolean("mediaPlaying"));
 		currentActivity.setMediaStartTime(savedInstanceState.getLong("mediaStartTimeStamp"));
 		currentActivity.setMediaFileName(savedInstanceState.getString("mediaFileName"));
-		Log.d(TAG,"resetting mediaplaying:" + currentActivity.getMediaPlaying());
+		currentActivity.setStartTime(savedInstanceState.getLong("activityStartTimeStamp"));
+		this.currentActivityNo = savedInstanceState.getInt("currentActivityNo");
+		Log.d(TAG,"resetting mediaplaying:" + this.currentActivityNo);
 	}
+	
     @Override
     public void onStart(){
     	super.onStart();
     	rebuildLangs();
     	setTitle(section.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
     	loadActivity();
-    	
     }
     
     @Override
@@ -176,6 +178,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     		}
     		currentActivity.mediaStopped();
     	}
+    	loadActivity();
     }
     
     @Override

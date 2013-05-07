@@ -340,4 +340,15 @@ public class MQuizWidget extends WidgetFactory {
 	public void setMediaFileName(String mediaFileName) {
 		// do nothing
 	}
+
+	@Override
+	public void setStartTime(long startTime) {
+		this.startTimestamp = startTime;
+		
+	}
+
+	@Override
+	public long getStartTime() {
+		return this.startTimestamp;
+	}
 }
