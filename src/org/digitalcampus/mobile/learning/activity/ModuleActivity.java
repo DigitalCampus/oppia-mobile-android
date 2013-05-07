@@ -50,6 +50,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -72,6 +73,9 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     private GestureDetector pageGestureDetector;
     View.OnTouchListener pageGestureListener;
 	
+    private GestureDetector quizGestureDetector;
+    View.OnTouchListener quizGestureListener;
+    
     private static int TTS_CHECK = 0;
     static TextToSpeech myTTS;
     private boolean ttsRunning = false;
@@ -104,6 +108,14 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
         pageGestureListener = new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 return pageGestureDetector.onTouchEvent(event);
+            }
+        };
+        
+        // Gesture detection
+        quizGestureDetector = new GestureDetector(new QuizGestureDetector());
+        quizGestureListener = new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                return quizGestureDetector.onTouchEvent(event);
             }
         };
     }
@@ -242,6 +254,8 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     	}
     	if(acts.get(this.currentActivityNo).getActType().equals("quiz")){
     		currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+    		ScrollView sv = (ScrollView) this.findViewById(R.id.quizScrollView);
+    		sv.setOnTouchListener(quizGestureListener);
     	}
     	this.setUpNav();
     }
@@ -377,6 +391,35 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
                 }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 	if(ModuleActivity.this.hasPrev()){
                 		ModuleActivity.this.movePrev();
+                	}
+                }
+            } catch (Exception e) {
+                // nothing
+            }
+            return false;
+        }
+
+    }
+    
+    class QuizGestureDetector extends SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                    return false;
+                // right to left swipe
+                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                	if(ModuleActivity.this.currentActivity instanceof MQuizWidget){
+                		if(((MQuizWidget) ModuleActivity.this.currentActivity).getMquiz().hasNext()){
+                			((MQuizWidget) ModuleActivity.this.currentActivity).nextBtn.performClick();
+                		}
+                	}
+                	
+                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                	if(ModuleActivity.this.currentActivity instanceof MQuizWidget){
+                		if(((MQuizWidget) ModuleActivity.this.currentActivity).getMquiz().hasPrevious()){
+                			((MQuizWidget) ModuleActivity.this.currentActivity).prevBtn.performClick();
+                		}
                 	}
                 }
             } catch (Exception e) {

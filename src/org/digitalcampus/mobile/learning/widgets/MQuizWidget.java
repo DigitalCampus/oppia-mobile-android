@@ -66,8 +66,8 @@ public class MQuizWidget extends WidgetFactory {
 	private android.app.Activity ctx;
 	private MQuiz mQuiz;
 	private QuestionWidget qw;
-	private Button prevBtn;
-	private Button nextBtn;
+	public Button prevBtn;
+	public Button nextBtn;
 	private TextView qText;
 	private String quizContent;
 	private boolean isComplete = false;
@@ -350,5 +350,9 @@ public class MQuizWidget extends WidgetFactory {
 	@Override
 	public long getStartTime() {
 		return this.startTimestamp;
+	}
+	
+	public MQuiz getMquiz(){
+		return mQuiz;
 	}
 }
