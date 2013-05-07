@@ -30,9 +30,16 @@ public class Media implements Serializable{
 	private String filename;
 	private String downloadUrl;
 	private String digest;
+	private int length;
 	
 	public String getFilename() {
 		return filename;
+	}
+	public int getLength() {
+		return length;
+	}
+	public void setLength(int length) {
+		this.length = length;
 	}
 	public void setFilename(String filename) {
 		this.filename = filename;

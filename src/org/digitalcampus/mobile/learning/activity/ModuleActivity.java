@@ -77,7 +77,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     private boolean ttsRunning = false;
     
     private HashMap<String, Object> mediaPlayingState = new HashMap<String, Object>();
-    
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +108,25 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
         };
     }
     
+    @Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putBoolean("mediaPlaying", currentActivity.getMediaPlaying());
+		savedInstanceState.putLong("mediaStartTimeStamp", currentActivity.getMediaStartTime());
+		savedInstanceState.putString("mediaFileName", currentActivity.getMediaFileName());
+		Log.d(TAG,"saving mediaplaying:" + currentActivity.getMediaPlaying());
+	}
+	
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		// Restore UI state from the savedInstanceState.
+		// This bundle has also been passed to onCreate.
+		currentActivity.setMediaPlaying(savedInstanceState.getBoolean("mediaPlaying"));
+		currentActivity.setMediaStartTime(savedInstanceState.getLong("mediaStartTimeStamp"));
+		currentActivity.setMediaFileName(savedInstanceState.getString("mediaFileName"));
+		Log.d(TAG,"resetting mediaplaying:" + currentActivity.getMediaPlaying());
+	}
     @Override
     public void onStart(){
     	super.onStart();

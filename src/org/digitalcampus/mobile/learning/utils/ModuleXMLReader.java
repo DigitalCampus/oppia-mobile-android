@@ -35,6 +35,9 @@ import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.model.ModuleMetaPage;
 import org.digitalcampus.mobile.learning.model.Section;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -185,6 +188,11 @@ public class ModuleXMLReader {
 						mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
 						mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
 						mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
+						if(fileAttrs.getNamedItem("length") != null){
+							mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem("length").getTextContent()));
+						} else {
+							mObj.setLength(0);
+						}
 						media.add(mObj);
 					}
 				}
@@ -225,7 +233,22 @@ public class ModuleXMLReader {
 				String actType = activityAttrs.getNamedItem("type").getTextContent();
 				int actId = Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent());
 				String digest = activityAttrs.getNamedItem("digest").getTextContent();
+				Node startDateNode = activityAttrs.getNamedItem("startdate");
+				Node endDateNode = activityAttrs.getNamedItem("enddate");
 				Activity a = new Activity();
+				if(startDateNode != null){
+					String startDateString = activityAttrs.getNamedItem("startdate").getTextContent();
+					DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+					DateTime sdt = formatter.parseDateTime(startDateString);
+					a.setStartDate(sdt);
+				}
+				if(endDateNode != null){
+					String endDateString = activityAttrs.getNamedItem("enddate").getTextContent();
+					DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+					DateTime edt = formatter.parseDateTime(endDateString);
+					a.setEndDate(edt);
+				}
+				
 				a.setModId(modId);
 				a.setActId(actId);
 				a.setSectionId(sectionId);
@@ -315,6 +338,11 @@ public class ModuleXMLReader {
 								mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
 								mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
 								mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
+								if(fileAttrs.getNamedItem("length") != null){
+									mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem("length").getTextContent()));
+								} else {
+									mObj.setLength(0);
+								}
 								actMedia.add(mObj);
 							}
 						}

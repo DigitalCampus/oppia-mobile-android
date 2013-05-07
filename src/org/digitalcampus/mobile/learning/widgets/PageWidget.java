@@ -65,6 +65,7 @@ public class PageWidget extends WidgetFactory {
 	private WebView wv;
 	private BufferedReader br;
 	
+	
 	public PageWidget(Context context, Module module, org.digitalcampus.mobile.learning.model.Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
@@ -152,17 +153,11 @@ public class PageWidget extends WidgetFactory {
 	public boolean isComplete(){
 		// only show as being complete if all the videos on this page have been played
 		if(this.activity.hasMedia()){
-			Log.d(TAG,"This page has media....");
 			ArrayList<Media> mediaList = this.activity.getMedia();
 			boolean completed = true;
 			DbHelper db = new DbHelper(this.ctx);
-			Log.d(TAG,"Searching media....");
 			for (Media m: mediaList){
-				Log.d(TAG,"Checking...."+m.getFilename());
 				if(!db.digestInLog(this.module.getModId(), m.getDigest())){
-					Log.d(TAG,"digest not in log");
-					Log.d(TAG,String.valueOf(this.module.getModId()));
-					Log.d(TAG,m.getDigest());
 					completed = false;
 				}
 			}
@@ -227,7 +222,6 @@ public class PageWidget extends WidgetFactory {
 
 	public void mediaStopped() {
 		if(mediaPlaying){
-			Log.d(TAG,"Media was playing...");
 			long mediaEndTimeStamp = System.currentTimeMillis()/1000;
 			long timeTaken = mediaEndTimeStamp - mediaStartTimeStamp;
 			Log.d(TAG,"video playing for:" + String.valueOf(timeTaken));
@@ -239,6 +233,7 @@ public class PageWidget extends WidgetFactory {
 				if(m.getFilename().equals(mediaFileName)){
 					Log.d(TAG,"media digest:" + m.getDigest());
 					Log.d(TAG,"media file:" + mediaFileName);
+					Log.d(TAG,"media length:" + m.getLength());
 					t.mediaPlayed(PageWidget.this.module.getModId(), m.getDigest(), mediaFileName, timeTaken);
 				}
 			}

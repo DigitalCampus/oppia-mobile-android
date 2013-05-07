@@ -38,12 +38,12 @@
         <activity
             android:name=".activity.ModuleActivity"
             android:label="@string/title_activity_module" 
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
             android:name=".activity.DownloadActivity"
             android:label="@string/title_download_activity"
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|screenLayout" >
         </activity>
         <activity
             android:name=".activity.PrefsActivity"
@@ -62,7 +62,7 @@
             android:name=".activity.RegisterActivity"
             android:label="@string/title_register" />
          <activity
-            android:name="org.digitalcampus.mobile.learning.activity.ModuleMetaPageActivity"
+            android:name=".activity.ModuleMetaPageActivity"
             android:label="@string/title_module_about" />
          <activity
             android:name=".activity.DownloadMediaActivity"
@@ -78,7 +78,7 @@
             android:label="@string/title_activity_module" />
          <activity
             android:name=".widgets.MQuizWidget"
-            android:label="@string/title_activity_module" />
+            android:label="@string/title_activity_module"/>
         <service
             android:name=".service.TrackerService"
             android:icon="@drawable/dc_logo"

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.utils.ImageUtils;
+import org.joda.time.DateTime;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -47,7 +48,9 @@ public class Activity implements Serializable{
 	private ArrayList<Media> media = new ArrayList<Media>();
 	private boolean completed = false;
 	private boolean customImage = false;
-	
+	private DateTime startDate;
+	private DateTime endDate;
+
 	public Activity(){
 	}
 	
@@ -186,5 +189,21 @@ public class Activity implements Serializable{
 	
 	public boolean getCompleted(){
 		return this.completed;
+	}
+	
+	public DateTime getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(DateTime startDate) {
+		this.startDate = startDate;
+	}
+
+	public DateTime getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(DateTime endDate) {
+		this.endDate = endDate;
 	}
 }

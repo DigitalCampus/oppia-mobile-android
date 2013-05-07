@@ -44,7 +44,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 7;
+	static final int DB_VERSION = 8;
 
 	private SQLiteDatabase db;
 	
@@ -63,6 +63,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String ACTIVITY_C_ACTID = "activityid";
 	private static final String ACTIVITY_C_ACTTYPE = "activitytype";
 	private static final String ACTIVITY_C_ACTIVITYDIGEST = "digest";
+	private static final String ACTIVITY_C_STARTDATE = "startdate";
+	private static final String ACTIVITY_C_ENDDATE = "enddate";
 
 	private static final String TRACKER_LOG_TABLE = "TrackerLog";
 	private static final String TRACKER_LOG_C_ID = BaseColumns._ID;
@@ -109,6 +111,8 @@ public class DbHelper extends SQLiteOpenHelper {
 									ACTIVITY_C_SECTIONID + " int, " + 
 									ACTIVITY_C_ACTID + " int, " + 
 									ACTIVITY_C_ACTTYPE + " text, " + 
+									ACTIVITY_C_STARTDATE + " datetime null, " + 
+									ACTIVITY_C_ENDDATE + " datetime null, " + 
 									ACTIVITY_C_ACTIVITYDIGEST + " text)";
 		Log.d(TAG, "Activity sql: " + a_sql);
 		db.execSQL(a_sql);
@@ -151,7 +155,14 @@ public class DbHelper extends SQLiteOpenHelper {
 			createMquizResultsTable(db);		
 		}
 		
-		if(newVersion <= 8){
+		if(newVersion <= 8 && oldVersion >= 7){
+			String sql = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
+			db.execSQL(sql);
+			sql = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
+			db.execSQL(sql);
+		}
+		
+		if(newVersion <= 9 && oldVersion >= 7){
 			
 		}
 	}
