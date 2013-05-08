@@ -20,6 +20,8 @@ package org.digitalcampus.mobile.learning.application;
 import java.io.File;
 
 import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import android.app.Activity;
 import android.app.Application;
@@ -38,7 +40,8 @@ public class MobileLearning extends Application {
 	public static final String MEDIA_PATH = MLEARN_ROOT + "media/";
 	public static final String DOWNLOAD_PATH = MLEARN_ROOT + "download/";
 	public static final String MODULE_XML = "module.xml";
-
+	public static final String MODULE_SCHEDULE_XML = "schedule.xml";
+	
 	// server path vars
 	
 	public static final String LOGIN_PATH = "api/v1/user/";
@@ -56,6 +59,7 @@ public class MobileLearning extends Application {
 	public static final int PAGE_READ_TIME = 3;
 	public static final String USER_AGENT = "Mobile Learning Android app: ";
 	public static final int MQUIZ_PASS_THRESHOLD = 100;
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	
 	// only used in case a module doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";

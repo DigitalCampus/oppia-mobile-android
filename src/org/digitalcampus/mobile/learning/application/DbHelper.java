@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.model.Activity;
+import org.digitalcampus.mobile.learning.model.ActivitySchedule;
 import org.digitalcampus.mobile.learning.model.MessageFeed;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.TrackerLog;
@@ -231,6 +232,17 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	public void insertSchedule(ArrayList<ActivitySchedule> actsched) {
+		// acts.listIterator();
+		for (ActivitySchedule as : actsched) {
+			Log.d(TAG,"adding schedule for: " + as.getDigest());
+			ContentValues values = new ContentValues();
+			values.put(ACTIVITY_C_STARTDATE, as.getStartTimeString());
+			values.put(ACTIVITY_C_ENDDATE, as.getEndTimeString());
+			db.update(ACTIVITY_TABLE, values, ACTIVITY_C_ACTIVITYDIGEST + "='" + as.getDigest() + "'", null);
+		}
+	}
+	
 	public ArrayList<Module> getModules() {
 		ArrayList<Module> modules = new ArrayList<Module>();
 		String order = MODULE_C_TITLE + " ASC";

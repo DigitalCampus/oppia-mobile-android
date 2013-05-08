@@ -233,22 +233,7 @@ public class ModuleXMLReader {
 				String actType = activityAttrs.getNamedItem("type").getTextContent();
 				int actId = Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent());
 				String digest = activityAttrs.getNamedItem("digest").getTextContent();
-				Node startDateNode = activityAttrs.getNamedItem("startdate");
-				Node endDateNode = activityAttrs.getNamedItem("enddate");
-				Activity a = new Activity();
-				if(startDateNode != null){
-					String startDateString = activityAttrs.getNamedItem("startdate").getTextContent();
-					DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-					DateTime sdt = formatter.parseDateTime(startDateString);
-					a.setStartDate(sdt);
-				}
-				if(endDateNode != null){
-					String endDateString = activityAttrs.getNamedItem("enddate").getTextContent();
-					DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-					DateTime edt = formatter.parseDateTime(endDateString);
-					a.setEndDate(edt);
-				}
-				
+				Activity a = new Activity();				
 				a.setModId(modId);
 				a.setActId(actId);
 				a.setSectionId(sectionId);
