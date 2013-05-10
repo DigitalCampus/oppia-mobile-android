@@ -107,6 +107,7 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 			listView.setAdapter(mla);
 
 		} catch (Exception e) {
+			db.close();
 			e.printStackTrace();
 			BugSenseHandler.sendException(e);
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);

@@ -45,7 +45,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 8;
+	static final int DB_VERSION = 9;
 
 	private SQLiteDatabase db;
 	
@@ -55,7 +55,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String MODULE_C_TITLE = "title";
 	private static final String MODULE_C_SHORTNAME = "shortname";
 	private static final String MODULE_C_LOCATION = "location";
-
+	private static final String MODULE_C_SCHEDULE = "schedule";
+	
 	private static final String ACTIVITY_TABLE = "Activity";
 	private static final String ACTIVITY_C_ID = BaseColumns._ID;
 	private static final String ACTIVITY_C_MODID = "modid"; // reference to
@@ -100,7 +101,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void createModuleTable(SQLiteDatabase db){
 		String m_sql = "create table " + MODULE_TABLE + " (" + MODULE_C_ID + " integer primary key autoincrement, "
 				+ MODULE_C_VERSIONID + " int, " + MODULE_C_TITLE + " text, " + MODULE_C_LOCATION + " text, "
-				+ MODULE_C_SHORTNAME + " text)";
+				+ MODULE_C_SHORTNAME + " text," + MODULE_C_SCHEDULE + " int)";
 		Log.d(TAG, "Module sql: " + m_sql);
 		db.execSQL(m_sql);
 	}
@@ -164,7 +165,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		
 		if(newVersion <= 9 && oldVersion >= 7){
-			
+			String sql = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_SCHEDULE + " int null;";
+			db.execSQL(sql);
 		}
 	}
 
@@ -219,6 +221,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	
+	public void updateScheduleVersion(long modId, long scheduleVersion){
+		ContentValues values = new ContentValues();
+		values.put(MODULE_C_SCHEDULE, scheduleVersion);
+		db.update(MODULE_TABLE, values, MODULE_C_ID + "=" + modId, null);
+	}
+	
 	public void insertActivities(ArrayList<Activity> acts) {
 		// acts.listIterator();
 		for (Activity a : acts) {

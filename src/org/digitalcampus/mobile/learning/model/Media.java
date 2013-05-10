@@ -35,24 +35,31 @@ public class Media implements Serializable{
 	public String getFilename() {
 		return filename;
 	}
+	
 	public int getLength() {
 		return length;
 	}
+	
 	public void setLength(int length) {
 		this.length = length;
 	}
+	
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
+	
 	public String getDownloadUrl() {
 		return downloadUrl;
 	}
+	
 	public void setDownloadUrl(String downloadUrl) {
 		this.downloadUrl = downloadUrl;
 	}
+	
 	public String getDigest() {
 		return digest;
 	}
+	
 	public void setDigest(String digest) {
 		this.digest = digest;
 	}

@@ -13,6 +13,7 @@ import org.digitalcampus.mobile.learning.model.ActivitySchedule;
 import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -48,6 +49,15 @@ public class ModuleScheduleXMLReader {
 		}
 	}
 	
+	public long getScheduleVersion(){
+		if (this.document == null){
+			return 0;
+		}
+		Node schedule = document.getDocumentElement();
+		NamedNodeMap attrs = schedule.getAttributes();
+		long version = Long.parseLong(attrs.getNamedItem("version").getTextContent());
+		return version;
+	}
 	public ArrayList<ActivitySchedule> getSchedule(){
 		ArrayList<ActivitySchedule> schedule = new ArrayList<ActivitySchedule>();
 		if (this.document == null){

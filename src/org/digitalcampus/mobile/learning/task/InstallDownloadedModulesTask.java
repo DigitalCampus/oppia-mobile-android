@@ -101,9 +101,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 					mxr.setTempFilePath(tempdir + "/" + moddirs[0]);
 
 					db.insertActivities(mxr.getActivities(added));
-					
-					
-					
+
 					// Delete old module
 					File oldMod = new File(MobileLearning.MODULES_PATH + moddirs[0]);
 					FileUtils.deleteDir(oldMod);
@@ -124,8 +122,9 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				}
 				
 				// add schedule
-				// put this here so even if the module content isn;t updated the schedule will be
+				// put this here so even if the module content isn't updated the schedule will be
 				db.insertSchedule(msxr.getSchedule());
+				db.updateScheduleVersion(added, msxr.getScheduleVersion());
 				
 				db.close();
 				// delete temp directory
