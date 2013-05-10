@@ -99,6 +99,11 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 				dm.setDownloadUrl(json_obj.getString("url"));
 				dm.setInstalled(db.isInstalled(dm.getShortname()));
 				dm.setToUpdate(db.toUpdate(dm.getShortname(), dm.getVersionId()));
+				if (json_obj.has("schedule_uri")){
+					dm.setScheduleVersionID(json_obj.getDouble("schedule"));
+					dm.setScheduleURI(json_obj.getString("schedule_uri"));
+					dm.setToUpdateSchedule(db.toUpdateSchedule(dm.getShortname(), dm.getScheduleVersionID()));
+				}
 				modules.add(dm);
 			}
 			

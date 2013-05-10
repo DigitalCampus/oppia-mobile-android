@@ -90,12 +90,17 @@
 	<string name="alt_activity_icon">Activity icon</string>
 	
 	<string name="update">Update</string>
+	<string name="update_schedule">Update Schedule</string>
 	<string name="installed">Installed</string>
 	<string name="install">Install</string>
 	
 	<string name="download_starting">Download starting</string>
 	<string name="downloading">Downloading &#8230;</string>
 	<string name="download_complete">Download complete</string>
+	
+	<string name="update_starting">Getting schedule updates</string>
+	<string name="updating">Updating &#8230;</string>
+	<string name="update_complete">Schedule update complete</string>
 	
 	<string name="installing">Installing module</string>
 	<string name="installing_module">Installing: %1$s</string>
@@ -122,6 +127,7 @@
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
 	<string name="error_media_not_found">Media file: \'%1$s\' not found.</string>
 	<string name="error_download_failure">Download failed</string>
+	<string name="error_update_failure">Update failed</string>
 	<string name="error_install_failure">Install failed</string>
 	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
 	

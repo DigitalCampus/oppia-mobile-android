@@ -23,11 +23,13 @@ import java.util.Locale;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.activity.DownloadActivity;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
+import org.digitalcampus.mobile.learning.listener.UpdateScheduleListener;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.DownloadModuleTask;
 import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
+import org.digitalcampus.mobile.learning.task.ScheduleUpdateTask;
 import org.digitalcampus.mobile.learning.utils.UIUtils;
 
 import android.app.Activity;
@@ -43,7 +45,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DownloadListAdapter extends ArrayAdapter<Module> implements InstallModuleListener{
+public class DownloadListAdapter extends ArrayAdapter<Module> implements InstallModuleListener, UpdateScheduleListener{
 
 	public static final String TAG = DownloadListAdapter.class.getSimpleName();
 
@@ -76,6 +78,9 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 	    	if(m.isToUpdate()){
 	    		actionBtn.setText(R.string.update);
 		    	actionBtn.setEnabled(true);
+	    	} else if (m.isToUpdateSchedule()){
+	    		actionBtn.setText(R.string.update_schedule);
+		    	actionBtn.setEnabled(true);
 	    	} else {
 	    		actionBtn.setText(R.string.installed);
 		    	actionBtn.setEnabled(false);
@@ -107,6 +112,31 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
              		DownloadModuleTask dmt = new DownloadModuleTask(ctx);
              		dmt.setInstallerListener(DownloadListAdapter.this);
              		dmt.execute(p);
+             	}
+             });
+	    }
+	    if(m.isToUpdateSchedule()){
+	    	actionBtn.setTag(m);
+	    	actionBtn.setOnClickListener(new View.OnClickListener() {
+             	public void onClick(View v) {
+             		Module dm = (Module) v.getTag();
+             		
+             		ArrayList<Object> data = new ArrayList<Object>();
+             		data.add(dm);
+             		Payload p = new Payload(0,data);
+             		
+             		myProgress = new ProgressDialog(ctx);
+             		myProgress.setTitle(R.string.update);
+             		myProgress.setMessage(ctx.getString(R.string.update_starting));
+             		myProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+             		myProgress.setProgress(0);
+             		myProgress.setMax(100);
+             		myProgress.setCancelable(true);
+             		myProgress.show();
+                     
+             		ScheduleUpdateTask sut = new ScheduleUpdateTask(ctx);
+             		sut.setUpdateListener(DownloadListAdapter.this);
+             		sut.execute(p);
              	}
              });
 	    }
@@ -150,4 +180,24 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 		myProgress.setMessage(dp.getMessage());
 		myProgress.setProgress(dp.getProgress());
 	}
+	
+	public void updateProgressUpdate(DownloadProgress dp) {
+		myProgress.setMessage(dp.getMessage());	
+		myProgress.setProgress(dp.getProgress());
+	}
+	
+	public void updateComplete(Payload p) {
+		myProgress.dismiss();
+		
+		if(p.result){
+			UIUtils.showAlert(ctx, ctx.getString(R.string.update_complete), p.resultResponse);
+			// new refresh the module list
+			DownloadActivity da = (DownloadActivity) ctx;
+			da.refreshModuleList();
+		} else {
+			UIUtils.showAlert(ctx, ctx.getString(R.string.error_update_failure), p.resultResponse);
+		}
+		
+	}
+
 }

@@ -144,6 +144,12 @@ public class TrackerService extends Service implements GetModuleListListener{
 				if(db.toUpdate(shortName,version)){
 					updateAvailable = true;
 				}
+				if(json_obj.has("schedule")){
+					Double scheduleVersion = json_obj.getDouble("schedule");
+					if(db.toUpdateSchedule(shortName, scheduleVersion)){
+						updateAvailable = true;
+					}
+				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

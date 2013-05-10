@@ -153,6 +153,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 		DbHelper db = new DbHelper(this);
 		ArrayList<Module> modules = db.getModules();
+		db.getActivitiesDue();
 		db.close();
 		ArrayList<Module> removeModules = new ArrayList<Module>();
 		for (Module m : modules) {

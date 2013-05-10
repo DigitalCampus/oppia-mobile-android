@@ -19,13 +19,18 @@ package org.digitalcampus.mobile.learning.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.utils.ImageUtils;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 public class Activity implements Serializable{
 	
@@ -126,7 +131,21 @@ public class Activity implements Serializable{
 		this.actType = actType;
 	}
 
-
+	public String getTitleJSONString(){
+		JSONArray array = new JSONArray();
+		for(Lang l: titles){
+			JSONObject obj = new JSONObject();
+			try {
+				obj.put(l.getLang(), l.getTitle());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			array.put(obj);
+		}
+		return array.toString();
+	}
+	
 	public String getTitle(String lang) {
 		for(Lang l: titles){
 			if(l.getLang().equals(lang)){
@@ -137,6 +156,25 @@ public class Activity implements Serializable{
 			return titles.get(0).getContent();
 		}
 		return "No title set";
+	}
+	
+	public void setTitlesFromJSONString(String json){
+		try {
+			JSONArray titlesArray = new JSONArray(json);
+			for(int i=0; i<titlesArray.length(); i++){
+				JSONObject titleObj = titlesArray.getJSONObject(i);
+				Iterator<String> iter = (Iterator) titleObj.keys();
+				while(iter.hasNext()){
+					String key = iter.next().toString();
+					String title = titleObj.getString(key);
+					Lang l = new Lang(key,title,"");
+					this.titles.add(l);
+				}
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void setTitles(ArrayList<Lang> titles) {

@@ -39,12 +39,23 @@ public class Module implements Serializable {
 	private Double versionId;
 	private boolean installed;
 	private boolean toUpdate;
+	private boolean toUpdateSchedule;
 	private String downloadUrl;
 	private ArrayList<String> availableLangs = new ArrayList<String>();
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
 	private ArrayList<ModuleMetaPage> metaPages = new ArrayList<ModuleMetaPage>();
+	private Double scheduleVersionID;
+	private String scheduleURI;
 	
+	public Double getScheduleVersionID() {
+		return scheduleVersionID;
+	}
+
+	public void setScheduleVersionID(Double scheduleVersionID) {
+		this.scheduleVersionID = scheduleVersionID;
+	}
+
 	public ArrayList<Media> getMedia() {
 		return media;
 	}
@@ -186,6 +197,22 @@ public class Module implements Serializable {
 			}
 		}
 		return null;
+	}
+
+	public boolean isToUpdateSchedule() {
+		return toUpdateSchedule;
+	}
+
+	public void setToUpdateSchedule(boolean toUpdateSchedule) {
+		this.toUpdateSchedule = toUpdateSchedule;
+	}
+
+	public String getScheduleURI() {
+		return scheduleURI;
+	}
+
+	public void setScheduleURI(String scheduleURI) {
+		this.scheduleURI = scheduleURI;
 	}
 	
 	

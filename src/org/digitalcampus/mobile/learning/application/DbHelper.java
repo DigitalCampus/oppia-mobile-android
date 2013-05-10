@@ -28,6 +28,7 @@ import org.digitalcampus.mobile.learning.model.TrackerLog;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.SubmitMQuizTask;
 import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,7 +46,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 9;
+	static final int DB_VERSION = 10;
 
 	private SQLiteDatabase db;
 	
@@ -67,6 +68,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String ACTIVITY_C_ACTIVITYDIGEST = "digest";
 	private static final String ACTIVITY_C_STARTDATE = "startdate";
 	private static final String ACTIVITY_C_ENDDATE = "enddate";
+	private static final String ACTIVITY_C_TITLE = "title";
 
 	private static final String TRACKER_LOG_TABLE = "TrackerLog";
 	private static final String TRACKER_LOG_C_ID = BaseColumns._ID;
@@ -102,7 +104,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		String m_sql = "create table " + MODULE_TABLE + " (" + MODULE_C_ID + " integer primary key autoincrement, "
 				+ MODULE_C_VERSIONID + " int, " + MODULE_C_TITLE + " text, " + MODULE_C_LOCATION + " text, "
 				+ MODULE_C_SHORTNAME + " text," + MODULE_C_SCHEDULE + " int)";
-		Log.d(TAG, "Module sql: " + m_sql);
 		db.execSQL(m_sql);
 	}
 	
@@ -115,8 +116,8 @@ public class DbHelper extends SQLiteOpenHelper {
 									ACTIVITY_C_ACTTYPE + " text, " + 
 									ACTIVITY_C_STARTDATE + " datetime null, " + 
 									ACTIVITY_C_ENDDATE + " datetime null, " + 
-									ACTIVITY_C_ACTIVITYDIGEST + " text)";
-		Log.d(TAG, "Activity sql: " + a_sql);
+									ACTIVITY_C_ACTIVITYDIGEST + " text, "+
+									ACTIVITY_C_TITLE + " text)";
 		db.execSQL(a_sql);
 	}
 	
@@ -129,7 +130,6 @@ public class DbHelper extends SQLiteOpenHelper {
 				TRACKER_LOG_C_DATA + " text, " + 
 				TRACKER_LOG_C_SUBMITTED + " integer default 0, " + 
 				TRACKER_LOG_C_INPROGRESS + " integer default 0)";
-		Log.d(TAG, "TrackerLog sql: " + l_sql);
 		db.execSQL(l_sql);
 	}
 
@@ -140,7 +140,6 @@ public class DbHelper extends SQLiteOpenHelper {
 							MQUIZRESULTS_C_DATA + " text, " +  
 							MQUIZRESULTS_C_SENT + " integer default 0, "+
 							MQUIZRESULTS_C_MODID + " integer)";
-		Log.d(TAG, "MQuiz results  sql: " + m_sql);
 		db.execSQL(m_sql);
 	}
 	
@@ -166,6 +165,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		if(newVersion <= 9 && oldVersion >= 7){
 			String sql = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_SCHEDULE + " int null;";
+			db.execSQL(sql);
+		}
+		
+		if(newVersion <= 10 && oldVersion >= 7){
+			String sql = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE  + " text null;";
 			db.execSQL(sql);
 		}
 	}
@@ -221,6 +225,20 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	public int getModuleID(String shortname){
+		String s = MODULE_C_SHORTNAME + "=?";
+		String[] args = new String[] { shortname };
+		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		if(c.getCount() == 0){
+			c.close();
+			return 0;
+		} else {
+			c.moveToFirst();
+			int modId = c.getInt(c.getColumnIndex(MODULE_C_ID));
+			c.close();
+			return modId;
+		}
+	}
 	
 	public void updateScheduleVersion(long modId, long scheduleVersion){
 		ContentValues values = new ContentValues();
@@ -237,6 +255,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(ACTIVITY_C_ACTID, a.getActId());
 			values.put(ACTIVITY_C_ACTTYPE, a.getActType());
 			values.put(ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
+			values.put(ACTIVITY_C_TITLE, a.getTitleJSONString());
 			db.insertOrThrow(ACTIVITY_TABLE, null, values);
 		}
 	}
@@ -244,12 +263,18 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void insertSchedule(ArrayList<ActivitySchedule> actsched) {
 		// acts.listIterator();
 		for (ActivitySchedule as : actsched) {
-			Log.d(TAG,"adding schedule for: " + as.getDigest());
 			ContentValues values = new ContentValues();
 			values.put(ACTIVITY_C_STARTDATE, as.getStartTimeString());
 			values.put(ACTIVITY_C_ENDDATE, as.getEndTimeString());
 			db.update(ACTIVITY_TABLE, values, ACTIVITY_C_ACTIVITYDIGEST + "='" + as.getDigest() + "'", null);
 		}
+	}
+	
+	public void resetSchedule(int modId){
+		ContentValues values = new ContentValues();
+		values.put(ACTIVITY_C_STARTDATE,"");
+		values.put(ACTIVITY_C_ENDDATE,"");
+		db.update(ACTIVITY_TABLE, values, ACTIVITY_C_MODID + "=" + modId, null);
 	}
 	
 	public ArrayList<Module> getModules() {
@@ -373,6 +398,19 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	public boolean toUpdateSchedule(String shortname, Double scheduleVersion){
+		String s = MODULE_C_SHORTNAME + "=? AND "+ MODULE_C_SCHEDULE + "< ?";
+		String[] args = new String[] { shortname, String.format("%.0f", scheduleVersion) };
+		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		if(c.getCount() == 0){
+			c.close();
+			return false;
+		} else {
+			c.close();
+			return true;
+		}
+	}
+	
 	public Payload getUnsentLog(){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
 		String[] args = new String[] { "0" };
@@ -427,7 +465,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.moveToFirst();
 		ArrayList<Object> sl = new ArrayList<Object>();
 		while (c.isAfterLast() == false) {
-			org.digitalcampus.mobile.learning.model.TrackerLog so = new org.digitalcampus.mobile.learning.model.TrackerLog();
+			TrackerLog so = new TrackerLog();
 			so.id = c.getLong(c.getColumnIndex(MQUIZRESULTS_C_ID));
 			so.content  = c.getString(c.getColumnIndex(MQUIZRESULTS_C_DATA));
 			sl.add(so);
@@ -470,5 +508,32 @@ public class DbHelper extends SQLiteOpenHelper {
 		MessageFeed mf = new MessageFeed();
 		// TODO get messages from db...
 		return mf;
+	}
+	
+	public void getActivitiesDue(){
+		
+		DateTime now = new DateTime();
+		String nowDateString = MobileLearning.DATE_FORMAT.print(now);
+		Log.d(TAG,nowDateString);
+		String sql = "SELECT a.* from "+ ACTIVITY_TABLE + " a " +
+					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
+					" LEFT OUTER JOIN " + TRACKER_LOG_TABLE + " tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
+					" WHERE tl."+TRACKER_LOG_C_ID + " IS NULL "+
+					" AND a."+ACTIVITY_C_STARTDATE + "<='" + nowDateString + "'" +
+					" AND a."+ACTIVITY_C_ENDDATE + ">='" + nowDateString + "'";
+							
+		
+		Cursor c = db.rawQuery(sql,null);
+		Log.d(TAG,String.valueOf(c.getCount()));
+		c.moveToFirst();
+		while (c.isAfterLast() == false) {
+			Activity a = new Activity();
+			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
+				//Log.d(TAG,c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+				a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+				Log.d(TAG,a.getTitleJSONString());
+			}
+			c.moveToNext();
+		}
 	}
 }

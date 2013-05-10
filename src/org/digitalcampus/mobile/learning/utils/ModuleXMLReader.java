@@ -239,6 +239,18 @@ public class ModuleXMLReader {
 				a.setSectionId(sectionId);
 				a.setActType(actType);
 				a.setDigest(digest);
+				// get the titles
+				ArrayList<Lang> actTitles = new ArrayList<Lang>();
+				NodeList act = activities.item(j).getChildNodes();
+				for (int k=0; k<act.getLength(); k++) {
+					NamedNodeMap attrs = act.item(k).getAttributes();
+					if(act.item(k).getNodeName().equals("title")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actTitles.add(new Lang(lang, act.item(k).getTextContent(),""));
+					}
+				}
+				a.setTitles(actTitles);
+				
 				acts.add(a);
 			}
 		}

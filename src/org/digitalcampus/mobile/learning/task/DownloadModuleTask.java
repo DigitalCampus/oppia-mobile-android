@@ -49,6 +49,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Pay
 
 	public final static String TAG = DownloadModuleTask.class.getSimpleName();
 	private InstallModuleListener mStateListener;
+	
 	private Context ctx;
 	private SharedPreferences prefs;
 	
