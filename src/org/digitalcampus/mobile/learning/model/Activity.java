@@ -30,7 +30,6 @@ import org.json.JSONObject;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 public class Activity implements Serializable{
 	

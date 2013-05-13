@@ -27,14 +27,14 @@ import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleScheduleXMLReader;
+import org.digitalcampus.mobile.learning.utils.ModuleTrackerXMLReader;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
-public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadProgress, Payload>
-
-{
+public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadProgress, Payload>{
+	
 	public final static String TAG = InstallDownloadedModulesTask.class.getSimpleName();
 	private Context ctx;
 	private InstallModuleListener mStateListener;
@@ -71,10 +71,12 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				
 				String moduleXMLPath = "";
 				String moduleScheduleXMLPath = "";
+				String moduleTrackerXMLPath = "";
 				// check that it's unzipped etc correctly
 				try {
 					moduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_XML;
 					moduleScheduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_SCHEDULE_XML;
+					moduleTrackerXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
 					break;
@@ -83,6 +85,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				// check a module.xml file exists and is a readable XML file
 				ModuleXMLReader mxr = new ModuleXMLReader(moduleXMLPath);
 				ModuleScheduleXMLReader msxr = new ModuleScheduleXMLReader(moduleScheduleXMLPath);
+				ModuleTrackerXMLReader mtxr = new ModuleTrackerXMLReader(moduleTrackerXMLPath);
 				
 				HashMap<String, String> hm = mxr.getMeta();
 
@@ -101,7 +104,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 					mxr.setTempFilePath(tempdir + "/" + moddirs[0]);
 
 					db.insertActivities(mxr.getActivities(added));
-
+					db.insertTrackers(mtxr.getTrackers(),added);
 					// Delete old module
 					File oldMod = new File(MobileLearning.MODULES_PATH + moddirs[0]);
 					FileUtils.deleteDir(oldMod);
@@ -125,6 +128,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				// put this here so even if the module content isn't updated the schedule will be
 				db.insertSchedule(msxr.getSchedule());
 				db.updateScheduleVersion(added, msxr.getScheduleVersion());
+				
 				
 				db.close();
 				// delete temp directory

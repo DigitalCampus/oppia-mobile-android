@@ -41,7 +41,7 @@ public class MobileLearning extends Application {
 	public static final String DOWNLOAD_PATH = MLEARN_ROOT + "download/";
 	public static final String MODULE_XML = "module.xml";
 	public static final String MODULE_SCHEDULE_XML = "schedule.xml";
-	
+	public static final String MODULE_TRACKER_XML = "tracker.xml";
 	// server path vars
 	
 	public static final String LOGIN_PATH = "api/v1/user/";

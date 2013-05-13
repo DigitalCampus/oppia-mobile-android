@@ -105,7 +105,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				//Log.d(TAG, "Sending log...." + l.id);
 				//Log.d(TAG, "Sending content...." + l.content);
 				
-				StringEntity se = new StringEntity(tl.content);
+				StringEntity se = new StringEntity(tl.getContent());
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPost.setEntity(se);
 
@@ -128,7 +128,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
 						DbHelper db = new DbHelper(ctx);
-						db.markMQuizSubmitted(tl.id);
+						db.markMQuizSubmitted(tl.getId());
 						db.close();
 						payload.result = true;
 						// update points

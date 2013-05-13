@@ -26,22 +26,20 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.mobile.learning.application.MobileLearning;
-import org.digitalcampus.mobile.learning.model.ActivitySchedule;
+import org.digitalcampus.mobile.learning.model.TrackerLog;
 import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class ModuleScheduleXMLReader {
-
-	public static final String TAG = ModuleScheduleXMLReader.class.getSimpleName();
+public class ModuleTrackerXMLReader {
+	public static final String TAG = ModuleTrackerXMLReader.class.getSimpleName();
 	private Document document;
 	
-	public ModuleScheduleXMLReader(String filename) {
+	public ModuleTrackerXMLReader(String filename) {
 		// TODO check that it's a valid module xml file else throw error
 		File moduleXML = new File(filename);
 		if (moduleXML.exists()) {
@@ -66,36 +64,26 @@ public class ModuleScheduleXMLReader {
 		}
 	}
 	
-	public long getScheduleVersion(){
+	
+	public ArrayList<TrackerLog> getTrackers(){
+		ArrayList<TrackerLog> trackers = new ArrayList<TrackerLog>();
 		if (this.document == null){
-			return 0;
-		}
-		Node schedule = document.getDocumentElement();
-		NamedNodeMap attrs = schedule.getAttributes();
-		long version = Long.parseLong(attrs.getNamedItem("version").getTextContent());
-		return version;
-	}
-	public ArrayList<ActivitySchedule> getSchedule(){
-		ArrayList<ActivitySchedule> schedule = new ArrayList<ActivitySchedule>();
-		if (this.document == null){
-			return schedule;
+			return trackers;
 		}
 		NodeList actscheds = document.getFirstChild().getChildNodes();
 		for (int i=0; i<actscheds.getLength(); i++) {
 			NamedNodeMap attrs = actscheds.item(i).getAttributes();
 			String digest = attrs.getNamedItem("digest").getTextContent();
-			String startDateString = attrs.getNamedItem("startdate").getTextContent();
-			String endDateString = attrs.getNamedItem("enddate").getTextContent();
+			String submittedDateString = attrs.getNamedItem("submitteddate").getTextContent();
 		
-			DateTime sdt = MobileLearning.DATE_FORMAT.parseDateTime(startDateString);
-			DateTime edt = MobileLearning.DATE_FORMAT.parseDateTime(endDateString);
+			DateTime sdt = MobileLearning.DATE_FORMAT.parseDateTime(submittedDateString);
 			
-			ActivitySchedule as = new ActivitySchedule();
-			as.setDigest(digest);
-			as.setStartTime(sdt);
-			as.setEndTime(edt);
-			schedule.add(as);
+			TrackerLog t = new TrackerLog();
+			t.setDigest(digest);
+			t.setSubmitted(true);
+			t.setDatetime(sdt);
+			trackers.add(t);
 		}
-		return schedule;
+		return trackers;
 	}
 }

@@ -270,6 +270,19 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	public void insertTrackers(ArrayList<TrackerLog> trackers, long modId) {
+		// acts.listIterator();
+		for (TrackerLog t : trackers) {
+			ContentValues values = new ContentValues();
+			values.put(TRACKER_LOG_C_DATETIME, t.getDateTimeString());
+			values.put(TRACKER_LOG_C_ACTIVITYDIGEST, t.getDigest());
+			values.put(TRACKER_LOG_C_SUBMITTED, t.isSubmitted());
+			values.put(TRACKER_LOG_C_MODID, modId);
+			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
+		}
+	}
+	
+	
 	public void resetSchedule(int modId){
 		ContentValues values = new ContentValues();
 		values.put(ACTIVITY_C_STARTDATE,"");
@@ -420,8 +433,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		ArrayList<Object> sl = new ArrayList<Object>();
 		while (c.isAfterLast() == false) {
 			TrackerLog so = new TrackerLog();
-			so.id = c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID));
-			so.digest = c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST));
+			so.setId(c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID)));
+			so.setDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 			String content = "";
 			try {
 				JSONObject json = new JSONObject();
@@ -434,7 +447,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				BugSenseHandler.sendException(e);
 			}
 			
-			so.content  = content;
+			so.setContent(content);
 			sl.add(so);
 			c.moveToNext();
 		}
@@ -466,8 +479,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		ArrayList<Object> sl = new ArrayList<Object>();
 		while (c.isAfterLast() == false) {
 			TrackerLog so = new TrackerLog();
-			so.id = c.getLong(c.getColumnIndex(MQUIZRESULTS_C_ID));
-			so.content  = c.getString(c.getColumnIndex(MQUIZRESULTS_C_DATA));
+			so.setId(c.getLong(c.getColumnIndex(MQUIZRESULTS_C_ID)));
+			so.setContent(c.getString(c.getColumnIndex(MQUIZRESULTS_C_DATA)));
 			sl.add(so);
 			c.moveToNext();
 		}
@@ -524,7 +537,6 @@ public class DbHelper extends SQLiteOpenHelper {
 							
 		
 		Cursor c = db.rawQuery(sql,null);
-		Log.d(TAG,String.valueOf(c.getCount()));
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
 			Activity a = new Activity();

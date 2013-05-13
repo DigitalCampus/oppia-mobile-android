@@ -101,7 +101,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				
 				HttpPost httpPost = new HttpPost(url);
 				
-				StringEntity se = new StringEntity(l.content);
+				StringEntity se = new StringEntity(l.getContent());
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPost.setEntity(se);
                 
@@ -124,7 +124,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
 						DbHelper dbh = new DbHelper(ctx);
-						dbh.markLogSubmitted(l.id);
+						dbh.markLogSubmitted(l.getId());
 						dbh.close();
 						payload.result = true;
 						// update points
@@ -136,7 +136,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 						break;
 					case 404: // submitted but invalid digest - so record as submitted so doesn't keep trying
 						DbHelper dbh1 = new DbHelper(ctx);
-						dbh1.markLogSubmitted(l.id);
+						dbh1.markLogSubmitted(l.getId());
 						dbh1.close();
 						payload.result = true;
 						break;

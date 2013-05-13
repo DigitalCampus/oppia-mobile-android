@@ -17,14 +17,52 @@
 
 package org.digitalcampus.mobile.learning.model;
 
-import java.util.Date;
+import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.joda.time.DateTime;
 
 public class TrackerLog {
 
-	public Date datetime;
-	public long id;
-	public String digest;
-	public String content;
-	public boolean submitted;
+	private DateTime datetime;
+	private long id;
+	private String digest;
+	private String content;
+	private boolean submitted;
+	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public DateTime getDatetime() {
+		return datetime;
+	}
+	public void setDatetime(DateTime datetime) {
+		this.datetime = datetime;
+	}
+	public String getDigest() {
+		return digest;
+	}
+	public void setDigest(String digest) {
+		this.digest = digest;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public boolean isSubmitted() {
+		return submitted;
+	}
+	public void setSubmitted(boolean submitted) {
+		this.submitted = submitted;
+	}
+	
+	public String getDateTimeString() {
+		return MobileLearning.DATE_FORMAT.print(datetime);
+	}
+	
 	
 }
