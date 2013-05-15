@@ -27,16 +27,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.SubmitListener;
 import org.digitalcampus.mobile.learning.model.User;
+import org.digitalcampus.mobile.learning.utils.HTTPConnectionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -66,16 +63,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 
 		Payload payload = params[0];
 		User u = (User) payload.data.get(0);
-		HttpParams httpParameters = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(
-				httpParameters,
-				Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
-						ctx.getString(R.string.prefServerTimeoutConnection))));
-		HttpConnectionParams.setSoTimeout(
-				httpParameters,
-				Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
-						ctx.getString(R.string.prefServerTimeoutResponseDefault))));
-		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
 		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault))
 				+ MobileLearning.REGISTER_PATH;

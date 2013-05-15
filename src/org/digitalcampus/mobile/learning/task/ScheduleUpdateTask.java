@@ -28,11 +28,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
@@ -40,6 +36,7 @@ import org.digitalcampus.mobile.learning.listener.UpdateScheduleListener;
 import org.digitalcampus.mobile.learning.model.ActivitySchedule;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.Module;
+import org.digitalcampus.mobile.learning.utils.HTTPConnectionUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,16 +86,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 		dp.setMessage(ctx.getString(R.string.updating));
 		publishProgress(dp);
 		
-		HttpParams httpParameters = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(
-				httpParameters,
-				Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
-						ctx.getString(R.string.prefServerTimeoutConnection))));
-		HttpConnectionParams.setSoTimeout(
-				httpParameters,
-				Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
-						ctx.getString(R.string.prefServerTimeoutResponseDefault))));
-		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 		
 		String responseStr = "";
 		HttpGet httpGet = new HttpGet(url);

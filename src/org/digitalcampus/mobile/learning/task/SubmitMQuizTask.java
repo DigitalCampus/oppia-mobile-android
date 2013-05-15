@@ -31,25 +31,20 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.TrackerLog;
+import org.digitalcampus.mobile.learning.utils.HTTPConnectionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -74,16 +69,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 		Payload payload = params[0];
 		for (Object l : payload.data) {
 			TrackerLog tl = (TrackerLog) l;
-			HttpParams httpParameters = new BasicHttpParams();
-			HttpConnectionParams.setConnectionTimeout(
-					httpParameters,
-					Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
-							ctx.getString(R.string.prefServerTimeoutConnection))));
-			HttpConnectionParams.setSoTimeout(
-					httpParameters,
-					Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
-							ctx.getString(R.string.prefServerTimeoutResponseDefault))));
-			DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 			try {
 				String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault))
 						+ MobileLearning.MQUIZ_SUBMIT_PATH;
@@ -100,18 +86,10 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				url += paramString;
 				
 				HttpPost httpPost = new HttpPost(url);
-			
-				// update progress dialog
-				//Log.d(TAG, "Sending log...." + l.id);
-				//Log.d(TAG, "Sending content...." + l.content);
 				
 				StringEntity se = new StringEntity(tl.getContent());
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPost.setEntity(se);
-
-                // add user agent 
-                String v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
-                client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, MobileLearning.USER_AGENT + v);
                 
 				// make request
 				HttpResponse response = client.execute(httpPost);
@@ -152,9 +130,6 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 			} catch (IOException e) {
 				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
-			} catch (NameNotFoundException e) {
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
 			} catch (JSONException e) {
 				BugSenseHandler.sendException(e);
 				e.printStackTrace();

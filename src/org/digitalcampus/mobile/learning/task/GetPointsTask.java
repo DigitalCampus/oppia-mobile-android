@@ -27,14 +27,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.GetPointsListener;
+import org.digitalcampus.mobile.learning.utils.HTTPConnectionUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -59,16 +56,7 @@ public class GetPointsTask extends AsyncTask<Payload, Object, Payload>{
 		Payload payload = params[0];
 		String responseStr = "";
 		
-		HttpParams httpParameters = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(
-				httpParameters,
-				Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
-						ctx.getString(R.string.prefServerTimeoutConnection))));
-		HttpConnectionParams.setSoTimeout(
-				httpParameters,
-				Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
-						ctx.getString(R.string.prefServerTimeoutResponseDefault))));
-		DefaultHttpClient client = new DefaultHttpClient(httpParameters);
+		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
 		// add post params
 		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
