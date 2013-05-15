@@ -8,11 +8,20 @@
     </EditTextPreference>
 
     <CheckBoxPreference
-            android:defaultValue="true"
-            android:title="@string/prefShowScheduleReminders"
-            android:summary="@string/prefShowScheduleReminders_summary"
-            android:key="prefShowScheduleReminders" />
-    
+        android:defaultValue="true"
+        android:key="prefShowScheduleReminders"
+        android:summary="@string/prefShowScheduleReminders_summary"
+        android:title="@string/prefShowScheduleReminders" />
+
+    <ListPreference
+        android:defaultValue="3"
+        android:dependency="prefShowScheduleReminders"
+        android:entries="@array/NoScheduleReminders"
+        android:entryValues="@array/NoScheduleRemindersValues"
+        android:key="prefNoScheduleReminders"
+        android:summary="@string/prefNoScheduleReminders"
+        android:title="@string/prefNoScheduleReminders_summary" />
+
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
             android:defaultValue="@string/prefServerDefault"
@@ -29,11 +38,12 @@
             android:key="prefServerTimeoutResponse"
             android:title="@string/prefServerTimeoutResponse" >
         </EditTextPreference>
+
         <CheckBoxPreference
             android:defaultValue="true"
-            android:title="@string/prefBackgroudDataConnect"
+            android:key="prefBackgroundDataConnect"
             android:summary="@string/prefBackgroudDataConnect_summary"
-            android:key="prefBackgroundDataConnect" />
+            android:title="@string/prefBackgroudDataConnect" />
     </PreferenceCategory>
 
 </PreferenceScreen>

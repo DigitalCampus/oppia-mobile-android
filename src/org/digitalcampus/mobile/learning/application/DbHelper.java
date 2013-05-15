@@ -583,6 +583,7 @@ public class DbHelper extends SQLiteOpenHelper {
 							
 		
 		Cursor c = db.rawQuery(sql,null);
+		int count = 0;
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
 			Activity a = new Activity();
@@ -591,9 +592,34 @@ public class DbHelper extends SQLiteOpenHelper {
 				a.setModId(c.getLong(c.getColumnIndex(ACTIVITY_C_MODID)));
 				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
 				activities.add(a);
+				count++;
 			}
 			c.moveToNext();
 		}
+		
+		if(count < max){
+			//just add in some extra suggested activities unrelated to the date/time
+			String sql2 = "SELECT a.* from "+ ACTIVITY_TABLE + " a " +
+					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
+					" LEFT OUTER JOIN " + TRACKER_LOG_TABLE + " tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
+					" WHERE tl."+TRACKER_LOG_C_ID + " IS NULL "+
+					" AND a."+ACTIVITY_C_ID + " NOT IN (SELECT "+ACTIVITY_C_ID+" FROM ("+sql+") b)" +
+					" LIMIT " + (max-count);
+			Cursor c2 = db.rawQuery(sql2,null);
+			c2.moveToFirst();
+			while (c2.isAfterLast() == false) {
+				Activity a = new Activity();
+				if(c2.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
+					a.setTitlesFromJSONString(c2.getString(c2.getColumnIndex(ACTIVITY_C_TITLE)));
+					a.setModId(c2.getLong(c2.getColumnIndex(ACTIVITY_C_MODID)));
+					a.setDigest(c2.getString(c2.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+					activities.add(a);
+				}
+				c2.moveToNext();
+			}
+			
+		}
+		
 		return activities;
 	}
 }

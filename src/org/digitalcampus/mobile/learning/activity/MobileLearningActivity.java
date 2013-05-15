@@ -34,7 +34,6 @@ import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
-import org.digitalcampus.mobile.learning.model.MessageFeed;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
@@ -136,11 +135,12 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	@Override
 	public void onResume(){
 		super.onResume();
-		DbHelper db = new DbHelper(this);
+		/*DbHelper db = new DbHelper(this);
 		MessageFeed mf = db.getMessageFeed();
 		db.close();
-		this.updateMessages(mf);
+		this.updateMessages(mf);*/
 		this.updateHeader();
+		this.updateReminders();
 	}
 	
 	@Override
@@ -215,20 +215,25 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			}
 		});
 
+		this.updateReminders();
+		
 		// scan media
 		this.scanMedia(modules);
-		
+	}
+
+	private void updateReminders(){
 		if(prefs.getBoolean("prefShowScheduleReminders", true)){
-			db = new DbHelper(MobileLearningActivity.this);
-			ArrayList<Activity> activities = db.getActivitiesDue(MobileLearning.MAX_ACTIVITY_REMINDERS);
+			DbHelper db = new DbHelper(MobileLearningActivity.this);
+			int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "3"));
+			ArrayList<Activity> activities = db.getActivitiesDue(max);
 			db.close();
 			this.drawReminders(activities);
 		} else {
 			LinearLayout ll = (LinearLayout) findViewById(R.id.schedule_reminders);
 			ll.setVisibility(View.GONE);
-		}
+		}		
 	}
-
+	
 	private void scanMedia(ArrayList<Module> modules) {
 		ArrayList<Object> media = new ArrayList<Object>();
 		for (Module m : modules) {
@@ -447,7 +452,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		    	editor.commit();
 			}
 		}
-		if(key.equalsIgnoreCase("prefShowScheduleReminders")){
+		if(key.equalsIgnoreCase("prefShowScheduleReminders") || key.equalsIgnoreCase("prefNoScheduleReminders")){
 			displayModules();
 		}
 	}
