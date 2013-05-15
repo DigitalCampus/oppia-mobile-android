@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <TextView
+        android:id="@+id/schedule_reminder_header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="@string/schedule_reminders"
+        android:textSize="16sp"/>
+    
+    <ListView
+        android:id="@+id/schedule_reminder_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:listSelector="@drawable/background_change_pressed" 
+        android:divider="@drawable/list_divider_light"
+        android:dividerHeight="1dp"
+        android:cacheColorHint="#00000000"/>
+
+</merge>

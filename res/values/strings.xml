@@ -2,7 +2,6 @@
 	<!-- TODO - organise these a bit better -->
     <string name="app_name">OppiaMobile</string>
     <string name="app_logo_alt">Digital Campus Logo</string>
-    <string name="app_tagline">Mobile Learning by Digital Campus</string>
     
     <string name="menu_download">Manage Modules</string>
     <string name="menu_language">Change language</string>
@@ -25,7 +24,6 @@
     <string name="title_module_about">About Module</string>
     <string name="title_download_media">Download Media</string>
     <string name="title_points">Your Points</string>
-    <string name="title_badges">Your Badges</string>
     
     <string name="activity_module_button_prev">&lt;</string>
     <string name="activity_module_button_next">&gt;</string>
@@ -58,6 +56,9 @@
 	
 	<string name="prefBackgroudDataConnect">Background activity tracker</string>
 	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
+	
+	<string name="prefShowScheduleReminders">Display suggested activities</string>
+	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
 	
 	<string name="notification_module_update_title">New module updates</string>
 	<string name="notification_module_update_text">Updates are available for your course modules.</string>
@@ -102,7 +103,6 @@
 	<string name="updating">Updating &#8230;</string>
 	<string name="update_complete">Schedule update complete</string>
 	
-	<string name="installing">Installing module</string>
 	<string name="installing_module">Installing: %1$s</string>
 	<string name="install_complete">Installation complete</string>
 	
@@ -148,4 +148,6 @@
 	<string name="download_via_pc_title">Download Media Files</string>
 	<string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
 	<string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
+	
+	<string name="schedule_reminders">Suggested next activities:</string>
 </resources>

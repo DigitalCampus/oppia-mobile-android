@@ -17,8 +17,11 @@
 
 package org.digitalcampus.mobile.learning.activity;
 
+import java.util.ArrayList;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.Header;
+import org.digitalcampus.mobile.learning.application.ScheduleReminders;
 import org.digitalcampus.mobile.learning.application.UserMessage;
 import org.digitalcampus.mobile.learning.model.MessageFeed;
 
@@ -30,6 +33,7 @@ public class AppActivity extends Activity {
 	
 	private Header header;
 	private UserMessage messages;
+	private ScheduleReminders reminders;
 	
 	public void drawHeader() {
 		try {
@@ -67,6 +71,15 @@ public class AppActivity extends Activity {
 	
 	public void stopMessages(){
 		messages.stopMessages();
+	}
+	
+	public void drawReminders(ArrayList<org.digitalcampus.mobile.learning.model.Activity> activities){
+		try {
+			reminders = (ScheduleReminders) findViewById(R.id.schedule_reminders);
+			reminders.initSheduleReminders(activities);
+		} catch (NullPointerException npe) {
+			// do nothing
+		}
 	}
 
 }

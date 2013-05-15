@@ -7,6 +7,12 @@
         android:title="@string/prefLanguage" >
     </EditTextPreference>
 
+    <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/prefShowScheduleReminders"
+            android:summary="@string/prefShowScheduleReminders_summary"
+            android:key="prefShowScheduleReminders" />
+    
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
             android:defaultValue="@string/prefServerDefault"

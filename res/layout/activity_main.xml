@@ -15,6 +15,13 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
+    <org.digitalcampus.mobile.learning.application.ScheduleReminders
+        android:id="@+id/schedule_reminders"
+        android:background="@drawable/message_background"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
     <LinearLayout
         android:id="@+id/home_messages"
         android:layout_width="fill_parent"

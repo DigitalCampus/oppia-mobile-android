@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 
 public abstract class WidgetFactory extends Activity {
 	
+	public final static String TAG = WidgetFactory.class.getSimpleName();
 	private LayoutInflater li;
 	private LinearLayout ll;
 	

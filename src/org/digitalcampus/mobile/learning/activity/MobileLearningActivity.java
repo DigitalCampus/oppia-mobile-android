@@ -32,6 +32,7 @@ import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
+import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.MessageFeed;
 import org.digitalcampus.mobile.learning.model.Module;
@@ -126,7 +127,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		if (children != null) {
 			ArrayList<Object> data = new ArrayList<Object>();
      		Payload p = new Payload(0,data);
-     		
 			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(MobileLearningActivity.this);
 			imTask.setInstallerListener(this);
 			imTask.execute(p);
@@ -217,11 +217,20 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 		// scan media
 		this.scanMedia(modules);
+		
+		if(prefs.getBoolean("prefShowScheduleReminders", true)){
+			db = new DbHelper(MobileLearningActivity.this);
+			ArrayList<Activity> activities = db.getActivitiesDue(MobileLearning.MAX_ACTIVITY_REMINDERS);
+			db.close();
+			this.drawReminders(activities);
+		} else {
+			LinearLayout ll = (LinearLayout) findViewById(R.id.schedule_reminders);
+			ll.setVisibility(View.GONE);
+		}
 	}
 
 	private void scanMedia(ArrayList<Module> modules) {
 		ArrayList<Object> media = new ArrayList<Object>();
-
 		for (Module m : modules) {
 			media.addAll(m.getMedia());
 		}
@@ -229,7 +238,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		Payload p = new Payload(0, media);
 		task.setScanMediaListener(this);
 		task.execute(p);
-
 	}
 
 	private void rebuildLangs() {
@@ -350,13 +358,11 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	public void installComplete(Payload p) {
-		Log.d(TAG, "Listener says install complete");
 		displayModules();
-
 	}
 
 	public void installProgressUpdate(DownloadProgress dp) {
-		Log.d(TAG, "Listener sent message:" + dp.getMessage());
+		//do nothing
 	}
 
 	@Override
@@ -370,14 +376,14 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		tempMod = (Module) info.targetView.getTag();
 		switch (item.getItemId()) {
-		case R.id.module_context_delete:
-			confirmModuleDelete();
-			return true;
-		case R.id.module_context_reset:
-			confirmModuleReset();
-			return true;
-		default:
-			return super.onContextItemSelected(item);
+			case R.id.module_context_delete:
+				confirmModuleDelete();
+				return true;
+			case R.id.module_context_reset:
+				confirmModuleReset();
+				return true;
+			default:
+				return super.onContextItemSelected(item);
 		}
 	}
 
@@ -388,16 +394,11 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		builder.setMessage(R.string.module_context_delete_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				// continue with delete
-				Log.d(TAG,
-						"deleting:"
-								+ tempMod.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 				// remove db records
 				DbHelper db = new DbHelper(MobileLearningActivity.this);
 				db.deleteModule(tempMod.getModId());
 				db.close();
 				// remove files
-				Log.d(TAG, "deleting:" + tempMod.getLocation());
 				File f = new File(tempMod.getLocation());
 				FileUtils.deleteDir(f);
 				displayModules();
@@ -418,9 +419,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		builder.setMessage(R.string.module_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.d(TAG,
-						"resetting:"
-								+ tempMod.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 				DbHelper db = new DbHelper(MobileLearningActivity.this);
 				db.resetModule(tempMod.getModId());
 				db.close();
@@ -448,6 +446,9 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 				editor.putString("prefServer", newServer);
 		    	editor.commit();
 			}
+		}
+		if(key.equalsIgnoreCase("prefShowScheduleReminders")){
+			displayModules();
 		}
 	}
 

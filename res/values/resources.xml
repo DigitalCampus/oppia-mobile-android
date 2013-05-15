@@ -3,6 +3,7 @@
     <drawable name="background_dark">#333333</drawable>
     <drawable name="background_light">#eeeeee</drawable>
     <drawable name="list_divider">#222222</drawable>
+    <drawable name="list_divider_light">#cccccc</drawable>
     <drawable name="text_dark">#222222</drawable>
     <drawable name="text_light">#ffffff</drawable>
     <drawable name="green_light">#74B042</drawable>

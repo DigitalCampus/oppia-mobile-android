@@ -2,7 +2,6 @@
 	<!-- TODO - organise these a bit better -->
     <string name="app_name">OppiaMobile</string>
     <string name="app_logo_alt">Digital Campus Logo</string>
-    <string name="app_tagline">Mobile Learning by Digital Campus</string>
     
     <string name="menu_download">Gestionar cursos</string>
     <string name="menu_language">Cambiar idioma</string>
@@ -11,6 +10,7 @@
     <string name="menu_help">Ayuda</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_read_aloud">Read aloud</string>
+    <string name="menu_stop_read_aloud">Stop reading</string>
     
     <string name="service_tracker">OppiaMobile buscador de servicio</string>
     <string name="title_about">Sobre</string>
@@ -24,7 +24,6 @@
     <string name="title_module_about">Sobre el curso</string>
     <string name="title_download_media">Download Media</string>
     <string name="title_points">Your Points</string>
-    <string name="title_badges">Your Badges</string>
     
     <string name="activity_module_button_prev">&lt;</string>
     <string name="activity_module_button_next">&gt;</string>
@@ -89,6 +88,7 @@
 	<string name="alt_activity_icon">Activity icon</string>
 	
 	<string name="update">Actualización</string>
+	<string name="update_schedule">Update Schedule</string>
 	<string name="installed">Instalado</string>
 	<string name="install">Instalar</string>
 	
@@ -96,7 +96,10 @@
 	<string name="downloading">Descargando..</string>
 	<string name="download_complete">Descarga completa</string>
 	
-	<string name="installing">Instalando el curso</string>
+	<string name="update_starting">Getting schedule updates</string>
+	<string name="updating">Updating &#8230;</string>
+	<string name="update_complete">Schedule update complete</string>
+	
 	<string name="installing_module">Instalando: %1$s</string>
 	<string name="install_complete">Instalación completa</string>
 	
@@ -118,9 +121,11 @@
 	<string name="error_installing_module">%1$s: no se pudo instalar</string>
 	<string name="error_latest_already_installed">%1$s: ultima versión ya está instalada</string>
 	<string name="error_login">Error en el acceso</string>
-	
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
 	<string name="error_media_not_found">Media file: \'%1$s\' not found.</string>
+	<string name="error_download_failure">Download failed</string>
+	<string name="error_update_failure">Update failed</string>
+	<string name="error_install_failure">Install failed</string>
 	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files vía your PC.</string>
 	
 	<string name="loading_module_list">Obteniendo la lista de cursos</string>

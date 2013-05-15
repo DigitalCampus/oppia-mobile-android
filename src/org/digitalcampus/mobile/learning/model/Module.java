@@ -48,6 +48,10 @@ public class Module implements Serializable {
 	private Double scheduleVersionID;
 	private String scheduleURI;
 	
+	public Module() {
+
+	}	
+	
 	public Double getScheduleVersionID() {
 		return scheduleVersionID;
 	}
@@ -78,10 +82,6 @@ public class Module implements Serializable {
 
 	public void setAvailableLangs(ArrayList<String> availableLangs) {
 		this.availableLangs = availableLangs;
-	}
-
-	public Module() {
-
 	}
 	
 	public String getDownloadUrl() {

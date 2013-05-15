@@ -46,7 +46,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 10;
+	static final int DB_VERSION = 11;
 
 	private SQLiteDatabase db;
 	
@@ -153,24 +153,53 @@ public class DbHelper extends SQLiteOpenHelper {
 			createModuleTable(db);
 			createActivityTable(db);
 			createLogTable(db);
-			createMquizResultsTable(db);		
+			createMquizResultsTable(db);
+			return;
 		}
 		
-		if(newVersion <= 8 && oldVersion >= 7){
+		if(oldVersion <= 7 && newVersion >= 8){
 			String sql = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
 			db.execSQL(sql);
 			sql = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
 			db.execSQL(sql);
 		}
 		
-		if(newVersion <= 9 && oldVersion >= 7){
+		if(oldVersion <= 8 && newVersion >= 9){
 			String sql = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_SCHEDULE + " int null;";
 			db.execSQL(sql);
 		}
 		
-		if(newVersion <= 10 && oldVersion >= 7){
+		if(oldVersion <= 9 && newVersion >= 10){
 			String sql = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE  + " text null;";
 			db.execSQL(sql);
+		}
+		
+		// This is a fix as previous versioning may not have upgraded db tables correctly
+		if(oldVersion <= 10 && newVersion >=11){
+			String sql1 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
+			String sql2 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
+			String sql3 = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_SCHEDULE + " int null;";
+			String sql4 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE  + " text null;";
+			try {
+				db.execSQL(sql1);
+			} catch (Exception e){
+				
+			}
+			try {
+				db.execSQL(sql2);
+			} catch (Exception e){
+				
+			}
+			try {
+				db.execSQL(sql3);
+			} catch (Exception e){
+				
+			}
+			try {
+				db.execSQL(sql4);
+			} catch (Exception e){
+				
+			}
 		}
 	}
 
@@ -282,7 +311,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	
 	public void resetSchedule(int modId){
 		ContentValues values = new ContentValues();
 		values.put(ACTIVITY_C_STARTDATE,"");
@@ -305,6 +333,23 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		c.close();
 		return modules;
+	}
+	
+	public Module getModule(long modId) {
+		Module m = null;
+		String s = MODULE_C_ID + "=?";
+		String[] args = new String[] { String.valueOf(modId) };
+		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		c.moveToFirst();
+		while (c.isAfterLast() == false) {
+			m = new Module();
+			m.setModId(c.getInt(c.getColumnIndex(MODULE_C_ID)));
+			m.setLocation(c.getString(c.getColumnIndex(MODULE_C_LOCATION)));
+			m.setProgress(this.getModuleProgress(m.getModId()));
+			c.moveToNext();
+		}
+		c.close();
+		return m;
 	}
 	
 	public long insertLog(int modId, String digest, String data){
@@ -523,17 +568,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		return mf;
 	}
 	
-	public void getActivitiesDue(){
+	public ArrayList<Activity> getActivitiesDue(int max){
 		
+		ArrayList<Activity> activities = new ArrayList<Activity>();
 		DateTime now = new DateTime();
 		String nowDateString = MobileLearning.DATE_FORMAT.print(now);
-		Log.d(TAG,nowDateString);
 		String sql = "SELECT a.* from "+ ACTIVITY_TABLE + " a " +
 					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
 					" LEFT OUTER JOIN " + TRACKER_LOG_TABLE + " tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
 					" WHERE tl."+TRACKER_LOG_C_ID + " IS NULL "+
 					" AND a."+ACTIVITY_C_STARTDATE + "<='" + nowDateString + "'" +
-					" AND a."+ACTIVITY_C_ENDDATE + ">='" + nowDateString + "'";
+					" ORDER BY a."+ACTIVITY_C_ENDDATE + " ASC" +
+					" LIMIT " + max;
 							
 		
 		Cursor c = db.rawQuery(sql,null);
@@ -541,11 +587,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		while (c.isAfterLast() == false) {
 			Activity a = new Activity();
 			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
-				//Log.d(TAG,c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
 				a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
-				Log.d(TAG,a.getTitleJSONString());
+				a.setModId(c.getLong(c.getColumnIndex(ACTIVITY_C_MODID)));
+				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+				activities.add(a);
 			}
 			c.moveToNext();
 		}
+		return activities;
 	}
 }

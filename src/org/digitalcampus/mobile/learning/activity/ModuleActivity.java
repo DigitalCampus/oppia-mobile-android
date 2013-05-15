@@ -41,6 +41,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -52,8 +54,6 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
 
 public class ModuleActivity extends AppActivity implements OnInitListener {
 
@@ -103,7 +103,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
         	currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
         }
         
-        // Gesture detection
+        // Gesture detection for pages
         pageGestureDetector = new GestureDetector(new PageGestureDetector());
         pageGestureListener = new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -111,7 +111,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
             }
         };
         
-        // Gesture detection
+        // Gesture detection for quizzes
         quizGestureDetector = new GestureDetector(new QuizGestureDetector());
         quizGestureListener = new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -119,6 +119,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
             }
         };
     }
+    
     
     @Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -128,7 +129,6 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 		savedInstanceState.putLong("mediaStartTimeStamp", currentActivity.getMediaStartTime());
 		savedInstanceState.putString("mediaFileName", currentActivity.getMediaFileName());
 		savedInstanceState.putInt("currentActivityNo", this.currentActivityNo);
-		Log.d(TAG,"saving mediaplaying:" + this.currentActivityNo);
 	}
 	
 	@Override
@@ -139,7 +139,6 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 		currentActivity.setMediaFileName(savedInstanceState.getString("mediaFileName"));
 		currentActivity.setStartTime(savedInstanceState.getLong("activityStartTimeStamp"));
 		this.currentActivityNo = savedInstanceState.getInt("currentActivityNo");
-		Log.d(TAG,"resetting mediaplaying:" + this.currentActivityNo);
 	}
 	
     @Override
@@ -147,7 +146,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     	super.onStart();
     	rebuildLangs();
     	setTitle(section.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
-    	loadActivity();
+        loadActivity();
     }
     
     @Override
@@ -385,13 +384,17 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
                     return false;
                 // right to left swipe
                 if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                	Log.d(TAG,"swiping next");
                 	if(ModuleActivity.this.hasNext()){
                 		ModuleActivity.this.moveNext();
                 	}
                 }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                	Log.d(TAG,"swiping previous");
                 	if(ModuleActivity.this.hasPrev()){
                 		ModuleActivity.this.movePrev();
                 	}
+                } else {
+                	Log.d(TAG,"swiping nothing");
                 }
             } catch (Exception e) {
                 // nothing

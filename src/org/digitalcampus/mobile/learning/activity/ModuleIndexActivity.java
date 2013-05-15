@@ -26,6 +26,7 @@ import java.util.Map;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.ModuleMetaPage;
 import org.digitalcampus.mobile.learning.model.Section;
@@ -72,6 +73,26 @@ public class ModuleIndexActivity extends AppActivity {
         	module = (Module) bundle.getSerializable(Module.TAG);
         	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MobileLearning.MODULE_XML);
         	module.setMetaPages(mxr.getMetaPages());
+        	
+        	String digest = (String) bundle.getSerializable("JumpTo");
+        	if(digest != null){
+        		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
+        		for(Section s: sections){
+        			for(int i=0 ; i<s.getActivities().size(); i++){
+        				Activity a = s.getActivities().get(i);
+        				if(a.getDigest().equals(digest)){
+        					Intent intent = new Intent(this, ModuleActivity.class);
+        					Bundle tb = new Bundle();
+        					tb.putSerializable(Section.TAG, (Section) s);
+        					tb.putSerializable(Module.TAG, (Module) module);
+        					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) i);
+        					intent.putExtras(tb);
+        	         		startActivity(intent);
+        				}
+        			}
+        		}
+        		
+        	}
         }
     	
     }

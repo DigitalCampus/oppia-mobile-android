@@ -43,6 +43,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.view.ViewPager.LayoutParams;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -74,6 +75,7 @@ public class PageWidget extends WidgetFactory {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_page, null);
+
 		super.getLayout().addView(vv);
 	
 		// get the location data

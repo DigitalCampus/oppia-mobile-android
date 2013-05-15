@@ -166,7 +166,7 @@ public class Activity implements Serializable{
 				while(iter.hasNext()){
 					String key = iter.next().toString();
 					String title = titleObj.getString(key);
-					Lang l = new Lang(key,title,"");
+					Lang l = new Lang(key,title,title);
 					this.titles.add(l);
 				}
 			}
