@@ -20,7 +20,6 @@ package org.digitalcampus.mobile.learning.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -29,7 +28,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
-import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Media;
@@ -84,14 +82,10 @@ public class ModuleXMLReader {
 		this.tempFilePath = tempFilePath;
 	}
 	
-	public ArrayList<Lang> getTitles() throws ModuleNotFoundException {
+	public ArrayList<Lang> getTitles(){
 		ArrayList<Lang> titles = new ArrayList<Lang>();
 		Node m = null;
-		try {
-			m = document.getFirstChild().getFirstChild();
-		} catch (NullPointerException npe){
-			throw new ModuleNotFoundException();
-		}
+		m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
 			if(meta.item(j).getNodeName().equals("title")){
@@ -107,25 +101,26 @@ public class ModuleXMLReader {
 		return titles;
 	}
 	
-	public ArrayList<String> getLangs(){
-		ArrayList<String> langs = new ArrayList<String>();
+	public ArrayList<Lang> getLangs(){
+		ArrayList<Lang> langs = new ArrayList<Lang>();
 		NodeList ls = document.getElementsByTagName("langs").item(0).getChildNodes();
 		for (int j=0; j<ls.getLength(); j++) {
-			langs.add(ls.item(j).getTextContent());
+			Lang l = new Lang(ls.item(j).getTextContent(),"");
+			langs.add(l);
 		}
 		return langs;
 	}
 	
-	public HashMap<String, String> getMeta(){
-		HashMap<String, String> hm = new HashMap<String, String>();
+	public double getVersionId(){
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
-			hm.put(meta.item(j).getNodeName(), meta.item(j).getTextContent());
+			if(meta.item(j).getNodeName().equals("versionid")){
+				return Double.valueOf(meta.item(j).getTextContent());
+			}
 		}
-		return hm;
+		return 0;
 	}
-	
 	
 	public ArrayList<ModuleMetaPage> getMetaPages(){
 		ArrayList<ModuleMetaPage> ammp = new ArrayList<ModuleMetaPage>();
@@ -163,8 +158,10 @@ public class ModuleXMLReader {
 							location = pages.item(p).getTextContent();
 						} 
 					}
-					Lang l = new Lang(lang,title,location);
+					Lang l = new Lang(lang,title);
+					l.setLocation(location);
 					mmp.addLang(l);
+					
 				}
 				ammp.add(mmp);
 			}
@@ -243,7 +240,7 @@ public class ModuleXMLReader {
 					NamedNodeMap attrs = act.item(k).getAttributes();
 					if(act.item(k).getNodeName().equals("title")){
 						String lang = attrs.getNamedItem("lang").getTextContent();
-						actTitles.add(new Lang(lang, act.item(k).getTextContent(),""));
+						actTitles.add(new Lang(lang, act.item(k).getTextContent()));
 					}
 				}
 				a.setTitles(actTitles);

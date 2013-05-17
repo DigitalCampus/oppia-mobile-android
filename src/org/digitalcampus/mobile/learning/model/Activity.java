@@ -135,7 +135,7 @@ public class Activity implements Serializable{
 		for(Lang l: titles){
 			JSONObject obj = new JSONObject();
 			try {
-				obj.put(l.getLang(), l.getTitle());
+				obj.put(l.getLang(), l.getContent());
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -162,11 +162,12 @@ public class Activity implements Serializable{
 			JSONArray titlesArray = new JSONArray(json);
 			for(int i=0; i<titlesArray.length(); i++){
 				JSONObject titleObj = titlesArray.getJSONObject(i);
-				Iterator<String> iter = (Iterator) titleObj.keys();
+				@SuppressWarnings("unchecked")
+				Iterator<String> iter = (Iterator<String>) titleObj.keys();
 				while(iter.hasNext()){
 					String key = iter.next().toString();
 					String title = titleObj.getString(key);
-					Lang l = new Lang(key,title,title);
+					Lang l = new Lang(key,title);
 					this.titles.add(l);
 				}
 			}

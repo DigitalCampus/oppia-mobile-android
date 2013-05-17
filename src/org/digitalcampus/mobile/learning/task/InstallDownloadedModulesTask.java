@@ -18,29 +18,34 @@
 package org.digitalcampus.mobile.learning.task;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
+import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleScheduleXMLReader;
 import org.digitalcampus.mobile.learning.utils.ModuleTrackerXMLReader;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 	
 	public final static String TAG = InstallDownloadedModulesTask.class.getSimpleName();
 	private Context ctx;
 	private InstallModuleListener mStateListener;
-
+	private SharedPreferences prefs;
+	
 	public InstallDownloadedModulesTask(Context ctx) {
 		this.ctx = ctx;
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
 	@Override
@@ -57,7 +62,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 			for (int i = 0; i < children.length; i++) {
 
 				// extract to temp dir and check it's a valid package file
-				File tempdir = new File(MobileLearning.MLEARN_ROOT + "temp/");
+				File tempdir = new File(MobileLearning.OPPIAMOBILE_ROOT + "temp/");
 				tempdir.mkdirs();
 				boolean unzipResult = FileUtils.unzipFiles(MobileLearning.DOWNLOAD_PATH, children[i], tempdir.getAbsolutePath());
 				
@@ -87,16 +92,21 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				ModuleScheduleXMLReader msxr = new ModuleScheduleXMLReader(moduleScheduleXMLPath);
 				ModuleTrackerXMLReader mtxr = new ModuleTrackerXMLReader(moduleTrackerXMLPath);
 				
-				HashMap<String, String> hm = mxr.getMeta();
-
-				String versionid = hm.get("versionid");
-				String title = hm.get("title");
-				String location = MobileLearning.MODULES_PATH + moddirs[0];
+				//HashMap<String, String> hm = mxr.getMeta();
+				Module m = new Module();
+				m.setVersionId(mxr.getVersionId());
+				m.setTitles(mxr.getTitles());
+				m.setLocation(MobileLearning.MODULES_PATH + moddirs[0]);
+				m.setShortname(moddirs[0]);
+				m.setImageFile(MobileLearning.MODULES_PATH + moddirs[0] + "/" + mxr.getModuleImage());
+				m.setLangs(mxr.getLangs());
+				String title = m.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+				
 				dp.setProgress(ctx.getString(R.string.installing_module, title));
 				publishProgress(dp);
 				
 				DbHelper db = new DbHelper(ctx);
-				long added = db.addOrUpdateModule(versionid, title, location, moddirs[0]);
+				long added = db.addOrUpdateModule(m);
 				
 				if (added != -1) {
 					File src = new File(tempdir + "/" + moddirs[0]);

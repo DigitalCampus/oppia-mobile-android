@@ -28,25 +28,23 @@ public class Lang implements Serializable {
 	private static final long serialVersionUID = -8960131611429444591L;
 	private String lang;
 	private String content;
-	private String title;
+	private String location;
 	
 	public Lang(String lang, String content){
 		this.setLang(lang);
 		this.setContent(content);
 	}
 	
-	public Lang(String lang, String title, String content){
-		this.setLang(lang);
-		this.setContent(content);
-		this.setTitle(title);
-	}
 
 	public String getLang() {
-		return lang;
+		String[] langCountry = this.lang.split("_|-");
+		return langCountry[0];
 	}
 
 	public void setLang(String lang) {
-		this.lang = lang;
+		// only set the first part of the lang - not the full localisation
+		String[] langCountry = lang.split("_|-");
+		this.lang = langCountry[0];
 	}
 	
 	public String getContent() {
@@ -57,11 +55,12 @@ public class Lang implements Serializable {
 		this.content = content;
 	}
 	
-	public void setTitle(String title){
-		this.title = title;
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
-	public String getTitle(){
-		return this.title;
+	public String getLocation() {
+		return location;
 	}
+	
 }

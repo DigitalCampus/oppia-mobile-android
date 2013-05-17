@@ -22,10 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
-import org.digitalcampus.mobile.learning.application.MobileLearning;
-import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
 import org.digitalcampus.mobile.learning.model.Module;
-import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -60,26 +57,15 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 	    DbHelper db = new DbHelper(ctx);
 		Module m = db.getModule(a.getModId());
 		db.close();
-		ModuleXMLReader mxr = new ModuleXMLReader(m.getLocation() + "/" + MobileLearning.MODULE_XML);
 	    
-		try {
-			m.setTitles(mxr.getTitles());
-			ArrayList<String> mLangs = mxr.getLangs();
-			m.setAvailableLangs(mLangs);
-			m.setProps(mxr.getMeta());
-			m.setImageFile(mxr.getModuleImage());
-			m.setMedia(mxr.getMedia());
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
-			
-			TextView scheduleTitle = (TextView) rowView.findViewById(R.id.schedule_title);
-			 
-			scheduleTitle.setText(m.getTitle(lang) + ": " + a.getTitle(lang));
-			rowView.setTag(R.id.TAG_MODULE_ID,m);
-			rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,a.getDigest());
+		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+		
+		TextView scheduleTitle = (TextView) rowView.findViewById(R.id.schedule_title);
+		 
+		scheduleTitle.setText(m.getTitle(lang) + ": " + a.getTitle(lang));
+		rowView.setTag(R.id.TAG_MODULE_ID,m);
+		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,a.getDigest());
 
-		} catch (ModuleNotFoundException e) {
-			e.printStackTrace();
-		}
 	    return rowView;
 	}
 

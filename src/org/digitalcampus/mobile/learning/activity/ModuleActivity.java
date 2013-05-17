@@ -26,6 +26,7 @@ import java.util.Map;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.Tracker;
+import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.service.TrackerService;
@@ -329,9 +330,9 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     private void rebuildLangs() {
 		// recreate langMap
 		langMap = new HashMap<String, String>();
-		Iterator<String> itr = module.getAvailableLangs().iterator();
+		Iterator<Lang> itr = module.getLangs().iterator();
 		while (itr.hasNext()) {
-			String lang = itr.next();
+			String lang = itr.next().getLang();
 			Locale l = new Locale(lang);
 			String langDisp = l.getDisplayLanguage(l);
 			langMap.put(langDisp, lang);
@@ -384,18 +385,14 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
                     return false;
                 // right to left swipe
                 if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                	Log.d(TAG,"swiping next");
                 	if(ModuleActivity.this.hasNext()){
                 		ModuleActivity.this.moveNext();
                 	}
                 }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                	Log.d(TAG,"swiping previous");
                 	if(ModuleActivity.this.hasPrev()){
                 		ModuleActivity.this.movePrev();
                 	}
-                } else {
-                	Log.d(TAG,"swiping nothing");
-                }
+                } 
             } catch (Exception e) {
                 // nothing
             }

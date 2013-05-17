@@ -19,10 +19,7 @@ package org.digitalcampus.mobile.learning.activity;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.R.id;
@@ -32,14 +29,16 @@ import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
+import org.digitalcampus.mobile.learning.listener.UpgradeListener;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
+import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.task.InstallDownloadedModulesTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.ScanMediaTask;
+import org.digitalcampus.mobile.learning.task.UpgradeManagerTask;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
-import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -60,6 +59,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -68,14 +68,13 @@ import android.widget.TextView;
 import com.bugsense.trace.BugSenseHandler;
 
 public class MobileLearningActivity extends AppActivity implements InstallModuleListener,
-		OnSharedPreferenceChangeListener, ScanMediaListener {
+		OnSharedPreferenceChangeListener, ScanMediaListener, UpgradeListener {
 
 	public static final String TAG = MobileLearningActivity.class.getSimpleName();
 	private SharedPreferences prefs;
 	private Module tempMod;
-	private ArrayList<String> langSet = new ArrayList<String>();
-	private HashMap<String, String> langMap = new HashMap<String, String>();
-	private String[] langArray;
+	private ArrayList<String> langs = new ArrayList<String>();
+	private Lang[] langArray;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -110,6 +109,12 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			});
 			builder.show();
 		}
+		// do upgrade if required
+		UpgradeManagerTask umt = new UpgradeManagerTask(this);
+		umt.setUpgradeListener(this);
+		ArrayList<Object> data = new ArrayList<Object>();
+ 		Payload p = new Payload(0,data);
+		umt.execute(p);
 	}
 
 	@Override
@@ -157,15 +162,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		ArrayList<Module> removeModules = new ArrayList<Module>();
 		for (Module m : modules) {
 			try {
-				ModuleXMLReader mxr = new ModuleXMLReader(m.getLocation() + "/" + MobileLearning.MODULE_XML);
-				m.setTitles(mxr.getTitles());
-				ArrayList<String> mLangs = mxr.getLangs();
-				m.setAvailableLangs(mLangs);
-				// add these langs to the global available langs
-				langSet.addAll(mLangs);
-				m.setProps(mxr.getMeta());
-				m.setImageFile(mxr.getModuleImage());
-				m.setMedia(mxr.getMedia());
+				m.validate();
 			} catch (ModuleNotFoundException mnfe){
 				// remove from database
 				mnfe.deleteModule(this, m.getModId());
@@ -176,11 +173,10 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		for(Module m: removeModules){
 			// remove from current list
 			modules.remove(m);
-			
 		}
-
+		
 		// rebuild langs
-		rebuildLangs();
+		this.rebuildLangs(modules);
 
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_modules);
 		llLoading.setVisibility(View.GONE);
@@ -245,15 +241,16 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		task.execute(p);
 	}
 
-	private void rebuildLangs() {
-		// recreate langMap
-		langMap = new HashMap<String, String>();
-		Iterator<String> itr = langSet.iterator();
-		while (itr.hasNext()) {
-			String lang = itr.next();
-			Locale l = new Locale(lang);
-			String langDisp = l.getDisplayLanguage(l);
-			langMap.put(langDisp, lang);
+	private void rebuildLangs(ArrayList<Module> modules) {
+		langs = new ArrayList<String>();
+		for (Module m: modules){
+			ArrayList<Lang> mlangs = m.getLangs();
+			for(Lang l: mlangs){
+				if(!langs.contains(l.getLang())){
+					Log.d(TAG,"adding lang:" + l.getLang());
+					langs.add(l.getLang());
+				}
+			}
 		}
 
 	}
@@ -294,25 +291,32 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 	private void createLanguageDialog() {
 		int selected = -1;
-		// TODO this is all quite untidy - fix it up!
-
-		langArray = new String[langMap.size()];
+		langArray = new Lang[langs.size()];
 		int i = 0;
-		for (Map.Entry<String, String> entry : langMap.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			langArray[i] = key;
-			if (value.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
+		for (String s: langs) {
+			Locale loc = new Locale(s);
+			String langDisp = loc.getDisplayLanguage(loc);
+			Lang l = new Lang(s,langDisp);
+			langArray[i] = l;
+			if (s.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
 				selected = i;
 			}
 			i++;
 		}
+		
+		String[] array = new String[langs.size()];
+		for(int j=0;j<langs.size(); j++){
+			array[j] = langArray[j].getContent();
+		}
+		
+		
 		// only show if at least one language
 		if (i > 0) {
+			ArrayAdapter<String> arr = new ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice,array);
 			AlertDialog mAlertDialog = new AlertDialog.Builder(this)
-					.setSingleChoiceItems(langArray, selected, new DialogInterface.OnClickListener() {
+					.setSingleChoiceItems(arr, selected, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							String newLang = langMap.get(langArray[whichButton]);
+							String newLang = langArray[whichButton].getLang();
 							Editor editor = prefs.edit();
 							editor.putString("prefLanguage", newLang);
 							editor.commit();
@@ -363,6 +367,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	public void installComplete(Payload p) {
+		Log.d(TAG,"Install complete");
 		displayModules();
 	}
 
@@ -505,6 +510,18 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	public void downloadProgressUpdate(DownloadProgress dp) {
+		// do nothing
+		
+	}
+
+	public void upgradeComplete(Payload p) {
+		if(p.result){
+			Log.d(TAG,"Upgrade complete");
+			displayModules();
+		}
+	}
+
+	public void upgradeProgressUpdate(String s) {
 		// do nothing
 		
 	}

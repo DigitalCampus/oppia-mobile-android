@@ -43,7 +43,6 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.view.ViewPager.LayoutParams;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;

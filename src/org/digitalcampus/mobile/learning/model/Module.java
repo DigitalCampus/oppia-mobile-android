@@ -17,10 +17,17 @@
 
 package org.digitalcampus.mobile.learning.model;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+
+import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.exception.ModuleNotFoundException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Module implements Serializable {
 	
@@ -35,13 +42,12 @@ public class Module implements Serializable {
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private String shortname;
 	private float progress = 0;
-	private HashMap<String,String> props;
 	private Double versionId;
 	private boolean installed;
 	private boolean toUpdate;
 	private boolean toUpdateSchedule;
 	private String downloadUrl;
-	private ArrayList<String> availableLangs = new ArrayList<String>();
+	private ArrayList<Lang> langs = new ArrayList<Lang>();
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
 	private ArrayList<ModuleMetaPage> metaPages = new ArrayList<ModuleMetaPage>();
@@ -52,6 +58,14 @@ public class Module implements Serializable {
 
 	}	
 	
+	public boolean validate() throws ModuleNotFoundException{
+		File moduleXML = new File(this.getLocation()+"/"+ MobileLearning.MODULE_XML);
+		if(!moduleXML.exists()){
+			throw new ModuleNotFoundException();
+		} else {
+			return true;
+		}
+	}
 	public Double getScheduleVersionID() {
 		return scheduleVersionID;
 	}
@@ -76,12 +90,45 @@ public class Module implements Serializable {
 		this.imageFile = imageFile;
 	}
 	
-	public ArrayList<String> getAvailableLangs() {
-		return availableLangs;
+	public ArrayList<Lang> getLangs() {
+		return langs;
 	}
 
-	public void setAvailableLangs(ArrayList<String> availableLangs) {
-		this.availableLangs = availableLangs;
+	public String getLangsJSONString(){
+		JSONArray array = new JSONArray();
+		for(Lang l: langs){
+			JSONObject obj = new JSONObject();
+			try {
+				obj.put(l.getLang(), true);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			array.put(obj);
+		}
+		return array.toString();
+	}
+	
+	public void setLangs(ArrayList<Lang> langs) {
+		this.langs = langs;
+	}
+	
+	public void setLangsFromJSONString(String jsonStr) {
+		try {
+			JSONArray langsArray = new JSONArray(jsonStr);
+			for(int i=0; i<langsArray.length(); i++){
+				JSONObject titleObj = langsArray.getJSONObject(i);
+				@SuppressWarnings("unchecked")
+				Iterator<String> iter = (Iterator<String>) titleObj.keys();
+				while(iter.hasNext()){
+					Lang l = new Lang(iter.next().toString(),"");
+					this.langs.add(l);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (NullPointerException npe){
+			npe.printStackTrace();
+		}
 	}
 	
 	public String getDownloadUrl() {
@@ -92,8 +139,6 @@ public class Module implements Serializable {
 		this.downloadUrl = downloadUrl;
 	}
 
-	
-	
 	public Double getVersionId() {
 		return versionId;
 	}
@@ -118,14 +163,6 @@ public class Module implements Serializable {
 		this.toUpdate = toUpdate;
 	}
 
-	public HashMap<String, String> getProps() {
-		return props;
-	}
-
-	public void setProps(HashMap<String, String> props) {
-		this.props = props;
-	}
-
 	public float getProgress() {
 		return progress;
 	}
@@ -135,7 +172,7 @@ public class Module implements Serializable {
 	}
 
 	public String getShortname() {
-		return shortname;
+		return shortname.toLowerCase(Locale.US);
 	}
 
 	public void setShortname(String shortname) {
@@ -172,6 +209,40 @@ public class Module implements Serializable {
 	
 	public void setTitles(ArrayList<Lang> titles) {
 		this.titles = titles;
+	}
+	
+	public void setTitlesFromJSONString(String jsonStr) {
+		try {
+			JSONArray titlesArray = new JSONArray(jsonStr);
+			for(int i=0; i<titlesArray.length(); i++){
+				JSONObject titleObj = titlesArray.getJSONObject(i);
+				@SuppressWarnings("unchecked")
+				Iterator<String> iter = (Iterator<String>) titleObj.keys();
+				while(iter.hasNext()){
+					String key = iter.next().toString();
+					String title = titleObj.getString(key);
+					Lang l = new Lang(key,title);
+					this.titles.add(l);
+				}
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String getTitleJSONString(){
+		JSONArray array = new JSONArray();
+		for(Lang l: this.titles){
+			JSONObject obj = new JSONObject();
+			try {
+				obj.put(l.getLang(), l.getContent());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			array.put(obj);
+		}
+		return array.toString();
 	}
 	
 	public boolean hasMedia(){

@@ -34,11 +34,11 @@ public class MobileLearning extends Application {
 	public static final String TAG = MobileLearning.class.getSimpleName();
 
 	// local storage vars
-	public static final String MLEARN_ROOT = Environment
+	public static final String OPPIAMOBILE_ROOT = Environment
 			.getExternalStorageDirectory() + "/digitalcampus/";
-	public static final String MODULES_PATH = MLEARN_ROOT + "modules/";
-	public static final String MEDIA_PATH = MLEARN_ROOT + "media/";
-	public static final String DOWNLOAD_PATH = MLEARN_ROOT + "download/";
+	public static final String MODULES_PATH = OPPIAMOBILE_ROOT + "modules/";
+	public static final String MEDIA_PATH = OPPIAMOBILE_ROOT + "media/";
+	public static final String DOWNLOAD_PATH = OPPIAMOBILE_ROOT + "download/";
 	public static final String MODULE_XML = "module.xml";
 	public static final String MODULE_SCHEDULE_XML = "schedule.xml";
 	public static final String MODULE_TRACKER_XML = "tracker.xml";
@@ -77,7 +77,7 @@ public class MobileLearning extends Application {
 			return false;
 		}
 
-		String[] dirs = { MLEARN_ROOT, MODULES_PATH, MEDIA_PATH, DOWNLOAD_PATH };
+		String[] dirs = { OPPIAMOBILE_ROOT, MODULES_PATH, MEDIA_PATH, DOWNLOAD_PATH };
 
 		for (String dirName : dirs) {
 			File dir = new File(dirName);

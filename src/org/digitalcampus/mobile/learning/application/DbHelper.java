@@ -18,7 +18,6 @@
 package org.digitalcampus.mobile.learning.application;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.ActivitySchedule;
@@ -46,7 +45,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 11;
+	static final int DB_VERSION = 12;
 
 	private SQLiteDatabase db;
 	
@@ -57,6 +56,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String MODULE_C_SHORTNAME = "shortname";
 	private static final String MODULE_C_LOCATION = "location";
 	private static final String MODULE_C_SCHEDULE = "schedule";
+	private static final String MODULE_C_IMAGE = "imagelink";
+	private static final String MODULE_C_LANGS = "langs";
 	
 	private static final String ACTIVITY_TABLE = "Activity";
 	private static final String ACTIVITY_C_ID = BaseColumns._ID;
@@ -103,7 +104,9 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void createModuleTable(SQLiteDatabase db){
 		String m_sql = "create table " + MODULE_TABLE + " (" + MODULE_C_ID + " integer primary key autoincrement, "
 				+ MODULE_C_VERSIONID + " int, " + MODULE_C_TITLE + " text, " + MODULE_C_LOCATION + " text, "
-				+ MODULE_C_SHORTNAME + " text," + MODULE_C_SCHEDULE + " int)";
+				+ MODULE_C_SHORTNAME + " text," + MODULE_C_SCHEDULE + " int,"
+				+ MODULE_C_IMAGE + " text,"
+				+ MODULE_C_LANGS + " text)";
 		db.execSQL(m_sql);
 	}
 	
@@ -201,6 +204,13 @@ public class DbHelper extends SQLiteOpenHelper {
 				
 			}
 		}
+		
+		if(oldVersion <= 11 && newVersion >= 12){
+			String sql = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_LANGS  + " text null;";
+			db.execSQL(sql);
+			sql = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_IMAGE  + " text null;";
+			db.execSQL(sql);
+		}
 	}
 
 	public void onLogout(){
@@ -210,17 +220,20 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	// returns id of the row
 	// TODO tidy this up now have is installed and toUpdate options
-	public long addOrUpdateModule(String versionid, String title, String location, String shortname) {
+	public long addOrUpdateModule(Module module) {
+	//public long addOrUpdateModule(String versionid, String title, String location, String shortname) {
 		// find if this is a new version or not
 		String selection = MODULE_C_LOCATION + "= ?";
-		String[] selArgs = new String[] { location };
+		String[] selArgs = new String[] { module.getLocation() };
 		Cursor c = db.query(MODULE_TABLE, null, selection, selArgs, null, null, null);
 
 		ContentValues values = new ContentValues();
-		values.put(MODULE_C_VERSIONID, versionid);
-		values.put(MODULE_C_TITLE, title);
-		values.put(MODULE_C_LOCATION, location);
-		values.put(MODULE_C_SHORTNAME, shortname.toLowerCase(Locale.US));
+		values.put(MODULE_C_VERSIONID, module.getVersionId());
+		values.put(MODULE_C_TITLE, module.getTitleJSONString());
+		values.put(MODULE_C_LOCATION, module.getLocation());
+		values.put(MODULE_C_SHORTNAME, module.getShortname());
+		values.put(MODULE_C_LANGS, module.getLangsJSONString());
+		values.put(MODULE_C_IMAGE, module.getImageFile());
 
 		if (c.getCount() == 0) {
 			c.close();
@@ -234,8 +247,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			long toUpdate = 0;
 			while (c.isAfterLast() == false) {
 				Log.v(TAG, "Installed version: " + c.getString(c.getColumnIndex(MODULE_C_VERSIONID)));
-				Log.v(TAG, "New version: " + versionid);
-				if (Long.valueOf(versionid) > c.getLong(c.getColumnIndex(MODULE_C_VERSIONID))) {
+				Log.v(TAG, "New version: " + module.getVersionId());
+				if (module.getVersionId() > c.getLong(c.getColumnIndex(MODULE_C_VERSIONID))) {
 					toUpdate = c.getLong(c.getColumnIndex(MODULE_C_ID));
 				}
 				c.moveToNext();
@@ -254,6 +267,24 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	public long refreshModule(Module module){
+		long modId = this.getModuleID(module.getShortname());
+		ContentValues values = new ContentValues();
+		values.put(MODULE_C_VERSIONID, module.getVersionId());
+		values.put(MODULE_C_TITLE, module.getTitleJSONString());
+		values.put(MODULE_C_LOCATION, module.getLocation());
+		values.put(MODULE_C_SHORTNAME, module.getShortname());
+		values.put(MODULE_C_LANGS, module.getLangsJSONString());
+		values.put(MODULE_C_IMAGE, module.getImageFile());
+		db.update(MODULE_TABLE, values, MODULE_C_ID + "=" + modId, null);
+		// remove all the old activities
+		String s = ACTIVITY_C_MODID + "=?";
+		String[] args = new String[] { String.valueOf(modId) };
+		db.delete(ACTIVITY_TABLE, s, args);
+		return modId;
+	}
+	
+	
 	public int getModuleID(String shortname){
 		String s = MODULE_C_SHORTNAME + "=?";
 		String[] args = new String[] { shortname };
@@ -328,6 +359,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			m.setModId(c.getInt(c.getColumnIndex(MODULE_C_ID)));
 			m.setLocation(c.getString(c.getColumnIndex(MODULE_C_LOCATION)));
 			m.setProgress(this.getModuleProgress(m.getModId()));
+			m.setVersionId(c.getDouble(c.getColumnIndex(MODULE_C_VERSIONID)));
+			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(MODULE_C_TITLE)));
+			m.setImageFile(c.getString(c.getColumnIndex(MODULE_C_IMAGE)));
+			m.setLangsFromJSONString(c.getString(c.getColumnIndex(MODULE_C_LANGS)));
+			m.setShortname(c.getString(c.getColumnIndex(MODULE_C_SHORTNAME)));
 			modules.add(m);
 			c.moveToNext();
 		}
@@ -346,6 +382,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			m.setModId(c.getInt(c.getColumnIndex(MODULE_C_ID)));
 			m.setLocation(c.getString(c.getColumnIndex(MODULE_C_LOCATION)));
 			m.setProgress(this.getModuleProgress(m.getModId()));
+			m.setVersionId(c.getDouble(c.getColumnIndex(MODULE_C_VERSIONID)));
+			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(MODULE_C_TITLE)));
+			m.setImageFile(c.getString(c.getColumnIndex(MODULE_C_IMAGE)));
+			m.setLangsFromJSONString(c.getString(c.getColumnIndex(MODULE_C_LANGS)));
+			m.setShortname(c.getString(c.getColumnIndex(MODULE_C_SHORTNAME)));
 			c.moveToNext();
 		}
 		c.close();
@@ -576,14 +617,14 @@ public class DbHelper extends SQLiteOpenHelper {
 		String sql = "SELECT a.* from "+ ACTIVITY_TABLE + " a " +
 					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
 					" LEFT OUTER JOIN " + TRACKER_LOG_TABLE + " tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
-					" WHERE tl."+TRACKER_LOG_C_ID + " IS NULL "+
-					" AND a."+ACTIVITY_C_STARTDATE + "<='" + nowDateString + "'" +
-					" ORDER BY a."+ACTIVITY_C_ENDDATE + " ASC" +
+					" WHERE tl." + TRACKER_LOG_C_ID + " IS NULL "+
+					" AND a." + ACTIVITY_C_STARTDATE + "<='" + nowDateString + "'" +
+					" AND a." + ACTIVITY_C_TITLE + " IS NOT NULL " +
+					" ORDER BY a." + ACTIVITY_C_ENDDATE + " ASC" +
 					" LIMIT " + max;
 							
 		
 		Cursor c = db.rawQuery(sql,null);
-		int count = 0;
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
 			Activity a = new Activity();
@@ -592,19 +633,19 @@ public class DbHelper extends SQLiteOpenHelper {
 				a.setModId(c.getLong(c.getColumnIndex(ACTIVITY_C_MODID)));
 				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
 				activities.add(a);
-				count++;
 			}
 			c.moveToNext();
 		}
 		
-		if(count < max){
+		if(c.getCount() < max){
 			//just add in some extra suggested activities unrelated to the date/time
 			String sql2 = "SELECT a.* from "+ ACTIVITY_TABLE + " a " +
 					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
 					" LEFT OUTER JOIN " + TRACKER_LOG_TABLE + " tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
-					" WHERE tl."+TRACKER_LOG_C_ID + " IS NULL "+
-					" AND a."+ACTIVITY_C_ID + " NOT IN (SELECT "+ACTIVITY_C_ID+" FROM ("+sql+") b)" +
-					" LIMIT " + (max-count);
+					" WHERE tl." + TRACKER_LOG_C_ID + " IS NULL "+
+					" AND a." + ACTIVITY_C_TITLE + " IS NOT NULL " +
+					" AND a." + ACTIVITY_C_ID + " NOT IN (SELECT " + ACTIVITY_C_ID + " FROM (" + sql + ") b)" +
+					" LIMIT " + (max-c.getCount());
 			Cursor c2 = db.rawQuery(sql2,null);
 			c2.moveToFirst();
 			while (c2.isAfterLast() == false) {
@@ -617,9 +658,9 @@ public class DbHelper extends SQLiteOpenHelper {
 				}
 				c2.moveToNext();
 			}
-			
+			c2.close();
 		}
-		
+		c.close();
 		return activities;
 	}
 }

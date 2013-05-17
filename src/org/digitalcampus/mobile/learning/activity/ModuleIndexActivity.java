@@ -18,15 +18,13 @@
 package org.digitalcampus.mobile.learning.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.Activity;
+import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.ModuleMetaPage;
 import org.digitalcampus.mobile.learning.model.Section;
@@ -44,6 +42,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -56,8 +55,8 @@ public class ModuleIndexActivity extends AppActivity {
 	private ModuleXMLReader mxr;
 	private ArrayList<Section> sections;
 	private SharedPreferences prefs;
-	private HashMap<String, String> langMap = new HashMap<String, String>();
-	private String[] langArray;
+	private ArrayList<String> langs = new ArrayList<String>();
+	private Lang[] langArray;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +75,7 @@ public class ModuleIndexActivity extends AppActivity {
         	
         	String digest = (String) bundle.getSerializable("JumpTo");
         	if(digest != null){
+        		// code to directly jump to a specific activity
         		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
         		for(Section s: sections){
         			for(int i=0 ; i<s.getActivities().size(); i++){
@@ -110,8 +110,7 @@ public class ModuleIndexActivity extends AppActivity {
     	// set image
 		if(module.getImageFile() != null){
 			ImageView iv = (ImageView) getHeader().findViewById(R.id.page_icon);
-			String path = module.getLocation() + "/" + module.getImageFile();
-			Bitmap bm = ImageUtils.LoadBMPsdcard(path, this.getResources(), R.drawable.default_icon_module);
+			Bitmap bm = ImageUtils.LoadBMPsdcard(module.getImageFile(), this.getResources(), R.drawable.default_icon_module);
 			iv.setImageBitmap(bm);
 		}
     	
@@ -128,7 +127,7 @@ public class ModuleIndexActivity extends AppActivity {
         ArrayList<ModuleMetaPage> ammp = module.getMetaPages();
         int order = 104;
         for(ModuleMetaPage mmp: ammp){
-        	String title = mmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getTitle();
+        	String title = mmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getContent();
         	menu.add(0,mmp.getId(),order, title).setIcon(android.R.drawable.ic_menu_info_details);
         	order++;
         }
@@ -160,9 +159,19 @@ public class ModuleIndexActivity extends AppActivity {
 	}
     
     private void rebuildLangs() {
-		// recreate langMap
+		
+    	ArrayList<Lang> mlangs = module.getLangs();
+		for(Lang l: mlangs){
+			if(!langs.contains(l.getLang())){
+				Log.d(TAG,"adding lang:" + l.getLang());
+				langs.add(l.getLang());
+			}
+		}
+    	
+    	
+    	/* recreate langMap
 		langMap = new HashMap<String, String>();
-		Iterator<String> itr = module.getAvailableLangs().iterator();
+		Iterator<String> itr = module.getLangs().iterator();
 		while (itr.hasNext()) {
 			String lang = itr.next();
 			String[] langCountry = lang.split("_");
@@ -175,48 +184,55 @@ public class ModuleIndexActivity extends AppActivity {
 				String langDisp = l.getDisplayLanguage();
 				langMap.put(langDisp, lang);
 			}
-		}
+		}*/
 
 	}
     
     private void createLanguageDialog() {
-		int selected = -1;
-		// TODO this is all quite untidy - fix it up!
-		
-		langArray = new String[langMap.size()];
+    	int selected = -1;
+		langArray = new Lang[langs.size()];
 		int i = 0;
-		for (Map.Entry<String, String> entry : langMap.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			langArray[i] = key;
-			Log.d(TAG,key + ":" + value);
-			Log.d(TAG,"pref: " + prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
-			if (value.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
+		for (String s: langs) {
+			Locale loc = new Locale(s);
+			String langDisp = loc.getDisplayLanguage(loc);
+			Lang l = new Lang(s,langDisp);
+			langArray[i] = l;
+			if (s.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
 				selected = i;
-				Log.d(TAG,"selected:" + value);
 			}
 			i++;
 		}
+		
+		String[] array = new String[langs.size()];
+		for(int j=0;j<langs.size(); j++){
+			array[j] = langArray[j].getContent();
+		}
+		
+		
+		// only show if at least one language
+		if (i > 0) {
+			ArrayAdapter<String> arr = new ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice,array);
 
-		AlertDialog mAlertDialog = new AlertDialog.Builder(this)
-				.setSingleChoiceItems(langArray, selected, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String newLang = langMap.get(langArray[whichButton]);
-						Editor editor = prefs.edit();
-						editor.putString("prefLanguage", newLang);
-						editor.commit();
-						dialog.dismiss();
-						onStart();
-					}
-				}).setTitle(getString(R.string.change_language))
-				.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-
-					public void onClick(DialogInterface dialog, int which) {
-						// do nothing
-					}
-
-				}).create();
-		mAlertDialog.show();
+			AlertDialog mAlertDialog = new AlertDialog.Builder(this)
+					.setSingleChoiceItems(arr, selected, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							String newLang = langArray[whichButton].getLang();
+							Editor editor = prefs.edit();
+							editor.putString("prefLanguage", newLang);
+							editor.commit();
+							dialog.dismiss();
+							onStart();
+						}
+					}).setTitle(getString(R.string.change_language))
+					.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+	
+						public void onClick(DialogInterface dialog, int which) {
+							// do nothing
+						}
+	
+					}).create();
+			mAlertDialog.show();
+		}
 	}
 
     
