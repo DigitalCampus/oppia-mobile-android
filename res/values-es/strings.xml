@@ -40,7 +40,7 @@
  	<string name="module_context_reset">Reajustar</string>
  	<string name="module_context_delete">Borrar</string>
  	<string name="module_context_reset_confirm">¿Está seguro de que desea restablecer este curso? Se eliminarán todos los registros de progreso para este curso.</string>
- 	<string name="module_context_delete_confirm">A¿Está seguro que desea eliminar este curso? Se eliminará completamente el curso de la aplicación.</string>
+ 	<string name="module_context_delete_confirm">¿Está seguro que desea eliminar este curso? Se eliminará completamente el curso de la aplicación.</string>
  	
  	<string name="no_modules">No hay cursos instalados</string>
  	

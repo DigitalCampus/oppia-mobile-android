@@ -87,8 +87,8 @@ public class ModuleScheduleXMLReader {
 			String startDateString = attrs.getNamedItem("startdate").getTextContent();
 			String endDateString = attrs.getNamedItem("enddate").getTextContent();
 		
-			DateTime sdt = MobileLearning.DATE_FORMAT.parseDateTime(startDateString);
-			DateTime edt = MobileLearning.DATE_FORMAT.parseDateTime(endDateString);
+			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(startDateString);
+			DateTime edt = MobileLearning.DATETIME_FORMAT.parseDateTime(endDateString);
 			
 			ActivitySchedule as = new ActivitySchedule();
 			as.setDigest(digest);

@@ -17,41 +17,25 @@
 
 package org.digitalcampus.mobile.learning.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.joda.time.DateTime;
 
 public class Points {
 
-	private String date;
+	private DateTime datetime;
 	private String description;
 	private int points;
 	
-	public String getDate() {
-		try {
-			Date dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",Locale.US).parse(date);
-			return new SimpleDateFormat("dd-MMM-yyyy",Locale.US).format(dt);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return date;
+	public String getDateAsString() {
+		return MobileLearning.DATE_FORMAT.print(datetime);
 	}
 	
-	public String getTime() {
-		try {
-			Date dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",Locale.US).parse(date);
-			return new SimpleDateFormat("H:mm",Locale.US).format(dt);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return date;
+	public String getTimeAsString() {
+		return MobileLearning.TIME_FORMAT.print(datetime);
 	}
 	
-	public void setDate(String date) {
-		this.date = date;
+	public void setDateTime(String date) {
+		this.datetime = MobileLearning.DATETIME_FORMAT.parseDateTime(date);;
 	}
 	
 	public String getDescription() {

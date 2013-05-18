@@ -59,7 +59,9 @@ public class MobileLearning extends Application {
 	public static final int PAGE_READ_TIME = 3;
 	public static final String USER_AGENT = "Mobile Learning Android app: ";
 	public static final int MQUIZ_PASS_THRESHOLD = 100;
-	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
+	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
 	
 	// only used in case a module doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";

@@ -22,7 +22,7 @@ public class ActivitySchedule {
 	}
 	
 	public String getStartTimeString() {
-		return MobileLearning.DATE_FORMAT.print(startTime);
+		return MobileLearning.DATETIME_FORMAT.print(startTime);
 	}
 	
 	public void setStartTime(DateTime startTime) {
@@ -34,7 +34,7 @@ public class ActivitySchedule {
 	}
 	
 	public String getEndTimeString () {
-		return MobileLearning.DATE_FORMAT.print(endTime);
+		return MobileLearning.DATETIME_FORMAT.print(endTime);
 	}
 	
 	public void setEndTime(DateTime endTime) {

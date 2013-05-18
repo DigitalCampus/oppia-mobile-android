@@ -72,7 +72,7 @@ public class ScoreActivity extends AppActivity implements GetPointsListener{
 				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
 				Points p = new Points();
 				p.setDescription(json_obj.getString("description"));
-				p.setDate(json_obj.getString("date"));
+				p.setDateTime(json_obj.getString("date"));
 				p.setPoints(json_obj.getInt("points"));
 
 				points.add(p);

@@ -247,7 +247,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			ArrayList<Lang> mlangs = m.getLangs();
 			for(Lang l: mlangs){
 				if(!langs.contains(l.getLang())){
-					Log.d(TAG,"adding lang:" + l.getLang());
 					langs.add(l.getLang());
 				}
 			}

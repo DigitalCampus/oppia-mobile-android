@@ -61,7 +61,7 @@ public class TrackerLog {
 	}
 	
 	public String getDateTimeString() {
-		return MobileLearning.DATE_FORMAT.print(datetime);
+		return MobileLearning.DATETIME_FORMAT.print(datetime);
 	}
 	
 	

@@ -613,7 +613,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		ArrayList<Activity> activities = new ArrayList<Activity>();
 		DateTime now = new DateTime();
-		String nowDateString = MobileLearning.DATE_FORMAT.print(now);
+		String nowDateString = MobileLearning.DATETIME_FORMAT.print(now);
 		String sql = "SELECT a.* from "+ ACTIVITY_TABLE + " a " +
 					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
 					" LEFT OUTER JOIN " + TRACKER_LOG_TABLE + " tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +

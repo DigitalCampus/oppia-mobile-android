@@ -76,7 +76,7 @@ public class ModuleTrackerXMLReader {
 			String digest = attrs.getNamedItem("digest").getTextContent();
 			String submittedDateString = attrs.getNamedItem("submitteddate").getTextContent();
 		
-			DateTime sdt = MobileLearning.DATE_FORMAT.parseDateTime(submittedDateString);
+			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
 			
 			TrackerLog t = new TrackerLog();
 			t.setDigest(digest);

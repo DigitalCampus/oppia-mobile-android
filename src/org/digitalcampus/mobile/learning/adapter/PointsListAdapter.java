@@ -54,10 +54,10 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
 	    pointsDescription.setText(p.getDescription());
 	    
 	    TextView pointsTime = (TextView) rowView.findViewById(R.id.points_time);
-	    pointsTime.setText(p.getTime());
+	    pointsTime.setText(p.getTimeAsString());
 	    
 	    TextView pointsDate = (TextView) rowView.findViewById(R.id.points_date);
-	    pointsDate.setText(p.getDate());
+	    pointsDate.setText(p.getDateAsString());
 	    
 	    TextView pointsPoints = (TextView) rowView.findViewById(R.id.points_points);
 	    pointsPoints.setText(String.valueOf(p.getPoints()));

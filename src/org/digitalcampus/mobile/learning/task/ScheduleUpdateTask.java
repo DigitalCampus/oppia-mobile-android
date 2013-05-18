@@ -122,8 +122,8 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 						JSONObject acts = (JSONObject) schedule.get(i);
 						ActivitySchedule as = new ActivitySchedule();
 						as.setDigest(acts.getString("digest"));
-						DateTime sdt = MobileLearning.DATE_FORMAT.parseDateTime(acts.getString("start_date"));
-						DateTime edt = MobileLearning.DATE_FORMAT.parseDateTime(acts.getString("end_date"));
+						DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("start_date"));
+						DateTime edt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("end_date"));
 						as.setStartTime(sdt);
 						as.setEndTime(edt);
 						activitySchedule.add(as);
