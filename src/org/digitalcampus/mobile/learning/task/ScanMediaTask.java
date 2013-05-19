@@ -18,10 +18,13 @@
 package org.digitalcampus.mobile.learning.task;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
 import org.digitalcampus.mobile.learning.model.Media;
+import org.digitalcampus.mobile.learning.model.Module;
+import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 
 import android.os.AsyncTask;
 
@@ -32,13 +35,17 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
-		for (Object o: payload.data){
-			Media m = (Media) o;
-			publishProgress(m.getFilename());
-			String filename = MobileLearning.MEDIA_PATH + m.getFilename();
-			File mediaFile = new File(filename);
-			if(!mediaFile.exists()){
-				payload.responseData.add(m);
+		for (Object obj: payload.data){
+			Module module = (Module) obj;
+			ModuleXMLReader mxr = new ModuleXMLReader(module.getModuleXMLLocation());
+			ArrayList<Media> media = mxr.getMedia();
+			for(Media m: media){
+				publishProgress(m.getFilename());
+				String filename = MobileLearning.MEDIA_PATH + m.getFilename();
+				File mediaFile = new File(filename);
+				if(!mediaFile.exists()){
+					payload.responseData.add(m);
+				}
 			}
 		}
 		return payload;

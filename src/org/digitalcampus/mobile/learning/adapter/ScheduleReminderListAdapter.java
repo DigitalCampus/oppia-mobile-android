@@ -27,7 +27,6 @@ import org.digitalcampus.mobile.learning.model.Module;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +61,6 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 		
 		TextView scheduleTitle = (TextView) rowView.findViewById(R.id.schedule_title);
-		Log.d(TAG,a.getTitleJSONString());
 		scheduleTitle.setText(m.getTitle(lang) + ": " + a.getTitle(lang));
 		rowView.setTag(R.id.TAG_MODULE_ID,m);
 		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,a.getDigest());

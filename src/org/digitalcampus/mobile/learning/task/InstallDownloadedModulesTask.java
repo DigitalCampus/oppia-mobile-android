@@ -109,6 +109,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				long added = db.addOrUpdateModule(m);
 				
 				if (added != -1) {
+					payload.responseData.add(m);
 					File src = new File(tempdir + "/" + moddirs[0]);
 					File dest = new File(MobileLearning.MODULES_PATH);
 					mxr.setTempFilePath(tempdir + "/" + moddirs[0]);

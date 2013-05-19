@@ -22,7 +22,6 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
-import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
@@ -70,7 +69,7 @@ public class ModuleIndexActivity extends AppActivity {
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	mxr = new ModuleXMLReader(module.getLocation()+"/"+ MobileLearning.MODULE_XML);
+        	mxr = new ModuleXMLReader(module.getModuleXMLLocation());
         	module.setMetaPages(mxr.getMetaPages());
         	
         	String digest = (String) bundle.getSerializable("JumpTo");
@@ -167,25 +166,6 @@ public class ModuleIndexActivity extends AppActivity {
 				langs.add(l.getLang());
 			}
 		}
-    	
-    	
-    	/* recreate langMap
-		langMap = new HashMap<String, String>();
-		Iterator<String> itr = module.getLangs().iterator();
-		while (itr.hasNext()) {
-			String lang = itr.next();
-			String[] langCountry = lang.split("_");
-			Locale l = new Locale(lang);
-			if(langCountry.length == 2){
-				l = new Locale(langCountry[0],langCountry[1]);
-				String langDisp = l.getDisplayName();
-				langMap.put(langDisp, lang);
-			} else {
-				String langDisp = l.getDisplayLanguage();
-				langMap.put(langDisp, lang);
-			}
-		}*/
-
 	}
     
     private void createLanguageDialog() {

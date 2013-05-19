@@ -59,7 +59,7 @@ public class Module implements Serializable {
 	}	
 	
 	public boolean validate() throws ModuleNotFoundException{
-		File moduleXML = new File(this.getLocation()+"/"+ MobileLearning.MODULE_XML);
+		File moduleXML = new File(this.getModuleXMLLocation());
 		if(!moduleXML.exists()){
 			throw new ModuleNotFoundException();
 		} else {
@@ -188,9 +188,12 @@ public class Module implements Serializable {
 	}
 
 	public String getLocation() {
-		return location;
+		return location + "/";
 	}
 
+	public String getModuleXMLLocation(){
+		return this.getLocation() + MobileLearning.MODULE_XML;
+	}
 	public void setLocation(String location) {
 		this.location = location;
 	}

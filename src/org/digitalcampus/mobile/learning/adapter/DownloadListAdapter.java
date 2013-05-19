@@ -36,6 +36,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -194,6 +195,9 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 			// new refresh the module list
 			DownloadActivity da = (DownloadActivity) ctx;
 			da.refreshModuleList();
+			Editor e = prefs.edit();
+			e.putLong("prefLastMediaScan", 0);
+			e.commit();
 		} else {
 			UIUtils.showAlert(ctx, ctx.getString(R.string.error_update_failure), p.resultResponse);
 		}

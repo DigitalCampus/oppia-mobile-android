@@ -125,6 +125,8 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			return;
 		}
 		
+		displayModules();
+		
 		// install any new modules
 		File dir = new File(MobileLearning.DOWNLOAD_PATH);
 		String[] children = dir.list();
@@ -231,12 +233,19 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 	
 	private void scanMedia(ArrayList<Module> modules) {
-		ArrayList<Object> media = new ArrayList<Object>();
-		for (Module m : modules) {
-			media.addAll(m.getMedia());
+		long now = System.currentTimeMillis()/1000;
+		if (prefs.getLong("prefLastMediaScan", 0)+3600 > now) {
+			Log.d(TAG,"Not scanning media");
+			return;
+		}
+		Log.d(TAG,"Scanning media");
+		ArrayList<Object> objs = new ArrayList<Object>();
+		
+		for (Module m: modules){
+			objs.add(m);
 		}
 		ScanMediaTask task = new ScanMediaTask();
-		Payload p = new Payload(0, media);
+		Payload p = new Payload(0, modules);
 		task.setScanMediaListener(this);
 		task.execute(p);
 	}
@@ -367,7 +376,12 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 	public void installComplete(Payload p) {
 		Log.d(TAG,"Install complete");
-		displayModules();
+		if(p.responseData.size()>0){
+			Editor e = prefs.edit();
+			e.putLong("prefLastMediaScan", 0);
+			e.commit();
+			displayModules();
+		}
 	}
 
 	public void installProgressUpdate(DownloadProgress dp) {
@@ -410,6 +424,9 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 				// remove files
 				File f = new File(tempMod.getLocation());
 				FileUtils.deleteDir(f);
+				Editor e = prefs.edit();
+				e.putLong("prefLastMediaScan", 0);
+				e.commit();
 				displayModules();
 			}
 		});
@@ -477,6 +494,11 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	public void scanComplete(Payload response) {
+		long now = System.currentTimeMillis()/1000;
+		Editor e = prefs.edit();
+		e.putLong("prefLastMediaScan", now);
+		e.commit();
+		
 		LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
 		TextView tv = (TextView) this.findViewById(id.home_message);
 		Button btn = (Button) this.findViewById(R.id.message_action_button);
