@@ -235,10 +235,8 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	private void scanMedia(ArrayList<Module> modules) {
 		long now = System.currentTimeMillis()/1000;
 		if (prefs.getLong("prefLastMediaScan", 0)+3600 > now) {
-			Log.d(TAG,"Not scanning media");
 			return;
 		}
-		Log.d(TAG,"Scanning media");
 		ArrayList<Object> objs = new ArrayList<Object>();
 		
 		for (Module m: modules){
@@ -537,7 +535,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 	public void upgradeComplete(Payload p) {
 		if(p.result){
-			Log.d(TAG,"Upgrade complete");
 			displayModules();
 		}
 	}

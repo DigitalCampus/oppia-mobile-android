@@ -158,7 +158,7 @@ public class PageWidget extends WidgetFactory {
 			boolean completed = true;
 			DbHelper db = new DbHelper(this.ctx);
 			for (Media m: mediaList){
-				if(!db.digestInLog(this.module.getModId(), m.getDigest())){
+				if(!db.activityCompleted(this.module.getModId(), m.getDigest())){
 					completed = false;
 				}
 			}

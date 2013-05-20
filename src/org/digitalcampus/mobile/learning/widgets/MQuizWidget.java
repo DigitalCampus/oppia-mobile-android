@@ -276,7 +276,14 @@ public class MQuizWidget extends WidgetFactory {
 	}
 	
 	public boolean activityCompleted(){
-		return isComplete;
+		if(isComplete){
+			mQuiz.mark();
+			float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
+			if (percent > 99){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public long getTimeTaken(){

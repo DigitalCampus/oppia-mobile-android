@@ -299,7 +299,7 @@ public class ModuleXMLReader {
 				a.setActType(actType);
 				a.setModId(modId);
 				a.setSectionId(order);
-				a.setCompleted(db.digestInLog(modId, digest));				
+				a.setCompleted(db.activityCompleted(modId, digest));				
 				
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
 				ArrayList<Lang> actLocations = new ArrayList<Lang>();

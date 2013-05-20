@@ -38,7 +38,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -162,7 +161,6 @@ public class ModuleIndexActivity extends AppActivity {
     	ArrayList<Lang> mlangs = module.getLangs();
 		for(Lang l: mlangs){
 			if(!langs.contains(l.getLang())){
-				Log.d(TAG,"adding lang:" + l.getLang());
 				langs.add(l.getLang());
 			}
 		}

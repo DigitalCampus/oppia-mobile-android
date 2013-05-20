@@ -607,8 +607,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.delete(MQUIZRESULTS_TABLE, s, args);
 	}
 	
-	public boolean digestInLog(int modId, String digest){
-		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_MODID + "=?";
+	public boolean activityCompleted(int modId, String digest){
+		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_MODID + "=? AND " + TRACKER_LOG_C_COMPLETED + "=1";
 		String[] args = new String[] { digest, String.valueOf(modId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
@@ -631,9 +631,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		ArrayList<Activity> activities = new ArrayList<Activity>();
 		DateTime now = new DateTime();
 		String nowDateString = MobileLearning.DATETIME_FORMAT.print(now);
-		String sql = "SELECT a.* from "+ ACTIVITY_TABLE + " a " +
+		String sql = "SELECT a.* FROM "+ ACTIVITY_TABLE + " a " +
 					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
-					" LEFT OUTER JOIN " + TRACKER_LOG_TABLE + " tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
+					" LEFT OUTER JOIN (SELECT * FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
 					" WHERE tl." + TRACKER_LOG_C_ID + " IS NULL "+
 					" AND a." + ACTIVITY_C_STARTDATE + "<='" + nowDateString + "'" +
 					" AND a." + ACTIVITY_C_TITLE + " IS NOT NULL " +
@@ -656,10 +656,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		if(c.getCount() < max){
 			//just add in some extra suggested activities unrelated to the date/time
-			String sql2 = "SELECT a.* from "+ ACTIVITY_TABLE + " a " +
+			String sql2 = "SELECT a.* FROM "+ ACTIVITY_TABLE + " a " +
 					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
-					" LEFT OUTER JOIN " + TRACKER_LOG_TABLE + " tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
-					" WHERE tl." + TRACKER_LOG_C_ID + " IS NULL "+
+					" LEFT OUTER JOIN (SELECT * FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
+					" WHERE (tl." + TRACKER_LOG_C_ID + " IS NULL "+
+					" OR tl." + TRACKER_LOG_C_COMPLETED + "=0)" +
 					" AND a." + ACTIVITY_C_TITLE + " IS NOT NULL " +
 					" AND a." + ACTIVITY_C_ID + " NOT IN (SELECT " + ACTIVITY_C_ID + " FROM (" + sql + ") b)" +
 					" LIMIT " + (max-c.getCount());
