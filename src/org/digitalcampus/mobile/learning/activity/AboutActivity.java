@@ -38,7 +38,7 @@ public class AboutActivity extends AppActivity {
 		this.drawHeader();
 		
 		WebView wv = (WebView) findViewById(R.id.about_webview);
-		String url = "file:///android_asset/www/about.html";
+		String url = "file:///android_asset/www/en/about.html";
 		wv.loadUrl(url);
 		
 		

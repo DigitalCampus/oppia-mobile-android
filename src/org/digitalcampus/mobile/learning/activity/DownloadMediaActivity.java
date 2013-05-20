@@ -67,7 +67,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		}
 		
 		WebView wv = (WebView) findViewById(R.id.download_media_webview);
-		String url = "file:///android_asset/www/download_media.html";
+		String url = "file:///android_asset/www/en/download_media.html";
 		wv.loadUrl(url);
 		
 		WebView wvml = (WebView) findViewById(R.id.download_media_list_webview);

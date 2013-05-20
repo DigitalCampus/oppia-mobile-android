@@ -33,7 +33,7 @@ public class HelpActivity extends AppActivity {
 		this.drawHeader();
 		
 		WebView wv = (WebView) findViewById(R.id.about_webview);
-		String url = "file:///android_asset/www/help.html";
+		String url = "file:///android_asset/www/en/help.html";
 		wv.loadUrl(url);
 		
 	}
