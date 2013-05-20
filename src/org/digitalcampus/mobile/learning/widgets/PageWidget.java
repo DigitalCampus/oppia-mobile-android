@@ -64,6 +64,7 @@ public class PageWidget extends WidgetFactory {
 	private SharedPreferences prefs;
 	private WebView wv;
 	private BufferedReader br;
+	private boolean readAloud = false;
 	
 	
 	public PageWidget(Context context, Module module, org.digitalcampus.mobile.learning.model.Activity activity) {
@@ -152,6 +153,16 @@ public class PageWidget extends WidgetFactory {
 	}
 	
 	public boolean activityHasTracker(){
+		long endTimestamp = System.currentTimeMillis()/1000;
+		long diff = endTimestamp - startTimestamp;
+		if(diff >= MobileLearning.PAGE_READ_TIME){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean activityCompleted(){
 		// only show as being complete if all the videos on this page have been played
 		if(this.activity.hasMedia()){
 			ArrayList<Media> mediaList = this.activity.getMedia();
@@ -167,18 +178,7 @@ public class PageWidget extends WidgetFactory {
 				return false;
 			}
 		}
-		
-		long endTimestamp = System.currentTimeMillis()/1000;
-		long diff = endTimestamp - startTimestamp;
-		if(diff >= MobileLearning.PAGE_READ_TIME){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public boolean activityCompleted(){
-		return this.activityHasTracker();
+		return true;
 	}
 	
 	public long getTimeTaken(){
@@ -197,6 +197,7 @@ public class PageWidget extends WidgetFactory {
 			obj.put("timetaken", this.getTimeTaken());
 			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
+			obj.put("readaloud",readAloud);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			BugSenseHandler.sendException(e);
@@ -238,7 +239,11 @@ public class PageWidget extends WidgetFactory {
 					Log.d(TAG,"media digest:" + m.getDigest());
 					Log.d(TAG,"media file:" + mediaFileName);
 					Log.d(TAG,"media length:" + m.getLength());
-					t.mediaPlayed(PageWidget.this.module.getModId(), m.getDigest(), mediaFileName, timeTaken, true);
+					boolean completed = false;
+					if(timeTaken >= m.getLength()){
+						completed = true;
+					}
+					t.mediaPlayed(PageWidget.this.module.getModId(), m.getDigest(), mediaFileName, timeTaken, completed);
 				}
 			}
 		}
