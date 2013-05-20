@@ -271,7 +271,11 @@ public class MQuizWidget extends WidgetFactory {
 		this.showQuestion();
 	}
 	
-	public boolean isComplete(){
+	public boolean activityHasTracker(){
+		return isComplete;
+	}
+	
+	public boolean activityCompleted(){
 		return isComplete;
 	}
 	
@@ -279,10 +283,9 @@ public class MQuizWidget extends WidgetFactory {
 		return (endTimestamp - startTimestamp);
 	}
 
-	public JSONObject getActivityCompleteData(){
+	public JSONObject getTrackerData(){
 		JSONObject obj = new JSONObject();
 		try {
-			obj.put("activity", "completed");
 			obj.put("timetaken", this.getTimeTaken());
 			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 			obj.put("lang", lang);

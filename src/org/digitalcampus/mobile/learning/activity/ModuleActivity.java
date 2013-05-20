@@ -158,7 +158,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
         }
     	
     	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
-    	markIfComplete(acts.get(this.currentActivityNo).getDigest());
+    	this.saveTracker(acts.get(this.currentActivityNo).getDigest());
     	// start a new tracker service
     	Log.d(TAG,"Starting tracker service");
     	Intent service = new Intent(this, TrackerService.class);
@@ -305,7 +305,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     private void moveNext(){
     	this.stopReading();
     	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
- 		markIfComplete(acts.get(currentActivityNo).getDigest());
+    	this.saveTracker(acts.get(currentActivityNo).getDigest());
  		currentActivityNo++;
  		loadActivity();
     }
@@ -313,16 +313,16 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     private void movePrev(){
     	this.stopReading();
     	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
- 		markIfComplete(acts.get(currentActivityNo).getDigest());
+    	this.saveTracker(acts.get(currentActivityNo).getDigest());
  		currentActivityNo--;
  		loadActivity();
     }
     
-    private boolean markIfComplete(String digest){
-    	if(currentActivity != null && currentActivity.isComplete()){
+    private boolean saveTracker(String digest){
+    	if(currentActivity != null && currentActivity.activityHasTracker()){
     		Tracker t = new Tracker(this);
-    		JSONObject json = currentActivity.getActivityCompleteData();
-    		t.activityComplete(module.getModId(), digest, json);
+    		JSONObject json = currentActivity.getTrackerData();
+    		t.saveTracker(module.getModId(), digest, json, currentActivity.activityCompleted());
     	}    	
     	return true;
     }

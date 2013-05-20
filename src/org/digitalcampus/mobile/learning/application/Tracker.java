@@ -34,15 +34,15 @@ public class Tracker {
 		this.ctx = context;
 	}
 	
-	public void activityComplete(int modId, String digest, JSONObject data){
+	public void saveTracker(int modId, String digest, JSONObject data, boolean completed){
 		// add to the db log
 		DbHelper db = new DbHelper(this.ctx);
 		Log.d(TAG,data.toString());
-		db.insertLog(modId, digest, data.toString());
+		db.insertLog(modId, digest, data.toString(), completed);
 		db.close();
 	}
 	
-	public void mediaPlayed(int modId, String digest, String media, long timetaken){
+	public void mediaPlayed(int modId, String digest, String media, long timetaken, boolean completed){
 		// add to the db log
 		DbHelper db = new DbHelper(this.ctx); 
 		JSONObject jsonObj = new JSONObject();
@@ -55,7 +55,7 @@ public class Tracker {
 			BugSenseHandler.sendException(e);
 		}
 		String data = jsonObj.toString();
-		db.insertLog(modId, digest, data);
+		db.insertLog(modId, digest, data, completed);
 		db.close();
 	}
 

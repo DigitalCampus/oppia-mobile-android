@@ -45,7 +45,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 12;
+	static final int DB_VERSION = 15;
 
 	private SQLiteDatabase db;
 	
@@ -79,6 +79,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String TRACKER_LOG_C_DATA = "logdata";
 	private static final String TRACKER_LOG_C_SUBMITTED = "logsubmitted";
 	private static final String TRACKER_LOG_C_INPROGRESS = "loginprogress";
+	private static final String TRACKER_LOG_C_COMPLETED = "completed";
 	
 	private static final String MQUIZRESULTS_TABLE = "results";
 	private static final String MQUIZRESULTS_C_ID = BaseColumns._ID;
@@ -132,7 +133,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				TRACKER_LOG_C_ACTIVITYDIGEST + " text, " + 
 				TRACKER_LOG_C_DATA + " text, " + 
 				TRACKER_LOG_C_SUBMITTED + " integer default 0, " + 
-				TRACKER_LOG_C_INPROGRESS + " integer default 0)";
+				TRACKER_LOG_C_INPROGRESS + " integer default 0, " +
+				TRACKER_LOG_C_COMPLETED + " integer default 0)";
 		db.execSQL(l_sql);
 	}
 
@@ -210,6 +212,17 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(sql);
 			sql = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_IMAGE  + " text null;";
 			db.execSQL(sql);
+		}
+		
+		if(oldVersion <= 12 && newVersion >= 13){
+			String sql = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_COMPLETED  + " integer default 0;";
+			db.execSQL(sql);
+		}
+		// skip jump from 13 to 14
+		if(oldVersion <= 14 && newVersion >= 15){
+			ContentValues values = new ContentValues();
+			values.put(TRACKER_LOG_C_COMPLETED,true);
+			db.update(TRACKER_LOG_TABLE, values, null, null);
 		}
 	}
 
@@ -338,6 +351,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(TRACKER_LOG_C_ACTIVITYDIGEST, t.getDigest());
 			values.put(TRACKER_LOG_C_SUBMITTED, t.isSubmitted());
 			values.put(TRACKER_LOG_C_MODID, modId);
+			values.put(TRACKER_LOG_C_COMPLETED, true);
 			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 		}
 	}
@@ -393,11 +407,12 @@ public class DbHelper extends SQLiteOpenHelper {
 		return m;
 	}
 	
-	public long insertLog(int modId, String digest, String data){
+	public long insertLog(int modId, String digest, String data, boolean completed){
 		ContentValues values = new ContentValues();
 		values.put(TRACKER_LOG_C_MODID, modId);
 		values.put(TRACKER_LOG_C_ACTIVITYDIGEST, digest);
 		values.put(TRACKER_LOG_C_DATA, data);
+		values.put(TRACKER_LOG_C_COMPLETED, completed);
 		return db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 	}
 	
@@ -405,7 +420,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
 				"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
 				" as d FROM "+ACTIVITY_TABLE + " a " +
-				" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM "+TRACKER_LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
+				" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) l " +
+						" ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
 				" WHERE a."+ ACTIVITY_C_MODID +"=" + String.valueOf(modId);
 		Cursor c = db.rawQuery(sql,null);
 		int noActs = c.getCount();
@@ -425,7 +441,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
 						"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
 						" as d FROM "+ACTIVITY_TABLE + " a " +
-						" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM "+TRACKER_LOG_TABLE+") l ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
+						" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) l " +
+								" ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
 						" WHERE a."+ ACTIVITY_C_MODID +"=" + String.valueOf(modId) +
 						" AND a."+ ACTIVITY_C_SECTIONID +"=" + String.valueOf(sectionId);
 		

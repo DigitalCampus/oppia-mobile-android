@@ -151,7 +151,7 @@ public class PageWidget extends WidgetFactory {
 		});
 	}
 	
-	public boolean isComplete(){
+	public boolean activityHasTracker(){
 		// only show as being complete if all the videos on this page have been played
 		if(this.activity.hasMedia()){
 			ArrayList<Media> mediaList = this.activity.getMedia();
@@ -177,6 +177,10 @@ public class PageWidget extends WidgetFactory {
 		}
 	}
 	
+	public boolean activityCompleted(){
+		return this.activityHasTracker();
+	}
+	
 	public long getTimeTaken(){
 		long endTimestamp = System.currentTimeMillis()/1000;
 		long diff = endTimestamp - startTimestamp;
@@ -187,10 +191,9 @@ public class PageWidget extends WidgetFactory {
 		}
 	}
 	
-	public JSONObject getActivityCompleteData(){
+	public JSONObject getTrackerData(){
 		JSONObject obj = new JSONObject();
 		try {
-			obj.put("activity", "completed");
 			obj.put("timetaken", this.getTimeTaken());
 			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
@@ -235,7 +238,7 @@ public class PageWidget extends WidgetFactory {
 					Log.d(TAG,"media digest:" + m.getDigest());
 					Log.d(TAG,"media file:" + mediaFileName);
 					Log.d(TAG,"media length:" + m.getLength());
-					t.mediaPlayed(PageWidget.this.module.getModId(), m.getDigest(), mediaFileName, timeTaken);
+					t.mediaPlayed(PageWidget.this.module.getModId(), m.getDigest(), mediaFileName, timeTaken, true);
 				}
 			}
 		}

@@ -47,13 +47,14 @@ public abstract class WidgetFactory extends Activity {
 		return ll;
 	}
 	
-	public abstract boolean isComplete();
+	public abstract boolean activityHasTracker();
+	public abstract boolean activityCompleted();
 	
 	public abstract long getTimeTaken();
 	public abstract void setStartTime(long startTime);
 	public abstract long getStartTime();
 	
-	public abstract JSONObject getActivityCompleteData();
+	public abstract JSONObject getTrackerData();
 	
 	public abstract String getContentToRead();
 	
