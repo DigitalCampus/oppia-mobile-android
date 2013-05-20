@@ -231,6 +231,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
    			case R.id.menu_tts:
    				if(myTTS != null && !ttsRunning){
    					ttsRunning = true;
+   					currentActivity.setReadAloud(true);
    					myTTS.speak(currentActivity.getContentToRead(),TextToSpeech.QUEUE_FLUSH, null);
    				} else {
    					this.stopReading();

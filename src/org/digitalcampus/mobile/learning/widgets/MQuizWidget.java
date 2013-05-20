@@ -365,4 +365,14 @@ public class MQuizWidget extends WidgetFactory {
 	public MQuiz getMquiz(){
 		return mQuiz;
 	}
+	
+	@Override
+	public void setReadAloud(boolean reading){
+		//do nothing
+	}
+	
+	@Override
+	public boolean getReadAloud(){
+		return false;
+	}
 }

@@ -66,4 +66,7 @@ public abstract class WidgetFactory extends Activity {
 	public abstract void setMediaPlaying(boolean playing);
 	public abstract void setMediaStartTime(long mediaStartTime);
 	
+	public abstract void setReadAloud(boolean reading);
+	public abstract boolean getReadAloud();
+	
 }

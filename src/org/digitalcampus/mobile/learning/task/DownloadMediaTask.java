@@ -129,8 +129,6 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			}
-			
-			
 		}
 		return payload;
 	}

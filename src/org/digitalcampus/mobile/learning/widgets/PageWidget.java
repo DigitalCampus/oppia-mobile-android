@@ -293,5 +293,14 @@ public class PageWidget extends WidgetFactory {
 		return this.startTimestamp;
 	}
 
+	@Override
+	public void setReadAloud(boolean reading){
+		this.readAloud = reading;
+	}
+	
+	@Override
+	public boolean getReadAloud(){
+		return readAloud;
+	}
 
 }
