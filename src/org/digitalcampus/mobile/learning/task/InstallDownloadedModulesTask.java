@@ -100,7 +100,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				m.setShortname(moddirs[0]);
 				m.setImageFile(MobileLearning.MODULES_PATH + moddirs[0] + "/" + mxr.getModuleImage());
 				m.setLangs(mxr.getLangs());
-				String title = m.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+				String title = m.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 				
 				dp.setProgress(ctx.getString(R.string.installing_module, title));
 				publishProgress(dp);

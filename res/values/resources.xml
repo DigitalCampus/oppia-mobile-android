@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="prefs_language">prefLanguage</string>
+    
     <drawable name="background_dark">#333333</drawable>
     <drawable name="background_light">#eeeeee</drawable>
     <drawable name="list_divider">#222222</drawable>

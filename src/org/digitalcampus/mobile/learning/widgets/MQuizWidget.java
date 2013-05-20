@@ -88,7 +88,7 @@ public class MQuizWidget extends WidgetFactory {
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
 		
 		// TODO error check that "content" is in the hashmap
-		quizContent = activity.getContents(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+		quizContent = activity.getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		mQuiz = new MQuiz();
 		mQuiz.load(quizContent);
 
@@ -294,7 +294,7 @@ public class MQuizWidget extends WidgetFactory {
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put("timetaken", this.getTimeTaken());
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("quiz_id", mQuiz.getID());
 			obj.put("instance_id", mQuiz.getInstanceID());

@@ -66,7 +66,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
 	    
 	    Section s = sectionList.get(position);
-	    sectionTitle.setText(s.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+	    sectionTitle.setText(s.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.section_progress_bar);
 	    pb.setProgress((int) s.getProgress());
@@ -82,7 +82,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 		    ll.addView(horizRowItem);
 		    
 		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
-		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 		    
 		    // set image
 		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);

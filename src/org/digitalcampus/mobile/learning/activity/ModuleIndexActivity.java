@@ -100,10 +100,10 @@ public class ModuleIndexActivity extends AppActivity {
 		super.onStart();
 		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
 		rebuildLangs();
-		setTitle(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+		setTitle(module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
     	
 		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
-    	tv.setText(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+    	tv.setText(module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 		
     	// set image
 		if(module.getImageFile() != null){
@@ -125,7 +125,7 @@ public class ModuleIndexActivity extends AppActivity {
         ArrayList<ModuleMetaPage> ammp = module.getMetaPages();
         int order = 104;
         for(ModuleMetaPage mmp: ammp){
-        	String title = mmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getContent();
+        	String title = mmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
         	menu.add(0,mmp.getId(),order, title).setIcon(android.R.drawable.ic_menu_info_details);
         	order++;
         }
@@ -175,7 +175,7 @@ public class ModuleIndexActivity extends AppActivity {
 			String langDisp = loc.getDisplayLanguage(loc);
 			Lang l = new Lang(s,langDisp);
 			langArray[i] = l;
-			if (s.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
+			if (s.equals(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()))) {
 				selected = i;
 			}
 			i++;
@@ -196,7 +196,7 @@ public class ModuleIndexActivity extends AppActivity {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							String newLang = langArray[whichButton].getLang();
 							Editor editor = prefs.edit();
-							editor.putString("prefLanguage", newLang);
+							editor.putString(getString(R.string.prefs_language), newLang);
 							editor.commit();
 							dialog.dismiss();
 							onStart();

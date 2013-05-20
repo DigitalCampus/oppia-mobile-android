@@ -3,7 +3,7 @@
 
     <ListPreference
         android:defaultValue=""
-        android:key="prefLanguage"
+        android:key="@string/prefs_language"
         android:title="@string/prefLanguage" >
     </ListPreference>
 

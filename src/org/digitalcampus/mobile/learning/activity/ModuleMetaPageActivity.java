@@ -49,13 +49,13 @@ public class ModuleMetaPageActivity extends AppActivity {
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			module = (Module) bundle.getSerializable(Module.TAG);
-			setTitle(module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+			setTitle(module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 			pageid = (Integer) bundle.getSerializable(ModuleMetaPage.TAG);
 			mmp = module.getMetaPage(pageid);
 		}
 		
 		TextView titleTV = (TextView) findViewById(R.id.module_title);
-		String title = module.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())) + ": " + mmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getContent();
+		String title = module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())) + ": " + mmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
 		titleTV.setText(title);
 		
 		TextView versionTV = (TextView) findViewById(R.id.module_versionid);
@@ -66,7 +66,7 @@ public class ModuleMetaPageActivity extends AppActivity {
 		
 		WebView wv = (WebView) this.findViewById(R.id.metapage_webview);
 		wv.setBackgroundColor(0x00000000);
-		String url = module.getLocation() + "/" +mmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getLocation();
+		String url = module.getLocation() + "/" +mmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getLocation();
 		
 		try {
 			String content =  "<html><head>";

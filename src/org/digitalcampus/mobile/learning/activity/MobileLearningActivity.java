@@ -90,9 +90,9 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		this.drawMessages();
 		
 		// set preferred lang to the default lang
-		if (prefs.getString("prefLanguage", "").equals("")) {
+		if (prefs.getString(getString(R.string.prefs_language), "").equals("")) {
 			Editor editor = prefs.edit();
-			editor.putString("prefLanguage", Locale.getDefault().getLanguage());
+			editor.putString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			editor.commit();
 		}
 
@@ -309,7 +309,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			String langDisp = loc.getDisplayLanguage(loc);
 			Lang l = new Lang(s,langDisp);
 			langArray[i] = l;
-			if (s.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
+			if (s.equals(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()))) {
 				selected = i;
 			}
 			i++;
@@ -329,7 +329,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 						public void onClick(DialogInterface dialog, int whichButton) {
 							String newLang = langArray[whichButton].getLang();
 							Editor editor = prefs.edit();
-							editor.putString("prefLanguage", newLang);
+							editor.putString(getString(R.string.prefs_language), newLang);
 							editor.commit();
 							dialog.dismiss();
 							displayModules();

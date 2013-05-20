@@ -36,7 +36,7 @@ public class PrefsActivity extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.prefs); 
 		
-		ListPreference langsList = (ListPreference) findPreference("prefLanguage"); 
+		ListPreference langsList = (ListPreference) findPreference(getString(R.string.prefs_language)); 
 		
 		List<String> entries = new ArrayList<String>();
 	    List<String> entryValues = new ArrayList<String>();

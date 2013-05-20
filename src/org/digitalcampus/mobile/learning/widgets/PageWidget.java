@@ -92,7 +92,7 @@ public class PageWidget extends WidgetFactory {
 		}
 		// TODO error check here that the file really exists first
 		// TODO error check that location is in the hashmap
-		String url = module.getLocation() + "/" + activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+		String url = module.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		try {
 			String content =  "<html><head>";
 			content += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
@@ -195,7 +195,7 @@ public class PageWidget extends WidgetFactory {
 		JSONObject obj = new JSONObject();
 		try {
 			obj.put("timetaken", this.getTimeTaken());
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("readaloud",readAloud);
 		} catch (JSONException e) {
@@ -208,7 +208,7 @@ public class PageWidget extends WidgetFactory {
 
 	@Override
 	public String getContentToRead() {
-		File f = new File ("/"+ module.getLocation() + "/" + activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+		File f = new File ("/"+ module.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 		StringBuilder text = new StringBuilder();
 		try {
 		    br = new BufferedReader(new FileReader(f));

@@ -146,7 +146,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     public void onStart(){
     	super.onStart();
     	rebuildLangs();
-    	setTitle(section.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+    	setTitle(section.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
         loadActivity();
     }
     
@@ -246,7 +246,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     	ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
     	TextView tb = (TextView) this.findViewById(R.id.module_activity_title);
     	
-    	tb.setText(acts.get(this.currentActivityNo).getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+    	tb.setText(acts.get(this.currentActivityNo).getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
     	
     	if(acts.get(this.currentActivityNo).getActType().equals("page")){
     		currentActivity = new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
@@ -351,7 +351,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			langArray[i] = key;
-			if (value.equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
+			if (value.equals(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()))) {
 				selected = i;
 			}
 			i++;
@@ -362,7 +362,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						String newLang = langMap.get(langArray[whichButton]);
 						Editor editor = prefs.edit();
-						editor.putString("prefLanguage", newLang);
+						editor.putString(getString(R.string.prefs_language), newLang);
 						editor.commit();
 						dialog.dismiss();
 						onStart();
