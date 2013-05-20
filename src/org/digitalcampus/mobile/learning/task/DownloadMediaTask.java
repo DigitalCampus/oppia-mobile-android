@@ -59,6 +59,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 		Payload payload = params[0];
 		for (Object o: payload.data){
 			Media m = (Media) o;
+			File file = new File(MobileLearning.MEDIA_PATH,m.getFilename());
 			try { 
 				
 				URL u = new URL(m.getDownloadUrl());
@@ -78,7 +79,6 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				dp.setProgress(0);
 				publishProgress(dp);
 				
-				File file = new File(MobileLearning.MEDIA_PATH,m.getFilename());
 				FileOutputStream f = new FileOutputStream(file);
 				InputStream in = c.getInputStream();
 				
@@ -118,14 +118,13 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				// TODO - this should be changed to .equals once the updated modules have been published and users 
 				// are using the updated module versions
 				if(!resultMD5.contains(m.getDigest())){
-					if (file.exists() && !file.isDirectory()){
-				        file.delete();
-				    }
+					this.deleteFile(file);
 				}
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 
 			} catch (IOException e1) { 
 				e1.printStackTrace();
+				this.deleteFile(file);
 			} catch (NoSuchAlgorithmException e) {
 				BugSenseHandler.sendException(e);
 				e.printStackTrace();
@@ -159,5 +158,11 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
             mStateListener = srl;
         }
     }
+	
+	private void deleteFile(File file){
+		if (file.exists() && !file.isDirectory()){
+	        file.delete();
+	    }
+	}
 
 }
