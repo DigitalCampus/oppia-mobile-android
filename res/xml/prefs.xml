@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <EditTextPreference
+    <ListPreference
         android:defaultValue=""
         android:key="prefLanguage"
         android:title="@string/prefLanguage" >
-    </EditTextPreference>
+    </ListPreference>
 
     <CheckBoxPreference
         android:defaultValue="true"

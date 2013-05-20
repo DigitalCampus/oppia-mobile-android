@@ -17,9 +17,14 @@
 
 package org.digitalcampus.mobile.learning.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import org.digitalcampus.mobile.learning.R;
 
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 
 public class PrefsActivity extends PreferenceActivity {
@@ -27,9 +32,32 @@ public class PrefsActivity extends PreferenceActivity {
 	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) { //
+	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.prefs); //
+		addPreferencesFromResource(R.xml.prefs); 
+		
+		ListPreference langsList = (ListPreference) findPreference("prefLanguage"); 
+		
+		List<String> entries = new ArrayList<String>();
+	    List<String> entryValues = new ArrayList<String>();
+	    
+	    Bundle bundle = this.getIntent().getExtras(); 
+        if(bundle != null) {
+        	@SuppressWarnings("unchecked")
+			ArrayList<String> langs = (ArrayList<String>) bundle.getSerializable("langs");
+        	for(String l: langs){
+        		entryValues.add(l);
+        		Locale loc = new Locale(l);
+        		entries.add(loc.getDisplayLanguage(loc));
+        	}
+        	
+        }
+        
+        final CharSequence[] entryCharSeq = entries.toArray(new CharSequence[entries.size()]);
+        final CharSequence[] entryValsChar = entryValues.toArray(new CharSequence[entryValues.size()]);
+        
+        langsList.setEntries(entryCharSeq);
+        langsList.setEntryValues(entryValsChar);
 	}
 
 	

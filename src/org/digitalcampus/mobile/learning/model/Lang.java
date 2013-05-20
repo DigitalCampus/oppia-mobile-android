@@ -26,6 +26,7 @@ public class Lang implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8960131611429444591L;
+	public static final String TAG = Lang.class.getSimpleName();
 	private String lang;
 	private String content;
 	private String location;

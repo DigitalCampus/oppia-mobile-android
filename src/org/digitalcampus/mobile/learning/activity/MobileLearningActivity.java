@@ -235,6 +235,8 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	private void scanMedia(ArrayList<Module> modules) {
 		long now = System.currentTimeMillis()/1000;
 		if (prefs.getLong("prefLastMediaScan", 0)+3600 > now) {
+			LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
+			ll.setVisibility(View.GONE);
 			return;
 		}
 		ArrayList<Object> objs = new ArrayList<Object>();
@@ -279,6 +281,9 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			return true;
 		case R.id.menu_settings:
 			Intent i = new Intent(this, PrefsActivity.class);
+			Bundle tb = new Bundle();
+			tb.putSerializable("langs", langs);
+			i.putExtras(tb);
 			startActivity(i);
 			return true;
 		case R.id.menu_language:

@@ -162,6 +162,9 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 		myProgress.dismiss();
 		
 		if(p.result){
+			Editor e = prefs.edit();
+			e.putLong("prefLastMediaScan", 0);
+			e.commit();
 			UIUtils.showAlert(ctx, ctx.getString(R.string.install_complete), p.resultResponse);
 			// new refresh the module list
 			DownloadActivity da = (DownloadActivity) ctx;
