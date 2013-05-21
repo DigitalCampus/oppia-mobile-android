@@ -56,9 +56,18 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 		
 		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
 		tv.setText(R.string.title_download_activity);
+	
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
 		// Get Module list
-		getModuleList();
-		
+		if(this.json == null){
+			this.getModuleList();
+		} else {
+			this.refreshModuleList();
+		}
 	}
 
 	@Override
@@ -71,6 +80,23 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 			dla.closeDialogs();
 		}
 		super.onPause();
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+	    super.onRestoreInstanceState(savedInstanceState);
+	    try {
+			this.json = new JSONObject(savedInstanceState.getString("json"));
+		} catch (JSONException e) {
+			// error in the json so just get the list again
+			this.getModuleList();
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+	    super.onSaveInstanceState(savedInstanceState);
+	    savedInstanceState.putString("json", json.toString());
 	}
 	
 	private void getModuleList() {
