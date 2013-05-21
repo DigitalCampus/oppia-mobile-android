@@ -46,6 +46,7 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 
 	private ProgressDialog pDialog;
 	private JSONObject json;
+	private DownloadListAdapter dla;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +58,21 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 		tv.setText(R.string.title_download_activity);
 		// Get Module list
 		getModuleList();
+		
 	}
 
+	@Override
+	public void onPause(){
+		// kill any open dialogs
+		if (pDialog != null){
+			pDialog.dismiss();
+		}
+		if (dla != null){
+			dla.closeDialogs();
+		}
+		super.onPause();
+	}
+	
 	private void getModuleList() {
 		// show progress dialog
 		pDialog = new ProgressDialog(this);
@@ -107,9 +121,9 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 				modules.add(dm);
 			}
 			
-			DownloadListAdapter mla = new DownloadListAdapter(this, modules);
+			dla = new DownloadListAdapter(this, modules);
 			ListView listView = (ListView) findViewById(R.id.module_list);
-			listView.setAdapter(mla);
+			listView.setAdapter(dla);
 
 		} catch (Exception e) {
 			db.close();
@@ -123,11 +137,8 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 
 	public void moduleListComplete(Payload response) {
 		// close dialog and process results
-		try {
-			pDialog.dismiss();
-		} catch (IllegalArgumentException iae){
-			//
-		}
+		pDialog.dismiss();
+	
 		if(response.result){
 			try {
 				json = new JSONObject(response.resultResponse);

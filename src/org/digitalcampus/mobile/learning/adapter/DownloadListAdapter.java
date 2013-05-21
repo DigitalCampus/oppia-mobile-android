@@ -206,5 +206,11 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 		}
 		
 	}
+	
+	public void closeDialogs(){
+		if (myProgress != null){
+			myProgress.dismiss();
+		}
+	}
 
 }
