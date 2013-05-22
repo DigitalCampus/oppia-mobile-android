@@ -90,8 +90,7 @@ public class PageWidget extends WidgetFactory {
 				
 			}
 		}
-		// TODO error check here that the file really exists first
-		// TODO error check that location is in the hashmap
+
 		String url = module.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		try {
 			String content =  "<html><head>";

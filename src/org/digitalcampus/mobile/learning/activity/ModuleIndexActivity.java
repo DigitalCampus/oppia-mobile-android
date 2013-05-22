@@ -25,7 +25,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.exception.InvalidXMLException;
 import org.digitalcampus.mobile.learning.model.Activity;
-import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.ModuleMetaPage;
 import org.digitalcampus.mobile.learning.model.Section;
@@ -33,17 +32,13 @@ import org.digitalcampus.mobile.learning.utils.ImageUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
 import org.digitalcampus.mobile.learning.utils.UIUtils;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -56,8 +51,6 @@ public class ModuleIndexActivity extends AppActivity {
 	private ModuleXMLReader mxr;
 	private ArrayList<Section> sections;
 	private SharedPreferences prefs;
-	private ArrayList<String> langs = new ArrayList<String>();
-	private Lang[] langArray;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,7 +105,6 @@ public class ModuleIndexActivity extends AppActivity {
 	public void onStart() {
 		super.onStart();
 		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
-		rebuildLangs();
 		setTitle(module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
     	
 		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
@@ -164,66 +156,17 @@ public class ModuleIndexActivity extends AppActivity {
 				i.putExtras(tb);
 				startActivity(i);
 				return true;
-				
-				//return super.onOptionsItemSelected(item);
-		}
-	}
-    
-    private void rebuildLangs() {
-		
-    	ArrayList<Lang> mlangs = module.getLangs();
-		for(Lang l: mlangs){
-			if(!langs.contains(l.getLang())){
-				langs.add(l.getLang());
-			}
 		}
 	}
     
     private void createLanguageDialog() {
-    	int selected = -1;
-		langArray = new Lang[langs.size()];
-		int i = 0;
-		for (String s: langs) {
-			Locale loc = new Locale(s);
-			String langDisp = loc.getDisplayLanguage(loc);
-			Lang l = new Lang(s,langDisp);
-			langArray[i] = l;
-			if (s.equals(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()))) {
-				selected = i;
+    	UIUtils ui = new UIUtils();
+    	ui.createLanguageDialog(this, module.getLangs(), prefs, new Callable<Boolean>() {	
+			public Boolean call() throws Exception {
+				ModuleIndexActivity.this.onStart();
+				return true;
 			}
-			i++;
-		}
-		
-		String[] array = new String[langs.size()];
-		for(int j=0;j<langs.size(); j++){
-			array[j] = langArray[j].getContent();
-		}
-		
-		
-		// only show if at least one language
-		if (i > 0) {
-			ArrayAdapter<String> arr = new ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice,array);
-
-			AlertDialog mAlertDialog = new AlertDialog.Builder(this)
-					.setSingleChoiceItems(arr, selected, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							String newLang = langArray[whichButton].getLang();
-							Editor editor = prefs.edit();
-							editor.putString(getString(R.string.prefs_language), newLang);
-							editor.commit();
-							dialog.dismiss();
-							onStart();
-						}
-					}).setTitle(getString(R.string.change_language))
-					.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-	
-						public void onClick(DialogInterface dialog, int which) {
-							// do nothing
-						}
-	
-					}).create();
-			mAlertDialog.show();
-		}
+		});
 	}
 
     

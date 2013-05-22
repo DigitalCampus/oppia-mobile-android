@@ -115,9 +115,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				Log.d(TAG,"supplied   digest: " + m.getDigest());
 				Log.d(TAG,"calculated digest: " + resultMD5);
 				
-				// TODO - this should be changed to .equals once the updated modules have been published and users 
-				// are using the updated module versions
-				if(!resultMD5.contains(m.getDigest())){
+				if(!resultMD5.equals(m.getDigest())){
 					this.deleteFile(file);
 					payload.setResult(false);
 					payload.setResultResponse(ctx.getString(R.string.error_media_download));

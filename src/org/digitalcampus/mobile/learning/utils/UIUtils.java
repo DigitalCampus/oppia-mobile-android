@@ -17,11 +17,14 @@
 
 package org.digitalcampus.mobile.learning.utils;
 
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.activity.ScoreActivity;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.model.Lang;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -29,14 +32,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class UIUtils {
 
 	public final static String TAG = UIUtils.class.getSimpleName();
-
+	private ArrayList<String> langStringList;
+	private ArrayList<Lang> langList;
+	private SharedPreferences prefs;
+	private Context ctx;
+	
 	public static void showUserData(final Activity act) {
 		// TextView username = (TextView) act.findViewById(R.id.username);
 		TextView points = (TextView) act.findViewById(R.id.userpoints);
@@ -113,6 +122,67 @@ public class UIUtils {
 		return alertDialog;
 	}
 	
+	
+	public void createLanguageDialog(Context ctx, ArrayList<Lang> langs, SharedPreferences prefs, final Callable<Boolean> funct) {
+		this.langStringList = new ArrayList<String>();
+		this.langList = new ArrayList<Lang>();
+		this.prefs = prefs;
+		this.ctx = ctx;
+		
+		// make sure there aren't any duplicates
+		for(Lang l: langs){
+			boolean found = false;
+			for(Lang ln: langList){
+				if(ln.getLang().equals(l.getLang())){
+					found = true;
+				}
+			}
+			if(!found){
+				langList.add(l);
+			}
+		}
+		
+		int selected = -1;
+		int i = 0;
+		for(Lang l: langList){
+			Locale loc = new Locale(l.getLang());
+			String langDisp = loc.getDisplayLanguage(loc);
+			langStringList.add(langDisp);
+			if (l.getLang().equals(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()))) {
+				selected = i;
+			}
+			i++;
+		}
+		
+		// only show if at least one language
+		if (i > 0) {
+			ArrayAdapter<String> arr = new ArrayAdapter<String>(ctx, android.R.layout.select_dialog_singlechoice,langStringList);
+
+			AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
+					.setSingleChoiceItems(arr, selected, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							String newLang = langList.get(whichButton).getLang();
+							Editor editor = UIUtils.this.prefs.edit();
+							editor.putString(UIUtils.this.ctx.getString(R.string.prefs_language), newLang);
+							editor.commit();
+							dialog.dismiss();
+							try {
+								funct.call();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}).setTitle(ctx.getString(R.string.change_language))
+					.setNegativeButton(ctx.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+	
+						public void onClick(DialogInterface dialog, int which) {
+							// do nothing
+						}
+	
+					}).create();
+			mAlertDialog.show();
+		}
+	}
 	
 
 }

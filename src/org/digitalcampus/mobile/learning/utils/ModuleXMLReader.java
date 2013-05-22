@@ -48,7 +48,6 @@ public class ModuleXMLReader {
 	private Document document;
 
 	public ModuleXMLReader(String filename) throws InvalidXMLException {
-		// TODO check that it's a valid module xml file else throw error
 		File moduleXML = new File(filename);
 		if (moduleXML.exists()) {
 

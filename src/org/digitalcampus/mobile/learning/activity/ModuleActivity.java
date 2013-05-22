@@ -19,27 +19,23 @@ package org.digitalcampus.mobile.learning.activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.Tracker;
-import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.service.TrackerService;
+import org.digitalcampus.mobile.learning.utils.UIUtils;
 import org.digitalcampus.mobile.learning.widgets.MQuizWidget;
 import org.digitalcampus.mobile.learning.widgets.PageWidget;
 import org.digitalcampus.mobile.learning.widgets.WidgetFactory;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -64,9 +60,6 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 	private int currentActivityNo = 0;
 	private WidgetFactory currentActivity;
 	private SharedPreferences prefs;
-	
-	private HashMap<String, String> langMap = new HashMap<String, String>();
-	private String[] langArray;
 	
 	private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -145,7 +138,6 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     @Override
     public void onStart(){
     	super.onStart();
-    	rebuildLangs();
     	setTitle(section.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
         loadActivity();
     }
@@ -328,54 +320,15 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
     	return true;
     }
     
-    private void rebuildLangs() {
-		// recreate langMap
-		langMap = new HashMap<String, String>();
-		Iterator<Lang> itr = module.getLangs().iterator();
-		while (itr.hasNext()) {
-			String lang = itr.next().getLang();
-			Locale l = new Locale(lang);
-			String langDisp = l.getDisplayLanguage(l);
-			langMap.put(langDisp, lang);
-		}
-
-	}
     
     private void createLanguageDialog() {
-		int selected = -1;
-		// TODO this is all quite untidy - fix it up!
-		
-		langArray = new String[langMap.size()];
-		int i = 0;
-		for (Map.Entry<String, String> entry : langMap.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			langArray[i] = key;
-			if (value.equals(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()))) {
-				selected = i;
+    	UIUtils ui = new UIUtils();
+    	ui.createLanguageDialog(this, module.getLangs(), prefs, new Callable<Boolean>() {	
+			public Boolean call() throws Exception {
+				ModuleActivity.this.onStart();
+				return true;
 			}
-			i++;
-		}
-
-		AlertDialog mAlertDialog = new AlertDialog.Builder(this)
-				.setSingleChoiceItems(langArray, selected, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String newLang = langMap.get(langArray[whichButton]);
-						Editor editor = prefs.edit();
-						editor.putString(getString(R.string.prefs_language), newLang);
-						editor.commit();
-						dialog.dismiss();
-						onStart();
-					}
-				}).setTitle(getString(R.string.change_language))
-				.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-
-					public void onClick(DialogInterface dialog, int which) {
-						// do nothing
-					}
-
-				}).create();
-		mAlertDialog.show();
+		});
 	}
     
     class PageGestureDetector extends SimpleOnGestureListener {

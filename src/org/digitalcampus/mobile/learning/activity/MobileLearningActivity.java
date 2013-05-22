@@ -20,6 +20,7 @@ package org.digitalcampus.mobile.learning.activity;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.R.id;
@@ -39,6 +40,7 @@ import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.ScanMediaTask;
 import org.digitalcampus.mobile.learning.task.UpgradeManagerTask;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
+import org.digitalcampus.mobile.learning.utils.UIUtils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -59,7 +61,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -73,8 +74,8 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	public static final String TAG = MobileLearningActivity.class.getSimpleName();
 	private SharedPreferences prefs;
 	private Module tempMod;
-	private ArrayList<String> langs = new ArrayList<String>();
-	private Lang[] langArray;
+	private ArrayList<Lang> langs = new ArrayList<Lang>();
+	private ArrayList<Module> modules;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -159,7 +160,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	private void displayModules() {
 
 		DbHelper db = new DbHelper(this);
-		ArrayList<Module> modules = db.getModules();
+		modules = db.getModules();
 		db.close();
 		ArrayList<Module> removeModules = new ArrayList<Module>();
 		for (Module m : modules) {
@@ -176,9 +177,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			// remove from current list
 			modules.remove(m);
 		}
-		
-		// rebuild langs
-		this.rebuildLangs(modules);
 
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_modules);
 		llLoading.setVisibility(View.GONE);
@@ -216,7 +214,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		this.updateReminders();
 		
 		// scan media
-		this.scanMedia(modules);
+		this.scanMedia();
 	}
 
 	private void updateReminders(){
@@ -232,35 +230,17 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		}		
 	}
 	
-	private void scanMedia(ArrayList<Module> modules) {
+	private void scanMedia() {
 		long now = System.currentTimeMillis()/1000;
 		if (prefs.getLong("prefLastMediaScan", 0)+3600 > now) {
 			LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
 			ll.setVisibility(View.GONE);
 			return;
 		}
-		ArrayList<Object> objs = new ArrayList<Object>();
-		
-		for (Module m: modules){
-			objs.add(m);
-		}
 		ScanMediaTask task = new ScanMediaTask();
-		Payload p = new Payload(modules);
+		Payload p = new Payload(this.modules);
 		task.setScanMediaListener(this);
 		task.execute(p);
-	}
-
-	private void rebuildLangs(ArrayList<Module> modules) {
-		langs = new ArrayList<String>();
-		for (Module m: modules){
-			ArrayList<Lang> mlangs = m.getLangs();
-			for(Lang l: mlangs){
-				if(!langs.contains(l.getLang())){
-					langs.add(l.getLang());
-				}
-			}
-		}
-
 	}
 
 	@Override
@@ -301,49 +281,18 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	private void createLanguageDialog() {
-		int selected = -1;
-		langArray = new Lang[langs.size()];
-		int i = 0;
-		for (String s: langs) {
-			Locale loc = new Locale(s);
-			String langDisp = loc.getDisplayLanguage(loc);
-			Lang l = new Lang(s,langDisp);
-			langArray[i] = l;
-			if (s.equals(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()))) {
-				selected = i;
+		ArrayList<Lang> langs = new ArrayList<Lang>();
+		for(Module m: modules){
+			langs.addAll(m.getLangs());
+		}
+		
+		UIUtils ui = new UIUtils();
+    	ui.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {	
+			public Boolean call() throws Exception {
+				MobileLearningActivity.this.onStart();
+				return true;
 			}
-			i++;
-		}
-		
-		String[] array = new String[langs.size()];
-		for(int j=0;j<langs.size(); j++){
-			array[j] = langArray[j].getContent();
-		}
-		
-		
-		// only show if at least one language
-		if (i > 0) {
-			ArrayAdapter<String> arr = new ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice,array);
-			AlertDialog mAlertDialog = new AlertDialog.Builder(this)
-					.setSingleChoiceItems(arr, selected, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							String newLang = langArray[whichButton].getLang();
-							Editor editor = prefs.edit();
-							editor.putString(getString(R.string.prefs_language), newLang);
-							editor.commit();
-							dialog.dismiss();
-							displayModules();
-						}
-					}).setTitle(getString(R.string.change_language))
-					.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-
-						public void onClick(DialogInterface dialog, int which) {
-							// do nothing
-						}
-
-					}).create();
-			mAlertDialog.show();
-		}
+		});
 	}
 
 	private void logout() {

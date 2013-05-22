@@ -232,10 +232,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	// returns id of the row
 	// TODO tidy this up now have is installed and toUpdate options
 	public long addOrUpdateModule(Module module) {
-		// find if this is a new version or not
-		String selection = MODULE_C_LOCATION + "= ?";
-		String[] selArgs = new String[] { module.getLocation() };
-		Cursor c = db.query(MODULE_TABLE, null, selection, selArgs, null, null, null);
 
 		ContentValues values = new ContentValues();
 		values.put(MODULE_C_VERSIONID, module.getVersionId());
@@ -245,25 +241,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(MODULE_C_LANGS, module.getLangsJSONString());
 		values.put(MODULE_C_IMAGE, module.getImageFile());
 
-		if (c.getCount() == 0) {
-			c.close();
-			// just insert
+		if (!this.isInstalled(module.getShortname())) {
 			Log.v(TAG, "Record added");
 			return db.insertOrThrow(MODULE_TABLE, null, values);
-		} else {
-			// check that the version id of new module is greater than existing
-			c.moveToFirst();
-
-			long toUpdate = 0;
-			while (c.isAfterLast() == false) {
-				Log.v(TAG, "Installed version: " + c.getString(c.getColumnIndex(MODULE_C_VERSIONID)));
-				Log.v(TAG, "New version: " + module.getVersionId());
-				if (module.getVersionId() > c.getLong(c.getColumnIndex(MODULE_C_VERSIONID))) {
-					toUpdate = c.getLong(c.getColumnIndex(MODULE_C_ID));
-				}
-				c.moveToNext();
-			}
-			c.close();
+		} else if(this.toUpdate(module.getShortname(), module.getVersionId())){
+			long toUpdate = this.getModuleID(module.getShortname());
 			if (toUpdate != 0) {
 				db.update(MODULE_TABLE, values, MODULE_C_ID + "=" + toUpdate, null);
 				// remove all the old activities
@@ -271,10 +253,9 @@ public class DbHelper extends SQLiteOpenHelper {
 				String[] args = new String[] { String.valueOf(toUpdate) };
 				db.delete(ACTIVITY_TABLE, s, args);
 				return toUpdate;
-			} else {
-				return -1;
 			}
-		}
+		} 
+		return -1;
 	}
 
 	public long refreshModule(Module module){
@@ -620,7 +601,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public MessageFeed getMessageFeed(){
 		MessageFeed mf = new MessageFeed();
-		// TODO get messages from db...
 		return mf;
 	}
 	
