@@ -18,6 +18,7 @@
 package org.digitalcampus.mobile.learning.task;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -75,6 +77,7 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 			
 			// make request
 			HttpResponse response = client.execute(httpGet);
+			
 		
 			// read response
 			InputStream content = response.getEntity().getContent();
@@ -86,21 +89,26 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 			
 			switch (response.getStatusLine().getStatusCode()){
 				case 400: // unauthorised
-					payload.result = false;
-					payload.resultResponse = ctx.getString(R.string.error_login);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_login));
 					break;
 				case 200: 
-					payload.result = true;
-					payload.resultResponse = responseStr;
+					payload.setResult(true);
+					payload.setResultResponse(responseStr);
 					break;
 				default:
-					payload.result = false;
-					payload.resultResponse = ctx.getString(R.string.error_connection);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_connection));
 			}
 			
-		} catch (Exception e) {
+		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch (IOException e) {
+			e.printStackTrace();
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}
 		return payload;
 	}

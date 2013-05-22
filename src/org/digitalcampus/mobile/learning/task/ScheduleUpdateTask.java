@@ -18,6 +18,7 @@
 package org.digitalcampus.mobile.learning.task;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -65,7 +67,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
-		Module dm = (Module) payload.data.get(0);
+		Module dm = (Module) payload.getData().get(0);
 		DownloadProgress dp = new DownloadProgress();
 		// add api_key/username params
 		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
@@ -105,12 +107,12 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 			
 			switch (response.getStatusLine().getStatusCode()){
 				case 400: // unauthorised
-					payload.result = false;
-					payload.resultResponse = ctx.getString(R.string.error_login);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_login));
 					break;
 				case 200: 
-					payload.result = true;
-					payload.resultResponse = "";
+					payload.setResult(true);
+					payload.setResultResponse("");
 					JSONObject jsonObj = new JSONObject(responseStr);
 					long scheduleVersion = jsonObj.getLong("version");
 					DbHelper db = new DbHelper(this.ctx);
@@ -135,24 +137,29 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 					db.close();
 					break;
 				default:
-					payload.result = false;
-					payload.resultResponse = ctx.getString(R.string.error_connection);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_connection));
 			}
 		
 		} catch (JSONException e) {
 			BugSenseHandler.sendException(e);
 			e.printStackTrace();
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_processing_response);
-		} catch (Exception e) {
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
+		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch (IOException e) {
+			e.printStackTrace();
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}
 		
 		dp.setProgress(100);
 		dp.setProgress(ctx.getString(R.string.update_complete));
 		publishProgress(dp);
-		payload.result = true;
+		payload.setResult(true);
 		
 		return payload;
 	}

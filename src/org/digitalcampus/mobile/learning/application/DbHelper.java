@@ -25,8 +25,6 @@ import org.digitalcampus.mobile.learning.model.MessageFeed;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.TrackerLog;
 import org.digitalcampus.mobile.learning.task.Payload;
-import org.digitalcampus.mobile.learning.task.SubmitMQuizTask;
-import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -554,7 +552,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			sl.add(so);
 			c.moveToNext();
 		}
-		Payload p = new Payload(SubmitTrackerTask.SUBMIT_LOG_TASK,sl);
+		Payload p = new Payload(sl);
 		c.close();
 		
 		return p;
@@ -587,7 +585,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			sl.add(so);
 			c.moveToNext();
 		}
-		Payload p = new Payload(SubmitMQuizTask.SUBMIT_MQUIZ_TASK,sl);
+		Payload p = new Payload(sl);
 		c.close();
 		
 		return p;

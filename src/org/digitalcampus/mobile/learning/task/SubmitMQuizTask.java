@@ -54,8 +54,6 @@ import com.bugsense.trace.BugSenseHandler;
 public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 
 	public final static String TAG = SubmitMQuizTask.class.getSimpleName();
-	public final static int SUBMIT_MQUIZ_TASK = 1002;
-
 	private Context ctx;
 	private SharedPreferences prefs;
 
@@ -67,7 +65,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 	@Override
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
-		for (Object l : payload.data) {
+		for (Object l : payload.getData()) {
 			TrackerLog tl = (TrackerLog) l;
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 			try {
@@ -108,7 +106,7 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 						DbHelper db = new DbHelper(ctx);
 						db.markMQuizSubmitted(tl.getId());
 						db.close();
-						payload.result = true;
+						payload.setResult(true);
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
 						Editor editor = prefs.edit();
@@ -117,27 +115,30 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 				    	editor.commit();
 						break;
 					default:
-						payload.result = false;
+						payload.setResult(false);
 				}
 
 			} catch (UnsupportedEncodingException e) {
-				
+				payload.setResult(false);
 				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (ClientProtocolException e) {
+				payload.setResult(false);
 				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (IOException e) {
+				payload.setResult(false);
 				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (JSONException e) {
+				payload.setResult(false);
 				BugSenseHandler.sendException(e);
 				e.printStackTrace();
 			} 
 			
 		}
 		
-		return null;
+		return payload;
 	}
 	
 	protected void onProgressUpdate(String... obj) {

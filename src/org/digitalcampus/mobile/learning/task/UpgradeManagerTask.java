@@ -34,14 +34,14 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
-		payload.result = false;
+		payload.setResult(false);
 		if(!prefs.getBoolean("upgradeV17",false)){
 			upgradeV17();
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV17", true);
 			editor.commit();
 			publishProgress("Upgraded to v17");
-			payload.result = true;
+			payload.setResult(true);
 		}
 		
 		return payload;

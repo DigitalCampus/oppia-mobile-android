@@ -82,7 +82,7 @@ public class TrackerService extends Service implements GetModuleListListener{
 			long now = System.currentTimeMillis()/1000;
 			if((lastRun + (3600*12)) < now){
 				GetModuleListTask task = new GetModuleListTask(this);
-				p = new Payload(0,null);
+				p = new Payload();
 				task.setGetModuleListListener(this);
 				task.execute(p);
 				
@@ -136,7 +136,7 @@ public class TrackerService extends Service implements GetModuleListListener{
 		
 		boolean updateAvailable = false;
 		try {
-			JSONObject json = new JSONObject(response.resultResponse);
+			JSONObject json = new JSONObject(response.getResultResponse());
 			for (int i = 0; i < (json.getJSONArray("modules").length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("modules").get(i);
 				String shortName = json_obj.getString("shortname");

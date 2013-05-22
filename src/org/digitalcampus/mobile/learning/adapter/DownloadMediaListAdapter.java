@@ -77,7 +77,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		ArrayList<Media> alMedia = new ArrayList<Media>();
 		alMedia.add(media);
 		task = new DownloadMediaTask(ctx);
-		Payload p = new Payload(0, alMedia);
+		Payload p = new Payload(alMedia);
 		task.setDownloadListener(this);
 		task.execute(p);
 	}

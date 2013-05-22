@@ -99,7 +99,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
              		
              		ArrayList<Object> data = new ArrayList<Object>();
              		data.add(dm);
-             		Payload p = new Payload(0,data);
+             		Payload p = new Payload(data);
              		
              		myProgress = new ProgressDialog(ctx);
              		myProgress.setTitle(R.string.install);
@@ -124,7 +124,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
              		
              		ArrayList<Object> data = new ArrayList<Object>();
              		data.add(dm);
-             		Payload p = new Payload(0,data);
+             		Payload p = new Payload(data);
              		
              		myProgress = new ProgressDialog(ctx);
              		myProgress.setTitle(R.string.update);
@@ -145,7 +145,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 	}
 
 	public void downloadComplete(Payload p) {
-		if (p.result){
+		if (p.isResult()){
 			// now set task to install
 			myProgress.setMessage(ctx.getString(R.string.download_complete));
 			myProgress.setIndeterminate(true);
@@ -154,23 +154,23 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 			imTask.execute(p);
 		} else {
 			myProgress.dismiss();
-			UIUtils.showAlert(ctx, ctx.getString(R.string.error_download_failure), p.resultResponse);
+			UIUtils.showAlert(ctx, ctx.getString(R.string.error_download_failure), p.getResultResponse());
 		}
 	}
 
 	public void installComplete(Payload p) {
 		myProgress.dismiss();
 		
-		if(p.result){
+		if(p.isResult()){
 			Editor e = prefs.edit();
 			e.putLong("prefLastMediaScan", 0);
 			e.commit();
-			UIUtils.showAlert(ctx, ctx.getString(R.string.install_complete), p.resultResponse);
+			UIUtils.showAlert(ctx, ctx.getString(R.string.install_complete), p.getResultResponse());
 			// new refresh the module list
 			DownloadActivity da = (DownloadActivity) ctx;
 			da.refreshModuleList();
 		} else {
-			UIUtils.showAlert(ctx, ctx.getString(R.string.error_install_failure), p.resultResponse);
+			UIUtils.showAlert(ctx, ctx.getString(R.string.error_install_failure), p.getResultResponse());
 		}
 		
 	}
@@ -193,8 +193,8 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 	public void updateComplete(Payload p) {
 		myProgress.dismiss();
 		
-		if(p.result){
-			UIUtils.showAlert(ctx, ctx.getString(R.string.update_complete), p.resultResponse);
+		if(p.isResult()){
+			UIUtils.showAlert(ctx, ctx.getString(R.string.update_complete), p.getResultResponse());
 			// new refresh the module list
 			DownloadActivity da = (DownloadActivity) ctx;
 			da.refreshModuleList();
@@ -202,7 +202,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 			e.putLong("prefLastMediaScan", 0);
 			e.commit();
 		} else {
-			UIUtils.showAlert(ctx, ctx.getString(R.string.error_update_failure), p.resultResponse);
+			UIUtils.showAlert(ctx, ctx.getString(R.string.error_update_failure), p.getResultResponse());
 		}
 		
 	}

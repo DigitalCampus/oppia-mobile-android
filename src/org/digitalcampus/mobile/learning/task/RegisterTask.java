@@ -62,7 +62,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
-		User u = (User) payload.data.get(0);
+		User u = (User) payload.getData().get(0);
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
 		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault))
@@ -100,8 +100,8 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 
 			switch (response.getStatusLine().getStatusCode()){
 				case 400: // unauthorised
-					payload.result = false;
-					payload.resultResponse = responseStr;
+					payload.setResult(false);
+					payload.setResultResponse(responseStr);
 					break;
 				case 201: // logged in
 					JSONObject jsonResp = new JSONObject(responseStr);
@@ -115,31 +115,31 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 					}
 					u.setFirstname(jsonResp.getString("first_name"));
 					u.setLastname(jsonResp.getString("last_name"));
-					payload.result = true;
-					payload.resultResponse = ctx.getString(R.string.register_complete);
+					payload.setResult(true);
+					payload.setResultResponse(ctx.getString(R.string.register_complete));
 					break;
 				default:
-					payload.result = false;
-					payload.resultResponse = ctx.getString(R.string.error_connection);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_connection));
 			}
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
 			e.printStackTrace();
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (JSONException e) {
 			BugSenseHandler.sendException(e);
 			e.printStackTrace();
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_processing_response);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
 		}
 		return payload;
 	}

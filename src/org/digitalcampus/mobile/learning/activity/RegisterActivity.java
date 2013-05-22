@@ -74,9 +74,9 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 
 	public void submitComplete(Payload response) {
 		pDialog.dismiss();
-		Log.d(TAG, "Login activity reports: " + response.resultResponse);
-		if (response.result) {
-			User u = (User) response.data.get(0);
+		Log.d(TAG, "Login activity reports: " + response.getResultResponse());
+		if (response.isResult()) {
+			User u = (User) response.getData().get(0);
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString("prefUsername", usernameField.getText().toString());
@@ -89,7 +89,7 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 			showAlert("Register", "Registration successful", ONCLICK_TASK_REGISTERED);
 
 		} else {
-			showAlert("Register", response.resultResponse, ONCLICK_TASK_NULL);
+			showAlert("Register", response.getResultResponse(), ONCLICK_TASK_NULL);
 		}
 
 	}
@@ -152,7 +152,7 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 		u.setLastname(lastname);
 		u.setEmail(email);
 		users.add(u);
-		Payload p = new Payload(0, users);
+		Payload p = new Payload(users);
 		RegisterTask lt = new RegisterTask(this);
 		lt.setLoginListener(this);
 		lt.execute(p);

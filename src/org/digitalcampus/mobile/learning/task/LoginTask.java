@@ -62,7 +62,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
-		User u = (User) payload.data.get(0);
+		User u = (User) payload.getData().get(0);
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
 		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.LOGIN_PATH;
@@ -96,8 +96,8 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 			// check status code
 			switch (response.getStatusLine().getStatusCode()){
 				case 400: // unauthorised
-					payload.result = false;
-					payload.resultResponse = ctx.getString(R.string.error_login);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_login));
 					break;
 				case 201: // logged in
 					JSONObject jsonResp = new JSONObject(responseStr);
@@ -111,32 +111,32 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 						u.setPoints(0);
 						u.setBadges(0);
 					}
-					payload.result = true;
-					payload.resultResponse = ctx.getString(R.string.login_complete);
+					payload.setResult(true);
+					payload.setResultResponse(ctx.getString(R.string.login_complete));
 					break;
 				default:
-					payload.result = false;
-					payload.resultResponse = ctx.getString(R.string.error_connection);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_connection));
 			}
 			
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
 			e.printStackTrace();
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (JSONException e) {
 			BugSenseHandler.sendException(e);
 			e.printStackTrace();
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_processing_response);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
 		} finally {
 
 		}

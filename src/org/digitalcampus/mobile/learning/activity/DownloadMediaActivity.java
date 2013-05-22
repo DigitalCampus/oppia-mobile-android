@@ -134,12 +134,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 	}
 
 	public void downloadComplete(Payload response) {
-		if (response.result){
-			missingMedia.remove((Media) response.data.get(0));
+		if (response.isResult()){
+			missingMedia.remove((Media) response.getData().get(0));
 			dmla.notifyDataSetChanged();
-			alertDialog = UIUtils.showAlert(this, R.string.info,response.resultResponse);
+			alertDialog = UIUtils.showAlert(this, R.string.info,response.getResultResponse());
 		} else {
-			alertDialog = UIUtils.showAlert(this, R.string.error,response.resultResponse);
+			alertDialog = UIUtils.showAlert(this, R.string.error,response.getResultResponse());
 		}
 	}
 }

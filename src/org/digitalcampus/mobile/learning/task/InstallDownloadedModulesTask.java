@@ -109,7 +109,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				long added = db.addOrUpdateModule(m);
 				
 				if (added != -1) {
-					payload.responseData.add(m);
+					payload.addResponseData(m);
 					File src = new File(tempdir + "/" + moddirs[0]);
 					File dest = new File(MobileLearning.MODULES_PATH);
 					mxr.setTempFilePath(tempdir + "/" + moddirs[0]);
@@ -124,15 +124,15 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 					boolean success = src.renameTo(new File(dest, src.getName()));
 
 					if (success) {
-						payload.result = true;
-						payload.resultResponse = ctx.getString(R.string.install_module_complete, title);
+						payload.setResult(true);
+						payload.setResultResponse(ctx.getString(R.string.install_module_complete, title));
 					} else {
-						payload.result = false;
-						payload.resultResponse = ctx.getString(R.string.error_installing_module, title);
+						payload.setResult(false);
+						payload.setResultResponse(ctx.getString(R.string.error_installing_module, title));
 					}
 				}  else {
-					payload.result = false;
-					payload.resultResponse = ctx.getString(R.string.error_latest_already_installed, title);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_latest_already_installed, title));
 				}
 				
 				// add schedule

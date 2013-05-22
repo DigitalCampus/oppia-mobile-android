@@ -54,7 +54,6 @@ import com.bugsense.trace.BugSenseHandler;
 public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 
 	public final static String TAG = SubmitTrackerTask.class.getSimpleName();
-	public final static int SUBMIT_LOG_TASK = 1001;
 
 	private Context ctx;
 	private SharedPreferences prefs;
@@ -70,7 +69,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 		Payload payload = db.getUnsentLog();
 		db.close();
 		
-		for (Object o : payload.data) {
+		for (Object o : payload.getData()) {
 			TrackerLog l = (TrackerLog) o;
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 			try {
@@ -108,7 +107,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 						DbHelper dbh = new DbHelper(ctx);
 						dbh.markLogSubmitted(l.getId());
 						dbh.close();
-						payload.result = true;
+						payload.setResult(true);
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
 						Editor editor = prefs.edit();
@@ -120,21 +119,25 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 						DbHelper dbh1 = new DbHelper(ctx);
 						dbh1.markLogSubmitted(l.getId());
 						dbh1.close();
-						payload.result = true;
+						payload.setResult(true);
 						break;
 					default:
-						payload.result = false;
+						payload.setResult(false);
 				}
 
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
+				payload.setResult(false);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
+				payload.setResult(false);
 			} catch (IOException e) {
 				e.printStackTrace();
+				payload.setResult(false);
 			} catch (JSONException e) {
 				BugSenseHandler.sendException(e);
 				e.printStackTrace();
+				payload.setResult(false);
 			}
 		}
 		

@@ -108,7 +108,7 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 		pDialog.show();
 
 		GetModuleListTask task = new GetModuleListTask(this);
-		Payload p = new Payload(0,null);
+		Payload p = new Payload();
 		task.setGetModuleListListener(this);
 		task.execute(p);
 	}
@@ -165,9 +165,9 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 		// close dialog and process results
 		pDialog.dismiss();
 	
-		if(response.result){
+		if(response.isResult()){
 			try {
-				json = new JSONObject(response.resultResponse);
+				json = new JSONObject(response.getResultResponse());
 				refreshModuleList();
 			} catch (JSONException e) {
 				BugSenseHandler.sendException(e);

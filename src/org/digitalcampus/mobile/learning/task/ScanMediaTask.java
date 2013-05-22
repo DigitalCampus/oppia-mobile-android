@@ -35,7 +35,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
-		for (Object obj: payload.data){
+		for (Object obj: payload.getData()){
 			Module module = (Module) obj;
 			ModuleXMLReader mxr = new ModuleXMLReader(module.getModuleXMLLocation());
 			ArrayList<Media> media = mxr.getMedia();
@@ -44,7 +44,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 				String filename = MobileLearning.MEDIA_PATH + m.getFilename();
 				File mediaFile = new File(filename);
 				if(!mediaFile.exists()){
-					payload.responseData.add(m);
+					payload.addResponseData(m);
 				}
 			}
 		}

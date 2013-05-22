@@ -32,7 +32,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -82,7 +81,7 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
     	u.setPassword(password);
     	users.add(u);
     	
-    	Payload p = new Payload(0,users);
+    	Payload p = new Payload(users);
     	LoginTask lt = new LoginTask(this);
     	lt.setLoginListener(this);
     	lt.execute(p);
@@ -101,10 +100,8 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 		} catch (IllegalArgumentException iae){
 			//
 		}
-		
-		Log.d(TAG,"Login activity reports: " + response.resultResponse);
-		if(response.result){
-			User u = (User) response.data.get(0);
+		if(response.isResult()){
+			User u = (User) response.getData().get(0);
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString("prefUsername", usernameField.getText().toString());
@@ -117,7 +114,7 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 			// return to main activity
 			finish();
 		} else {
-			UIUtils.showAlert(this, R.string.title_login, response.resultResponse);
+			UIUtils.showAlert(this, R.string.title_login, response.getResultResponse());
 		}
 	}
 	

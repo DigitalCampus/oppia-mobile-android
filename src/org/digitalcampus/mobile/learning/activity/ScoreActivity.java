@@ -59,7 +59,7 @@ public class ScoreActivity extends AppActivity implements GetPointsListener{
 		pDialog.show();
 		
 		GetPointsTask task = new GetPointsTask(this);
-		Payload p = new Payload(0,null);
+		Payload p = new Payload();
 		task.setGetPointsListener(this);
 		task.execute(p);
 	}
@@ -92,9 +92,9 @@ public class ScoreActivity extends AppActivity implements GetPointsListener{
 	
 	public void pointsComplete(Payload response) {
 		pDialog.dismiss();
-		if(response.result){
+		if(response.isResult()){
 			try {
-				json = new JSONObject(response.resultResponse);
+				json = new JSONObject(response.getResultResponse());
 				refreshPointsList();
 			} catch (JSONException e) {
 				BugSenseHandler.sendException(e);

@@ -62,7 +62,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Pay
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
-		Module dm = (Module) payload.data.get(0);
+		Module dm = (Module) payload.getData().get(0);
 		DownloadProgress dp = new DownloadProgress();
 		try { 
 
@@ -125,22 +125,22 @@ public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Pay
 			publishProgress(dp);
 			dp.setProgress(ctx.getString(R.string.download_complete));
 			publishProgress(dp);
-			payload.result = true;
+			payload.setResult(true);
 		} catch (ClientProtocolException e1) { 
 			e1.printStackTrace(); 
 			BugSenseHandler.sendException(e1);
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (SocketTimeoutException ste){
 			ste.printStackTrace();
 			BugSenseHandler.sendException(ste);
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e1) { 
 			e1.printStackTrace();
 			BugSenseHandler.sendException(e1);
-			payload.result = false;
-			payload.resultResponse = ctx.getString(R.string.error_connection);
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}
 		
 		return payload;

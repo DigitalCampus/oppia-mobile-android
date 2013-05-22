@@ -113,7 +113,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		UpgradeManagerTask umt = new UpgradeManagerTask(this);
 		umt.setUpgradeListener(this);
 		ArrayList<Object> data = new ArrayList<Object>();
- 		Payload p = new Payload(0,data);
+ 		Payload p = new Payload(data);
 		umt.execute(p);
 	}
 
@@ -132,7 +132,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		String[] children = dir.list();
 		if (children != null) {
 			ArrayList<Object> data = new ArrayList<Object>();
-     		Payload p = new Payload(0,data);
+     		Payload p = new Payload(data);
 			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(MobileLearningActivity.this);
 			imTask.setInstallerListener(this);
 			imTask.execute(p);
@@ -245,7 +245,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			objs.add(m);
 		}
 		ScanMediaTask task = new ScanMediaTask();
-		Payload p = new Payload(0, modules);
+		Payload p = new Payload(modules);
 		task.setScanMediaListener(this);
 		task.execute(p);
 	}
@@ -378,8 +378,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	public void installComplete(Payload p) {
-		Log.d(TAG,"Install complete");
-		if(p.responseData.size()>0){
+		if(p.getResponseData().size()>0){
 			Editor e = prefs.edit();
 			e.putLong("prefLastMediaScan", 0);
 			e.commit();
@@ -502,11 +501,11 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		TextView tv = (TextView) this.findViewById(id.home_message);
 		Button btn = (Button) this.findViewById(R.id.message_action_button);
 		
-		if (response.responseData.size() > 0) {
+		if (response.getResponseData().size() > 0) {
 			ll.setVisibility(View.VISIBLE);
 			tv.setText(this.getString(R.string.info_scan_media_missing));
 			btn.setText(this.getString(R.string.scan_media_download_button));
-			btn.setTag(response.responseData);
+			btn.setTag(response.getResponseData());
 			btn.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View view) {
@@ -539,7 +538,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	public void upgradeComplete(Payload p) {
-		if(p.result){
+		if(p.isResult()){
 			displayModules();
 		}
 	}
