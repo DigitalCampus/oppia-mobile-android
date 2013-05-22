@@ -229,7 +229,6 @@ public class Module implements Serializable {
 				}
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

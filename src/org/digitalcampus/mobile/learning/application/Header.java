@@ -25,6 +25,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class Header extends RelativeLayout {
 
@@ -42,6 +43,14 @@ public class Header extends RelativeLayout {
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    inflater.inflate(R.layout.header, this);
 	    UIUtils.showUserData(act);
+	}
+	
+	public void initHeader(Activity act,String title) {
+		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    inflater.inflate(R.layout.header, this);
+	    UIUtils.showUserData(act);
+	    TextView tv = (TextView) act.findViewById(R.id.page_title);
+	    tv.setText(title);
 	}
 	
 	public void updateHeader(Activity act){

@@ -18,10 +18,10 @@
 package org.digitalcampus.mobile.learning.listener;
 
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
+import org.digitalcampus.mobile.learning.task.Payload;
 
 public interface DownloadMediaListener {
 	
-	void downloadStarting();
     void downloadProgressUpdate(DownloadProgress msg);
-    void downloadComplete();
+    void downloadComplete(Payload response);
 }

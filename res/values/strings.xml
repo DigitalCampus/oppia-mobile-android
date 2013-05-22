@@ -13,7 +13,7 @@
     <string name="menu_stop_read_aloud">Stop reading</string>
     
     <string name="service_tracker">OppiaMobile Tracker Service</string>
-    <string name="title_about">About</string>
+    <string name="title_about">About/Licenses</string>
     <string name="title_help">Help</string>
      
     <string name="title_activity_module_index">Module Index</string>
@@ -90,6 +90,8 @@
 	<string name="cancel">Cancel</string>
 	<string name="logout">Logout</string>
 	<string name="feedback">Feedback</string>
+	<string name="download">Download</string>
+	<string name="downloaded">Downloaded</string>
 	
 	<string name="alt_activity_icon">Activity icon</string>
 	
@@ -119,6 +121,7 @@
 	
 	<string name="scan_media_download_button">Download</string>
 	<string name="scan_media_download_via_pc_button">Download via PC</string>
+	<string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>
 	
 	<string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
 	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
@@ -132,6 +135,7 @@
 	<string name="error_download_failure">Download failed</string>
 	<string name="error_update_failure">Update failed</string>
 	<string name="error_install_failure">Install failed</string>
+	<string name="error_media_download">Error trying to download media, please try again later</string>
 	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
 	
 	<string name="loading_module_list">Getting list of modules</string>

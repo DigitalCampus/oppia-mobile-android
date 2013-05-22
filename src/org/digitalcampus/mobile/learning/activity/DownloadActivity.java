@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.adapter.DownloadListAdapter;
+import org.digitalcampus.mobile.learning.adapter.DownloadModuleListAdapter;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.listener.GetModuleListListener;
 import org.digitalcampus.mobile.learning.model.Lang;
@@ -46,7 +46,7 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 
 	private ProgressDialog pDialog;
 	private JSONObject json;
-	private DownloadListAdapter dla;
+	private DownloadModuleListAdapter dla;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -147,7 +147,7 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 				modules.add(dm);
 			}
 			
-			dla = new DownloadListAdapter(this, modules);
+			dla = new DownloadModuleListAdapter(this, modules);
 			ListView listView = (ListView) findViewById(R.id.module_list);
 			listView.setAdapter(dla);
 

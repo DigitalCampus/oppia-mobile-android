@@ -44,6 +44,15 @@ public class AppActivity extends Activity {
 		}
 	}
 	
+	public void drawHeader(String title) {
+		try {
+			header = (Header) findViewById(R.id.header);
+			header.initHeader(this,title);
+		} catch (NullPointerException npe) {
+			// do nothing
+		}
+	}
+	
 	public Header getHeader(){
 		return this.header;
 	}

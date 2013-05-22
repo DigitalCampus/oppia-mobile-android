@@ -234,7 +234,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	// returns id of the row
 	// TODO tidy this up now have is installed and toUpdate options
 	public long addOrUpdateModule(Module module) {
-	//public long addOrUpdateModule(String versionid, String title, String location, String shortname) {
 		// find if this is a new version or not
 		String selection = MODULE_C_LOCATION + "= ?";
 		String[] selArgs = new String[] { module.getLocation() };

@@ -60,15 +60,15 @@ public class UIUtils {
 		}
 	}
 
-	public static void showAlert(Context ctx, int title, int msg) {
-		UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg));
+	public static AlertDialog showAlert(Context ctx, int title, int msg) {
+		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg));
 	}
 
-	public static void showAlert(Context ctx, int R, String msg) {
-		UIUtils.showAlert(ctx, ctx.getString(R), msg);
+	public static AlertDialog showAlert(Context ctx, int R, String msg) {
+		return UIUtils.showAlert(ctx, ctx.getString(R), msg);
 	}
 
-	public static void showAlert(Context ctx, String title, String msg) {
+	public static AlertDialog showAlert(Context ctx, String title, String msg) {
 		AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
 		alertDialog.setTitle(title);
 		alertDialog.setMessage(msg);
@@ -78,17 +78,18 @@ public class UIUtils {
 			}
 		});
 		alertDialog.show();
+		return alertDialog;
 	}
 
-	public static void showAlert(Context ctx, int title, int msg, Callable<Boolean> funct) {
-		UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg), funct);
+	public static AlertDialog showAlert(Context ctx, int title, int msg, Callable<Boolean> funct) {
+		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg), funct);
 	}
 
-	public static void showAlert(Context ctx, int R, String msg, Callable<Boolean> funct) {
-		UIUtils.showAlert(ctx, ctx.getString(R), msg, funct);
+	public static AlertDialog showAlert(Context ctx, int R, String msg, Callable<Boolean> funct) {
+		return UIUtils.showAlert(ctx, ctx.getString(R), msg, funct);
 	}
 
-	public static void showAlert(Context ctx, String title, String msg, final Callable<Boolean> funct) {
+	public static AlertDialog showAlert(Context ctx, String title, String msg, final Callable<Boolean> funct) {
 		AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
 		alertDialog.setTitle(title);
 		alertDialog.setMessage(msg);
@@ -109,6 +110,9 @@ public class UIUtils {
 			}
 		});
 		alertDialog.show();
+		return alertDialog;
 	}
+	
+	
 
 }

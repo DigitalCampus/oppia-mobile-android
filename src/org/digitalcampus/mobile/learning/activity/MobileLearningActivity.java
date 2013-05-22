@@ -497,11 +497,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	public void scanComplete(Payload response) {
-		long now = System.currentTimeMillis()/1000;
 		Editor e = prefs.edit();
-		e.putLong("prefLastMediaScan", now);
-		e.commit();
-		
 		LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
 		TextView tv = (TextView) this.findViewById(id.home_message);
 		Button btn = (Button) this.findViewById(R.id.message_action_button);
@@ -523,13 +519,17 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 					startActivity(i);
 				}
 			});
-
+			e.putLong("prefLastMediaScan", 0);
+			e.commit();
 		} else {
 			ll.setVisibility(View.GONE);
 			tv.setText("");
 			btn.setText("");
 			btn.setOnClickListener(null);
 			btn.setTag(null);
+			long now = System.currentTimeMillis()/1000;
+			e.putLong("prefLastMediaScan", now);
+			e.commit();
 		}
 	}
 

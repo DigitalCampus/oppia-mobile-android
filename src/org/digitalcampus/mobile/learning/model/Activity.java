@@ -137,7 +137,6 @@ public class Activity implements Serializable{
 			try {
 				obj.put(l.getLang(), l.getContent());
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			array.put(obj);
@@ -172,7 +171,6 @@ public class Activity implements Serializable{
 				}
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

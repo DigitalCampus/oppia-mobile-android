@@ -119,15 +119,26 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				// are using the updated module versions
 				if(!resultMD5.contains(m.getDigest())){
 					this.deleteFile(file);
+					payload.result = false;
+					payload.resultResponse = ctx.getString(R.string.error_media_download);
+				} else {
+					payload.result = true;
+					payload.resultResponse = ctx.getString(R.string.success_media_download,m.getFilename());
 				}
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 
+				payload.result = false;
+				payload.resultResponse = ctx.getString(R.string.error_media_download);
 			} catch (IOException e1) { 
 				e1.printStackTrace();
 				this.deleteFile(file);
+				payload.result = false;
+				payload.resultResponse = ctx.getString(R.string.error_media_download);
 			} catch (NoSuchAlgorithmException e) {
 				BugSenseHandler.sendException(e);
 				e.printStackTrace();
+				payload.result = false;
+				payload.resultResponse = ctx.getString(R.string.error_media_download);
 			}
 		}
 		return payload;
@@ -143,10 +154,10 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 	}
 	
 	@Override
-	protected void onPostExecute(Payload results) {
+	protected void onPostExecute(Payload response) {
 		synchronized (this) {
             if (mStateListener != null) {
-               mStateListener.downloadComplete();
+               mStateListener.downloadComplete(response);
             }
         }
 	}

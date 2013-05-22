@@ -75,6 +75,7 @@ public class ModuleScheduleXMLReader {
 		long version = Long.parseLong(attrs.getNamedItem("version").getTextContent());
 		return version;
 	}
+	
 	public ArrayList<ActivitySchedule> getSchedule(){
 		ArrayList<ActivitySchedule> schedule = new ArrayList<ActivitySchedule>();
 		if (this.document == null){

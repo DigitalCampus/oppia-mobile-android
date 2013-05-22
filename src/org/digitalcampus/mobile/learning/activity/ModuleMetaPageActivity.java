@@ -77,7 +77,6 @@ public class ModuleMetaPageActivity extends AppActivity {
 			content += "</html>";
 			wv.loadDataWithBaseURL("file://" + module.getLocation() + "/", content, "text/html", "utf-8", null);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			wv.loadUrl("file://" + url);
 		}

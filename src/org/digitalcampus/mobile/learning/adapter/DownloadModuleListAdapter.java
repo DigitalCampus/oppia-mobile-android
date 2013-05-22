@@ -46,17 +46,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DownloadListAdapter extends ArrayAdapter<Module> implements InstallModuleListener, UpdateScheduleListener{
+public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements InstallModuleListener, UpdateScheduleListener{
 
-	public static final String TAG = DownloadListAdapter.class.getSimpleName();
+	public static final String TAG = DownloadModuleListAdapter.class.getSimpleName();
 
 	private final Context ctx;
 	private final ArrayList<Module> moduleList;
 	private ProgressDialog myProgress;
 	private SharedPreferences prefs;
 
-	public DownloadListAdapter(Activity context, ArrayList<Module> moduleList) {
-		super(context, R.layout.module_list_row, moduleList);
+	public DownloadModuleListAdapter(Activity context, ArrayList<Module> moduleList) {
+		super(context, R.layout.module_download_row, moduleList);
 		this.ctx = context;
 		this.moduleList = moduleList;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -111,7 +111,7 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
              		myProgress.show();
                      
              		DownloadModuleTask dmt = new DownloadModuleTask(ctx);
-             		dmt.setInstallerListener(DownloadListAdapter.this);
+             		dmt.setInstallerListener(DownloadModuleListAdapter.this);
              		dmt.execute(p);
              	}
              });
@@ -136,7 +136,7 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
              		myProgress.show();
                      
              		ScheduleUpdateTask sut = new ScheduleUpdateTask(ctx);
-             		sut.setUpdateListener(DownloadListAdapter.this);
+             		sut.setUpdateListener(DownloadModuleListAdapter.this);
              		sut.execute(p);
              	}
              });
@@ -150,7 +150,7 @@ public class DownloadListAdapter extends ArrayAdapter<Module> implements Install
 			myProgress.setMessage(ctx.getString(R.string.download_complete));
 			myProgress.setIndeterminate(true);
 			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(ctx);
-			imTask.setInstallerListener(DownloadListAdapter.this);
+			imTask.setInstallerListener(DownloadModuleListAdapter.this);
 			imTask.execute(p);
 		} else {
 			myProgress.dismiss();
