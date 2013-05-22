@@ -120,20 +120,22 @@ public class PageWidget extends WidgetFactory {
 					// check video file exists
 					boolean exists = FileUtils.mediaFileExists(mediaFileName);
 					if (exists) {
-						// launch intent to play video
-						Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-						Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
 						
-						// TODO check that the file really is video/mp4 and not another video type
-						
-						intent.setDataAndType(data, "video/mp4");
-						
-						mediaPlaying = true;
-						mediaStartTimeStamp = System.currentTimeMillis()/1000;
-	
-						ctx.startActivity(intent);
+						String mimeType = FileUtils.getMimeType(MobileLearning.MEDIA_PATH + mediaFileName);
+						if(FileUtils.supportedMediafileType(mimeType)){
+							// launch intent to play video
+							Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+							Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
+							intent.setDataAndType(data, "video/mp4");
+							mediaPlaying = true;
+							mediaStartTimeStamp = System.currentTimeMillis()/1000;
+							ctx.startActivity(intent);
+						} else {
+							Toast.makeText(ctx, ctx.getString(R.string.error_media_unsupported, mediaFileName), Toast.LENGTH_LONG).show();
+						}
 					} else {
 						Toast.makeText(ctx, ctx.getString(R.string.error_media_not_found,mediaFileName), Toast.LENGTH_LONG).show();
+						
 					}
 					return true;
 				} else {

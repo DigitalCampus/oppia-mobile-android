@@ -32,6 +32,7 @@ import java.util.zip.ZipInputStream;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -49,27 +50,21 @@ public class FileUtils {
 		try {
 			// first make sure that all the arguments are valid and not null
 			if (srcDirectory == null) {
-				Log.v(TAG,"1");
 				return false;
 			}
 			if (srcFile == null) {
-				Log.v(TAG,"2");
 				return false;
 			}
 			if (destDirectory == null) {
-				Log.v(TAG,"3");
 				return false;
 			}
 			if (srcDirectory.equals("")) {
-				Log.v(TAG,"4");
 				return false;
 			}
 			if (srcFile.equals("")) {
-				Log.v(TAG,"5");
 				return false;
 			}
 			if (destDirectory.equals("")) {
-				Log.v(TAG,"6");
 				return false;
 			}
 			// now make sure that these directories exist
@@ -78,15 +73,12 @@ public class FileUtils {
 			File destinationDirectory = new File(destDirectory);
 
 			if (!sourceDirectory.exists()) {
-				Log.v(TAG,"7");
 				return false;
 			}
 			if (!sourceFile.exists()) {
-				Log.v(TAG,sourceFile.getName());
 				return false;
 			}
 			if (!destinationDirectory.exists()) {
-				Log.v(TAG,"9");
 				return false;
 			}
 
@@ -215,5 +207,27 @@ public class FileUtils {
 		  }
 		  in.close();
 		  return stringBuilder.toString();
+	}
+	
+	public static String getMimeType(String url){
+	    String type = null;
+	    String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+	    if (extension != null) {
+	        MimeTypeMap mime = MimeTypeMap.getSingleton();
+	        type = mime.getMimeTypeFromExtension(extension);
+	    }
+	    return type;
+	}
+	
+	public static boolean supportedMediafileType(String mimeType){
+		if(mimeType == null){
+			return false;
+		} else if(mimeType.equals("video/m4v")){
+			return true;
+		} else if(mimeType.equals("video/mp4")){
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

@@ -131,6 +131,7 @@
 	<string name="error_login">Invalid username/password\nPlease try again</string>
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
 	<string name="error_media_not_found">Media file: \'%1$s\' not found.</string>
+	<string name="error_media_unsupported">\'%1$s\' does not appear to be a supported media file type.</string>
 	<string name="error_download_failure">Download failed</string>
 	<string name="error_update_failure">Update failed</string>
 	<string name="error_install_failure">Install failed</string>
