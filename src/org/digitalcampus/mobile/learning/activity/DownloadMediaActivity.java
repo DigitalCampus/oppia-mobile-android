@@ -129,8 +129,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 	}
 
 	public void downloadProgressUpdate(DownloadProgress msg) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void downloadComplete(Payload response) {

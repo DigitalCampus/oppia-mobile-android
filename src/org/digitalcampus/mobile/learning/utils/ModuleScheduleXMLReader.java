@@ -26,6 +26,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.exception.InvalidXMLException;
 import org.digitalcampus.mobile.learning.model.ActivitySchedule;
 import org.joda.time.DateTime;
 import org.w3c.dom.Document;
@@ -34,14 +35,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.bugsense.trace.BugSenseHandler;
-
 public class ModuleScheduleXMLReader {
 
 	public static final String TAG = ModuleScheduleXMLReader.class.getSimpleName();
 	private Document document;
 	
-	public ModuleScheduleXMLReader(String filename) {
+	public ModuleScheduleXMLReader(String filename) throws InvalidXMLException {
 		// TODO check that it's a valid module xml file else throw error
 		File moduleXML = new File(filename);
 		if (moduleXML.exists()) {
@@ -52,16 +51,12 @@ public class ModuleScheduleXMLReader {
 			try {
 				builder = factory.newDocumentBuilder();
 				document = builder.parse(moduleXML);
-
 			} catch (ParserConfigurationException e) {
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
+				throw new InvalidXMLException(e);
 			} catch (SAXException e) {
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
+				throw new InvalidXMLException(e);
 			} catch (IOException e) {
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
+				throw new InvalidXMLException(e);
 			}
 		}
 	}

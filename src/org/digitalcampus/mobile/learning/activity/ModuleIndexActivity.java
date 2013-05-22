@@ -19,9 +19,11 @@ package org.digitalcampus.mobile.learning.activity;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
+import org.digitalcampus.mobile.learning.exception.InvalidXMLException;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
@@ -29,6 +31,7 @@ import org.digitalcampus.mobile.learning.model.ModuleMetaPage;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.utils.ImageUtils;
 import org.digitalcampus.mobile.learning.utils.ModuleXMLReader;
+import org.digitalcampus.mobile.learning.utils.UIUtils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -68,29 +71,39 @@ public class ModuleIndexActivity extends AppActivity {
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	module = (Module) bundle.getSerializable(Module.TAG);
-        	mxr = new ModuleXMLReader(module.getModuleXMLLocation());
-        	module.setMetaPages(mxr.getMetaPages());
-        	
-        	String digest = (String) bundle.getSerializable("JumpTo");
-        	if(digest != null){
-        		// code to directly jump to a specific activity
-        		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
-        		for(Section s: sections){
-        			for(int i=0 ; i<s.getActivities().size(); i++){
-        				Activity a = s.getActivities().get(i);
-        				if(a.getDigest().equals(digest)){
-        					Intent intent = new Intent(this, ModuleActivity.class);
-        					Bundle tb = new Bundle();
-        					tb.putSerializable(Section.TAG, (Section) s);
-        					tb.putSerializable(Module.TAG, (Module) module);
-        					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) i);
-        					intent.putExtras(tb);
-        	         		startActivity(intent);
-        				}
-        			}
-        		}
-        		
-        	}
+        	try {
+				mxr = new ModuleXMLReader(module.getModuleXMLLocation());
+			
+	        	module.setMetaPages(mxr.getMetaPages());
+	        	
+	        	String digest = (String) bundle.getSerializable("JumpTo");
+	        	if(digest != null){
+	        		// code to directly jump to a specific activity
+	        		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
+	        		for(Section s: sections){
+	        			for(int i=0 ; i<s.getActivities().size(); i++){
+	        				Activity a = s.getActivities().get(i);
+	        				if(a.getDigest().equals(digest)){
+	        					Intent intent = new Intent(this, ModuleActivity.class);
+	        					Bundle tb = new Bundle();
+	        					tb.putSerializable(Section.TAG, (Section) s);
+	        					tb.putSerializable(Module.TAG, (Module) module);
+	        					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) i);
+	        					intent.putExtras(tb);
+	        	         		startActivity(intent);
+	        				}
+	        			}
+	        		}
+	        		
+	        	}
+        	} catch (InvalidXMLException e) {
+        		UIUtils.showAlert(this, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
+    				public Boolean call() throws Exception {
+    					ModuleIndexActivity.this.finish();
+    					return true;
+    				}
+    			});
+			}
         }
     	
     }

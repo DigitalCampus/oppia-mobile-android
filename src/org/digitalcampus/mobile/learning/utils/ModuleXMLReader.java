@@ -28,6 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.exception.InvalidXMLException;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Media;
@@ -41,15 +42,12 @@ import org.xml.sax.SAXException;
 
 import android.content.Context;
 
-import com.bugsense.trace.BugSenseHandler;
-
 public class ModuleXMLReader {
 
 	public static final String TAG = ModuleXMLReader.class.getSimpleName();
 	private Document document;
-	private String tempFilePath;
 
-	public ModuleXMLReader(String filename) {
+	public ModuleXMLReader(String filename) throws InvalidXMLException {
 		// TODO check that it's a valid module xml file else throw error
 		File moduleXML = new File(filename);
 		if (moduleXML.exists()) {
@@ -62,24 +60,13 @@ public class ModuleXMLReader {
 				document = builder.parse(moduleXML);
 
 			} catch (ParserConfigurationException e) {
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
+				throw new InvalidXMLException(e);
 			} catch (SAXException e) {
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
+				throw new InvalidXMLException(e);
 			} catch (IOException e) {
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
+				throw new InvalidXMLException(e);
 			}
 		}
-	}
-	
-	public String getTempFilePath() {
-		return tempFilePath;
-	}
-
-	public void setTempFilePath(String tempFilePath) {
-		this.tempFilePath = tempFilePath;
 	}
 	
 	public ArrayList<Lang> getTitles(){

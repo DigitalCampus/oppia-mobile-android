@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.exception.InvalidXMLException;
 import org.digitalcampus.mobile.learning.listener.ScanMediaListener;
 import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.model.Module;
@@ -37,16 +38,24 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 		Payload payload = params[0];
 		for (Object obj: payload.getData()){
 			Module module = (Module) obj;
-			ModuleXMLReader mxr = new ModuleXMLReader(module.getModuleXMLLocation());
-			ArrayList<Media> media = mxr.getMedia();
-			for(Media m: media){
-				publishProgress(m.getFilename());
-				String filename = MobileLearning.MEDIA_PATH + m.getFilename();
-				File mediaFile = new File(filename);
-				if(!mediaFile.exists()){
-					payload.addResponseData(m);
+			ModuleXMLReader mxr;
+			try {
+				mxr = new ModuleXMLReader(module.getModuleXMLLocation());
+				ArrayList<Media> media = mxr.getMedia();
+				for(Media m: media){
+					publishProgress(m.getFilename());
+					String filename = MobileLearning.MEDIA_PATH + m.getFilename();
+					File mediaFile = new File(filename);
+					if(!mediaFile.exists()){
+						payload.addResponseData(m);
+						payload.setResult(true);
+					}
 				}
+			} catch (InvalidXMLException e) {
+				e.printStackTrace();
+				payload.setResult(false);
 			}
+			
 		}
 		return payload;
 	}

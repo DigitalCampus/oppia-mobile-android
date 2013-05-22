@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.exception.InvalidXMLException;
 import org.digitalcampus.mobile.learning.listener.UpgradeListener;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
@@ -69,10 +70,19 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					FileUtils.cleanUp(dir, MobileLearning.DOWNLOAD_PATH + children[i]);
 					break;
 				}
+				
 				// check a module.xml file exists and is a readable XML file
-				ModuleXMLReader mxr = new ModuleXMLReader(moduleXMLPath);
-				ModuleScheduleXMLReader msxr = new ModuleScheduleXMLReader(moduleScheduleXMLPath);
-				ModuleTrackerXMLReader mtxr = new ModuleTrackerXMLReader(moduleTrackerXMLPath);
+				ModuleXMLReader mxr;
+				ModuleScheduleXMLReader msxr;
+				ModuleTrackerXMLReader mtxr;
+				try {
+					mxr = new ModuleXMLReader(moduleXMLPath);
+					msxr = new ModuleScheduleXMLReader(moduleScheduleXMLPath);
+					mtxr = new ModuleTrackerXMLReader(moduleTrackerXMLPath);
+				} catch (InvalidXMLException e) {
+					e.printStackTrace();
+					break;
+				}
 				
 				//HashMap<String, String> hm = mxr.getMeta();
 				Module m = new Module();

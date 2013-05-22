@@ -23,6 +23,7 @@ import java.util.Locale;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.exception.InvalidXMLException;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.Module;
@@ -88,9 +89,18 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				}
 				
 				// check a module.xml file exists and is a readable XML file
-				ModuleXMLReader mxr = new ModuleXMLReader(moduleXMLPath);
-				ModuleScheduleXMLReader msxr = new ModuleScheduleXMLReader(moduleScheduleXMLPath);
-				ModuleTrackerXMLReader mtxr = new ModuleTrackerXMLReader(moduleTrackerXMLPath);
+				ModuleXMLReader mxr;
+				ModuleScheduleXMLReader msxr;
+				ModuleTrackerXMLReader mtxr;
+				try {
+					mxr = new ModuleXMLReader(moduleXMLPath);
+					msxr = new ModuleScheduleXMLReader(moduleScheduleXMLPath);
+					mtxr = new ModuleTrackerXMLReader(moduleTrackerXMLPath);
+				} catch (InvalidXMLException e) {
+					payload.setResult(false);
+					return payload;
+				}
+				
 				
 				//HashMap<String, String> hm = mxr.getMeta();
 				Module m = new Module();
@@ -112,7 +122,6 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 					payload.addResponseData(m);
 					File src = new File(tempdir + "/" + moddirs[0]);
 					File dest = new File(MobileLearning.MODULES_PATH);
-					mxr.setTempFilePath(tempdir + "/" + moddirs[0]);
 
 					db.insertActivities(mxr.getActivities(added));
 					db.insertTrackers(mtxr.getTrackers(),added);
