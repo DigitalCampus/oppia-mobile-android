@@ -95,6 +95,14 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		super.onPause();
 	}
 	
+	@Override
+	public void onResume(){
+		super.onResume();
+		if (dmla != null){
+			dmla.openDialogs();
+		}
+
+	}
 	private void downloadViaPC(){
 		String filename = "mobile-learning-media.html";
 		String strData = "<html>";

@@ -54,27 +54,28 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 		Payload payload = db.getUnsentLog();
 		db.close();
 		
-		
 		@SuppressWarnings("unchecked")
 		Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
+		
+		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.TRACKER_PATH;
+		// add url params
+		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
+		pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
+		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
+		pairs.add(new BasicNameValuePair("format", "json"));
+		String paramString = URLEncodedUtils.format(pairs, "utf-8");
+		if(!url.endsWith("?"))
+	        url += "?";
+		url += paramString;
+		
+		HttpPatch httpPatch = new HttpPatch(url);
+		
 		for (Collection<TrackerLog> trackerBatch : result) {
 			String dataToSend = createDataString(trackerBatch);
-			Log.d(TAG,dataToSend);
-			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+			
 			try {
-				String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.TRACKER_PATH;
-				// add url params
-				List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-				pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
-				pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
-				pairs.add(new BasicNameValuePair("format", "json"));
-				String paramString = URLEncodedUtils.format(pairs, "utf-8");
-				if(!url.endsWith("?"))
-			        url += "?";
-				url += paramString;
-				
-				HttpPatch httpPatch = new HttpPatch(url);
-				
+
 				StringEntity se = new StringEntity(dataToSend);
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPatch.setEntity(se);

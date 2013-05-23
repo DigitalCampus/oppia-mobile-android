@@ -107,4 +107,10 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 			downloadDialog.dismiss();
 		}
 	}
+	
+	public void openDialogs(){
+		if (downloadDialog != null){
+			downloadDialog.show();
+		}
+	}
 }
