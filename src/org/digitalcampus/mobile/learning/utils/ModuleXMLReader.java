@@ -181,7 +181,6 @@ public class ModuleXMLReader {
 		return media;
 	}
 	public String getModuleImage(){
-		// TODO must be better way to do this???
 		String image = null;
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
