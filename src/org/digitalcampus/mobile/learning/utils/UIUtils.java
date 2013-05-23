@@ -46,16 +46,18 @@ public class UIUtils {
 	private SharedPreferences prefs;
 	private Context ctx;
 	
+	/**
+	 * Displays the users points and badges scores in the app header
+	 * @param act
+	 */
 	public static void showUserData(final Activity act) {
-		// TextView username = (TextView) act.findViewById(R.id.username);
 		TextView points = (TextView) act.findViewById(R.id.userpoints);
 		TextView badges = (TextView) act.findViewById(R.id.userbadges);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
 		if (MobileLearning.isLoggedIn(act)) {
 			points.setVisibility(View.VISIBLE);
 			badges.setVisibility(View.VISIBLE);
-			// username.setText(prefs.getString("prefDisplayName", uname));
-			points.setText(String.valueOf(prefs.getInt("prefPoints", 100)));
+			points.setText(String.valueOf(prefs.getInt("prefPoints", 0)));
 			badges.setText(String.valueOf(prefs.getInt("prefBadges", 0)));
 
 			if (!(act instanceof ScoreActivity)) {
@@ -69,14 +71,32 @@ public class UIUtils {
 		}
 	}
 
+	/**
+	 * @param ctx
+	 * @param title
+	 * @param msg
+	 * @return
+	 */
 	public static AlertDialog showAlert(Context ctx, int title, int msg) {
 		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg));
 	}
 
+	/**
+	 * @param ctx
+	 * @param R
+	 * @param msg
+	 * @return
+	 */
 	public static AlertDialog showAlert(Context ctx, int R, String msg) {
 		return UIUtils.showAlert(ctx, ctx.getString(R), msg);
 	}
 
+	/**
+	 * @param ctx
+	 * @param title
+	 * @param msg
+	 * @return
+	 */
 	public static AlertDialog showAlert(Context ctx, String title, String msg) {
 		AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
 		alertDialog.setTitle(title);
@@ -90,14 +110,35 @@ public class UIUtils {
 		return alertDialog;
 	}
 
+	/**
+	 * @param ctx
+	 * @param title
+	 * @param msg
+	 * @param funct
+	 * @return
+	 */
 	public static AlertDialog showAlert(Context ctx, int title, int msg, Callable<Boolean> funct) {
 		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg), funct);
 	}
 
+	/**
+	 * @param ctx
+	 * @param R
+	 * @param msg
+	 * @param funct
+	 * @return
+	 */
 	public static AlertDialog showAlert(Context ctx, int R, String msg, Callable<Boolean> funct) {
 		return UIUtils.showAlert(ctx, ctx.getString(R), msg, funct);
 	}
 
+	/**
+	 * @param ctx
+	 * @param title
+	 * @param msg
+	 * @param funct
+	 * @return
+	 */
 	public static AlertDialog showAlert(Context ctx, String title, String msg, final Callable<Boolean> funct) {
 		AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
 		alertDialog.setTitle(title);
@@ -123,6 +164,13 @@ public class UIUtils {
 	}
 	
 	
+	/**
+	 * 
+	 * @param ctx
+	 * @param langs
+	 * @param prefs
+	 * @param funct
+	 */
 	public void createLanguageDialog(Context ctx, ArrayList<Lang> langs, SharedPreferences prefs, final Callable<Boolean> funct) {
 		this.langStringList = new ArrayList<String>();
 		this.langList = new ArrayList<Lang>();

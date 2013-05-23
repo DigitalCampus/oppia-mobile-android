@@ -1,20 +1,3 @@
-/* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
- * 
- * OppiaMobile is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * OppiaMobile is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.digitalcampus.mobile.learning.task;
 
 import java.io.BufferedReader;
@@ -22,13 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
@@ -51,14 +36,14 @@ import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
+public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payload> {
 
-	public final static String TAG = SubmitTrackerTask.class.getSimpleName();
+	public final static String TAG = SubmitTrackerMultipleTask.class.getSimpleName();
 
 	private Context ctx;
 	private SharedPreferences prefs;
 
-	public SubmitTrackerTask(Context ctx) {
+	public SubmitTrackerMultipleTask(Context ctx) {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
@@ -69,8 +54,12 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 		Payload payload = db.getUnsentLog();
 		db.close();
 		
-		for (Object o : payload.getData()) {
-			TrackerLog l = (TrackerLog) o;
+		
+		@SuppressWarnings("unchecked")
+		Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
+		for (Collection<TrackerLog> trackerBatch : result) {
+			String dataToSend = createDataString(trackerBatch);
+			Log.d(TAG,dataToSend);
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 			try {
 				String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.TRACKER_PATH;
@@ -84,14 +73,14 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 			        url += "?";
 				url += paramString;
 				
-				HttpPost httpPost = new HttpPost(url);
+				HttpPatch httpPatch = new HttpPatch(url);
 				
-				StringEntity se = new StringEntity(l.getContent());
+				StringEntity se = new StringEntity(dataToSend);
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-                httpPost.setEntity(se);
+                httpPatch.setEntity(se);
 				
                 // make request
-				HttpResponse response = client.execute(httpPost);				
+				HttpResponse response = client.execute(httpPatch);				
 				
 				InputStream content = response.getEntity().getContent();
 				BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
@@ -102,10 +91,14 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 					responseStr += s;
 				}
 				
+				Log.d(TAG,responseStr);
+				
 				switch (response.getStatusLine().getStatusCode()){
-					case 201: // submitted
+					case 200: // submitted
 						DbHelper dbh = new DbHelper(ctx);
-						dbh.markLogSubmitted(l.getId());
+						for(TrackerLog tl: trackerBatch){
+							dbh.markLogSubmitted(tl.getId());
+						}
 						dbh.close();
 						payload.setResult(true);
 						// update points
@@ -117,7 +110,9 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 						break;
 					case 404: // submitted but invalid digest - so record as submitted so doesn't keep trying
 						DbHelper dbh1 = new DbHelper(ctx);
-						dbh1.markLogSubmitted(l.getId());
+						for(TrackerLog tl: trackerBatch){
+							dbh1.markLogSubmitted(tl.getId());
+						};
 						dbh1.close();
 						payload.setResult(true);
 						break;
@@ -141,11 +136,11 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 			}
 		}
 		
-		return null;
+		return payload;
 	}
 
 	protected void onProgressUpdate(String... obj) {
-		Log.d(TAG, obj[0]);
+		// do nothing
 	}
 	
 	@Override
@@ -154,5 +149,42 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
 		app.omSubmitTrackerTask = null;
     }
+	
+	private static Collection<Collection<TrackerLog>> split(Collection<Object> bigCollection, int maxBatchSize) {
+		Collection<Collection<TrackerLog>> result = new ArrayList<Collection<TrackerLog>>();
+
+		ArrayList<TrackerLog> currentBatch = null;
+		for (Object obj : bigCollection) {
+			TrackerLog tl = (TrackerLog) obj;
+			if (currentBatch == null) {
+				currentBatch = new ArrayList<TrackerLog>();
+			} else if (currentBatch.size() >= maxBatchSize) {
+				result.add(currentBatch);
+				currentBatch = new ArrayList<TrackerLog>();
+			}
+
+			currentBatch.add(tl);
+		}
+
+		if (currentBatch != null) {
+			result.add(currentBatch);
+		}
+
+		return result;
+	}
+	
+	private String createDataString(Collection<TrackerLog> collection){
+		String s = "{\"objects\":[";
+		int counter = 0;
+		for(TrackerLog tl: collection){
+			counter++;
+			s += tl.getContent();
+			if(counter != collection.size()){
+				s += ",";
+			}
+		}
+		s += "]}";
+		return s;
+	}
 
 }

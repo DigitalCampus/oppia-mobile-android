@@ -19,7 +19,7 @@ package org.digitalcampus.mobile.learning.application;
 
 import java.io.File;
 
-import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
+import org.digitalcampus.mobile.learning.task.SubmitTrackerMultipleTask;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -62,12 +62,13 @@ public class MobileLearning extends Application {
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
+	public static final int MAX_TRACKER_SUBMIT = 10;
 	
 	// only used in case a module doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
 	
-	// for tracking if SubmitTrackerTask is already running
-	public SubmitTrackerTask omSubmitTrackerTask = null;
+	// for tracking if SubmitTrackerMultipleTask is already running
+	public SubmitTrackerMultipleTask omSubmitTrackerTask = null;
 	
 	public static boolean createDirs() {
 		String cardstatus = Environment.getExternalStorageState();

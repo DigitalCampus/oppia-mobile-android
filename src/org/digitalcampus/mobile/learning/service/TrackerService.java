@@ -25,7 +25,7 @@ import org.digitalcampus.mobile.learning.listener.GetModuleListListener;
 import org.digitalcampus.mobile.learning.task.GetModuleListTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.SubmitMQuizTask;
-import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
+import org.digitalcampus.mobile.learning.task.SubmitTrackerMultipleTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,7 +94,7 @@ public class TrackerService extends Service implements GetModuleListListener{
 			// send activity trackers
 			MobileLearning app = (MobileLearning) this.getApplication();
 			if(app.omSubmitTrackerTask == null){
-				app.omSubmitTrackerTask = new SubmitTrackerTask(this);
+				app.omSubmitTrackerTask = new SubmitTrackerMultipleTask(this);
 				app.omSubmitTrackerTask.execute();
 			}
 			

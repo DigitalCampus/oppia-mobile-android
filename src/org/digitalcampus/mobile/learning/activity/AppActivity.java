@@ -35,6 +35,7 @@ public class AppActivity extends Activity {
 	private UserMessage messages;
 	private ScheduleReminders reminders;
 	
+
 	public void drawHeader() {
 		try {
 			header = (Header) findViewById(R.id.header);
@@ -44,6 +45,10 @@ public class AppActivity extends Activity {
 		}
 	}
 	
+	
+	/**
+	 * @param title
+	 */
 	public void drawHeader(String title) {
 		try {
 			header = (Header) findViewById(R.id.header);
@@ -82,6 +87,9 @@ public class AppActivity extends Activity {
 		messages.stopMessages();
 	}
 	
+	/**
+	 * @param activities
+	 */
 	public void drawReminders(ArrayList<org.digitalcampus.mobile.learning.model.Activity> activities){
 		try {
 			reminders = (ScheduleReminders) findViewById(R.id.schedule_reminders);
