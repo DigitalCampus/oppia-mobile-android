@@ -60,6 +60,7 @@ public class ModuleIndexActivity extends AppActivity {
         this.drawHeader();
 	    
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
         
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
@@ -168,6 +169,5 @@ public class ModuleIndexActivity extends AppActivity {
 			}
 		});
 	}
-
     
 }

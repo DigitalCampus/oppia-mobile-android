@@ -430,6 +430,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		if(key.equalsIgnoreCase("prefShowScheduleReminders") || key.equalsIgnoreCase("prefNoScheduleReminders")){
 			displayModules();
 		}
+		super.onSharedPreferenceChanged(sharedPreferences, key);
 	}
 
 	public void downloadComplete(Payload p) {

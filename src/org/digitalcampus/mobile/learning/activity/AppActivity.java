@@ -26,8 +26,10 @@ import org.digitalcampus.mobile.learning.application.UserMessage;
 import org.digitalcampus.mobile.learning.model.MessageFeed;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
-public class AppActivity extends Activity {
+public class AppActivity extends Activity implements OnSharedPreferenceChangeListener {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
 	
@@ -97,6 +99,14 @@ public class AppActivity extends Activity {
 		} catch (NullPointerException npe) {
 			// do nothing
 		}
+	}
+
+
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if(key.equalsIgnoreCase("prefPoints") || key.equalsIgnoreCase("prefBadges")){
+			this.updateHeader();
+		}
+		
 	}
 
 }
