@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -39,12 +38,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Paint;
 import android.net.Uri;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -75,22 +73,13 @@ public class PageWidget extends WidgetFactory {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_page, null);
-
+		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		super.getLayout().addView(vv);
-	
-		// get the location data
+		vv.setLayoutParams(lp);
+		
 		wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
-		wv.setBackgroundColor(0x00000000);
-		// hack to get transparent background on webviews
-		if (Build.VERSION.SDK_INT >= 11){ // Android v3.0+
-			try {
-				Method method = View.class.getMethod("setLayerType", int.class, Paint.class);
-				method.invoke(wv, 1, new Paint()); // 1 = LAYER_TYPE_SOFTWARE (API11)
-			} catch (Exception e) {
-				
-			}
-		}
 
+		// get the location data
 		String url = module.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		try {
 			String content =  "<html><head>";

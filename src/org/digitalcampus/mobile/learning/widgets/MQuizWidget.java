@@ -81,7 +81,9 @@ public class MQuizWidget extends WidgetFactory {
 		this.module = module;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
+		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		super.getLayout().addView(vv);
+		vv.setLayoutParams(lp);
 
 		prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
 		nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
