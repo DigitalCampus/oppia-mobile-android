@@ -74,7 +74,6 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	public static final String TAG = MobileLearningActivity.class.getSimpleName();
 	private SharedPreferences prefs;
 	private Module tempMod;
-	private ArrayList<Lang> langs = new ArrayList<Lang>();
 	private ArrayList<Module> modules;
 
 	@Override
@@ -262,6 +261,10 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		case R.id.menu_settings:
 			Intent i = new Intent(this, PrefsActivity.class);
 			Bundle tb = new Bundle();
+			ArrayList<Lang> langs = new ArrayList<Lang>();
+			for(Module m: modules){
+				langs.addAll(m.getLangs());
+			}
 			tb.putSerializable("langs", langs);
 			i.putExtras(tb);
 			startActivity(i);

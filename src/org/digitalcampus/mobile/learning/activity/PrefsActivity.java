@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.model.Lang;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -44,11 +45,13 @@ public class PrefsActivity extends PreferenceActivity {
 	    Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	@SuppressWarnings("unchecked")
-			ArrayList<String> langs = (ArrayList<String>) bundle.getSerializable("langs");
-        	for(String l: langs){
-        		entryValues.add(l);
-        		Locale loc = new Locale(l);
-        		entries.add(loc.getDisplayLanguage(loc));
+			ArrayList<Lang> langs = (ArrayList<Lang>) bundle.getSerializable("langs");
+        	for(Lang l: langs){
+        		if(!entryValues.contains(l.getLang())){
+	        		entryValues.add(l.getLang());
+	        		Locale loc = new Locale(l.getLang());
+	        		entries.add(loc.getDisplayLanguage(loc));
+        		}
         	}
         	
         }
