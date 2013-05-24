@@ -31,6 +31,7 @@ import org.digitalcampus.mobile.learning.application.Tracker;
 import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
+import org.digitalcampus.mquiz.MQuiz;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -290,6 +291,18 @@ public class PageWidget extends WidgetFactory {
 	@Override
 	public boolean getReadAloud(){
 		return readAloud;
+	}
+
+	@Override
+	public MQuiz getMQuiz() {
+		//do nothing
+		return null;
+	}
+
+	@Override
+	public void setMQuiz(MQuiz mquiz) {
+		// do nothing
+		
 	}
 
 }

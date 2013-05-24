@@ -89,9 +89,12 @@ public class MQuizWidget extends WidgetFactory {
 		nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
 		
-		quizContent = activity.getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-		mQuiz = new MQuiz();
-		mQuiz.load(quizContent);
+		if(mQuiz == null){
+			quizContent = activity.getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+			mQuiz = new MQuiz();
+			mQuiz.load(quizContent);
+			Log.d(TAG,"created new mquiz object...");
+		}
 
 		this.showQuestion();
 	}
@@ -375,5 +378,15 @@ public class MQuizWidget extends WidgetFactory {
 	@Override
 	public boolean getReadAloud(){
 		return false;
+	}
+
+	@Override
+	public MQuiz getMQuiz() {
+		return this.mQuiz;
+	}
+
+	@Override
+	public void setMQuiz(MQuiz mquiz) {
+		this.mQuiz = mquiz;
 	}
 }

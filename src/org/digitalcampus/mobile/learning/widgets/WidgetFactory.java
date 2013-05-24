@@ -19,6 +19,7 @@ package org.digitalcampus.mobile.learning.widgets;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.model.Module;
+import org.digitalcampus.mquiz.MQuiz;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -68,5 +69,8 @@ public abstract class WidgetFactory extends Activity {
 	
 	public abstract void setReadAloud(boolean reading);
 	public abstract boolean getReadAloud();
+	
+	public abstract MQuiz getMQuiz();
+	public abstract void setMQuiz(MQuiz mquiz);
 	
 }

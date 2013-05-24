@@ -32,6 +32,7 @@ import org.digitalcampus.mobile.learning.utils.UIUtils;
 import org.digitalcampus.mobile.learning.widgets.MQuizWidget;
 import org.digitalcampus.mobile.learning.widgets.PageWidget;
 import org.digitalcampus.mobile.learning.widgets.WidgetFactory;
+import org.digitalcampus.mquiz.MQuiz;
 import org.json.JSONObject;
 
 import android.content.Intent;
@@ -123,6 +124,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 		savedInstanceState.putLong("mediaStartTimeStamp", currentActivity.getMediaStartTime());
 		savedInstanceState.putString("mediaFileName", currentActivity.getMediaFileName());
 		savedInstanceState.putInt("currentActivityNo", this.currentActivityNo);
+		savedInstanceState.putSerializable("mquiz", currentActivity.getMQuiz());
 	}
 	
 	@Override
@@ -133,6 +135,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
 		currentActivity.setMediaFileName(savedInstanceState.getString("mediaFileName"));
 		currentActivity.setStartTime(savedInstanceState.getLong("activityStartTimeStamp"));
 		this.currentActivityNo = savedInstanceState.getInt("currentActivityNo");
+		currentActivity.setMQuiz((MQuiz) savedInstanceState.getSerializable("mquiz"));
 	}
 	
     @Override
