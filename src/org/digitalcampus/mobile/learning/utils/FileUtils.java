@@ -23,14 +23,18 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 
+import android.app.Activity;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -229,5 +233,45 @@ public class FileUtils {
 		} else {
 			return false;
 		}
+	}
+	
+	public static String getLocalizedFilePath(Activity act, String currentLang, String fileName){
+		String filePath = "www/"+currentLang+"/"+fileName;
+		try {
+	        InputStream stream = act.getAssets().open(filePath);
+	        stream.close();
+	        Log.d(TAG, "assetExists exists: " + filePath);
+	        return "file:///android_asset/"+filePath;
+	    } catch (FileNotFoundException e) {
+	        Log.d(TAG, "assetExists failed: "+e.toString());
+	    } catch (IOException e) {
+	        Log.w(TAG, "assetExists failed: "+e.toString());
+	    }
+		
+		String localeFilePath = "www/"+Locale.getDefault().getLanguage()+"/"+fileName;
+		try {
+	        InputStream stream = act.getAssets().open(localeFilePath);
+	        stream.close();
+	        Log.d(TAG, "assetExists exists: " + localeFilePath);
+	        return "file:///android_asset/"+localeFilePath;
+	    } catch (FileNotFoundException e) {
+	        Log.d(TAG, "assetExists failed: "+e.toString());
+	    } catch (IOException e) {
+	        Log.w(TAG, "assetExists failed: "+e.toString());
+	    }
+		
+		String defaultFilePath = "www/"+MobileLearning.DEFAULT_LANG+"/"+fileName;
+		try {
+	        InputStream stream = act.getAssets().open(defaultFilePath);
+	        stream.close();
+	        Log.d(TAG, "assetExists exists: " + defaultFilePath);
+	        return "file:///android_asset/"+defaultFilePath;
+	    } catch (FileNotFoundException e) {
+	        Log.d(TAG, "assetExists failed: "+e.toString());
+	    } catch (IOException e) {
+	        Log.w(TAG, "assetExists failed: "+e.toString());
+	    }
+		return "";
+		
 	}
 }

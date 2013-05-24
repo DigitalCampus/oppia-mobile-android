@@ -17,10 +17,15 @@
 
 package org.digitalcampus.mobile.learning.activity;
 
-import org.digitalcampus.mobile.learning.R;
+import java.util.Locale;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.utils.FileUtils;
+
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -36,11 +41,11 @@ public class AboutActivity extends AppActivity {
 		setContentView(R.layout.activity_about);
 		
 		this.drawHeader(getString(R.string.title_about));
-		
+			
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String url = FileUtils.getLocalizedFilePath(this,prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()) , "about.html");
 		WebView wv = (WebView) findViewById(R.id.about_webview);
-		String url = "file:///android_asset/www/en/about.html";
 		wv.loadUrl(url);
-		
 		
 		TextView versionNo = (TextView)  findViewById(R.id.about_versionno);
 		try {

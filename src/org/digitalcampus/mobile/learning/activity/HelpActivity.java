@@ -17,9 +17,14 @@
 
 package org.digitalcampus.mobile.learning.activity;
 
-import org.digitalcampus.mobile.learning.R;
+import java.util.Locale;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.utils.FileUtils;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.webkit.WebView;
 
 public class HelpActivity extends AppActivity {
@@ -32,8 +37,9 @@ public class HelpActivity extends AppActivity {
 		setContentView(R.layout.activity_help);
 		this.drawHeader();
 		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String url = FileUtils.getLocalizedFilePath(this,prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()) , "help.html");
 		WebView wv = (WebView) findViewById(R.id.about_webview);
-		String url = "file:///android_asset/www/en/help.html";
 		wv.loadUrl(url);
 		
 	}
