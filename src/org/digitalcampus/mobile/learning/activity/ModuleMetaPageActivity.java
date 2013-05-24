@@ -18,6 +18,7 @@
 package org.digitalcampus.mobile.learning.activity;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
@@ -59,13 +60,13 @@ public class ModuleMetaPageActivity extends AppActivity {
 		titleTV.setText(title);
 		
 		TextView versionTV = (TextView) findViewById(R.id.module_versionid);
-		versionTV.setText(String.valueOf(module.getVersionId()));
+		BigDecimal big = new BigDecimal(module.getVersionId());
+		versionTV.setText(big.toString());
 		
 		TextView shortnameTV = (TextView) findViewById(R.id.module_shortname);
 		shortnameTV.setText(module.getShortname());
 		
 		WebView wv = (WebView) this.findViewById(R.id.metapage_webview);
-		wv.setBackgroundColor(0x00000000);
 		String url = module.getLocation() + "/" +mmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getLocation();
 		
 		try {
