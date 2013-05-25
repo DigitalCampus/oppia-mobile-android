@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="prefs_language">prefLanguage</string>
-    <string name="prefs_username">prefUsername</string>
     <string name="prefs_api_key">prefApiKey</string>
+	<string name="prefs_background_data_connect">prefBackgroundDataConnect</string>
+	<string name="prefs_display_name">prefDisplayName</string>
+    <string name="prefs_language">prefLanguage</string>
+    <string name="prefs_last_media_scan">prefLastMediaScan</string>
+    <string name="prefs_schedule_reminders_no">prefNoScheduleReminders</string>
+    <string name="prefs_schedule_reminders_show">prefShowScheduleReminders</string>
+    <string name="prefs_server">prefServer</string>
+    <string name="prefs_server_timeout_connection">prefServerTimeoutConnection</string>
+    <string name="prefs_server_timeout_response">prefServerTimeoutResponse</string>
+    <string name="prefs_username">prefUsername</string>
+    
+    
+    <string name="prefs_points">prefPoints</string>
+    <string name="prefs_badges">prefBadges</string>
     
     <drawable name="background_dark">#333333</drawable>
     <drawable name="background_light">#eeeeee</drawable>

@@ -217,9 +217,9 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	private void updateReminders(){
-		if(prefs.getBoolean("prefShowScheduleReminders", true)){
+		if(prefs.getBoolean(getString(R.string.prefs_schedule_reminders_show), true)){
 			DbHelper db = new DbHelper(MobileLearningActivity.this);
-			int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "3"));
+			int max = Integer.valueOf(prefs.getString(getString(R.string.prefs_schedule_reminders_no), "3"));
 			ArrayList<Activity> activities = db.getActivitiesDue(max);
 			db.close();
 			this.drawReminders(activities);
@@ -231,7 +231,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	
 	private void scanMedia() {
 		long now = System.currentTimeMillis()/1000;
-		if (prefs.getLong("prefLastMediaScan", 0)+3600 > now) {
+		if (prefs.getLong(getString(R.string.prefs_last_media_scan), 0)+3600 > now) {
 			LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
 			ll.setVisibility(View.GONE);
 			return;
@@ -313,7 +313,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 				// wipe user prefs
 				Editor editor = prefs.edit();
 				editor.putString(getString(R.string.prefs_username), "");
-				editor.putString("prefApiKey", "");
+				editor.putString(getString(R.string.prefs_api_key), "");
 				editor.commit();
 
 				// restart this activity
@@ -332,7 +332,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	public void installComplete(Payload p) {
 		if(p.getResponseData().size()>0){
 			Editor e = prefs.edit();
-			e.putLong("prefLastMediaScan", 0);
+			e.putLong(getString(R.string.prefs_last_media_scan), 0);
 			e.commit();
 			displayModules();
 		}
@@ -379,7 +379,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 				File f = new File(tempMod.getLocation());
 				FileUtils.deleteDir(f);
 				Editor e = prefs.edit();
-				e.putLong("prefLastMediaScan", 0);
+				e.putLong(getString(R.string.prefs_last_media_scan), 0);
 				e.commit();
 				displayModules();
 			}
@@ -419,15 +419,15 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Log.d(TAG, key + " changed");
-		if(key.equalsIgnoreCase("prefServer")){
+		if(key.equalsIgnoreCase(getString(R.string.prefs_server))){
 			Editor editor = sharedPreferences.edit();
-			if(!sharedPreferences.getString("prefServer", "").endsWith("/")){
-				String newServer = sharedPreferences.getString("prefServer", "")+"/";
-				editor.putString("prefServer", newServer);
+			if(!sharedPreferences.getString(getString(R.string.prefs_server), "").endsWith("/")){
+				String newServer = sharedPreferences.getString(getString(R.string.prefs_server), "")+"/";
+				editor.putString(getString(R.string.prefs_server), newServer);
 		    	editor.commit();
 			}
 		}
-		if(key.equalsIgnoreCase("prefShowScheduleReminders") || key.equalsIgnoreCase("prefNoScheduleReminders")){
+		if(key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_show)) || key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_no))){
 			displayModules();
 		}
 		super.onSharedPreferenceChanged(sharedPreferences, key);
@@ -471,7 +471,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 					startActivity(i);
 				}
 			});
-			e.putLong("prefLastMediaScan", 0);
+			e.putLong(getString(R.string.prefs_last_media_scan), 0);
 			e.commit();
 		} else {
 			ll.setVisibility(View.GONE);
@@ -480,7 +480,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			btn.setOnClickListener(null);
 			btn.setTag(null);
 			long now = System.currentTimeMillis()/1000;
-			e.putLong("prefLastMediaScan", now);
+			e.putLong(getString(R.string.prefs_last_media_scan), now);
 			e.commit();
 		}
 	}

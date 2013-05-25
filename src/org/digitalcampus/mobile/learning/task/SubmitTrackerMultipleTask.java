@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.TrackerLog;
@@ -90,8 +91,8 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
 						Editor editor = prefs.edit();
-						editor.putInt("prefPoints", jsonResp.getInt("points"));
-						editor.putInt("prefBadges", jsonResp.getInt("badges"));
+						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("points"));
+						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("badges"));
 				    	editor.commit();
 						break;
 					case 404: // submitted but invalid digest - so record as submitted so doesn't keep trying

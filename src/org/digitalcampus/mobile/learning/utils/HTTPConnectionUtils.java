@@ -28,11 +28,11 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 		httpParameters = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(
 				httpParameters,
-				Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
+				Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_connection),
 						ctx.getString(R.string.prefServerTimeoutConnection))));
 		HttpConnectionParams.setSoTimeout(
 				httpParameters,
-				Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
+				Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_response),
 						ctx.getString(R.string.prefServerTimeoutResponseDefault))));
 		// add user agent 
         
@@ -49,11 +49,11 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 	
 	public static String createUrlWithCredentials(Context ctx, SharedPreferences prefs, String baseUrl, boolean addServer){
 		if(addServer){
-			baseUrl = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + baseUrl;
+			baseUrl = prefs.getString(ctx.getString(R.string.prefs_server), ctx.getString(R.string.prefServerDefault)) + baseUrl;
 		}
 		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("username", prefs.getString(ctx.getString(R.string.prefs_username), "")));
-		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
+		pairs.add(new BasicNameValuePair("api_key", prefs.getString(ctx.getString(R.string.prefs_api_key), "")));
 		pairs.add(new BasicNameValuePair("format", "json"));
 		String paramString = URLEncodedUtils.format(pairs, "utf-8");
 		if(!baseUrl.endsWith("?"))

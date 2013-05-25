@@ -17,6 +17,8 @@
 
 package org.digitalcampus.mobile.learning.service;
 
+import org.digitalcampus.mobile.learning.R;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,16 +31,16 @@ public class TrackerStartServiceReceiver extends BroadcastReceiver {
 	public final static String TAG = TrackerStartServiceReceiver.class.getSimpleName();
 	
 	@Override
-	public void onReceive(Context context, Intent intent) {
+	public void onReceive(Context ctx, Intent intent) {
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		boolean backgroundData = prefs.getBoolean("prefBackgroundDataConnect", true);
-		Intent service = new Intent(context, TrackerService.class);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		boolean backgroundData = prefs.getBoolean(ctx.getString(R.string.prefs_background_data_connect), true);
+		Intent service = new Intent(ctx, TrackerService.class);
 		
 		Bundle tb = new Bundle();
 		tb.putBoolean("backgroundData", backgroundData);
 		service.putExtras(tb);
 		
-		context.startService(service);
+		ctx.startService(service);
 	}
 }

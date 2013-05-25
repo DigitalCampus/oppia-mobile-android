@@ -163,7 +163,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 		
 		if(p.isResult()){
 			Editor e = prefs.edit();
-			e.putLong("prefLastMediaScan", 0);
+			e.putLong(ctx.getString(R.string.prefs_last_media_scan), 0);
 			e.commit();
 			UIUtils.showAlert(ctx, ctx.getString(R.string.install_complete), p.getResultResponse());
 			// new refresh the module list
@@ -199,7 +199,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 			DownloadActivity da = (DownloadActivity) ctx;
 			da.refreshModuleList();
 			Editor e = prefs.edit();
-			e.putLong("prefLastMediaScan", 0);
+			e.putLong(ctx.getString(R.string.prefs_last_media_scan), 0);
 			e.commit();
 		} else {
 			UIUtils.showAlert(ctx, ctx.getString(R.string.error_update_failure), p.getResultResponse());

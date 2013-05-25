@@ -80,10 +80,10 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString(getString(R.string.prefs_username), usernameField.getText().toString());
-	    	editor.putString("prefApiKey", u.getApi_key());
-	    	editor.putString("prefDisplayName", u.getDisplayName());
-	    	editor.putInt("prefPoints", u.getPoints());
-	    	editor.putInt("prefBadges", u.getBadges());
+	    	editor.putString(getString(R.string.prefs_api_key), u.getApi_key());
+	    	editor.putString(getString(R.string.prefs_display_name), u.getDisplayName());
+	    	editor.putInt(getString(R.string.prefs_points), u.getPoints());
+	    	editor.putInt(getString(R.string.prefs_points), u.getBadges());
 	    	editor.commit();
 
 			showAlert("Register", "Registration successful", ONCLICK_TASK_REGISTERED);

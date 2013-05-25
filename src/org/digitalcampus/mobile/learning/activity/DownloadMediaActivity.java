@@ -79,7 +79,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor e = prefs.edit();
-		e.putLong("prefLastMediaScan", 0);
+		e.putLong(getString(R.string.prefs_last_media_scan), 0);
 		e.commit();
 	}
 	

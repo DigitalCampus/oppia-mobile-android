@@ -57,8 +57,8 @@ public class UIUtils {
 		if (MobileLearning.isLoggedIn(act)) {
 			points.setVisibility(View.VISIBLE);
 			badges.setVisibility(View.VISIBLE);
-			points.setText(String.valueOf(prefs.getInt("prefPoints", 0)));
-			badges.setText(String.valueOf(prefs.getInt("prefBadges", 0)));
+			points.setText(String.valueOf(prefs.getInt(act.getString(R.string.prefs_points), 0)));
+			badges.setText(String.valueOf(prefs.getInt(act.getString(R.string.prefs_badges), 0)));
 
 			if (!(act instanceof ScoreActivity)) {
 				points.setOnClickListener(new View.OnClickListener() {

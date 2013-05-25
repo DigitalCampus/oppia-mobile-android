@@ -93,8 +93,8 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
 						Editor editor = prefs.edit();
-						editor.putInt("prefPoints", jsonResp.getInt("points"));
-						editor.putInt("prefBadges", jsonResp.getInt("badges"));
+						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("points"));
+						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("badges"));
 				    	editor.commit();
 						break;
 					default:
