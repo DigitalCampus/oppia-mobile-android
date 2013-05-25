@@ -243,7 +243,6 @@ public class ModuleXMLReader {
 	}
 	
 	public ArrayList<Section> getSections(int modId, Context ctx){
-		// TODO - must be better way of navigating the nodes??
 		ArrayList<Section> sections = new ArrayList<Section>();
 		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
 		DbHelper db = new DbHelper(ctx);

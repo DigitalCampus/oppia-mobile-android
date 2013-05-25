@@ -104,7 +104,7 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 			User u = (User) response.getData().get(0);
 			// set params
 			Editor editor = prefs.edit();
-	    	editor.putString("prefUsername", usernameField.getText().toString());
+	    	editor.putString(getString(R.string.prefs_username), usernameField.getText().toString());
 	    	editor.putString("prefApiKey", u.getApi_key());
 	    	editor.putString("prefDisplayName", u.getDisplayName());
 	    	editor.putInt("prefPoints", u.getPoints());

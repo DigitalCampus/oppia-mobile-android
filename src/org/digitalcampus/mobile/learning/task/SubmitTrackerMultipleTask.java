@@ -7,19 +7,13 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
-import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.model.TrackerLog;
@@ -58,16 +52,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 		Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
 		
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.TRACKER_PATH;
-		// add url params
-		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-		pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
-		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
-		pairs.add(new BasicNameValuePair("format", "json"));
-		String paramString = URLEncodedUtils.format(pairs, "utf-8");
-		if(!url.endsWith("?"))
-	        url += "?";
-		url += paramString;
+		String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, MobileLearning.TRACKER_PATH,true);
 		
 		HttpPatch httpPatch = new HttpPatch(url);
 		

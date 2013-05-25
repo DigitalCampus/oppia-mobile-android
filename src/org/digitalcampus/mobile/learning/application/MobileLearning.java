@@ -19,6 +19,7 @@ package org.digitalcampus.mobile.learning.application;
 
 import java.io.File;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.task.SubmitTrackerMultipleTask;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -99,7 +100,7 @@ public class MobileLearning extends Application {
 	
 	public static boolean isLoggedIn(Activity act) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
-		String username = prefs.getString("prefUsername", "");
+		String username = prefs.getString(act.getString(R.string.prefs_username), "");
 		String apiKey = prefs.getString("prefApiKey", "");
 		if (username.trim().equals("") || apiKey.trim().equals("")) {
 			return false;

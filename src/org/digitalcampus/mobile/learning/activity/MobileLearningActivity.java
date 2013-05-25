@@ -312,7 +312,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 				// wipe user prefs
 				Editor editor = prefs.edit();
-				editor.putString("prefsUsername", "");
+				editor.putString(getString(R.string.prefs_username), "");
 				editor.putString("prefApiKey", "");
 				editor.commit();
 

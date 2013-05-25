@@ -21,15 +21,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.GetPointsListener;
@@ -59,19 +54,9 @@ public class GetPointsTask extends AsyncTask<Payload, Object, Payload>{
 		String responseStr = "";
 		
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-
-		// add post params
-		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-		pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
-		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
-		pairs.add(new BasicNameValuePair("format", "json"));
 		
-		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + MobileLearning.SERVER_POINTS_PATH;
-		String paramString = URLEncodedUtils.format(pairs, "utf-8");
-		if(!url.endsWith("?"))
-	        url += "?";
-		url += paramString;
-		
+		String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, MobileLearning.SERVER_POINTS_PATH,true);
+			
 		HttpGet httpGet = new HttpGet(url);
 		
 		try {

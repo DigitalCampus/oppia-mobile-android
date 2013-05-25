@@ -2,6 +2,8 @@
 <resources>
 
     <string name="prefs_language">prefLanguage</string>
+    <string name="prefs_username">prefUsername</string>
+    <string name="prefs_api_key">prefApiKey</string>
     
     <drawable name="background_dark">#333333</drawable>
     <drawable name="background_light">#eeeeee</drawable>

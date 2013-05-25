@@ -1,6 +1,12 @@
 package org.digitalcampus.mobile.learning.utils;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
@@ -41,6 +47,19 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 		super.getParams().setParameter(CoreProtocolPNames.USER_AGENT, MobileLearning.USER_AGENT + v);
 	}
 	
-	
+	public static String createUrlWithCredentials(Context ctx, SharedPreferences prefs, String baseUrl, boolean addServer){
+		if(addServer){
+			baseUrl = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + baseUrl;
+		}
+		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
+		pairs.add(new BasicNameValuePair("username", prefs.getString(ctx.getString(R.string.prefs_username), "")));
+		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
+		pairs.add(new BasicNameValuePair("format", "json"));
+		String paramString = URLEncodedUtils.format(pairs, "utf-8");
+		if(!baseUrl.endsWith("?"))
+			baseUrl += "?";
+		baseUrl += paramString;
+		return baseUrl;
+	}
 
 }

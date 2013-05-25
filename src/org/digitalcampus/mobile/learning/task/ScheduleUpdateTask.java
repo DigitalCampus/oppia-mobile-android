@@ -22,15 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
@@ -69,20 +64,8 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 		
 		Module dm = (Module) payload.getData().get(0);
 		DownloadProgress dp = new DownloadProgress();
-		// add api_key/username params
-		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-		pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
-		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
-		pairs.add(new BasicNameValuePair("format", "json"));
-		String paramString = URLEncodedUtils.format(pairs, "utf-8");
 		
-		String url = prefs.getString("prefServer",
-				ctx.getString(R.string.prefServerDefault)) + dm.getScheduleURI();
-
-		
-		if(!url.endsWith("?"))
-		    url += "?";
-		url += paramString;
+		String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, dm.getScheduleURI() ,true);
 		
 		dp.setProgress(0);
 		dp.setMessage(ctx.getString(R.string.updating));

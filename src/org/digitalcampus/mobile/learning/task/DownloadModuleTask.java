@@ -24,18 +24,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.InstallModuleListener;
 import org.digitalcampus.mobile.learning.model.DownloadProgress;
 import org.digitalcampus.mobile.learning.model.Module;
+import org.digitalcampus.mobile.learning.utils.HTTPConnectionUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -65,20 +61,8 @@ public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Pay
 		Module dm = (Module) payload.getData().get(0);
 		DownloadProgress dp = new DownloadProgress();
 		try { 
-
-			// add api_key/username params
-			List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-			pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
-			pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
-			pairs.add(new BasicNameValuePair("format", "json"));
-			String paramString = URLEncodedUtils.format(pairs, "utf-8");
 			
-			String url = dm.getDownloadUrl();
-
-			
-			if(!url.endsWith("?"))
-		        url += "?";
-			url += paramString;
+			String url =  HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, dm.getDownloadUrl(),false);
 			
 			Log.d(TAG,"Downloading:" + url);
 			
