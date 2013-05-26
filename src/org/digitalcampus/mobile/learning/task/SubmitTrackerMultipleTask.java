@@ -65,7 +65,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 				StringEntity se = new StringEntity(dataToSend);
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPatch.setEntity(se);
-				
+				Log.d(TAG,url);
                 // make request
 				HttpResponse response = client.execute(httpPatch);				
 				
@@ -91,8 +91,9 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
 						Editor editor = prefs.edit();
+						
 						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("points"));
-						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("badges"));
+						editor.putInt(ctx.getString(R.string.prefs_badges), jsonResp.getInt("badges"));
 				    	editor.commit();
 						break;
 					case 404: // submitted but invalid digest - so record as submitted so doesn't keep trying
@@ -134,7 +135,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
     protected void onPostExecute(Payload p) {
 		// reset submittask back to null after completion - so next call can run properly
 		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-		app.omSubmitTrackerTask = null;
+		app.omSubmitTrackerMultipleTask = null;
     }
 	
 	private static Collection<Collection<TrackerLog>> split(Collection<Object> bigCollection, int maxBatchSize) {

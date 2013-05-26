@@ -41,6 +41,7 @@ import org.digitalcampus.mobile.learning.task.ScanMediaTask;
 import org.digitalcampus.mobile.learning.task.UpgradeManagerTask;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
 import org.digitalcampus.mobile.learning.utils.UIUtils;
+import org.digitalcampus.mobile.learning.utils.UpgradeUtils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -108,6 +109,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 				}
 			});
 			builder.show();
+			return;
 		}
 		// do upgrade if required
 		UpgradeManagerTask umt = new UpgradeManagerTask(this);
@@ -115,6 +117,9 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		ArrayList<Object> data = new ArrayList<Object>();
  		Payload p = new Payload(data);
 		umt.execute(p);
+		
+		UpgradeUtils uu = new UpgradeUtils(this);
+		uu.show();
 	}
 
 	@Override
@@ -161,20 +166,25 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		DbHelper db = new DbHelper(this);
 		modules = db.getModules();
 		db.close();
-		ArrayList<Module> removeModules = new ArrayList<Module>();
-		for (Module m : modules) {
-			try {
-				m.validate();
-			} catch (ModuleNotFoundException mnfe){
-				// remove from database
-				mnfe.deleteModule(this, m.getModId());
-				removeModules.add(m);
-			}
-		}
 		
-		for(Module m: removeModules){
-			// remove from current list
-			modules.remove(m);
+		if(MobileLearning.createDirs()){
+			// only remove modules if the SD card is present 
+			//- else it will remove the modules just because the SD card isn't in
+			ArrayList<Module> removeModules = new ArrayList<Module>();
+			for (Module m : modules) {
+				try {
+					m.validate();
+				} catch (ModuleNotFoundException mnfe){
+					// remove from database
+					mnfe.deleteModule(this, m.getModId());
+					removeModules.add(m);
+				}
+			}
+			
+			for(Module m: removeModules){
+				// remove from current list
+				modules.remove(m);
+			}
 		}
 
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_modules);

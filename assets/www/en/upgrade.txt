@@ -1,0 +1,5 @@
+<b>Updates in v1.17</b>
+<p>
+* Added scheduling<br/>
+* Better navigation in activities (fixes for swipe)<br/>
+</p>

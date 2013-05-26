@@ -411,9 +411,9 @@ public class ModuleActivity extends AppActivity implements OnInitListener {
                 myTTS = new TextToSpeech(this, this);
             } else {
                 // no data - install it now
-                Intent installTTSIntent = new Intent();
-                installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                startActivity(installTTSIntent);
+                //Intent installTTSIntent = new Intent();
+                //installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                //startActivity(installTTSIntent);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

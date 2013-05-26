@@ -88,6 +88,8 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 					responseStr += s;
 				}
 				
+				Log.d(TAG,responseStr);
+				
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
 						DbHelper dbh = new DbHelper(ctx);
@@ -98,7 +100,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
 						JSONObject jsonResp = new JSONObject(responseStr);
 						Editor editor = prefs.edit();
 						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("points"));
-						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("badges"));
+						editor.putInt(ctx.getString(R.string.prefs_badges), jsonResp.getInt("badges"));
 				    	editor.commit();
 						break;
 					case 404: // submitted but invalid digest - so record as submitted so doesn't keep trying
@@ -138,7 +140,7 @@ public class SubmitTrackerTask extends AsyncTask<Payload, Object, Payload> {
     protected void onPostExecute(Payload p) {
 		// reset submittask back to null after completion - so next call can run properly
 		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-		app.omSubmitTrackerTask = null;
+		app.omSubmitTrackerMultipleTask = null;
     }
 
 }

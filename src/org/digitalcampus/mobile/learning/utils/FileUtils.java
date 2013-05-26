@@ -41,7 +41,7 @@ import android.webkit.MimeTypeMap;
 import com.bugsense.trace.BugSenseHandler;
 
 public class FileUtils {
-	
+
 	public static final String TAG = FileUtils.class.getSimpleName();
 	public static final int BUFFER_SIZE = 1024;
 
@@ -49,8 +49,7 @@ public class FileUtils {
 	// placed in the
 	// destination directory
 	// destination directory should be created first
-	public static boolean unzipFiles(String srcDirectory, String srcFile,
-			String destDirectory) {
+	public static boolean unzipFiles(String srcDirectory, String srcFile, String destDirectory) {
 		try {
 			// first make sure that all the arguments are valid and not null
 			if (srcDirectory == null) {
@@ -90,14 +89,12 @@ public class FileUtils {
 			BufferedOutputStream dest = null;
 
 			FileInputStream fis = new FileInputStream(sourceFile);
-			ZipInputStream zis = new ZipInputStream(
-					new BufferedInputStream(fis));
+			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
 
 			ZipEntry entry = null;
 
 			while ((entry = zis.getNextEntry()) != null) {
-				String outputFilename = destDirectory + File.separator
-						+ entry.getName();
+				String outputFilename = destDirectory + File.separator + entry.getName();
 
 				createDirIfNeeded(destDirectory, entry);
 
@@ -112,13 +109,16 @@ public class FileUtils {
 					FileOutputStream fos = new FileOutputStream(f);
 					dest = new BufferedOutputStream(fos, BUFFER_SIZE);
 
-					// this counter is a hack to prevent getting stuck when installing corrupted or not fully downloaded module packages
-					// it will prevent any module being installed with files larger than around 500kb
+					// this counter is a hack to prevent getting stuck when
+					// installing corrupted or not fully downloaded module
+					// packages
+					// it will prevent any module being installed with files
+					// larger than around 500kb
 					int counter = 0;
 					while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {
 						dest.write(data, 0, count);
 						counter++;
-						if (counter > 5000){
+						if (counter > 5000) {
 							dest.flush();
 							dest.close();
 							return false;
@@ -152,8 +152,7 @@ public class FileUtils {
 			int index = name.lastIndexOf("/");
 			String dirSequence = name.substring(0, index);
 
-			File newDirs = new File(destDirectory + File.separator
-					+ dirSequence);
+			File newDirs = new File(destDirectory + File.separator + dirSequence);
 
 			// create the directory
 			newDirs.mkdirs();
@@ -172,25 +171,25 @@ public class FileUtils {
 				boolean success = deleteDir(delFile);
 				if (!success) {
 					return false;
-				} 
+				}
 			}
 		}
-		
+
 		// The directory is now empty so delete it
 		return dir.delete();
 	}
-	
-	public static boolean mediaFileExists(String filename){
+
+	public static boolean mediaFileExists(String filename) {
 		File media = new File(MobileLearning.MEDIA_PATH + filename);
-		if(media.exists()){
+		if (media.exists()) {
 			return true;
 		} else {
 			return false;
 		}
-		
+
 	}
-	
-	public static void cleanUp(File tempDir, String path){
+
+	public static void cleanUp(File tempDir, String path) {
 		FileUtils.deleteDir(tempDir);
 		Log.d(TAG, "Temp directory deleted");
 
@@ -199,79 +198,91 @@ public class FileUtils {
 		zip.delete();
 		Log.d(TAG, "Zip file deleted");
 	}
-	
-	public static String readFile( String file ) throws IOException {
-		 FileInputStream fstream = new FileInputStream(file);
-		  DataInputStream in = new DataInputStream(fstream);
-		  BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		  String strLine;
-		  StringBuilder stringBuilder = new StringBuilder();
-		  while ((strLine = br.readLine()) != null)   {
-			  stringBuilder.append(strLine);
-		  }
-		  in.close();
-		  return stringBuilder.toString();
+
+	public static String readFile(String file) throws IOException {
+		FileInputStream fstream = new FileInputStream(file);
+		DataInputStream in = new DataInputStream(fstream);
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		String strLine;
+		StringBuilder stringBuilder = new StringBuilder();
+		while ((strLine = br.readLine()) != null) {
+			stringBuilder.append(strLine);
+		}
+		in.close();
+		return stringBuilder.toString();
 	}
-	
-	public static String getMimeType(String url){
-	    String type = null;
-	    String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-	    if (extension != null) {
-	        MimeTypeMap mime = MimeTypeMap.getSingleton();
-	        type = mime.getMimeTypeFromExtension(extension);
-	    }
-	    return type;
+
+	public static String readFile(InputStream fileStream) throws IOException {
+		DataInputStream in = new DataInputStream(fileStream);
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		String strLine;
+		StringBuilder stringBuilder = new StringBuilder();
+		while ((strLine = br.readLine()) != null) {
+			stringBuilder.append(strLine);
+		}
+		in.close();
+		return stringBuilder.toString();
 	}
-	
-	public static boolean supportedMediafileType(String mimeType){
-		if(mimeType == null){
+
+	public static String getMimeType(String url) {
+		String type = null;
+		String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+		if (extension != null) {
+			MimeTypeMap mime = MimeTypeMap.getSingleton();
+			type = mime.getMimeTypeFromExtension(extension);
+		}
+		return type;
+	}
+
+	public static boolean supportedMediafileType(String mimeType) {
+		if (mimeType == null) {
 			return false;
-		} else if(mimeType.equals("video/m4v")){
+		} else if (mimeType.equals("video/m4v")) {
 			return true;
-		} else if(mimeType.equals("video/mp4")){
+		} else if (mimeType.equals("video/mp4")) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public static String getLocalizedFilePath(Activity act, String currentLang, String fileName){
-		String filePath = "www/"+currentLang+"/"+fileName;
+
+	public static String getLocalizedFilePath(Activity act, String currentLang, String fileName) {
+		String filePath = "www/" + currentLang + "/" + fileName;
 		try {
-	        InputStream stream = act.getAssets().open(filePath);
-	        stream.close();
-	        Log.d(TAG, "assetExists exists: " + filePath);
-	        return "file:///android_asset/"+filePath;
-	    } catch (FileNotFoundException e) {
-	        Log.d(TAG, "assetExists failed: "+e.toString());
-	    } catch (IOException e) {
-	        Log.w(TAG, "assetExists failed: "+e.toString());
-	    }
-		
-		String localeFilePath = "www/"+Locale.getDefault().getLanguage()+"/"+fileName;
+			InputStream stream = act.getAssets().open(filePath);
+			stream.close();
+			Log.d(TAG, "assetExists exists: " + filePath);
+			return filePath;
+		} catch (FileNotFoundException e) {
+			Log.d(TAG, "assetExists failed: " + e.toString());
+		} catch (IOException e) {
+			Log.w(TAG, "assetExists failed: " + e.toString());
+		}
+
+		String localeFilePath = "www/" + Locale.getDefault().getLanguage() + "/" + fileName;
 		try {
-	        InputStream stream = act.getAssets().open(localeFilePath);
-	        stream.close();
-	        Log.d(TAG, "assetExists exists: " + localeFilePath);
-	        return "file:///android_asset/"+localeFilePath;
-	    } catch (FileNotFoundException e) {
-	        Log.d(TAG, "assetExists failed: "+e.toString());
-	    } catch (IOException e) {
-	        Log.w(TAG, "assetExists failed: "+e.toString());
-	    }
-		
-		String defaultFilePath = "www/"+MobileLearning.DEFAULT_LANG+"/"+fileName;
+			InputStream stream = act.getAssets().open(localeFilePath);
+			stream.close();
+			Log.d(TAG, "assetExists exists: " + localeFilePath);
+			return "file:///android_asset/" + localeFilePath;
+		} catch (FileNotFoundException e) {
+			Log.d(TAG, "assetExists failed: " + e.toString());
+		} catch (IOException e) {
+			Log.w(TAG, "assetExists failed: " + e.toString());
+		}
+
+		String defaultFilePath = "www/" + MobileLearning.DEFAULT_LANG + "/" + fileName;
 		try {
-	        InputStream stream = act.getAssets().open(defaultFilePath);
-	        stream.close();
-	        Log.d(TAG, "assetExists exists: " + defaultFilePath);
-	        return "file:///android_asset/"+defaultFilePath;
-	    } catch (FileNotFoundException e) {
-	        Log.d(TAG, "assetExists failed: "+e.toString());
-	    } catch (IOException e) {
-	        Log.w(TAG, "assetExists failed: "+e.toString());
-	    }
+			InputStream stream = act.getAssets().open(defaultFilePath);
+			stream.close();
+			Log.d(TAG, "assetExists exists: " + defaultFilePath);
+			return "file:///android_asset/" + defaultFilePath;
+		} catch (FileNotFoundException e) {
+			Log.d(TAG, "assetExists failed: " + e.toString());
+		} catch (IOException e) {
+			Log.w(TAG, "assetExists failed: " + e.toString());
+		}
 		return "";
-		
+
 	}
 }

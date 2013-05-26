@@ -34,6 +34,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -128,7 +129,7 @@ public class UIUtils {
 	 * @param funct
 	 * @return
 	 */
-	public static AlertDialog showAlert(Context ctx, int R, String msg, Callable<Boolean> funct) {
+	public static AlertDialog showAlert(Context ctx, int R, CharSequence msg, Callable<Boolean> funct) {
 		return UIUtils.showAlert(ctx, ctx.getString(R), msg, funct);
 	}
 
@@ -139,7 +140,7 @@ public class UIUtils {
 	 * @param funct
 	 * @return
 	 */
-	public static AlertDialog showAlert(Context ctx, String title, String msg, final Callable<Boolean> funct) {
+	public static AlertDialog showAlert(Context ctx, String title, CharSequence msg, final Callable<Boolean> funct) {
 		AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
 		alertDialog.setTitle(title);
 		alertDialog.setMessage(msg);

@@ -43,7 +43,7 @@ public class AboutActivity extends AppActivity {
 		this.drawHeader(getString(R.string.title_about));
 			
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String url = FileUtils.getLocalizedFilePath(this,prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()) , "about.html");
+		String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(this,prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()) , "about.html");
 		WebView wv = (WebView) findViewById(R.id.about_webview);
 		wv.loadUrl(url);
 		
