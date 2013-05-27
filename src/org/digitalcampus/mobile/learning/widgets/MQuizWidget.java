@@ -84,7 +84,25 @@ public class MQuizWidget extends WidgetFactory {
 		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		super.getLayout().addView(vv);
 		vv.setLayoutParams(lp);
+		
+		this.startQuiz(activity);
+	}
 
+	public MQuizWidget(android.app.Activity context, Module module, Activity activity, MQuiz mQuiz) {
+		super(context, module, activity);
+		this.ctx = context;
+		this.module = module;
+		this.mQuiz = mQuiz;
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
+		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		super.getLayout().addView(vv);
+		vv.setLayoutParams(lp);
+		
+		this.startQuiz(activity);
+	}
+	
+	private void startQuiz(Activity activity){
 		prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
 		nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
@@ -98,7 +116,7 @@ public class MQuizWidget extends WidgetFactory {
 
 		this.showQuestion();
 	}
-
+	
 	public void showQuestion() {
 		QuizQuestion q = mQuiz.getCurrentQuestion();
 		qText.setVisibility(View.VISIBLE);

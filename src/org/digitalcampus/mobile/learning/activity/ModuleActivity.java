@@ -77,6 +77,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 	private boolean ttsRunning = false;
 
 	private HashMap<String, Object> mediaPlayingState = new HashMap<String, Object>();
+	private MQuiz mQuiz;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +126,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 		savedInstanceState.putString("mediaFileName", currentActivity.getMediaFileName());
 		savedInstanceState.putInt("currentActivityNo", this.currentActivityNo);
 		savedInstanceState.putSerializable("mquiz", currentActivity.getMQuiz());
+		Log.d(TAG,"saved instance state");
 	}
 
 	@Override
@@ -135,7 +137,8 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 		currentActivity.setMediaFileName(savedInstanceState.getString("mediaFileName"));
 		currentActivity.setStartTime(savedInstanceState.getLong("activityStartTimeStamp"));
 		this.currentActivityNo = savedInstanceState.getInt("currentActivityNo");
-		currentActivity.setMQuiz((MQuiz) savedInstanceState.getSerializable("mquiz"));
+		this.mQuiz = (MQuiz) savedInstanceState.getSerializable("mquiz");
+		Log.d(TAG,"restored instance state");
 	}
 
 	@Override
@@ -187,7 +190,9 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 			}
 			currentActivity.mediaStopped();
 		}
+		Log.d(TAG,"starting to load activity");
 		loadActivity();
+		Log.d(TAG,"Activity loaded?");
 	}
 
 	@Override
@@ -255,7 +260,13 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 			wv.setOnTouchListener(pageGestureListener);
 		}
 		if (acts.get(this.currentActivityNo).getActType().equals("quiz")) {
-			currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+			if(mQuiz != null){
+				currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo), mQuiz);
+				Log.d(TAG,"Sending mquiz object");
+				//currentActivity.setMQuiz(mQuiz);
+			} else {
+				currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+			}
 			ScrollView sv = (ScrollView) this.findViewById(R.id.quizScrollView);
 			sv.setOnTouchListener(quizGestureListener);
 		}
