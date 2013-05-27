@@ -26,7 +26,6 @@ import org.digitalcampus.mobile.learning.task.GetModuleListTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.SubmitMQuizTask;
 import org.digitalcampus.mobile.learning.task.SubmitTrackerMultipleTask;
-import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 

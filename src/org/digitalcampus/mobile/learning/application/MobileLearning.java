@@ -21,7 +21,6 @@ import java.io.File;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.task.SubmitTrackerMultipleTask;
-import org.digitalcampus.mobile.learning.task.SubmitTrackerTask;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
