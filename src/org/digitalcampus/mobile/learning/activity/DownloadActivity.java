@@ -24,10 +24,11 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.DownloadModuleListAdapter;
 import org.digitalcampus.mobile.learning.application.DbHelper;
-import org.digitalcampus.mobile.learning.listener.GetModuleListListener;
+import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.listener.APIRequestListener;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
-import org.digitalcampus.mobile.learning.task.GetModuleListTask;
+import org.digitalcampus.mobile.learning.task.APIRequestTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.utils.UIUtils;
 import org.json.JSONException;
@@ -40,7 +41,7 @@ import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class DownloadActivity extends AppActivity implements GetModuleListListener {
+public class DownloadActivity extends AppActivity implements APIRequestListener {
 
 	public static final String TAG = DownloadActivity.class.getSimpleName();
 
@@ -107,9 +108,9 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 		pDialog.setCancelable(true);
 		pDialog.show();
 
-		GetModuleListTask task = new GetModuleListTask(this);
-		Payload p = new Payload();
-		task.setGetModuleListListener(this);
+		APIRequestTask task = new APIRequestTask(this);
+		Payload p = new Payload(MobileLearning.SERVER_MODULES_PATH);
+		task.setAPIRequestListener(this);
 		task.execute(p);
 	}
 
@@ -161,7 +162,7 @@ public class DownloadActivity extends AppActivity implements GetModuleListListen
 
 	}
 
-	public void moduleListComplete(Payload response) {
+	public void apiRequestComplete(Payload response) {
 		// close dialog and process results
 		pDialog.dismiss();
 	

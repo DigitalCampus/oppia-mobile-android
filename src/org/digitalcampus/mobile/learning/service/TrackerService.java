@@ -21,8 +21,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.activity.DownloadActivity;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
-import org.digitalcampus.mobile.learning.listener.GetModuleListListener;
-import org.digitalcampus.mobile.learning.task.GetModuleListTask;
+import org.digitalcampus.mobile.learning.listener.APIRequestListener;
+import org.digitalcampus.mobile.learning.task.APIRequestTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.task.SubmitMQuizTask;
 import org.digitalcampus.mobile.learning.task.SubmitTrackerMultipleTask;
@@ -49,7 +49,7 @@ import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class TrackerService extends Service implements GetModuleListListener{
+public class TrackerService extends Service implements APIRequestListener{
 
 	public static final String TAG = TrackerService.class.getSimpleName();
 
@@ -81,9 +81,9 @@ public class TrackerService extends Service implements GetModuleListListener{
 			long lastRun = prefs.getLong("lastModuleUpdateCheck", 0);
 			long now = System.currentTimeMillis()/1000;
 			if((lastRun + (3600*12)) < now){
-				GetModuleListTask task = new GetModuleListTask(this);
-				p = new Payload();
-				task.setGetModuleListListener(this);
+				APIRequestTask task = new APIRequestTask(this);
+				p = new Payload(MobileLearning.SERVER_MODULES_PATH);
+				task.setAPIRequestListener(this);
 				task.execute(p);
 				
 				Editor editor = prefs.edit();
@@ -130,7 +130,7 @@ public class TrackerService extends Service implements GetModuleListListener{
 		return false;
 	}
 
-	public void moduleListComplete(Payload response) {
+	public void apiRequestComplete(Payload response) {
 		DbHelper db = new DbHelper(this);
 		Log.d(TAG,"completed getting module list");
 		

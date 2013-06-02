@@ -22,9 +22,10 @@ import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.PointsListAdapter;
-import org.digitalcampus.mobile.learning.listener.GetPointsListener;
+import org.digitalcampus.mobile.learning.application.MobileLearning;
+import org.digitalcampus.mobile.learning.listener.APIRequestListener;
 import org.digitalcampus.mobile.learning.model.Points;
-import org.digitalcampus.mobile.learning.task.GetPointsTask;
+import org.digitalcampus.mobile.learning.task.APIRequestTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.utils.UIUtils;
 import org.json.JSONException;
@@ -36,7 +37,7 @@ import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class ScoreActivity extends AppActivity implements GetPointsListener{
+public class ScoreActivity extends AppActivity implements APIRequestListener{
 
 	public static final String TAG = ScoreActivity.class.getSimpleName();
 	private ProgressDialog pDialog;
@@ -45,7 +46,7 @@ public class ScoreActivity extends AppActivity implements GetPointsListener{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_score);
+		setContentView(R.layout.activity_scorecard);
 		this.drawHeader();
 		this.getPoints();
 	}
@@ -58,9 +59,9 @@ public class ScoreActivity extends AppActivity implements GetPointsListener{
 		pDialog.setCancelable(true);
 		pDialog.show();
 		
-		GetPointsTask task = new GetPointsTask(this);
-		Payload p = new Payload();
-		task.setGetPointsListener(this);
+		APIRequestTask task = new APIRequestTask(this);
+		Payload p = new Payload(MobileLearning.SERVER_POINTS_PATH);
+		task.setAPIRequestListener(this);
 		task.execute(p);
 	}
 
@@ -90,7 +91,7 @@ public class ScoreActivity extends AppActivity implements GetPointsListener{
 
 	}
 	
-	public void pointsComplete(Payload response) {
+	public void apiRequestComplete(Payload response) {
 		pDialog.dismiss();
 		if(response.isResult()){
 			try {

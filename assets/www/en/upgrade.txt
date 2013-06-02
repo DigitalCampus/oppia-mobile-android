@@ -2,4 +2,5 @@
 <p>
 * Added scheduling<br/>
 * Better navigation in activities (fixes for swipe)<br/>
+* Fix some bug with losing position in quiz when phone rotated<br/>
 </p>

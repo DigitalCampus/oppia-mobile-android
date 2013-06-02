@@ -15,10 +15,8 @@
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.digitalcampus.mobile.learning.listener;
+package org.digitalcampus.mobile.learning.adapter;
 
-import org.digitalcampus.mobile.learning.task.Payload;
+public class TagListAdapter {
 
-public interface  GetPointsListener {
-	void pointsComplete(Payload response);
 }

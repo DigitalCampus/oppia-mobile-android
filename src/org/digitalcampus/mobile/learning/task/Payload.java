@@ -25,9 +25,14 @@ public class Payload {
 	private boolean result = false;
 	private String resultResponse;
 	private ArrayList<Object> responseData = new ArrayList<Object>();
+	private String url;
 
 	public Payload(){
 		
+	}
+	
+	public Payload(String url){
+		this.setUrl(url);		
 	}
 	
 	public Payload(ArrayList<? extends Object> data) {
@@ -68,6 +73,14 @@ public class Payload {
 	
 	public void addResponseData(Object obj){
 		this.responseData.add(obj);
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }

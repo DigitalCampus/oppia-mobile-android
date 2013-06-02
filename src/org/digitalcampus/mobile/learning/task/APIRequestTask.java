@@ -26,8 +26,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.application.MobileLearning;
-import org.digitalcampus.mobile.learning.listener.GetModuleListListener;
+import org.digitalcampus.mobile.learning.listener.APIRequestListener;
 import org.digitalcampus.mobile.learning.utils.HTTPConnectionUtils;
 
 import android.content.Context;
@@ -35,14 +34,14 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
+public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 	
-	public static final String TAG = GetModuleListTask.class.getSimpleName();
+	public static final String TAG = APIRequestTask.class.getSimpleName();
 	protected Context ctx;
 	private SharedPreferences prefs;
-	private GetModuleListListener mStateListener;
+	private APIRequestListener requestListener;
 	
-	public GetModuleListTask(Context ctx) {
+	public APIRequestTask(Context ctx) {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
@@ -54,7 +53,7 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 		String responseStr = "";
 		
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);		
-		String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, MobileLearning.SERVER_MODULES_PATH,true);
+		String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, payload.getUrl() ,true);
 		
 		HttpGet httpGet = new HttpGet(url);
 		try {
@@ -100,15 +99,15 @@ public class GetModuleListTask extends AsyncTask<Payload, Object, Payload>{
 	@Override
 	protected void onPostExecute(Payload response) {
 		synchronized (this) {
-            if (mStateListener != null) {
-               mStateListener.moduleListComplete(response);
+            if (requestListener != null) {
+               requestListener.apiRequestComplete(response);
             }
         }
 	}
 	
-	public void setGetModuleListListener(GetModuleListListener srl) {
+	public void setAPIRequestListener(APIRequestListener srl) {
         synchronized (this) {
-            mStateListener = srl;
+        	requestListener = srl;
         }
     }
 }
