@@ -9,7 +9,7 @@
         style="@style/Header" />
 
     <ListView
-        android:id="@+id/module_list"
+        android:id="@+id/tag_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="@drawable/list_divider"

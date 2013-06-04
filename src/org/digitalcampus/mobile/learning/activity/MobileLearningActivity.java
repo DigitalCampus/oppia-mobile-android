@@ -197,7 +197,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			Button manageBtn = (Button) this.findViewById(R.id.manage_modules_btn);
 			manageBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					startActivity(new Intent(MobileLearningActivity.this, DownloadActivity.class));
+					startActivity(new Intent(MobileLearningActivity.this, TagSelectActivity.class));
 				}
 			});
 
@@ -266,7 +266,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			startActivity(new Intent(this, AboutActivity.class));
 			return true;
 		case R.id.menu_download:
-			startActivity(new Intent(this, DownloadActivity.class));
+			startActivity(new Intent(this, TagSelectActivity.class));
 			return true;
 		case R.id.menu_settings:
 			Intent i = new Intent(this, PrefsActivity.class);
@@ -424,7 +424,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	}
 
 	public void manageBtnClick(View view) {
-		startActivity(new Intent(this, DownloadActivity.class));
+		startActivity(new Intent(this, TagSelectActivity.class));
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

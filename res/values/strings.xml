@@ -15,12 +15,13 @@
     <string name="title_about">About/Licenses</string>
     <string name="title_help">Help</string>
      
-    <string name="title_activity_module_index">Module Index</string>
+    <string name="title_activity_module_index">Course index</string>
     <string name="title_activity_module">Activity</string>
-    <string name="title_download_activity">Manage Modules</string>
+    <string name="title_download_activity">Manage courses</string>
     <string name="title_prefs">Settings</string>
+    <string name="title_tag_select_activity">Select Category</string>
     <string name="version">Version: %1$s</string>
-    <string name="title_module_about">About Module</string>
+    <string name="title_module_about">About Course</string>
     <string name="title_download_media">Download Media</string>
     <string name="title_points">Your Points</string>
     
@@ -92,6 +93,7 @@
 	<string name="download">Download</string>
 	<string name="downloaded">Downloaded</string>
 	
+	<string name="tag_label">%1$s (%2$d)</string>
 	<string name="alt_activity_icon">Activity icon</string>
 	
 	<string name="update">Update</string>

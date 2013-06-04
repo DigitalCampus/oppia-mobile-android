@@ -4,7 +4,7 @@
     android:versionName="1.16dev">
 
     <uses-sdk
-        android:minSdkVersion="10"
+        android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
     <uses-permission
@@ -44,6 +44,10 @@
             android:name=".activity.DownloadActivity"
             android:label="@string/title_download_activity"
             android:configChanges="orientation|keyboardHidden" >
+        </activity>
+         <activity
+            android:name=".activity.TagSelectActivity"
+            android:label="@string/title_tag_select_activity">
         </activity>
         <activity
             android:name=".activity.PrefsActivity"

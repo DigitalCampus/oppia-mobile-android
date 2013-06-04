@@ -50,6 +50,7 @@ public class MobileLearning extends Application {
 	public static final String MQUIZ_SUBMIT_PATH = "api/v1/quizattempt/";
 	
 	public static final String SERVER_MODULES_PATH = "modules/api/v1/module/";
+	public static final String SERVER_TAG_PATH = "modules/api/v1/tag/";
 	public static final String TRACKER_PATH = "modules/api/v1/tracker/";
 	
 	public static final String SERVER_POINTS_PATH = "badges/api/v1/points/";
