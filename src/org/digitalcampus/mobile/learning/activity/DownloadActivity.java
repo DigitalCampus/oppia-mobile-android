@@ -28,6 +28,7 @@ import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.listener.APIRequestListener;
 import org.digitalcampus.mobile.learning.model.Lang;
 import org.digitalcampus.mobile.learning.model.Module;
+import org.digitalcampus.mobile.learning.model.Tag;
 import org.digitalcampus.mobile.learning.task.APIRequestTask;
 import org.digitalcampus.mobile.learning.task.Payload;
 import org.digitalcampus.mobile.learning.utils.UIUtils;
@@ -42,12 +43,13 @@ import android.widget.TextView;
 import com.bugsense.trace.BugSenseHandler;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener {
-
+	
 	public static final String TAG = DownloadActivity.class.getSimpleName();
 
 	private ProgressDialog pDialog;
 	private JSONObject json;
 	private DownloadModuleListAdapter dla;
+	private String url;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,14 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		
 		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
 		tv.setText(R.string.title_download_activity);
-	
+		Bundle bundle = this.getIntent().getExtras(); 
+        if(bundle != null) {
+        	Tag t = (Tag) bundle.getSerializable(Tag.TAG);
+        	url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + "/";
+        } else {
+        	url = MobileLearning.SERVER_MODULES_PATH;
+        }
+        	
 	}
 	
 	@Override
@@ -90,7 +99,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 			this.json = new JSONObject(savedInstanceState.getString("json"));
 		} catch (JSONException e) {
 			// error in the json so just get the list again
-			this.getModuleList();
+			//this.getModuleList();
 		}
 	}
 
@@ -104,12 +113,12 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		// show progress dialog
 		pDialog = new ProgressDialog(this);
 		pDialog.setTitle(R.string.loading);
-		pDialog.setMessage(getString(R.string.loading_module_list));
+		pDialog.setMessage(getString(R.string.loading));
 		pDialog.setCancelable(true);
 		pDialog.show();
 
 		APIRequestTask task = new APIRequestTask(this);
-		Payload p = new Payload(MobileLearning.SERVER_MODULES_PATH);
+		Payload p = new Payload(url);
 		task.setAPIRequestListener(this);
 		task.execute(p);
 	}
@@ -149,7 +158,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 			}
 			
 			dla = new DownloadModuleListAdapter(this, modules);
-			ListView listView = (ListView) findViewById(R.id.module_list);
+			ListView listView = (ListView) findViewById(R.id.tag_list);
 			listView.setAdapter(dla);
 
 		} catch (Exception e) {
@@ -161,7 +170,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		db.close();
 
 	}
-
+	
 	public void apiRequestComplete(Payload response) {
 		// close dialog and process results
 		pDialog.dismiss();
@@ -177,7 +186,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 			}
 		} else {
 			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, new Callable<Boolean>() {
-				
 				public Boolean call() throws Exception {
 					DownloadActivity.this.finish();
 					return true;
