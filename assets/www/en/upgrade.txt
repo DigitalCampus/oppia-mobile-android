@@ -1,6 +1,8 @@
 <b>Updates in v1.17</b>
 <p>
-* Added scheduling<br/>
+* Added scheduling and suggesting activities<br/>
 * Better navigation in activities (fixes for swipe)<br/>
-* Fix some bug with losing position in quiz when phone rotated<br/>
+* Fix bug with losing position in quiz when phone rotated<br/>
+* Fix for text-for-speech prompting installation when trying to view activities<br/>
+
 </p>

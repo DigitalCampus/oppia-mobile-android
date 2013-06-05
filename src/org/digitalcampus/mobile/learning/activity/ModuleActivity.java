@@ -53,8 +53,9 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ModuleActivity extends AppActivity implements OnInitListener, OnUtteranceCompletedListener {
+public class ModuleActivity extends AppActivity implements OnUtteranceCompletedListener, OnInitListener {
 
 	public static final String TAG = ModuleActivity.class.getSimpleName();
 	private Section section;
@@ -82,11 +83,6 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// check for TTS data
-		Intent checkTTSIntent = new Intent();
-		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-		startActivityForResult(checkTTSIntent, TTS_CHECK);
 
 		setContentView(R.layout.activity_module);
 		this.drawHeader();
@@ -190,15 +186,14 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 			}
 			currentActivity.mediaStopped();
 		}
-		Log.d(TAG,"starting to load activity");
 		loadActivity();
-		Log.d(TAG,"Activity loaded?");
 	}
 
 	@Override
 	protected void onDestroy() {
 		if (myTTS != null) {
 			myTTS.shutdown();
+			myTTS = null;
 		}
 		super.onDestroy();
 	}
@@ -231,15 +226,16 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 			startActivity(new Intent(this, HelpActivity.class));
 			return true;
 		case R.id.menu_tts:
-			if (myTTS != null && !ttsRunning) {
-				ttsRunning = true;
-				currentActivity.setReadAloud(true);
-				HashMap<String,String> params = new HashMap<String,String>();
-				params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,TAG);
-				myTTS.speak(currentActivity.getContentToRead(), TextToSpeech.QUEUE_FLUSH, params);
-				myTTS.setOnUtteranceCompletedListener(this);
-			} else {
+			if (myTTS == null && !ttsRunning) {
+				// check for TTS data
+				Intent checkTTSIntent = new Intent();
+				checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+				startActivityForResult(checkTTSIntent, TTS_CHECK);
+			} else if (myTTS != null && ttsRunning){
 				this.stopReading();
+			} else {
+				// TTS not installed so show message
+				Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
 			}
 			return true;
 		default:
@@ -407,15 +403,15 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 		// check for successful instantiation
 		if (status == TextToSpeech.SUCCESS) {
 			Log.d(TAG, "tts success");
-			/*
-			 * if (myTTS.isLanguageAvailable(Locale.ENGLISH) ==
-			 * TextToSpeech.LANG_AVAILABLE){ myTTS.setLanguage(Locale.ENGLISH);
-			 * Log.d(TAG,"tts set lang"); }
-			 */
-		} else if (status == TextToSpeech.ERROR) {
-			Log.d(TAG, "tts failed");
-			// Toast.makeText(this, "Sorry! Text To Speech failed...",
-			// Toast.LENGTH_LONG).show();
+			ttsRunning = true;
+			currentActivity.setReadAloud(true);
+			HashMap<String,String> params = new HashMap<String,String>();
+			params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,TAG);
+			myTTS.speak(currentActivity.getContentToRead(), TextToSpeech.QUEUE_FLUSH, params);
+			myTTS.setOnUtteranceCompletedListener(this);
+		} else {
+			// TTS not installed so show message
+			Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -425,12 +421,7 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 			if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
 				// the user has the necessary data - create the TTS
 				myTTS = new TextToSpeech(this, this);
-			} else {
-				// no data - install it now
-				//Toast.makeText(this, "Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled", Toast.LENGTH_LONG).show();
-				//Intent installTTSIntent = new Intent();
-				//installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-				//startActivity(installTTSIntent);
+				
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -439,13 +430,14 @@ public class ModuleActivity extends AppActivity implements OnInitListener, OnUtt
 	private void stopReading() {
 		if (myTTS != null) {
 			myTTS.stop();
+			myTTS = null;
 		}
 		this.ttsRunning = false;
 	}
 
 	public void onUtteranceCompleted(String utteranceId) {
-		Log.d(TAG,"Finshed reading");
+		Log.d(TAG,"Finished reading");
 		this.ttsRunning = false;
-		
+		myTTS = null;
 	}
 }

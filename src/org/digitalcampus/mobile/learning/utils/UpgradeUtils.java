@@ -31,7 +31,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.util.Log;
 
 public class UpgradeUtils {
 
@@ -49,6 +48,7 @@ public class UpgradeUtils {
         // the eulaKey changes every time you increment the version number in the AndroidManifest.xml
         final String upgradeKey = UPGRADE_PREFIX + versionInfo.versionCode;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
         if(!prefs.getBoolean(upgradeKey, false)){
  
             String title = ctx.getString(R.string.app_name) + " v" + versionInfo.versionName;
@@ -68,7 +68,6 @@ public class UpgradeUtils {
             UIUtils.showAlert(ctx, title, Html.fromHtml(message), new Callable<Boolean>() {
 				
 				public Boolean call() throws Exception {
-					Log.d(TAG,"hello" + upgradeKey);
 					SharedPreferences.Editor editor = prefs.edit();
                     editor.putBoolean(upgradeKey, true);
                     editor.commit();
