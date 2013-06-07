@@ -173,6 +173,11 @@ public class ModuleXMLReader {
 						} else {
 							mObj.setLength(0);
 						}
+						if(fileAttrs.getNamedItem("filesize") != null){
+							mObj.setFileSize(Double.parseDouble(fileAttrs.getNamedItem("filesize").getTextContent()));
+						} else {
+							mObj.setFileSize(0);
+						}
 						media.add(mObj);
 					}
 				}

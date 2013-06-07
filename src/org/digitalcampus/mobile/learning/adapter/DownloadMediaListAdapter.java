@@ -46,7 +46,14 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		rowView.setTag(m);
 		TextView mediaTitle = (TextView) rowView.findViewById(R.id.media_title);
 		mediaTitle.setText(m.getFilename());
-
+		TextView mediaFileSize = (TextView) rowView.findViewById(R.id.media_file_size);
+		if(m.getFileSize() != 0){
+			mediaFileSize.setText(ctx.getString(R.string.media_file_size,m.getFileSize()/(1024*1024)));
+		} else {
+			mediaFileSize.setVisibility(View.GONE);
+		}
+		
+		
 		Button downloadBtn = (Button) rowView.findViewById(R.id.action_btn);
 		downloadBtn.setTag(m);
 		downloadBtn.setOnClickListener(new View.OnClickListener() {

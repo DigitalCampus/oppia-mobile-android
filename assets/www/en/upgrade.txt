@@ -4,5 +4,5 @@
 * Better navigation in activities (fixes for swipe)<br/>
 * Fix bug with losing position in quiz when phone rotated<br/>
 * Fix for text-for-speech prompting installation when trying to view activities<br/>
-
+* Now works with some older versions of Android (v2.2+)
 </p>

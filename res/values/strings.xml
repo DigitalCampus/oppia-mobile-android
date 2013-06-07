@@ -123,6 +123,8 @@
 	<string name="scan_media_download_button">Download</string>
 	<string name="scan_media_download_via_pc_button">Download via PC</string>
 	<string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>
+	<string name="media_file_size">%1$.1fMb</string>
+	<string name="media_file_size_unknown">unknown file size</string>
 	
 	<string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
 	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
