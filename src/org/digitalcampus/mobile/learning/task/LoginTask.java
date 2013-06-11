@@ -115,6 +115,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 					payload.setResultResponse(ctx.getString(R.string.login_complete));
 					break;
 				default:
+					Log.d(TAG,responseStr);
 					payload.setResult(false);
 					payload.setResultResponse(ctx.getString(R.string.error_connection));
 			}

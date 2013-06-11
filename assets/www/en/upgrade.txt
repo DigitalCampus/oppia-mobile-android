@@ -1,3 +1,8 @@
+<b>Updates in v1.18</b>
+<p>
+* Fix bug for reading in quiz questions
+</p>
+
 <b>Updates in v1.17</b>
 <p>
 * Added scheduling and suggesting activities<br/>
