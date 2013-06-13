@@ -434,7 +434,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			c.moveToNext();
 		}
 		c.close();
-		return noComplete*100/noActs;
+		if(noActs == 0){
+			return 0;
+		} else {
+			return noComplete*100/noActs;
+		}
 		
 	}
 	
