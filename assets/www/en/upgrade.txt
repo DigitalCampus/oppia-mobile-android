@@ -1,3 +1,9 @@
+<b>Updates in v1.20</b>
+<p>
+* Enabled tagging of courses
+* Change to using new API url
+</p>
+
 <b>Updates in v1.18</b>
 <p>
 * Fix bug for reading in quiz questions

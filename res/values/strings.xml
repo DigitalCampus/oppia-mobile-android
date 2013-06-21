@@ -45,7 +45,7 @@
  	<string name="no_modules">There are no courses currently installed</string>
  	
  	<string name="prefServer">Server</string>
-	<string name="prefServerDefault">http://mquiz.org/</string>
+	<string name="prefServerDefault">http://demo.oppia-mobile.org/</string>
 	<string name="prefLanguage">Preferred Language</string>
 	<string name="prefAdvanced">Advanced settings</string>
 	

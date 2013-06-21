@@ -2,6 +2,7 @@ package org.digitalcampus.mobile.learning.task;
 
 import java.io.File;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.exception.InvalidXMLException;
@@ -42,6 +43,15 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			editor.putBoolean("upgradeV17", true);
 			editor.commit();
 			publishProgress("Upgraded to v17");
+			payload.setResult(true);
+		}
+		
+		if(!prefs.getBoolean("upgradeV20",false)){
+			upgradeV20();
+			Editor editor = prefs.edit();
+			editor.putBoolean("upgradeV20", true);
+			editor.commit();
+			publishProgress("Upgraded to v20");
 			payload.setResult(true);
 		}
 		
@@ -110,6 +120,14 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				db.close();
 			}
 		}
+	}
+	
+	/* switch to using demo.oppia-mobile.org
+	 */
+	protected void upgradeV20(){
+		Editor editor = prefs.edit();
+		editor.putString(ctx.getString(R.string.prefs_server), ctx.getString(R.string.prefServerDefault));
+		editor.commit();
 	}
 	
 	

@@ -82,7 +82,7 @@ public class TrackerService extends Service implements APIRequestListener{
 			long now = System.currentTimeMillis()/1000;
 			if((lastRun + (3600*12)) < now){
 				APIRequestTask task = new APIRequestTask(this);
-				p = new Payload(MobileLearning.SERVER_MODULES_PATH);
+				p = new Payload(MobileLearning.SERVER_COURSES_PATH);
 				task.setAPIRequestListener(this);
 				task.execute(p);
 				

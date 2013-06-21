@@ -64,7 +64,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
         	Tag t = (Tag) bundle.getSerializable(Tag.TAG);
         	url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + "/";
         } else {
-        	url = MobileLearning.SERVER_MODULES_PATH;
+        	url = MobileLearning.SERVER_COURSES_PATH;
         }
         	
 	}
@@ -131,8 +131,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		try {
 			ArrayList<Module> modules = new ArrayList<Module>();
 			
-			for (int i = 0; i < (json.getJSONArray("modules").length()); i++) {
-				JSONObject json_obj = (JSONObject) json.getJSONArray("modules").get(i);
+			for (int i = 0; i < (json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).length()); i++) {
+				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
 				Module dm = new Module();
 				
 				ArrayList<Lang> titles = new ArrayList<Lang>();
