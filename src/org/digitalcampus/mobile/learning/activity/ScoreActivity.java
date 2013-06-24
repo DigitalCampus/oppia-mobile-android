@@ -32,7 +32,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.webkit.WebView;
 import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -42,13 +45,26 @@ public class ScoreActivity extends AppActivity implements APIRequestListener{
 	public static final String TAG = ScoreActivity.class.getSimpleName();
 	private ProgressDialog pDialog;
 	private JSONObject json;
+	private SharedPreferences prefs;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scorecard);
 		this.drawHeader();
-		this.getPoints();
+		//this.getPoints();
+		this.getScorecard();
+		
+	}
+	
+	private void getScorecard(){
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		WebView webView = (WebView) findViewById(R.id.scorecard_webview);
+		webView.getSettings().setJavaScriptEnabled(true);
+		String url = prefs.getString(getString(R.string.prefs_server), getString(R.string.prefServer)) + "mobile/scorecard/?";
+		url += "username=" + prefs.getString(getString(R.string.prefs_username), "");
+		url += "&api_key=" + prefs.getString(getString(R.string.prefs_api_key), "");
+		webView.loadUrl(url);
 	}
 	
 	private void getPoints(){
@@ -65,7 +81,7 @@ public class ScoreActivity extends AppActivity implements APIRequestListener{
 		task.execute(p);
 	}
 
-	public void refreshPointsList() {
+	private void refreshPointsList() {
 		try {
 			ArrayList<Points> points = new ArrayList<Points>();
 			

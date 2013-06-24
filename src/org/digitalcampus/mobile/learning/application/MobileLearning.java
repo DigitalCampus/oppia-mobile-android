@@ -45,16 +45,15 @@ public class MobileLearning extends Application {
 	public static final String MODULE_TRACKER_XML = "tracker.xml";
 	
 	// server path vars - new version
-	public static final String LOGIN_PATH = "api/v1/user/";
-	public static final String REGISTER_PATH = "api/v1/register/";
-	public static final String MQUIZ_SUBMIT_PATH = "api/v1/quizattempt/";
-	public static final String SERVER_COURSES_PATH = "api/v1/course/";
-	public static final String SERVER_TAG_PATH = "api/v1/tag/";
-	public static final String TRACKER_PATH = "api/v1/tracker/";
-	public static final String SERVER_POINTS_PATH = "api/v1/points/";
+	public static final String OPPIAMOBILE_API = "api/v1/";
+	public static final String LOGIN_PATH = OPPIAMOBILE_API + "user/";
+	public static final String REGISTER_PATH = OPPIAMOBILE_API + "register/";
+	public static final String MQUIZ_SUBMIT_PATH = OPPIAMOBILE_API + "quizattempt/";
+	public static final String SERVER_COURSES_PATH = OPPIAMOBILE_API + "course/";
+	public static final String SERVER_TAG_PATH = OPPIAMOBILE_API + "tag/";
+	public static final String TRACKER_PATH = OPPIAMOBILE_API + "tracker/";
+	public static final String SERVER_POINTS_PATH = OPPIAMOBILE_API + "points/";
 	public static final String SERVER_COURSES_NAME = "courses";
-	
-	
 	
 	// general other settings
 	public static final String BUGSENSE_API_KEY = "84d61fd0";

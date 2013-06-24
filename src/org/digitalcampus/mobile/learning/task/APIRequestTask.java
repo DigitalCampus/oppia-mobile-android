@@ -60,7 +60,6 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 			
 			// make request
 			HttpResponse response = client.execute(httpGet);
-			
 		
 			// read response
 			InputStream content = response.getEntity().getContent();
