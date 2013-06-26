@@ -1,4 +1,4 @@
-<b>Updates in v1.19</b>
+<b>Updates in v2.0.0</b>
 <p>
 * Enabled tagging of courses
 * Change to using new API url

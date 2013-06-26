@@ -273,25 +273,25 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		Button prevB = (Button) ModuleActivity.this.findViewById(R.id.prev_btn);
 		Button nextB = (Button) ModuleActivity.this.findViewById(R.id.next_btn);
 		if (this.hasPrev()) {
-			prevB.setEnabled(true);
+			prevB.setVisibility(View.VISIBLE);
 			prevB.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					movePrev();
 				}
 			});
 		} else {
-			prevB.setEnabled(false);
+			prevB.setVisibility(View.INVISIBLE);
 		}
 
 		if (this.hasNext()) {
-			nextB.setEnabled(true);
+			nextB.setVisibility(View.VISIBLE);
 			nextB.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					moveNext();
 				}
 			});
 		} else {
-			nextB.setEnabled(false);
+			nextB.setVisibility(View.INVISIBLE);
 		}
 	}
 
