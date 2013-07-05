@@ -17,115 +17,58 @@
 
 package org.digitalcampus.mobile.learning.activity;
 
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
+import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.adapter.PointsListAdapter;
-import org.digitalcampus.mobile.learning.application.MobileLearning;
-import org.digitalcampus.mobile.learning.listener.APIRequestListener;
-import org.digitalcampus.mobile.learning.model.Points;
-import org.digitalcampus.mobile.learning.task.APIRequestTask;
-import org.digitalcampus.mobile.learning.task.Payload;
-import org.digitalcampus.mobile.learning.utils.UIUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.digitalcampus.mobile.learning.utils.ConnectionUtils;
+import org.digitalcampus.mobile.learning.utils.FileUtils;
 
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.webkit.WebView;
-import android.widget.ListView;
+import android.webkit.WebViewClient;
 
-import com.bugsense.trace.BugSenseHandler;
-
-public class ScoreActivity extends AppActivity implements APIRequestListener{
+public class ScoreActivity extends AppActivity {
 
 	public static final String TAG = ScoreActivity.class.getSimpleName();
-	private ProgressDialog pDialog;
-	private JSONObject json;
 	private SharedPreferences prefs;
+	private static WebView webView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scorecard);
 		this.drawHeader();
-		//this.getPoints();
 		this.getScorecard();
 		
 	}
 	
 	private void getScorecard(){
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		WebView webView = (WebView) findViewById(R.id.scorecard_webview);
+		webView = (WebView) findViewById(R.id.scorecard_webview);
+		webView.setWebViewClient(new ScoreCardWebViewClient());
 		webView.getSettings().setJavaScriptEnabled(true);
-		String url = prefs.getString(getString(R.string.prefs_server), getString(R.string.prefServer)) + "mobile/scorecard/?";
-		url += "username=" + prefs.getString(getString(R.string.prefs_username), "");
-		url += "&api_key=" + prefs.getString(getString(R.string.prefs_api_key), "");
-		webView.loadUrl(url);
-	}
-	
-	private void getPoints(){
-		// show progress dialog
-		pDialog = new ProgressDialog(this);
-		pDialog.setTitle(R.string.loading);
-		pDialog.setMessage(getString(R.string.loading_points));
-		pDialog.setCancelable(true);
-		pDialog.show();
-		
-		APIRequestTask task = new APIRequestTask(this);
-		Payload p = new Payload(MobileLearning.SERVER_POINTS_PATH);
-		task.setAPIRequestListener(this);
-		task.execute(p);
-	}
-
-	private void refreshPointsList() {
-		try {
-			ArrayList<Points> points = new ArrayList<Points>();
-			
-			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
-				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
-				Points p = new Points();
-				p.setDescription(json_obj.getString("description"));
-				p.setDateTime(json_obj.getString("date"));
-				p.setPoints(json_obj.getInt("points"));
-
-				points.add(p);
-			}
-			
-			PointsListAdapter pla = new PointsListAdapter(this, points);
-			ListView listView = (ListView) findViewById(R.id.points_list);
-			listView.setAdapter(pla);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			BugSenseHandler.sendException(e);
-			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
-		}
-
-	}
-	
-	public void apiRequestComplete(Payload response) {
-		pDialog.dismiss();
-		if(response.isResult()){
-			try {
-				json = new JSONObject(response.getResultResponse());
-				refreshPointsList();
-			} catch (JSONException e) {
-				BugSenseHandler.sendException(e);
-				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);
-				e.printStackTrace();
-			}
+		if(ConnectionUtils.isNetworkConnected(this)){
+			String url = prefs.getString(getString(R.string.prefs_server), getString(R.string.prefServer)) + "mobile/scorecard/?";
+			url += "username=" + prefs.getString(getString(R.string.prefs_username), "");
+			url += "&api_key=" + prefs.getString(getString(R.string.prefs_api_key), "");
+			webView.loadUrl(url);
 		} else {
-			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, new Callable<Boolean>() {
-				public Boolean call() throws Exception {
-					ScoreActivity.this.finish();
-					return true;
-				}
-			});
+			String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+        	String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(ScoreActivity.this,lang,"scorecard_not_available.html");
+        	webView.loadUrl(url);
 		}
-		
 	}
+	
+	private class ScoreCardWebViewClient extends WebViewClient{
+		@Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+        	String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+        	String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(ScoreActivity.this,lang,"scorecard_not_available.html");
+        	webView.loadUrl(url);
+        }
+	}
+	
 }

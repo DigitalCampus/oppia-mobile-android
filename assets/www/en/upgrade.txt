@@ -1,6 +1,11 @@
+<b>Updates in v2.0.1</b>
+<p>
+
+</p>
+
 <b>Updates in v2.0.0</b>
 <p>
-* Enabled tagging of courses
+* Enabled tagging of courses<br/>
 * Change to using new API url
 </p>
 
