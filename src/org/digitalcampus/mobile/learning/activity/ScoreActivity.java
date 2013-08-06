@@ -26,7 +26,6 @@ import org.digitalcampus.mobile.learning.utils.FileUtils;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 

@@ -52,7 +52,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 public class PageWidget extends WidgetFactory {
 
-	private static final String TAG = PageWidget.class.getSimpleName();
+	public static final String TAG = PageWidget.class.getSimpleName();
 	private Context ctx;
 	private Module module;
 	private org.digitalcampus.mobile.learning.model.Activity activity;

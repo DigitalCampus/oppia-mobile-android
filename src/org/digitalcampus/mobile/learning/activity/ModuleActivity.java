@@ -25,12 +25,14 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.Tracker;
+import org.digitalcampus.mobile.learning.gesture.ResourceGestureDetector;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.service.TrackerService;
 import org.digitalcampus.mobile.learning.utils.UIUtils;
 import org.digitalcampus.mobile.learning.widgets.MQuizWidget;
 import org.digitalcampus.mobile.learning.widgets.PageWidget;
+import org.digitalcampus.mobile.learning.widgets.ResourceWidget;
 import org.digitalcampus.mobile.learning.widgets.WidgetFactory;
 import org.digitalcampus.mquiz.MQuiz;
 import org.json.JSONObject;
@@ -51,6 +53,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +75,10 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 
 	private GestureDetector quizGestureDetector;
 	View.OnTouchListener quizGestureListener;
-
+	
+	private GestureDetector resourceGestureDetector;
+	View.OnTouchListener resourceGestureListener; 
+	
 	private static int TTS_CHECK = 0;
 	static TextToSpeech myTTS;
 	private boolean ttsRunning = false;
@@ -96,19 +102,31 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 			currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
 		}
 
-		// Gesture detection for pages
-		pageGestureDetector = new GestureDetector(new PageGestureDetector());
+		// OppiaMobileGesture detection for pages
+		pageGestureDetector = new GestureDetector(this, new PageGestureDetector());
 		pageGestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				return pageGestureDetector.onTouchEvent(event);
+				//return pageGestureDetector.onTouchEvent(event);
+				if(pageGestureDetector.onTouchEvent(event)){
+			         return true;
+			    }
+			    return false;
 			}
 		};
 
-		// Gesture detection for quizzes
-		quizGestureDetector = new GestureDetector(new QuizGestureDetector());
+		// OppiaMobileGesture detection for quizzes
+		quizGestureDetector = new GestureDetector(this, new QuizGestureDetector());
 		quizGestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				return quizGestureDetector.onTouchEvent(event);
+			}
+		};
+		
+		// OppiaMobileGesture detection for resources
+		resourceGestureDetector = new GestureDetector(this, new ResourceGestureDetector(this));
+		resourceGestureListener = new View.OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				return resourceGestureDetector.onTouchEvent(event);
 			}
 		};
 	}
@@ -122,7 +140,6 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		savedInstanceState.putString("mediaFileName", currentActivity.getMediaFileName());
 		savedInstanceState.putInt("currentActivityNo", this.currentActivityNo);
 		savedInstanceState.putSerializable("mquiz", currentActivity.getMQuiz());
-		Log.d(TAG,"saved instance state");
 	}
 
 	@Override
@@ -134,7 +151,6 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		currentActivity.setStartTime(savedInstanceState.getLong("activityStartTimeStamp"));
 		this.currentActivityNo = savedInstanceState.getInt("currentActivityNo");
 		this.mQuiz = (MQuiz) savedInstanceState.getSerializable("mquiz");
-		Log.d(TAG,"restored instance state");
 	}
 
 	@Override
@@ -258,13 +274,17 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		if (acts.get(this.currentActivityNo).getActType().equals("quiz")) {
 			if(mQuiz != null){
 				currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo), mQuiz);
-				Log.d(TAG,"Sending mquiz object");
-				//currentActivity.setMQuiz(mQuiz);
 			} else {
 				currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
 			}
 			ScrollView sv = (ScrollView) this.findViewById(R.id.quizScrollView);
 			sv.setOnTouchListener(quizGestureListener);
+		}
+		if (acts.get(this.currentActivityNo).getActType().equals("resource")) {
+			currentActivity = new ResourceWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+			LinearLayout ll = (LinearLayout) this.findViewById(R.id.widget_resource);
+			ll.setOnTouchListener(resourceGestureListener);
+			Log.d(TAG,"set resourceGestureListener");
 		}
 		this.setUpNav();
 	}
@@ -295,14 +315,14 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		}
 	}
 
-	private boolean hasPrev() {
+	public boolean hasPrev() {
 		if (this.currentActivityNo == 0) {
 			return false;
 		}
 		return true;
 	}
 
-	private boolean hasNext() {
+	public boolean hasNext() {
 		int noActs = section.getActivities().size();
 		if (this.currentActivityNo + 1 == noActs) {
 			return false;
@@ -311,7 +331,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		}
 	}
 
-	private void moveNext() {
+	public void moveNext() {
 		this.stopReading();
 		ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
 		this.saveTracker(acts.get(currentActivityNo).getDigest());
@@ -319,7 +339,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		loadActivity();
 	}
 
-	private void movePrev() {
+	public void movePrev() {
 		this.stopReading();
 		ArrayList<org.digitalcampus.mobile.learning.model.Activity> acts = section.getActivities();
 		this.saveTracker(acts.get(currentActivityNo).getDigest());
@@ -398,7 +418,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		}
 
 	}
-
+	
 	public void onInit(int status) {
 		// check for successful instantiation
 		if (status == TextToSpeech.SUCCESS) {

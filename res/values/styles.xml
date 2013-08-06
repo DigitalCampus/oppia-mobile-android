@@ -69,5 +69,11 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@drawable/text_light</item>
     </style>
+    
+    <style name="NormalTextDark">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@drawable/text_dark</item>
+    </style>
 
 </resources>

@@ -54,6 +54,8 @@ public class Activity implements Serializable{
 	private boolean customImage = false;
 	private DateTime startDate;
 	private DateTime endDate;
+	private String mimeType;
+	private ArrayList<Lang> descriptions = new ArrayList<Lang>();
 
 	public Activity(){
 	}
@@ -87,8 +89,6 @@ public class Activity implements Serializable{
 	public void setMedia(ArrayList<Media> media) {
 		this.media = media;
 	}
-
-	
 
 	public String getDigest() {
 		return digest;
@@ -241,5 +241,29 @@ public class Activity implements Serializable{
 
 	public void setEndDate(DateTime endDate) {
 		this.endDate = endDate;
+	}
+
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
+	
+	public String getDescription(String lang) {
+		for(Lang l: descriptions){
+			if(l.getLang().equals(lang)){
+				return l.getContent();
+			}
+		}
+		if(descriptions.size() > 0){
+			return descriptions.get(0).getContent();
+		}
+		return "No description set";
+	}
+	
+	public void setDescriptions(ArrayList<Lang> descriptions) {
+		this.descriptions = descriptions;
 	}
 }

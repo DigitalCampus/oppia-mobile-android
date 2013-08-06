@@ -225,6 +225,7 @@ public class ModuleXMLReader {
 				a.setDigest(digest);
 				// get the titles
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
+				ArrayList<Lang> actDescriptions = new ArrayList<Lang>();
 				NodeList act = activities.item(j).getChildNodes();
 				for (int k=0; k<act.getLength(); k++) {
 					NamedNodeMap attrs = act.item(k).getAttributes();
@@ -232,8 +233,13 @@ public class ModuleXMLReader {
 						String lang = attrs.getNamedItem("lang").getTextContent();
 						actTitles.add(new Lang(lang, act.item(k).getTextContent()));
 					}
+					if(act.item(k).getNodeName().equals("description")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
+					}
 				}
 				a.setTitles(actTitles);
+				a.setDescriptions(actDescriptions);
 				
 				acts.add(a);
 			}
@@ -293,7 +299,9 @@ public class ModuleXMLReader {
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
 				ArrayList<Lang> actLocations = new ArrayList<Lang>();
 				ArrayList<Lang> actContents = new ArrayList<Lang>();
+				ArrayList<Lang> actDescriptions = new ArrayList<Lang>();
 				ArrayList<Media> actMedia = new ArrayList<Media>();
+				String actMimeType = null;
 				NodeList act = acts.item(j).getChildNodes();
 				for (int k=0; k<act.getLength(); k++) {
 					NamedNodeMap attrs = act.item(k).getAttributes();
@@ -303,6 +311,12 @@ public class ModuleXMLReader {
 					} else if(act.item(k).getNodeName().equals("location")){
 						String lang = attrs.getNamedItem("lang").getTextContent();
 						actLocations.add(new Lang(lang, act.item(k).getTextContent()));
+						try {
+							String mimeType = attrs.getNamedItem("type").getTextContent();
+							actMimeType = mimeType;
+						} catch (NullPointerException npe){
+							//do nothing
+						}
 					} else if(act.item(k).getNodeName().equals("content")){
 						String lang = attrs.getNamedItem("lang").getTextContent();
 						actContents.add(new Lang(lang, act.item(k).getTextContent()));
@@ -326,13 +340,18 @@ public class ModuleXMLReader {
 								actMedia.add(mObj);
 							}
 						}
+					} else if (act.item(k).getNodeName().equals("description")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
 					}
 				}
 				a.setTitles(actTitles);
+				a.setDescriptions(actDescriptions);
 				a.setLocations(actLocations);
 				a.setContents(actContents);
 				a.setDigest(digest);
 				a.setMedia(actMedia);
+				a.setMimeType(actMimeType);
 				
 				s.addActivity(a);
 			}

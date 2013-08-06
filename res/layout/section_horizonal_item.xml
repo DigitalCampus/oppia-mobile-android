@@ -11,7 +11,7 @@
         android:layout_marginRight="5dp"
         android:background="@drawable/activity_background"
         android:orientation="vertical"
-        android:paddingBottom="4dp"
+        android:paddingBottom="2dp"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:paddingTop="2dp" >
@@ -28,11 +28,12 @@
         <TextView
             android:id="@+id/activity_title"
             android:layout_width="140dp"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:gravity="center_horizontal"
             android:textColor="@drawable/text_light"
             android:textSize="14sp"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            android:background="@drawable/background_dark"/>
     </LinearLayout>
 
 </LinearLayout>

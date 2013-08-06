@@ -1,6 +1,6 @@
 <b>Updates in v2.0.1</b>
 <p>
-
+* Better handing of scorecard when no connection available
 </p>
 
 <b>Updates in v2.0.0</b>
