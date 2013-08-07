@@ -16,7 +16,7 @@
     <LinearLayout
         android:id="@+id/widget_resource_object"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:background="@drawable/background_light"
         android:orientation="vertical" />
 

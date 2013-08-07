@@ -25,7 +25,6 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.Tracker;
-import org.digitalcampus.mobile.learning.gesture.ResourceGestureDetector;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.service.TrackerService;
@@ -45,16 +44,10 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,18 +59,6 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 	private int currentActivityNo = 0;
 	private WidgetFactory currentActivity;
 	private SharedPreferences prefs;
-
-	private static final int SWIPE_MIN_DISTANCE = 120;
-	private static final int SWIPE_MAX_OFF_PATH = 250;
-	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-	private GestureDetector pageGestureDetector;
-	View.OnTouchListener pageGestureListener;
-
-	private GestureDetector quizGestureDetector;
-	View.OnTouchListener quizGestureListener;
-	
-	private GestureDetector resourceGestureDetector;
-	View.OnTouchListener resourceGestureListener; 
 	
 	private static int TTS_CHECK = 0;
 	static TextToSpeech myTTS;
@@ -100,35 +81,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 			section = (Section) bundle.getSerializable(Section.TAG);
 			module = (Module) bundle.getSerializable(Module.TAG);
 			currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
-		}
-
-		// OppiaMobileGesture detection for pages
-		pageGestureDetector = new GestureDetector(this, new PageGestureDetector());
-		pageGestureListener = new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				//return pageGestureDetector.onTouchEvent(event);
-				if(pageGestureDetector.onTouchEvent(event)){
-			         return true;
-			    }
-			    return false;
-			}
-		};
-
-		// OppiaMobileGesture detection for quizzes
-		quizGestureDetector = new GestureDetector(this, new QuizGestureDetector());
-		quizGestureListener = new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				return quizGestureDetector.onTouchEvent(event);
-			}
-		};
-		
-		// OppiaMobileGesture detection for resources
-		resourceGestureDetector = new GestureDetector(this, new ResourceGestureDetector(this));
-		resourceGestureListener = new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				return resourceGestureDetector.onTouchEvent(event);
-			}
-		};
+		}	
 	}
 
 	@Override
@@ -268,23 +221,14 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 
 		if (acts.get(this.currentActivityNo).getActType().equals("page")) {
 			currentActivity = new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
-			WebView wv = (WebView) this.findViewById(R.id.page_webview);
-			wv.setOnTouchListener(pageGestureListener);
-		}
-		if (acts.get(this.currentActivityNo).getActType().equals("quiz")) {
+		} else if (acts.get(this.currentActivityNo).getActType().equals("quiz")) {
 			if(mQuiz != null){
 				currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo), mQuiz);
 			} else {
 				currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
-			}
-			ScrollView sv = (ScrollView) this.findViewById(R.id.quizScrollView);
-			sv.setOnTouchListener(quizGestureListener);
-		}
-		if (acts.get(this.currentActivityNo).getActType().equals("resource")) {
-			currentActivity = new ResourceWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
-			LinearLayout ll = (LinearLayout) this.findViewById(R.id.widget_resource);
-			ll.setOnTouchListener(resourceGestureListener);
-			Log.d(TAG,"set resourceGestureListener");
+			}			
+		} else if (acts.get(this.currentActivityNo).getActType().equals("resource")) {
+			currentActivity = new ResourceWidget(this, module, acts.get(this.currentActivityNo));
 		}
 		this.setUpNav();
 	}
@@ -365,59 +309,6 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 			}
 		});
 	}
-
-	class PageGestureDetector extends SimpleOnGestureListener {
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-			try {
-				if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-					return false;
-				// right to left swipe
-				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					if (ModuleActivity.this.hasNext()) {
-						ModuleActivity.this.moveNext();
-					}
-				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					if (ModuleActivity.this.hasPrev()) {
-						ModuleActivity.this.movePrev();
-					}
-				}
-			} catch (Exception e) {
-				// nothing
-			}
-			return false;
-		}
-
-	}
-
-	class QuizGestureDetector extends SimpleOnGestureListener {
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-			try {
-				if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-					return false;
-				// right to left swipe
-				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					if (ModuleActivity.this.currentActivity instanceof MQuizWidget) {
-						if (((MQuizWidget) ModuleActivity.this.currentActivity).getMquiz().hasNext()) {
-							((MQuizWidget) ModuleActivity.this.currentActivity).nextBtn.performClick();
-						}
-					}
-
-				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-					if (ModuleActivity.this.currentActivity instanceof MQuizWidget) {
-						if (((MQuizWidget) ModuleActivity.this.currentActivity).getMquiz().hasPrevious()) {
-							((MQuizWidget) ModuleActivity.this.currentActivity).prevBtn.performClick();
-						}
-					}
-				}
-			} catch (Exception e) {
-				// nothing
-			}
-			return false;
-		}
-
-	}
 	
 	public void onInit(int status) {
 		// check for successful instantiation
@@ -459,5 +350,9 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		Log.d(TAG,"Finished reading");
 		this.ttsRunning = false;
 		myTTS = null;
+	}
+	
+	public WidgetFactory getCurrentActivity(){
+		return this.currentActivity;
 	}
 }

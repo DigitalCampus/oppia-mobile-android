@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.activity.ModuleActivity;
 import org.digitalcampus.mobile.learning.application.DbHelper;
+import org.digitalcampus.mobile.learning.gesture.QuizGestureDetector;
 import org.digitalcampus.mobile.learning.model.Activity;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.widgets.mquiz.EssayWidget;
@@ -48,11 +50,15 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,16 +81,13 @@ public class MQuizWidget extends WidgetFactory {
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private long endTimestamp = System.currentTimeMillis()/1000;
 	
+	private GestureDetector quizGestureDetector;
+	private OnTouchListener quizGestureListener; 
+	
 	public MQuizWidget(android.app.Activity context, Module module, Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
 		this.module = module;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		super.getLayout().addView(vv);
-		vv.setLayoutParams(lp);
-		
 		this.startQuiz(activity);
 	}
 
@@ -93,16 +96,33 @@ public class MQuizWidget extends WidgetFactory {
 		this.ctx = context;
 		this.module = module;
 		this.mQuiz = mQuiz;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		super.getLayout().addView(vv);
-		vv.setLayoutParams(lp);
-		
 		this.startQuiz(activity);
 	}
 	
+	
 	private void startQuiz(Activity activity){
+		this.prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
+		
+		quizGestureDetector = new GestureDetector((android.app.Activity) this.ctx, new QuizGestureDetector((ModuleActivity) this.ctx));
+		quizGestureListener = new OnTouchListener() {
+			public boolean onTouch(View v, MotionEvent event) {
+				try {
+					// TODO - for some reason unless this is in a try/catch block it will fail with NullPointerException
+					return quizGestureDetector.onTouchEvent(event);
+				} catch (Exception e){
+					return false;
+				}
+			}
+		};
+		View vv = super.getLayoutInflater().inflate(R.layout.widget_mquiz, null);
+		
+		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		super.getLayout().addView(vv);
+		vv.setLayoutParams(lp);
+
+		ScrollView sv = (ScrollView) this.ctx.findViewById(R.id.quizScrollView);
+		sv.setOnTouchListener(quizGestureListener);
+
 		prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
 		nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
@@ -111,7 +131,6 @@ public class MQuizWidget extends WidgetFactory {
 			quizContent = activity.getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 			mQuiz = new MQuiz();
 			mQuiz.load(quizContent);
-			Log.d(TAG,"created new mquiz object...");
 		}
 
 		this.showQuestion();
