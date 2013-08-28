@@ -25,6 +25,7 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.adapter.SectionListAdapter;
 import org.digitalcampus.mobile.learning.application.Tracker;
+import org.digitalcampus.mobile.learning.gesture.PageGestureDetector;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.model.Section;
 import org.digitalcampus.mobile.learning.service.TrackerService;
@@ -44,9 +45,12 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +63,9 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 	private int currentActivityNo = 0;
 	private WidgetFactory currentActivity;
 	private SharedPreferences prefs;
+	
+	private GestureDetector pageGestureDetector;
+	View.OnTouchListener pageGestureListener;
 	
 	private static int TTS_CHECK = 0;
 	static TextToSpeech myTTS;
@@ -81,7 +88,21 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 			section = (Section) bundle.getSerializable(Section.TAG);
 			module = (Module) bundle.getSerializable(Module.TAG);
 			currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
-		}	
+		}
+		
+		// OppiaMobileGesture detection for pages
+		pageGestureDetector = new GestureDetector(this, new PageGestureDetector(this));
+		pageGestureListener = new View.OnTouchListener() {
+			
+			public boolean onTouch(View v, MotionEvent event) {
+				//return pageGestureDetector.onTouchEvent(event);
+				if(pageGestureDetector.onTouchEvent(event)){
+			         return true;
+			    }
+			    return false;
+			}
+		};
+		
 	}
 
 	@Override
@@ -221,12 +242,14 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 
 		if (acts.get(this.currentActivityNo).getActType().equals("page")) {
 			currentActivity = new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+			WebView wv = (WebView) this.findViewById(R.id.page_webview);
+			wv.setOnTouchListener(pageGestureListener);
 		} else if (acts.get(this.currentActivityNo).getActType().equals("quiz")) {
 			if(mQuiz != null){
 				currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo), mQuiz);
 			} else {
 				currentActivity = new MQuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
-			}			
+			}
 		} else if (acts.get(this.currentActivityNo).getActType().equals("resource")) {
 			currentActivity = new ResourceWidget(this, module, acts.get(this.currentActivityNo));
 		}

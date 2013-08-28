@@ -25,11 +25,9 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.activity.ModuleActivity;
 import org.digitalcampus.mobile.learning.application.DbHelper;
 import org.digitalcampus.mobile.learning.application.MobileLearning;
 import org.digitalcampus.mobile.learning.application.Tracker;
-import org.digitalcampus.mobile.learning.gesture.ResourceGestureDetector;
 import org.digitalcampus.mobile.learning.model.Media;
 import org.digitalcampus.mobile.learning.model.Module;
 import org.digitalcampus.mobile.learning.utils.FileUtils;
@@ -44,13 +42,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.widget.LinearLayout.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -69,8 +64,6 @@ public class PageWidget extends WidgetFactory {
 	private WebView wv;
 	private BufferedReader br;
 	private boolean readAloud = false;
-	private GestureDetector pageGestureDetector;
-	private OnTouchListener pageGestureListener;
 	
 	
 	public PageWidget(Context context, Module module, org.digitalcampus.mobile.learning.model.Activity activity) {
@@ -80,24 +73,12 @@ public class PageWidget extends WidgetFactory {
 		this.activity = activity;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		
-		pageGestureDetector = new GestureDetector((Activity) context, new ResourceGestureDetector((ModuleActivity) context));
-		pageGestureListener = new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				try {
-					// TODO - for some reason unless this is in a try/catch block it will fail with NullPointerException
-					return pageGestureDetector.onTouchEvent(event);
-				} catch (Exception e){
-					return false;
-				}
-			}
-		};
 		View vv = super.getLayoutInflater().inflate(R.layout.widget_page, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		super.getLayout().addView(vv);
 		vv.setLayoutParams(lp);
 		
 		wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
-		wv.setOnTouchListener(pageGestureListener);
 		// get the location data
 		String url = module.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		try {
