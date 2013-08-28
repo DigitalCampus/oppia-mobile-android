@@ -1,17 +1,18 @@
 <b>Updates in v2.0.1</b>
 <p>
-* Better handing of scorecard when no connection available
+* Better handling of scorecard when no connection available<br/>
+* Added support for resource activities<br/>
 </p>
 
 <b>Updates in v2.0.0</b>
 <p>
 * Enabled tagging of courses<br/>
-* Change to using new API url
+* Change to using new API url<br/>
 </p>
 
 <b>Updates in v1.18</b>
 <p>
-* Fix bug for reading in quiz questions
+* Fix bug for reading in quiz questions<br/>
 </p>
 
 <b>Updates in v1.17</b>
