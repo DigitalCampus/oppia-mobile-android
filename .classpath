@@ -5,9 +5,9 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="lib" path="libs/mquiz-0.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/bugsense3.2.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/joda-time-2.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/httpclient-4.2.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/bugsense-3.5.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
