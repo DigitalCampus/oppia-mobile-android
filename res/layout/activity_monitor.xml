@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <org.digitalcampus.mobile.learning.application.Header
+        android:id="@+id/header"
+        style="@style/Header" />
+
+    <WebView
+        android:id="@+id/monitor_webview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </WebView>
+
+</LinearLayout>

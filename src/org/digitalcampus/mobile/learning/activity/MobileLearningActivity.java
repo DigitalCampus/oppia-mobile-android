@@ -285,6 +285,9 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		case R.id.menu_help:
 			startActivity(new Intent(this, HelpActivity.class));
 			return true;
+		case R.id.menu_monitor:
+			startActivity(new Intent(this, MonitorActivity.class));
+			return true;
 		case R.id.menu_logout:
 			logout();
 			return true;

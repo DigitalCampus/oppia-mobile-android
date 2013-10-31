@@ -127,5 +127,12 @@ public class SubmitMQuizTask extends AsyncTask<Payload, Object, Payload> {
 	protected void onProgressUpdate(String... obj) {
 		Log.d(TAG, obj[0]);
 	}
+	
+	@Override
+    protected void onPostExecute(Payload p) {
+		// reset submittask back to null after completion - so next call can run properly
+		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+		app.omSubmitQuizTask = null;
+    }
 
 }

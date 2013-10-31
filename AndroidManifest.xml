@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.digitalcampus.mobile.learning"
-    android:versionCode="21"
-    android:versionName="2.0.1">
+    android:versionCode="22"
+    android:versionName="2.0.2">
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -62,6 +62,9 @@
          <activity
             android:name=".activity.HelpActivity"
             android:label="@string/title_help" />
+         <activity
+            android:name=".activity.MonitorActivity"
+            android:label="@string/title_monitor" />
          <activity
             android:name=".activity.RegisterActivity"
             android:label="@string/title_register" />

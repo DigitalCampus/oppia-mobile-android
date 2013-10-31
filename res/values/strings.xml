@@ -8,6 +8,7 @@
     <string name="menu_about">About</string>
     <string name="menu_help">Help</string>
     <string name="menu_logout">Logout</string>
+    <string name="menu_monitor">Monitor</string>
     <string name="menu_read_aloud">Read aloud</string>
     <string name="menu_stop_read_aloud">Stop reading</string>
     
@@ -18,6 +19,7 @@
     <string name="title_activity_module_index">Course index</string>
     <string name="title_activity_module">Activity</string>
     <string name="title_download_activity">Manage courses</string>
+    <string name="title_monitor">Monitor</string>
     <string name="title_prefs">Settings</string>
     <string name="title_tag_select_activity">Select Category</string>
     <string name="version">Version: %1$s</string>

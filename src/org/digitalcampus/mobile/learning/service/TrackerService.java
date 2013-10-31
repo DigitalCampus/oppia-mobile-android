@@ -99,9 +99,11 @@ public class TrackerService extends Service implements APIRequestListener{
 			}
 			
 			// send quiz results
-			Payload mqp = db.getUnsentMquiz();
-			SubmitMQuizTask smqt = new SubmitMQuizTask(this);
-			smqt.execute(mqp);
+			if(app.omSubmitQuizTask == null){
+				Payload mqp = db.getUnsentMquiz();
+				app.omSubmitQuizTask = new SubmitMQuizTask(this);
+				app.omSubmitQuizTask.execute(mqp);
+			}
 
 			db.close();
 

@@ -20,6 +20,7 @@ package org.digitalcampus.mobile.learning.application;
 import java.io.File;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.task.SubmitMQuizTask;
 import org.digitalcampus.mobile.learning.task.SubmitTrackerMultipleTask;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -71,6 +72,9 @@ public class MobileLearning extends Application {
 	
 	// for tracking if SubmitTrackerMultipleTask is already running
 	public SubmitTrackerMultipleTask omSubmitTrackerMultipleTask = null;
+	
+	// for tracking if SubmitQuizTask is already running
+	public SubmitMQuizTask omSubmitQuizTask = null;
 	
 	public static boolean createDirs() {
 		String cardstatus = Environment.getExternalStorageState();
