@@ -24,7 +24,7 @@
         android:allowBackup="true"
         android:name="org.digitalcampus.oppia.application.MobileLearning">
         <activity
-            android:name="org.digitalcampus.oppia.activity.MobileLearningActivity"
+            android:name="org.digitalcampus.oppia.activity.OppiaMobileActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

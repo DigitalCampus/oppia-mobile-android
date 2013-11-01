@@ -69,10 +69,10 @@ import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class MobileLearningActivity extends AppActivity implements InstallModuleListener,
+public class OppiaMobileActivity extends AppActivity implements InstallModuleListener,
 		OnSharedPreferenceChangeListener, ScanMediaListener, UpgradeListener {
 
-	public static final String TAG = MobileLearningActivity.class.getSimpleName();
+	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
 	private Module tempMod;
 	private ArrayList<Module> modules;
@@ -105,7 +105,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			builder.setMessage(R.string.error_sdcard);
 			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
-					MobileLearningActivity.this.finish();
+					OppiaMobileActivity.this.finish();
 				}
 			});
 			builder.show();
@@ -126,7 +126,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	public void onStart() {
 		super.onStart();
 		if (!MobileLearning.isLoggedIn(this)) {
-			startActivity(new Intent(MobileLearningActivity.this, LoginActivity.class));
+			startActivity(new Intent(OppiaMobileActivity.this, LoginActivity.class));
 			return;
 		}
 		
@@ -138,7 +138,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		if (children != null) {
 			ArrayList<Object> data = new ArrayList<Object>();
      		Payload p = new Payload(data);
-			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(MobileLearningActivity.this);
+			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(OppiaMobileActivity.this);
 			imTask.setInstallerListener(this);
 			imTask.execute(p);
 		}
@@ -197,7 +197,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 			Button manageBtn = (Button) this.findViewById(R.id.manage_modules_btn);
 			manageBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					startActivity(new Intent(MobileLearningActivity.this, TagSelectActivity.class));
+					startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
 				}
 			});
 
@@ -212,7 +212,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Module m = (Module) view.getTag();
-				Intent i = new Intent(MobileLearningActivity.this, ModuleIndexActivity.class);
+				Intent i = new Intent(OppiaMobileActivity.this, ModuleIndexActivity.class);
 				Bundle tb = new Bundle();
 				tb.putSerializable(Module.TAG, m);
 				i.putExtras(tb);
@@ -228,7 +228,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 
 	private void updateReminders(){
 		if(prefs.getBoolean(getString(R.string.prefs_schedule_reminders_show), true)){
-			DbHelper db = new DbHelper(MobileLearningActivity.this);
+			DbHelper db = new DbHelper(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString(getString(R.string.prefs_schedule_reminders_no), "3"));
 			ArrayList<Activity> activities = db.getActivitiesDue(max);
 			db.close();
@@ -262,37 +262,37 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.menu_about:
-			startActivity(new Intent(this, AboutActivity.class));
-			return true;
-		case R.id.menu_download:
-			startActivity(new Intent(this, TagSelectActivity.class));
-			return true;
-		case R.id.menu_settings:
-			Intent i = new Intent(this, PrefsActivity.class);
-			Bundle tb = new Bundle();
-			ArrayList<Lang> langs = new ArrayList<Lang>();
-			for(Module m: modules){
-				langs.addAll(m.getLangs());
-			}
-			tb.putSerializable("langs", langs);
-			i.putExtras(tb);
-			startActivity(i);
-			return true;
-		case R.id.menu_language:
-			createLanguageDialog();
-			return true;
-		case R.id.menu_help:
-			startActivity(new Intent(this, HelpActivity.class));
-			return true;
-		case R.id.menu_monitor:
-			startActivity(new Intent(this, MonitorActivity.class));
-			return true;
-		case R.id.menu_logout:
-			logout();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.menu_about:
+				startActivity(new Intent(this, AboutActivity.class));
+				return true;
+			case R.id.menu_download:
+				startActivity(new Intent(this, TagSelectActivity.class));
+				return true;
+			case R.id.menu_settings:
+				Intent i = new Intent(this, PrefsActivity.class);
+				Bundle tb = new Bundle();
+				ArrayList<Lang> langs = new ArrayList<Lang>();
+				for(Module m: modules){
+					langs.addAll(m.getLangs());
+				}
+				tb.putSerializable("langs", langs);
+				i.putExtras(tb);
+				startActivity(i);
+				return true;
+			case R.id.menu_language:
+				createLanguageDialog();
+				return true;
+			case R.id.menu_help:
+				startActivity(new Intent(this, HelpActivity.class));
+				return true;
+			case R.id.menu_monitor:
+				startActivity(new Intent(this, MonitorActivity.class));
+				return true;
+			case R.id.menu_logout:
+				logout();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -305,7 +305,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		UIUtils ui = new UIUtils();
     	ui.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {	
 			public Boolean call() throws Exception {
-				MobileLearningActivity.this.onStart();
+				OppiaMobileActivity.this.onStart();
 				return true;
 			}
 		});
@@ -319,7 +319,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				// wipe activity data
-				DbHelper db = new DbHelper(MobileLearningActivity.this);
+				DbHelper db = new DbHelper(OppiaMobileActivity.this);
 				db.onLogout();
 				db.close();
 
@@ -332,7 +332,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 				editor.commit();
 
 				// restart this activity
-				MobileLearningActivity.this.onStart();
+				OppiaMobileActivity.this.onStart();
 
 			}
 		});
@@ -387,7 +387,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				// remove db records
-				DbHelper db = new DbHelper(MobileLearningActivity.this);
+				DbHelper db = new DbHelper(OppiaMobileActivity.this);
 				db.deleteModule(tempMod.getModId());
 				db.close();
 				// remove files
@@ -414,7 +414,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 		builder.setMessage(R.string.module_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				DbHelper db = new DbHelper(MobileLearningActivity.this);
+				DbHelper db = new DbHelper(OppiaMobileActivity.this);
 				db.resetModule(tempMod.getModId());
 				db.close();
 				displayModules();
@@ -475,7 +475,7 @@ public class MobileLearningActivity extends AppActivity implements InstallModule
 				public void onClick(View view) {
 					@SuppressWarnings("unchecked")
 					ArrayList<Object> m = (ArrayList<Object>) view.getTag();
-					Intent i = new Intent(MobileLearningActivity.this, DownloadMediaActivity.class);
+					Intent i = new Intent(OppiaMobileActivity.this, DownloadMediaActivity.class);
 					Bundle tb = new Bundle();
 					tb.putSerializable(DownloadMediaActivity.TAG, m);
 					i.putExtras(tb);

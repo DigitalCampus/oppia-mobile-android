@@ -1,0 +1,5 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_return"
+        android:title="@string/menu_return_to_courses"
+        android:orderInCategory="100" />
+</menu>
