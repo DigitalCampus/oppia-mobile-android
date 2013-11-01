@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
-        <org.digitalcampus.mobile.learning.application.Header
+        <org.digitalcampus.oppia.application.Header
             android:id="@+id/header"
             style="@style/Header" />
         

@@ -4,18 +4,18 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <org.digitalcampus.mobile.learning.application.Header
+    <org.digitalcampus.oppia.application.Header
         android:id="@+id/header"
         style="@style/Header" />
     
-    <org.digitalcampus.mobile.learning.application.UserMessage
+    <org.digitalcampus.oppia.application.UserMessage
         android:id="@+id/user_messages"
         android:background="@drawable/message_background"
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-    <org.digitalcampus.mobile.learning.application.ScheduleReminders
+    <org.digitalcampus.oppia.application.ScheduleReminders
         android:id="@+id/schedule_reminders"
         android:background="@drawable/message_background"
         android:layout_width="fill_parent" 

@@ -22,9 +22,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme.Dark"
         android:allowBackup="true"
-        android:name=".application.MobileLearning">
+        android:name="org.digitalcampus.oppia.application.MobileLearning">
         <activity
-            android:name=".activity.MobileLearningActivity"
+            android:name="org.digitalcampus.oppia.activity.MobileLearningActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,72 +32,72 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ModuleIndexActivity"
+            android:name="org.digitalcampus.oppia.activity.ModuleIndexActivity"
             android:label="@string/title_activity_module_index" >
         </activity>
         <activity
-            android:name=".activity.ModuleActivity"
+            android:name="org.digitalcampus.oppia.activity.ModuleActivity"
             android:label="@string/title_activity_module" 
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
-            android:name=".activity.DownloadActivity"
+            android:name="org.digitalcampus.oppia.activity.DownloadActivity"
             android:label="@string/title_download_activity"
             android:configChanges="orientation|keyboardHidden" >
         </activity>
          <activity
-            android:name=".activity.TagSelectActivity"
+            android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
             android:label="@string/title_tag_select_activity">
         </activity>
         <activity
-            android:name=".activity.PrefsActivity"
+            android:name="org.digitalcampus.oppia.activity.PrefsActivity"
             android:label="@string/title_prefs"
             android:theme="@style/AppTheme.Light" />
         <activity
-            android:name=".activity.AboutActivity"
+            android:name="org.digitalcampus.oppia.activity.AboutActivity"
             android:label="@string/title_about" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="org.digitalcampus.oppia.activity.LoginActivity"
             android:label="@string/title_login" />
          <activity
-            android:name=".activity.HelpActivity"
+            android:name="org.digitalcampus.oppia.activity.HelpActivity"
             android:label="@string/title_help" />
          <activity
-            android:name=".activity.MonitorActivity"
+            android:name="org.digitalcampus.oppia.activity.MonitorActivity"
             android:label="@string/title_monitor" />
          <activity
-            android:name=".activity.RegisterActivity"
+            android:name="org.digitalcampus.oppia.activity.RegisterActivity"
             android:label="@string/title_register" />
          <activity
-            android:name=".activity.ModuleMetaPageActivity"
+            android:name="org.digitalcampus.oppia.activity.ModuleMetaPageActivity"
             android:label="@string/title_module_about" />
          <activity
-            android:name=".activity.DownloadMediaActivity"
+            android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"
             android:label="@string/title_download_media" />
          <activity
-            android:name=".activity.ScoreActivity"
+            android:name="org.digitalcampus.oppia.activity.ScoreActivity"
             android:label="@string/title_points" />
          <activity
-            android:name=".activity.AppActivity"
+            android:name="org.digitalcampus.oppia.activity.AppActivity"
             android:label="@string/app_name" />
          <activity
-            android:name=".widgets.PageWidget"
+            android:name="org.digitalcampus.oppia.widgets.PageWidget"
             android:label="@string/title_activity_module" />
          <activity
-            android:name=".widgets.MQuizWidget"
+            android:name="org.digitalcampus.oppia.widgets.QuizWidget"
             android:label="@string/title_activity_module"/>
         <service
-            android:name=".service.TrackerService"
+            android:name="org.digitalcampus.oppia.service.TrackerService"
             android:icon="@drawable/dc_logo"
             android:label="@string/service_tracker" >
         </service>
         
-		<receiver android:name=".service.TrackerScheduleReceiver" >
+		<receiver android:name="org.digitalcampus.oppia.service.TrackerScheduleReceiver" >
             <intent-filter>                
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".service.TrackerStartServiceReceiver" >
+        <receiver android:name="org.digitalcampus.oppia.service.TrackerStartServiceReceiver" >
         </receiver>
 
     </application>
