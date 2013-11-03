@@ -433,7 +433,11 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 		if(key.equalsIgnoreCase(getString(R.string.prefs_server))){
 			Editor editor = sharedPreferences.edit();
 			if(!sharedPreferences.getString(getString(R.string.prefs_server), "").endsWith("/")){
-				String newServer = sharedPreferences.getString(getString(R.string.prefs_server), "")+"/";
+				String newServer = sharedPreferences.getString(getString(R.string.prefs_server), "").trim()+"/";
+				editor.putString(getString(R.string.prefs_server), newServer);
+		    	editor.commit();
+			} else {
+				String newServer = sharedPreferences.getString(getString(R.string.prefs_server), "").trim();
 				editor.putString(getString(R.string.prefs_server), newServer);
 		    	editor.commit();
 			}

@@ -84,6 +84,7 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 	    	editor.putString(getString(R.string.prefs_display_name), u.getDisplayName());
 	    	editor.putInt(getString(R.string.prefs_points), u.getPoints());
 	    	editor.putInt(getString(R.string.prefs_points), u.getBadges());
+	    	editor.putBoolean(getString(R.string.prefs_scoring_enabled), u.isScoringEnabled());
 	    	editor.commit();
 
 			showAlert("Register", "Registration successful", ONCLICK_TASK_REGISTERED);
@@ -111,7 +112,7 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 		}
 				
 		// TODO check valid email address format
-		// use: android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+		// android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 		if (email.length() == 0) {
 			this.showAlert(getString(R.string.error), "Please enter an email address", ONCLICK_TASK_NULL);
 			return;

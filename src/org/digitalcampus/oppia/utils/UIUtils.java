@@ -54,7 +54,8 @@ public class UIUtils {
 		TextView points = (TextView) act.findViewById(R.id.userpoints);
 		TextView badges = (TextView) act.findViewById(R.id.userbadges);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
-		if (MobileLearning.isLoggedIn(act)) {
+		boolean scoringEnabled = prefs.getBoolean(act.getString(R.string.prefs_scoring_enabled), true);
+		if (MobileLearning.isLoggedIn(act) && scoringEnabled ) {
 			points.setVisibility(View.VISIBLE);
 			badges.setVisibility(View.VISIBLE);
 			points.setText(String.valueOf(prefs.getInt(act.getString(R.string.prefs_points), 0)));
@@ -68,6 +69,9 @@ public class UIUtils {
 					}
 				});
 			}
+		} else if (!scoringEnabled){
+			points.setVisibility(View.GONE);
+			badges.setVisibility(View.GONE);
 		}
 	}
 

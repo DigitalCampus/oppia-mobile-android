@@ -111,6 +111,11 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 						u.setPoints(0);
 						u.setBadges(0);
 					}
+					try {
+						u.setScoringEnabled(jsonResp.getBoolean("scoring"));
+					} catch (JSONException e){
+						u.setScoringEnabled(true);
+					}
 					payload.setResult(true);
 					payload.setResultResponse(ctx.getString(R.string.login_complete));
 					break;

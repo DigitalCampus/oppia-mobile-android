@@ -113,6 +113,11 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 						u.setPoints(0);
 						u.setBadges(0);
 					}
+					try {
+						u.setScoringEnabled(jsonResp.getBoolean("scoring"));
+					} catch (JSONException e){
+						u.setScoringEnabled(true);
+					}
 					u.setFirstname(jsonResp.getString("first_name"));
 					u.setLastname(jsonResp.getString("last_name"));
 					payload.setResult(true);

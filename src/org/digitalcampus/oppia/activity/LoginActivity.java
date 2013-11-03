@@ -109,6 +109,7 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 	    	editor.putString(getString(R.string.prefs_display_name), u.getDisplayName());
 	    	editor.putInt(getString(R.string.prefs_points), u.getPoints());
 	    	editor.putInt(getString(R.string.prefs_badges), u.getBadges());
+	    	editor.putBoolean(getString(R.string.prefs_scoring_enabled), u.isScoringEnabled());
 	    	editor.commit();
 	    	
 			// return to main activity

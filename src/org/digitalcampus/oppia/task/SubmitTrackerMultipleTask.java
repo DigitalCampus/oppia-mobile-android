@@ -66,6 +66,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPatch.setEntity(se);
 				Log.d(TAG,url);
+				Log.d(TAG,dataToSend);
                 // make request
 				HttpResponse response = client.execute(httpPatch);				
 				
@@ -94,6 +95,11 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 						
 						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("points"));
 						editor.putInt(ctx.getString(R.string.prefs_badges), jsonResp.getInt("badges"));
+						try {
+							editor.putBoolean(ctx.getString(R.string.prefs_scoring_enabled), jsonResp.getBoolean("scoring"));
+						} catch (JSONException e) {
+							// skip
+						}
 				    	editor.commit();
 						break;
 					// TODO remove this case statement when new server side released (v0.1.15)
