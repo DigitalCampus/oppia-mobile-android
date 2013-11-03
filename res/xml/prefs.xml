@@ -22,6 +22,11 @@
         android:summary="@string/prefNoScheduleReminders"
         android:title="@string/prefNoScheduleReminders_summary" />
 
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="prefHighlightCompleted"
+        android:title="@string/prefHighlightCompleted" />
+    
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
             android:defaultValue="@string/prefServerDefault"

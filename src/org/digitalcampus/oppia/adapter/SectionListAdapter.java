@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,8 +95,9 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    	
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
 	    	
-	    	// set if completed
-	    	if(s.getActivities().get(i).getCompleted()){
+	    	// highlight if completed
+	    	Log.d(TAG, "test: " + prefs.getBoolean(ctx.getString(R.string.prefs_highlightCompleted), true));
+	    	if(s.getActivities().get(i).getCompleted() && prefs.getBoolean(ctx.getString(R.string.prefs_highlightCompleted), true)){
 	    		activityObject.setBackgroundResource(R.drawable.activity_background_completed);
 	    	}
 	    	

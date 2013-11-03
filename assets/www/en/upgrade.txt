@@ -1,3 +1,9 @@
+<b>Updates in v2.0.3</b>
+<p>
+* Points and badges display according to whether enabled on server<br/>
+* New option to allow highlighting of activities to be on or off<br/>
+</p>
+
 <b>Updates in v2.0.2</b>
 <p>
 * Add direct access to teacher monitoring pages (from main menu)<br/>

@@ -50,24 +50,22 @@
  	
  	<string name="no_modules">There are no courses currently installed</string>
  	
- 	<string name="prefServer">Server</string>
-	<string name="prefServerDefault">http://demo.oppia-mobile.org/</string>
-	<string name="prefLanguage">Preferred Language</string>
+ 
 	<string name="prefAdvanced">Advanced settings</string>
-	
+	<string name="prefBackgroudDataConnect">Background activity tracker</string>
+	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
+	<string name="prefLanguage">Preferred Language</string>
+	<string name="prefHighlightCompleted">Highlight completed activities</string>
+	<string name="prefNoScheduleReminders">Number of suggested activities</string>
+	<string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
+	<string name="prefServer">Server</string>
+	<string name="prefServerDefault">http://demo.oppia-mobile.org/</string>
 	<string name="prefServerTimeoutConnection">Connection timeout</string>
 	<string name="prefServerTimeoutConnectionDefault">10000</string>
 	<string name="prefServerTimeoutResponse">Response timeout</string>
 	<string name="prefServerTimeoutResponseDefault">20000</string>
-	
-	<string name="prefBackgroudDataConnect">Background activity tracker</string>
-	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
-	
 	<string name="prefShowScheduleReminders">Display suggested activities</string>
 	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
-	
-	<string name="prefNoScheduleReminders">Number of suggested activities</string>
-	<string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
 	
 	<string name="notification_module_update_title">New course updates</string>
 	<string name="notification_module_update_text">Updates are available for your courses.</string>
