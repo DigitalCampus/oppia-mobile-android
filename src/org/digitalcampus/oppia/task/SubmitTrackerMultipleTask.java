@@ -19,6 +19,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,8 +66,10 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 				StringEntity se = new StringEntity(dataToSend);
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPatch.setEntity(se);
-				Log.d(TAG,url);
-				Log.d(TAG,dataToSend);
+			
+                //Log.d(TAG,url);
+				//Log.d(TAG,dataToSend);
+				
                 // make request
 				HttpResponse response = client.execute(httpPatch);				
 				
@@ -80,6 +83,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 				}
 				
 				Log.d(TAG,responseStr);
+				
 				
 				switch (response.getStatusLine().getStatusCode()){
 					case 200: // submitted
@@ -98,9 +102,18 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 						try {
 							editor.putBoolean(ctx.getString(R.string.prefs_scoring_enabled), jsonResp.getBoolean("scoring"));
 						} catch (JSONException e) {
-							// skip
+							e.printStackTrace();
 						}
-				    	editor.commit();
+						editor.commit();
+						
+						try {
+							JSONObject metadata = jsonResp.getJSONObject("metadata");
+					        MetaDataUtils mu = new MetaDataUtils(ctx);
+					        mu.saveMetaData(metadata, prefs);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+				    	
 						break;
 					// TODO remove this case statement when new server side released (v0.1.15)
 					case 404: // submitted but invalid digest - returned 404 Not Found - so record as submitted so doesn't keep trying

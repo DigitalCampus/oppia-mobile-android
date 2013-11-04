@@ -34,6 +34,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -115,6 +116,13 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 						u.setScoringEnabled(jsonResp.getBoolean("scoring"));
 					} catch (JSONException e){
 						u.setScoringEnabled(true);
+					}
+					try {
+						JSONObject metadata = jsonResp.getJSONObject("metadata");
+				        MetaDataUtils mu = new MetaDataUtils(ctx);
+				        mu.saveMetaData(metadata, prefs);
+					} catch (JSONException e) {
+						e.printStackTrace();
 					}
 					payload.setResult(true);
 					payload.setResultResponse(ctx.getString(R.string.login_complete));

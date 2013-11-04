@@ -65,7 +65,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 			try {
 				
-				String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, MobileLearning.MQUIZ_SUBMIT_PATH,true);
+				String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, MobileLearning.QUIZ_SUBMIT_PATH,true);
 				HttpPost httpPost = new HttpPost(url);
 				
 				StringEntity se = new StringEntity(tl.getContent());
@@ -74,7 +74,6 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
                 
 				// make request
 				HttpResponse response = client.execute(httpPost);
-				
 				InputStream content = response.getEntity().getContent();
 				BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
 				String responseStr = "";

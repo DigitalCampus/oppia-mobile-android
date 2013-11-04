@@ -6,6 +6,7 @@
 	<string name="prefs_highlightCompleted">prefHighlightCompleted</string>
     <string name="prefs_language">prefLanguage</string>
     <string name="prefs_last_media_scan">prefLastMediaScan</string>
+    <string name="prefs_metadata">prefMetadata</string>
     <string name="prefs_schedule_reminders_no">prefNoScheduleReminders</string>
     <string name="prefs_schedule_reminders_show">prefShowScheduleReminders</string>
     <string name="prefs_server">prefServer</string>

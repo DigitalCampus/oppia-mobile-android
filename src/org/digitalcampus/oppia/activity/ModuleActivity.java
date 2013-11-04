@@ -30,8 +30,7 @@ import org.digitalcampus.oppia.gesture.PageGestureDetector;
 import org.digitalcampus.oppia.model.Module;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
-import org.digitalcampus.oppia.utils.ConnectionUtils;
-import org.digitalcampus.oppia.utils.TrackerUtils;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.widgets.PageWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
@@ -321,15 +320,10 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		if (currentActivity != null && currentActivity.activityHasTracker()) {
 			Tracker t = new Tracker(this);
 			JSONObject json = currentActivity.getTrackerData();
-			TrackerUtils tu = new TrackerUtils(this);
+			MetaDataUtils mdu = new MetaDataUtils(this);
 			// add in extra meta-data
 			try {
-				json.put("network",tu.getNetworkProvider());
-				json.put("deviceid",tu.getDeviceId());
-				json.put("simserial",tu.getSimSerial());
-				json.put("wifion",ConnectionUtils.isOnWifi(this));
-				json.put("netconnected",ConnectionUtils.isNetworkConnected(this));
-				json.put("battery",tu.getBatteryLevel(this));
+				json = mdu.getMetaData(json);
 			} catch (JSONException e) {
 				// Do nothing
 			} 
