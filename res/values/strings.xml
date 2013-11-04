@@ -96,6 +96,10 @@
 	<string name="feedback">Feedback</string>
 	<string name="download">Download</string>
 	<string name="downloaded">Downloaded</string>
+	<string name="open">Open</string>
+	
+	<string name="alert_pretest">Pre-test</string>
+	<string name="alert_pretest_summary">This course contains a pre-test which you need to complete before you can view the full course.</string>
 	
 	<string name="tag_label">%1$s (%2$d)</string>
 	<string name="alt_activity_icon">Activity icon</string>

@@ -155,6 +155,89 @@ public class ModuleXMLReader {
 		return ammp;
 	}
 	
+	public ArrayList<Activity> getBaselineActivities(long modId){
+		ArrayList<Activity>  acts = new ArrayList<Activity>();
+		//NodeList actlist = this.getChildNodeByName(document.getFirstChild().getFirstChild(),"activity").getChildNodes();
+		Node docMeta = document.getFirstChild().getFirstChild();
+		NodeList meta = docMeta.getChildNodes();
+		for (int i=0; i<meta.getLength(); i++) {
+			if(meta.item(i).getNodeName().toLowerCase(Locale.US).equals("activity")){
+				Activity a = new Activity();
+				NamedNodeMap activityAttrs = meta.item(i).getAttributes();
+				a.setActId(Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent()));
+				NamedNodeMap nnm = meta.item(i).getAttributes();
+				String actType = nnm.getNamedItem("type").getTextContent();
+				String digest = nnm.getNamedItem("digest").getTextContent();
+				a.setActType(actType);
+				a.setModId(modId);
+				a.setSectionId(0);
+				//a.setCompleted(db.activityCompleted(modId, digest));				
+				a.setCompleted(false);
+				
+				ArrayList<Lang> actTitles = new ArrayList<Lang>();
+				ArrayList<Lang> actLocations = new ArrayList<Lang>();
+				ArrayList<Lang> actContents = new ArrayList<Lang>();
+				ArrayList<Lang> actDescriptions = new ArrayList<Lang>();
+				ArrayList<Media> actMedia = new ArrayList<Media>();
+				String actMimeType = null;
+				NodeList act = meta.item(i).getChildNodes();
+				for (int k=0; k<act.getLength(); k++) {
+					NamedNodeMap attrs = act.item(k).getAttributes();
+					if(act.item(k).getNodeName().equals("title")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actTitles.add(new Lang(lang, act.item(k).getTextContent()));
+					} else if(act.item(k).getNodeName().equals("location")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actLocations.add(new Lang(lang, act.item(k).getTextContent()));
+						try {
+							String mimeType = attrs.getNamedItem("type").getTextContent();
+							actMimeType = mimeType;
+						} catch (NullPointerException npe){
+							//do nothing
+						}
+					} else if(act.item(k).getNodeName().equals("content")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actContents.add(new Lang(lang, act.item(k).getTextContent()));
+					} else if(act.item(k).getNodeName().equals("image")){
+						a.setImageFile(attrs.getNamedItem("filename").getTextContent());
+					} else if (act.item(k).getNodeName().equals("media")){
+						// add media
+						NodeList files = act.item(k).getChildNodes();
+						for (int m=0; m<files.getLength(); m++) {
+							if (files.item(m).getNodeName().equals("file")){
+								NamedNodeMap fileAttrs = files.item(m).getAttributes();
+								Media mObj = new Media();
+								mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
+								mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
+								mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
+								if(fileAttrs.getNamedItem("length") != null){
+									mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem("length").getTextContent()));
+								} else {
+									mObj.setLength(0);
+								}
+								actMedia.add(mObj);
+							}
+						}
+					} else if (act.item(k).getNodeName().equals("description")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
+					}
+				}
+				a.setTitles(actTitles);
+				a.setDescriptions(actDescriptions);
+				a.setLocations(actLocations);
+				a.setContents(actContents);
+				a.setDigest(digest);
+				a.setMedia(actMedia);
+				a.setMimeType(actMimeType);
+				
+				acts.add(a);
+			}
+		}
+		
+		return acts;
+	}
+	
 	public ArrayList<Media> getMedia(){
 		ArrayList<Media> media = new ArrayList<Media>();
 		NodeList m = document.getFirstChild().getChildNodes();

@@ -82,17 +82,7 @@ public class UIUtils {
 	 * @return
 	 */
 	public static AlertDialog showAlert(Context ctx, int title, int msg) {
-		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg));
-	}
-
-	/**
-	 * @param ctx
-	 * @param R
-	 * @param msg
-	 * @return
-	 */
-	public static AlertDialog showAlert(Context ctx, int R, String msg) {
-		return UIUtils.showAlert(ctx, ctx.getString(R), msg);
+		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg), ctx.getString(R.string.close));
 	}
 
 	/**
@@ -101,11 +91,35 @@ public class UIUtils {
 	 * @param msg
 	 * @return
 	 */
+	public static AlertDialog showAlert(Context ctx, int title, int msg, int btnText) {
+		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg), ctx.getString(btnText));
+	}
+	
+	/**
+	 * @param ctx
+	 * @param Res
+	 * @param msg
+	 * @return
+	 */
+	public static AlertDialog showAlert(Context ctx, int Res, String msg) {
+		return UIUtils.showAlert(ctx, ctx.getString(Res), msg, ctx.getString(R.string.close));
+	}
+
 	public static AlertDialog showAlert(Context ctx, String title, String msg) {
+		return UIUtils.showAlert(ctx, title, msg, ctx.getString(R.string.close));
+	}
+	
+	/**
+	 * @param ctx
+	 * @param title
+	 * @param msg
+	 * @return
+	 */
+	public static AlertDialog showAlert(Context ctx, String title, String msg, String btnText) {
 		AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
 		alertDialog.setTitle(title);
 		alertDialog.setMessage(msg);
-		alertDialog.setButton(ctx.getString(R.string.close), new DialogInterface.OnClickListener() {
+		alertDialog.setButton(btnText, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
@@ -125,6 +139,9 @@ public class UIUtils {
 		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg), funct);
 	}
 
+	public static AlertDialog showAlert(Context ctx, int title, int msg, int btnText, Callable<Boolean> funct) {
+		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg),ctx.getString(btnText), funct);
+	}
 	/**
 	 * @param ctx
 	 * @param R
@@ -136,6 +153,9 @@ public class UIUtils {
 		return UIUtils.showAlert(ctx, ctx.getString(R), msg, funct);
 	}
 
+	public static AlertDialog showAlert(Context ctx, String title, CharSequence msg, final Callable<Boolean> funct) {
+		return UIUtils.showAlert(ctx, title, msg, ctx.getString(R.string.close),funct);
+	}
 	/**
 	 * @param ctx
 	 * @param title
@@ -143,12 +163,12 @@ public class UIUtils {
 	 * @param funct
 	 * @return
 	 */
-	public static AlertDialog showAlert(Context ctx, String title, CharSequence msg, final Callable<Boolean> funct) {
+	public static AlertDialog showAlert(Context ctx, String title, CharSequence msg, String btnText, final Callable<Boolean> funct) {
 		AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
 		alertDialog.setTitle(title);
 		alertDialog.setMessage(msg);
 		alertDialog.setCancelable(true);
-		alertDialog.setButton(ctx.getString(R.string.close), new DialogInterface.OnClickListener() {
+		alertDialog.setButton(btnText, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}

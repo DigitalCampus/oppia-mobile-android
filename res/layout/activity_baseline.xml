@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/green_background_gradient"
+        android:padding="0dp" 
+        android:layout_margin="0dp">
+
+        <Button android:id="@+id/prev_btn" 
+			android:layout_height="fill_parent" 
+			android:layout_width="wrap_content"
+			android:layout_weight=".1" 
+			android:text="@string/activity_module_button_prev"
+			android:textSize="20sp" 
+			android:textStyle="bold"
+			android:background="@drawable/activity_nav_button"/>
+        <TextView
+            android:id="@+id/module_activity_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".8" 
+            android:padding="@dimen/padding_medium"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:context=".BaselineActivity"
+            android:gravity="center"/>
+        
+        <Button android:id="@+id/next_btn" 
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:layout_weight=".1" 
+			android:text="@string/activity_module_button_next"
+			android:textSize="20sp" 
+			android:textStyle="bold"
+			android:background="@drawable/activity_nav_button"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_widget"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" 
+        android:background="@drawable/background_light">
+    </LinearLayout>
+
+</LinearLayout>
