@@ -105,6 +105,7 @@ public class QuizWidget extends WidgetFactory {
 		
 		quizGestureDetector = new GestureDetector((android.app.Activity) this.ctx, new QuizGestureDetector((ModuleActivity) this.ctx));
 		quizGestureListener = new OnTouchListener() {
+
 			public boolean onTouch(View v, MotionEvent event) {
 				try {
 					// TODO - for some reason unless this is in a try/catch block it will fail with NullPointerException
@@ -263,7 +264,8 @@ public class QuizWidget extends WidgetFactory {
 		DbHelper db = new DbHelper(ctx);
 		db.insertMQuizResult(data, module.getModId());
 		db.close();
-		//Log.d(TAG,data);
+		Log.d(TAG,data);
+		Log.d(TAG,"id: " + module.getModId());
 		
 		LinearLayout responsesLL = (LinearLayout) ((android.app.Activity) ctx).findViewById(R.id.quizResponseWidget);
     	responsesLL.removeAllViews();

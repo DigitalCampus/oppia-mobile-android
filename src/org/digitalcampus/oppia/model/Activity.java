@@ -51,6 +51,7 @@ public class Activity implements Serializable{
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
 	private boolean completed = false;
+	private boolean attempted = false;
 	private boolean customImage = false;
 	private DateTime startDate;
 	private DateTime endDate;
@@ -265,5 +266,13 @@ public class Activity implements Serializable{
 	
 	public void setDescriptions(ArrayList<Lang> descriptions) {
 		this.descriptions = descriptions;
+	}
+
+	public boolean isAttempted() {
+		return attempted;
+	}
+
+	public void setAttempted(boolean attempted) {
+		this.attempted = attempted;
 	}
 }

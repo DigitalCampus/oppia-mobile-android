@@ -155,11 +155,12 @@ public class ModuleXMLReader {
 		return ammp;
 	}
 	
-	public ArrayList<Activity> getBaselineActivities(long modId){
+	public ArrayList<Activity> getBaselineActivities(long modId, Context ctx){
 		ArrayList<Activity>  acts = new ArrayList<Activity>();
 		//NodeList actlist = this.getChildNodeByName(document.getFirstChild().getFirstChild(),"activity").getChildNodes();
 		Node docMeta = document.getFirstChild().getFirstChild();
 		NodeList meta = docMeta.getChildNodes();
+		DbHelper db = new DbHelper(ctx);
 		for (int i=0; i<meta.getLength(); i++) {
 			if(meta.item(i).getNodeName().toLowerCase(Locale.US).equals("activity")){
 				Activity a = new Activity();
@@ -171,8 +172,7 @@ public class ModuleXMLReader {
 				a.setActType(actType);
 				a.setModId(modId);
 				a.setSectionId(0);
-				//a.setCompleted(db.activityCompleted(modId, digest));				
-				a.setCompleted(false);
+				a.setAttempted(db.activityAttempted(modId, digest));				
 				
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
 				ArrayList<Lang> actLocations = new ArrayList<Lang>();
@@ -234,7 +234,7 @@ public class ModuleXMLReader {
 				acts.add(a);
 			}
 		}
-		
+		db.close();
 		return acts;
 	}
 	

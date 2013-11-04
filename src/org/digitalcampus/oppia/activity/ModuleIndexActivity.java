@@ -145,6 +145,7 @@ public class ModuleIndexActivity extends AppActivity {
 	public void onPause() {
 		if(aDialog != null){
 			aDialog.dismiss();
+			aDialog = null;
 		}
 		super.onPause();
     }
@@ -196,11 +197,11 @@ public class ModuleIndexActivity extends AppActivity {
 	}
     
     private void checkBaseline(){
-    	ArrayList<Activity> baselineActs = mxr.getBaselineActivities(module.getModId());
+    	ArrayList<Activity> baselineActs = mxr.getBaselineActivities(module.getModId(),this);
     	Log.d(TAG,"No baseline activities: " + baselineActs.size());
     	// TODO how to handle if more than one baseline activity
     	for(Activity a: baselineActs){
-    		if(!a.getCompleted()){
+    		if(!a.isAttempted()){
     			this.baselineActivity = a;
     			Log.d(TAG,"adding dialog");
     			aDialog = new AlertDialog.Builder(this).create();
@@ -210,9 +211,13 @@ public class ModuleIndexActivity extends AppActivity {
 
     			aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, (CharSequence) this.getString(R.string.open), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-    					Intent intent = new Intent(ModuleIndexActivity.this, BaselineActivity.class);
+    					Intent intent = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
     					Bundle tb = new Bundle();
-    					tb.putSerializable(Activity.TAG, ModuleIndexActivity.this.baselineActivity);
+    					Section section = new Section();
+    					section.addActivity(ModuleIndexActivity.this.baselineActivity);
+    					tb.putSerializable(Section.TAG, section);
+    					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, 0);
+    					tb.putSerializable(Module.TAG, ModuleIndexActivity.this.module);
     					intent.putExtras(tb);
     	         		startActivity(intent);	
 					}
