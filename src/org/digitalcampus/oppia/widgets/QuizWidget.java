@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.widgets;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -70,7 +71,7 @@ public class QuizWidget extends WidgetFactory {
 	private static final String TAG = QuizWidget.class.getSimpleName();
 	private SharedPreferences prefs;
 	private android.app.Activity ctx;
-	private MQuiz mQuiz;
+	private MQuiz quiz;
 	private QuestionWidget qw;
 	public Button prevBtn;
 	public Button nextBtn;
@@ -92,11 +93,11 @@ public class QuizWidget extends WidgetFactory {
 		this.startQuiz(activity);
 	}
 
-	public QuizWidget(android.app.Activity context, Module module, Activity activity, MQuiz mQuiz) {
+	public QuizWidget(android.app.Activity context, Module module, Activity activity, HashMap<String, Object> config) {
 		super(context, module, activity);
 		this.ctx = context;
 		this.module = module;
-		this.mQuiz = mQuiz;
+		this.setWidgetConfig(config);
 		this.startQuiz(activity);
 	}
 	
@@ -109,7 +110,7 @@ public class QuizWidget extends WidgetFactory {
 
 			public boolean onTouch(View v, MotionEvent event) {
 				try {
-					// TODO - for some reason unless this is in a try/catch block it will fail with NullPointerException
+					//  for some reason unless this is in a try/catch block it will fail with NullPointerException
 					return quizGestureDetector.onTouchEvent(event);
 				} catch (Exception e){
 					return false;
@@ -129,17 +130,17 @@ public class QuizWidget extends WidgetFactory {
 		nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
 		
-		if(mQuiz == null){
+		if(this.quiz == null){
 			quizContent = activity.getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-			mQuiz = new MQuiz();
-			mQuiz.load(quizContent);
+			this.quiz = new MQuiz();
+			this.quiz.load(quizContent);
 		}
 
 		this.showQuestion();
 	}
 	
 	public void showQuestion() {
-		QuizQuestion q = mQuiz.getCurrentQuestion();
+		QuizQuestion q = this.quiz.getCurrentQuestion();
 		qText.setVisibility(View.VISIBLE);
 		qText.setText(q.getTitle());
 
@@ -168,14 +169,14 @@ public class QuizWidget extends WidgetFactory {
 		nextBtn.setVisibility(View.VISIBLE);
 		prevBtn.setVisibility(View.VISIBLE);
 		
-		if (mQuiz.hasPrevious()) {
+		if (this.quiz.hasPrevious()) {
 			prevBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					// save answer
 					saveAnswer();
 
-					if (mQuiz.hasPrevious()) {
-						mQuiz.movePrevious();
+					if (QuizWidget.this.quiz.hasPrevious()) {
+						QuizWidget.this.quiz.movePrevious();
 						showQuestion();
 					}
 				}
@@ -190,11 +191,11 @@ public class QuizWidget extends WidgetFactory {
 			public void onClick(View v) {
 				// save answer
 				if (saveAnswer()) {
-					String feedback = mQuiz.getCurrentQuestion().getFeedback();
+					String feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback();
 					if (!feedback.equals("") && !isBaselineActivity) {
 						showFeedback(feedback);
-					} else if (mQuiz.hasNext()) {
-						mQuiz.moveNext();
+					} else if (QuizWidget.this.quiz.hasNext()) {
+						QuizWidget.this.quiz.moveNext();
 						showQuestion();
 					} else {
 						showResults();
@@ -209,7 +210,7 @@ public class QuizWidget extends WidgetFactory {
 		});
 
 		// set label on next button
-		if (mQuiz.hasNext()) {
+		if (quiz.hasNext()) {
 			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_mquiz_next));
 		} else {
 			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_mquiz_getresults));
@@ -219,14 +220,14 @@ public class QuizWidget extends WidgetFactory {
 	private void setProgress() {
 		TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
 		progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_progress,
-				mQuiz.getCurrentQuestionNo(), mQuiz.getTotalNoQuestions()));
+				quiz.getCurrentQuestionNo(), quiz.getTotalNoQuestions()));
 
 	}
 
 	private boolean saveAnswer() {
-		List<String> answers = qw.getQuestionResponses(mQuiz.getCurrentQuestion().getResponseOptions());
+		List<String> answers = qw.getQuestionResponses(quiz.getCurrentQuestion().getResponseOptions());
 		if (answers != null) {
-			mQuiz.getCurrentQuestion().setUserResponses(answers);
+			quiz.getCurrentQuestion().setUserResponses(answers);
 			return true;
 		}
 		return false;
@@ -239,8 +240,8 @@ public class QuizWidget extends WidgetFactory {
 		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface arg0, int arg1) {
-				if (mQuiz.hasNext()) {
-					mQuiz.moveNext();
+				if (QuizWidget.this.quiz.hasNext()) {
+					QuizWidget.this.quiz.moveNext();
 					showQuestion();
 				} else {
 					showResults();
@@ -251,8 +252,8 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void showResults() {
-		mQuiz.mark();
-		float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
+		quiz.mark();
+		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		
 		// log the activity as complete
 		isComplete = true;
@@ -261,7 +262,7 @@ public class QuizWidget extends WidgetFactory {
 		endTimestamp = System.currentTimeMillis()/1000;
 		
 		// save results ready to send back to the mquiz server
-		String data = mQuiz.getResultObject().toString();
+		String data = quiz.getResultObject().toString();
 		DbHelper db = new DbHelper(ctx);
 		db.insertMQuizResult(data, module.getModId());
 		db.close();
@@ -307,9 +308,8 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void restart() {
-		Log.d(TAG,"restarting");
-		mQuiz = new MQuiz();
-		mQuiz.load(quizContent);
+		quiz = new MQuiz();
+		quiz.load(quizContent);
 		startTimestamp = System.currentTimeMillis()/1000;
 		endTimestamp = System.currentTimeMillis()/1000;
 		this.showQuestion();
@@ -321,8 +321,8 @@ public class QuizWidget extends WidgetFactory {
 	
 	public boolean activityCompleted(){
 		if(isComplete){
-			mQuiz.mark();
-			float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
+			quiz.mark();
+			float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 			if (percent > 99){
 				return true;
 			}
@@ -340,10 +340,10 @@ public class QuizWidget extends WidgetFactory {
 			obj.put("timetaken", this.getTimeTaken());
 			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
-			obj.put("quiz_id", mQuiz.getID());
-			obj.put("instance_id", mQuiz.getInstanceID());
-			mQuiz.mark();
-			float percent = mQuiz.getUserscore() * 100 / mQuiz.getMaxscore();
+			obj.put("quiz_id", quiz.getID());
+			obj.put("instance_id", quiz.getInstanceID());
+			quiz.mark();
+			float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 			obj.put("score", percent);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -359,43 +359,6 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	@Override
-	public void mediaStopped() {
-		// do nothing
-	}
-
-	@Override
-	public boolean getMediaPlaying() {
-		return false;
-	}
-	
-	@Override
-	public long getMediaStartTime() {
-		return 0;
-	}
-
-	@Override
-	public void setMediaPlaying(boolean playing) {
-		// do nothing
-		
-	}
-
-	@Override
-	public void setMediaStartTime(long mediaStartTime) {
-		// do nothing
-		
-	}
-
-	@Override
-	public String getMediaFileName() {
-		return null;
-	}
-
-	@Override
-	public void setMediaFileName(String mediaFileName) {
-		// do nothing
-	}
-
-	@Override
 	public void setStartTime(long startTime) {
 		this.startTimestamp = startTime;
 		
@@ -405,10 +368,7 @@ public class QuizWidget extends WidgetFactory {
 	public long getStartTime() {
 		return this.startTimestamp;
 	}
-	
-	public MQuiz getMquiz(){
-		return mQuiz;
-	}
+
 	
 	@Override
 	public void setReadAloud(boolean reading){
@@ -420,14 +380,12 @@ public class QuizWidget extends WidgetFactory {
 		return false;
 	}
 
-	@Override
-	public MQuiz getMQuiz() {
-		return this.mQuiz;
+	public MQuiz getQuiz() {
+		return this.quiz;
 	}
 
-	@Override
-	public void setMQuiz(MQuiz mquiz) {
-		this.mQuiz = mquiz;
+	private void setQuiz(MQuiz quiz) {
+		this.quiz = quiz;
 	}
 
 	@Override
@@ -438,5 +396,21 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public boolean isBaselineActivity() {
 		return this.isBaselineActivity;
+	}
+
+	@Override
+	public HashMap<String, Object> getWidgetConfig() {
+		HashMap<String, Object> config = new HashMap<String, Object>();
+		this.saveAnswer();
+		config.put("quiz", this.getQuiz());
+		return config;
+	}
+
+	@Override
+	public void setWidgetConfig(HashMap<String, Object> config) {
+		if (config.containsKey("quiz")){
+			this.setQuiz((MQuiz) config.get("quiz"));
+		}
+		
 	}
 }

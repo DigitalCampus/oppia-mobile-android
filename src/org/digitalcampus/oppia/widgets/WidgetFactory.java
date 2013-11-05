@@ -17,8 +17,9 @@
 
 package org.digitalcampus.oppia.widgets;
 
+import java.util.HashMap;
+
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.oppia.model.Module;
 import org.json.JSONObject;
 
@@ -59,20 +60,23 @@ public abstract class WidgetFactory extends Activity {
 	
 	public abstract String getContentToRead();
 	
-	public abstract String getMediaFileName();
+	/*public abstract String getMediaFileName();
 	public abstract void setMediaFileName(String mediaFileName);
 	public abstract void mediaStopped();
 	public abstract boolean getMediaPlaying();
 	public abstract long getMediaStartTime();
 	public abstract void setMediaPlaying(boolean playing);
-	public abstract void setMediaStartTime(long mediaStartTime);
+	public abstract void setMediaStartTime(long mediaStartTime);*/
 	
 	public abstract void setReadAloud(boolean reading);
 	public abstract boolean getReadAloud();
 	
-	public abstract MQuiz getMQuiz();
-	public abstract void setMQuiz(MQuiz mquiz);
+	//public abstract MQuiz getMQuiz();
+	//public abstract void setMQuiz(MQuiz mquiz);
 	
 	public abstract void setBaselineActivity(boolean baseline);
 	public abstract boolean isBaselineActivity();
+	
+	public abstract HashMap<String,Object> getWidgetConfig();
+	public abstract void setWidgetConfig(HashMap<String,Object> config);
 }

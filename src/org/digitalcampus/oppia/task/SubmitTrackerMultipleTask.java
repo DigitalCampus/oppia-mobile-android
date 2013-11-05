@@ -67,8 +67,8 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPatch.setEntity(se);
 			
-                //Log.d(TAG,url);
-				//Log.d(TAG,dataToSend);
+                Log.d(TAG,url);
+				Log.d(TAG,dataToSend);
 				
                 // make request
 				HttpResponse response = client.execute(httpPatch);				

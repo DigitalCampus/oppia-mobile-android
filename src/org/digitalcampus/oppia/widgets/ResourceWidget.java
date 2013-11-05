@@ -1,11 +1,11 @@
 package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.oppia.activity.ModuleActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.gesture.ResourceGestureDetector;
@@ -27,14 +27,14 @@ import android.preference.PreferenceManager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -196,59 +196,13 @@ public class ResourceWidget extends WidgetFactory {
 	}
 
 	@Override
-	public String getMediaFileName() {
-		return null;
-	}
-
-	@Override
-	public void setMediaFileName(String mediaFileName) {
-		
-	}
-
-	@Override
-	public void mediaStopped() {
-		
-	}
-
-	@Override
-	public boolean getMediaPlaying() {
-		return false;
-	}
-
-	@Override
-	public long getMediaStartTime() {
-		return 0;
-	}
-
-	@Override
-	public void setMediaPlaying(boolean playing) {
-		
-	}
-
-	@Override
-	public void setMediaStartTime(long mediaStartTime) {
-		
-	}
-
-	@Override
 	public void setReadAloud(boolean reading) {
-
-		
+	
 	}
 
 	@Override
 	public boolean getReadAloud() {
 		return false;
-	}
-
-	@Override
-	public MQuiz getMQuiz() {
-		return null;
-	}
-
-	@Override
-	public void setMQuiz(MQuiz mquiz) {
-		
 	}
 
 	@Override
@@ -261,6 +215,18 @@ public class ResourceWidget extends WidgetFactory {
 	public boolean isBaselineActivity() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public HashMap<String, Object> getWidgetConfig() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setWidgetConfig(HashMap<String, Object> config) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

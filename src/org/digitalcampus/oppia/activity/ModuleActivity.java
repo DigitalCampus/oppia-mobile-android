@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gesture.PageGestureDetector;
@@ -75,8 +74,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 	static TextToSpeech myTTS;
 	private boolean ttsRunning = false;
 
-	private HashMap<String, Object> mediaPlayingState = new HashMap<String, Object>();
-	private MQuiz mQuiz;
+	private HashMap<String, Object> widgetState = new HashMap<String, Object>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -114,24 +112,21 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putLong("activityStartTimeStamp", currentActivity.getStartTime());
-		savedInstanceState.putBoolean("mediaPlaying", currentActivity.getMediaPlaying());
-		savedInstanceState.putLong("mediaStartTimeStamp", currentActivity.getMediaStartTime());
-		savedInstanceState.putString("mediaFileName", currentActivity.getMediaFileName());
 		savedInstanceState.putInt("currentActivityNo", this.currentActivityNo);
-		savedInstanceState.putSerializable("mquiz", currentActivity.getMQuiz());
+		savedInstanceState.putSerializable("widget_config", currentActivity.getWidgetConfig());
+		super.onSaveInstanceState(savedInstanceState);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		currentActivity.setMediaPlaying(savedInstanceState.getBoolean("mediaPlaying"));
-		currentActivity.setMediaStartTime(savedInstanceState.getLong("mediaStartTimeStamp"));
-		currentActivity.setMediaFileName(savedInstanceState.getString("mediaFileName"));
+		currentActivity.setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
+		widgetState = currentActivity.getWidgetConfig();
 		currentActivity.setStartTime(savedInstanceState.getLong("activityStartTimeStamp"));
 		this.currentActivityNo = savedInstanceState.getInt("currentActivityNo");
-		this.mQuiz = (MQuiz) savedInstanceState.getSerializable("mquiz");
+		
 	}
 
 	@Override
@@ -159,31 +154,21 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		Bundle tb = new Bundle();
 		tb.putBoolean("backgroundData", true);
 		service.putExtras(tb);
-
-		if (currentActivity != null) {
-			mediaPlayingState.put("Media_Playing", currentActivity.getMediaPlaying());
-			mediaPlayingState.put("Media_StartTime", currentActivity.getMediaStartTime());
-			mediaPlayingState.put("Media_File", currentActivity.getMediaFileName());
-		}
 		this.startService(service);
+		
+		if (currentActivity != null) {
+			widgetState = currentActivity.getWidgetConfig();
+		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		if (currentActivity != null) {
-			if (mediaPlayingState.containsKey("Media_Playing")) {
-				currentActivity.setMediaPlaying((Boolean) mediaPlayingState.get("Media_Playing"));
-			}
-			if (mediaPlayingState.containsKey("Media_StartTime")) {
-				currentActivity.setMediaStartTime((Long) mediaPlayingState.get("Media_StartTime"));
-			}
-			if (mediaPlayingState.containsKey("Media_File")) {
-				currentActivity.setMediaFileName((String) mediaPlayingState.get("Media_File"));
-			}
-			currentActivity.mediaStopped();
+			currentActivity.setWidgetConfig(widgetState);
+			loadActivity();
 		}
-		loadActivity();
+		Log.d(TAG,"onresume called");
 	}
 
 	@Override
@@ -252,10 +237,10 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 			WebView wv = (WebView) this.findViewById(R.id.page_webview);
 			wv.setOnTouchListener(pageGestureListener);
 		} else if (acts.get(this.currentActivityNo).getActType().equals("quiz")) {
-			if(mQuiz != null){
-				currentActivity = new QuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo), mQuiz);
-			} else {
+			if(widgetState.isEmpty()){
 				currentActivity = new QuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+			} else {
+				currentActivity = new QuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo), widgetState);
 			}
 			currentActivity.setBaselineActivity(this.isBaselineActivity);
 		} else if (acts.get(this.currentActivityNo).getActType().equals("resource")) {

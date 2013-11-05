@@ -22,10 +22,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
@@ -214,7 +214,7 @@ public class PageWidget extends WidgetFactory {
 	}
 
 
-	public void mediaStopped() {
+	private void mediaStopped() {
 		if(mediaPlaying){
 			long mediaEndTimeStamp = System.currentTimeMillis()/1000;
 			long timeTaken = mediaEndTimeStamp - mediaStartTimeStamp;
@@ -240,34 +240,49 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	@Override
-	public boolean getMediaPlaying() {
+	public void setWidgetConfig(HashMap<String,Object> config) {
+		if (config.containsKey("Media_Playing")){
+			this.setMediaPlaying((Boolean) config.get("Media_Playing"));
+		}
+		if (config.containsKey("Media_StartTime")){
+			this.setMediaStartTime((Long) config.get("Media_StartTime"));
+		}
+		if (config.containsKey("Media_File")){
+			this.setMediaFileName((String) config.get("Media_File"));
+		}
+		this.mediaStopped();
+	}
+	
+	@Override
+	public HashMap<String, Object> getWidgetConfig() {
+		HashMap<String, Object> config = new HashMap<String, Object>();
+		config.put("Media_Playing", this.getMediaPlaying());
+		config.put("Media_StartTime", this.getMediaStartTime());
+		config.put("Media_File", this.getMediaFileName());
+		return config;
+	}
+	
+	private boolean getMediaPlaying() {
 		return this.mediaPlaying;
 	}
 
-	@Override
-	public long getMediaStartTime() {
+	private long getMediaStartTime() {
 		return this.mediaStartTimeStamp;
 	}
 
-	@Override
-	public void setMediaPlaying(boolean playing) {
+	private void setMediaPlaying(boolean playing) {
 		this.mediaPlaying = playing;
-		
 	}
 
-	@Override
-	public void setMediaStartTime(long mediaStartTime) {
+	private void setMediaStartTime(long mediaStartTime) {
 		this.mediaStartTimeStamp = mediaStartTime;
-		
 	}
 
-	@Override
-	public String getMediaFileName() {
+	private String getMediaFileName() {
 		return this.mediaFileName;
 	}
 
-	@Override
-	public void setMediaFileName(String mediaFileName) {
+	private void setMediaFileName(String mediaFileName) {
 		this.mediaFileName = mediaFileName;	
 	}
 	
@@ -293,21 +308,8 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	@Override
-	public MQuiz getMQuiz() {
-		//do nothing
-		return null;
-	}
-
-	@Override
-	public void setMQuiz(MQuiz mquiz) {
-		// do nothing
-		
-	}
-
-	@Override
 	public void setBaselineActivity(boolean baseline) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -315,5 +317,7 @@ public class PageWidget extends WidgetFactory {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	
 
 }
