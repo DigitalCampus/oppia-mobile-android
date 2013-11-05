@@ -436,10 +436,6 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 				String newServer = sharedPreferences.getString(getString(R.string.prefs_server), "").trim()+"/";
 				editor.putString(getString(R.string.prefs_server), newServer);
 		    	editor.commit();
-			} else {
-				String newServer = sharedPreferences.getString(getString(R.string.prefs_server), "").trim();
-				editor.putString(getString(R.string.prefs_server), newServer);
-		    	editor.commit();
 			}
 		}
 		if(key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_show)) || key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_no))){
