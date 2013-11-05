@@ -115,15 +115,6 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 						}
 				    	
 						break;
-					// TODO remove this case statement when new server side released (v0.1.15)
-					case 404: // submitted but invalid digest - returned 404 Not Found - so record as submitted so doesn't keep trying
-						DbHelper dbh1 = new DbHelper(ctx);
-						for(TrackerLog tl: trackerBatch){
-							dbh1.markLogSubmitted(tl.getId());
-						};
-						dbh1.close();
-						payload.setResult(true);
-						break;
 					case 400: // submitted but invalid digest - returned 400 Bad Request - so record as submitted so doesn't keep trying
 						DbHelper dbh2 = new DbHelper(ctx);
 						for(TrackerLog tl: trackerBatch){
