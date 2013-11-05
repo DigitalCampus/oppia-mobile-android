@@ -401,7 +401,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
-		this.saveAnswer();
+		//this.saveAnswer();
 		config.put("quiz", this.getQuiz());
 		return config;
 	}
