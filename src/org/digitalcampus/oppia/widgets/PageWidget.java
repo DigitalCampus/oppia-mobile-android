@@ -304,4 +304,16 @@ public class PageWidget extends WidgetFactory {
 		
 	}
 
+	@Override
+	public void setBaselineActivity(boolean baseline) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isBaselineActivity() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

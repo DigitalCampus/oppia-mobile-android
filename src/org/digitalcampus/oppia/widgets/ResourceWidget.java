@@ -47,7 +47,7 @@ public class ResourceWidget extends WidgetFactory {
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private GestureDetector resourceGestureDetector;
 	private OnTouchListener resourceGestureListener; 		
-			
+	
 	public ResourceWidget(Context context, Module module, org.digitalcampus.oppia.model.Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
@@ -249,6 +249,18 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public void setMQuiz(MQuiz mquiz) {
 		
+	}
+
+	@Override
+	public void setBaselineActivity(boolean baseline) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isBaselineActivity() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

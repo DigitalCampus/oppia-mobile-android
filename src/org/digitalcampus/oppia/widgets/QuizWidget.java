@@ -80,6 +80,7 @@ public class QuizWidget extends WidgetFactory {
 	private Module module; 
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private long endTimestamp = System.currentTimeMillis()/1000;
+	private boolean isBaselineActivity = false;
 	
 	private GestureDetector quizGestureDetector;
 	private OnTouchListener quizGestureListener; 
@@ -190,7 +191,7 @@ public class QuizWidget extends WidgetFactory {
 				// save answer
 				if (saveAnswer()) {
 					String feedback = mQuiz.getCurrentQuestion().getFeedback();
-					if (!feedback.equals("")) {
+					if (!feedback.equals("") && !isBaselineActivity) {
 						showFeedback(feedback);
 					} else if (mQuiz.hasNext()) {
 						mQuiz.moveNext();
@@ -427,5 +428,15 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void setMQuiz(MQuiz mquiz) {
 		this.mQuiz = mquiz;
+	}
+
+	@Override
+	public void setBaselineActivity(boolean baseline) {
+		this.isBaselineActivity = baseline;
+	}
+
+	@Override
+	public boolean isBaselineActivity() {
+		return this.isBaselineActivity;
 	}
 }

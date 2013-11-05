@@ -73,4 +73,6 @@ public abstract class WidgetFactory extends Activity {
 	public abstract MQuiz getMQuiz();
 	public abstract void setMQuiz(MQuiz mquiz);
 	
+	public abstract void setBaselineActivity(boolean baseline);
+	public abstract boolean isBaselineActivity();
 }

@@ -216,6 +216,7 @@ public class ModuleIndexActivity extends AppActivity {
     					Section section = new Section();
     					section.addActivity(ModuleIndexActivity.this.baselineActivity);
     					tb.putSerializable(Section.TAG, section);
+    					tb.putSerializable(ModuleActivity.BASELINE_TAG, true);
     					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, 0);
     					tb.putSerializable(Module.TAG, ModuleIndexActivity.this.module);
     					intent.putExtras(tb);

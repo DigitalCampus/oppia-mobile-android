@@ -60,11 +60,13 @@ import android.widget.Toast;
 public class ModuleActivity extends AppActivity implements OnUtteranceCompletedListener, OnInitListener {
 
 	public static final String TAG = ModuleActivity.class.getSimpleName();
+	public static final String BASELINE_TAG = "BASELINE";
 	private Section section;
 	private Module module;
 	private int currentActivityNo = 0;
 	private WidgetFactory currentActivity;
 	private SharedPreferences prefs;
+	private boolean isBaselineActivity = false;
 	
 	private GestureDetector pageGestureDetector;
 	View.OnTouchListener pageGestureListener;
@@ -90,6 +92,9 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 			section = (Section) bundle.getSerializable(Section.TAG);
 			module = (Module) bundle.getSerializable(Module.TAG);
 			currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
+			if(bundle.getSerializable(ModuleActivity.BASELINE_TAG) != null){
+				this.isBaselineActivity = (Boolean) bundle.getSerializable(ModuleActivity.BASELINE_TAG);
+			}
 		}
 		
 		// OppiaMobileGesture detection for pages
@@ -252,6 +257,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 			} else {
 				currentActivity = new QuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
 			}
+			currentActivity.setBaselineActivity(this.isBaselineActivity);
 		} else if (acts.get(this.currentActivityNo).getActType().equals("resource")) {
 			currentActivity = new ResourceWidget(this, module, acts.get(this.currentActivityNo));
 		}
