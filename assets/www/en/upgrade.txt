@@ -1,3 +1,8 @@
+<b>Updates in v2.0.4</b>
+<p>
+* Added support for baseline quizzes before a course may be accessed.
+</p>
+
 <b>Updates in v2.0.3</b>
 <p>
 * Points and badges display according to whether enabled on server<br/>

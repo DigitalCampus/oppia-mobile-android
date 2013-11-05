@@ -75,10 +75,10 @@ public class ModuleIndexActivity extends AppActivity {
 			
 	        	module.setMetaPages(mxr.getMetaPages());
 	        	
-	        	this.checkBaseline();
+	        	boolean baselineCompleted = this.isBaselineCompleted();
 	        	
 	        	String digest = (String) bundle.getSerializable("JumpTo");
-	        	if(digest != null){
+	        	if(digest != null && baselineCompleted){
 	        		// code to directly jump to a specific activity
 	        		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
 	        		for(Section s: sections){
@@ -134,7 +134,7 @@ public class ModuleIndexActivity extends AppActivity {
    	public void onResume() {
     	super.onResume();
    		if(aDialog == null){
-   			this.checkBaseline();
+   			this.isBaselineCompleted();
    		} else {
    			aDialog.show();
    		}
@@ -196,7 +196,7 @@ public class ModuleIndexActivity extends AppActivity {
 		});
 	}
     
-    private void checkBaseline(){
+    private boolean isBaselineCompleted(){
     	ArrayList<Activity> baselineActs = mxr.getBaselineActivities(module.getModId(),this);
     	Log.d(TAG,"No baseline activities: " + baselineActs.size());
     	// TODO how to handle if more than one baseline activity
@@ -228,8 +228,10 @@ public class ModuleIndexActivity extends AppActivity {
     				}
     			});
     			aDialog.show();
+    			return false;
     		}
     	}
+    	return true;
     }
     
 }
