@@ -397,8 +397,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
 				"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
 				" as d FROM "+ACTIVITY_TABLE + " a " +
-				" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) l " +
-						" ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
+				" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM " + TRACKER_LOG_TABLE + 
+									" WHERE " + TRACKER_LOG_C_COMPLETED + "=1 AND " + TRACKER_LOG_C_MODID + "=" + String.valueOf(modId) + ") l " +
+									" ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
 				" WHERE a."+ ACTIVITY_C_MODID +"=" + String.valueOf(modId);
 		Cursor c = db.rawQuery(sql,null);
 		int noActs = c.getCount();
