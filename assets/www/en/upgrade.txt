@@ -1,3 +1,8 @@
+<b>Updates in v2.0.7</b>
+<p>
+* Added support for custom style sheets for courses
+</p>
+
 <b>Updates in v2.0.4</b>
 <p>
 * Added support for baseline quizzes before a course may be accessed.
