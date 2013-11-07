@@ -81,10 +81,16 @@ public class PageWidget extends WidgetFactory {
 		wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
 		// get the location data
 		String url = module.getLocation() + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+		// find if there is specific stylesheet in course package
+		String styleLocation = "file:///android_asset/www/style.css";
+		File styleSheet = new File(module.getLocation() + "/style.css");
+		if(styleSheet.exists()){
+			styleLocation = module.getLocation() + "/style.css";
+		} 
 		try {
 			String content =  "<html><head>";
 			content += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
-			content += "<link href='file:///android_asset/www/style.css' rel='stylesheet' type='text/css'/>";
+			content += "<link href='" + styleLocation + "' rel='stylesheet' type='text/css'/>";
 			content += "</head>";
 			content += FileUtils.readFile(url);
 			content += "</html>";
