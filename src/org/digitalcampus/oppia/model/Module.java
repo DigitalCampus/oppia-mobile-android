@@ -188,7 +188,11 @@ public class Module implements Serializable {
 	}
 
 	public String getLocation() {
-		return location + "/";
+		if (location.endsWith("/")){
+			return location;
+		} else {
+			return location + "/";
+		}
 	}
 
 	public String getModuleXMLLocation(){

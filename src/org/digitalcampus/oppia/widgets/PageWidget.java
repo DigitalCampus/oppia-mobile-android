@@ -80,7 +80,7 @@ public class PageWidget extends WidgetFactory {
 		
 		wv = (WebView) ((Activity) context).findViewById(R.id.page_webview);
 		// get the location data
-		String url = module.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+		String url = module.getLocation() + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		try {
 			String content =  "<html><head>";
 			content += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
