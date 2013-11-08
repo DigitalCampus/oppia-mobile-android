@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
@@ -38,7 +39,10 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -114,24 +118,43 @@ public class PageWidget extends WidgetFactory {
 
 					// check video file exists
 					boolean exists = FileUtils.mediaFileExists(mediaFileName);
-					if (exists) {
-						
-						String mimeType = FileUtils.getMimeType(MobileLearning.MEDIA_PATH + mediaFileName);
-						if(FileUtils.supportedMediafileType(mimeType)){
-							// launch intent to play video
-							Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-							Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
-							intent.setDataAndType(data, "video/mp4");
-							mediaPlaying = true;
-							mediaStartTimeStamp = System.currentTimeMillis()/1000;
-							ctx.startActivity(intent);
-						} else {
-							Toast.makeText(ctx, ctx.getString(R.string.error_media_unsupported, mediaFileName), Toast.LENGTH_LONG).show();
-						}
-					} else {
+					if (!exists) {
 						Toast.makeText(ctx, ctx.getString(R.string.error_media_not_found,mediaFileName), Toast.LENGTH_LONG).show();
-						
+						return true;
 					}
+					
+					String mimeType = FileUtils.getMimeType(MobileLearning.MEDIA_PATH + mediaFileName);
+					if(!FileUtils.supportedMediafileType(mimeType)){
+						Toast.makeText(ctx, ctx.getString(R.string.error_media_unsupported, mediaFileName), Toast.LENGTH_LONG).show();
+						return true;
+					}
+					
+					// check user has app installed to play the video
+					// launch intent to play video
+					Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+					Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
+					intent.setDataAndType(data, "video/mp4");
+					
+					PackageManager pm = PageWidget.this.ctx.getPackageManager();
+
+					List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+					boolean appFound = false;
+					for (ResolveInfo info : infos) {
+						IntentFilter filter = info.filter;
+						if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
+							// Found an app with the right intent/filter
+							appFound = true;
+						}
+					}
+					if (!appFound){
+						Toast.makeText(PageWidget.this.ctx, PageWidget.this.ctx.getString(R.string.error_media_app_not_found), Toast.LENGTH_LONG).show();
+						return true;
+					}
+					
+					mediaPlaying = true;
+					mediaStartTimeStamp = System.currentTimeMillis()/1000;
+					ctx.startActivity(intent);
+					
 					return true;
 				} else {
 					Intent intent = new Intent(Intent.ACTION_VIEW);
