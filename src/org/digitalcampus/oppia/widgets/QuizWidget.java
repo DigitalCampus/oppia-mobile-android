@@ -51,6 +51,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -149,7 +150,8 @@ public class QuizWidget extends WidgetFactory {
 			return;
 		}
 		qText.setVisibility(View.VISIBLE);
-		qText.setText(q.getTitle());
+		// convert in case has any html special chars
+		qText.setText(Html.fromHtml(q.getTitle()).toString());
 
 		if (q instanceof MultiChoice) {
 			qw = new MultiChoiceWidget(this.ctx);

@@ -2,6 +2,7 @@
 <p>
 * Check a media player is installed before playing the video
 * Better error checking for quizzes
+* Fix quiz question display when html is used
 </p>
 
 <b>Updates in v2.0.7</b>
