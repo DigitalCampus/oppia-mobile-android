@@ -1,6 +1,7 @@
 <b>Updates in v2.0.8</b>
 <p>
 * Check a media player is installed before playing the video
+* Better error checking for quizzes
 </p>
 
 <b>Updates in v2.0.7</b>

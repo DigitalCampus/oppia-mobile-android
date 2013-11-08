@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mquiz.InvalidQuizException;
 import org.digitalcampus.mquiz.MQuiz;
 import org.digitalcampus.mquiz.model.QuizQuestion;
 import org.digitalcampus.mquiz.model.questiontypes.Essay;
@@ -135,12 +136,18 @@ public class QuizWidget extends WidgetFactory {
 			this.quiz = new MQuiz();
 			this.quiz.load(quizContent);
 		}
-
 		this.showQuestion();
 	}
 	
 	public void showQuestion() {
-		QuizQuestion q = this.quiz.getCurrentQuestion();
+		QuizQuestion q = null;
+		try {
+			q = this.quiz.getCurrentQuestion();
+		} catch (InvalidQuizException e) {
+			Toast.makeText(this.ctx, this.ctx.getString(R.string.error_quiz_no_questions), Toast.LENGTH_LONG).show();
+			e.printStackTrace();
+			return;
+		}
 		qText.setVisibility(View.VISIBLE);
 		qText.setText(q.getTitle());
 
@@ -191,7 +198,12 @@ public class QuizWidget extends WidgetFactory {
 			public void onClick(View v) {
 				// save answer
 				if (saveAnswer()) {
-					String feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback();
+					String feedback = "";
+					try {
+						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback();
+					} catch (InvalidQuizException e) {
+						e.printStackTrace();
+					}
 					if (!feedback.equals("") && !isBaselineActivity) {
 						showFeedback(feedback);
 					} else if (QuizWidget.this.quiz.hasNext()) {
@@ -225,10 +237,14 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private boolean saveAnswer() {
-		List<String> answers = qw.getQuestionResponses(quiz.getCurrentQuestion().getResponseOptions());
-		if (answers != null) {
-			quiz.getCurrentQuestion().setUserResponses(answers);
-			return true;
+		try {
+			List<String> answers = qw.getQuestionResponses(quiz.getCurrentQuestion().getResponseOptions());
+			if (answers != null) {
+				quiz.getCurrentQuestion().setUserResponses(answers);
+				return true;
+			}
+		} catch (InvalidQuizException e){
+			e.printStackTrace();
 		}
 		return false;
 	}
