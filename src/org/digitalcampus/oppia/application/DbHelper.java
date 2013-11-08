@@ -527,6 +527,10 @@ public class DbHelper extends SQLiteOpenHelper {
 				json.put("tracker_date", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
 				json.put("digest", c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 				json.put("completed", c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
+				Module m = this.getModule(c.getLong(c.getColumnIndex(TRACKER_LOG_C_MODID)));
+				if (m != null){
+					json.put("course", m.getShortname());
+				}
 				content = json.toString();
 			} catch (JSONException e) {
 				e.printStackTrace();
