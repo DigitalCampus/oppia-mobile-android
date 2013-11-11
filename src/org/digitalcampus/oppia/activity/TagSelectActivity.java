@@ -140,7 +140,6 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				}
 			});
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

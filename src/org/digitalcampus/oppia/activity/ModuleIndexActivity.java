@@ -198,7 +198,6 @@ public class ModuleIndexActivity extends AppActivity {
     
     private boolean isBaselineCompleted(){
     	ArrayList<Activity> baselineActs = mxr.getBaselineActivities(module.getModId(),this);
-    	Log.d(TAG,"No baseline activities: " + baselineActs.size());
     	// TODO how to handle if more than one baseline activity
     	for(Activity a: baselineActs){
     		if(!a.isAttempted()){

@@ -61,7 +61,6 @@ public class UpgradeUtils {
 				InputStream stream = ((Activity) ctx).getAssets().open(messagePath);
 				message = FileUtils.readFile(stream);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
             

@@ -58,7 +58,7 @@ public class ResourceWidget extends WidgetFactory {
 		resourceGestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				try {
-					// TODO - for some reason unless this is in a try/catch block it will fail with NullPointerException
+					// for some reason unless this is in a try/catch block it will fail with NullPointerException
 					return resourceGestureDetector.onTouchEvent(event);
 				} catch (Exception e){
 					return false;
@@ -165,13 +165,11 @@ public class ResourceWidget extends WidgetFactory {
 		}
 	}
 
-	@Override
-	public void setStartTime(long startTime) {
+	private void setStartTime(long startTime) {
 		this.startTimestamp = startTime;
 	}
 
-	@Override
-	public long getStartTime() {
+	private long getStartTime() {
 		return this.startTimestamp;
 	}
 
@@ -219,14 +217,16 @@ public class ResourceWidget extends WidgetFactory {
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<String, Object> config = new HashMap<String, Object>();
+		config.put("Activity_StartTime", this.getStartTime());
+		return config;
 	}
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
-		// TODO Auto-generated method stub
-		
+		if (config.containsKey("Activity_StartTime")){
+			this.setStartTime((Long) config.get("Activity_StartTime"));
+		}
 	}
 
 }

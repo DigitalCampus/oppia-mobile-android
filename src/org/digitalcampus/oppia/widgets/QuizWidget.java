@@ -401,14 +401,11 @@ public class QuizWidget extends WidgetFactory {
 		return "";
 	}
 
-	@Override
-	public void setStartTime(long startTime) {
+	private void setStartTime(long startTime) {
 		this.startTimestamp = startTime;
-		
 	}
 
-	@Override
-	public long getStartTime() {
+	private long getStartTime() {
 		return this.startTimestamp;
 	}
 
@@ -446,6 +443,7 @@ public class QuizWidget extends WidgetFactory {
 		HashMap<String, Object> config = new HashMap<String, Object>();
 		//this.saveAnswer();
 		config.put("quiz", this.getQuiz());
+		config.put("Activity_StartTime", this.getStartTime());
 		return config;
 	}
 
@@ -454,6 +452,8 @@ public class QuizWidget extends WidgetFactory {
 		if (config.containsKey("quiz")){
 			this.setQuiz((MQuiz) config.get("quiz"));
 		}
-		
+		if (config.containsKey("Activity_StartTime")){
+			this.setStartTime((Long) config.get("Activity_StartTime"));
+		}
 	}
 }

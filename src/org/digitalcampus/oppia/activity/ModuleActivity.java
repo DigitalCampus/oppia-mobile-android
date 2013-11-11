@@ -112,8 +112,9 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putLong("activityStartTimeStamp", currentActivity.getStartTime());
+		//savedInstanceState.putLong("activityStartTimeStamp", currentActivity.getStartTime());
 		savedInstanceState.putInt("currentActivityNo", this.currentActivityNo);
+		//savedInstanceState.putSerializable("currentActivity", this.currentActivity);
 		savedInstanceState.putSerializable("widget_config", currentActivity.getWidgetConfig());
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -122,11 +123,11 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		currentActivity.setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
-		widgetState = currentActivity.getWidgetConfig();
-		currentActivity.setStartTime(savedInstanceState.getLong("activityStartTimeStamp"));
 		this.currentActivityNo = savedInstanceState.getInt("currentActivityNo");
-		
+		//currentActivity = section.getActivities().get(this.currentActivityNo);
+		//currentActivity.setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
+		widgetState = (HashMap<String, Object>) savedInstanceState.getSerializable("widget_config");
+		//currentActivity.setStartTime(savedInstanceState.getLong("activityStartTimeStamp"));
 	}
 
 	@Override
@@ -134,7 +135,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		super.onStart();
 		setTitle(section.getTitle(prefs
 				.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
-		loadActivity();
+		//loadActivity();
 	}
 
 	@Override
@@ -164,9 +165,10 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 	@Override
 	public void onResume() {
 		super.onResume();
+		loadActivity();
 		if (currentActivity != null) {
 			currentActivity.setWidgetConfig(widgetState);
-			loadActivity();
+			
 		}
 		Log.d(TAG,"onresume called");
 	}
@@ -246,6 +248,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		} else if (acts.get(this.currentActivityNo).getActType().equals("resource")) {
 			currentActivity = new ResourceWidget(this, module, acts.get(this.currentActivityNo));
 		}
+		currentActivity.setWidgetConfig(widgetState);
 		this.setUpNav();
 	}
 

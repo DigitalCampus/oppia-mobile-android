@@ -279,6 +279,9 @@ public class PageWidget extends WidgetFactory {
 		if (config.containsKey("Media_File")){
 			this.setMediaFileName((String) config.get("Media_File"));
 		}
+		if (config.containsKey("Activity_StartTime")){
+			this.setStartTime((Long) config.get("Activity_StartTime"));
+		}
 		this.mediaStopped();
 	}
 	
@@ -288,6 +291,7 @@ public class PageWidget extends WidgetFactory {
 		config.put("Media_Playing", this.getMediaPlaying());
 		config.put("Media_StartTime", this.getMediaStartTime());
 		config.put("Media_File", this.getMediaFileName());
+		config.put("Activity_StartTime", this.getStartTime());
 		return config;
 	}
 	
@@ -315,14 +319,12 @@ public class PageWidget extends WidgetFactory {
 		this.mediaFileName = mediaFileName;	
 	}
 	
-	@Override
-	public void setStartTime(long startTime) {
+	private void setStartTime(long startTime) {
 		this.startTimestamp = startTime;
 		
 	}
 
-	@Override
-	public long getStartTime() {
+	private long getStartTime() {
 		return this.startTimestamp;
 	}
 
@@ -338,12 +340,10 @@ public class PageWidget extends WidgetFactory {
 
 	@Override
 	public void setBaselineActivity(boolean baseline) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public boolean isBaselineActivity() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
