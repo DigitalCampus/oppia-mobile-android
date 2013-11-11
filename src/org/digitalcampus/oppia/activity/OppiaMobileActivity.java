@@ -41,7 +41,6 @@ import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
 import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.UpgradeUtils;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -118,8 +117,10 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
  		Payload p = new Payload(data);
 		umt.execute(p);
 		
-		UpgradeUtils uu = new UpgradeUtils(this);
-		uu.show();
+		// Don't bother to show upgrade log info...
+		// if this is required uncomment the 2 lines below
+		//UpgradeUtils uu = new UpgradeUtils(this);
+		//uu.show();
 	}
 
 	@Override
