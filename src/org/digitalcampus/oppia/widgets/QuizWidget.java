@@ -273,7 +273,7 @@ public class QuizWidget extends WidgetFactory {
 		builder.show();
 	}
 
-	private void showResults() {
+	public void showResults() {
 		quiz.mark();
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		

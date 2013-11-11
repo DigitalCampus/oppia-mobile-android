@@ -47,6 +47,8 @@ public class QuizGestureDetector extends SimpleOnGestureListener {
 				if (this.modAct.getCurrentActivity() instanceof QuizWidget) {
 					if (((QuizWidget) this.modAct.getCurrentActivity()).getQuiz().hasNext()) {
 						((QuizWidget) this.modAct.getCurrentActivity()).nextBtn.performClick();
+					} else {
+						((QuizWidget) this.modAct.getCurrentActivity()).showResults();
 					}
 				}
 
@@ -54,6 +56,8 @@ public class QuizGestureDetector extends SimpleOnGestureListener {
 				if (this.modAct.getCurrentActivity() instanceof QuizWidget) {
 					if (((QuizWidget) this.modAct.getCurrentActivity()).getQuiz().hasPrevious()) {
 						((QuizWidget) this.modAct.getCurrentActivity()).prevBtn.performClick();
+					} else if (this.modAct.hasPrev()){
+						this.modAct.movePrev();
 					}
 				}
 			}

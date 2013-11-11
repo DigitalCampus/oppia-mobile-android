@@ -112,9 +112,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		//savedInstanceState.putLong("activityStartTimeStamp", currentActivity.getStartTime());
 		savedInstanceState.putInt("currentActivityNo", this.currentActivityNo);
-		//savedInstanceState.putSerializable("currentActivity", this.currentActivity);
 		savedInstanceState.putSerializable("widget_config", currentActivity.getWidgetConfig());
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -124,10 +122,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		this.currentActivityNo = savedInstanceState.getInt("currentActivityNo");
-		//currentActivity = section.getActivities().get(this.currentActivityNo);
-		//currentActivity.setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
-		widgetState = (HashMap<String, Object>) savedInstanceState.getSerializable("widget_config");
-		//currentActivity.setStartTime(savedInstanceState.getLong("activityStartTimeStamp"));
+		this.widgetState = (HashMap<String, Object>) savedInstanceState.getSerializable("widget_config");
 	}
 
 	@Override
