@@ -27,15 +27,15 @@
     <string name="activity_module_button_prev">&lt;</string>
     <string name="activity_module_button_next">&gt;</string>
     
-    <string name="widget_mquiz_next">Próximo &gt;&gt;</string>
-    <string name="widget_mquiz_prev">&lt;&lt; Anterior</string>
-    <string name="widget_mquiz_getresults">Obterner resultados</string>
-    <string name="widget_mquiz_noanswergiven">Por favor dé una respuesta antes de pasar a la siguiente pregunta</string>
-    <string name="widget_mquiz_progress">Pregunta %1$d de %2$d</string>
- 	<string name="widget_mquiz_results">Resultados</string>
- 	<string name="widget_mquiz_results_intro">Su puntuación:</string>
- 	<string name="widget_mquiz_results_score">%1$.0f%%</string>
- 	<string name="widget_mquiz_results_restart">Vuelva a pasar el test</string>
+    <string name="widget_quiz_next">Próximo &gt;&gt;</string>
+    <string name="widget_quiz_prev">&lt;&lt; Anterior</string>
+    <string name="widget_quiz_getresults">Obterner resultados</string>
+    <string name="widget_quiz_noanswergiven">Por favor dé una respuesta antes de pasar a la siguiente pregunta</string>
+    <string name="widget_quiz_progress">Pregunta %1$d de %2$d</string>
+ 	<string name="widget_quiz_results">Resultados</string>
+ 	<string name="widget_quiz_results_intro">Su puntuación:</string>
+ 	<string name="widget_quiz_results_score">%1$.0f%%</string>
+ 	<string name="widget_quiz_results_restart">Vuelva a pasar el test</string>
  	<string name="module_context_reset">Reajustar</string>
  	<string name="module_context_delete">Borrar</string>
  	<string name="module_context_reset_confirm">¿Está seguro de que desea restablecer este curso? Se eliminarán todos los registros de progreso para este curso.</string>

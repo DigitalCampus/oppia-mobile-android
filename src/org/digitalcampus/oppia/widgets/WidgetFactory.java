@@ -60,19 +60,8 @@ public abstract class WidgetFactory extends Activity {
 	
 	public abstract String getContentToRead();
 	
-	/*public abstract String getMediaFileName();
-	public abstract void setMediaFileName(String mediaFileName);
-	public abstract void mediaStopped();
-	public abstract boolean getMediaPlaying();
-	public abstract long getMediaStartTime();
-	public abstract void setMediaPlaying(boolean playing);
-	public abstract void setMediaStartTime(long mediaStartTime);*/
-	
 	public abstract void setReadAloud(boolean reading);
 	public abstract boolean getReadAloud();
-	
-	//public abstract MQuiz getMQuiz();
-	//public abstract void setMQuiz(MQuiz mquiz);
 	
 	public abstract void setBaselineActivity(boolean baseline);
 	public abstract boolean isBaselineActivity();

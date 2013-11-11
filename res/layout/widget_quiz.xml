@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight=".5"
-            android:text="@string/widget_mquiz_prev"
+            android:text="@string/widget_quiz_prev"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight=".5"
-            android:text="@string/widget_mquiz_next"
+            android:text="@string/widget_quiz_next"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>

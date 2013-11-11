@@ -215,7 +215,7 @@ public class QuizWidget extends WidgetFactory {
 						showResults();
 					}
 				} else {
-					CharSequence text = ((android.app.Activity) ctx).getString(R.string.widget_mquiz_noanswergiven);
+					CharSequence text = ((android.app.Activity) ctx).getString(R.string.widget_quiz_noanswergiven);
 					int duration = Toast.LENGTH_SHORT;
 					Toast toast = Toast.makeText(ctx, text, duration);
 					toast.show();
@@ -225,15 +225,15 @@ public class QuizWidget extends WidgetFactory {
 
 		// set label on next button
 		if (quiz.hasNext()) {
-			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_mquiz_next));
+			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_quiz_next));
 		} else {
-			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_mquiz_getresults));
+			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_quiz_getresults));
 		}
 	}
 
 	private void setProgress() {
 		TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
-		progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_progress,
+		progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_progress,
 				quiz.getCurrentQuestionNo(), quiz.getTotalNoQuestions()));
 
 	}
@@ -285,7 +285,6 @@ public class QuizWidget extends WidgetFactory {
 		db.insertMQuizResult(data, module.getModId());
 		db.close();
 		Log.d(TAG,data);
-		Log.d(TAG,"id: " + module.getModId());
 		
 		LinearLayout responsesLL = (LinearLayout) ((android.app.Activity) ctx).findViewById(R.id.quizResponseWidget);
     	responsesLL.removeAllViews();
@@ -293,36 +292,62 @@ public class QuizWidget extends WidgetFactory {
 		prevBtn.setVisibility(View.GONE);
 		qText.setVisibility(View.GONE);
 		
-		// set page heading
-		TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
-		progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_results));
-		
-		// show final score
-		TextView intro = new TextView(this.ctx);
-		intro.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_results_intro));
-		intro.setGravity(Gravity.CENTER);
-		intro.setTextSize(20);
-		responsesLL.addView(intro);
-		
-		TextView score = new TextView(this.ctx);
-		score.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_results_score,percent));
-		score.setTextSize(60);
-		score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-		score.setGravity(Gravity.CENTER);
-		score.setPadding(0, 20, 0, 20);
-		responsesLL.addView(score);
-		
-		Button restartBtn = new Button(this.ctx);
-		restartBtn.setText(((android.app.Activity) this.ctx).getString(R.string.widget_mquiz_results_restart));
-		restartBtn.setTextSize(20);
-		restartBtn.setTypeface(Typeface.DEFAULT_BOLD);
-		restartBtn.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				restart();
-			}
-		});
-		
-		responsesLL.addView(restartBtn);
+	
+		if (this.isBaselineActivity){
+			TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
+			progress.setText("");
+			
+			TextView intro = new TextView(this.ctx);
+			intro.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_baseline_completed));
+			intro.setGravity(Gravity.CENTER);
+			intro.setTextSize(20);
+			intro.setPadding(0, 20, 0, 50);
+			responsesLL.addView(intro);
+			
+			Button restartBtn = new Button(this.ctx);
+			restartBtn.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_baseline_goto_course));
+			restartBtn.setTextSize(20);
+			restartBtn.setTypeface(Typeface.DEFAULT_BOLD);
+			restartBtn.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					QuizWidget.this.ctx.finish();
+				}
+			});
+			
+			responsesLL.addView(restartBtn);
+		} else {
+			// set page heading
+			TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
+			progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_results));
+			
+			// show final score
+			TextView intro = new TextView(this.ctx);
+			intro.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_results_intro));
+			intro.setGravity(Gravity.CENTER);
+			intro.setTextSize(20);
+			responsesLL.addView(intro);
+			
+			TextView score = new TextView(this.ctx);
+			score.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_results_score,percent));
+			score.setTextSize(60);
+			score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			score.setGravity(Gravity.CENTER);
+			score.setPadding(0, 20, 0, 20);
+			responsesLL.addView(score);
+			
+			
+			Button restartBtn = new Button(this.ctx);
+			restartBtn.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_results_restart));
+			restartBtn.setTextSize(20);
+			restartBtn.setTypeface(Typeface.DEFAULT_BOLD);
+			restartBtn.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					restart();
+				}
+			});
+			
+			responsesLL.addView(restartBtn);
+		}
 	}
 
 	private void restart() {
