@@ -50,7 +50,8 @@ public abstract class WidgetFactory extends Activity {
 	}
 	
 	public abstract boolean activityHasTracker();
-	public abstract boolean activityCompleted();
+	public abstract void setActivityCompleted(boolean completed);
+	public abstract boolean getActivityCompleted();
 	
 	public abstract long getTimeTaken();
 	//public abstract void setStartTime(long startTime);

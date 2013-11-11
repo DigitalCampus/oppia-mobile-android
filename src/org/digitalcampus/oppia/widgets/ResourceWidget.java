@@ -150,8 +150,13 @@ public class ResourceWidget extends WidgetFactory {
 	}
 
 	@Override
-	public boolean activityCompleted() {
+	public boolean getActivityCompleted() {
 		return true;
+	}
+	
+	@Override
+	public void setActivityCompleted(boolean completed){
+		//do nothing
 	}
 
 	@Override

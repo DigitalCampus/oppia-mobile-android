@@ -79,7 +79,7 @@ public class QuizWidget extends WidgetFactory {
 	public Button nextBtn;
 	private TextView qText;
 	private String quizContent;
-	private boolean isComplete = false;
+	private boolean isOnResultsPage = false;
 	private Module module; 
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private long endTimestamp = System.currentTimeMillis()/1000;
@@ -137,7 +137,11 @@ public class QuizWidget extends WidgetFactory {
 			this.quiz = new MQuiz();
 			this.quiz.load(quizContent);
 		}
-		this.showQuestion();
+		if (this.isOnResultsPage){
+			this.showResults();
+		} else {
+			this.showQuestion();
+		}
 	}
 	
 	public void showQuestion() {
@@ -274,7 +278,7 @@ public class QuizWidget extends WidgetFactory {
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		
 		// log the activity as complete
-		isComplete = true;
+		isOnResultsPage = true;
 		
 		// make end time
 		endTimestamp = System.currentTimeMillis()/1000;
@@ -355,15 +359,23 @@ public class QuizWidget extends WidgetFactory {
 		quiz.load(quizContent);
 		startTimestamp = System.currentTimeMillis()/1000;
 		endTimestamp = System.currentTimeMillis()/1000;
+		isOnResultsPage = false;
 		this.showQuestion();
 	}
 	
+	@Override
 	public boolean activityHasTracker(){
-		return isComplete;
+		return isOnResultsPage;
 	}
 	
-	public boolean activityCompleted(){
-		if(isComplete){
+	@Override
+	public void setActivityCompleted(boolean completed){
+		this.isOnResultsPage = completed;
+	}
+	
+	@Override
+	public boolean getActivityCompleted(){
+		if(isOnResultsPage){
 			quiz.mark();
 			float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 			if (percent > 99){
@@ -444,6 +456,7 @@ public class QuizWidget extends WidgetFactory {
 		//this.saveAnswer();
 		config.put("quiz", this.getQuiz());
 		config.put("Activity_StartTime", this.getStartTime());
+		config.put("OnResultsPage", this.isOnResultsPage);
 		return config;
 	}
 
@@ -454,6 +467,9 @@ public class QuizWidget extends WidgetFactory {
 		}
 		if (config.containsKey("Activity_StartTime")){
 			this.setStartTime((Long) config.get("Activity_StartTime"));
+		}
+		if (config.containsKey("OnResultsPage")){
+			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
 		}
 	}
 }

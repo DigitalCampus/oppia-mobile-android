@@ -325,7 +325,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 			if(this.isBaselineActivity){
 				t.saveTracker(module.getModId(), digest, json, true);
 			} else {
-				t.saveTracker(module.getModId(), digest, json, currentActivity.activityCompleted());
+				t.saveTracker(module.getModId(), digest, json, currentActivity.getActivityCompleted());
 			}
 		}
 		return true;

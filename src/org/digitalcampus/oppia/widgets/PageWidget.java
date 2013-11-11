@@ -180,7 +180,8 @@ public class PageWidget extends WidgetFactory {
 		}
 	}
 	
-	public boolean activityCompleted(){
+	@Override
+	public boolean getActivityCompleted(){
 		// only show as being complete if all the videos on this page have been played
 		if(this.activity.hasMedia()){
 			ArrayList<Media> mediaList = this.activity.getMedia();
@@ -199,6 +200,10 @@ public class PageWidget extends WidgetFactory {
 		return true;
 	}
 	
+	@Override
+	public void setActivityCompleted(boolean completed){
+		//do nothing
+	}
 	public long getTimeTaken(){
 		long endTimestamp = System.currentTimeMillis()/1000;
 		long diff = endTimestamp - startTimestamp;
