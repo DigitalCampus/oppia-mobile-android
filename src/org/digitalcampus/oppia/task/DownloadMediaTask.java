@@ -85,7 +85,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				MessageDigest md = MessageDigest.getInstance("MD5");
 				in = new DigestInputStream(in, md);
 				
-                byte[] buffer = new byte[4096];
+                byte[] buffer = new byte[8192];
                 int len1 = 0;
                 long total = 0;
                 int progress = 0;
@@ -96,6 +96,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 	                    dp.setProgress(progress);
 	                    publishProgress(dp);
                     }
+                    Log.d(TAG,"downloaded: " + total);
                     f.write(buffer, 0, len1);
                 }
                 f.close();
@@ -115,7 +116,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				Log.d(TAG,"supplied   digest: " + m.getDigest());
 				Log.d(TAG,"calculated digest: " + resultMD5);
 				
-				if(!resultMD5.equals(m.getDigest())){
+				if(!resultMD5.contains(m.getDigest())){
 					this.deleteFile(file);
 					payload.setResult(false);
 					payload.setResultResponse(ctx.getString(R.string.error_media_download));
