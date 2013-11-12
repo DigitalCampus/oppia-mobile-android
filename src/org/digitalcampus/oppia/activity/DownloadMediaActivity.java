@@ -65,8 +65,15 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 			missingMedia = (ArrayList<Media>) bundle.getSerializable(DownloadMediaActivity.TAG);
 		}
 		
-		dmla = new DownloadMediaListAdapter(this, missingMedia);
 		ListView listView = (ListView) findViewById(R.id.missing_media_list);
+		Object retained = getLastNonConfigurationInstance();
+		if (retained instanceof DownloadMediaListAdapter){
+			dmla = (DownloadMediaListAdapter) retained;
+			dmla.setMediaList(missingMedia);
+			dmla.notifyDataSetChanged();
+		} else {
+			dmla = new DownloadMediaListAdapter(this, missingMedia);
+		}
 		dmla.setDownloadMediaListener(this);
 		listView.setAdapter(dmla);
 		
@@ -90,7 +97,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 			alertDialog.dismiss();
 		}
 		if (dmla != null){
-			dmla.closeDialogs();
+			dmla.removeProgressDialog();
 		}
 		super.onPause();
 	}
@@ -103,6 +110,16 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		}
 
 	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		dmla.removeProgressDialog();
+		if (dmla != null) {
+			return dmla;
+		}
+		return super.onRetainNonConfigurationInstance();
+	}
+	
 	private void downloadViaPC(){
 		String filename = "mobile-learning-media.html";
 		String strData = "<html>";

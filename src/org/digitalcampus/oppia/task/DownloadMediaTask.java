@@ -96,7 +96,6 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 	                    dp.setProgress(progress);
 	                    publishProgress(dp);
                     }
-                    Log.d(TAG,"downloaded: " + total);
                     f.write(buffer, 0, len1);
                 }
                 f.close();

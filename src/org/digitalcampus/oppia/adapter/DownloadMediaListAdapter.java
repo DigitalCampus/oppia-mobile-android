@@ -26,10 +26,11 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 	public static final String TAG = DownloadMediaListAdapter.class.getSimpleName();
 
 	private final Context ctx;
-	private final ArrayList<Media> mediaList;
+	private ArrayList<Media> mediaList;
 	private DownloadMediaTask task;
 	private ProgressDialog downloadDialog;
 	private DownloadMediaListener mDownloadListener;
+	private boolean inProgress = false;
 	
 	public DownloadMediaListAdapter(Activity context, ArrayList<Media> mediaList) {
 		super(context, R.layout.media_download_row, mediaList);
@@ -37,6 +38,10 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		this.mediaList = mediaList;
 	}
 
+	public void setMediaList(ArrayList<Media> mediaList){
+		this.mediaList = mediaList;
+	}
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -72,15 +77,8 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		}
 
 		// show progress dialog
-		downloadDialog = new ProgressDialog(ctx);
-		downloadDialog.setTitle(R.string.downloading);
-		downloadDialog.setMessage(ctx.getString(R.string.download_starting));
-		downloadDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		downloadDialog.setProgress(0);
-		downloadDialog.setMax(100);
-		downloadDialog.setCancelable(false);
-		downloadDialog.show();
-
+		this.showProgressDialog();
+		this.inProgress = true;
 		ArrayList<Media> alMedia = new ArrayList<Media>();
 		alMedia.add(media);
 		task = new DownloadMediaTask(ctx);
@@ -89,6 +87,23 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		task.execute(p);
 	}
 	
+	public void showProgressDialog(){
+		// show progress dialog
+		downloadDialog = new ProgressDialog(ctx);
+		downloadDialog.setTitle(R.string.downloading);
+		downloadDialog.setMessage(ctx.getString(R.string.download_starting));
+		downloadDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		downloadDialog.setProgress(0);
+		downloadDialog.setMax(100);
+		downloadDialog.setCancelable(false);	
+		downloadDialog.show();
+	}
+	
+	public void removeProgressDialog(){
+		if(downloadDialog != null){
+			downloadDialog.dismiss();
+		}
+	}
 	public void setDownloadMediaListener(DownloadMediaListener dml) {
         synchronized (this) {
         	mDownloadListener = dml;
@@ -96,12 +111,15 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
     }
 
 	public void downloadProgressUpdate(DownloadProgress msg) {
-		downloadDialog.setMessage(msg.getMessage());
-		downloadDialog.setProgress(msg.getProgress());
+		if(downloadDialog != null){
+			downloadDialog.setMessage(msg.getMessage());
+			downloadDialog.setProgress(msg.getProgress());
+		}
 	}
 
 	public void downloadComplete(Payload response) {
-		downloadDialog.cancel();
+		this.removeProgressDialog();
+		this.inProgress = false;
 		synchronized (this) {
 			if (mDownloadListener != null) {
 				mDownloadListener.downloadComplete(response);
@@ -116,7 +134,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 	}
 	
 	public void openDialogs(){
-		if (downloadDialog != null){
+		if (downloadDialog != null && this.inProgress){
 			downloadDialog.show();
 		}
 	}
