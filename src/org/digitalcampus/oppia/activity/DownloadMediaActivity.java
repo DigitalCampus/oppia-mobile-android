@@ -106,9 +106,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 	public void onResume(){
 		super.onResume();
 		if (dmla != null){
-			dmla.openDialogs();
+			dmla.openDialog();
 		}
-
 	}
 	
 	@Override

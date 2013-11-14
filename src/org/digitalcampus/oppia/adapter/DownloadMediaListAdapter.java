@@ -79,6 +79,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		// show progress dialog
 		this.showProgressDialog();
 		this.inProgress = true;
+		
 		ArrayList<Media> alMedia = new ArrayList<Media>();
 		alMedia.add(media);
 		task = new DownloadMediaTask(ctx);
@@ -127,13 +128,13 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		}
 	}
 	
-	public void closeDialogs(){
+	public void closeDialog(){
 		if (downloadDialog != null){
 			downloadDialog.dismiss();
 		}
 	}
 	
-	public void openDialogs(){
+	public void openDialog(){
 		if (downloadDialog != null && this.inProgress){
 			downloadDialog.show();
 		}
