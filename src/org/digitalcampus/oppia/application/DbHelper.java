@@ -395,8 +395,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.moveToFirst();
 		long toUpdate = 0;
 		while (c.isAfterLast() == false) {
-			Log.d(TAG,c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
-			Log.d(TAG,c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 			if (c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)).equals(digest)
 					&& c.getInt(c.getColumnIndex(TRACKER_LOG_C_SUBMITTED)) == 0){
 				toUpdate = c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID));

@@ -17,13 +17,9 @@
 
 package org.digitalcampus.oppia.application;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import android.content.Context;
-import android.util.Log;
 
 public class Tracker {
 
@@ -35,27 +31,8 @@ public class Tracker {
 	}
 	
 	public void saveTracker(int modId, String digest, JSONObject data, boolean completed){
-		// add to the db log
 		DbHelper db = new DbHelper(this.ctx);
-		//Log.d(TAG,data.toString());
 		db.insertLog(modId, digest, data.toString(), completed);
-		db.close();
-	}
-	
-	public void mediaPlayed(int modId, String digest, String media, long timetaken, boolean completed){
-		// add to the db log
-		DbHelper db = new DbHelper(this.ctx); 
-		JSONObject jsonObj = new JSONObject();
-		try {
-			jsonObj.put("media", "played");
-			jsonObj.put("mediafile", media);
-			jsonObj.put("timetaken", timetaken);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			BugSenseHandler.sendException(e);
-		}
-		String data = jsonObj.toString();
-		db.insertLog(modId, digest, data, completed);
 		db.close();
 	}
 

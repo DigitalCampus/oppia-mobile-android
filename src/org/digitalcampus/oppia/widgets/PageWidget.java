@@ -33,6 +33,7 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Module;
 import org.digitalcampus.oppia.utils.FileUtils;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -266,7 +267,25 @@ public class PageWidget extends WidgetFactory {
 					if(timeTaken >= m.getLength()){
 						completed = true;
 					}
-					t.mediaPlayed(PageWidget.this.module.getModId(), m.getDigest(), mediaFileName, timeTaken, completed);
+					JSONObject data = new JSONObject();
+					try {
+						data.put("media", "played");
+						data.put("mediafile", mediaFileName);
+						data.put("timetaken", timeTaken);
+						String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+						data.put("lang", lang);
+					} catch (JSONException e) {
+						e.printStackTrace();
+						BugSenseHandler.sendException(e);
+					}
+					MetaDataUtils mdu = new MetaDataUtils(ctx);
+					// add in extra meta-data
+					try {
+						data = mdu.getMetaData(data);
+					} catch (JSONException e) {
+						// Do nothing
+					} 
+					t.saveTracker(PageWidget.this.module.getModId(), m.getDigest(), data, completed);
 				}
 			}
 		}
