@@ -30,8 +30,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.BatteryManager;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-
 
 public class MetaDataUtils {
 
@@ -79,7 +77,7 @@ public class MetaDataUtils {
 		Iterator<?> keys = metadata.keys();
 		while( keys.hasNext() ){
             String key = (String) keys.next();
-            Log.d(TAG,key + ": " + metadata.getBoolean(key));
+            //Log.d(TAG,key + ": " + metadata.getBoolean(key));
             editor.putBoolean(ctx.getString(R.string.prefs_metadata) + "_" + key, metadata.getBoolean(key));
         }
 		editor.commit();

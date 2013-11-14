@@ -1,3 +1,8 @@
+<b>Updates in v2.0.9</b>
+<p>
+* Improved handling of screen re-orientation when downloading media files
+</p>
+
 <b>Updates in v2.0.8</b>
 <p>
 * Check a media player is installed before playing the video

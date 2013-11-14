@@ -37,7 +37,7 @@ public class Tracker {
 	public void saveTracker(int modId, String digest, JSONObject data, boolean completed){
 		// add to the db log
 		DbHelper db = new DbHelper(this.ctx);
-		Log.d(TAG,data.toString());
+		//Log.d(TAG,data.toString());
 		db.insertLog(modId, digest, data.toString(), completed);
 		db.close();
 	}

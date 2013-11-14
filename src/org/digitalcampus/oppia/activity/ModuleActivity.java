@@ -28,7 +28,6 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gesture.PageGestureDetector;
 import org.digitalcampus.oppia.model.Module;
 import org.digitalcampus.oppia.model.Section;
-import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.widgets.PageWidget;
@@ -130,7 +129,6 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		super.onStart();
 		setTitle(section.getTitle(prefs
 				.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
-		//loadActivity();
 	}
 
 	@Override
@@ -138,22 +136,13 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		super.onPause();
 		if (myTTS != null) {
 			myTTS.shutdown();
-		}
-
+		}		
+		
 		ArrayList<org.digitalcampus.oppia.model.Activity> acts = section.getActivities();
 		this.saveTracker(acts.get(this.currentActivityNo).getDigest());
-
-		// start a new tracker service
-		Log.d(TAG, "Starting tracker service");
-		Intent service = new Intent(this, TrackerService.class);
-
-		Bundle tb = new Bundle();
-		tb.putBoolean("backgroundData", true);
-		service.putExtras(tb);
-		this.startService(service);
 		
 		if (currentActivity != null) {
-			widgetState = currentActivity.getWidgetConfig();
+			this.widgetState = currentActivity.getWidgetConfig();
 		}
 	}
 
@@ -163,9 +152,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		loadActivity();
 		if (currentActivity != null) {
 			currentActivity.setWidgetConfig(widgetState);
-			
 		}
-		Log.d(TAG,"onresume called");
 	}
 
 	@Override
@@ -174,6 +161,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 			myTTS.shutdown();
 			myTTS = null;
 		}
+		
 		super.onDestroy();
 	}
 
@@ -243,7 +231,8 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		} else if (acts.get(this.currentActivityNo).getActType().equals("resource")) {
 			currentActivity = new ResourceWidget(this, module, acts.get(this.currentActivityNo));
 		}
-		currentActivity.setWidgetConfig(widgetState);
+		currentActivity.setWidgetConfig(this.widgetState);
+		this.widgetState = new HashMap<String, Object>();
 		this.setUpNav();
 	}
 

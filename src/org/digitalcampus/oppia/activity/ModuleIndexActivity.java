@@ -28,6 +28,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Module;
 import org.digitalcampus.oppia.model.ModuleMetaPage;
 import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.ModuleXMLReader;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -128,6 +129,15 @@ public class ModuleIndexActivity extends AppActivity {
     	ListView listView = (ListView) findViewById(R.id.section_list);
     	SectionListAdapter sla = new SectionListAdapter(this, module, sections);
     	listView.setAdapter(sla); 
+    	
+    	// start a new tracker service
+		Log.d(TAG, "Starting tracker service");
+		Intent service = new Intent(this, TrackerService.class);
+
+		Bundle tb = new Bundle();
+		tb.putBoolean("backgroundData", true);
+		service.putExtras(tb);
+		this.startService(service);
 	
     }
     @Override

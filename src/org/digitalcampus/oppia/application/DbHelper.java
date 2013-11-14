@@ -384,13 +384,32 @@ public class DbHelper extends SQLiteOpenHelper {
 		return m;
 	}
 	
-	public long insertLog(int modId, String digest, String data, boolean completed){
+	public void insertLog(int modId, String digest, String data, boolean completed){
 		ContentValues values = new ContentValues();
 		values.put(TRACKER_LOG_C_MODID, modId);
 		values.put(TRACKER_LOG_C_ACTIVITYDIGEST, digest);
 		values.put(TRACKER_LOG_C_DATA, data);
 		values.put(TRACKER_LOG_C_COMPLETED, completed);
-		return db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
+		String sql = "SELECT * FROM " + TRACKER_LOG_TABLE + " ORDER BY " + TRACKER_LOG_C_DATETIME + " DESC LIMIT 0,1";
+		Cursor c = db.rawQuery(sql,null);
+		c.moveToFirst();
+		long toUpdate = 0;
+		while (c.isAfterLast() == false) {
+			Log.d(TAG,c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
+			Log.d(TAG,c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
+			if (c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)).equals(digest)
+					&& c.getInt(c.getColumnIndex(TRACKER_LOG_C_SUBMITTED)) == 0){
+				toUpdate = c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID));
+			}
+			c.moveToNext();
+		}
+		c.close();
+		
+		if(toUpdate != 0){
+			db.update(TRACKER_LOG_TABLE,values,TRACKER_LOG_C_ID+"=?",new String [] {String.valueOf(toUpdate)});
+		} else {
+			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
+		}
 	}
 	
 	public float getModuleProgress(int modId){
