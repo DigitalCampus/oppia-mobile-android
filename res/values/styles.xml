@@ -58,6 +58,12 @@
         <item name="android:textColor">@drawable/text_light</item>
     </style>
     
+     <style name="SmallTextLightItalic">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@drawable/text_light</item>
+    </style>
+    
     <style name="SmallTextDark">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>

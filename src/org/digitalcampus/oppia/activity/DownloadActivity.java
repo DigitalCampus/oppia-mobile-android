@@ -76,7 +76,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		if(this.json == null){
 			this.getModuleList();
 		} else {
-			this.refreshModuleList();
+			this.refreshCourseList();
 		}
 	}
 
@@ -123,17 +123,17 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		task.execute(p);
 	}
 
-	public void refreshModuleList() {
+	public void refreshCourseList() {
 		// process the response and display on screen in listview
 		// Create an array of Modules, that will be put to our ListActivity
 
 		DbHelper db = new DbHelper(this);
 		try {
-			ArrayList<Course> modules = new ArrayList<Course>();
+			ArrayList<Course> courses = new ArrayList<Course>();
 			
 			for (int i = 0; i < (json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
-				Course dm = new Course();
+				Course dc = new Course();
 				
 				ArrayList<Lang> titles = new ArrayList<Lang>();
 				JSONObject jsonTitles = json_obj.getJSONObject("title");
@@ -143,21 +143,26 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		            Lang l = new Lang(key,jsonTitles.getString(key));
 					titles.add(l);
 		        }
-				dm.setTitles(titles);
-				dm.setShortname(json_obj.getString("shortname"));
-				dm.setVersionId(json_obj.getDouble("version"));
-				dm.setDownloadUrl(json_obj.getString("url"));
-				dm.setInstalled(db.isInstalled(dm.getShortname()));
-				dm.setToUpdate(db.toUpdate(dm.getShortname(), dm.getVersionId()));
+		        dc.setTitles(titles);
+		        dc.setShortname(json_obj.getString("shortname"));
+		        dc.setVersionId(json_obj.getDouble("version"));
+		        dc.setDownloadUrl(json_obj.getString("url"));
+		        try {
+		        	dc.setDraft(json_obj.getBoolean("is_draft"));
+		        }catch (JSONException je){
+		        	dc.setDraft(false);
+		        }
+		        dc.setInstalled(db.isInstalled(dc.getShortname()));
+		        dc.setToUpdate(db.toUpdate(dc.getShortname(), dc.getVersionId()));
 				if (json_obj.has("schedule_uri")){
-					dm.setScheduleVersionID(json_obj.getDouble("schedule"));
-					dm.setScheduleURI(json_obj.getString("schedule_uri"));
-					dm.setToUpdateSchedule(db.toUpdateSchedule(dm.getShortname(), dm.getScheduleVersionID()));
+					dc.setScheduleVersionID(json_obj.getDouble("schedule"));
+					dc.setScheduleURI(json_obj.getString("schedule_uri"));
+					dc.setToUpdateSchedule(db.toUpdateSchedule(dc.getShortname(), dc.getScheduleVersionID()));
 				}
-				modules.add(dm);
+				courses.add(dc);
 			}
 			
-			dla = new DownloadCourseListAdapter(this, modules);
+			dla = new DownloadCourseListAdapter(this, courses);
 			ListView listView = (ListView) findViewById(R.id.tag_list);
 			listView.setAdapter(dla);
 
@@ -178,7 +183,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		if(response.isResult()){
 			try {
 				json = new JSONObject(response.getResultResponse());
-				refreshModuleList();
+				refreshCourseList();
 			} catch (JSONException e) {
 				BugSenseHandler.sendException(e);
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);

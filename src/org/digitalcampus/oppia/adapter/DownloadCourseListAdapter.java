@@ -51,14 +51,14 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	public static final String TAG = DownloadCourseListAdapter.class.getSimpleName();
 
 	private final Context ctx;
-	private final ArrayList<Course> moduleList;
+	private final ArrayList<Course> courseList;
 	private ProgressDialog myProgress;
 	private SharedPreferences prefs;
 
-	public DownloadCourseListAdapter(Activity context, ArrayList<Course> moduleList) {
-		super(context, R.layout.course_download_row, moduleList);
+	public DownloadCourseListAdapter(Activity context, ArrayList<Course> courseList) {
+		super(context, R.layout.course_download_row, courseList);
 		this.ctx = context;
-		this.moduleList = moduleList;
+		this.courseList = courseList;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
@@ -67,19 +67,25 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 
 		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    View rowView = inflater.inflate(R.layout.course_download_row, parent, false);
-	    Course m = moduleList.get(position);
-	    rowView.setTag(m);
+	    Course c = courseList.get(position);
+	    rowView.setTag(c);
 	    
-	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.course_title);
-	    moduleTitle.setText(m.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
+	    courseTitle.setText(c.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 	    
+	    TextView courseDraft = (TextView) rowView.findViewById(R.id.course_draft);
+	    if (c.isDraft()){
+	    	courseDraft.setText(ctx.getString(R.string.course_draft));
+	    } else {
+	    	courseDraft.setVisibility(View.GONE);
+	    }
 	    Button actionBtn = (Button) rowView.findViewById(R.id.action_btn);
 	    
-	    if(m.isInstalled()){
-	    	if(m.isToUpdate()){
+	    if(c.isInstalled()){
+	    	if(c.isToUpdate()){
 	    		actionBtn.setText(R.string.update);
 		    	actionBtn.setEnabled(true);
-	    	} else if (m.isToUpdateSchedule()){
+	    	} else if (c.isToUpdateSchedule()){
 	    		actionBtn.setText(R.string.update_schedule);
 		    	actionBtn.setEnabled(true);
 	    	} else {
@@ -90,8 +96,8 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	    	actionBtn.setText(R.string.install);
 	    	actionBtn.setEnabled(true);
 	    }
-	    if(!m.isInstalled() || m.isToUpdate()){
-	    	actionBtn.setTag(m);
+	    if(!c.isInstalled() || c.isToUpdate()){
+	    	actionBtn.setTag(c);
 	    	actionBtn.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
              		Course dm = (Course) v.getTag();
@@ -116,8 +122,8 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
              	}
              });
 	    }
-	    if(m.isToUpdateSchedule()){
-	    	actionBtn.setTag(m);
+	    if(c.isToUpdateSchedule()){
+	    	actionBtn.setTag(c);
 	    	actionBtn.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
              		Course dm = (Course) v.getTag();
@@ -168,7 +174,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 			UIUtils.showAlert(ctx, ctx.getString(R.string.install_complete), p.getResultResponse());
 			// new refresh the module list
 			DownloadActivity da = (DownloadActivity) ctx;
-			da.refreshModuleList();
+			da.refreshCourseList();
 		} else {
 			UIUtils.showAlert(ctx, ctx.getString(R.string.error_install_failure), p.getResultResponse());
 		}
@@ -197,7 +203,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 			UIUtils.showAlert(ctx, ctx.getString(R.string.update_complete), p.getResultResponse());
 			// new refresh the module list
 			DownloadActivity da = (DownloadActivity) ctx;
-			da.refreshModuleList();
+			da.refreshCourseList();
 			Editor e = prefs.edit();
 			e.putLong(ctx.getString(R.string.prefs_last_media_scan), 0);
 			e.commit();

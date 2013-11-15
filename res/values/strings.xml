@@ -179,4 +179,6 @@
 	<string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
 	
 	<string name="schedule_reminders">Suggested next activities:</string>
+	
+	<string name="course_draft">(Draft version)</string>
 </resources>

@@ -53,6 +53,7 @@ public class Course implements Serializable {
 	private ArrayList<CourseMetaPage> metaPages = new ArrayList<CourseMetaPage>();
 	private Double scheduleVersionID;
 	private String scheduleURI;
+	private boolean isDraft = false;
 	
 	public Course() {
 
@@ -290,6 +291,14 @@ public class Course implements Serializable {
 
 	public void setScheduleURI(String scheduleURI) {
 		this.scheduleURI = scheduleURI;
+	}
+
+	public boolean isDraft() {
+		return isDraft;
+	}
+
+	public void setDraft(boolean isDraft) {
+		this.isDraft = isDraft;
 	}
 	
 	
