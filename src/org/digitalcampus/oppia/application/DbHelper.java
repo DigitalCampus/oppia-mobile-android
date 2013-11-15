@@ -47,20 +47,20 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private SQLiteDatabase db;
 	
-	private static final String MODULE_TABLE = "Module";
-	private static final String MODULE_C_ID = BaseColumns._ID;
-	private static final String MODULE_C_VERSIONID = "versionid";
-	private static final String MODULE_C_TITLE = "title";
-	private static final String MODULE_C_SHORTNAME = "shortname";
-	private static final String MODULE_C_LOCATION = "location";
-	private static final String MODULE_C_SCHEDULE = "schedule";
-	private static final String MODULE_C_IMAGE = "imagelink";
-	private static final String MODULE_C_LANGS = "langs";
+	private static final String COURSE_TABLE = "Module";
+	private static final String COURSE_C_ID = BaseColumns._ID;
+	private static final String COURSE_C_VERSIONID = "versionid";
+	private static final String COURSE_C_TITLE = "title";
+	private static final String COURSE_C_SHORTNAME = "shortname";
+	private static final String COURSE_C_LOCATION = "location";
+	private static final String COURSE_C_SCHEDULE = "schedule";
+	private static final String COURSE_C_IMAGE = "imagelink";
+	private static final String COURSE_C_LANGS = "langs";
 	
 	private static final String ACTIVITY_TABLE = "Activity";
 	private static final String ACTIVITY_C_ID = BaseColumns._ID;
 	private static final String ACTIVITY_C_MODID = "modid"; // reference to
-															// MODULE_C_ID
+															// COURSE_C_ID
 	private static final String ACTIVITY_C_SECTIONID = "sectionid";
 	private static final String ACTIVITY_C_ACTID = "activityid";
 	private static final String ACTIVITY_C_ACTTYPE = "activitytype";
@@ -71,7 +71,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TRACKER_LOG_TABLE = "TrackerLog";
 	private static final String TRACKER_LOG_C_ID = BaseColumns._ID;
-	private static final String TRACKER_LOG_C_MODID = "modid"; // reference to MODULE_C_ID
+	private static final String TRACKER_LOG_C_MODID = "modid"; // reference to COURSE_C_ID
 	private static final String TRACKER_LOG_C_DATETIME = "logdatetime";
 	private static final String TRACKER_LOG_C_ACTIVITYDIGEST = "digest";
 	private static final String TRACKER_LOG_C_DATA = "logdata";
@@ -101,11 +101,11 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 
 	public void createModuleTable(SQLiteDatabase db){
-		String m_sql = "create table " + MODULE_TABLE + " (" + MODULE_C_ID + " integer primary key autoincrement, "
-				+ MODULE_C_VERSIONID + " int, " + MODULE_C_TITLE + " text, " + MODULE_C_LOCATION + " text, "
-				+ MODULE_C_SHORTNAME + " text," + MODULE_C_SCHEDULE + " int,"
-				+ MODULE_C_IMAGE + " text,"
-				+ MODULE_C_LANGS + " text)";
+		String m_sql = "create table " + COURSE_TABLE + " (" + COURSE_C_ID + " integer primary key autoincrement, "
+				+ COURSE_C_VERSIONID + " int, " + COURSE_C_TITLE + " text, " + COURSE_C_LOCATION + " text, "
+				+ COURSE_C_SHORTNAME + " text," + COURSE_C_SCHEDULE + " int,"
+				+ COURSE_C_IMAGE + " text,"
+				+ COURSE_C_LANGS + " text)";
 		db.execSQL(m_sql);
 	}
 	
@@ -149,7 +149,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
 		if(oldVersion < 7){
-			db.execSQL("drop table if exists " + MODULE_TABLE);
+			db.execSQL("drop table if exists " + COURSE_TABLE);
 			db.execSQL("drop table if exists " + ACTIVITY_TABLE);
 			db.execSQL("drop table if exists " + TRACKER_LOG_TABLE);
 			db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
@@ -168,7 +168,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		
 		if(oldVersion <= 8 && newVersion >= 9){
-			String sql = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_SCHEDULE + " int null;";
+			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SCHEDULE + " int null;";
 			db.execSQL(sql);
 		}
 		
@@ -181,7 +181,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		if(oldVersion <= 10 && newVersion >=11){
 			String sql1 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
 			String sql2 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
-			String sql3 = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_SCHEDULE + " int null;";
+			String sql3 = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SCHEDULE + " int null;";
 			String sql4 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE  + " text null;";
 			try {
 				db.execSQL(sql1);
@@ -206,9 +206,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		
 		if(oldVersion <= 11 && newVersion >= 12){
-			String sql = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_LANGS  + " text null;";
+			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_LANGS  + " text null;";
 			db.execSQL(sql);
-			sql = "ALTER TABLE " + MODULE_TABLE + " ADD COLUMN " + MODULE_C_IMAGE  + " text null;";
+			sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_IMAGE  + " text null;";
 			db.execSQL(sql);
 		}
 		
@@ -233,20 +233,20 @@ public class DbHelper extends SQLiteOpenHelper {
 	public long addOrUpdateModule(Course module) {
 
 		ContentValues values = new ContentValues();
-		values.put(MODULE_C_VERSIONID, module.getVersionId());
-		values.put(MODULE_C_TITLE, module.getTitleJSONString());
-		values.put(MODULE_C_LOCATION, module.getLocation());
-		values.put(MODULE_C_SHORTNAME, module.getShortname());
-		values.put(MODULE_C_LANGS, module.getLangsJSONString());
-		values.put(MODULE_C_IMAGE, module.getImageFile());
+		values.put(COURSE_C_VERSIONID, module.getVersionId());
+		values.put(COURSE_C_TITLE, module.getTitleJSONString());
+		values.put(COURSE_C_LOCATION, module.getLocation());
+		values.put(COURSE_C_SHORTNAME, module.getShortname());
+		values.put(COURSE_C_LANGS, module.getLangsJSONString());
+		values.put(COURSE_C_IMAGE, module.getImageFile());
 
 		if (!this.isInstalled(module.getShortname())) {
 			Log.v(TAG, "Record added");
-			return db.insertOrThrow(MODULE_TABLE, null, values);
+			return db.insertOrThrow(COURSE_TABLE, null, values);
 		} else if(this.toUpdate(module.getShortname(), module.getVersionId())){
 			long toUpdate = this.getModuleID(module.getShortname());
 			if (toUpdate != 0) {
-				db.update(MODULE_TABLE, values, MODULE_C_ID + "=" + toUpdate, null);
+				db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + toUpdate, null);
 				// remove all the old activities
 				String s = ACTIVITY_C_MODID + "=?";
 				String[] args = new String[] { String.valueOf(toUpdate) };
@@ -260,13 +260,13 @@ public class DbHelper extends SQLiteOpenHelper {
 	public long refreshModule(Course module){
 		long modId = this.getModuleID(module.getShortname());
 		ContentValues values = new ContentValues();
-		values.put(MODULE_C_VERSIONID, module.getVersionId());
-		values.put(MODULE_C_TITLE, module.getTitleJSONString());
-		values.put(MODULE_C_LOCATION, module.getLocation());
-		values.put(MODULE_C_SHORTNAME, module.getShortname());
-		values.put(MODULE_C_LANGS, module.getLangsJSONString());
-		values.put(MODULE_C_IMAGE, module.getImageFile());
-		db.update(MODULE_TABLE, values, MODULE_C_ID + "=" + modId, null);
+		values.put(COURSE_C_VERSIONID, module.getVersionId());
+		values.put(COURSE_C_TITLE, module.getTitleJSONString());
+		values.put(COURSE_C_LOCATION, module.getLocation());
+		values.put(COURSE_C_SHORTNAME, module.getShortname());
+		values.put(COURSE_C_LANGS, module.getLangsJSONString());
+		values.put(COURSE_C_IMAGE, module.getImageFile());
+		db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + modId, null);
 		// remove all the old activities
 		String s = ACTIVITY_C_MODID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
@@ -276,15 +276,15 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	
 	public int getModuleID(String shortname){
-		String s = MODULE_C_SHORTNAME + "=?";
+		String s = COURSE_C_SHORTNAME + "=?";
 		String[] args = new String[] { shortname };
-		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
 			c.close();
 			return 0;
 		} else {
 			c.moveToFirst();
-			int modId = c.getInt(c.getColumnIndex(MODULE_C_ID));
+			int modId = c.getInt(c.getColumnIndex(COURSE_C_ID));
 			c.close();
 			return modId;
 		}
@@ -292,8 +292,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void updateScheduleVersion(long modId, long scheduleVersion){
 		ContentValues values = new ContentValues();
-		values.put(MODULE_C_SCHEDULE, scheduleVersion);
-		db.update(MODULE_TABLE, values, MODULE_C_ID + "=" + modId, null);
+		values.put(COURSE_C_SCHEDULE, scheduleVersion);
+		db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + modId, null);
 	}
 	
 	public void insertActivities(ArrayList<Activity> acts) {
@@ -342,19 +342,19 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public ArrayList<Course> getModules() {
 		ArrayList<Course> modules = new ArrayList<Course>();
-		String order = MODULE_C_TITLE + " ASC";
-		Cursor c = db.query(MODULE_TABLE, null, null, null, null, null, order);
+		String order = COURSE_C_TITLE + " ASC";
+		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
 			Course m = new Course();
-			m.setModId(c.getInt(c.getColumnIndex(MODULE_C_ID)));
-			m.setLocation(c.getString(c.getColumnIndex(MODULE_C_LOCATION)));
+			m.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
+			m.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
 			m.setProgress(this.getModuleProgress(m.getModId()));
-			m.setVersionId(c.getDouble(c.getColumnIndex(MODULE_C_VERSIONID)));
-			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(MODULE_C_TITLE)));
-			m.setImageFile(c.getString(c.getColumnIndex(MODULE_C_IMAGE)));
-			m.setLangsFromJSONString(c.getString(c.getColumnIndex(MODULE_C_LANGS)));
-			m.setShortname(c.getString(c.getColumnIndex(MODULE_C_SHORTNAME)));
+			m.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
+			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
+			m.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
+			m.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
+			m.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
 			modules.add(m);
 			c.moveToNext();
 		}
@@ -364,20 +364,20 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public Course getModule(long modId) {
 		Course m = null;
-		String s = MODULE_C_ID + "=?";
+		String s = COURSE_C_ID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
-		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
 			m = new Course();
-			m.setModId(c.getInt(c.getColumnIndex(MODULE_C_ID)));
-			m.setLocation(c.getString(c.getColumnIndex(MODULE_C_LOCATION)));
+			m.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
+			m.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
 			m.setProgress(this.getModuleProgress(m.getModId()));
-			m.setVersionId(c.getDouble(c.getColumnIndex(MODULE_C_VERSIONID)));
-			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(MODULE_C_TITLE)));
-			m.setImageFile(c.getString(c.getColumnIndex(MODULE_C_IMAGE)));
-			m.setLangsFromJSONString(c.getString(c.getColumnIndex(MODULE_C_LANGS)));
-			m.setShortname(c.getString(c.getColumnIndex(MODULE_C_SHORTNAME)));
+			m.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
+			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
+			m.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
+			m.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
+			m.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
 			c.moveToNext();
 		}
 		c.close();
@@ -479,18 +479,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.delete(ACTIVITY_TABLE, s, args);
 		
 		// delete module
-		s = MODULE_C_ID + "=?";
+		s = COURSE_C_ID + "=?";
 		args = new String[] { String.valueOf(modId) };
-		db.delete(MODULE_TABLE, s, args);
+		db.delete(COURSE_TABLE, s, args);
 		
 		// delete any quiz attempts
 		this.deleteMQuizResults(modId);
 	}
 	
 	public boolean isInstalled(String shortname){
-		String s = MODULE_C_SHORTNAME + "=?";
+		String s = COURSE_C_SHORTNAME + "=?";
 		String[] args = new String[] { shortname };
-		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
 			c.close();
 			return false;
@@ -501,9 +501,9 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public boolean toUpdate(String shortname, Double version){
-		String s = MODULE_C_SHORTNAME + "=? AND "+ MODULE_C_VERSIONID + "< ?";
+		String s = COURSE_C_SHORTNAME + "=? AND "+ COURSE_C_VERSIONID + "< ?";
 		String[] args = new String[] { shortname, String.format("%.0f", version) };
-		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
 			c.close();
 			return false;
@@ -514,9 +514,9 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public boolean toUpdateSchedule(String shortname, Double scheduleVersion){
-		String s = MODULE_C_SHORTNAME + "=? AND "+ MODULE_C_SCHEDULE + "< ?";
+		String s = COURSE_C_SHORTNAME + "=? AND "+ COURSE_C_SCHEDULE + "< ?";
 		String[] args = new String[] { shortname, String.format("%.0f", scheduleVersion) };
-		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
+		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
 			c.close();
 			return false;
@@ -648,7 +648,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		DateTime now = new DateTime();
 		String nowDateString = MobileLearning.DATETIME_FORMAT.print(now);
 		String sql = "SELECT a.* FROM "+ ACTIVITY_TABLE + " a " +
-					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
+					" INNER JOIN " + COURSE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+COURSE_C_ID +
 					" LEFT OUTER JOIN (SELECT * FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
 					" WHERE tl." + TRACKER_LOG_C_ID + " IS NULL "+
 					" AND a." + ACTIVITY_C_STARTDATE + "<='" + nowDateString + "'" +
@@ -673,7 +673,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		if(c.getCount() < max){
 			//just add in some extra suggested activities unrelated to the date/time
 			String sql2 = "SELECT a.* FROM "+ ACTIVITY_TABLE + " a " +
-					" INNER JOIN " + MODULE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+MODULE_C_ID +
+					" INNER JOIN " + COURSE_TABLE + " m ON a."+ ACTIVITY_C_MODID + " = m."+COURSE_C_ID +
 					" LEFT OUTER JOIN (SELECT * FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
 					" WHERE (tl." + TRACKER_LOG_C_ID + " IS NULL "+
 					" OR tl." + TRACKER_LOG_C_COMPLETED + "=0)" +
