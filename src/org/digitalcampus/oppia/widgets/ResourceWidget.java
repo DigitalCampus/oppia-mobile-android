@@ -24,10 +24,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -73,7 +75,7 @@ public class ResourceWidget extends WidgetFactory {
 		
 		LinearLayout ll = (LinearLayout) ((android.app.Activity) context).findViewById(R.id.widget_resource_object);
 		String fileUrl = module.getLocation() + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-		
+		Log.d(TAG,fileUrl);
 		// show description if any
 		String desc = activity.getDescription(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 
@@ -84,57 +86,24 @@ public class ResourceWidget extends WidgetFactory {
 			descTV.setVisibility(View.GONE);
 		}
 		
+		File file = new File(fileUrl);
+		OnResourceClickListener orcl = new OnResourceClickListener();
 		// show image files
 		if (activity.getMimeType().equals("image/jpeg") || activity.getMimeType().equals("image/png")){
 			ImageView iv = new ImageView(this.ctx);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			iv.setImageBitmap(myBitmap);
 			ll.addView(iv, lp);
+			iv.setTag(file);
+			iv.setOnClickListener(orcl);
 		} else {
 		// add button to open other filetypes in whatever app the user has installed as default for that filetype
 			Button btn = new Button(this.ctx);
-			File file = new File(fileUrl);
 			btn.setText(this.ctx.getString(R.string.widget_resource_open_file,file.getName()));
 			btn.setTextAppearance(this.ctx, R.style.ButtonText);
 			ll.addView(btn);
-			
 			btn.setTag(file);
-			btn.setOnClickListener(new OnClickListener() {
-				
-				public void onClick(View v) {
-					File file = (File) v.getTag();
-					// check the file is on the file system (should be but just in case)
-					if(!file.exists()){
-						Toast.makeText(ResourceWidget.this.ctx, ResourceWidget.this.ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
-						return;
-					} 
-					Uri targetUri = Uri.fromFile(file);
-					
-					// check there is actually an app installed to open this filetype
-					
-					Intent intent = new Intent();
-					intent.setAction(android.content.Intent.ACTION_VIEW);
-					intent.setDataAndType(targetUri, ResourceWidget.this.activity.getMimeType());
-					
-					PackageManager pm = ResourceWidget.this.ctx.getPackageManager();
-
-					List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
-					boolean appFound = false;
-					for (ResolveInfo info : infos) {
-						IntentFilter filter = info.filter;
-						if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
-							// Found an app with the right intent/filter
-							appFound = true;
-						}
-					}
-
-					if(appFound){
-						ResourceWidget.this.ctx.startActivity(intent);
-					} else {
-						Toast.makeText(ResourceWidget.this.ctx, ResourceWidget.this.ctx.getString(R.string.error_resource_app_not_found,file.getName()), Toast.LENGTH_LONG).show();
-					}
-				}
-			});
+			btn.setOnClickListener(orcl);
 		}
 	}
 
@@ -232,6 +201,45 @@ public class ResourceWidget extends WidgetFactory {
 		if (config.containsKey("Activity_StartTime")){
 			this.setStartTime((Long) config.get("Activity_StartTime"));
 		}
+	}
+	
+	private class OnResourceClickListener implements OnClickListener{
+
+		public void onClick(View v) {
+			File file = (File) v.getTag();
+			// check the file is on the file system (should be but just in case)
+			if(!file.exists()){
+				Toast.makeText(ResourceWidget.this.ctx, ResourceWidget.this.ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
+				return;
+			} 
+			Uri targetUri = Uri.fromFile(file);
+			
+			// check there is actually an app installed to open this filetype
+			
+			Intent intent = new Intent();
+			intent.setAction(android.content.Intent.ACTION_VIEW);
+			intent.setDataAndType(targetUri, ResourceWidget.this.activity.getMimeType());
+			
+			PackageManager pm = ResourceWidget.this.ctx.getPackageManager();
+
+			List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+			boolean appFound = false;
+			for (ResolveInfo info : infos) {
+				IntentFilter filter = info.filter;
+				if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
+					// Found an app with the right intent/filter
+					appFound = true;
+				}
+			}
+
+			if(appFound){
+				ResourceWidget.this.ctx.startActivity(intent);
+			} else {
+				Toast.makeText(ResourceWidget.this.ctx, ResourceWidget.this.ctx.getString(R.string.error_resource_app_not_found,file.getName()), Toast.LENGTH_LONG).show();
+			}
+			return;
+		}
+		
 	}
 
 }
