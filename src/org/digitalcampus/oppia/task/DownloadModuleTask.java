@@ -30,7 +30,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallModuleListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 
 import android.content.Context;
@@ -58,7 +58,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Pay
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
-		Module dm = (Module) payload.getData().get(0);
+		Course dm = (Course) payload.getData().get(0);
 		DownloadProgress dp = new DownloadProgress();
 		try { 
 			

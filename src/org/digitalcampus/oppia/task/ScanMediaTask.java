@@ -24,7 +24,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.ModuleXMLReader;
 
 import android.os.AsyncTask;
@@ -37,7 +37,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		for (Object obj: payload.getData()){
-			Module module = (Module) obj;
+			Course module = (Course) obj;
 			ModuleXMLReader mxr;
 			try {
 				mxr = new ModuleXMLReader(module.getModuleXMLLocation());

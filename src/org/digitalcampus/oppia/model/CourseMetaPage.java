@@ -21,13 +21,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ModuleMetaPage implements Serializable{
+public class CourseMetaPage implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1597711519611488890L;
-	public final static String TAG = ModuleMetaPage.class.getSimpleName();
+	public final static String TAG = CourseMetaPage.class.getSimpleName();
 	private int id;
 	private ArrayList<Lang> langs = new ArrayList<Lang>();
 	

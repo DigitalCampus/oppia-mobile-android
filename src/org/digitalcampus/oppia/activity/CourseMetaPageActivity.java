@@ -22,8 +22,8 @@ import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Module;
-import org.digitalcampus.oppia.model.ModuleMetaPage;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.content.SharedPreferences;
@@ -32,30 +32,30 @@ import android.preference.PreferenceManager;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-public class ModuleMetaPageActivity extends AppActivity {
+public class CourseMetaPageActivity extends AppActivity {
 
-	public static final String TAG = ModuleMetaPageActivity.class.getSimpleName();
-	private Module module;
+	public static final String TAG = CourseMetaPageActivity.class.getSimpleName();
+	private Course module;
 	private SharedPreferences prefs;
 	private int pageid;
-	private ModuleMetaPage mmp;
+	private CourseMetaPage mmp;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_module_metapage);
+		setContentView(R.layout.activity_course_metapage);
 		this.drawHeader();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
-			module = (Module) bundle.getSerializable(Module.TAG);
+			module = (Course) bundle.getSerializable(Course.TAG);
 			setTitle(module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
-			pageid = (Integer) bundle.getSerializable(ModuleMetaPage.TAG);
+			pageid = (Integer) bundle.getSerializable(CourseMetaPage.TAG);
 			mmp = module.getMetaPage(pageid);
 		}
 		
-		TextView titleTV = (TextView) findViewById(R.id.module_title);
+		TextView titleTV = (TextView) findViewById(R.id.course_title);
 		String title = module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())) + ": " + mmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
 		titleTV.setText(title);
 		

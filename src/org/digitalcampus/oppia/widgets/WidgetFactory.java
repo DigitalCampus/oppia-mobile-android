@@ -20,7 +20,7 @@ package org.digitalcampus.oppia.widgets;
 import java.util.HashMap;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -34,7 +34,7 @@ public abstract class WidgetFactory extends Activity {
 	private LayoutInflater li;
 	private LinearLayout ll;
 	
-	public WidgetFactory(Context context, Module module, org.digitalcampus.oppia.model.Activity activity ) {
+	public WidgetFactory(Context context, Course module, org.digitalcampus.oppia.model.Activity activity ) {
 		super();
 		ll = (LinearLayout) ((Activity) context).findViewById(R.id.activity_widget);
 		ll.removeAllViews();

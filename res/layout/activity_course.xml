@@ -30,7 +30,7 @@
             android:padding="@dimen/padding_medium"
             android:textSize="20sp"
             android:textStyle="bold"
-            tools:context=".ModuleActivity"
+            tools:context=".CourseActivity"
             android:gravity="center"/>
         
         <Button android:id="@+id/next_btn" 

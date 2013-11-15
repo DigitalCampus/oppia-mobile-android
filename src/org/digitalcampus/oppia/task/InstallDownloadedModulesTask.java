@@ -26,7 +26,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.InstallModuleListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.ModuleScheduleXMLReader;
 import org.digitalcampus.oppia.utils.ModuleTrackerXMLReader;
@@ -103,7 +103,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				
 				
 				//HashMap<String, String> hm = mxr.getMeta();
-				Module m = new Module();
+				Course m = new Course();
 				m.setVersionId(mxr.getVersionId());
 				m.setTitles(mxr.getTitles());
 				m.setLocation(MobileLearning.MODULES_PATH + moddirs[0]);

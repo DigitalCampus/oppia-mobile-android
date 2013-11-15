@@ -33,11 +33,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.digitalcampus.oppia.activity.ModuleIndexActivity"
+            android:name="org.digitalcampus.oppia.activity.CourseIndexActivity"
             android:label="@string/title_activity_module_index" >
         </activity>
         <activity
-            android:name="org.digitalcampus.oppia.activity.ModuleActivity"
+            android:name="org.digitalcampus.oppia.activity.CourseActivity"
             android:label="@string/title_activity_module" 
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
@@ -70,7 +70,7 @@
             android:name="org.digitalcampus.oppia.activity.RegisterActivity"
             android:label="@string/title_register" />
          <activity
-            android:name="org.digitalcampus.oppia.activity.ModuleMetaPageActivity"
+            android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"
             android:label="@string/title_module_about" />
          <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"

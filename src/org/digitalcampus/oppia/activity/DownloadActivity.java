@@ -22,12 +22,12 @@ import java.util.Iterator;
 import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.DownloadModuleListAdapter;
+import org.digitalcampus.oppia.adapter.DownloadCourseListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.task.APIRequestTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -48,7 +48,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 
 	private ProgressDialog pDialog;
 	private JSONObject json;
-	private DownloadModuleListAdapter dla;
+	private DownloadCourseListAdapter dla;
 	private String url;
 	
 	@Override
@@ -72,7 +72,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 	@Override
 	public void onResume(){
 		super.onResume();
-		// Get Module list
+		// Get Course list
 		if(this.json == null){
 			this.getModuleList();
 		} else {
@@ -129,11 +129,11 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 
 		DbHelper db = new DbHelper(this);
 		try {
-			ArrayList<Module> modules = new ArrayList<Module>();
+			ArrayList<Course> modules = new ArrayList<Course>();
 			
 			for (int i = 0; i < (json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
-				Module dm = new Module();
+				Course dm = new Course();
 				
 				ArrayList<Lang> titles = new ArrayList<Lang>();
 				JSONObject jsonTitles = json_obj.getJSONObject("title");
@@ -157,7 +157,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 				modules.add(dm);
 			}
 			
-			dla = new DownloadModuleListAdapter(this, modules);
+			dla = new DownloadCourseListAdapter(this, modules);
 			ListView listView = (ListView) findViewById(R.id.tag_list);
 			listView.setAdapter(dla);
 

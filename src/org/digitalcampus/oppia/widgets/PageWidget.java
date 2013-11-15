@@ -31,7 +31,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
@@ -59,7 +59,7 @@ public class PageWidget extends WidgetFactory {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
 	private Context ctx;
-	private Module module;
+	private Course module;
 	private org.digitalcampus.oppia.model.Activity activity;
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private long mediaStartTimeStamp;
@@ -71,7 +71,7 @@ public class PageWidget extends WidgetFactory {
 	private boolean readAloud = false;
 	
 	
-	public PageWidget(Context context, Module module, org.digitalcampus.oppia.model.Activity activity) {
+	public PageWidget(Context context, Course module, org.digitalcampus.oppia.model.Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
 		this.module = module;

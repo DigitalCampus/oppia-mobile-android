@@ -64,7 +64,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	@Override
 	public void onResume(){
 		super.onResume();
-		// Get Module list
+		// Get Course list
 		if(this.json == null){
 			this.getTagList();
 		}

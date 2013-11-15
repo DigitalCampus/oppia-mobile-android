@@ -17,7 +17,7 @@
 
 package org.digitalcampus.oppia.gesture;
 
-import org.digitalcampus.oppia.activity.ModuleActivity;
+import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -26,9 +26,9 @@ import android.view.MotionEvent;
 public class QuizGestureDetector extends SimpleOnGestureListener {
 	
 	public final static String TAG = QuizGestureDetector.class.getSimpleName();
-	private ModuleActivity modAct;
+	private CourseActivity modAct;
 	
-	public QuizGestureDetector(ModuleActivity modAct){
+	public QuizGestureDetector(CourseActivity modAct){
 		this.modAct = modAct;
 	}
 

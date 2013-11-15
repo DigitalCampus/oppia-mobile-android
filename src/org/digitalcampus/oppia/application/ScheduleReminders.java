@@ -3,9 +3,9 @@ package org.digitalcampus.oppia.application;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.ModuleIndexActivity;
+import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.adapter.ScheduleReminderListAdapter;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 
 import android.content.Context;
 import android.content.Intent;
@@ -51,11 +51,11 @@ public class ScheduleReminders extends LinearLayout {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Module m = (Module) view.getTag(R.id.TAG_MODULE_ID);
+				Course m = (Course) view.getTag(R.id.TAG_MODULE_ID);
 				String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
-				Intent i = new Intent(getContext(), ModuleIndexActivity.class);
+				Intent i = new Intent(getContext(), CourseIndexActivity.class);
 				Bundle tb = new Bundle();
-				tb.putSerializable(Module.TAG, m);
+				tb.putSerializable(Course.TAG, m);
 				tb.putSerializable("JumpTo", digest);
 				i.putExtras(tb);
 				getContext().startActivity(i);

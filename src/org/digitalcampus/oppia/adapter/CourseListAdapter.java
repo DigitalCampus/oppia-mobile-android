@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.ImageUtils;
 
 import android.app.Activity;
@@ -37,16 +37,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class ModuleListAdapter extends ArrayAdapter<Module> {
+public class CourseListAdapter extends ArrayAdapter<Course> {
 
-	public static final String TAG = ModuleListAdapter.class.getSimpleName();
+	public static final String TAG = CourseListAdapter.class.getSimpleName();
 
 	private final Context ctx;
-	private final ArrayList<Module> moduleList;
+	private final ArrayList<Course> moduleList;
 	private SharedPreferences prefs;
 	
-	public ModuleListAdapter(Activity context, ArrayList<Module> moduleList) {
-		super(context, R.layout.module_list_row, moduleList);
+	public CourseListAdapter(Activity context, ArrayList<Course> moduleList) {
+		super(context, R.layout.course_list_row, moduleList);
 		this.ctx = context;
 		this.moduleList = moduleList;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -56,11 +56,11 @@ public class ModuleListAdapter extends ArrayAdapter<Module> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View rowView = inflater.inflate(R.layout.module_list_row, parent, false);
-	    Module m = moduleList.get(position);
+	    View rowView = inflater.inflate(R.layout.course_list_row, parent, false);
+	    Course m = moduleList.get(position);
 	    rowView.setTag(m);
 	    
-	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.module_title);
+	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.course_title);
 	    moduleTitle.setText(m.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.module_progress_bar);

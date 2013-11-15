@@ -29,14 +29,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Module implements Serializable {
+public class Course implements Serializable {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4412987572522420704L;
 	
-	public static final String TAG = Module.class.getSimpleName();
+	public static final String TAG = Course.class.getSimpleName();
 	private int modId;
 	private String location;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
@@ -50,11 +50,11 @@ public class Module implements Serializable {
 	private ArrayList<Lang> langs = new ArrayList<Lang>();
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
-	private ArrayList<ModuleMetaPage> metaPages = new ArrayList<ModuleMetaPage>();
+	private ArrayList<CourseMetaPage> metaPages = new ArrayList<CourseMetaPage>();
 	private Double scheduleVersionID;
 	private String scheduleURI;
 	
-	public Module() {
+	public Course() {
 
 	}	
 	
@@ -259,16 +259,16 @@ public class Module implements Serializable {
 		}
 	}
 	
-	public void setMetaPages(ArrayList<ModuleMetaPage> ammp){
+	public void setMetaPages(ArrayList<CourseMetaPage> ammp){
 		this.metaPages = ammp;
 	}
 	
-	public ArrayList<ModuleMetaPage> getMetaPages(){
+	public ArrayList<CourseMetaPage> getMetaPages(){
 		return this.metaPages;
 	}
 	
-	public ModuleMetaPage getMetaPage(int id){
-		for(ModuleMetaPage mmp: this.metaPages){
+	public CourseMetaPage getMetaPage(int id){
+		for(CourseMetaPage mmp: this.metaPages){
 			if(id == mmp.getId()){
 				return mmp;
 			}

@@ -32,7 +32,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -62,7 +62,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
-		Module dm = (Module) payload.getData().get(0);
+		Course dm = (Course) payload.getData().get(0);
 		DownloadProgress dp = new DownloadProgress();
 		
 		String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, dm.getScheduleURI() ,true);

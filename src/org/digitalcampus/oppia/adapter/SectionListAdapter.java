@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.ModuleActivity;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
 
 import android.app.Activity;
@@ -49,9 +49,9 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	private final Context ctx;
 	private final ArrayList<Section> sectionList;
 	private SharedPreferences prefs;
-	private Module module;
+	private Course module;
 
-	public SectionListAdapter(Activity context, Module module, ArrayList<Section> sectionList) {
+	public SectionListAdapter(Activity context, Course module, ArrayList<Section> sectionList) {
 		super(context, R.layout.section_list_row, sectionList);
 		this.ctx = context;
 		this.sectionList = sectionList;
@@ -109,10 +109,10 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 				public void onClick(View v) {
 					Section s = (Section) v.getTag(R.id.TAG_SECTION_ID); 
 					int placeholder = (Integer) v.getTag(R.id.TAG_PLACEHOLDER_ID);
-					Intent i = new Intent(ctx, ModuleActivity.class);
+					Intent i = new Intent(ctx, CourseActivity.class);
 					Bundle tb = new Bundle();
 					tb.putSerializable(Section.TAG, (Section) s);
-					tb.putSerializable(Module.TAG, (Module) module);
+					tb.putSerializable(Course.TAG, (Course) module);
 					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) placeholder);
 					i.putExtras(tb);
 	         		ctx.startActivity(i);

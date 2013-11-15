@@ -14,7 +14,7 @@ public class Tag implements Serializable{
 	private String name;
 	private int count;
 	private int id;
-	private ArrayList<Module> modules = new ArrayList<Module>();
+	private ArrayList<Course> modules = new ArrayList<Course>();
 	
 	public String getName() {
 		return name;
@@ -28,10 +28,10 @@ public class Tag implements Serializable{
 	public void setCount(int count) {
 		this.count = count;
 	}
-	public ArrayList<Module> getModules() {
+	public ArrayList<Course> getModules() {
 		return modules;
 	}
-	public void setModules(ArrayList<Module> modules) {
+	public void setModules(ArrayList<Course> modules) {
 		this.modules = modules;
 	}
 	public int getId() {

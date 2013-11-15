@@ -24,7 +24,7 @@ import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.learning.R.id;
-import org.digitalcampus.oppia.adapter.ModuleListAdapter;
+import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.ModuleNotFoundException;
@@ -34,7 +34,7 @@ import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.task.InstallDownloadedModulesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
@@ -73,8 +73,8 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
-	private Module tempMod;
-	private ArrayList<Module> modules;
+	private Course tempMod;
+	private ArrayList<Course> modules;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -171,8 +171,8 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 		if(MobileLearning.createDirs()){
 			// only remove modules if the SD card is present 
 			//- else it will remove the modules just because the SD card isn't in
-			ArrayList<Module> removeModules = new ArrayList<Module>();
-			for (Module m : modules) {
+			ArrayList<Course> removeModules = new ArrayList<Course>();
+			for (Course m : modules) {
 				try {
 					m.validate();
 				} catch (ModuleNotFoundException mnfe){
@@ -182,7 +182,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 				}
 			}
 			
-			for(Module m: removeModules){
+			for(Course m: removeModules){
 				// remove from current list
 				modules.remove(m);
 			}
@@ -204,7 +204,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 
 		}
 
-		ModuleListAdapter mla = new ModuleListAdapter(this, modules);
+		CourseListAdapter mla = new CourseListAdapter(this, modules);
 		ListView listView = (ListView) findViewById(R.id.module_list);
 		listView.setAdapter(mla);
 		registerForContextMenu(listView);
@@ -212,10 +212,10 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Module m = (Module) view.getTag();
-				Intent i = new Intent(OppiaMobileActivity.this, ModuleIndexActivity.class);
+				Course m = (Course) view.getTag();
+				Intent i = new Intent(OppiaMobileActivity.this, CourseIndexActivity.class);
 				Bundle tb = new Bundle();
-				tb.putSerializable(Module.TAG, m);
+				tb.putSerializable(Course.TAG, m);
 				i.putExtras(tb);
 				startActivity(i);
 			}
@@ -273,7 +273,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 				Intent i = new Intent(this, PrefsActivity.class);
 				Bundle tb = new Bundle();
 				ArrayList<Lang> langs = new ArrayList<Lang>();
-				for(Module m: modules){
+				for(Course m: modules){
 					langs.addAll(m.getLangs());
 				}
 				tb.putSerializable("langs", langs);
@@ -299,7 +299,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 
 	private void createLanguageDialog() {
 		ArrayList<Lang> langs = new ArrayList<Lang>();
-		for(Module m: modules){
+		for(Course m: modules){
 			langs.addAll(m.getLangs());
 		}
 		
@@ -367,7 +367,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		tempMod = (Module) info.targetView.getTag();
+		tempMod = (Course) info.targetView.getTag();
 		switch (item.getItemId()) {
 			case R.id.module_context_delete:
 				confirmModuleDelete();

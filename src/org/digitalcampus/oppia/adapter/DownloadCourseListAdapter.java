@@ -25,7 +25,7 @@ import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.listener.InstallModuleListener;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.task.DownloadModuleTask;
 import org.digitalcampus.oppia.task.InstallDownloadedModulesTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -46,17 +46,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements InstallModuleListener, UpdateScheduleListener{
+public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements InstallModuleListener, UpdateScheduleListener{
 
-	public static final String TAG = DownloadModuleListAdapter.class.getSimpleName();
+	public static final String TAG = DownloadCourseListAdapter.class.getSimpleName();
 
 	private final Context ctx;
-	private final ArrayList<Module> moduleList;
+	private final ArrayList<Course> moduleList;
 	private ProgressDialog myProgress;
 	private SharedPreferences prefs;
 
-	public DownloadModuleListAdapter(Activity context, ArrayList<Module> moduleList) {
-		super(context, R.layout.module_download_row, moduleList);
+	public DownloadCourseListAdapter(Activity context, ArrayList<Course> moduleList) {
+		super(context, R.layout.course_download_row, moduleList);
 		this.ctx = context;
 		this.moduleList = moduleList;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -66,11 +66,11 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View rowView = inflater.inflate(R.layout.module_download_row, parent, false);
-	    Module m = moduleList.get(position);
+	    View rowView = inflater.inflate(R.layout.course_download_row, parent, false);
+	    Course m = moduleList.get(position);
 	    rowView.setTag(m);
 	    
-	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.module_title);
+	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.course_title);
 	    moduleTitle.setText(m.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 	    
 	    Button actionBtn = (Button) rowView.findViewById(R.id.action_btn);
@@ -94,7 +94,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 	    	actionBtn.setTag(m);
 	    	actionBtn.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
-             		Module dm = (Module) v.getTag();
+             		Course dm = (Course) v.getTag();
              		Log.d(TAG,dm.getDownloadUrl());
              		
              		ArrayList<Object> data = new ArrayList<Object>();
@@ -111,7 +111,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
              		myProgress.show();
                      
              		DownloadModuleTask dmt = new DownloadModuleTask(ctx);
-             		dmt.setInstallerListener(DownloadModuleListAdapter.this);
+             		dmt.setInstallerListener(DownloadCourseListAdapter.this);
              		dmt.execute(p);
              	}
              });
@@ -120,7 +120,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 	    	actionBtn.setTag(m);
 	    	actionBtn.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
-             		Module dm = (Module) v.getTag();
+             		Course dm = (Course) v.getTag();
              		
              		ArrayList<Object> data = new ArrayList<Object>();
              		data.add(dm);
@@ -136,7 +136,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
              		myProgress.show();
                      
              		ScheduleUpdateTask sut = new ScheduleUpdateTask(ctx);
-             		sut.setUpdateListener(DownloadModuleListAdapter.this);
+             		sut.setUpdateListener(DownloadCourseListAdapter.this);
              		sut.execute(p);
              	}
              });
@@ -150,7 +150,7 @@ public class DownloadModuleListAdapter extends ArrayAdapter<Module> implements I
 			myProgress.setMessage(ctx.getString(R.string.download_complete));
 			myProgress.setIndeterminate(true);
 			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(ctx);
-			imTask.setInstallerListener(DownloadModuleListAdapter.this);
+			imTask.setInstallerListener(DownloadCourseListAdapter.this);
 			imTask.execute(p);
 		} else {
 			myProgress.dismiss();

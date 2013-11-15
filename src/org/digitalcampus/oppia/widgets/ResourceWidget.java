@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.ModuleActivity;
+import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.gesture.ResourceGestureDetector;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,13 +48,13 @@ public class ResourceWidget extends WidgetFactory {
 	private GestureDetector resourceGestureDetector;
 	private OnTouchListener resourceGestureListener; 		
 	
-	public ResourceWidget(Context context, Module module, org.digitalcampus.oppia.model.Activity activity) {
+	public ResourceWidget(Context context, Course module, org.digitalcampus.oppia.model.Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
 		this.activity = activity;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 		
-		resourceGestureDetector = new GestureDetector((Activity) context, new ResourceGestureDetector((ModuleActivity) context));
+		resourceGestureDetector = new GestureDetector((Activity) context, new ResourceGestureDetector((CourseActivity) context));
 		resourceGestureListener = new View.OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
 				try {

@@ -25,8 +25,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Module;
-import org.digitalcampus.oppia.model.ModuleMetaPage;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.utils.ImageUtils;
@@ -47,11 +47,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class ModuleIndexActivity extends AppActivity {
+public class CourseIndexActivity extends AppActivity {
 
-	public static final String TAG = ModuleIndexActivity.class.getSimpleName();
+	public static final String TAG = CourseIndexActivity.class.getSimpleName();
 	
-	private Module module;
+	private Course module;
 	private ModuleXMLReader mxr;
 	private ArrayList<Section> sections;
 	private SharedPreferences prefs;
@@ -61,7 +61,7 @@ public class ModuleIndexActivity extends AppActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_module_index);
+        setContentView(R.layout.activity_course_index);
         
         this.drawHeader();
 	    
@@ -70,7 +70,7 @@ public class ModuleIndexActivity extends AppActivity {
         
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
-        	module = (Module) bundle.getSerializable(Module.TAG);
+        	module = (Course) bundle.getSerializable(Course.TAG);
         	try {
 				mxr = new ModuleXMLReader(module.getModuleXMLLocation());
 			
@@ -81,15 +81,15 @@ public class ModuleIndexActivity extends AppActivity {
 	        	String digest = (String) bundle.getSerializable("JumpTo");
 	        	if(digest != null && baselineCompleted){
 	        		// code to directly jump to a specific activity
-	        		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
+	        		sections = mxr.getSections(module.getModId(),CourseIndexActivity.this);
 	        		for(Section s: sections){
 	        			for(int i=0 ; i<s.getActivities().size(); i++){
 	        				Activity a = s.getActivities().get(i);
 	        				if(a.getDigest().equals(digest)){
-	        					Intent intent = new Intent(this, ModuleActivity.class);
+	        					Intent intent = new Intent(this, CourseActivity.class);
 	        					Bundle tb = new Bundle();
 	        					tb.putSerializable(Section.TAG, (Section) s);
-	        					tb.putSerializable(Module.TAG, (Module) module);
+	        					tb.putSerializable(Course.TAG, (Course) module);
 	        					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) i);
 	        					intent.putExtras(tb);
 	        	         		startActivity(intent);
@@ -101,7 +101,7 @@ public class ModuleIndexActivity extends AppActivity {
         	} catch (InvalidXMLException e) {
         		UIUtils.showAlert(this, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
     				public Boolean call() throws Exception {
-    					ModuleIndexActivity.this.finish();
+    					CourseIndexActivity.this.finish();
     					return true;
     				}
     			});
@@ -113,7 +113,7 @@ public class ModuleIndexActivity extends AppActivity {
     @Override
 	public void onStart() {
 		super.onStart();
-		sections = mxr.getSections(module.getModId(),ModuleIndexActivity.this);
+		sections = mxr.getSections(module.getModId(),CourseIndexActivity.this);
 		setTitle(module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
     	
 		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
@@ -163,10 +163,10 @@ public class ModuleIndexActivity extends AppActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
     	menu.clear();
-        getMenuInflater().inflate(R.menu.activity_module_index, menu);
-        ArrayList<ModuleMetaPage> ammp = module.getMetaPages();
+        getMenuInflater().inflate(R.menu.activity_course_index, menu);
+        ArrayList<CourseMetaPage> ammp = module.getMetaPages();
         int order = 104;
-        for(ModuleMetaPage mmp: ammp){
+        for(CourseMetaPage mmp: ammp){
         	String title = mmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
         	menu.add(0,mmp.getId(),order, title).setIcon(android.R.drawable.ic_menu_info_details);
         	order++;
@@ -187,9 +187,9 @@ public class ModuleIndexActivity extends AppActivity {
 				startActivity(new Intent(this, HelpActivity.class));
 				return true;
 			default:
-				i = new Intent(this, ModuleMetaPageActivity.class);
-				tb.putSerializable(Module.TAG, module);
-				tb.putSerializable(ModuleMetaPage.TAG, item.getItemId());
+				i = new Intent(this, CourseMetaPageActivity.class);
+				tb.putSerializable(Course.TAG, module);
+				tb.putSerializable(CourseMetaPage.TAG, item.getItemId());
 				i.putExtras(tb);
 				startActivity(i);
 				return true;
@@ -200,7 +200,7 @@ public class ModuleIndexActivity extends AppActivity {
     	UIUtils ui = new UIUtils();
     	ui.createLanguageDialog(this, module.getLangs(), prefs, new Callable<Boolean>() {	
 			public Boolean call() throws Exception {
-				ModuleIndexActivity.this.onStart();
+				CourseIndexActivity.this.onStart();
 				return true;
 			}
 		});
@@ -220,21 +220,21 @@ public class ModuleIndexActivity extends AppActivity {
 
     			aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, (CharSequence) this.getString(R.string.open), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-    					Intent intent = new Intent(ModuleIndexActivity.this, ModuleActivity.class);
+    					Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
     					Bundle tb = new Bundle();
     					Section section = new Section();
-    					section.addActivity(ModuleIndexActivity.this.baselineActivity);
+    					section.addActivity(CourseIndexActivity.this.baselineActivity);
     					tb.putSerializable(Section.TAG, section);
-    					tb.putSerializable(ModuleActivity.BASELINE_TAG, true);
+    					tb.putSerializable(CourseActivity.BASELINE_TAG, true);
     					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, 0);
-    					tb.putSerializable(Module.TAG, ModuleIndexActivity.this.module);
+    					tb.putSerializable(Course.TAG, CourseIndexActivity.this.module);
     					intent.putExtras(tb);
     	         		startActivity(intent);	
 					}
     			});
     			aDialog.setButton(DialogInterface.BUTTON_POSITIVE,(CharSequence) this.getString(R.string.cancel), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-    					ModuleIndexActivity.this.finish();
+    					CourseIndexActivity.this.finish();
     				}
     			});
     			aDialog.show();

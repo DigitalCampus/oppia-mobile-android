@@ -9,7 +9,7 @@
         style="@style/Header" />
 
     <TextView
-        android:id="@+id/module_title"
+        android:id="@+id/course_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

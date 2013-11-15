@@ -26,7 +26,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gesture.PageGestureDetector;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -55,12 +55,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ModuleActivity extends AppActivity implements OnUtteranceCompletedListener, OnInitListener {
+public class CourseActivity extends AppActivity implements OnUtteranceCompletedListener, OnInitListener {
 
-	public static final String TAG = ModuleActivity.class.getSimpleName();
+	public static final String TAG = CourseActivity.class.getSimpleName();
 	public static final String BASELINE_TAG = "BASELINE";
 	private Section section;
-	private Module module;
+	private Course module;
 	private int currentActivityNo = 0;
 	private WidgetFactory currentActivity;
 	private SharedPreferences prefs;
@@ -79,7 +79,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_module);
+		setContentView(R.layout.activity_course);
 		this.drawHeader();
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -87,10 +87,10 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			section = (Section) bundle.getSerializable(Section.TAG);
-			module = (Module) bundle.getSerializable(Module.TAG);
+			module = (Course) bundle.getSerializable(Course.TAG);
 			currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
-			if(bundle.getSerializable(ModuleActivity.BASELINE_TAG) != null){
-				this.isBaselineActivity = (Boolean) bundle.getSerializable(ModuleActivity.BASELINE_TAG);
+			if(bundle.getSerializable(CourseActivity.BASELINE_TAG) != null){
+				this.isBaselineActivity = (Boolean) bundle.getSerializable(CourseActivity.BASELINE_TAG);
 			}
 		}
 		
@@ -167,7 +167,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_module, menu);
+		getMenuInflater().inflate(R.menu.activity_course, menu);
 		return true;
 	}
 
@@ -218,14 +218,14 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 				prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 
 		if (acts.get(this.currentActivityNo).getActType().equals("page")) {
-			currentActivity = new PageWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+			currentActivity = new PageWidget(CourseActivity.this, module, acts.get(this.currentActivityNo));
 			WebView wv = (WebView) this.findViewById(R.id.page_webview);
 			wv.setOnTouchListener(pageGestureListener);
 		} else if (acts.get(this.currentActivityNo).getActType().equals("quiz")) {
 			if(widgetState.isEmpty()){
-				currentActivity = new QuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo));
+				currentActivity = new QuizWidget(CourseActivity.this, module, acts.get(this.currentActivityNo));
 			} else {
-				currentActivity = new QuizWidget(ModuleActivity.this, module, acts.get(this.currentActivityNo), widgetState);
+				currentActivity = new QuizWidget(CourseActivity.this, module, acts.get(this.currentActivityNo), widgetState);
 			}
 			currentActivity.setBaselineActivity(this.isBaselineActivity);
 		} else if (acts.get(this.currentActivityNo).getActType().equals("resource")) {
@@ -237,8 +237,8 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 	}
 
 	private void setUpNav() {
-		Button prevB = (Button) ModuleActivity.this.findViewById(R.id.prev_btn);
-		Button nextB = (Button) ModuleActivity.this.findViewById(R.id.next_btn);
+		Button prevB = (Button) CourseActivity.this.findViewById(R.id.prev_btn);
+		Button nextB = (Button) CourseActivity.this.findViewById(R.id.next_btn);
 		if (this.hasPrev()) {
 			prevB.setVisibility(View.VISIBLE);
 			prevB.setOnClickListener(new View.OnClickListener() {
@@ -319,7 +319,7 @@ public class ModuleActivity extends AppActivity implements OnUtteranceCompletedL
 		UIUtils ui = new UIUtils();
 		ui.createLanguageDialog(this, module.getLangs(), prefs, new Callable<Boolean>() {
 			public Boolean call() throws Exception {
-				ModuleActivity.this.onStart();
+				CourseActivity.this.onStart();
 				return true;
 			}
 		});

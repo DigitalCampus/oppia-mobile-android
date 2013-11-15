@@ -22,7 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -55,7 +55,7 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 	    View rowView = inflater.inflate(R.layout.schedule_reminder_list_row, parent, false);
 	    org.digitalcampus.oppia.model.Activity a = activityList.get(position);
 	    DbHelper db = new DbHelper(ctx);
-		Module m = db.getModule(a.getModId());
+		Course m = db.getModule(a.getModId());
 		db.close();
 	    
 		String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());

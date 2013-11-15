@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/module_row"
+    android:id="@+id/course_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -15,7 +15,14 @@
         android:layout_gravity="center_vertical"  >
 
         <TextView
-            android:id="@+id/module_title"
+            android:id="@+id/course_title"
+            style="@style/FieldLabelText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/course_draft"
             style="@style/FieldLabelText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

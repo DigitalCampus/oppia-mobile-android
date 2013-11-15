@@ -31,11 +31,11 @@ import org.digitalcampus.mquiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mquiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mquiz.model.questiontypes.Numerical;
 import org.digitalcampus.mquiz.model.questiontypes.ShortAnswer;
-import org.digitalcampus.oppia.activity.ModuleActivity;
+import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.gesture.QuizGestureDetector;
 import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -80,7 +80,7 @@ public class QuizWidget extends WidgetFactory {
 	private TextView qText;
 	private String quizContent;
 	private boolean isOnResultsPage = false;
-	private Module module; 
+	private Course module; 
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private long endTimestamp = System.currentTimeMillis()/1000;
 	private boolean isBaselineActivity = false;
@@ -88,14 +88,14 @@ public class QuizWidget extends WidgetFactory {
 	private GestureDetector quizGestureDetector;
 	private OnTouchListener quizGestureListener; 
 	
-	public QuizWidget(android.app.Activity context, Module module, Activity activity) {
+	public QuizWidget(android.app.Activity context, Course module, Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
 		this.module = module;
 		this.startQuiz(activity);
 	}
 
-	public QuizWidget(android.app.Activity context, Module module, Activity activity, HashMap<String, Object> config) {
+	public QuizWidget(android.app.Activity context, Course module, Activity activity, HashMap<String, Object> config) {
 		super(context, module, activity);
 		this.ctx = context;
 		this.module = module;
@@ -107,7 +107,7 @@ public class QuizWidget extends WidgetFactory {
 	private void startQuiz(Activity activity){
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 		
-		quizGestureDetector = new GestureDetector((android.app.Activity) this.ctx, new QuizGestureDetector((ModuleActivity) this.ctx));
+		quizGestureDetector = new GestureDetector((android.app.Activity) this.ctx, new QuizGestureDetector((CourseActivity) this.ctx));
 		quizGestureListener = new OnTouchListener() {
 
 			public boolean onTouch(View v, MotionEvent event) {

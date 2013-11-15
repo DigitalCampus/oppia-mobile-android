@@ -32,7 +32,7 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.model.ModuleMetaPage;
+import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Section;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -108,13 +108,13 @@ public class ModuleXMLReader {
 		return 0;
 	}
 	
-	public ArrayList<ModuleMetaPage> getMetaPages(){
-		ArrayList<ModuleMetaPage> ammp = new ArrayList<ModuleMetaPage>();
+	public ArrayList<CourseMetaPage> getMetaPages(){
+		ArrayList<CourseMetaPage> ammp = new ArrayList<CourseMetaPage>();
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
 			if(meta.item(j).getNodeName().toLowerCase(Locale.US).equals("page")){
-				ModuleMetaPage mmp = new ModuleMetaPage();
+				CourseMetaPage mmp = new CourseMetaPage();
 				
 				NamedNodeMap pageAttrs = meta.item(j).getAttributes();
 				NodeList pages = meta.item(j).getChildNodes();

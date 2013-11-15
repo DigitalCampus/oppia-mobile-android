@@ -1,7 +1,7 @@
 package org.digitalcampus.oppia.gesture;
 
 
-import org.digitalcampus.oppia.activity.ModuleActivity;
+import org.digitalcampus.oppia.activity.CourseActivity;
 
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -9,9 +9,9 @@ import android.view.MotionEvent;
 public class ResourceGestureDetector extends SimpleOnGestureListener {
 	
 	public final static String TAG = ResourceGestureDetector.class.getSimpleName();
-	private ModuleActivity modAct;
+	private CourseActivity modAct;
 	
-	public ResourceGestureDetector(ModuleActivity modAct){
+	public ResourceGestureDetector(CourseActivity modAct){
 		this.modAct = modAct;
 	}
 	

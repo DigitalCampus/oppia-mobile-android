@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.MessageFeed;
-import org.digitalcampus.oppia.model.Module;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.task.Payload;
 import org.joda.time.DateTime;
@@ -230,7 +230,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	// returns id of the row
-	public long addOrUpdateModule(Module module) {
+	public long addOrUpdateModule(Course module) {
 
 		ContentValues values = new ContentValues();
 		values.put(MODULE_C_VERSIONID, module.getVersionId());
@@ -257,7 +257,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return -1;
 	}
 
-	public long refreshModule(Module module){
+	public long refreshModule(Course module){
 		long modId = this.getModuleID(module.getShortname());
 		ContentValues values = new ContentValues();
 		values.put(MODULE_C_VERSIONID, module.getVersionId());
@@ -340,13 +340,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(ACTIVITY_TABLE, values, ACTIVITY_C_MODID + "=" + modId, null);
 	}
 	
-	public ArrayList<Module> getModules() {
-		ArrayList<Module> modules = new ArrayList<Module>();
+	public ArrayList<Course> getModules() {
+		ArrayList<Course> modules = new ArrayList<Course>();
 		String order = MODULE_C_TITLE + " ASC";
 		Cursor c = db.query(MODULE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			Module m = new Module();
+			Course m = new Course();
 			m.setModId(c.getInt(c.getColumnIndex(MODULE_C_ID)));
 			m.setLocation(c.getString(c.getColumnIndex(MODULE_C_LOCATION)));
 			m.setProgress(this.getModuleProgress(m.getModId()));
@@ -362,14 +362,14 @@ public class DbHelper extends SQLiteOpenHelper {
 		return modules;
 	}
 	
-	public Module getModule(long modId) {
-		Module m = null;
+	public Course getModule(long modId) {
+		Course m = null;
 		String s = MODULE_C_ID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
 		Cursor c = db.query(MODULE_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			m = new Module();
+			m = new Course();
 			m.setModId(c.getInt(c.getColumnIndex(MODULE_C_ID)));
 			m.setLocation(c.getString(c.getColumnIndex(MODULE_C_LOCATION)));
 			m.setProgress(this.getModuleProgress(m.getModId()));
@@ -544,7 +544,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				json.put("tracker_date", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
 				json.put("digest", c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 				json.put("completed", c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
-				Module m = this.getModule(c.getLong(c.getColumnIndex(TRACKER_LOG_C_MODID)));
+				Course m = this.getModule(c.getLong(c.getColumnIndex(TRACKER_LOG_C_MODID)));
 				if (m != null){
 					json.put("course", m.getShortname());
 				}
