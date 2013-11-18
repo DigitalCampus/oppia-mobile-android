@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.ModuleNotFoundException;
 import org.digitalcampus.oppia.listener.InstallModuleListener;
+import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
@@ -37,6 +38,7 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.task.InstallDownloadedModulesTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
 import org.digitalcampus.oppia.utils.FileUtils;
@@ -69,7 +71,7 @@ import android.widget.TextView;
 import com.bugsense.trace.BugSenseHandler;
 
 public class OppiaMobileActivity extends AppActivity implements InstallModuleListener,
-		OnSharedPreferenceChangeListener, ScanMediaListener, UpgradeListener {
+		OnSharedPreferenceChangeListener, ScanMediaListener, UpgradeListener, PostInstallListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
@@ -131,27 +133,12 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 			return;
 		}
 		
-		displayModules();
-		
-		// install any new modules
-		File dir = new File(MobileLearning.DOWNLOAD_PATH);
-		String[] children = dir.list();
-		if (children != null) {
-			ArrayList<Object> data = new ArrayList<Object>();
-     		Payload p = new Payload(data);
-			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(OppiaMobileActivity.this);
-			imTask.setInstallerListener(this);
-			imTask.execute(p);
-		}
+		displayModules();		
 	}
 
 	@Override
 	public void onResume(){
 		super.onResume();
-		/*DbHelper db = new DbHelper(this);
-		MessageFeed mf = db.getMessageFeed();
-		db.close();
-		this.updateMessages(mf);*/
 		this.updateHeader();
 		this.updateReminders();
 	}
@@ -505,11 +492,40 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 	public void upgradeComplete(Payload p) {
 		if(p.isResult()){
 			displayModules();
+			Payload payload = new Payload();
+			PostInstallTask piTask = new PostInstallTask(OppiaMobileActivity.this);
+			piTask.setPostInstallListener(this);
+			piTask.execute(payload);
+		} else {
+			// now install any new modules
+			File dir = new File(MobileLearning.DOWNLOAD_PATH);
+			String[] children = dir.list();
+			if (children != null) {
+				ArrayList<Object> data = new ArrayList<Object>();
+	     		Payload payload = new Payload(data);
+				InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(OppiaMobileActivity.this);
+				imTask.setInstallerListener(this);
+				imTask.execute(payload);
+			}
 		}
 	}
 
 	public void upgradeProgressUpdate(String s) {
 		// do nothing
+		
+	}
+
+	public void postInstallComplete(Payload response) {
+		// now install any new modules
+		File dir = new File(MobileLearning.DOWNLOAD_PATH);
+		String[] children = dir.list();
+		if (children != null) {
+			ArrayList<Object> data = new ArrayList<Object>();
+     		Payload payload = new Payload(data);
+			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(OppiaMobileActivity.this);
+			imTask.setInstallerListener(this);
+			imTask.execute(payload);
+		}
 		
 	}
 

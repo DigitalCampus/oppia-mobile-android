@@ -75,14 +75,14 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				String[] moddirs = tempdir.list(); // use this to get the module
 													// name
 				
-				String moduleXMLPath = "";
-				String moduleScheduleXMLPath = "";
-				String moduleTrackerXMLPath = "";
+				String courseXMLPath = "";
+				String courseScheduleXMLPath = "";
+				String courseTrackerXMLPath = "";
 				// check that it's unzipped etc correctly
 				try {
-					moduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_XML;
-					moduleScheduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_SCHEDULE_XML;
-					moduleTrackerXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_TRACKER_XML;
+					courseXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.COURSE_XML;
+					courseScheduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_SCHEDULE_XML;
+					courseTrackerXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
 					break;
@@ -93,9 +93,9 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				ModuleScheduleXMLReader msxr;
 				ModuleTrackerXMLReader mtxr;
 				try {
-					mxr = new ModuleXMLReader(moduleXMLPath);
-					msxr = new ModuleScheduleXMLReader(moduleScheduleXMLPath);
-					mtxr = new ModuleTrackerXMLReader(moduleTrackerXMLPath);
+					mxr = new ModuleXMLReader(courseXMLPath);
+					msxr = new ModuleScheduleXMLReader(courseScheduleXMLPath);
+					mtxr = new ModuleTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
 					payload.setResult(false);
 					return payload;
@@ -103,30 +103,30 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				
 				
 				//HashMap<String, String> hm = mxr.getMeta();
-				Course m = new Course();
-				m.setVersionId(mxr.getVersionId());
-				m.setTitles(mxr.getTitles());
-				m.setLocation(MobileLearning.MODULES_PATH + moddirs[0]);
-				m.setShortname(moddirs[0]);
-				m.setImageFile(MobileLearning.MODULES_PATH + moddirs[0] + "/" + mxr.getModuleImage());
-				m.setLangs(mxr.getLangs());
-				String title = m.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+				Course c = new Course();
+				c.setVersionId(mxr.getVersionId());
+				c.setTitles(mxr.getTitles());
+				c.setLocation(MobileLearning.COURSES_PATH + moddirs[0]);
+				c.setShortname(moddirs[0]);
+				c.setImageFile(MobileLearning.COURSES_PATH + moddirs[0] + "/" + mxr.getModuleImage());
+				c.setLangs(mxr.getLangs());
+				String title = c.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 				
 				dp.setProgress(ctx.getString(R.string.installing_module, title));
 				publishProgress(dp);
 				
 				DbHelper db = new DbHelper(ctx);
-				long added = db.addOrUpdateModule(m);
+				long added = db.addOrUpdateModule(c);
 				
 				if (added != -1) {
-					payload.addResponseData(m);
+					payload.addResponseData(c);
 					File src = new File(tempdir + "/" + moddirs[0]);
-					File dest = new File(MobileLearning.MODULES_PATH);
+					File dest = new File(MobileLearning.COURSES_PATH);
 
 					db.insertActivities(mxr.getActivities(added));
 					db.insertTrackers(mtxr.getTrackers(),added);
 					// Delete old module
-					File oldMod = new File(MobileLearning.MODULES_PATH + moddirs[0]);
+					File oldMod = new File(MobileLearning.COURSES_PATH + moddirs[0]);
 					FileUtils.deleteDir(oldMod);
 
 					// move from temp to modules dir

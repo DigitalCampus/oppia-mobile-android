@@ -60,7 +60,7 @@ public class CourseActivity extends AppActivity implements OnUtteranceCompletedL
 	public static final String TAG = CourseActivity.class.getSimpleName();
 	public static final String BASELINE_TAG = "BASELINE";
 	private Section section;
-	private Course module;
+	private Course course;
 	private int currentActivityNo = 0;
 	private WidgetFactory currentActivity;
 	private SharedPreferences prefs;
@@ -87,7 +87,7 @@ public class CourseActivity extends AppActivity implements OnUtteranceCompletedL
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			section = (Section) bundle.getSerializable(Section.TAG);
-			module = (Course) bundle.getSerializable(Course.TAG);
+			course = (Course) bundle.getSerializable(Course.TAG);
 			currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
 			if(bundle.getSerializable(CourseActivity.BASELINE_TAG) != null){
 				this.isBaselineActivity = (Boolean) bundle.getSerializable(CourseActivity.BASELINE_TAG);
@@ -218,18 +218,18 @@ public class CourseActivity extends AppActivity implements OnUtteranceCompletedL
 				prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 
 		if (acts.get(this.currentActivityNo).getActType().equals("page")) {
-			currentActivity = new PageWidget(CourseActivity.this, module, acts.get(this.currentActivityNo));
+			currentActivity = new PageWidget(CourseActivity.this, course, acts.get(this.currentActivityNo));
 			WebView wv = (WebView) this.findViewById(R.id.page_webview);
 			wv.setOnTouchListener(pageGestureListener);
 		} else if (acts.get(this.currentActivityNo).getActType().equals("quiz")) {
 			if(widgetState.isEmpty()){
-				currentActivity = new QuizWidget(CourseActivity.this, module, acts.get(this.currentActivityNo));
+				currentActivity = new QuizWidget(CourseActivity.this, course, acts.get(this.currentActivityNo));
 			} else {
-				currentActivity = new QuizWidget(CourseActivity.this, module, acts.get(this.currentActivityNo), widgetState);
+				currentActivity = new QuizWidget(CourseActivity.this, course, acts.get(this.currentActivityNo), widgetState);
 			}
 			currentActivity.setBaselineActivity(this.isBaselineActivity);
 		} else if (acts.get(this.currentActivityNo).getActType().equals("resource")) {
-			currentActivity = new ResourceWidget(this, module, acts.get(this.currentActivityNo));
+			currentActivity = new ResourceWidget(this, course, acts.get(this.currentActivityNo));
 		}
 		currentActivity.setWidgetConfig(this.widgetState);
 		this.widgetState = new HashMap<String, Object>();
@@ -307,9 +307,9 @@ public class CourseActivity extends AppActivity implements OnUtteranceCompletedL
 			} 
 			// if it's a baseline activity then assume completed
 			if(this.isBaselineActivity){
-				t.saveTracker(module.getModId(), digest, json, true);
+				t.saveTracker(course.getModId(), digest, json, true);
 			} else {
-				t.saveTracker(module.getModId(), digest, json, currentActivity.getActivityCompleted());
+				t.saveTracker(course.getModId(), digest, json, currentActivity.getActivityCompleted());
 			}
 		}
 		return true;
@@ -317,7 +317,7 @@ public class CourseActivity extends AppActivity implements OnUtteranceCompletedL
 
 	private void createLanguageDialog() {
 		UIUtils ui = new UIUtils();
-		ui.createLanguageDialog(this, module.getLangs(), prefs, new Callable<Boolean>() {
+		ui.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
 			public Boolean call() throws Exception {
 				CourseActivity.this.onStart();
 				return true;

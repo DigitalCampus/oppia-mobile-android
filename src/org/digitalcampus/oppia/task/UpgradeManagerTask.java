@@ -55,6 +55,14 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 		
+		if(!prefs.getBoolean("upgradeV29",false)){
+			Editor editor = prefs.edit();
+			editor.putBoolean("upgradeV29", false);
+			editor.commit();
+			publishProgress("Upgraded to v29");
+			payload.setResult(true);
+		}
+		
 		return payload;
 	}
 	
@@ -62,7 +70,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	 * the new titles etc are picked up
 	 */
 	protected void upgradeV17(){
-		File dir = new File(MobileLearning.MODULES_PATH);
+		File dir = new File(MobileLearning.COURSES_PATH);
 		String[] children = dir.list();
 		if (children != null) {
 			for (int i = 0; i < children.length; i++) {
@@ -73,7 +81,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				String moduleTrackerXMLPath = "";
 				// check that it's unzipped etc correctly
 				try {
-					moduleXMLPath = dir + "/" + children[i] + "/" + MobileLearning.MODULE_XML;
+					moduleXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_XML;
 					moduleScheduleXMLPath = dir + "/" + children[i] + "/" + MobileLearning.MODULE_SCHEDULE_XML;
 					moduleTrackerXMLPath = dir + "/" + children[i] + "/" + MobileLearning.MODULE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
@@ -98,9 +106,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				Course m = new Course();
 				m.setVersionId(mxr.getVersionId());
 				m.setTitles(mxr.getTitles());
-				m.setLocation(MobileLearning.MODULES_PATH + children[i]);
+				m.setLocation(MobileLearning.COURSES_PATH + children[i]);
 				m.setShortname(children[i]);
-				m.setImageFile(MobileLearning.MODULES_PATH + children[i] + "/" + mxr.getModuleImage());
+				m.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + mxr.getModuleImage());
 				m.setLangs(mxr.getLangs());
 				
 				

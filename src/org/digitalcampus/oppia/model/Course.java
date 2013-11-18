@@ -197,7 +197,7 @@ public class Course implements Serializable {
 	}
 
 	public String getModuleXMLLocation(){
-		return this.getLocation() + MobileLearning.MODULE_XML;
+		return this.getLocation() + MobileLearning.COURSE_XML;
 	}
 	public void setLocation(String location) {
 		this.location = location;
