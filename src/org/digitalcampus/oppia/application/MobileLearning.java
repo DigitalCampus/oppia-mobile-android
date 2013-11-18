@@ -42,8 +42,8 @@ public class MobileLearning extends Application {
 	public static final String MEDIA_PATH = OPPIAMOBILE_ROOT + "media/";
 	public static final String DOWNLOAD_PATH = OPPIAMOBILE_ROOT + "download/";
 	public static final String COURSE_XML = "module.xml";
-	public static final String MODULE_SCHEDULE_XML = "schedule.xml";
-	public static final String MODULE_TRACKER_XML = "tracker.xml";
+	public static final String COURSE_SCHEDULE_XML = "schedule.xml";
+	public static final String COURSE_TRACKER_XML = "tracker.xml";
 	public static final String PRE_INSTALL_COURSES_DIR = "www/preload/courses"; // don't include leading or trailing slash
 	public static final String PRE_INSTALL_MEDIA_DIR = "www/preload/media"; // don't include leading or trailing slash
 	
@@ -63,7 +63,7 @@ public class MobileLearning extends Application {
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
 	public static final String USER_AGENT = "OppiaMobile Android: ";
-	public static final int MQUIZ_PASS_THRESHOLD = 100;
+	public static final int QUIZ_PASS_THRESHOLD = 100;
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");

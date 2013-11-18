@@ -81,8 +81,8 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				// check that it's unzipped etc correctly
 				try {
 					courseXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.COURSE_XML;
-					courseScheduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_SCHEDULE_XML;
-					courseTrackerXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.MODULE_TRACKER_XML;
+					courseScheduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.COURSE_SCHEDULE_XML;
+					courseTrackerXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
 					break;

@@ -212,7 +212,7 @@ public class CourseActivity extends AppActivity implements OnUtteranceCompletedL
 
 	private void loadActivity() {
 		ArrayList<org.digitalcampus.oppia.model.Activity> acts = section.getActivities();
-		TextView tb = (TextView) this.findViewById(R.id.module_activity_title);
+		TextView tb = (TextView) this.findViewById(R.id.course_activity_title);
 
 		tb.setText(acts.get(this.currentActivityNo).getTitle(
 				prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));

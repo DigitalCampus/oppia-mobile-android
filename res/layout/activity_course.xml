@@ -18,12 +18,12 @@
 			android:layout_height="fill_parent" 
 			android:layout_width="wrap_content"
 			android:layout_weight=".1" 
-			android:text="@string/activity_module_button_prev"
+			android:text="@string/activity_course_button_prev"
 			android:textSize="20sp" 
 			android:textStyle="bold"
 			android:background="@drawable/activity_nav_button"/>
         <TextView
-            android:id="@+id/module_activity_title"
+            android:id="@+id/course_activity_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".8" 
@@ -37,7 +37,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="fill_parent"
 			android:layout_weight=".1" 
-			android:text="@string/activity_module_button_next"
+			android:text="@string/activity_course_button_next"
 			android:textSize="20sp" 
 			android:textStyle="bold"
 			android:background="@drawable/activity_nav_button"/>

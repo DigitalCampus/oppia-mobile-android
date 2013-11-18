@@ -76,7 +76,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
 	private Course tempMod;
-	private ArrayList<Course> modules;
+	private ArrayList<Course> courses;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -118,11 +118,6 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 		ArrayList<Object> data = new ArrayList<Object>();
  		Payload p = new Payload(data);
 		umt.execute(p);
-		
-		// Don't bother to show upgrade log info...
-		// if this is required uncomment the 2 lines below
-		//UpgradeUtils uu = new UpgradeUtils(this);
-		//uu.show();
 	}
 
 	@Override
@@ -133,7 +128,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 			return;
 		}
 		
-		displayModules();		
+		displayCourses();		
 	}
 
 	@Override
@@ -149,36 +144,36 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 		super.onPause();
 	}
 	
-	private void displayModules() {
+	private void displayCourses() {
 
 		DbHelper db = new DbHelper(this);
-		modules = db.getModules();
+		courses = db.getModules();
 		db.close();
 		
 		if(MobileLearning.createDirs()){
-			// only remove modules if the SD card is present 
-			//- else it will remove the modules just because the SD card isn't in
-			ArrayList<Course> removeModules = new ArrayList<Course>();
-			for (Course m : modules) {
+			// only remove courses if the SD card is present 
+			//- else it will remove the courses just because the SD card isn't in
+			ArrayList<Course> removeCourses = new ArrayList<Course>();
+			for (Course c : courses) {
 				try {
-					m.validate();
+					c.validate();
 				} catch (ModuleNotFoundException mnfe){
 					// remove from database
-					mnfe.deleteModule(this, m.getModId());
-					removeModules.add(m);
+					mnfe.deleteModule(this, c.getModId());
+					removeCourses.add(c);
 				}
 			}
 			
-			for(Course m: removeModules){
+			for(Course c: removeCourses){
 				// remove from current list
-				modules.remove(m);
+				courses.remove(c);
 			}
 		}
 
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_modules);
 		llLoading.setVisibility(View.GONE);
 		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_modules);
-		if (modules.size() > 0) {
+		if (courses.size() > 0) {
 			llNone.setVisibility(View.GONE);
 		} else {
 			llNone.setVisibility(View.VISIBLE);
@@ -188,10 +183,9 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 					startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
 				}
 			});
-
 		}
 
-		CourseListAdapter mla = new CourseListAdapter(this, modules);
+		CourseListAdapter mla = new CourseListAdapter(this, courses);
 		ListView listView = (ListView) findViewById(R.id.module_list);
 		listView.setAdapter(mla);
 		registerForContextMenu(listView);
@@ -235,7 +229,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 			return;
 		}
 		ScanMediaTask task = new ScanMediaTask();
-		Payload p = new Payload(this.modules);
+		Payload p = new Payload(this.courses);
 		task.setScanMediaListener(this);
 		task.execute(p);
 	}
@@ -260,7 +254,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 				Intent i = new Intent(this, PrefsActivity.class);
 				Bundle tb = new Bundle();
 				ArrayList<Lang> langs = new ArrayList<Lang>();
-				for(Course m: modules){
+				for(Course m: courses){
 					langs.addAll(m.getLangs());
 				}
 				tb.putSerializable("langs", langs);
@@ -286,7 +280,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 
 	private void createLanguageDialog() {
 		ArrayList<Lang> langs = new ArrayList<Lang>();
-		for(Course m: modules){
+		for(Course m: courses){
 			langs.addAll(m.getLangs());
 		}
 		
@@ -337,7 +331,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 			Editor e = prefs.edit();
 			e.putLong(getString(R.string.prefs_last_media_scan), 0);
 			e.commit();
-			displayModules();
+			displayCourses();
 		}
 	}
 
@@ -384,7 +378,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 				Editor e = prefs.edit();
 				e.putLong(getString(R.string.prefs_last_media_scan), 0);
 				e.commit();
-				displayModules();
+				displayCourses();
 			}
 		});
 		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -405,7 +399,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
 				db.resetModule(tempMod.getModId());
 				db.close();
-				displayModules();
+				displayCourses();
 			}
 		});
 		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -427,7 +421,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 			}
 		}
 		if(key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_show)) || key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_no))){
-			displayModules();
+			displayCourses();
 		}
 		super.onSharedPreferenceChanged(sharedPreferences, key);
 	}
@@ -491,22 +485,14 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 
 	public void upgradeComplete(Payload p) {
 		if(p.isResult()){
-			displayModules();
+			displayCourses();
 			Payload payload = new Payload();
 			PostInstallTask piTask = new PostInstallTask(OppiaMobileActivity.this);
 			piTask.setPostInstallListener(this);
 			piTask.execute(payload);
 		} else {
-			// now install any new modules
-			File dir = new File(MobileLearning.DOWNLOAD_PATH);
-			String[] children = dir.list();
-			if (children != null) {
-				ArrayList<Object> data = new ArrayList<Object>();
-	     		Payload payload = new Payload(data);
-				InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(OppiaMobileActivity.this);
-				imTask.setInstallerListener(this);
-				imTask.execute(payload);
-			}
+			// now install any new courses
+			this.installCourses();
 		}
 	}
 
@@ -516,7 +502,11 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 	}
 
 	public void postInstallComplete(Payload response) {
-		// now install any new modules
+		// now install any new courses
+		this.installCourses();
+	}
+	
+	private void installCourses(){
 		File dir = new File(MobileLearning.DOWNLOAD_PATH);
 		String[] children = dir.list();
 		if (children != null) {
@@ -526,7 +516,6 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 			imTask.setInstallerListener(this);
 			imTask.execute(payload);
 		}
-		
 	}
 
 }

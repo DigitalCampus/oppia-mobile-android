@@ -17,7 +17,7 @@
        	android:background="@drawable/background_light"/>
     
     <TextView
-        android:id="@+id/module_shortname"
+        android:id="@+id/course_shortname"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -25,7 +25,7 @@
         android:background="@drawable/background_light"/>
     
     <TextView
-        android:id="@+id/module_versionid"
+        android:id="@+id/course_versionid"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

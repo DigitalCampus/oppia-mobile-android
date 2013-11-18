@@ -57,7 +57,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		
 		if(!prefs.getBoolean("upgradeV29",false)){
 			Editor editor = prefs.edit();
-			editor.putBoolean("upgradeV29", false);
+			editor.putBoolean("upgradeV29", true);
 			editor.commit();
 			publishProgress("Upgraded to v29");
 			payload.setResult(true);
@@ -76,14 +76,14 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			for (int i = 0; i < children.length; i++) {
 				Log.d(TAG,"checking "+ children[i]);
 				
-				String moduleXMLPath = "";
-				String moduleScheduleXMLPath = "";
-				String moduleTrackerXMLPath = "";
+				String courseXMLPath = "";
+				String courseScheduleXMLPath = "";
+				String courseTrackerXMLPath = "";
 				// check that it's unzipped etc correctly
 				try {
-					moduleXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_XML;
-					moduleScheduleXMLPath = dir + "/" + children[i] + "/" + MobileLearning.MODULE_SCHEDULE_XML;
-					moduleTrackerXMLPath = dir + "/" + children[i] + "/" + MobileLearning.MODULE_TRACKER_XML;
+					courseXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_XML;
+					courseScheduleXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_SCHEDULE_XML;
+					courseTrackerXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(dir, MobileLearning.DOWNLOAD_PATH + children[i]);
 					break;
@@ -94,26 +94,26 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				ModuleScheduleXMLReader msxr;
 				ModuleTrackerXMLReader mtxr;
 				try {
-					mxr = new ModuleXMLReader(moduleXMLPath);
-					msxr = new ModuleScheduleXMLReader(moduleScheduleXMLPath);
-					mtxr = new ModuleTrackerXMLReader(moduleTrackerXMLPath);
+					mxr = new ModuleXMLReader(courseXMLPath);
+					msxr = new ModuleScheduleXMLReader(courseScheduleXMLPath);
+					mtxr = new ModuleTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
 					e.printStackTrace();
 					break;
 				}
 				
 				//HashMap<String, String> hm = mxr.getMeta();
-				Course m = new Course();
-				m.setVersionId(mxr.getVersionId());
-				m.setTitles(mxr.getTitles());
-				m.setLocation(MobileLearning.COURSES_PATH + children[i]);
-				m.setShortname(children[i]);
-				m.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + mxr.getModuleImage());
-				m.setLangs(mxr.getLangs());
+				Course c = new Course();
+				c.setVersionId(mxr.getVersionId());
+				c.setTitles(mxr.getTitles());
+				c.setLocation(MobileLearning.COURSES_PATH + children[i]);
+				c.setShortname(children[i]);
+				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + mxr.getModuleImage());
+				c.setLangs(mxr.getLangs());
 				
 				
 				DbHelper db = new DbHelper(ctx);
-				long modId = db.refreshModule(m);
+				long modId = db.refreshModule(c);
 				
 				if (modId != -1) {
 					db.insertActivities(mxr.getActivities(modId));

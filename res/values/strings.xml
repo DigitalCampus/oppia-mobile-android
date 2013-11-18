@@ -17,19 +17,19 @@
     <string name="title_about">About/Licenses</string>
     <string name="title_help">Help</string>
      
-    <string name="title_activity_module_index">Course index</string>
-    <string name="title_activity_module">Activity</string>
+    <string name="title_activity_course_index">Course index</string>
+    <string name="title_activity_course">Activity</string>
     <string name="title_download_activity">Manage courses</string>
     <string name="title_monitor">Monitor</string>
     <string name="title_prefs">Settings</string>
     <string name="title_tag_select_activity">Select Category</string>
     <string name="version">Version: %1$s</string>
-    <string name="title_module_about">About Course</string>
+    <string name="title_course_about">About Course</string>
     <string name="title_download_media">Download Media</string>
     <string name="title_points">Your Points</string>
     
-    <string name="activity_module_button_prev">&lt;</string>
-    <string name="activity_module_button_next">&gt;</string>
+    <string name="activity_course_button_prev">&lt;</string>
+    <string name="activity_course_button_next">&gt;</string>
     
     <string name="widget_quiz_next">Next &gt;&gt;</string>
     <string name="widget_quiz_prev">&lt;&lt; Prev</string>
@@ -46,12 +46,12 @@
  	
  	<string name="widget_resource_open_file">Open \'%1$s\'</string>
  	
- 	<string name="module_context_reset">Reset</string>
- 	<string name="module_context_delete">Delete</string>
- 	<string name="module_context_reset_confirm">Are you sure you want to reset this course? It will remove all the progress logs for this course.</string>
- 	<string name="module_context_delete_confirm">Are you sure you want to delete this course? It will completely remove the course from your phone.</string>
+ 	<string name="course_context_reset">Reset</string>
+ 	<string name="course_context_delete">Delete</string>
+ 	<string name="course_context_reset_confirm">Are you sure you want to reset this course? It will remove all the progress logs for this course.</string>
+ 	<string name="course_context_delete_confirm">Are you sure you want to delete this course? It will completely remove the course from your phone.</string>
  	
- 	<string name="no_modules">There are no courses currently installed</string>
+ 	<string name="no_courses">There are no courses currently installed</string>
  	
  
 	<string name="prefAdvanced">Advanced settings</string>
@@ -70,8 +70,8 @@
 	<string name="prefShowScheduleReminders">Display suggested activities</string>
 	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
 	
-	<string name="notification_module_update_title">New course updates</string>
-	<string name="notification_module_update_text">Updates are available for your courses.</string>
+	<string name="notification_course_update_title">New course updates</string>
+	<string name="notification_course_update_text">Updates are available for your courses.</string>
 	
 	<string name="title_login">Login</string>
 	<string name="login_username_title">Username</string>
@@ -120,16 +120,16 @@
 	<string name="updating">Updating &#8230;</string>
 	<string name="update_complete">Schedule update complete</string>
 	
-	<string name="installing_module">Installing: %1$s</string>
+	<string name="installing_course">Installing: %1$s</string>
 	<string name="install_complete">Installation complete</string>
 	
-	<string name="install_module_complete">%1$s: installed</string>
+	<string name="install_course_complete">%1$s: installed</string>
 	
 	<string name="info_scan_media_start">Scanning for media</string>
 	<string name="info_scan_media_checking">Checking for: %1$s</string>
 	<string name="info_scan_media_missing">Some media files are missing for your courses.</string>
 	
-	<string name="loading_modules">Loading courses</string>
+	<string name="loading_courses">Loading courses</string>
 	
 	<string name="scan_media_download_button">Download</string>
 	<string name="scan_media_download_via_pc_button">Download via PC</string>
@@ -139,7 +139,7 @@
 	
 	<string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
 	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
-	<string name="error_installing_module">%1$s: failed to install</string>
+	<string name="error_installing_course">%1$s: failed to install</string>
 	<string name="error_latest_already_installed">%1$s: latest version already installed</string>
 	<string name="error_login">Invalid username/password\nPlease try again</string>
 	<string name="error_media_app_not_found">You don\'t appear to have a media player installed which supports playing this video.</string>

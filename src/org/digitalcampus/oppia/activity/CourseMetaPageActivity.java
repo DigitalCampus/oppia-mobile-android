@@ -35,10 +35,10 @@ import android.widget.TextView;
 public class CourseMetaPageActivity extends AppActivity {
 
 	public static final String TAG = CourseMetaPageActivity.class.getSimpleName();
-	private Course module;
+	private Course course;
 	private SharedPreferences prefs;
 	private int pageid;
-	private CourseMetaPage mmp;
+	private CourseMetaPage cmp;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,25 +49,25 @@ public class CourseMetaPageActivity extends AppActivity {
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
-			module = (Course) bundle.getSerializable(Course.TAG);
-			setTitle(module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+			course = (Course) bundle.getSerializable(Course.TAG);
+			setTitle(course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 			pageid = (Integer) bundle.getSerializable(CourseMetaPage.TAG);
-			mmp = module.getMetaPage(pageid);
+			cmp = course.getMetaPage(pageid);
 		}
 		
 		TextView titleTV = (TextView) findViewById(R.id.course_title);
-		String title = module.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())) + ": " + mmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
+		String title = course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())) + ": " + cmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
 		titleTV.setText(title);
 		
-		TextView versionTV = (TextView) findViewById(R.id.module_versionid);
-		BigDecimal big = new BigDecimal(module.getVersionId());
+		TextView versionTV = (TextView) findViewById(R.id.course_versionid);
+		BigDecimal big = new BigDecimal(course.getVersionId());
 		versionTV.setText(big.toString());
 		
-		TextView shortnameTV = (TextView) findViewById(R.id.module_shortname);
-		shortnameTV.setText(module.getShortname());
+		TextView shortnameTV = (TextView) findViewById(R.id.course_shortname);
+		shortnameTV.setText(course.getShortname());
 		
 		WebView wv = (WebView) this.findViewById(R.id.metapage_webview);
-		String url = module.getLocation() + "/" +mmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getLocation();
+		String url = course.getLocation() + "/" +cmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getLocation();
 		
 		try {
 			String content =  "<html><head>";
@@ -76,7 +76,7 @@ public class CourseMetaPageActivity extends AppActivity {
 			content += "</head>";
 			content += FileUtils.readFile(url);
 			content += "</html>";
-			wv.loadDataWithBaseURL("file://" + module.getLocation() + "/", content, "text/html", "utf-8", null);
+			wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", content, "text/html", "utf-8", null);
 		} catch (IOException e) {
 			e.printStackTrace();
 			wv.loadUrl("file://" + url);
