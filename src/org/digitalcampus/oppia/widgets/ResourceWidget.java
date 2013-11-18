@@ -2,41 +2,33 @@ package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.gesture.ResourceGestureDetector;
+import org.digitalcampus.oppia.listener.OnResourceClickListener;
 import org.digitalcampus.oppia.model.Course;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -44,16 +36,15 @@ public class ResourceWidget extends WidgetFactory {
 
 	public static final String TAG = ResourceWidget.class.getSimpleName();
 	private Context ctx;
-	private org.digitalcampus.oppia.model.Activity activity;
 	private SharedPreferences prefs;
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private GestureDetector resourceGestureDetector;
-	private OnTouchListener resourceGestureListener; 		
+	private OnTouchListener resourceGestureListener; 
+	private boolean isBaselineActivity = false;
 	
 	public ResourceWidget(Context context, Course module, org.digitalcampus.oppia.model.Activity activity) {
 		super(context, module, activity);
 		this.ctx = context;
-		this.activity = activity;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 		
 		resourceGestureDetector = new GestureDetector((Activity) context, new ResourceGestureDetector((CourseActivity) context));
@@ -87,7 +78,7 @@ public class ResourceWidget extends WidgetFactory {
 		}
 		
 		File file = new File(fileUrl);
-		OnResourceClickListener orcl = new OnResourceClickListener();
+		OnResourceClickListener orcl = new OnResourceClickListener(this.ctx,activity.getMimeType());
 		// show image files
 		if (activity.getMimeType().equals("image/jpeg") || activity.getMimeType().equals("image/png")){
 			ImageView iv = new ImageView(this.ctx);
@@ -179,14 +170,12 @@ public class ResourceWidget extends WidgetFactory {
 
 	@Override
 	public void setBaselineActivity(boolean baseline) {
-		// TODO Auto-generated method stub
-		
+		this.isBaselineActivity = baseline;
 	}
 
 	@Override
 	public boolean isBaselineActivity() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.isBaselineActivity;
 	}
 
 	@Override
@@ -202,44 +191,4 @@ public class ResourceWidget extends WidgetFactory {
 			this.setStartTime((Long) config.get("Activity_StartTime"));
 		}
 	}
-	
-	private class OnResourceClickListener implements OnClickListener{
-
-		public void onClick(View v) {
-			File file = (File) v.getTag();
-			// check the file is on the file system (should be but just in case)
-			if(!file.exists()){
-				Toast.makeText(ResourceWidget.this.ctx, ResourceWidget.this.ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
-				return;
-			} 
-			Uri targetUri = Uri.fromFile(file);
-			
-			// check there is actually an app installed to open this filetype
-			
-			Intent intent = new Intent();
-			intent.setAction(android.content.Intent.ACTION_VIEW);
-			intent.setDataAndType(targetUri, ResourceWidget.this.activity.getMimeType());
-			
-			PackageManager pm = ResourceWidget.this.ctx.getPackageManager();
-
-			List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
-			boolean appFound = false;
-			for (ResolveInfo info : infos) {
-				IntentFilter filter = info.filter;
-				if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
-					// Found an app with the right intent/filter
-					appFound = true;
-				}
-			}
-
-			if(appFound){
-				ResourceWidget.this.ctx.startActivity(intent);
-			} else {
-				Toast.makeText(ResourceWidget.this.ctx, ResourceWidget.this.ctx.getString(R.string.error_resource_app_not_found,file.getName()), Toast.LENGTH_LONG).show();
-			}
-			return;
-		}
-		
-	}
-
 }

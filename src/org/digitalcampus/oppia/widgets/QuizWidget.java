@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.widgets;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +35,7 @@ import org.digitalcampus.mquiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.gesture.QuizGestureDetector;
+import org.digitalcampus.oppia.listener.OnResourceClickListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
@@ -49,6 +51,8 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -59,6 +63,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
@@ -79,6 +84,7 @@ public class QuizWidget extends WidgetFactory {
 	public Button nextBtn;
 	private TextView qText;
 	private String quizContent;
+	private LinearLayout questionImage;
 	private boolean isOnResultsPage = false;
 	private Course module; 
 	private long startTimestamp = System.currentTimeMillis()/1000;
@@ -130,7 +136,8 @@ public class QuizWidget extends WidgetFactory {
 
 		prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
 		nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
-		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.questiontext);
+		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.question_text);
+		questionImage = (LinearLayout) ((android.app.Activity) this.ctx).findViewById(R.id.question_image);
 		
 		quizContent = activity.getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		if(this.quiz == null){
@@ -156,6 +163,21 @@ public class QuizWidget extends WidgetFactory {
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
 		qText.setText(Html.fromHtml(q.getTitle()).toString());
+		
+		if (q.getProp("image") == null){
+			questionImage.setVisibility(View.GONE);
+		} else {
+			String fileUrl = module.getLocation() + q.getProp("image");
+			//File file = new File(fileUrl);
+			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
+			File file = new File(fileUrl);
+			ImageView iv = (ImageView) ((android.app.Activity) this.ctx).findViewById(R.id.question_image_image);
+			iv.setImageBitmap(myBitmap);
+			iv.setTag(file);
+			OnResourceClickListener orcl = new OnResourceClickListener(this.ctx, "image/*");
+			iv.setOnClickListener(orcl);
+			questionImage.setVisibility(View.VISIBLE);
+		}
 
 		if (q instanceof MultiChoice) {
 			qw = new MultiChoiceWidget(this.ctx);
@@ -295,6 +317,7 @@ public class QuizWidget extends WidgetFactory {
 		nextBtn.setVisibility(View.GONE);
 		prevBtn.setVisibility(View.GONE);
 		qText.setVisibility(View.GONE);
+		questionImage.setVisibility(View.GONE);
 		
 	
 		if (this.isBaselineActivity){
@@ -472,4 +495,5 @@ public class QuizWidget extends WidgetFactory {
 			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
 		}
 	}
+
 }

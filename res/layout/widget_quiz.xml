@@ -9,8 +9,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="20sp" 
-        android:textStyle="bold"/>
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <ScrollView
         android:id="@+id/quizScrollView"
@@ -25,7 +25,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/questiontext"
+                android:id="@+id/question_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
@@ -33,7 +33,29 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:gravity="left"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/question_image"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/question_image_image"
+                    android:layout_width="fill_parent"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp" />
+
+                <TextView
+                    android:id="@+id/question_image_caption"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/widget_quiz_image_caption"
+                    style="@style/SmallTextDark" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/quizResponseWidget"
