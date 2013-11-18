@@ -1,0 +1,1 @@
+Place in this directory any courses that you would like to be pre-installed.
