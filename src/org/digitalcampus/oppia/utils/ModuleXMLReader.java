@@ -125,9 +125,13 @@ public class ModuleXMLReader {
 				ArrayList<String> langList = new ArrayList<String>();
 				for(int p=0; p<pages.getLength(); p++){
 					NamedNodeMap nodeAttrs = pages.item(p).getAttributes();
-					String lang = nodeAttrs.getNamedItem("lang").getTextContent();
-					if(!langList.contains(lang)){
-						langList.add(lang);
+					try {
+						String lang = nodeAttrs.getNamedItem("lang").getTextContent();
+						if(!langList.contains(lang)){
+							langList.add(lang);
+						}
+					} catch (NullPointerException npe){
+						// do nothing
 					}
 				}
 				
