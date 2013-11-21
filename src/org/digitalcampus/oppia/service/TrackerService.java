@@ -165,8 +165,8 @@ public class TrackerService extends Service implements APIRequestListener{
 				    new NotificationCompat.Builder(this)
 				    .setSmallIcon(R.drawable.ic_stat_notification)
 				    .setLargeIcon(icon)
-				    .setContentTitle(getString(R.string.notification_module_update_title))
-				    .setContentText(getString(R.string.notification_module_update_text));
+				    .setContentTitle(getString(R.string.notification_course_update_title))
+				    .setContentText(getString(R.string.notification_course_update_text));
 			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			Intent resultIntent = new Intent(this, DownloadActivity.class);
 			PendingIntent resultPendingIntent =

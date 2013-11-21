@@ -34,11 +34,11 @@
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseIndexActivity"
-            android:label="@string/title_activity_module_index" >
+            android:label="@string/title_activity_course_index" >
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseActivity"
-            android:label="@string/title_activity_module" 
+            android:label="@string/title_activity_course" 
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
@@ -71,7 +71,7 @@
             android:label="@string/title_register" />
          <activity
             android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"
-            android:label="@string/title_module_about" />
+            android:label="@string/title_course_meta" />
          <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"
             android:label="@string/title_download_media" />
@@ -82,14 +82,11 @@
             android:name="org.digitalcampus.oppia.activity.AppActivity"
             android:label="@string/app_name" />
          <activity
-            android:name="org.digitalcampus.oppia.activity.BaselineActivity"
-            android:label="@string/app_name" />
-         <activity
             android:name="org.digitalcampus.oppia.widgets.PageWidget"
-            android:label="@string/title_activity_module" />
+            android:label="@string/title_activity_course" />
          <activity
             android:name="org.digitalcampus.oppia.widgets.QuizWidget"
-            android:label="@string/title_activity_module"/>
+            android:label="@string/title_activity_course"/>
         <service
             android:name="org.digitalcampus.oppia.service.TrackerService"
             android:icon="@drawable/dc_logo"

@@ -16,15 +16,14 @@
     <string name="service_tracker">OppiaMobile Tracker Service</string>
     <string name="title_about">About/Licenses</string>
     <string name="title_help">Help</string>
-     
-    <string name="title_activity_course_index">Course index</string>
+	<string name="title_download_activity">Manage courses</string>
+    <string name="title_activity_course_index">Course Index</string>
     <string name="title_activity_course">Activity</string>
-    <string name="title_download_activity">Manage courses</string>
+    <string name="title_course_meta">About</string>
     <string name="title_monitor">Monitor</string>
     <string name="title_prefs">Settings</string>
     <string name="title_tag_select_activity">Select Category</string>
     <string name="version">Version: %1$s</string>
-    <string name="title_course_about">About Course</string>
     <string name="title_download_media">Download Media</string>
     <string name="title_points">Your Points</string>
     
@@ -157,12 +156,9 @@
 	<string name="error_update_failure">Update failed</string>
 	<string name="error_install_failure">Install failed</string>
 	<string name="error_media_download">Error trying to download media, please try again later</string>
-	<string name="error_reading_xml">An error occured trying to load the course. Please reinstall the course.</string>
+	<string name="error_reading_xml">An error occurred trying to load the course. Please reinstall the course.</string>
 	<string name="error_tts_start">Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled</string>
 	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
-	
-	<string name="loading_module_list">Getting list of courses</string>
-	<string name="loading_points">Getting points</string>
 	
 	<string name="login_process">Logging in</string>
 	<string name="login_complete">Logged in</string>

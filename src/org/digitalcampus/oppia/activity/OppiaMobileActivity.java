@@ -170,7 +170,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 			}
 		}
 
-		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_modules);
+		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
 		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_modules);
 		if (courses.size() > 0) {
@@ -343,17 +343,17 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.module_context_menu, menu);
+		inflater.inflate(R.menu.course_context_menu, menu);
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		tempMod = (Course) info.targetView.getTag();
 		switch (item.getItemId()) {
-			case R.id.module_context_delete:
+			case R.id.course_context_delete:
 				confirmModuleDelete();
 				return true;
-			case R.id.module_context_reset:
+			case R.id.course_context_reset:
 				confirmModuleReset();
 				return true;
 			default:
@@ -364,8 +364,8 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 	private void confirmModuleDelete() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
-		builder.setTitle(R.string.module_context_delete);
-		builder.setMessage(R.string.module_context_delete_confirm);
+		builder.setTitle(R.string.course_context_delete);
+		builder.setMessage(R.string.course_context_delete_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				// remove db records
@@ -392,8 +392,8 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 	private void confirmModuleReset() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
-		builder.setTitle(R.string.module_context_reset);
-		builder.setMessage(R.string.module_context_reset_confirm);
+		builder.setTitle(R.string.course_context_reset);
+		builder.setMessage(R.string.course_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);

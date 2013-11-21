@@ -112,7 +112,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				c.setLangs(mxr.getLangs());
 				String title = c.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 				
-				dp.setProgress(ctx.getString(R.string.installing_module, title));
+				dp.setProgress(ctx.getString(R.string.installing_course, title));
 				publishProgress(dp);
 				
 				DbHelper db = new DbHelper(ctx);
@@ -134,10 +134,10 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 
 					if (success) {
 						payload.setResult(true);
-						payload.setResultResponse(ctx.getString(R.string.install_module_complete, title));
+						payload.setResultResponse(ctx.getString(R.string.install_course_complete, title));
 					} else {
 						payload.setResult(false);
-						payload.setResultResponse(ctx.getString(R.string.error_installing_module, title));
+						payload.setResultResponse(ctx.getString(R.string.error_installing_course, title));
 					}
 				}  else {
 					payload.setResult(false);
