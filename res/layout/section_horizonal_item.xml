@@ -8,8 +8,8 @@
         android:id="@+id/activity_object"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/activity_background"
+        android:layout_marginRight="10dp"     
+        android:layout_marginBottom="5dp"    
         android:orientation="vertical"
         android:paddingBottom="2dp"
         android:paddingLeft="2dp"
@@ -33,7 +33,10 @@
             android:textColor="@drawable/text_light"
             android:textSize="14sp"
             android:textStyle="normal"
-            android:background="@drawable/background_dark"/>
+            android:background="@drawable/background_dark"
+            android:maxLines="2" 
+			android:ellipsize="end" 
+			android:singleLine="false" />
     </LinearLayout>
 
 </LinearLayout>
