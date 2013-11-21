@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/module_row"
+    android:id="@+id/course_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -14,13 +14,13 @@
 
         
         <ImageView
-            android:id="@+id/module_image"
+            android:id="@+id/course_image"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="4dp"
             android:gravity="center_vertical"
             android:contentDescription="@string/app_logo_alt"
-            android:src="@drawable/default_icon_module" />
+            android:src="@drawable/default_icon_course" />
 
         <TextView
             android:id="@+id/course_title"
@@ -33,7 +33,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/module_progress_bar"
+        android:id="@+id/course_progress_bar"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="fill_parent"
         android:layout_height="5dp"

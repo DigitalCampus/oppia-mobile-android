@@ -49,13 +49,13 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	private final Context ctx;
 	private final ArrayList<Section> sectionList;
 	private SharedPreferences prefs;
-	private Course module;
+	private Course course;
 
-	public SectionListAdapter(Activity context, Course module, ArrayList<Section> sectionList) {
+	public SectionListAdapter(Activity context, Course course, ArrayList<Section> sectionList) {
 		super(context, R.layout.section_list_row, sectionList);
 		this.ctx = context;
 		this.sectionList = sectionList;
-		this.module = module;
+		this.course = course;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 	
@@ -89,7 +89,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    	if(!s.getActivities().get(i).hasCustomImage()){
 	    		iv.setScaleType(ImageView.ScaleType.CENTER);
 	    	}
-	    	iv.setImageBitmap(s.getActivities().get(i).getImageFile(module.getLocation(), ctx.getResources()));
+	    	iv.setImageBitmap(s.getActivities().get(i).getImageFile(course.getLocation(), ctx.getResources()));
 	    	
 	    	
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
@@ -112,7 +112,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 					Intent i = new Intent(ctx, CourseActivity.class);
 					Bundle tb = new Bundle();
 					tb.putSerializable(Section.TAG, (Section) s);
-					tb.putSerializable(Course.TAG, (Course) module);
+					tb.putSerializable(Course.TAG, (Course) course);
 					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) placeholder);
 					i.putExtras(tb);
 	         		ctx.startActivity(i);

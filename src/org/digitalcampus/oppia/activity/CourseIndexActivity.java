@@ -30,7 +30,7 @@ import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.utils.ImageUtils;
-import org.digitalcampus.oppia.utils.ModuleXMLReader;
+import org.digitalcampus.oppia.utils.CourseXMLReader;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import android.app.AlertDialog;
@@ -52,7 +52,7 @@ public class CourseIndexActivity extends AppActivity {
 	public static final String TAG = CourseIndexActivity.class.getSimpleName();
 	
 	private Course course;
-	private ModuleXMLReader mxr;
+	private CourseXMLReader mxr;
 	private ArrayList<Section> sections;
 	private SharedPreferences prefs;
 	private Activity baselineActivity;
@@ -72,7 +72,7 @@ public class CourseIndexActivity extends AppActivity {
         if(bundle != null) {
         	course = (Course) bundle.getSerializable(Course.TAG);
         	try {
-				mxr = new ModuleXMLReader(course.getModuleXMLLocation());
+				mxr = new CourseXMLReader(course.getModuleXMLLocation());
 			
 	        	course.setMetaPages(mxr.getMetaPages());
 	        	
@@ -122,7 +122,7 @@ public class CourseIndexActivity extends AppActivity {
     	// set image
 		if(course.getImageFile() != null){
 			ImageView iv = (ImageView) getHeader().findViewById(R.id.page_icon);
-			Bitmap bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_module);
+			Bitmap bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
 			iv.setImageBitmap(bm);
 		}
     	

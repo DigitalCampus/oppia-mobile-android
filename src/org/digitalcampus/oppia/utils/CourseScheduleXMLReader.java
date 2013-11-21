@@ -27,18 +27,20 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
-import org.digitalcampus.oppia.model.TrackerLog;
+import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class ModuleTrackerXMLReader {
-	public static final String TAG = ModuleTrackerXMLReader.class.getSimpleName();
+public class CourseScheduleXMLReader {
+
+	public static final String TAG = CourseScheduleXMLReader.class.getSimpleName();
 	private Document document;
 	
-	public ModuleTrackerXMLReader(String filename) throws InvalidXMLException {
+	public CourseScheduleXMLReader(String filename) throws InvalidXMLException {
 		File moduleXML = new File(filename);
 		if (moduleXML.exists()) {
 
@@ -48,7 +50,6 @@ public class ModuleTrackerXMLReader {
 			try {
 				builder = factory.newDocumentBuilder();
 				document = builder.parse(moduleXML);
-
 			} catch (ParserConfigurationException e) {
 				throw new InvalidXMLException(e);
 			} catch (SAXException e) {
@@ -59,26 +60,37 @@ public class ModuleTrackerXMLReader {
 		}
 	}
 	
-	
-	public ArrayList<TrackerLog> getTrackers(){
-		ArrayList<TrackerLog> trackers = new ArrayList<TrackerLog>();
+	public long getScheduleVersion(){
 		if (this.document == null){
-			return trackers;
+			return 0;
+		}
+		Node schedule = document.getDocumentElement();
+		NamedNodeMap attrs = schedule.getAttributes();
+		long version = Long.parseLong(attrs.getNamedItem("version").getTextContent());
+		return version;
+	}
+	
+	public ArrayList<ActivitySchedule> getSchedule(){
+		ArrayList<ActivitySchedule> schedule = new ArrayList<ActivitySchedule>();
+		if (this.document == null){
+			return schedule;
 		}
 		NodeList actscheds = document.getFirstChild().getChildNodes();
 		for (int i=0; i<actscheds.getLength(); i++) {
 			NamedNodeMap attrs = actscheds.item(i).getAttributes();
 			String digest = attrs.getNamedItem("digest").getTextContent();
-			String submittedDateString = attrs.getNamedItem("submitteddate").getTextContent();
+			String startDateString = attrs.getNamedItem("startdate").getTextContent();
+			String endDateString = attrs.getNamedItem("enddate").getTextContent();
 		
-			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
+			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(startDateString);
+			DateTime edt = MobileLearning.DATETIME_FORMAT.parseDateTime(endDateString);
 			
-			TrackerLog t = new TrackerLog();
-			t.setDigest(digest);
-			t.setSubmitted(true);
-			t.setDatetime(sdt);
-			trackers.add(t);
+			ActivitySchedule as = new ActivitySchedule();
+			as.setDigest(digest);
+			as.setStartTime(sdt);
+			as.setEndTime(edt);
+			schedule.add(as);
 		}
-		return trackers;
+		return schedule;
 	}
 }

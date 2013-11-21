@@ -22,12 +22,12 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.listener.InstallModuleListener;
+import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.task.DownloadModuleTask;
-import org.digitalcampus.oppia.task.InstallDownloadedModulesTask;
+import org.digitalcampus.oppia.task.DownloadCourseTask;
+import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScheduleUpdateTask;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -46,7 +46,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements InstallModuleListener, UpdateScheduleListener{
+public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements InstallCourseListener, UpdateScheduleListener{
 
 	public static final String TAG = DownloadCourseListAdapter.class.getSimpleName();
 
@@ -116,7 +116,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
              		myProgress.setCancelable(true);
              		myProgress.show();
                      
-             		DownloadModuleTask dmt = new DownloadModuleTask(ctx);
+             		DownloadCourseTask dmt = new DownloadCourseTask(ctx);
              		dmt.setInstallerListener(DownloadCourseListAdapter.this);
              		dmt.execute(p);
              	}
@@ -155,7 +155,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 			// now set task to install
 			myProgress.setMessage(ctx.getString(R.string.download_complete));
 			myProgress.setIndeterminate(true);
-			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(ctx);
+			InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(ctx);
 			imTask.setInstallerListener(DownloadCourseListAdapter.this);
 			imTask.execute(p);
 		} else {
@@ -172,7 +172,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 			e.putLong(ctx.getString(R.string.prefs_last_media_scan), 0);
 			e.commit();
 			UIUtils.showAlert(ctx, ctx.getString(R.string.install_complete), p.getResultResponse());
-			// new refresh the module list
+			// new refresh the course list
 			DownloadActivity da = (DownloadActivity) ctx;
 			da.refreshCourseList();
 		} else {
@@ -201,7 +201,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 		
 		if(p.isResult()){
 			UIUtils.showAlert(ctx, ctx.getString(R.string.update_complete), p.getResultResponse());
-			// new refresh the module list
+			// new refresh the course list
 			DownloadActivity da = (DownloadActivity) ctx;
 			da.refreshCourseList();
 			Editor e = prefs.edit();

@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.exception.ModuleNotFoundException;
+import org.digitalcampus.oppia.exception.CourseNotFoundException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,10 +59,10 @@ public class Course implements Serializable {
 
 	}	
 	
-	public boolean validate() throws ModuleNotFoundException{
+	public boolean validate() throws CourseNotFoundException{
 		File moduleXML = new File(this.getModuleXMLLocation());
 		if(!moduleXML.exists()){
-			throw new ModuleNotFoundException();
+			throw new CourseNotFoundException();
 		} else {
 			return true;
 		}

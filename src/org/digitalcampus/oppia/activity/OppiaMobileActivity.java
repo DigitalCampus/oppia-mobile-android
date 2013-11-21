@@ -27,8 +27,8 @@ import org.digitalcampus.mobile.learning.R.id;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.exception.ModuleNotFoundException;
-import org.digitalcampus.oppia.listener.InstallModuleListener;
+import org.digitalcampus.oppia.exception.CourseNotFoundException;
+import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
@@ -36,7 +36,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.task.InstallDownloadedModulesTask;
+import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.ScanMediaTask;
@@ -70,7 +70,7 @@ import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class OppiaMobileActivity extends AppActivity implements InstallModuleListener,
+public class OppiaMobileActivity extends AppActivity implements InstallCourseListener,
 		OnSharedPreferenceChangeListener, ScanMediaListener, UpgradeListener, PostInstallListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
@@ -157,7 +157,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 			for (Course c : courses) {
 				try {
 					c.validate();
-				} catch (ModuleNotFoundException mnfe){
+				} catch (CourseNotFoundException mnfe){
 					// remove from database
 					mnfe.deleteModule(this, c.getModId());
 					removeCourses.add(c);
@@ -172,12 +172,12 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
-		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_modules);
+		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_courses);
 		if (courses.size() > 0) {
 			llNone.setVisibility(View.GONE);
 		} else {
 			llNone.setVisibility(View.VISIBLE);
-			Button manageBtn = (Button) this.findViewById(R.id.manage_modules_btn);
+			Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
 			manageBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
@@ -186,7 +186,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 		}
 
 		CourseListAdapter mla = new CourseListAdapter(this, courses);
-		ListView listView = (ListView) findViewById(R.id.module_list);
+		ListView listView = (ListView) findViewById(R.id.course_list);
 		listView.setAdapter(mla);
 		registerForContextMenu(listView);
 
@@ -512,7 +512,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallModuleLis
 		if (children != null) {
 			ArrayList<Object> data = new ArrayList<Object>();
      		Payload payload = new Payload(data);
-			InstallDownloadedModulesTask imTask = new InstallDownloadedModulesTask(OppiaMobileActivity.this);
+			InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(OppiaMobileActivity.this);
 			imTask.setInstallerListener(this);
 			imTask.execute(payload);
 		}

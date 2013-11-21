@@ -42,12 +42,12 @@ import org.xml.sax.SAXException;
 
 import android.content.Context;
 
-public class ModuleXMLReader {
+public class CourseXMLReader {
 
-	public static final String TAG = ModuleXMLReader.class.getSimpleName();
+	public static final String TAG = CourseXMLReader.class.getSimpleName();
 	private Document document;
 
-	public ModuleXMLReader(String filename) throws InvalidXMLException {
+	public CourseXMLReader(String filename) throws InvalidXMLException {
 		File moduleXML = new File(filename);
 		if (moduleXML.exists()) {
 

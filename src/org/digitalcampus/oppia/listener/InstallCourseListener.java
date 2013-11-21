@@ -20,7 +20,7 @@ package org.digitalcampus.oppia.listener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.Payload;
 
-public interface InstallModuleListener {
+public interface InstallCourseListener {
 	
 	void downloadComplete(Payload p);
     void downloadProgressUpdate(DownloadProgress dp);

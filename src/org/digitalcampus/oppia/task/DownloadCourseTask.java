@@ -28,7 +28,7 @@ import java.net.URL;
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.listener.InstallModuleListener;
+import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
@@ -41,15 +41,15 @@ import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Payload>{
+public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
-	public final static String TAG = DownloadModuleTask.class.getSimpleName();
-	private InstallModuleListener mStateListener;
+	public final static String TAG = DownloadCourseTask.class.getSimpleName();
+	private InstallCourseListener mStateListener;
 	
 	private Context ctx;
 	private SharedPreferences prefs;
 	
-	public DownloadModuleTask(Context ctx) {
+	public DownloadCourseTask(Context ctx) {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
@@ -148,7 +148,7 @@ public class DownloadModuleTask extends AsyncTask<Payload, DownloadProgress, Pay
         }
 	}
 
-	public void setInstallerListener(InstallModuleListener srl) {
+	public void setInstallerListener(InstallCourseListener srl) {
         synchronized (this) {
             mStateListener = srl;
         }

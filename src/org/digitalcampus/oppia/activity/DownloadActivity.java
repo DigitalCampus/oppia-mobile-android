@@ -99,7 +99,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 			this.json = new JSONObject(savedInstanceState.getString("json"));
 		} catch (JSONException e) {
 			// error in the json so just get the list again
-			//this.getModuleList();
 		}
 	}
 

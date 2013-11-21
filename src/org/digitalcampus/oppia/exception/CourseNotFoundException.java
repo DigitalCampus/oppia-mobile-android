@@ -21,9 +21,9 @@ import org.digitalcampus.oppia.application.DbHelper;
 
 import android.app.Activity;
 
-public class ModuleNotFoundException extends Exception {
+public class CourseNotFoundException extends Exception {
 
-	public static final String TAG = ModuleNotFoundException.class.getSimpleName();
+	public static final String TAG = CourseNotFoundException.class.getSimpleName();
 	private static final long serialVersionUID = 6941152461497123259L;
 	
 	public void deleteModule(Activity act, int id){

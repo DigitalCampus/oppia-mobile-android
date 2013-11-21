@@ -9,9 +9,9 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.FileUtils;
-import org.digitalcampus.oppia.utils.ModuleScheduleXMLReader;
-import org.digitalcampus.oppia.utils.ModuleTrackerXMLReader;
-import org.digitalcampus.oppia.utils.ModuleXMLReader;
+import org.digitalcampus.oppia.utils.CourseScheduleXMLReader;
+import org.digitalcampus.oppia.utils.CourseTrackerXMLReader;
+import org.digitalcampus.oppia.utils.CourseXMLReader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -90,13 +90,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				}
 				
 				// check a module.xml file exists and is a readable XML file
-				ModuleXMLReader mxr;
-				ModuleScheduleXMLReader msxr;
-				ModuleTrackerXMLReader mtxr;
+				CourseXMLReader mxr;
+				CourseScheduleXMLReader msxr;
+				CourseTrackerXMLReader mtxr;
 				try {
-					mxr = new ModuleXMLReader(courseXMLPath);
-					msxr = new ModuleScheduleXMLReader(courseScheduleXMLPath);
-					mtxr = new ModuleTrackerXMLReader(courseTrackerXMLPath);
+					mxr = new CourseXMLReader(courseXMLPath);
+					msxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
+					mtxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
 					e.printStackTrace();
 					break;

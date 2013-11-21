@@ -24,27 +24,27 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
-import org.digitalcampus.oppia.listener.InstallModuleListener;
+import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.FileUtils;
-import org.digitalcampus.oppia.utils.ModuleScheduleXMLReader;
-import org.digitalcampus.oppia.utils.ModuleTrackerXMLReader;
-import org.digitalcampus.oppia.utils.ModuleXMLReader;
+import org.digitalcampus.oppia.utils.CourseScheduleXMLReader;
+import org.digitalcampus.oppia.utils.CourseTrackerXMLReader;
+import org.digitalcampus.oppia.utils.CourseXMLReader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadProgress, Payload>{
+public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 	
-	public final static String TAG = InstallDownloadedModulesTask.class.getSimpleName();
+	public final static String TAG = InstallDownloadedCoursesTask.class.getSimpleName();
 	private Context ctx;
-	private InstallModuleListener mStateListener;
+	private InstallCourseListener mStateListener;
 	private SharedPreferences prefs;
 	
-	public InstallDownloadedModulesTask(Context ctx) {
+	public InstallDownloadedCoursesTask(Context ctx) {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
@@ -89,13 +89,13 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
 				}
 				
 				// check a module.xml file exists and is a readable XML file
-				ModuleXMLReader mxr;
-				ModuleScheduleXMLReader msxr;
-				ModuleTrackerXMLReader mtxr;
+				CourseXMLReader mxr;
+				CourseScheduleXMLReader msxr;
+				CourseTrackerXMLReader mtxr;
 				try {
-					mxr = new ModuleXMLReader(courseXMLPath);
-					msxr = new ModuleScheduleXMLReader(courseScheduleXMLPath);
-					mtxr = new ModuleTrackerXMLReader(courseTrackerXMLPath);
+					mxr = new CourseXMLReader(courseXMLPath);
+					msxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
+					mtxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
 					payload.setResult(false);
 					return payload;
@@ -181,7 +181,7 @@ public class InstallDownloadedModulesTask extends AsyncTask<Payload, DownloadPro
         }
 	}
 
-	public void setInstallerListener(InstallModuleListener srl) {
+	public void setInstallerListener(InstallCourseListener srl) {
         synchronized (this) {
             mStateListener = srl;
         }
