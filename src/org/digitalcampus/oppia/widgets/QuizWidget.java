@@ -23,21 +23,23 @@ import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mquiz.InvalidQuizException;
-import org.digitalcampus.mquiz.MQuiz;
-import org.digitalcampus.mquiz.model.QuizQuestion;
-import org.digitalcampus.mquiz.model.questiontypes.Essay;
-import org.digitalcampus.mquiz.model.questiontypes.Matching;
-import org.digitalcampus.mquiz.model.questiontypes.MultiChoice;
-import org.digitalcampus.mquiz.model.questiontypes.MultiSelect;
-import org.digitalcampus.mquiz.model.questiontypes.Numerical;
-import org.digitalcampus.mquiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.mobile.quiz.InvalidQuizException;
+import org.digitalcampus.mobile.quiz.Quiz;
+import org.digitalcampus.mobile.quiz.model.QuizQuestion;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
+import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
+import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
+import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.gesture.QuizGestureDetector;
 import org.digitalcampus.oppia.listener.OnResourceClickListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -78,7 +80,7 @@ public class QuizWidget extends WidgetFactory {
 	private static final String TAG = QuizWidget.class.getSimpleName();
 	private SharedPreferences prefs;
 	private android.app.Activity ctx;
-	private MQuiz quiz;
+	private Quiz quiz;
 	private QuestionWidget qw;
 	public Button prevBtn;
 	public Button nextBtn;
@@ -141,7 +143,7 @@ public class QuizWidget extends WidgetFactory {
 		
 		quizContent = activity.getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		if(this.quiz == null){
-			this.quiz = new MQuiz();
+			this.quiz = new Quiz();
 			this.quiz.load(quizContent);
 		}
 		if (this.isOnResultsPage){
@@ -191,6 +193,8 @@ public class QuizWidget extends WidgetFactory {
 			qw = new MatchingWidget(this.ctx);
 		} else if (q instanceof Numerical) {
 			qw = new NumericalWidget(this.ctx);
+		} else if (q instanceof Description) {
+			qw = new DescriptionWidget(this.ctx);
 		} else {
 			Log.d(TAG, "Class for question type not found");
 			return;
@@ -259,8 +263,17 @@ public class QuizWidget extends WidgetFactory {
 
 	private void setProgress() {
 		TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
-		progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_progress,
-				quiz.getCurrentQuestionNo(), quiz.getTotalNoQuestions()));
+		try {
+			if (quiz.getCurrentQuestion().responseExpected()){
+				progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_progress,
+					quiz.getCurrentQuestionNo(), quiz.getTotalNoQuestions()));
+			} else {
+				progress.setText("");
+			}
+		} catch (InvalidQuizException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -269,6 +282,9 @@ public class QuizWidget extends WidgetFactory {
 			List<String> answers = qw.getQuestionResponses(quiz.getCurrentQuestion().getResponseOptions());
 			if (answers != null) {
 				quiz.getCurrentQuestion().setUserResponses(answers);
+				return true;
+			}
+			if(!quiz.getCurrentQuestion().responseExpected()){
 				return true;
 			}
 		} catch (InvalidQuizException e){
@@ -305,7 +321,7 @@ public class QuizWidget extends WidgetFactory {
 		// make end time
 		endTimestamp = System.currentTimeMillis()/1000;
 		
-		// save results ready to send back to the mquiz server
+		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
 		DbHelper db = new DbHelper(ctx);
 		db.insertQuizResult(data, course.getModId());
@@ -378,7 +394,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void restart() {
-		quiz = new MQuiz();
+		quiz = new Quiz();
 		quiz.load(quizContent);
 		startTimestamp = System.currentTimeMillis()/1000;
 		endTimestamp = System.currentTimeMillis()/1000;
@@ -455,11 +471,11 @@ public class QuizWidget extends WidgetFactory {
 		return false;
 	}
 
-	public MQuiz getQuiz() {
+	public Quiz getQuiz() {
 		return this.quiz;
 	}
 
-	private void setQuiz(MQuiz quiz) {
+	private void setQuiz(Quiz quiz) {
 		this.quiz = quiz;
 	}
 
@@ -486,7 +502,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
 		if (config.containsKey("quiz")){
-			this.setQuiz((MQuiz) config.get("quiz"));
+			this.setQuiz((Quiz) config.get("quiz"));
 		}
 		if (config.containsKey("Activity_StartTime")){
 			this.setStartTime((Long) config.get("Activity_StartTime"));

@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.List;
 
-import org.digitalcampus.mquiz.model.Response;
+import org.digitalcampus.mobile.quiz.model.Response;
 
 public abstract class QuestionWidget {
 

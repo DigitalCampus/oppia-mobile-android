@@ -7,13 +7,6 @@
     <org.digitalcampus.oppia.application.Header
         android:id="@+id/header"
         style="@style/Header" />
-    
-    <org.digitalcampus.oppia.application.UserMessage
-        android:id="@+id/user_messages"
-        android:background="@drawable/message_background"
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
 
     <org.digitalcampus.oppia.application.ScheduleReminders
         android:id="@+id/schedule_reminders"
