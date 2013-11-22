@@ -42,8 +42,8 @@ public class ResourceWidget extends WidgetFactory {
 	private OnTouchListener resourceGestureListener; 
 	private boolean isBaselineActivity = false;
 	
-	public ResourceWidget(Context context, Course module, org.digitalcampus.oppia.model.Activity activity) {
-		super(context, module, activity);
+	public ResourceWidget(Context context, Course course, org.digitalcampus.oppia.model.Activity activity) {
+		super(context, course, activity);
 		this.ctx = context;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 		
@@ -65,7 +65,7 @@ public class ResourceWidget extends WidgetFactory {
 		vv.setOnTouchListener(resourceGestureListener);
 		
 		LinearLayout ll = (LinearLayout) ((android.app.Activity) context).findViewById(R.id.widget_resource_object);
-		String fileUrl = module.getLocation() + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		Log.d(TAG,fileUrl);
 		// show description if any
 		String desc = activity.getDescription(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));

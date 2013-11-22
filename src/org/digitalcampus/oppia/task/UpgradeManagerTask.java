@@ -108,12 +108,12 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				c.setTitles(mxr.getTitles());
 				c.setLocation(MobileLearning.COURSES_PATH + children[i]);
 				c.setShortname(children[i]);
-				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + mxr.getModuleImage());
+				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + mxr.getCourseImage());
 				c.setLangs(mxr.getLangs());
 				
 				
 				DbHelper db = new DbHelper(ctx);
-				long modId = db.refreshModule(c);
+				long modId = db.refreshCourse(c);
 				
 				if (modId != -1) {
 					db.insertActivities(mxr.getActivities(modId));

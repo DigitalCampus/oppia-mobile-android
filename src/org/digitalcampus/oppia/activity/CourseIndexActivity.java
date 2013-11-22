@@ -72,7 +72,7 @@ public class CourseIndexActivity extends AppActivity {
         if(bundle != null) {
         	course = (Course) bundle.getSerializable(Course.TAG);
         	try {
-				mxr = new CourseXMLReader(course.getModuleXMLLocation());
+				mxr = new CourseXMLReader(course.getCourseXMLLocation());
 			
 	        	course.setMetaPages(mxr.getMetaPages());
 	        	

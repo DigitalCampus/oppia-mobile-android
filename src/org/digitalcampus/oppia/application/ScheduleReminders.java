@@ -51,7 +51,7 @@ public class ScheduleReminders extends LinearLayout {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Course m = (Course) view.getTag(R.id.TAG_MODULE_ID);
+				Course m = (Course) view.getTag(R.id.TAG_COURSE_ID);
 				String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
 				Intent i = new Intent(getContext(), CourseIndexActivity.class);
 				Bundle tb = new Bundle();

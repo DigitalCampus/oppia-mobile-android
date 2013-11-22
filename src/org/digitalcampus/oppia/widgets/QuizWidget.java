@@ -86,7 +86,7 @@ public class QuizWidget extends WidgetFactory {
 	private String quizContent;
 	private LinearLayout questionImage;
 	private boolean isOnResultsPage = false;
-	private Course module; 
+	private Course course; 
 	private long startTimestamp = System.currentTimeMillis()/1000;
 	private long endTimestamp = System.currentTimeMillis()/1000;
 	private boolean isBaselineActivity = false;
@@ -94,17 +94,17 @@ public class QuizWidget extends WidgetFactory {
 	private GestureDetector quizGestureDetector;
 	private OnTouchListener quizGestureListener; 
 	
-	public QuizWidget(android.app.Activity context, Course module, Activity activity) {
-		super(context, module, activity);
+	public QuizWidget(android.app.Activity context, Course course, Activity activity) {
+		super(context, course, activity);
 		this.ctx = context;
-		this.module = module;
+		this.course = course;
 		this.startQuiz(activity);
 	}
 
 	public QuizWidget(android.app.Activity context, Course module, Activity activity, HashMap<String, Object> config) {
 		super(context, module, activity);
 		this.ctx = context;
-		this.module = module;
+		this.course = module;
 		this.setWidgetConfig(config);
 		this.startQuiz(activity);
 	}
@@ -167,7 +167,7 @@ public class QuizWidget extends WidgetFactory {
 		if (q.getProp("image") == null){
 			questionImage.setVisibility(View.GONE);
 		} else {
-			String fileUrl = module.getLocation() + q.getProp("image");
+			String fileUrl = course.getLocation() + q.getProp("image");
 			//File file = new File(fileUrl);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
@@ -308,7 +308,7 @@ public class QuizWidget extends WidgetFactory {
 		// save results ready to send back to the mquiz server
 		String data = quiz.getResultObject().toString();
 		DbHelper db = new DbHelper(ctx);
-		db.insertMQuizResult(data, module.getModId());
+		db.insertQuizResult(data, course.getModId());
 		db.close();
 		Log.d(TAG,data);
 		

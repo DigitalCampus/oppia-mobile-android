@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.Header;
 import org.digitalcampus.oppia.application.ScheduleReminders;
-import org.digitalcampus.oppia.application.UserMessage;
-import org.digitalcampus.oppia.model.MessageFeed;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -34,7 +32,6 @@ public class AppActivity extends Activity implements OnSharedPreferenceChangeLis
 	public static final String TAG = AppActivity.class.getSimpleName();
 	
 	private Header header;
-	private UserMessage messages;
 	private ScheduleReminders reminders;
 	
 
@@ -70,23 +67,6 @@ public class AppActivity extends Activity implements OnSharedPreferenceChangeLis
 		} catch (Exception npe) {
 			// do nothing
 		}
-	}
-	
-	public void drawMessages(){
-		try {
-			messages = (UserMessage) findViewById(R.id.user_messages);
-			messages.initUserMessage();
-		} catch (NullPointerException npe) {
-			// do nothing
-		}
-	}
-	
-	public void updateMessages(MessageFeed mf){
-		messages.updateUserMessages(mf);
-	}
-	
-	public void stopMessages(){
-		messages.stopMessages();
 	}
 	
 	/**

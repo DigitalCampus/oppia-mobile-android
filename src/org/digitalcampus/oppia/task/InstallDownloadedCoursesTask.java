@@ -108,7 +108,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				c.setTitles(mxr.getTitles());
 				c.setLocation(MobileLearning.COURSES_PATH + moddirs[0]);
 				c.setShortname(moddirs[0]);
-				c.setImageFile(MobileLearning.COURSES_PATH + moddirs[0] + "/" + mxr.getModuleImage());
+				c.setImageFile(MobileLearning.COURSES_PATH + moddirs[0] + "/" + mxr.getCourseImage());
 				c.setLangs(mxr.getLangs());
 				String title = c.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 				

@@ -89,7 +89,6 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 		
 		this.drawHeader();
-		this.drawMessages();
 		
 		// set preferred lang to the default lang
 		if (prefs.getString(getString(R.string.prefs_language), "").equals("")) {
@@ -140,14 +139,13 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 	
 	@Override
 	public void onPause(){
-		this.stopMessages();
 		super.onPause();
 	}
 	
 	private void displayCourses() {
 
 		DbHelper db = new DbHelper(this);
-		courses = db.getModules();
+		courses = db.getCourses();
 		db.close();
 		
 		if(MobileLearning.createDirs()){
@@ -157,9 +155,9 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 			for (Course c : courses) {
 				try {
 					c.validate();
-				} catch (CourseNotFoundException mnfe){
+				} catch (CourseNotFoundException cnfe){
 					// remove from database
-					mnfe.deleteModule(this, c.getModId());
+					cnfe.deleteCourse(this, c.getModId());
 					removeCourses.add(c);
 				}
 			}
@@ -351,17 +349,17 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 		tempMod = (Course) info.targetView.getTag();
 		switch (item.getItemId()) {
 			case R.id.course_context_delete:
-				confirmModuleDelete();
+				confirmCourseDelete();
 				return true;
 			case R.id.course_context_reset:
-				confirmModuleReset();
+				confirmCourseReset();
 				return true;
 			default:
 				return super.onContextItemSelected(item);
 		}
 	}
 
-	private void confirmModuleDelete() {
+	private void confirmCourseDelete() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
 		builder.setTitle(R.string.course_context_delete);
@@ -370,7 +368,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 			public void onClick(DialogInterface dialog, int which) {
 				// remove db records
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.deleteModule(tempMod.getModId());
+				db.deleteCourse(tempMod.getModId());
 				db.close();
 				// remove files
 				File f = new File(tempMod.getLocation());
@@ -389,7 +387,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 		builder.show();
 	}
 
-	private void confirmModuleReset() {
+	private void confirmCourseReset() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
 		builder.setTitle(R.string.course_context_reset);
@@ -397,7 +395,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.resetModule(tempMod.getModId());
+				db.resetCourse(tempMod.getModId());
 				db.close();
 				displayCourses();
 			}

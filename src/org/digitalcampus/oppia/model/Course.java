@@ -60,8 +60,8 @@ public class Course implements Serializable {
 	}	
 	
 	public boolean validate() throws CourseNotFoundException{
-		File moduleXML = new File(this.getModuleXMLLocation());
-		if(!moduleXML.exists()){
+		File courseXML = new File(this.getCourseXMLLocation());
+		if(!courseXML.exists()){
 			throw new CourseNotFoundException();
 		} else {
 			return true;
@@ -196,7 +196,7 @@ public class Course implements Serializable {
 		}
 	}
 
-	public String getModuleXMLLocation(){
+	public String getCourseXMLLocation(){
 		return this.getLocation() + MobileLearning.COURSE_XML;
 	}
 	public void setLocation(String location) {

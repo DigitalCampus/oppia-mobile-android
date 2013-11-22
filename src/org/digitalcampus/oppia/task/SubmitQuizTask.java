@@ -86,7 +86,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
 						DbHelper db = new DbHelper(ctx);
-						db.markMQuizSubmitted(tl.getId());
+						db.markQuizSubmitted(tl.getId());
 						db.close();
 						payload.setResult(true);
 						// update points

@@ -48,15 +48,15 @@ public class CourseXMLReader {
 	private Document document;
 
 	public CourseXMLReader(String filename) throws InvalidXMLException {
-		File moduleXML = new File(filename);
-		if (moduleXML.exists()) {
+		File courseXML = new File(filename);
+		if (courseXML.exists()) {
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder builder;
 			try {
 				builder = factory.newDocumentBuilder();
-				document = builder.parse(moduleXML);
+				document = builder.parse(courseXML);
 
 			} catch (ParserConfigurationException e) {
 				throw new InvalidXMLException(e);
@@ -272,7 +272,7 @@ public class CourseXMLReader {
 		}
 		return media;
 	}
-	public String getModuleImage(){
+	public String getCourseImage(){
 		String image = null;
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
@@ -286,7 +286,7 @@ public class CourseXMLReader {
 	}
 	
 	/*
-	 * This is used when installing a new module
+	 * This is used when installing a new course
 	 * and so adding all the activities to the db
 	 */
 	public ArrayList<Activity> getActivities(long modId){

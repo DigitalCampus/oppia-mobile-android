@@ -74,7 +74,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		super.onResume();
 		// Get Course list
 		if(this.json == null){
-			this.getModuleList();
+			this.getCourseList();
 		} else {
 			this.refreshCourseList();
 		}
@@ -108,7 +108,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 	    savedInstanceState.putString("json", json.toString());
 	}
 	
-	private void getModuleList() {
+	private void getCourseList() {
 		// show progress dialog
 		pDialog = new ProgressDialog(this);
 		pDialog.setTitle(R.string.loading);
@@ -124,7 +124,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 
 	public void refreshCourseList() {
 		// process the response and display on screen in listview
-		// Create an array of Modules, that will be put to our ListActivity
+		// Create an array of courses, that will be put to our ListActivity
 
 		DbHelper db = new DbHelper(this);
 		try {

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
-import org.digitalcampus.oppia.model.MessageFeed;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.task.Payload;
@@ -79,12 +78,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String TRACKER_LOG_C_INPROGRESS = "loginprogress";
 	private static final String TRACKER_LOG_C_COMPLETED = "completed";
 	
-	private static final String MQUIZRESULTS_TABLE = "results";
-	private static final String MQUIZRESULTS_C_ID = BaseColumns._ID;
-	private static final String MQUIZRESULTS_C_DATETIME = "resultdatetime";
-	private static final String MQUIZRESULTS_C_DATA = "content";
-	private static final String MQUIZRESULTS_C_SENT = "submitted";
-	private static final String MQUIZRESULTS_C_MODID = "moduleid";
+	private static final String QUIZRESULTS_TABLE = "results";
+	private static final String QUIZRESULTS_C_ID = BaseColumns._ID;
+	private static final String QUIZRESULTS_C_DATETIME = "resultdatetime";
+	private static final String QUIZRESULTS_C_DATA = "content";
+	private static final String QUIZRESULTS_C_SENT = "submitted";
+	private static final String QUIZRESULTS_C_MODID = "moduleid";
 	
 	// Constructor
 	public DbHelper(Context ctx) { //
@@ -94,13 +93,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		createModuleTable(db);
+		createCourseTable(db);
 		createActivityTable(db);
 		createLogTable(db);
-		createMquizResultsTable(db);
+		createQuizResultsTable(db);
 	}
 
-	public void createModuleTable(SQLiteDatabase db){
+	public void createCourseTable(SQLiteDatabase db){
 		String m_sql = "create table " + COURSE_TABLE + " (" + COURSE_C_ID + " integer primary key autoincrement, "
 				+ COURSE_C_VERSIONID + " int, " + COURSE_C_TITLE + " text, " + COURSE_C_LOCATION + " text, "
 				+ COURSE_C_SHORTNAME + " text," + COURSE_C_SCHEDULE + " int,"
@@ -136,13 +135,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(l_sql);
 	}
 
-	public void createMquizResultsTable(SQLiteDatabase db){
-		String m_sql = "create table " + MQUIZRESULTS_TABLE + " (" + 
-							MQUIZRESULTS_C_ID + " integer primary key autoincrement, " + 
-							MQUIZRESULTS_C_DATETIME + " datetime default current_timestamp, " + 
-							MQUIZRESULTS_C_DATA + " text, " +  
-							MQUIZRESULTS_C_SENT + " integer default 0, "+
-							MQUIZRESULTS_C_MODID + " integer)";
+	public void createQuizResultsTable(SQLiteDatabase db){
+		String m_sql = "create table " + QUIZRESULTS_TABLE + " (" + 
+							QUIZRESULTS_C_ID + " integer primary key autoincrement, " + 
+							QUIZRESULTS_C_DATETIME + " datetime default current_timestamp, " + 
+							QUIZRESULTS_C_DATA + " text, " +  
+							QUIZRESULTS_C_SENT + " integer default 0, "+
+							QUIZRESULTS_C_MODID + " integer)";
 		db.execSQL(m_sql);
 	}
 	
@@ -152,11 +151,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL("drop table if exists " + COURSE_TABLE);
 			db.execSQL("drop table if exists " + ACTIVITY_TABLE);
 			db.execSQL("drop table if exists " + TRACKER_LOG_TABLE);
-			db.execSQL("drop table if exists " + MQUIZRESULTS_TABLE);
-			createModuleTable(db);
+			db.execSQL("drop table if exists " + QUIZRESULTS_TABLE);
+			createCourseTable(db);
 			createActivityTable(db);
 			createLogTable(db);
-			createMquizResultsTable(db);
+			createQuizResultsTable(db);
 			return;
 		}
 		
@@ -226,25 +225,25 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	public void onLogout(){
 		db.execSQL("DELETE FROM "+ TRACKER_LOG_TABLE);
-		db.execSQL("DELETE FROM "+ MQUIZRESULTS_TABLE);
+		db.execSQL("DELETE FROM "+ QUIZRESULTS_TABLE);
 	}
 	
 	// returns id of the row
-	public long addOrUpdateModule(Course module) {
+	public long addOrUpdateModule(Course course) {
 
 		ContentValues values = new ContentValues();
-		values.put(COURSE_C_VERSIONID, module.getVersionId());
-		values.put(COURSE_C_TITLE, module.getTitleJSONString());
-		values.put(COURSE_C_LOCATION, module.getLocation());
-		values.put(COURSE_C_SHORTNAME, module.getShortname());
-		values.put(COURSE_C_LANGS, module.getLangsJSONString());
-		values.put(COURSE_C_IMAGE, module.getImageFile());
+		values.put(COURSE_C_VERSIONID, course.getVersionId());
+		values.put(COURSE_C_TITLE, course.getTitleJSONString());
+		values.put(COURSE_C_LOCATION, course.getLocation());
+		values.put(COURSE_C_SHORTNAME, course.getShortname());
+		values.put(COURSE_C_LANGS, course.getLangsJSONString());
+		values.put(COURSE_C_IMAGE, course.getImageFile());
 
-		if (!this.isInstalled(module.getShortname())) {
+		if (!this.isInstalled(course.getShortname())) {
 			Log.v(TAG, "Record added");
 			return db.insertOrThrow(COURSE_TABLE, null, values);
-		} else if(this.toUpdate(module.getShortname(), module.getVersionId())){
-			long toUpdate = this.getModuleID(module.getShortname());
+		} else if(this.toUpdate(course.getShortname(), course.getVersionId())){
+			long toUpdate = this.getCourseID(course.getShortname());
 			if (toUpdate != 0) {
 				db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + toUpdate, null);
 				// remove all the old activities
@@ -257,15 +256,15 @@ public class DbHelper extends SQLiteOpenHelper {
 		return -1;
 	}
 
-	public long refreshModule(Course module){
-		long modId = this.getModuleID(module.getShortname());
+	public long refreshCourse(Course course){
+		long modId = this.getCourseID(course.getShortname());
 		ContentValues values = new ContentValues();
-		values.put(COURSE_C_VERSIONID, module.getVersionId());
-		values.put(COURSE_C_TITLE, module.getTitleJSONString());
-		values.put(COURSE_C_LOCATION, module.getLocation());
-		values.put(COURSE_C_SHORTNAME, module.getShortname());
-		values.put(COURSE_C_LANGS, module.getLangsJSONString());
-		values.put(COURSE_C_IMAGE, module.getImageFile());
+		values.put(COURSE_C_VERSIONID, course.getVersionId());
+		values.put(COURSE_C_TITLE, course.getTitleJSONString());
+		values.put(COURSE_C_LOCATION, course.getLocation());
+		values.put(COURSE_C_SHORTNAME, course.getShortname());
+		values.put(COURSE_C_LANGS, course.getLangsJSONString());
+		values.put(COURSE_C_IMAGE, course.getImageFile());
 		db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + modId, null);
 		// remove all the old activities
 		String s = ACTIVITY_C_MODID + "=?";
@@ -275,7 +274,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	
-	public int getModuleID(String shortname){
+	public int getCourseID(String shortname){
 		String s = COURSE_C_SHORTNAME + "=?";
 		String[] args = new String[] { shortname };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
@@ -340,29 +339,29 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(ACTIVITY_TABLE, values, ACTIVITY_C_MODID + "=" + modId, null);
 	}
 	
-	public ArrayList<Course> getModules() {
-		ArrayList<Course> modules = new ArrayList<Course>();
+	public ArrayList<Course> getCourses() {
+		ArrayList<Course> courses = new ArrayList<Course>();
 		String order = COURSE_C_TITLE + " ASC";
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			Course m = new Course();
-			m.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			m.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
-			m.setProgress(this.getModuleProgress(m.getModId()));
-			m.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
-			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
-			m.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
-			m.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
-			m.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
-			modules.add(m);
+			Course course = new Course();
+			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
+			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
+			course.setProgress(this.getCourseProgress(course.getModId()));
+			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
+			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
+			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
+			course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
+			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
+			courses.add(course);
 			c.moveToNext();
 		}
 		c.close();
-		return modules;
+		return courses;
 	}
 	
-	public Course getModule(long modId) {
+	public Course getCourse(long modId) {
 		Course m = null;
 		String s = COURSE_C_ID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
@@ -372,7 +371,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			m = new Course();
 			m.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			m.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
-			m.setProgress(this.getModuleProgress(m.getModId()));
+			m.setProgress(this.getCourseProgress(m.getModId()));
 			m.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			m.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
@@ -410,7 +409,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public float getModuleProgress(int modId){
+	public float getCourseProgress(int modId){
 		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
 				"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
 				" as d FROM "+ACTIVITY_TABLE + " a " +
@@ -460,31 +459,31 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 	}
 	
-	public int resetModule(int modId){
+	public int resetCourse(int modId){
 		// delete quiz results
-		this.deleteMQuizResults(modId);
+		this.deleteQuizResults(modId);
 		
 		String s = TRACKER_LOG_C_MODID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
 		return db.delete(TRACKER_LOG_TABLE, s, args);
 	}
 	
-	public void deleteModule(int modId){
+	public void deleteCourse(int modId){
 		// delete log
-		resetModule(modId);
+		resetCourse(modId);
 		
 		// delete activities
 		String s = ACTIVITY_C_MODID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
 		db.delete(ACTIVITY_TABLE, s, args);
 		
-		// delete module
+		// delete course
 		s = COURSE_C_ID + "=?";
 		args = new String[] { String.valueOf(modId) };
 		db.delete(COURSE_TABLE, s, args);
 		
 		// delete any quiz attempts
-		this.deleteMQuizResults(modId);
+		this.deleteQuizResults(modId);
 	}
 	
 	public boolean isInstalled(String shortname){
@@ -544,7 +543,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				json.put("tracker_date", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
 				json.put("digest", c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 				json.put("completed", c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
-				Course m = this.getModule(c.getLong(c.getColumnIndex(TRACKER_LOG_C_MODID)));
+				Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_MODID)));
 				if (m != null){
 					json.put("course", m.getShortname());
 				}
@@ -571,23 +570,23 @@ public class DbHelper extends SQLiteOpenHelper {
 		return db.update(TRACKER_LOG_TABLE, values, TRACKER_LOG_C_ID + "=" + rowId, null);
 	}
 	
-	public long insertMQuizResult(String data, int modId){
+	public long insertQuizResult(String data, int modId){
 		ContentValues values = new ContentValues();
-		values.put(MQUIZRESULTS_C_DATA, data);
-		values.put(MQUIZRESULTS_C_MODID, modId);
-		return db.insertOrThrow(MQUIZRESULTS_TABLE, null, values);
+		values.put(QUIZRESULTS_C_DATA, data);
+		values.put(QUIZRESULTS_C_MODID, modId);
+		return db.insertOrThrow(QUIZRESULTS_TABLE, null, values);
 	}
 	
-	public Payload getUnsentMquiz(){
-		String s = MQUIZRESULTS_C_SENT + "=? ";
+	public Payload getUnsentQuizResults(){
+		String s = QUIZRESULTS_C_SENT + "=? ";
 		String[] args = new String[] { "0" };
-		Cursor c = db.query(MQUIZRESULTS_TABLE, null, s, args, null, null, null);
+		Cursor c = db.query(QUIZRESULTS_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		ArrayList<Object> sl = new ArrayList<Object>();
 		while (c.isAfterLast() == false) {
 			TrackerLog so = new TrackerLog();
-			so.setId(c.getLong(c.getColumnIndex(MQUIZRESULTS_C_ID)));
-			so.setContent(c.getString(c.getColumnIndex(MQUIZRESULTS_C_DATA)));
+			so.setId(c.getLong(c.getColumnIndex(QUIZRESULTS_C_ID)));
+			so.setContent(c.getString(c.getColumnIndex(QUIZRESULTS_C_DATA)));
 			sl.add(so);
 			c.moveToNext();
 		}
@@ -597,18 +596,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		return p;
 	}
 	
-	public int markMQuizSubmitted(long rowId){
+	public int markQuizSubmitted(long rowId){
 		ContentValues values = new ContentValues();
-		values.put(MQUIZRESULTS_C_SENT, 1);
+		values.put(QUIZRESULTS_C_SENT, 1);
 		
-		return db.update(MQUIZRESULTS_TABLE, values, MQUIZRESULTS_C_ID + "=" + rowId, null);
+		return db.update(QUIZRESULTS_TABLE, values, QUIZRESULTS_C_ID + "=" + rowId, null);
 	}
 	
-	public void deleteMQuizResults(int modId){
+	public void deleteQuizResults(int modId){
 		// delete any quiz attempts
-		String s = MQUIZRESULTS_C_MODID + "=?";
+		String s = QUIZRESULTS_C_MODID + "=?";
 		String[] args = new String[] { String.valueOf(modId) };
-		db.delete(MQUIZRESULTS_TABLE, s, args);
+		db.delete(QUIZRESULTS_TABLE, s, args);
 	}
 	
 	public boolean activityAttempted(long modId, String digest){
@@ -635,11 +634,6 @@ public class DbHelper extends SQLiteOpenHelper {
 			c.close();
 			return true;
 		}
-	}
-	
-	public MessageFeed getMessageFeed(){
-		MessageFeed mf = new MessageFeed();
-		return mf;
 	}
 	
 	public ArrayList<Activity> getActivitiesDue(int max){
