@@ -69,6 +69,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				HttpPost httpPost = new HttpPost(url);
 				
 				StringEntity se = new StringEntity(tl.getContent());
+				Log.d(TAG,tl.getContent());
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPost.setEntity(se);
                 
@@ -82,6 +83,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				while ((s = buffer.readLine()) != null) {
 					responseStr += s;
 				}
+				Log.d(TAG,responseStr);
 				
 				switch (response.getStatusLine().getStatusCode()){
 					case 201: // submitted
@@ -95,6 +97,13 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("points"));
 						editor.putInt(ctx.getString(R.string.prefs_badges), jsonResp.getInt("badges"));
 				    	editor.commit();
+						break;
+					case 400: 	// bad request - so to prevent re-submitting over and over
+								// just mark as submitted
+						DbHelper dba = new DbHelper(ctx);
+						dba.markQuizSubmitted(tl.getId());
+						dba.close();
+						payload.setResult(false);
 						break;
 					default:
 						payload.setResult(false);
