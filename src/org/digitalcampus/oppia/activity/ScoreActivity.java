@@ -49,16 +49,16 @@ public class ScoreActivity extends AppActivity {
 		webView = (WebView) findViewById(R.id.scorecard_webview);
 		webView.setWebViewClient(new ScoreCardWebViewClient());
 		webView.getSettings().setJavaScriptEnabled(true);
+		String url = "";
 		if(ConnectionUtils.isNetworkConnected(this)){
-			String url = prefs.getString(getString(R.string.prefs_server), getString(R.string.prefServer)) + "mobile/scorecard/?";
+			url = prefs.getString(getString(R.string.prefs_server), getString(R.string.prefServer)) + "mobile/scorecard/?";
 			url += "username=" + prefs.getString(getString(R.string.prefs_username), "");
 			url += "&api_key=" + prefs.getString(getString(R.string.prefs_api_key), "");
-			webView.loadUrl(url);
 		} else {
 			String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
-        	String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(ScoreActivity.this,lang,"scorecard_not_available.html");
-        	webView.loadUrl(url);
+        	url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(ScoreActivity.this,lang,"scorecard_not_available.html");
 		}
+		webView.loadUrl(url);
 	}
 	
 	private class ScoreCardWebViewClient extends WebViewClient{

@@ -17,7 +17,11 @@
 package org.digitalcampus.oppia.activity;
 
 
+import java.util.Locale;
+
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
+import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,13 +35,15 @@ import android.webkit.WebViewClient;
 public class MonitorActivity extends AppActivity {
 	
 	public static final String TAG = MonitorActivity.class.getSimpleName();
-	private WebView wv;
+	private WebView webView;
+	private SharedPreferences prefs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
 		this.drawHeader();
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 
 	@Override
@@ -46,17 +52,25 @@ public class MonitorActivity extends AppActivity {
 		this.loadMonitor();
 	}
 	
-	private void loadMonitor(){
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String url = prefs.getString(getString(R.string.prefs_server), getString(R.string.prefServer)) + "mobile/monitor/?";
-		url += "username=" + prefs.getString(getString(R.string.prefs_username), "");
-		url += "&api_key=" + prefs.getString(getString(R.string.prefs_api_key), "");
-		wv = (WebView) findViewById(R.id.monitor_webview);
-		wv.getSettings().setJavaScriptEnabled(true);
-		wv.loadUrl(url);
+	private void loadMonitor(){ 
+		webView = (WebView) findViewById(R.id.monitor_webview);
+		webView.setWebViewClient(new MonitorWebViewClient());
+		webView.getSettings().setJavaScriptEnabled(true);
+		
+		String url = "";
+		if(ConnectionUtils.isNetworkConnected(this)){
+			url = prefs.getString(getString(R.string.prefs_server), getString(R.string.prefServer)) + "mobile/monitor/?";
+			url += "username=" + prefs.getString(getString(R.string.prefs_username), "");
+			url += "&api_key=" + prefs.getString(getString(R.string.prefs_api_key), "");
+		} else {
+			String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+        	url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+		}
+		webView.loadUrl(url);
+		
 		
 		// set up the page to intercept videos
-		wv.setWebViewClient(new WebViewClient() {
+		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				return false;
@@ -67,12 +81,12 @@ public class MonitorActivity extends AppActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    // Check if the key event was the Back button and if there's history
-	    if ((keyCode == KeyEvent.KEYCODE_BACK) && wv.canGoBack()) {
-	        wv.goBack();
+	    if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+	    	webView.goBack();
 	        return true;
 	    }
 	    // If it wasn't the Back key or there's no web page history, bubble up to the default
-	    // system behavior (probably exit the activity)
+	    // system behaviour (probably exit the activity)
 	    return super.onKeyDown(keyCode, event);
 	}
 	
@@ -92,6 +106,15 @@ public class MonitorActivity extends AppActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	private class MonitorWebViewClient extends WebViewClient{
+		@Override
+        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+        	String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+        	String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+        	webView.loadUrl(url);
+        }
 	}
 
 }
