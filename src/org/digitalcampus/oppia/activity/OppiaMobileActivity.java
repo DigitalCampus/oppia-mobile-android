@@ -97,20 +97,6 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 			editor.commit();
 		}
 
-		// set up local dirs
-		if(!MobileLearning.createDirs()){
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setCancelable(false);
-			builder.setTitle(R.string.error);
-			builder.setMessage(R.string.error_sdcard);
-			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					OppiaMobileActivity.this.finish();
-				}
-			});
-			builder.show();
-			return;
-		}
 		// do upgrade if required
 		UpgradeManagerTask umt = new UpgradeManagerTask(this);
 		umt.setUpgradeListener(this);
