@@ -28,19 +28,12 @@ import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
-import org.digitalcampus.oppia.listener.InstallCourseListener;
-import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
-import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.ScanMediaTask;
-import org.digitalcampus.oppia.task.UpgradeManagerTask;
 import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
@@ -68,10 +61,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
-
-public class OppiaMobileActivity extends AppActivity implements InstallCourseListener,
-		OnSharedPreferenceChangeListener, ScanMediaListener, UpgradeListener, PostInstallListener {
+public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
@@ -81,7 +71,7 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		BugSenseHandler.initAndStartSession(this, MobileLearning.BUGSENSE_API_KEY);
+		
 		setContentView(R.layout.activity_main);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -96,13 +86,6 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 			editor.putString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			editor.commit();
 		}
-
-		// do upgrade if required
-		UpgradeManagerTask umt = new UpgradeManagerTask(this);
-		umt.setUpgradeListener(this);
-		ArrayList<Object> data = new ArrayList<Object>();
- 		Payload p = new Payload(data);
-		umt.execute(p);
 	}
 
 	@Override
@@ -310,19 +293,6 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 		builder.show();
 	}
 
-	public void installComplete(Payload p) {
-		if(p.getResponseData().size()>0){
-			Editor e = prefs.edit();
-			e.putLong(getString(R.string.prefs_last_media_scan), 0);
-			e.commit();
-			displayCourses();
-		}
-	}
-
-	public void installProgressUpdate(DownloadProgress dp) {
-		//do nothing
-	}
-
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -410,11 +380,6 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 		super.onSharedPreferenceChanged(sharedPreferences, key);
 	}
 
-	public void downloadComplete(Payload p) {
-		// do nothing
-
-	}
-
 	public void scanStart() {
 		TextView tv = (TextView) this.findViewById(id.home_message);
 		tv.setText(this.getString(R.string.info_scan_media_start));
@@ -461,45 +426,4 @@ public class OppiaMobileActivity extends AppActivity implements InstallCourseLis
 			e.commit();
 		}
 	}
-
-	public void downloadProgressUpdate(DownloadProgress dp) {
-		// do nothing
-		
-	}
-
-	public void upgradeComplete(Payload p) {
-		if(p.isResult()){
-			displayCourses();
-			Payload payload = new Payload();
-			PostInstallTask piTask = new PostInstallTask(OppiaMobileActivity.this);
-			piTask.setPostInstallListener(this);
-			piTask.execute(payload);
-		} else {
-			// now install any new courses
-			this.installCourses();
-		}
-	}
-
-	public void upgradeProgressUpdate(String s) {
-		// do nothing
-		
-	}
-
-	public void postInstallComplete(Payload response) {
-		// now install any new courses
-		this.installCourses();
-	}
-	
-	private void installCourses(){
-		File dir = new File(MobileLearning.DOWNLOAD_PATH);
-		String[] children = dir.list();
-		if (children != null) {
-			ArrayList<Object> data = new ArrayList<Object>();
-     		Payload payload = new Payload(data);
-			InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(OppiaMobileActivity.this);
-			imTask.setInstallerListener(this);
-			imTask.execute(payload);
-		}
-	}
-
 }
