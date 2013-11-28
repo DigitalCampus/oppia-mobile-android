@@ -70,7 +70,8 @@
             android:label="@string/title_help" />
          <activity
             android:name="org.digitalcampus.oppia.activity.MonitorActivity"
-            android:label="@string/title_monitor" />
+            android:label="@string/title_monitor"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout" />
          <activity
             android:name="org.digitalcampus.oppia.activity.RegisterActivity"
             android:label="@string/title_register" />

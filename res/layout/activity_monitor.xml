@@ -2,16 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/monitor_layout" >
 
     <org.digitalcampus.oppia.application.Header
         android:id="@+id/header"
         style="@style/Header" />
-
-    <WebView
-        android:id="@+id/monitor_webview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </WebView>
 
 </LinearLayout>
