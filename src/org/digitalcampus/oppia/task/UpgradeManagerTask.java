@@ -75,7 +75,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		if (children != null) {
 			for (int i = 0; i < children.length; i++) {
 				Log.d(TAG,"checking "+ children[i]);
-				
+				publishProgress("checking: " + children[i]);
 				String courseXMLPath = "";
 				String courseScheduleXMLPath = "";
 				String courseTrackerXMLPath = "";
