@@ -148,7 +148,6 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	}
 
 	public void installProgressUpdate(DownloadProgress dp) {
-		// TODO Auto-generated method stub
-		
+		this.updateProgress(dp.getMessage());
 	}
 }

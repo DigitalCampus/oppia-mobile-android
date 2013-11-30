@@ -140,7 +140,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 		}
 		
 		dp.setProgress(100);
-		dp.setProgress(ctx.getString(R.string.update_complete));
+		dp.setMessage(ctx.getString(R.string.update_complete));
 		publishProgress(dp);
 		payload.setResult(true);
 		

@@ -25,17 +25,16 @@ public class DownloadProgress {
 	public String getMessage() {
 		return message;
 	}
+	
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	
 	public int getProgress() {
 		return progress;
 	}
+	
 	public void setProgress(int progress) {
 		this.progress = progress;
-	}
-	
-	public void setProgress(String progress) {
-		this.message = progress;
 	}
 }

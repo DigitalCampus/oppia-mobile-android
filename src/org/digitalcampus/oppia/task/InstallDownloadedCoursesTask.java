@@ -89,13 +89,13 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				}
 				
 				// check a module.xml file exists and is a readable XML file
-				CourseXMLReader mxr;
-				CourseScheduleXMLReader msxr;
-				CourseTrackerXMLReader mtxr;
+				CourseXMLReader cxr;
+				CourseScheduleXMLReader csxr;
+				CourseTrackerXMLReader ctxr;
 				try {
-					mxr = new CourseXMLReader(courseXMLPath);
-					msxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-					mtxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+					cxr = new CourseXMLReader(courseXMLPath);
+					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
+					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
 					payload.setResult(false);
 					return payload;
@@ -104,15 +104,15 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				
 				//HashMap<String, String> hm = mxr.getMeta();
 				Course c = new Course();
-				c.setVersionId(mxr.getVersionId());
-				c.setTitles(mxr.getTitles());
+				c.setVersionId(cxr.getVersionId());
+				c.setTitles(cxr.getTitles());
 				c.setLocation(MobileLearning.COURSES_PATH + moddirs[0]);
 				c.setShortname(moddirs[0]);
-				c.setImageFile(MobileLearning.COURSES_PATH + moddirs[0] + "/" + mxr.getCourseImage());
-				c.setLangs(mxr.getLangs());
+				c.setImageFile(MobileLearning.COURSES_PATH + moddirs[0] + "/" + cxr.getCourseImage());
+				c.setLangs(cxr.getLangs());
 				String title = c.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 				
-				dp.setProgress(ctx.getString(R.string.installing_course, title));
+				dp.setMessage(ctx.getString(R.string.installing_course, title));
 				publishProgress(dp);
 				
 				DbHelper db = new DbHelper(ctx);
@@ -123,8 +123,8 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					File src = new File(tempdir + "/" + moddirs[0]);
 					File dest = new File(MobileLearning.COURSES_PATH);
 
-					db.insertActivities(mxr.getActivities(added));
-					db.insertTrackers(mtxr.getTrackers(),added);
+					db.insertActivities(cxr.getActivities(added));
+					db.insertTrackers(ctxr.getTrackers(),added);
 					// Delete old module
 					File oldMod = new File(MobileLearning.COURSES_PATH + moddirs[0]);
 					FileUtils.deleteDir(oldMod);
@@ -146,8 +146,8 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				
 				// add schedule
 				// put this here so even if the module content isn't updated the schedule will be
-				db.insertSchedule(msxr.getSchedule());
-				db.updateScheduleVersion(added, msxr.getScheduleVersion());
+				db.insertSchedule(csxr.getSchedule());
+				db.updateScheduleVersion(added, csxr.getScheduleVersion());
 				
 				
 				db.close();

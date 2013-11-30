@@ -107,7 +107,7 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 			
 			dp.setProgress(100);
 			publishProgress(dp);
-			dp.setProgress(ctx.getString(R.string.download_complete));
+			dp.setMessage(ctx.getString(R.string.download_complete));
 			publishProgress(dp);
 			payload.setResult(true);
 		} catch (ClientProtocolException e1) { 
