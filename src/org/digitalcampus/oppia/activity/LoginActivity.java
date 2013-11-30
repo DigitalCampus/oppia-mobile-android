@@ -88,10 +88,8 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 	}
 	
 	public void onRegisterClick(View view){
-		Intent i = new Intent(this, RegisterActivity.class);
-		startActivity(i);
+		startActivity(new Intent(this, RegisterActivity.class));
 		finish();
-		
 	}
 
 	public void submitComplete(Payload response) {
@@ -113,6 +111,7 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 	    	editor.commit();
 	    	
 			// return to main activity
+	    	startActivity(new Intent(this, OppiaMobileActivity.class));
 			finish();
 		} else {
 			UIUtils.showAlert(this, R.string.title_login, response.getResultResponse());

@@ -180,6 +180,7 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 					
 					public void onClick(DialogInterface dialog, int which) {
 						// return to main activity
+						RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, OppiaMobileActivity.class));
 						RegisterActivity.this.finish();
 					}
 	

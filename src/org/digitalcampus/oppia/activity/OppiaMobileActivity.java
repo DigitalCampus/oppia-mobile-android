@@ -90,12 +90,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	@Override
 	public void onStart() {
-		super.onStart();
-		if (!MobileLearning.isLoggedIn(this)) {
-			startActivity(new Intent(OppiaMobileActivity.this, LoginActivity.class));
-			return;
-		}
-		
+		super.onStart();		
 		displayCourses();		
 	}
 
@@ -280,8 +275,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				editor.putInt(getString(R.string.prefs_points), 0);
 				editor.commit();
 
-				// restart this activity
-				OppiaMobileActivity.this.onStart();
+				// restart the app
+				OppiaMobileActivity.this.startActivity(new Intent(OppiaMobileActivity.this, StartUpActivity.class));
+				OppiaMobileActivity.this.finish();
 
 			}
 		});
