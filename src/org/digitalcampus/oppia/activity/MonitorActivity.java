@@ -56,7 +56,6 @@ public class MonitorActivity extends AppActivity {
 		} else {
 			webView.getSettings().setJavaScriptEnabled(true);
 			webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-			webView.getSettings().setBuiltInZoomControls(true);
 			webView.setWebViewClient(new MonitorWebViewClient());
 			this.loadMonitor();
 		}
