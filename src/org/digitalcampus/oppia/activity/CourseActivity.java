@@ -43,7 +43,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
-import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -55,7 +55,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CourseActivity extends AppActivity implements OnUtteranceCompletedListener, OnInitListener {
+public class CourseActivity extends AppActivity implements OnInitListener {
 
 	public static final String TAG = CourseActivity.class.getSimpleName();
 	public static final String BASELINE_TAG = "BASELINE";
@@ -335,7 +335,22 @@ public class CourseActivity extends AppActivity implements OnUtteranceCompletedL
 			HashMap<String,String> params = new HashMap<String,String>();
 			params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,TAG);
 			myTTS.speak(currentActivity.getContentToRead(), TextToSpeech.QUEUE_FLUSH, params);
-			myTTS.setOnUtteranceCompletedListener(this);
+			myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener(){
+                @Override
+                public void onDone(String utteranceId){
+                	Log.d(TAG,"Finished reading");
+            		CourseActivity.this.ttsRunning = false;
+            		myTTS = null;
+                }
+
+                @Override
+                public void onError(String utteranceId){
+                }
+
+                @Override
+                public void onStart(String utteranceId){
+                }
+            	});
 		} else {
 			// TTS not installed so show message
 			Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
@@ -360,12 +375,6 @@ public class CourseActivity extends AppActivity implements OnUtteranceCompletedL
 			myTTS = null;
 		}
 		this.ttsRunning = false;
-	}
-
-	public void onUtteranceCompleted(String utteranceId) {
-		Log.d(TAG,"Finished reading");
-		this.ttsRunning = false;
-		myTTS = null;
 	}
 	
 	public WidgetFactory getCurrentActivity(){
