@@ -44,7 +44,7 @@ public class CourseMetaPageActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_metapage);
-		this.drawHeader();
+
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		Bundle bundle = this.getIntent().getExtras();

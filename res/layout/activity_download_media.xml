@@ -4,17 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/top_control_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <org.digitalcampus.oppia.application.Header
-            android:id="@+id/header"
-            style="@style/Header" />
-        
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/bottom_control_bar"
         android:layout_width="fill_parent"
@@ -35,7 +24,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/bottom_control_bar"
-        android:layout_below="@id/top_control_bar"
         android:cacheColorHint="#00000000"
         android:divider="@drawable/list_divider"
         android:dividerHeight="1dp" />
@@ -44,7 +32,6 @@
         android:id="@android:id/empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_control_bar"
-        android:layout_below="@id/top_control_bar" />
+        android:layout_above="@id/bottom_control_bar" />
 
 </RelativeLayout>

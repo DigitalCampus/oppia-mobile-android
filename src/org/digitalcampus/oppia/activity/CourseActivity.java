@@ -80,7 +80,6 @@ public class CourseActivity extends AppActivity implements OnInitListener {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_course);
-		this.drawHeader();
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 

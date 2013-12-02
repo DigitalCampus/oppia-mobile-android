@@ -21,13 +21,13 @@
     <application
         android:icon="@drawable/dc_logo"
         android:label="@string/app_name"
-        android:theme="@style/AppThemeDark"
+        android:theme="@style/OppiaTheme"
         android:allowBackup="true"
         android:name="org.digitalcampus.oppia.application.MobileLearning">
         <activity
             android:name="org.digitalcampus.oppia.activity.StartUpActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppThemeLight">
+            android:theme="@style/OppiaThemeStartUp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -57,8 +57,7 @@
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
-            android:label="@string/title_prefs"
-            android:theme="@style/AppThemeLight" />
+            android:label="@string/title_prefs"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.AboutActivity"
             android:label="@string/title_about" />

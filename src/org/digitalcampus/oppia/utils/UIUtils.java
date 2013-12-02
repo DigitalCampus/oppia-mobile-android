@@ -45,35 +45,6 @@ public class UIUtils {
 	private ArrayList<Lang> langList;
 	private SharedPreferences prefs;
 	private Context ctx;
-	
-	/**
-	 * Displays the users points and badges scores in the app header
-	 * @param act
-	 */
-	public static void showUserData(final Activity act) {
-		TextView points = (TextView) act.findViewById(R.id.userpoints);
-		TextView badges = (TextView) act.findViewById(R.id.userbadges);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
-		boolean scoringEnabled = prefs.getBoolean(act.getString(R.string.prefs_scoring_enabled), true);
-		if (MobileLearning.isLoggedIn(act) && scoringEnabled ) {
-			points.setVisibility(View.VISIBLE);
-			badges.setVisibility(View.VISIBLE);
-			points.setText(String.valueOf(prefs.getInt(act.getString(R.string.prefs_points), 0)));
-			badges.setText(String.valueOf(prefs.getInt(act.getString(R.string.prefs_badges), 0)));
-
-			if (!(act instanceof ScoreActivity)) {
-				points.setOnClickListener(new View.OnClickListener() {
-
-					public void onClick(View v) {
-						act.startActivity(new Intent(act, ScoreActivity.class));
-					}
-				});
-			}
-		} else if (!scoringEnabled){
-			points.setVisibility(View.GONE);
-			badges.setVisibility(View.GONE);
-		}
-	}
 
 	/**
 	 * @param ctx

@@ -4,10 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <org.digitalcampus.oppia.application.Header
-        android:id="@+id/header"
-        style="@style/Header" />
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">

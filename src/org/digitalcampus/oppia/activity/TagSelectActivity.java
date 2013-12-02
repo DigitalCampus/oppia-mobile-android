@@ -38,7 +38,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -54,10 +53,10 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-		this.drawHeader();
+		//this.drawHeader();
 		
-		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
-		tv.setText(R.string.title_download_activity);
+		//TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
+		//tv.setText(R.string.title_download_activity);
 	
 	}
 	

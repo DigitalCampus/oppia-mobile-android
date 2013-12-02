@@ -43,7 +43,7 @@ public class MonitorActivity extends AppActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
-		this.drawHeader();
+
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		webView = new WebView(this);
 		

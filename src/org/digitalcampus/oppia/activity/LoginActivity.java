@@ -50,7 +50,6 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		this.drawHeader();
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		

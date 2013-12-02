@@ -58,7 +58,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download_media);
-		this.drawHeader(getString(R.string.title_download_media));
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {

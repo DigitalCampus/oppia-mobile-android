@@ -1,15 +1,16 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppThemeLight" parent="@style/Theme.AppCompat.Light">
+    
+    <style name="OppiaTheme" parent="@style/Theme.AppCompat">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowBackground">@drawable/background_dark</item>
+    </style>
+  
+    <style name="OppiaThemeStartUp" parent="@style/Theme.AppCompat.Light">
         <item name="android:windowNoTitle">false</item>
         <item name="android:windowBackground">@drawable/background_light</item>
     </style>
     
-    <style name="AppThemeDark" parent="@style/Theme.AppCompat.Light">
-        <item name="android:windowNoTitle">false</item>
-        <item name="android:windowBackground">@drawable/background_light</item>
-    </style>
-  
     <style name="Header">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

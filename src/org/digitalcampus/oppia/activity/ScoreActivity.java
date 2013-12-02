@@ -39,7 +39,6 @@ public class ScoreActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scorecard);
-		this.drawHeader();
 		this.getScorecard();
 		
 	}

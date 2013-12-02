@@ -20,54 +20,16 @@ package org.digitalcampus.oppia.activity;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.Header;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.support.v7.app.ActionBarActivity;
 
-public class AppActivity extends ActionBarActivity implements OnSharedPreferenceChangeListener {
+public class AppActivity extends ActionBarActivity {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
 	
-	private Header header;
 	private ScheduleReminders reminders;
-	
 
-	public void drawHeader() {
-		try {
-			header = (Header) findViewById(R.id.header);
-			header.initHeader(this);
-		} catch (NullPointerException npe) {
-			// do nothing
-		}
-	}
-	
-	
-	/**
-	 * @param title
-	 */
-	public void drawHeader(String title) {
-		try {
-			header = (Header) findViewById(R.id.header);
-			header.initHeader(this,title);
-		} catch (NullPointerException npe) {
-			// do nothing
-		}
-	}
-	
-	public Header getHeader(){
-		return this.header;
-	}
-	
-	public void updateHeader(){
-		try {
-			header.updateHeader(this);
-		} catch (Exception npe) {
-			// do nothing
-		}
-	}
 	
 	/**
 	 * @param activities
@@ -79,10 +41,6 @@ public class AppActivity extends ActionBarActivity implements OnSharedPreference
 		} catch (NullPointerException npe) {
 			// do nothing
 		}
-	}
-
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		this.updateHeader();		
 	}
 
 }

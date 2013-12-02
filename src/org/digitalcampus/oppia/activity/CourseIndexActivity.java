@@ -29,7 +29,6 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
-import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.CourseXMLReader;
 import org.digitalcampus.oppia.utils.UIUtils;
 
@@ -37,15 +36,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class CourseIndexActivity extends AppActivity {
 
@@ -62,11 +58,8 @@ public class CourseIndexActivity extends AppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_index);
-        
-        this.drawHeader();
-	    
+       
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.registerOnSharedPreferenceChangeListener(this);
         
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
@@ -116,14 +109,14 @@ public class CourseIndexActivity extends AppActivity {
 		sections = mxr.getSections(course.getModId(),CourseIndexActivity.this);
 		setTitle(course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
     	
-		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
-    	tv.setText(course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+		//TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
+    	//tv.setText(course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 		
     	// set image
 		if(course.getImageFile() != null){
-			ImageView iv = (ImageView) getHeader().findViewById(R.id.page_icon);
-			Bitmap bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
-			iv.setImageBitmap(bm);
+			//ImageView iv = (ImageView) getHeader().findViewById(R.id.page_icon);
+			//Bitmap bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
+			//iv.setImageBitmap(bm);
 		}
     	
     	ListView listView = (ListView) findViewById(R.id.section_list);

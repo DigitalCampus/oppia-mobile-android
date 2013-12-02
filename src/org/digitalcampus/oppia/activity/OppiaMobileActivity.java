@@ -78,8 +78,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 		
-		this.drawHeader();
-		
 		// set preferred lang to the default lang
 		if (prefs.getString(getString(R.string.prefs_language), "").equals("")) {
 			Editor editor = prefs.edit();
@@ -97,7 +95,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public void onResume(){
 		super.onResume();
-		this.updateHeader();
 		this.updateReminders();
 	}
 	
@@ -373,7 +370,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_show)) || key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_no))){
 			displayCourses();
 		}
-		super.onSharedPreferenceChanged(sharedPreferences, key);
 	}
 
 	public void scanStart() {

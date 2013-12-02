@@ -38,7 +38,6 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -55,10 +54,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-		this.drawHeader();
 		
-		TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
-		tv.setText(R.string.title_download_activity);
+		//TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
+		//tv.setText(R.string.title_download_activity);
 		Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	Tag t = (Tag) bundle.getSerializable(Tag.TAG);

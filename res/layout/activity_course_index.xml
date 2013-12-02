@@ -4,10 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <org.digitalcampus.oppia.application.Header
-        android:id="@+id/header"
-        style="@style/Header" />
-
     <ListView
         android:id="@+id/section_list"
         android:layout_width="fill_parent"
