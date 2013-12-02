@@ -58,7 +58,7 @@
             android:gravity="center"
             android:text="@string/loading_courses"
             android:textSize="18sp" 
-            android:textColor="@drawable/text_light"/>
+            android:textColor="@color/text_light"/>
     </LinearLayout>
     
     <LinearLayout
@@ -76,7 +76,7 @@
             android:gravity="center"
             android:text="@string/no_courses"
             android:textSize="18sp" 
-            android:textColor="@drawable/text_light"/>
+            android:textColor="@color/text_light"/>
 
         <Button
             android:id="@+id/manage_courses_btn"
@@ -93,7 +93,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:listSelector="@drawable/background_change_pressed" 
-        android:divider="@drawable/list_divider"
+        android:divider="@color/list_divider"
         android:dividerHeight="1dp"
         android:cacheColorHint="#00000000"/>
 

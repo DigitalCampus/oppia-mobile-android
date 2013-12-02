@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     File created by the Android Action Bar Style Generator
+
+     Copyright (C) 2011 The Android Open Source Project
+     Copyright (C) 2012 readyState Software Ltd
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Oppia.Theme.StartUp" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/background_light</item>
+    </style>
+
+    <style name="Oppia.Theme" parent="@style/Theme.AppCompat">
+        <!--  item name="android:actionBarItemBackground">@drawable/selectable_background_om</item>-->
+        <!--  item name="android:popupMenuStyle">@style/Oppia.PopupMenu</item>-->
+        <!--  item name="android:dropDownListViewStyle">@style/DropDownListView.Om</item>-->
+        <!--  item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Om</item>-->
+        <!--  item name="android:actionDropDownStyle">@style/DropDownNav.Om</item>-->
+        <!--  item name="android:actionBarStyle">@style/Oppia.ActionBar.Solid</item>-->
+        <!--  item name="android:actionModeBackground">@drawable/cab_background_top_om</item>-->
+        <!--  item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_om</item>-->
+        <!--  item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Om</item>-->
+        <!--  item name="android:windowBackground">@color/background_dark</item>-->
+        <!--  item name="android:editTextStyle">@style/Oppia.EditText</item-->
+    </style>
+<!-- @android:style/Widget.Holo.ActionBar.Solid -->
+    <style name="Oppia.ActionBar.Solid" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="android:background">@drawable/green_background_gradient</item>
+        <item name="android:backgroundStacked">@drawable/green_background_gradient</item>
+        <item name="android:backgroundSplit">@drawable/green_background_gradient</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Om</item>
+        <item name="android:titleTextStyle">@style/Oppia.ActionBar.TitleTextStyle</item>
+    </style>
+    
+    <style name="Oppia.ActionBar.TitleTextStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Oppia.PopupMenu" parent="@style/Widget.AppCompat.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_om</item>
+    </style>
+
+    <style name="DropDownListView.Om" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_om</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Om" parent="@style/Widget.AppCompat.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_om</item>
+    </style>
+
+    <style name="DropDownNav.Om" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="android:background">@drawable/spinner_background_ab_om</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_om</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_om</item>
+    </style>
+
+    <style name="ProgressBar.Om" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_om</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.Om" parent="@style/Widget.AppCompat.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_om</item>
+    </style>
+
+    <!--  style name="Oppia.EditText" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/om_edit_text_holo_light</item>
+        <item name="android:textColor">@color/text_light</item>
+    </style-->
+
+</resources>

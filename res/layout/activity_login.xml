@@ -28,8 +28,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:padding="5dp"
-                style="@style/EditText.Om"/>
+                android:padding="5dp"/>
 
             <TextView
                 android:id="@+id/main_password_title"
@@ -44,8 +43,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:padding="5dp"
-                style="@style/EditText.Om" />
+                android:padding="5dp"/>
 
             <Button
                 android:id="@+id/login_btn"

@@ -14,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:listSelector="@drawable/background_change_pressed" 
-        android:divider="@drawable/list_divider_light"
+        android:divider="@color/list_divider_light"
         android:dividerHeight="1dp"
         android:cacheColorHint="#00000000"/>
 

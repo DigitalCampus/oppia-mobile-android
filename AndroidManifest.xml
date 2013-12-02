@@ -21,13 +21,13 @@
     <application
         android:icon="@drawable/dc_logo"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Om"
+        android:theme="@style/Oppia.Theme"
         android:allowBackup="true"
         android:name="org.digitalcampus.oppia.application.MobileLearning">
         <activity
             android:name="org.digitalcampus.oppia.activity.StartUpActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Om.StartUp">
+            android:theme="@style/Oppia.Theme.StartUp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

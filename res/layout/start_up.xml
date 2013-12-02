@@ -44,7 +44,7 @@
 				android:background="@android:color/transparent"
 				android:textSize="22dip"
 				android:textStyle="bold"
-				android:textColor="@drawable/green_dark"
+				android:textColor="@color/green_dark"
 				android:paddingLeft="7dip"
 				android:paddingRight="7dip" />
 			<TextView
@@ -53,7 +53,7 @@
 				android:layout_width="fill_parent"
 				android:layout_height="fill_parent"
 				style="@style/SmallTextDark"
-				android:textColor="@drawable/green_dark"
+				android:textColor="@color/green_dark"
 				android:paddingTop="5dip"
 				android:paddingLeft="7dip"
 				android:paddingRight="7dip" />

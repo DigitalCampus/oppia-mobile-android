@@ -30,10 +30,10 @@
             android:layout_width="135dp"
             android:layout_height="fill_parent"
             android:gravity="center_horizontal"
-            android:textColor="@drawable/text_light"
+            android:textColor="@color/text_light"
             android:textSize="14sp"
             android:textStyle="normal"
-            android:background="@drawable/background_dark"
+            android:background="@color/background_dark"
             android:maxLines="2" 
 			android:ellipsize="end" 
 			android:singleLine="false" />

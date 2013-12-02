@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
        	style="@style/HeaderText"
-       	android:background="@drawable/background_light"/>
+       	android:background="@color/background_light"/>
     
     <TextView
         android:id="@+id/course_shortname"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         style="@style/SmallTextDark"
-        android:background="@drawable/background_light"/>
+        android:background="@color/background_light"/>
     
     <TextView
         android:id="@+id/course_versionid"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         style="@style/SmallTextDark"
-        android:background="@drawable/background_light"/>
+        android:background="@color/background_light"/>
 
     <WebView
         android:id="@+id/metapage_webview"
