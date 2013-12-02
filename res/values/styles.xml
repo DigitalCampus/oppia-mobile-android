@@ -1,12 +1,13 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme.Light" parent="android:Theme.Light">
-        <item name="android:windowNoTitle">true</item>
+    <style name="AppThemeLight" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowBackground">@drawable/background_light</item>
     </style>
     
-    <style name="AppTheme.Dark" parent="android:Theme.Light">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@drawable/background_dark</item>
+    <style name="AppThemeDark" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowBackground">@drawable/background_light</item>
     </style>
   
     <style name="Header">

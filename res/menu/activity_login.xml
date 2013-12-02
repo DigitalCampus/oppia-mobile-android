@@ -1,6 +1,7 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:oppiamobile="http://schemas.android.com/apk/res-auto" >
     <item android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
-        android:orderInCategory="100" 
-        android:icon="@android:drawable/ic_menu_preferences"/>
+        android:icon="@android:drawable/ic_menu_preferences"
+        oppiamobile:showAsAction="always"/>
 </menu>

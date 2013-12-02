@@ -1,19 +1,17 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:oppiamobile="http://schemas.android.com/apk/res-auto" >
 
     <item
         android:id="@+id/menu_language"
         android:icon="@drawable/ic_menu_start_conversation"
-        android:orderInCategory="100"
         android:title="@string/menu_language"/>
     <item
         android:id="@+id/menu_help"
         android:icon="@android:drawable/ic_menu_help"
-        android:orderInCategory="100"
         android:title="@string/menu_help"/>
     <item
         android:id="@+id/menu_tts"
         android:icon="@android:drawable/ic_lock_silent_mode_off"
-        android:orderInCategory="100"
         android:title="@string/menu_read_aloud"/>
 
 </menu>

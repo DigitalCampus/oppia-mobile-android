@@ -110,15 +110,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		}
 	}
 	
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		dmla.removeProgressDialog();
-		if (dmla != null) {
-			return dmla;
-		}
-		return super.onRetainNonConfigurationInstance();
-	}
-	
 	private void downloadViaPC(){
 		String filename = "mobile-learning-media.html";
 		String strData = "<html>";

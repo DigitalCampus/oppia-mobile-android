@@ -23,11 +23,11 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.Header;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.support.v7.app.ActionBarActivity;
 
-public class AppActivity extends Activity implements OnSharedPreferenceChangeListener {
+public class AppActivity extends ActionBarActivity implements OnSharedPreferenceChangeListener {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
 	
