@@ -4,14 +4,17 @@
     <item
         android:id="@+id/menu_language"
         android:icon="@drawable/ic_menu_start_conversation"
-        android:title="@string/menu_language"/>
+        android:title="@string/menu_language"
+        oppiamobile:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_help"
         android:icon="@android:drawable/ic_menu_help"
-        android:title="@string/menu_help"/>
+        android:title="@string/menu_help"
+        oppiamobile:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_tts"
         android:icon="@android:drawable/ic_lock_silent_mode_off"
-        android:title="@string/menu_read_aloud"/>
+        android:title="@string/menu_read_aloud"
+        oppiamobile:showAsAction="ifRoom"/>
 
 </menu>

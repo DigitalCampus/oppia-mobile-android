@@ -2,5 +2,5 @@
      xmlns:oppiamobile="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menu_return"
         android:title="@string/menu_return_to_courses"
-        oppiamobile:showAsAction="always"/>
+        oppiamobile:showAsAction="ifRoom"/>
 </menu>

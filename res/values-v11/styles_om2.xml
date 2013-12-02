@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="AutoCompleteTextViewom2" parent="android:Widget.Holo.Light.AutoCompleteTextView">
+      <item name="android:dropDownSelector">@drawable/om2_list_selector_holo_light</item>
+	    <item name="android:background">@drawable/om_edit_text_holo_light</item>
+  </style>
+
+  <style name="Buttonom2" parent="android:Widget.Holo.Light.Button">
+	  <item name="android:background">@drawable/om2_btn_default_holo_light</item>
+  </style>
+
+  <style name="ImageButtonom2" parent="android:Widget.Holo.Light.ImageButton">
+	  <item name="android:background">@drawable/om2_btn_default_holo_light</item>
+  </style>
+
+  <style name="Spinnerom2" parent="android:Widget.Holo.Light.Spinner">
+      <item name="android:background">@drawable/om2_spinner_background_holo_light</item>
+      <item name="android:dropDownSelector">@drawable/om2_list_selector_holo_light</item>
+  </style>
+
+  <style name="TabWidgetom2" parent="@android:style/Widget.TabWidget">
+      <item name="android:tabStripLeft">@null</item>
+      <item name="android:tabStripRight">@null</item>
+      <item name="android:tabStripEnabled">false</item>
+      <item name="android:divider">?android:attr/dividerVertical</item>
+      <item name="android:showDividers">middle</item>
+      <item name="android:dividerPadding">8dip</item>
+      <item name="android:measureWithLargestChild">true</item>
+      <item name="tabLayout">@layout/om2_tab_indicator_holo</item>
+  </style>
+
+  <style name="ProgressBarom2" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/om2_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/om2_progress_indeterminate_horizontal_holo_light</item>
+  </style>
+
+  <style name="SeekBarom2" parent="android:Widget.Holo.Light.SeekBar">
+      <item name="android:progressDrawable">@drawable/om2_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/om2_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:thumb">@drawable/om2_scrubber_control_selector_holo_light</item>
+  </style>
+
+  <style name="RatingBarom2" parent="android:Widget.Holo.Light.RatingBar">
+      <item name="android:progressDrawable">@drawable/om2_ratingbar_full_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/om2_ratingbar_full_holo_light</item>
+  </style>
+
+  <style name="RatingBarBigom2" parent="android:Widget.Holo.Light.RatingBar.Indicator">
+      <item name="android:progressDrawable">@drawable/om2_ratingbar_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/om2_ratingbar_holo_light</item>
+  </style>
+
+  <style name="RatingBarSmallom2" parent="android:Widget.Holo.Light.RatingBar.Small">
+      <item name="android:progressDrawable">@drawable/om2_ratingbar_small_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/om2_ratingbar_small_holo_light</item>
+  </style>
+
+  <style name="Toggleom2" parent="android:Widget.Holo.Light.Button.Toggle">
+      <item name="android:background">@drawable/om2_btn_toggle_holo_light</item>
+  </style>
+
+</resources>

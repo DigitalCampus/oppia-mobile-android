@@ -16,20 +16,12 @@
             android:padding="10dp" >
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:text="@string/title_login"
-                style="@style/PageHeadingText"/>
-
-            <TextView
                 android:id="@+id/main_email_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/login_username_title"
-                style="@style/FieldLabelText" />
+                style="@style/FieldLabelText"/>
 
             <EditText
                 android:id="@+id/login_username_field"
@@ -37,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:padding="5dp"
-                style="@style/FieldText" />
+                style="@style/EditText.Om"/>
 
             <TextView
                 android:id="@+id/main_password_title"
@@ -53,23 +45,21 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:padding="5dp"
-                style="@style/FieldText" />
+                style="@style/EditText.Om" />
 
             <Button
                 android:id="@+id/login_btn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onLoginClick"
-                android:text="@string/title_login"
-                style="@style/ButtonText"  />
+                android:text="@string/title_login"/>
 
             <Button
                 android:id="@+id/register_btn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onRegisterClick"
-                android:text="@string/title_register"
-                style="@style/ButtonText" />
+                android:text="@string/title_register"/>
         </LinearLayout>
     </ScrollView>
 

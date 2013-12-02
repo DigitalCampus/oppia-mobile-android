@@ -21,17 +21,5 @@
     <string name="prefs_points">prefPoints</string>
     <string name="prefs_badges">prefBadges</string>
     <string name="prefs_scoring_enabled">prefScoringEnabled</string>
-    
-    <drawable name="background_dark">#333333</drawable>
-    <drawable name="background_light">#eeeeee</drawable>
-    <drawable name="list_divider">#222222</drawable>
-    <drawable name="list_divider_light">#cccccc</drawable>
-    <drawable name="text_dark">#222222</drawable>
-    <drawable name="text_light">#ffffff</drawable>
-    <drawable name="green_light">#74B042</drawable>
-    <drawable name="green_mid">#9aca3c</drawable>
-    <drawable name="green_dark">#495525</drawable>
-    <drawable name="default_icon_foreground">#666666</drawable>
-    <drawable name="button_background">#eeeeee</drawable>
 
 </resources>

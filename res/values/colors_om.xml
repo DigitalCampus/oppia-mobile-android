@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- File created by the Android Action Bar Style Generator
+
+     Copyright (C) 2011 The Android Open Source Project
+     Copyright (C) 2012 readyState Software Ltd
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <!--  color name="pressed_om">#CC33B5E5</color-->
+   <color name="pressed_om">#74B042</color>
+    <color name="background_dark">#333333</color>
+    <color name="background_light">#eeeeee</color>
+    <color name="list_divider">#222222</color>
+    <color name="list_divider_light">#cccccc</color>
+    <color name="text_dark">#222222</color>
+    <color name="text_light">#ffffff</color>
+    <color name="green_light">#74B042</color>
+    <color name="green_mid">#9aca3c</color>
+    <color name="green_dark">#495525</color>
+    <color name="default_icon_foreground">#666666</color>
+    <color name="button_background">#eeeeee</color>
+</resources>

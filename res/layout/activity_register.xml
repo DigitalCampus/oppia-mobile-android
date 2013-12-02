@@ -16,14 +16,6 @@
             android:orientation="vertical" >
 
             <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:text="@string/title_register"
-                style="@style/PageHeadingText" />
-
-            <TextView
                 android:id="@+id/register_form_username_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -35,7 +27,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                style="@style/FieldText"  />
+                style="@style/EditText.Om" />
 
             <TextView
                 android:id="@+id/register_form_email_title"
@@ -48,8 +40,8 @@
                 android:id="@+id/register_form_email_field"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                style="@style/FieldText" />
+                android:inputType="text" 
+                style="@style/EditText.Om" />
 
             <TextView
                 android:id="@+id/register_form_password_title"
@@ -63,7 +55,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                style="@style/FieldText" />
+                style="@style/EditText.Om" />
 
             <TextView
                 android:id="@+id/register_form_password_again_title"
@@ -76,8 +68,8 @@
                 android:id="@+id/register_form_password_again_field"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                style="@style/FieldText" />
+                android:inputType="textPassword" 
+                style="@style/EditText.Om" />
 
             <TextView
                 android:id="@+id/register_form_firstname_title"
@@ -91,7 +83,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                style="@style/FieldText" />
+                style="@style/EditText.Om" />
 
             <TextView
                 android:id="@+id/register_form_lastname_title"
@@ -105,15 +97,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                style="@style/FieldText" />
+                style="@style/EditText.Om" />
 
             <Button
                 android:id="@+id/register_btn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onRegisterClick"
-                android:text="@string/register_btn_text"
-                style="@style/ButtonText" />
+                android:text="@string/register_btn_text"/>
         </LinearLayout>
     </ScrollView>
 

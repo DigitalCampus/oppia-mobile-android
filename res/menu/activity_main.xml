@@ -3,7 +3,7 @@
     <item android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
         android:icon="@android:drawable/ic_menu_preferences"
-        oppiamobile:showAsAction="always" />
+        oppiamobile:showAsAction="ifRoom" />
     <item android:id="@+id/menu_download"
         android:title="@string/menu_download"
         android:icon="@android:drawable/ic_menu_add"
