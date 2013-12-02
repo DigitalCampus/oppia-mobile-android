@@ -320,6 +320,7 @@ public class CourseActivity extends AppActivity implements OnUtteranceCompletedL
 		ui.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
 			public Boolean call() throws Exception {
 				CourseActivity.this.onStart();
+				CourseActivity.this.loadActivity();
 				return true;
 			}
 		});
