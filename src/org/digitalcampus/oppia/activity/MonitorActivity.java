@@ -43,7 +43,9 @@ public class MonitorActivity extends AppActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
-
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		webView = new WebView(this);
 		

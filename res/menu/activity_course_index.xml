@@ -5,11 +5,11 @@
         android:id="@+id/menu_language"
         android:icon="@drawable/ic_menu_start_conversation"
         android:title="@string/menu_language"
-        oppiamobile:showAsAction="ifRoom"/>
+        oppiamobile:showAsAction="never"/>
     <item
         android:id="@+id/menu_help"
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/menu_help"
-        oppiamobile:showAsAction="ifRoom"/>
+        oppiamobile:showAsAction="never"/>
 
 </menu>

@@ -7,7 +7,8 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:text="@string/schedule_reminders"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textColor="@color/text_dark"/>
     
     <ListView
         android:id="@+id/schedule_reminder_list"

@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -54,7 +55,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        
 		//TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
 		//tv.setText(R.string.title_download_activity);
 		Bundle bundle = this.getIntent().getExtras(); 

@@ -23,6 +23,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 
 import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
 
 public class AppActivity extends ActionBarActivity {
 	
@@ -41,6 +42,17 @@ public class AppActivity extends ActionBarActivity {
 		} catch (NullPointerException npe) {
 			// do nothing
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				this.finish();
+				return true;
+		}
+		return true;
 	}
 
 }

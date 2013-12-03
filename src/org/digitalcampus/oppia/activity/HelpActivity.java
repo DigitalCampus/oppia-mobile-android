@@ -20,11 +20,15 @@ package org.digitalcampus.oppia.activity;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.utils.FileUtils;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.webkit.WebView;
 
 public class HelpActivity extends AppActivity {
@@ -35,12 +39,25 @@ public class HelpActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_help);
-		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(this,prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()) , "help.html");
 		WebView wv = (WebView) findViewById(R.id.about_webview);
 		wv.loadUrl(url);
 		
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				this.finish();
+				return true;
+		}
+		return true;
 	}
 }
 

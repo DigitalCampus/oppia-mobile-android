@@ -80,7 +80,9 @@ public class CourseActivity extends AppActivity implements OnInitListener {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_course);
-
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		Bundle bundle = this.getIntent().getExtras();
@@ -190,6 +192,9 @@ public class CourseActivity extends AppActivity implements OnInitListener {
 			return true;
 		case R.id.menu_help:
 			startActivity(new Intent(this, HelpActivity.class));
+			return true;
+		case android.R.id.home:
+			this.finish();
 			return true;
 		case R.id.menu_tts:
 			if (myTTS == null && !ttsRunning) {

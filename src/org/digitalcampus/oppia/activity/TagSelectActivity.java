@@ -53,10 +53,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-		//this.drawHeader();
-		
-		//TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
-		//tv.setText(R.string.title_download_activity);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 	
 	}
 	

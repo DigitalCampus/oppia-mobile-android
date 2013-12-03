@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.utils.FileUtils;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -44,7 +45,9 @@ public class CourseMetaPageActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_metapage);
-
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		Bundle bundle = this.getIntent().getExtras();
