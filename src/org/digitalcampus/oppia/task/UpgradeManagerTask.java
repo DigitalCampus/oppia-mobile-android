@@ -118,7 +118,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				if (modId != -1) {
 					db.insertActivities(mxr.getActivities(modId));
 					db.insertTrackers(mtxr.getTrackers(),modId);
-				}  
+				} 
 				
 				// add schedule
 				// put this here so even if the module content isn't updated the schedule will be

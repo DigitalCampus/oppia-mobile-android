@@ -54,14 +54,11 @@
  	<string name="no_courses">No hay cursos instalados</string>
  	
  	<string name="prefServer">Servidor</string>
-	<string name="prefServerDefault">http://demo.oppia-mobile.org/</string>
 	<string name="prefLanguage">Idioma preferido</string>
 	<string name="prefAdvanced">Configuración avanzada</string>
 	
 	<string name="prefServerTimeoutConnection">Tiempo de espera de conexión superado</string>
-	<string name="prefServerTimeoutConnectionDefault">10000</string>
 	<string name="prefServerTimeoutResponse">Tiempo de espera de respuesta superado</string>
-	<string name="prefServerTimeoutResponseDefault">20000</string>
 	
 	<string name="prefBackgroudDataConnect">Buscador de actividad previa</string>
 	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando esta aplicación no se esté ejecutando.</string>
