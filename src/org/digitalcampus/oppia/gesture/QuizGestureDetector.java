@@ -45,20 +45,20 @@ public class QuizGestureDetector extends SimpleOnGestureListener {
 			// right to left swipe
 			if (e1.getX() - e2.getX() > OppiaMobileGestureParams.SWIPE_MIN_DISTANCE && Math.abs(velocityX) > OppiaMobileGestureParams.SWIPE_THRESHOLD_VELOCITY) {
 				if (this.modAct.getCurrentActivity() instanceof QuizWidget) {
-					if (((QuizWidget) this.modAct.getCurrentActivity()).getQuiz().hasNext()) {
+					/*if (((QuizWidget) this.modAct.getCurrentActivity()).getQuiz().hasNext()) {
 						((QuizWidget) this.modAct.getCurrentActivity()).nextBtn.performClick();
 					} else {
 						((QuizWidget) this.modAct.getCurrentActivity()).showResults();
-					}
+					}*
 				}
 
 			} else if (e2.getX() - e1.getX() > OppiaMobileGestureParams.SWIPE_MIN_DISTANCE && Math.abs(velocityX) > OppiaMobileGestureParams.SWIPE_THRESHOLD_VELOCITY) {
 				if (this.modAct.getCurrentActivity() instanceof QuizWidget) {
-					if (((QuizWidget) this.modAct.getCurrentActivity()).getQuiz().hasPrevious()) {
+					/(if (((QuizWidget) this.modAct.getCurrentActivity()).getQuiz().hasPrevious()) {
 						((QuizWidget) this.modAct.getCurrentActivity()).prevBtn.performClick();
 					//} else if (this.modAct.hasPrev()){
 					//	this.modAct.movePrev();
-					}
+					}*/
 				}
 			}
 		} catch (Exception e) {

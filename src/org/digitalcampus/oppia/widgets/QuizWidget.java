@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,8 +46,6 @@ import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
 import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
 import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -56,14 +53,17 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,8 +72,6 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bugsense.trace.BugSenseHandler;
 
 public class QuizWidget extends WidgetFactory {
 
@@ -96,15 +94,21 @@ public class QuizWidget extends WidgetFactory {
 	private GestureDetector quizGestureDetector;
 	private OnTouchListener quizGestureListener; 
 	
-	public QuizWidget(android.app.Activity context, Course course, Activity activity) {
-		this.ctx = context;
-		this.course = course;
-		this.startQuiz(activity);
+	 @Override
+	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
+		ctx = super.getActivity();
+		course = (Course) getArguments().getSerializable(Course.TAG);
+		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, null);
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		vv.setLayoutParams(lp);
+		return vv;
 	}
 	
-	
-	private void startQuiz(Activity activity){
-		this.prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
+	 @Override
+	 public void onActivityCreated(Bundle savedInstanceState) { 
+		super.onActivityCreated(savedInstanceState);
 		
 		quizGestureDetector = new GestureDetector((android.app.Activity) this.ctx, new QuizGestureDetector((CourseActivity) this.ctx));
 		quizGestureListener = new OnTouchListener() {
@@ -118,11 +122,6 @@ public class QuizWidget extends WidgetFactory {
 				}
 			}
 		};
-		//View vv = super.getLayoutInflater().inflate(R.layout.widget_quiz, null);
-		
-		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		//super.getLayout().addView(vv);
-		//vv.setLayoutParams(lp);
 
 		ScrollView sv = (ScrollView) this.ctx.findViewById(R.id.quizScrollView);
 		sv.setOnTouchListener(quizGestureListener);
@@ -132,7 +131,6 @@ public class QuizWidget extends WidgetFactory {
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.question_text);
 		questionImage = (LinearLayout) ((android.app.Activity) this.ctx).findViewById(R.id.question_image);
 		
-		quizContent = activity.getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		if(this.quiz == null){
 			this.quiz = new Quiz();
 			this.quiz.load(quizContent);
@@ -364,7 +362,7 @@ public class QuizWidget extends WidgetFactory {
 			TextView score = new TextView(this.ctx);
 			score.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_results_score,percent));
 			score.setTextSize(60);
-			score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+			score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			score.setGravity(Gravity.CENTER);
 			score.setPadding(0, 20, 0, 20);
 			responsesLL.addView(score);
@@ -393,91 +391,4 @@ public class QuizWidget extends WidgetFactory {
 		this.showQuestion();
 	}
 	
-	@Override
-	public boolean activityHasTracker(){
-		return isOnResultsPage;
-	}
-	
-	@Override
-	public void setActivityCompleted(boolean completed){
-		this.isOnResultsPage = completed;
-	}
-	
-	@Override
-	public boolean getActivityCompleted(){
-		if(isOnResultsPage){
-			quiz.mark();
-			float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
-			if (percent > 99){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public long getTimeTaken(){
-		return (endTimestamp - startTimestamp);
-	}
-
-	public JSONObject getTrackerData(){
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("timetaken", this.getTimeTaken());
-			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
-			obj.put("quiz_id", quiz.getID());
-			obj.put("instance_id", quiz.getInstanceID());
-			quiz.mark();
-			float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
-			obj.put("score", percent);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			BugSenseHandler.sendException(e);
-		}
-		
-		return obj;
-	}
-	
-	@Override
-	public String getContentToRead() {
-		return "";
-	}
-
-	private void setStartTime(long startTime) {
-		this.startTimestamp = startTime;
-	}
-
-	private long getStartTime() {
-		return this.startTimestamp;
-	}
-
-	
-	@Override
-	public void setReadAloud(boolean reading){
-		//do nothing
-	}
-	
-	@Override
-	public boolean getReadAloud(){
-		return false;
-	}
-
-	public Quiz getQuiz() {
-		return this.quiz;
-	}
-
-	private void setQuiz(Quiz quiz) {
-		this.quiz = quiz;
-	}
-
-	@Override
-	public void setBaselineActivity(boolean baseline) {
-		this.isBaselineActivity = baseline;
-	}
-
-	@Override
-	public boolean isBaselineActivity() {
-		return this.isBaselineActivity;
-	}
-
 }

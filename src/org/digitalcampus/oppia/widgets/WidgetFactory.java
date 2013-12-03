@@ -25,19 +25,4 @@ public abstract class WidgetFactory extends Fragment {
 	
 	public final static String TAG = WidgetFactory.class.getSimpleName();
 	
-	public abstract boolean activityHasTracker();
-	public abstract void setActivityCompleted(boolean completed);
-	public abstract boolean getActivityCompleted();
-	
-	public abstract long getTimeTaken();
-	
-	public abstract JSONObject getTrackerData();
-	
-	public abstract String getContentToRead();
-	
-	public abstract void setReadAloud(boolean reading);
-	public abstract boolean getReadAloud();
-	
-	public abstract void setBaselineActivity(boolean baseline);
-	public abstract boolean isBaselineActivity();
 }

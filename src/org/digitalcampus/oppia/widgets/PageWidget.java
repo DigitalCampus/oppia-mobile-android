@@ -17,26 +17,16 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.FileUtils;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
@@ -56,22 +46,15 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
-import com.bugsense.trace.BugSenseHandler;
-
 public class PageWidget extends WidgetFactory {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
 	private Context ctx;
 	private Course course;
 	private Activity activity;
-	private long startTimestamp = System.currentTimeMillis()/1000;
-	private long mediaStartTimeStamp;
-	private boolean mediaPlaying = false;
 	private String mediaFileName;
 	private SharedPreferences prefs;
 	private WebView wv;
-	private BufferedReader br;
-	private boolean readAloud = false;
 	
 	
 	 @Override
@@ -159,8 +142,6 @@ public class PageWidget extends WidgetFactory {
 							return true;
 						}
 						
-						mediaPlaying = true;
-						mediaStartTimeStamp = System.currentTimeMillis()/1000;
 						ctx.startActivity(intent);
 						
 						return true;
@@ -177,180 +158,5 @@ public class PageWidget extends WidgetFactory {
 				}
 			});
 	 }
-	 
-	public boolean activityHasTracker(){
-		long endTimestamp = System.currentTimeMillis()/1000;
-		long diff = endTimestamp - startTimestamp;
-		if(diff >= MobileLearning.PAGE_READ_TIME){
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
-	@Override
-	public boolean getActivityCompleted(){
-		// only show as being complete if all the videos on this page have been played
-		if(this.activity.hasMedia()){
-			ArrayList<Media> mediaList = this.activity.getMedia();
-			boolean completed = true;
-			DbHelper db = new DbHelper(this.ctx);
-			for (Media m: mediaList){
-				if(!db.activityCompleted(this.course.getModId(), m.getDigest())){
-					completed = false;
-				}
-			}
-			db.close();
-			if(!completed){
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	@Override
-	public void setActivityCompleted(boolean completed){
-		//do nothing
-	}
-	public long getTimeTaken(){
-		long endTimestamp = System.currentTimeMillis()/1000;
-		long diff = endTimestamp - startTimestamp;
-		if(diff >= MobileLearning.PAGE_READ_TIME){
-			return diff;
-		} else {
-			return 0;
-		}
-	}
-	
-	public JSONObject getTrackerData(){
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("timetaken", this.getTimeTaken());
-			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
-			obj.put("readaloud",readAloud);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			BugSenseHandler.sendException(e);
-		}
-		
-		return obj;
-	}
-
-	@Override
-	public String getContentToRead() {
-		File f = new File ("/"+ course.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
-		StringBuilder text = new StringBuilder();
-		try {
-		    br = new BufferedReader(new FileReader(f));
-		    String line;
-
-		    while ((line = br.readLine()) != null) {
-		        text.append(line);
-		    }
-		}
-		catch (IOException e) {
-		    return "";
-		}
-		return android.text.Html.fromHtml(text.toString()).toString();
-	}
-
-
-	private void mediaStopped() {
-		if(mediaPlaying){
-			long mediaEndTimeStamp = System.currentTimeMillis()/1000;
-			long timeTaken = mediaEndTimeStamp - mediaStartTimeStamp;
-			Log.d(TAG,"video playing for:" + String.valueOf(timeTaken));
-			mediaPlaying = false;
-			// track that the video has been played (or at least clicked on)
-			Tracker t = new Tracker(ctx);
-			// digest should be that of the video not the page
-			for(Media m: PageWidget.this.activity.getMedia()){
-				if(m.getFilename().equals(mediaFileName)){
-					Log.d(TAG,"media digest:" + m.getDigest());
-					Log.d(TAG,"media file:" + mediaFileName);
-					Log.d(TAG,"media length:" + m.getLength());
-					boolean completed = false;
-					if(timeTaken >= m.getLength()){
-						completed = true;
-					}
-					JSONObject data = new JSONObject();
-					try {
-						data.put("media", "played");
-						data.put("mediafile", mediaFileName);
-						data.put("timetaken", timeTaken);
-						String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
-						data.put("lang", lang);
-					} catch (JSONException e) {
-						e.printStackTrace();
-						BugSenseHandler.sendException(e);
-					}
-					MetaDataUtils mdu = new MetaDataUtils(ctx);
-					// add in extra meta-data
-					try {
-						data = mdu.getMetaData(data);
-					} catch (JSONException e) {
-						// Do nothing
-					} 
-					t.saveTracker(PageWidget.this.course.getModId(), m.getDigest(), data, completed);
-				}
-			}
-		}
-		
-	}
-	
-	private boolean getMediaPlaying() {
-		return this.mediaPlaying;
-	}
-
-	private long getMediaStartTime() {
-		return this.mediaStartTimeStamp;
-	}
-
-	private void setMediaPlaying(boolean playing) {
-		this.mediaPlaying = playing;
-	}
-
-	private void setMediaStartTime(long mediaStartTime) {
-		this.mediaStartTimeStamp = mediaStartTime;
-	}
-
-	private String getMediaFileName() {
-		return this.mediaFileName;
-	}
-
-	private void setMediaFileName(String mediaFileName) {
-		this.mediaFileName = mediaFileName;	
-	}
-	
-	private void setStartTime(long startTime) {
-		this.startTimestamp = startTime;
-		
-	}
-
-	private long getStartTime() {
-		return this.startTimestamp;
-	}
-
-	@Override
-	public void setReadAloud(boolean reading){
-		this.readAloud = reading;
-	}
-	
-	@Override
-	public boolean getReadAloud(){
-		return readAloud;
-	}
-
-	@Override
-	public void setBaselineActivity(boolean baseline) {
-	}
-
-	@Override
-	public boolean isBaselineActivity() {
-		return false;
-	}
-
-	
-
 }

@@ -34,20 +34,14 @@ import org.digitalcampus.oppia.widgets.WidgetFactory;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 public class CourseActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -89,7 +83,11 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 						.get(i)
 						.getTitle(
 								prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-				actionBar.addTab(actionBar.newTab().setText(title).setTabListener(this));
+				boolean tabSelected = false;
+				if(i == currentActivityNo){
+					tabSelected = true;
+				}
+				actionBar.addTab(actionBar.newTab().setText(title).setTabListener(this),tabSelected);
 			}
 		}
 	}
@@ -180,19 +178,22 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 	}
 
 	public void onTabSelected(Tab tab, android.app.FragmentTransaction ft){
+		Fragment fragment = null;
 		if (activities.get(tab.getPosition()).getActType().equals("page")) {
-			Fragment fragment =  new PageWidget();
+			fragment =  new PageWidget();
+		} else if (activities.get(tab.getPosition()).getActType().equals("quiz")) {
+			fragment = new QuizWidget();
+		} else if (activities.get(tab.getPosition()).getActType().equals("resource")) {
+			fragment = new ResourceWidget();
+		}
+		
+		if (fragment != null){
 			Bundle args = new Bundle();
-		    args.putSerializable(Activity.TAG,activities.get(tab.getPosition()));
+			args.putSerializable(Activity.TAG,activities.get(tab.getPosition()));
 		    args.putSerializable(Course.TAG,course);
 		    fragment.setArguments(args);
 			getSupportFragmentManager().beginTransaction().replace(R.id.activity_widget, fragment).commit();
-		} else if (activities.get(this.currentActivityNo).getActType().equals("quiz")) {
-			Fragment fragment = new QuizWidget(CourseActivity.this, course, activities.get(this.currentActivityNo));
-		} else if (activities.get(this.currentActivityNo).getActType().equals("resource")) {
-			Fragment fragment = new ResourceWidget(this, course, activities.get(this.currentActivityNo));
 		}
-
 	}
 
 	public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {
@@ -202,7 +203,6 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 
 
 	public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) {
-		// TODO Auto-generated method stub
 		
 	}
 
