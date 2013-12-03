@@ -97,17 +97,8 @@ public class QuizWidget extends WidgetFactory {
 	private OnTouchListener quizGestureListener; 
 	
 	public QuizWidget(android.app.Activity context, Course course, Activity activity) {
-		super(context, course, activity);
 		this.ctx = context;
 		this.course = course;
-		this.startQuiz(activity);
-	}
-
-	public QuizWidget(android.app.Activity context, Course module, Activity activity, HashMap<String, Object> config) {
-		super(context, module, activity);
-		this.ctx = context;
-		this.course = module;
-		this.setWidgetConfig(config);
 		this.startQuiz(activity);
 	}
 	
@@ -127,11 +118,11 @@ public class QuizWidget extends WidgetFactory {
 				}
 			}
 		};
-		View vv = super.getLayoutInflater().inflate(R.layout.widget_quiz, null);
+		//View vv = super.getLayoutInflater().inflate(R.layout.widget_quiz, null);
 		
 		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		super.getLayout().addView(vv);
-		vv.setLayoutParams(lp);
+		//super.getLayout().addView(vv);
+		//vv.setLayoutParams(lp);
 
 		ScrollView sv = (ScrollView) this.ctx.findViewById(R.id.quizScrollView);
 		sv.setOnTouchListener(quizGestureListener);
@@ -487,29 +478,6 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public boolean isBaselineActivity() {
 		return this.isBaselineActivity;
-	}
-
-	@Override
-	public HashMap<String, Object> getWidgetConfig() {
-		HashMap<String, Object> config = new HashMap<String, Object>();
-		//this.saveAnswer();
-		config.put("quiz", this.getQuiz());
-		config.put("Activity_StartTime", this.getStartTime());
-		config.put("OnResultsPage", this.isOnResultsPage);
-		return config;
-	}
-
-	@Override
-	public void setWidgetConfig(HashMap<String, Object> config) {
-		if (config.containsKey("quiz")){
-			this.setQuiz((Quiz) config.get("quiz"));
-		}
-		if (config.containsKey("Activity_StartTime")){
-			this.setStartTime((Long) config.get("Activity_StartTime"));
-		}
-		if (config.containsKey("OnResultsPage")){
-			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
-		}
 	}
 
 }

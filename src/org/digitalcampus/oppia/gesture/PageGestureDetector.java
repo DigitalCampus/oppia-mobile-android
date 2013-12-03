@@ -38,13 +38,13 @@ public class PageGestureDetector extends SimpleOnGestureListener {
 				return false;
 			// right to left swipe
 			if (e1.getX() - e2.getX() > OppiaMobileGestureParams.SWIPE_MIN_DISTANCE && Math.abs(velocityX) > OppiaMobileGestureParams.SWIPE_THRESHOLD_VELOCITY) {
-				if (modAct.hasNext()) {
+				/*if (modAct.hasNext()) {
 					modAct.moveNext();
-				}
+				}*/
 			} else if (e2.getX() - e1.getX() > OppiaMobileGestureParams.SWIPE_MIN_DISTANCE && Math.abs(velocityX) > OppiaMobileGestureParams.SWIPE_THRESHOLD_VELOCITY) {
-				if (modAct.hasPrev()) {
+				/*if (modAct.hasPrev()) {
 					modAct.movePrev();
-				}
+				}*/
 			}
 		} catch (Exception e) {
 			// nothing

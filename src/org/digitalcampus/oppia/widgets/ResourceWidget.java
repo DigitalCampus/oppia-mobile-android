@@ -43,7 +43,6 @@ public class ResourceWidget extends WidgetFactory {
 	private boolean isBaselineActivity = false;
 	
 	public ResourceWidget(Context context, Course course, org.digitalcampus.oppia.model.Activity activity) {
-		super(context, course, activity);
 		this.ctx = context;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 		
@@ -59,10 +58,10 @@ public class ResourceWidget extends WidgetFactory {
 			}
 		};
 		
-		View vv = super.getLayoutInflater().inflate(R.layout.widget_resource, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		super.getLayout().addView(vv,lp);
-		vv.setOnTouchListener(resourceGestureListener);
+		//View vv = super.getLayoutInflater().inflate(R.layout.widget_resource, null);
+		//LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		//super.getLayout().addView(vv,lp);
+		//vv.setOnTouchListener(resourceGestureListener);
 		
 		LinearLayout ll = (LinearLayout) ((android.app.Activity) context).findViewById(R.id.widget_resource_object);
 		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
@@ -84,7 +83,7 @@ public class ResourceWidget extends WidgetFactory {
 			ImageView iv = new ImageView(this.ctx);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			iv.setImageBitmap(myBitmap);
-			ll.addView(iv, lp);
+			//ll.addView(iv, lp);
 			iv.setTag(file);
 			iv.setOnClickListener(orcl);
 		} else {
@@ -176,19 +175,5 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public boolean isBaselineActivity() {
 		return this.isBaselineActivity;
-	}
-
-	@Override
-	public HashMap<String, Object> getWidgetConfig() {
-		HashMap<String, Object> config = new HashMap<String, Object>();
-		config.put("Activity_StartTime", this.getStartTime());
-		return config;
-	}
-
-	@Override
-	public void setWidgetConfig(HashMap<String, Object> config) {
-		if (config.containsKey("Activity_StartTime")){
-			this.setStartTime((Long) config.get("Activity_StartTime"));
-		}
 	}
 }

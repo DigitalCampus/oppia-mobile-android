@@ -59,7 +59,7 @@ public class CourseMetaPageActivity extends AppActivity {
 		}
 		
 		TextView titleTV = (TextView) findViewById(R.id.course_title);
-		String title = course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())) + ": " + cmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
+		String title = cmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
 		titleTV.setText(title);
 		
 		TextView versionTV = (TextView) findViewById(R.id.course_versionid);

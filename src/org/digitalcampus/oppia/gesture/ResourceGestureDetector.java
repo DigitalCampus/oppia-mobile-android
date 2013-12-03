@@ -28,14 +28,14 @@ public class ResourceGestureDetector extends SimpleOnGestureListener {
 			}
 			// right to left swipe
 			if (e1.getX() - e2.getX() > OppiaMobileGestureParams.SWIPE_MIN_DISTANCE && Math.abs(velocityX) > OppiaMobileGestureParams.SWIPE_THRESHOLD_VELOCITY) {
-				if (modAct.hasNext()){
+				/*if (modAct.hasNext()){
 					modAct.moveNext();
 					return true;
-				}
+				}*/
 			} else if (e2.getX() - e1.getX() > OppiaMobileGestureParams.SWIPE_MIN_DISTANCE && Math.abs(velocityX) > OppiaMobileGestureParams.SWIPE_THRESHOLD_VELOCITY) {
-				if (modAct.hasPrev()) {
+				/*if (modAct.hasPrev()) {
 					modAct.movePrev();
-				}
+				}*/
 			}
 		} catch (Exception e) {
 			// nothing

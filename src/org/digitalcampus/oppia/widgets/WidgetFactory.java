@@ -17,45 +17,19 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.util.HashMap;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Course;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
+import android.support.v4.app.Fragment;
 
-public abstract class WidgetFactory extends Activity {
+public abstract class WidgetFactory extends Fragment {
 	
 	public final static String TAG = WidgetFactory.class.getSimpleName();
-	private LayoutInflater li;
-	private LinearLayout ll;
-	
-	public WidgetFactory(Context context, Course course, org.digitalcampus.oppia.model.Activity activity ) {
-		super();
-		ll = (LinearLayout) ((Activity) context).findViewById(R.id.activity_widget);
-		ll.removeAllViews();
-		li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
-	
-	public LayoutInflater getLayoutInflater(){
-		return li;
-	}
-	
-	public LinearLayout getLayout(){
-		return ll;
-	}
 	
 	public abstract boolean activityHasTracker();
 	public abstract void setActivityCompleted(boolean completed);
 	public abstract boolean getActivityCompleted();
 	
 	public abstract long getTimeTaken();
-	//public abstract void setStartTime(long startTime);
-	//public abstract long getStartTime();
 	
 	public abstract JSONObject getTrackerData();
 	
@@ -66,7 +40,4 @@ public abstract class WidgetFactory extends Activity {
 	
 	public abstract void setBaselineActivity(boolean baseline);
 	public abstract boolean isBaselineActivity();
-	
-	public abstract HashMap<String,Object> getWidgetConfig();
-	public abstract void setWidgetConfig(HashMap<String,Object> config);
 }
