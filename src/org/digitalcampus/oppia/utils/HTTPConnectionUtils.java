@@ -29,7 +29,7 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 		HttpConnectionParams.setConnectionTimeout(
 				httpParameters,
 				Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_connection),
-						ctx.getString(R.string.prefServerTimeoutConnection))));
+						ctx.getString(R.string.prefServerTimeoutConnectionDefault))));
 		HttpConnectionParams.setSoTimeout(
 				httpParameters,
 				Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_response),
