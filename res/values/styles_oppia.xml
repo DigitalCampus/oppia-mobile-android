@@ -26,24 +26,23 @@
     </style>
 
     <style name="Oppia.Theme" parent="@style/Theme.AppCompat">
-        <!--  item name="android:actionBarItemBackground">@drawable/selectable_background_om</item>-->
-        <!--  item name="android:popupMenuStyle">@style/Oppia.PopupMenu</item>-->
-        <!--  item name="android:dropDownListViewStyle">@style/DropDownListView.Om</item>-->
-        <!--  item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Om</item>-->
-        <!--  item name="android:actionDropDownStyle">@style/DropDownNav.Om</item>-->
-        <!--  item name="android:actionBarStyle">@style/Oppia.ActionBar.Solid</item>-->
-        <!--  item name="android:actionModeBackground">@drawable/cab_background_top_om</item>-->
-        <!--  item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_om</item>-->
-        <!--  item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Om</item>-->
-        <!--  item name="android:windowBackground">@color/background_dark</item>-->
-        <!--  item name="android:editTextStyle">@style/Oppia.EditText</item-->
+        <item name="android:actionBarItemBackground">@drawable/oppia_selectable_background</item>
+        <item name="android:popupMenuStyle">@style/Oppia.PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/Oppia.DropDownListView</item>
+        <item name="android:actionBarTabStyle">@style/Oppia.ActionBarTabStyle</item>
+        <item name="android:actionDropDownStyle">@style/Oppia.DropDownNav</item>
+        <item name="android:actionBarStyle">@style/Oppia.ActionBar.Solid</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_om</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_om</item>
+        <item name="android:actionModeCloseButtonStyle">@style/Oppia.ActionButton.CloseMode</item>
+        <item name="android:windowBackground">@color/background_dark</item>
     </style>
-<!-- @android:style/Widget.Holo.ActionBar.Solid -->
+    
     <style name="Oppia.ActionBar.Solid" parent="@style/Widget.AppCompat.ActionBar.Solid">
         <item name="android:background">@drawable/green_background_gradient</item>
         <item name="android:backgroundStacked">@drawable/green_background_gradient</item>
         <item name="android:backgroundSplit">@drawable/green_background_gradient</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.Om</item>
+        <item name="android:progressBarStyle">@style/Oppia.ProgressBar</item>
         <item name="android:titleTextStyle">@style/Oppia.ActionBar.TitleTextStyle</item>
     </style>
     
@@ -56,31 +55,26 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_om</item>
     </style>
 
-    <style name="DropDownListView.Om" parent="@style/Widget.AppCompat.ListView.DropDown">
-        <item name="android:listSelector">@drawable/selectable_background_om</item>
+    <style name="Oppia.DropDownListView" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/oppia_selectable_background</item>
     </style>
 
-    <style name="ActionBarTabStyle.Om" parent="@style/Widget.AppCompat.ActionBar.TabView">
+    <style name="Oppia.ActionBarTabStyle" parent="@style/Widget.AppCompat.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_om</item>
     </style>
 
-    <style name="DropDownNav.Om" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
+    <style name="Oppia.DropDownNav" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
         <item name="android:background">@drawable/spinner_background_ab_om</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_om</item>
-        <item name="android:dropDownSelector">@drawable/selectable_background_om</item>
+        <item name="android:dropDownSelector">@drawable/oppia_selectable_background</item>
     </style>
 
-    <style name="ProgressBar.Om" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+    <style name="Oppia.ProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_om</item>
     </style>
 
-    <style name="ActionButton.CloseMode.Om" parent="@style/Widget.AppCompat.ActionButton.CloseMode">
+    <style name="Oppia.ActionButton.CloseMode" parent="@style/Widget.AppCompat.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_om</item>
     </style>
-
-    <!--  style name="Oppia.EditText" parent="android:Widget.EditText">
-        <item name="android:background">@drawable/om_edit_text_holo_light</item>
-        <item name="android:textColor">@color/text_light</item>
-    </style-->
 
 </resources>

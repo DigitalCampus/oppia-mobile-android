@@ -30,7 +30,6 @@
 
     <Button
         android:id="@+id/action_btn"
-        style="@style/ButtonText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight=".35"
