@@ -2,6 +2,5 @@
     xmlns:oppiamobile="http://schemas.android.com/apk/res-auto" >
     <item android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
-        android:icon="@android:drawable/ic_menu_preferences"
-        oppiamobile:showAsAction="ifRoom"/>
+        android:icon="@android:drawable/ic_menu_preferences"/>
 </menu>

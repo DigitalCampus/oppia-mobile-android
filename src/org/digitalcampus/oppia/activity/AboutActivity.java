@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.activity;
 
 import java.util.Locale;
 
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.utils.FileUtils;
 
@@ -26,7 +27,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.TextView;
 

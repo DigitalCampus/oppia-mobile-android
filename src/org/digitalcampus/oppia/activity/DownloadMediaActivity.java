@@ -65,14 +65,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		}
 		
 		ListView listView = (ListView) findViewById(R.id.missing_media_list);
-		Object retained = getLastNonConfigurationInstance();
-		if (retained instanceof DownloadMediaListAdapter){
-			dmla = (DownloadMediaListAdapter) retained;
-			dmla.setMediaList(missingMedia);
-			dmla.notifyDataSetChanged();
-		} else {
-			dmla = new DownloadMediaListAdapter(this, missingMedia);
-		}
+		dmla = new DownloadMediaListAdapter(this, missingMedia);
 		dmla.setDownloadMediaListener(this);
 		listView.setAdapter(dmla);
 		

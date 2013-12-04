@@ -32,6 +32,9 @@ import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.utils.CourseXMLReader;
 import org.digitalcampus.oppia.utils.UIUtils;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,8 +42,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ListView;
 
 public class CourseIndexActivity extends AppActivity {
@@ -158,7 +159,7 @@ public class CourseIndexActivity extends AppActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
     	menu.clear();
-        getMenuInflater().inflate(R.menu.activity_course_index, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_course_index, menu);
         ArrayList<CourseMetaPage> ammp = course.getMetaPages();
         int order = 104;
         for(CourseMetaPage mmp: ammp){

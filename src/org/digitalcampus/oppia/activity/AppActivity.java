@@ -22,10 +22,11 @@ import java.util.ArrayList;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 
-import android.support.v7.app.ActionBarActivity;
-import android.view.MenuItem;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 
-public class AppActivity extends ActionBarActivity {
+
+public class AppActivity extends SherlockActivity {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
 	

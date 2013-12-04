@@ -22,12 +22,13 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.FileUtils;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -50,7 +51,7 @@ public class MonitorActivity extends AppActivity {
 		webView = new WebView(this);
 		
 		LinearLayout ll = (LinearLayout) findViewById(R.id.monitor_layout);
-		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		webView.setLayoutParams(lp);
 		ll.addView(webView);
 		if (savedInstanceState != null) {
@@ -96,7 +97,7 @@ public class MonitorActivity extends AppActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_monitor, menu);
+		getSupportMenuInflater().inflate(R.menu.activity_monitor, menu);
 		return true;
 	}
 	

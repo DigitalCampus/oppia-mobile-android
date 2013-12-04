@@ -37,7 +37,6 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;

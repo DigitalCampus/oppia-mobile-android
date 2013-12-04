@@ -29,7 +29,6 @@ import org.digitalcampus.oppia.utils.FileUtils;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.TextView;
 

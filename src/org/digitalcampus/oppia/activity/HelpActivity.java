@@ -20,16 +20,14 @@ package org.digitalcampus.oppia.activity;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.utils.FileUtils;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.MenuItem;
 import android.webkit.WebView;
+
+import com.actionbarsherlock.view.MenuItem;
 
 public class HelpActivity extends AppActivity {
 

@@ -32,18 +32,22 @@ import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.digitalcampus.oppia.widgets.ResourceWidget;
 import org.digitalcampus.oppia.widgets.WidgetFactory;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.FragmentTransaction;
 
-public class CourseActivity extends FragmentActivity implements ActionBar.TabListener {
+
+public class CourseActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 
 	public static final String TAG = CourseActivity.class.getSimpleName();
 	public static final String BASELINE_TAG = "BASELINE";
@@ -61,7 +65,7 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_course);
-		final ActionBar actionBar = getActionBar();
+		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
@@ -115,7 +119,7 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_course, menu);
+		getSupportMenuInflater().inflate(R.menu.activity_course, menu);
 		return true;
 	}
 
@@ -177,7 +181,7 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 		return this.currentActivity;
 	}
 
-	public void onTabSelected(Tab tab, android.app.FragmentTransaction ft){
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		Fragment fragment = null;
 		if (activities.get(tab.getPosition()).getActType().equals("page")) {
 			fragment =  new PageWidget();
@@ -194,15 +198,16 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 		    fragment.setArguments(args);
 			getSupportFragmentManager().beginTransaction().replace(R.id.activity_widget, fragment).commit();
 		}
+		
 	}
 
-	public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
-	public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) {
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
 		
 	}
 
