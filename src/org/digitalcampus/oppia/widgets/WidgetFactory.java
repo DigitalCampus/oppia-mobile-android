@@ -17,8 +17,6 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import org.json.JSONObject;
-
 import android.support.v4.app.Fragment;
 
 public abstract class WidgetFactory extends Fragment {

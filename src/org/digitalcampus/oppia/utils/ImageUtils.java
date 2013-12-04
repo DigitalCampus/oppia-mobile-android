@@ -22,20 +22,23 @@ import java.io.File;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 
 public class ImageUtils {
 	
 	public static final String TAG = ImageUtils.class.getSimpleName();
 	
-	public static Bitmap LoadBMPsdcard(String path, Resources res, int defaultImageResource){  
+	public static BitmapDrawable LoadBMPsdcard(String path, Resources res, int defaultImageResource){  
         File imageFile = new File(path);  
         //if the file exists  
         if(imageFile.exists()) {  
             //load the bitmap from the given path  
-            return BitmapFactory.decodeFile(path);  
+        	Bitmap bmp = BitmapFactory.decodeFile(path); 
+            return new BitmapDrawable(res, bmp); 
         } else {  
-            //return the standard 'Image not found' bitmap placed on the res folder  
-            return BitmapFactory.decodeResource(res, defaultImageResource);  
+            //return the standard 'Image not found' bitmap placed on the res folder   
+            Bitmap bmp = BitmapFactory.decodeResource(res, defaultImageResource); 
+            return new BitmapDrawable(res, bmp); 
         }  
     }  
 

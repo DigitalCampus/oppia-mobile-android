@@ -27,7 +27,7 @@ import org.digitalcampus.oppia.utils.ImageUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,8 +69,8 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 		// set image
 		if(m.getImageFile() != null){
 			ImageView iv = (ImageView) rowView.findViewById(R.id.course_image);
-			Bitmap bm = ImageUtils.LoadBMPsdcard(m.getImageFile(), ctx.getResources(), R.drawable.default_icon_course);
-			iv.setImageBitmap(bm);
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(m.getImageFile(), ctx.getResources(), R.drawable.default_icon_course);
+			iv.setImageDrawable(bm);
 		}
 	    return rowView;
 	}

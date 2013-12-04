@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-     File created by the Android Action Bar Style Generator
+<!-- File created by the Android Action Bar Style Generator
 
      Copyright (C) 2011 The Android Open Source Project
      Copyright (C) 2012 readyState Software Ltd
@@ -18,65 +17,70 @@
      limitations under the License.
 -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
     <style name="Oppia.Theme.StartUp" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/background_light</item>
     </style>
-
+    
     <style name="Oppia.Theme" parent="@style/Theme.Sherlock">
-        <item name="android:actionBarItemBackground">@drawable/oppia_selectable_background</item>
-        <item name="android:popupMenuStyle">@style/Oppia.PopupMenu</item>
-        <item name="android:dropDownListViewStyle">@style/Oppia.DropDownListView</item>
-        <item name="android:actionBarTabStyle">@style/Oppia.ActionBarTabStyle</item>
-        <item name="android:actionDropDownStyle">@style/Oppia.DropDownNav</item>
-        <item name="android:actionBarStyle">@style/Oppia.ActionBar.Solid</item>
-        <item name="android:actionModeBackground">@drawable/cab_background_top_om</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_om</item>
-        <item name="android:actionModeCloseButtonStyle">@style/Oppia.ActionButton.CloseMode</item>
-        <item name="android:windowBackground">@color/background_dark</item>
+         <item name="actionBarItemBackground">@drawable/selectable_background_om</item>
+        <item name="popupMenuStyle">@style/PopupMenu.Om</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Om</item>
+        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Om</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.Om</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Om</item>
+        <item name="actionModeBackground">@drawable/cab_background_top_om</item>
+        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_om</item>
+        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Om</item>
+		<item name="android:windowBackground">@color/background_dark</item>
+        
+    </style>
+
+     <style name="ActionBar.Solid.Om" parent="@style/Widget.Sherlock.ActionBar.Solid">
+        <item name="background">@drawable/ab_solid_om</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_om</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_om</item>
+        <item name="progressBarStyle">@style/ProgressBar.Om</item>
     </style>
     
-    <style name="Oppia.ActionBar.Solid" parent="@style/Widget.Sherlock.ActionBar.Solid">
-        <item name="android:background">@drawable/green_background_gradient</item>
-        <item name="android:backgroundStacked">@drawable/green_background_gradient</item>
-        <item name="android:backgroundSplit">@drawable/green_background_gradient</item>
-        <item name="android:progressBarStyle">@style/Oppia.ProgressBar</item>
-        <item name="android:titleTextStyle">@style/Oppia.ActionBar.TitleTextStyle</item>
+
+    <style name="ActionBar.Transparent.Om" parent="@style/Widget.Sherlock.ActionBar">
+        <item name="background">@drawable/ab_transparent_om</item>
+        <item name="progressBarStyle">@style/ProgressBar.Om</item>
     </style>
-    
-    <style name="Oppia.ActionBar.TitleTextStyle" parent="@style/Widget.Sherlock.ActionBar.Solid">
-        <item name="android:textColor">@color/text_dark</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20dp</item>
+	
+    <style name="PopupMenu.Om" parent="@style/Widget.Sherlock.ListPopupWindow">	
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_om</item>	
+    </style>
+	
+    <style name="DropDownListView.Om" parent="@style/Widget.Sherlock.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_om</item>
     </style>
 
-    <style name="Oppia.PopupMenu" parent="@style/Widget.Sherlock.ListPopupWindow">
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_om</item>
-    </style>
-
-    <style name="Oppia.DropDownListView" parent="@style/Widget.Sherlock.ListView.DropDown">
-        <item name="android:listSelector">@drawable/oppia_selectable_background</item>
-    </style>
-
-    <style name="Oppia.ActionBarTabStyle" parent="@style/Widget.Sherlock.ActionBar.TabView">
+    <style name="ActionBarTabStyle.Om" parent="@style/Widget.Sherlock.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_om</item>
     </style>
-
-    <style name="Oppia.DropDownNav" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
+	
+    <style name="DropDownNav.Om" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
         <item name="android:background">@drawable/spinner_background_ab_om</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_om</item>
-        <item name="android:dropDownSelector">@drawable/oppia_selectable_background</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_om</item>
     </style>
-
-    <style name="Oppia.ProgressBar" parent="@style/Widget.Sherlock.ProgressBar.Horizontal">
+    
+    <style name="ProgressBar.Om" parent="@style/Widget.Sherlock.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_om</item>
     </style>
-
-    <!-- Widget.AppCompat.ActionButton.CloseMode -->
-    <style name="Oppia.ActionButton.CloseMode" parent="@style/Widget.Sherlock.ActionButton.CloseMode">
+    
+    <style name="ActionButton.CloseMode.Om" parent="@style/Widget.Sherlock.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_om</item>
+    </style>
+    
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Om.Widget" parent="@style/Theme.Sherlock">
+        <item name="popupMenuStyle">@style/PopupMenu.Om</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Om</item>
     </style>
 
 </resources>

@@ -26,6 +26,7 @@ import org.digitalcampus.oppia.adapter.SectionListAdapter;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.widgets.PageWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
@@ -40,10 +41,10 @@ import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 
@@ -80,6 +81,10 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			if (bundle.getSerializable(CourseActivity.BASELINE_TAG) != null) {
 				//this.isBaselineActivity = (Boolean) bundle.getSerializable(CourseActivity.BASELINE_TAG);
 			}
+			//set image
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
+			getSupportActionBar().setIcon(bm);
+			
 			activities = section.getActivities();
 			for (int i = 0; i < activities.size(); i++) {
 				String title = section
@@ -176,7 +181,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		});
 	}
 
-
 	public WidgetFactory getCurrentActivity() {
 		return this.currentActivity;
 	}
@@ -197,6 +201,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		    args.putSerializable(Course.TAG,course);
 		    fragment.setArguments(args);
 			getSupportFragmentManager().beginTransaction().replace(R.id.activity_widget, fragment).commit();
+			currentActivity = (WidgetFactory) fragment;
 		}
 		
 	}

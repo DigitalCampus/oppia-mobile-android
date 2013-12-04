@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import com.actionbarsherlock.view.Menu;
@@ -39,6 +40,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -111,15 +113,11 @@ public class CourseIndexActivity extends AppActivity {
 		super.onStart();
 		sections = mxr.getSections(course.getModId(),CourseIndexActivity.this);
 		setTitle(course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
-    	
-		//TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
-    	//tv.setText(course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 		
     	// set image
 		if(course.getImageFile() != null){
-			//ImageView iv = (ImageView) getHeader().findViewById(R.id.page_icon);
-			//Bitmap bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
-			//iv.setImageBitmap(bm);
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
+			getSupportActionBar().setIcon(bm);
 		}
     	
     	ListView listView = (ListView) findViewById(R.id.section_list);

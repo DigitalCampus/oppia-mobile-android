@@ -29,7 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 
 public class Activity implements Serializable{
 	
@@ -65,7 +65,7 @@ public class Activity implements Serializable{
 		return this.customImage;
 	}
 	
-	public Bitmap getImageFile(String prefix, Resources res) {
+	public BitmapDrawable getImageFile(String prefix, Resources res) {
 		int defaultImage = R.drawable.default_icon_activity;
 		if(actType.equals("quiz")){
 			defaultImage = R.drawable.default_icon_quiz;

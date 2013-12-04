@@ -32,9 +32,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
-import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.gesture.QuizGestureDetector;
 import org.digitalcampus.oppia.listener.OnResourceClickListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -57,18 +55,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,9 +85,6 @@ public class QuizWidget extends WidgetFactory {
 	private long endTimestamp = System.currentTimeMillis()/1000;
 	private boolean isBaselineActivity = false;
 	
-	private GestureDetector quizGestureDetector;
-	private OnTouchListener quizGestureListener; 
-	
 	 @Override
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
@@ -109,23 +100,6 @@ public class QuizWidget extends WidgetFactory {
 	 @Override
 	 public void onActivityCreated(Bundle savedInstanceState) { 
 		super.onActivityCreated(savedInstanceState);
-		
-		quizGestureDetector = new GestureDetector((android.app.Activity) this.ctx, new QuizGestureDetector((CourseActivity) this.ctx));
-		quizGestureListener = new OnTouchListener() {
-
-			public boolean onTouch(View v, MotionEvent event) {
-				try {
-					//  for some reason unless this is in a try/catch block it will fail with NullPointerException
-					return quizGestureDetector.onTouchEvent(event);
-				} catch (Exception e){
-					return false;
-				}
-			}
-		};
-
-		ScrollView sv = (ScrollView) this.ctx.findViewById(R.id.quizScrollView);
-		sv.setOnTouchListener(quizGestureListener);
-
 		prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
 		nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.question_text);

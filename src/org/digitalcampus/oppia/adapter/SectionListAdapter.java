@@ -89,7 +89,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    	if(!s.getActivities().get(i).hasCustomImage()){
 	    		iv.setScaleType(ImageView.ScaleType.CENTER);
 	    	}
-	    	iv.setImageBitmap(s.getActivities().get(i).getImageFile(course.getLocation(), ctx.getResources()));
+	    	iv.setImageDrawable(s.getActivities().get(i).getImageFile(course.getLocation(), ctx.getResources()));
 	    	
 	    	
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
