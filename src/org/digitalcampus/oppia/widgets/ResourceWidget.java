@@ -8,7 +8,6 @@ import org.digitalcampus.oppia.listener.OnResourceClickListener;
 import org.digitalcampus.oppia.model.Course;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -26,11 +25,7 @@ import android.widget.TextView;
 public class ResourceWidget extends WidgetFactory {
 
 	public static final String TAG = ResourceWidget.class.getSimpleName();
-	private Context ctx;
-	private SharedPreferences prefs;
-	private Course course;
-	private org.digitalcampus.oppia.model.Activity activity;
-	
+	private Context ctx;	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,5 +75,11 @@ public class ResourceWidget extends WidgetFactory {
 			btn.setTag(file);
 			btn.setOnClickListener(orcl);
 		}
+	}
+
+	@Override
+	public boolean getActivityCompleted() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

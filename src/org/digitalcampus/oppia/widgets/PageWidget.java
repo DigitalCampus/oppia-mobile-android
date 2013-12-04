@@ -31,7 +31,6 @@ import org.digitalcampus.oppia.utils.FileUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -50,10 +49,7 @@ public class PageWidget extends WidgetFactory {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
 	private Context ctx;
-	private Course course;
-	private Activity activity;
 	private String mediaFileName;
-	private SharedPreferences prefs;
 	private WebView wv;
 	
 	
@@ -158,5 +154,11 @@ public class PageWidget extends WidgetFactory {
 				}
 			});
 	 }
-	
+
+
+	@Override
+	public boolean getActivityCompleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

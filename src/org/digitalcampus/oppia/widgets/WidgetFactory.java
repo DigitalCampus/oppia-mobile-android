@@ -17,10 +17,22 @@
 
 package org.digitalcampus.oppia.widgets;
 
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
+
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 
 public abstract class WidgetFactory extends Fragment {
 	
 	public final static String TAG = WidgetFactory.class.getSimpleName();
+	protected Activity activity = null;
+	protected Course course = null;
+	protected SharedPreferences prefs;
 	
+	public abstract boolean getActivityCompleted();
+	
+	public String getDigest() {
+		return activity.getDigest();
+	}
 }

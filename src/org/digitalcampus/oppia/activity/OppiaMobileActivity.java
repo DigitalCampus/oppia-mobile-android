@@ -60,7 +60,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
-	private Course tempMod;
 	private ArrayList<Course> courses;
 
 	@Override

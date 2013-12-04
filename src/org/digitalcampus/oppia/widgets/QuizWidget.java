@@ -47,7 +47,6 @@ import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -70,7 +69,6 @@ import android.widget.Toast;
 public class QuizWidget extends WidgetFactory {
 
 	private static final String TAG = QuizWidget.class.getSimpleName();
-	private SharedPreferences prefs;
 	private android.app.Activity ctx;
 	private Quiz quiz;
 	private QuestionWidget qw;
@@ -79,10 +77,7 @@ public class QuizWidget extends WidgetFactory {
 	private TextView qText;
 	private String quizContent;
 	private LinearLayout questionImage;
-	private boolean isOnResultsPage = false;
-	private Course course; 
-	private long startTimestamp = System.currentTimeMillis()/1000;
-	private long endTimestamp = System.currentTimeMillis()/1000;
+	private boolean isOnResultsPage = false; 
 	private boolean isBaselineActivity = false;
 	
 	 @Override
@@ -90,6 +85,7 @@ public class QuizWidget extends WidgetFactory {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		ctx = super.getActivity();
 		course = (Course) getArguments().getSerializable(Course.TAG);
+		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
 		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -234,7 +230,6 @@ public class QuizWidget extends WidgetFactory {
 				progress.setText("");
 			}
 		} catch (InvalidQuizException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -280,9 +275,6 @@ public class QuizWidget extends WidgetFactory {
 		
 		// log the activity as complete
 		isOnResultsPage = true;
-		
-		// make end time
-		endTimestamp = System.currentTimeMillis()/1000;
 		
 		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
@@ -359,10 +351,13 @@ public class QuizWidget extends WidgetFactory {
 	private void restart() {
 		quiz = new Quiz();
 		quiz.load(quizContent);
-		startTimestamp = System.currentTimeMillis()/1000;
-		endTimestamp = System.currentTimeMillis()/1000;
 		isOnResultsPage = false;
 		this.showQuestion();
 	}
-	
+
+	@Override
+	public boolean getActivityCompleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

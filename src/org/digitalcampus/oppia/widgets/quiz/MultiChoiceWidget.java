@@ -60,7 +60,6 @@ public class MultiChoiceWidget extends QuestionWidget{
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);
     		rb.setId(id);
-    	
 			rb.setText(r.getTitle());
 			responsesRG.addView(rb);
 			Iterator<String> itr = currentAnswer.iterator();
