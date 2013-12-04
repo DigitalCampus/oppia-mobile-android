@@ -17,7 +17,7 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Oppia.Theme.StartUp" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowNoTitle">true</item>
@@ -43,9 +43,16 @@
         <item name="backgroundStacked">@drawable/ab_stacked_solid_om</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_om</item>
         <item name="progressBarStyle">@style/ProgressBar.Om</item>
+          <item name="titleTextStyle">@style/Oppia.ActionBar.TitleTextStyle</item>
     </style>
     
 
+      <style name="Oppia.ActionBar.TitleTextStyle" parent="@style/Widget.Sherlock.ActionBar.Solid">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+    
     <style name="ActionBar.Transparent.Om" parent="@style/Widget.Sherlock.ActionBar">
         <item name="background">@drawable/ab_transparent_om</item>
         <item name="progressBarStyle">@style/ProgressBar.Om</item>
