@@ -166,7 +166,6 @@ public class PageWidget extends WidgetFactory {
 
 	@Override
 	public void onStop() {
-		Log.d(TAG, "Stopping activity");
 		this.saveTracker();
 		super.onStop();
 	}

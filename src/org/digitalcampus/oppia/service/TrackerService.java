@@ -179,7 +179,7 @@ public class TrackerService extends Service implements APIRequestListener{
 				);
 			mBuilder.setContentIntent(resultPendingIntent);
 			int mId = 001;
-			notificationManager.notify(mId, mBuilder.getNotification());
+			notificationManager.notify(mId, mBuilder.build());
 		}
 	}
 

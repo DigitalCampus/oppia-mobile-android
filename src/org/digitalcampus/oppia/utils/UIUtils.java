@@ -22,24 +22,19 @@ import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.ScoreActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Lang;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class UIUtils {
 
@@ -123,16 +118,17 @@ public class UIUtils {
 	 * @return
 	 */
 	public static AlertDialog showAlert(Context ctx, String title, String msg, String btnText) {
-		AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
-		alertDialog.setTitle(title);
-		alertDialog.setMessage(msg);
-		alertDialog.setButton(btnText, new DialogInterface.OnClickListener() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+		builder.setTitle(title);
+		builder.setMessage(msg);
+		builder.setNeutralButton(btnText, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
 		});
-		alertDialog.show();
-		return alertDialog;
+		AlertDialog alert = builder.create();
+        alert.show();
+		return alert;
 	}
 
 	/**
@@ -171,16 +167,16 @@ public class UIUtils {
 	 * @return
 	 */
 	public static AlertDialog showAlert(Context ctx, String title, CharSequence msg, String btnText, final Callable<Boolean> funct) {
-		AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
-		alertDialog.setTitle(title);
-		alertDialog.setMessage(msg);
-		alertDialog.setCancelable(true);
-		alertDialog.setButton(btnText, new DialogInterface.OnClickListener() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+		builder.setTitle(title);
+		builder.setMessage(msg);
+		builder.setCancelable(true);
+		builder.setNeutralButton(btnText, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
 		});
-		alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+		builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			public void onCancel(DialogInterface dialog) {
 				try {
 					funct.call();
@@ -190,8 +186,9 @@ public class UIUtils {
 
 			}
 		});
-		alertDialog.show();
-		return alertDialog;
+		AlertDialog alert = builder.create();
+        alert.show();
+		return alert;
 	}
 	
 	
