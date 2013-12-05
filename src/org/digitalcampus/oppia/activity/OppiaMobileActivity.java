@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.activity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -33,6 +34,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
+import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import android.app.AlertDialog;
@@ -44,6 +46,8 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -53,6 +57,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.internal.widget.IcsAdapterView.AdapterContextMenuInfo;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
@@ -61,6 +66,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
 	private ArrayList<Course> courses;
+	private Course tempCourse;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -192,7 +198,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_main, menu);
-		Log.d(TAG,"creating menu");
 		return true;
 	}
 
@@ -288,15 +293,16 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.show();
 	}
 
-	/*@Override
+	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		getSupportMenuInflater().inflate(R.menu.course_context_menu, menu);
+		getMenuInflater().inflate(R.menu.course_context_menu, menu);
 	}
 
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		tempMod = (Course) info.targetView.getTag();
+	@Override
+	public boolean onContextItemSelected(android.view.MenuItem item) {
+		android.widget.AdapterView.AdapterContextMenuInfo info = (android.widget.AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		tempCourse = (Course) info.targetView.getTag();
 		switch (item.getItemId()) {
 			case R.id.course_context_delete:
 				confirmCourseDelete();
@@ -304,9 +310,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			case R.id.course_context_reset:
 				confirmCourseReset();
 				return true;
-			default:
-				return super.onContextItemSelected(item);
 		}
+		return true;
 	}
 
 	private void confirmCourseDelete() {
@@ -318,10 +323,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			public void onClick(DialogInterface dialog, int which) {
 				// remove db records
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.deleteCourse(tempMod.getModId());
+				db.deleteCourse(tempCourse.getModId());
 				db.close();
 				// remove files
-				File f = new File(tempMod.getLocation());
+				File f = new File(tempCourse.getLocation());
 				FileUtils.deleteDir(f);
 				Editor e = prefs.edit();
 				e.putLong(getString(R.string.prefs_last_media_scan), 0);
@@ -331,7 +336,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		});
 		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				tempMod = null;
+				tempCourse = null;
 			}
 		});
 		builder.show();
@@ -345,18 +350,18 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.resetCourse(tempMod.getModId());
+				db.resetCourse(tempCourse.getModId());
 				db.close();
 				displayCourses();
 			}
 		});
 		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				tempMod = null;
+				tempCourse = null;
 			}
 		});
 		builder.show();
-	}*/
+	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Log.d(TAG, key + " changed");

@@ -57,8 +57,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         
-		//TextView tv = (TextView) getHeader().findViewById(R.id.page_title);
-		//tv.setText(R.string.title_download_activity);
 		Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	Tag t = (Tag) bundle.getSerializable(Tag.TAG);

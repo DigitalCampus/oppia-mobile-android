@@ -58,7 +58,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download_media);
-		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			missingMedia = (ArrayList<Media>) bundle.getSerializable(DownloadMediaActivity.TAG);
