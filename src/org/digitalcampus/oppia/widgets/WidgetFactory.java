@@ -29,10 +29,17 @@ public abstract class WidgetFactory extends Fragment {
 	protected Activity activity = null;
 	protected Course course = null;
 	protected SharedPreferences prefs;
+	protected boolean isBaseline = false;
+	protected long startTime = System.currentTimeMillis()/1000;
 	
-	public abstract boolean getActivityCompleted();
+	protected abstract boolean getActivityCompleted();
+	protected abstract void saveTracker();
 	
-	public String getDigest() {
+	protected String getDigest() {
 		return activity.getDigest();
+	}
+	
+	public void setIsBaseline(boolean isBaseline) {
+		this.isBaseline = isBaseline;
 	}
 }

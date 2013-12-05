@@ -19,14 +19,22 @@ package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.FileUtils;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
@@ -58,6 +66,7 @@ public class PageWidget extends WidgetFactory {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = (Activity) getArguments().getSerializable(Activity.TAG);
+		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
 		ctx = super.getActivity();
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_page, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -155,10 +164,60 @@ public class PageWidget extends WidgetFactory {
 			});
 	 }
 
-
 	@Override
-	public boolean getActivityCompleted() {
-		// TODO Auto-generated method stub
-		return false;
+	public void onStop() {
+		Log.d(TAG, "Stopping activity");
+		this.saveTracker();
+		super.onStop();
+	}
+	 
+	@Override
+	protected boolean getActivityCompleted() {
+		// only show as being complete if all the videos on this page have been
+		// played
+		if (this.activity.hasMedia()) {
+			ArrayList<Media> mediaList = this.activity.getMedia();
+			boolean completed = true;
+			DbHelper db = new DbHelper(this.ctx);
+			for (Media m : mediaList) {
+				if (!db.activityCompleted(this.course.getModId(), m.getDigest())) {
+					completed = false;
+				}
+			}
+			db.close();
+			if (!completed) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	protected void saveTracker(){
+		long timetaken = System.currentTimeMillis()/1000 - startTime;
+		this.startTime = System.currentTimeMillis()/1000;
+		// only save tracker if over the time 
+		if (timetaken < MobileLearning.PAGE_READ_TIME) {
+			return;
+		}
+		Tracker t = new Tracker(ctx);
+		JSONObject obj = new JSONObject();
+		MetaDataUtils mdu = new MetaDataUtils(ctx);
+		// add in extra meta-data
+		try {
+			obj.put("timetaken", timetaken);
+			obj = mdu.getMetaData(obj);
+			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+			obj.put("lang", lang);
+             //obj.put("readaloud",readAloud);
+		} catch (JSONException e) {
+			// Do nothing
+		} 
+		// if it's a baseline activity then assume completed
+		if(this.isBaseline){
+			t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
+		} else {
+			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+		}
 	}
 }

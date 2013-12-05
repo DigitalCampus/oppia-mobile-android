@@ -23,25 +23,15 @@ import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
-import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ImageUtils;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.widgets.PageWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.digitalcampus.oppia.widgets.ResourceWidget;
 import org.digitalcampus.oppia.widgets.WidgetFactory;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,7 +40,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class CourseActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
@@ -64,8 +59,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	private SharedPreferences prefs;
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 	private ArrayList<Activity> activities;
-	private long startTime = System.currentTimeMillis()/1000;
-	private boolean isBaselineActivity = false;
+	private boolean isBaseline = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +79,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			course = (Course) bundle.getSerializable(Course.TAG);
 			currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
 			if (bundle.getSerializable(CourseActivity.BASELINE_TAG) != null) {
-				this.isBaselineActivity = (Boolean) bundle.getSerializable(CourseActivity.BASELINE_TAG);
+				this.isBaseline = (Boolean) bundle.getBoolean(CourseActivity.BASELINE_TAG);
 			}
 			//set image
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
@@ -126,12 +120,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		super.onStart();
 		setTitle(section.getTitle(prefs
 				.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
-	}
-
-	@Override
-	public void onDestroy(){
-		this.saveTracker();
-		super.onDestroy();
 	}
 	
 	@Override
@@ -198,8 +186,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	}
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		// save tracker for previous 
-		this.saveTracker();
 
 		Fragment fragment = null;
 		if (activities.get(tab.getPosition()).getActType().equals("page")) {
@@ -214,6 +200,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			Bundle args = new Bundle();
 			args.putSerializable(Activity.TAG,activities.get(tab.getPosition()));
 		    args.putSerializable(Course.TAG,course);
+		    args.putBoolean(CourseActivity.BASELINE_TAG, this.isBaseline);
 		    fragment.setArguments(args);
 			getSupportFragmentManager().beginTransaction().replace(R.id.activity_widget, fragment).commit();
 			currentActivity = (WidgetFactory) fragment;
@@ -230,27 +217,5 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		
 	}
 	
-	private void saveTracker(){
-		long timetaken = System.currentTimeMillis()/1000 - startTime;
-		this.startTime = System.currentTimeMillis()/1000;
-		if (currentActivity != null) {
-			Tracker t = new Tracker(this);
-			JSONObject obj = new JSONObject();
-			MetaDataUtils mdu = new MetaDataUtils(this);
-			// add in extra meta-data
-			try {
-				obj.put("timetaken", timetaken);
-				obj = mdu.getMetaData(obj);
-			} catch (JSONException e) {
-				// Do nothing
-			} 
-			// if it's a baseline activity then assume completed
-			if(this.isBaselineActivity){
-				t.saveTracker(course.getModId(), currentActivity.getDigest(), obj, true);
-			} else {
-				t.saveTracker(course.getModId(), currentActivity.getDigest(), obj, currentActivity.getActivityCompleted());
-			}
-		}
-		Log.d(TAG,"time = " + timetaken);
-	}
+	
 }

@@ -31,15 +31,20 @@ public class ImageUtils {
 	public static BitmapDrawable LoadBMPsdcard(String path, Resources res, int defaultImageResource){  
         File imageFile = new File(path);  
         //if the file exists  
-        if(imageFile.exists()) {  
-            //load the bitmap from the given path  
-        	Bitmap bmp = BitmapFactory.decodeFile(path); 
+        try {
+	        if(imageFile.exists()) {  
+	            //load the bitmap from the given path  
+	        	Bitmap bmp = BitmapFactory.decodeFile(path); 
+	            return new BitmapDrawable(res, bmp); 
+	        } else {  
+	            //return the standard 'Image not found' bitmap placed on the res folder   
+	            Bitmap bmp = BitmapFactory.decodeResource(res, defaultImageResource); 
+	            return new BitmapDrawable(res, bmp); 
+	        }  
+        } catch (OutOfMemoryError oome){
+        	Bitmap bmp = BitmapFactory.decodeResource(res, defaultImageResource); 
             return new BitmapDrawable(res, bmp); 
-        } else {  
-            //return the standard 'Image not found' bitmap placed on the res folder   
-            Bitmap bmp = BitmapFactory.decodeResource(res, defaultImageResource); 
-            return new BitmapDrawable(res, bmp); 
-        }  
+        }
     }  
 
 }

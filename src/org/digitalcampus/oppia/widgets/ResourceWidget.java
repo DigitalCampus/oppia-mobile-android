@@ -4,8 +4,13 @@ import java.io.File;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.listener.OnResourceClickListener;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -32,6 +37,7 @@ public class ResourceWidget extends WidgetFactory {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = (org.digitalcampus.oppia.model.Activity) getArguments().getSerializable(org.digitalcampus.oppia.model.Activity.TAG);
+		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
 		ctx = super.getActivity();
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_resource, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -81,5 +87,28 @@ public class ResourceWidget extends WidgetFactory {
 	public boolean getActivityCompleted() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	protected void saveTracker(){
+		long timetaken = System.currentTimeMillis()/1000 - startTime;
+		Tracker t = new Tracker(ctx);
+		JSONObject obj = new JSONObject();
+		MetaDataUtils mdu = new MetaDataUtils(ctx);
+		// add in extra meta-data
+		try {
+			obj.put("timetaken", timetaken);
+			obj = mdu.getMetaData(obj);
+			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+			obj.put("lang", lang);
+		} catch (JSONException e) {
+			// Do nothing
+		} 
+		// if it's a baseline activity then assume completed
+		if(this.isBaseline){
+			t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
+		} else {
+			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+		}
 	}
 }

@@ -32,10 +32,13 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.listener.OnResourceClickListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
@@ -44,6 +47,8 @@ import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
 import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
 import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -78,7 +83,6 @@ public class QuizWidget extends WidgetFactory {
 	private String quizContent;
 	private LinearLayout questionImage;
 	private boolean isOnResultsPage = false; 
-	private boolean isBaselineActivity = false;
 	
 	 @Override
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,6 +90,7 @@ public class QuizWidget extends WidgetFactory {
 		ctx = super.getActivity();
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
+		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
 		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -195,7 +200,7 @@ public class QuizWidget extends WidgetFactory {
 					} catch (InvalidQuizException e) {
 						e.printStackTrace();
 					}
-					if (!feedback.equals("") && !isBaselineActivity) {
+					if (!feedback.equals("") && !isBaseline) {
 						showFeedback(feedback);
 					} else if (QuizWidget.this.quiz.hasNext()) {
 						QuizWidget.this.quiz.moveNext();
@@ -272,7 +277,7 @@ public class QuizWidget extends WidgetFactory {
 	public void showResults() {
 		quiz.mark();
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
-		
+		this.saveTracker();
 		// log the activity as complete
 		isOnResultsPage = true;
 		
@@ -290,8 +295,7 @@ public class QuizWidget extends WidgetFactory {
 		qText.setVisibility(View.GONE);
 		questionImage.setVisibility(View.GONE);
 		
-	
-		if (this.isBaselineActivity){
+		if (this.isBaseline){
 			TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
 			progress.setText("");
 			
@@ -349,6 +353,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void restart() {
+		this.startTime = System.currentTimeMillis()/1000;
 		quiz = new Quiz();
 		quiz.load(quizContent);
 		isOnResultsPage = false;
@@ -356,8 +361,36 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	@Override
-	public boolean getActivityCompleted() {
+	protected boolean getActivityCompleted() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	protected void saveTracker(){
+		long timetaken = System.currentTimeMillis()/1000 - startTime;
+		Tracker t = new Tracker(ctx);
+		JSONObject obj = new JSONObject();
+		MetaDataUtils mdu = new MetaDataUtils(ctx);
+		// add in extra meta-data
+		try {
+			obj.put("timetaken", timetaken);
+			obj = mdu.getMetaData(obj);
+			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+			obj.put("lang", lang);
+			obj.put("quiz_id", quiz.getID());
+            obj.put("instance_id", quiz.getInstanceID());
+            quiz.mark();
+            float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
+            obj.put("score", percent);
+		} catch (JSONException e) {
+			// Do nothing
+		} 
+		// if it's a baseline activity then assume completed
+		if(this.isBaseline){
+			t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
+		} else {
+			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+		}
 	}
 }
