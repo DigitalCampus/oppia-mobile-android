@@ -78,6 +78,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			editor.putString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			editor.commit();
 		}
+		
+
 	}
 
 	@Override
@@ -190,9 +192,16 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_main, menu);
+		Log.d(TAG,"creating menu");
 		return true;
 	}
 
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		UIUtils.showUserData(menu,this);
+	    return super.onPrepareOptionsMenu(menu);
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
@@ -226,9 +235,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			case R.id.menu_logout:
 				logout();
 				return true;
-			default:
-				return super.onOptionsItemSelected(item);
 		}
+		return true;
 	}
 
 	private void createLanguageDialog() {
@@ -362,6 +370,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		}
 		if(key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_show)) || key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_no))){
 			displayCourses();
+		}
+		if(key.equalsIgnoreCase(getString(R.string.prefs_points)) || key.equalsIgnoreCase(getString(R.string.prefs_badges))){
+			supportInvalidateOptionsMenu();
 		}
 	}
 

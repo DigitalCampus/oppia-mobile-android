@@ -122,7 +122,7 @@ public class TrackerService extends Service implements APIRequestListener{
 		}
 	}
 
-	public boolean isOnline() {
+	private boolean isOnline() {
 		getApplicationContext();
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();

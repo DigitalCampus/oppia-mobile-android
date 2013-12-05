@@ -26,6 +26,9 @@ import org.digitalcampus.oppia.activity.ScoreActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Lang;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -46,6 +49,39 @@ public class UIUtils {
 	private SharedPreferences prefs;
 	private Context ctx;
 
+	
+	
+	 /**
+     * Displays the users points and badges scores in the app header
+     * @param act
+     */
+	public static void showUserData(Menu menu, Context ctx) {
+		MenuItem pointsItem = menu.findItem(R.id.points);
+		MenuItem badgesItem = menu.findItem(R.id.badges);
+
+		if(pointsItem == null || badgesItem == null){
+			return;
+		}
+		
+		TextView points = (TextView) pointsItem.getActionView().findViewById(R.id.userpoints);
+		TextView badges = (TextView) badgesItem.getActionView().findViewById(R.id.userbadges);
+
+		if(points == null || badges == null){
+			return;
+		}
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		boolean scoringEnabled = prefs.getBoolean(ctx.getString(R.string.prefs_scoring_enabled), true);
+		if (scoringEnabled) {
+			pointsItem.setVisible(true);
+			badgesItem.setVisible(true);
+			points.setText(String.valueOf(prefs.getInt(ctx.getString(R.string.prefs_points), 0)));
+			badges.setText(String.valueOf(prefs.getInt(ctx.getString(R.string.prefs_badges), 0)));
+		} else {
+			pointsItem.setVisible(false);
+			badgesItem.setVisible(false);
+		}
+	}
 	/**
 	 * @param ctx
 	 * @param title

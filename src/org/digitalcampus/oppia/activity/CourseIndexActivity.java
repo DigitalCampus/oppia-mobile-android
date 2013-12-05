@@ -40,13 +40,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ListView;
 
-public class CourseIndexActivity extends AppActivity {
+public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener {
 
 	public static final String TAG = CourseIndexActivity.class.getSimpleName();
 	
@@ -65,6 +66,7 @@ public class CourseIndexActivity extends AppActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
         
         Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
@@ -142,7 +144,6 @@ public class CourseIndexActivity extends AppActivity {
    		} else {
    			aDialog.show();
    		}
-   		
     }
     
     @Override
@@ -165,6 +166,7 @@ public class CourseIndexActivity extends AppActivity {
         	menu.add(0,mmp.getId(),order, title).setIcon(android.R.drawable.ic_menu_info_details);
         	order++;
         }
+        UIUtils.showUserData(menu,this);
         return true;
     }
     
@@ -240,5 +242,12 @@ public class CourseIndexActivity extends AppActivity {
     	}
     	return true;
     }
+
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		if(key.equalsIgnoreCase(getString(R.string.prefs_points)) || key.equalsIgnoreCase(getString(R.string.prefs_badges))){
+			supportInvalidateOptionsMenu();
+		}
+		
+	}
     
 }
