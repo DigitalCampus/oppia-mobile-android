@@ -1,0 +1,86 @@
+/*
+#31849b - steel blue
+#f79646 - mustard orange
+#495525 - DC dark green
+#77A240 - DC mid green
+*/
+
+* { padding:0px;
+    margin:0px;
+}
+
+body {
+	font-family: Helvetica, Verdana, sans-serif;
+	line-height: 1.5em;
+	margin: 5px;
+	font-size:100%;
+}
+
+h1 {
+	margin: 10px 5px;
+	text-align:center;
+	color: #495525;
+	font-size: 160%;
+}
+
+h2 {
+	margin: 10px 5px;
+	text-align:center;
+	color: #495525;
+	font-size: 140%;
+}
+
+h3 {
+	margin: 10px 5px;
+	text-align:center;
+	color: #495525;
+	font-size: 120%;
+}
+
+p {
+	margin:10px 5px;
+}
+
+ul {
+	margin: 10px 0;
+}
+
+li {
+	margin-left:25px;
+	list-style: none;	
+}
+
+li:before {
+      /* For a round bullet */
+      content:'\2022';
+      /* For a square bullet */
+      /*content:'\25A0';*/
+      display: block;
+      position: relative;
+      max-width: 0px;
+      max-height: 0px;
+      left: -20px;
+      top: -0px;
+      color: #77A240;
+      font-size: 30px;
+    }
+  
+a {
+	color: #495525;
+	text-decoration: underline;
+}
+
+.box {
+	margin:10px 5px;
+	padding: 5px;
+	font-weight: bold;
+	border: 2px solid #77A240;
+	border-radius: 0.5em;
+	-moz-border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+}
+
+.credit {
+	font-size: 80%;
+	margin: 3px 0 10px 0;
+}

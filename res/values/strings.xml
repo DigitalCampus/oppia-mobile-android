@@ -14,7 +14,8 @@
     <string name="menu_stop_read_aloud">Stop reading</string>
     
     <string name="service_tracker">OppiaMobile Tracker Service</string>
-    <string name="title_about">About/Licenses</string>
+    <string name="title_about">About/License</string>
+    <string name="title_baseline">Baseline</string>
     <string name="title_help">Help</string>
 	<string name="title_download_activity">Manage courses</string>
     <string name="title_activity_course_index">Course Index</string>

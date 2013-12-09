@@ -71,7 +71,7 @@ public class Section implements Serializable  {
 		if(titles.size() > 0){
 			return titles.get(0).getContent();
 		}
-		return "No title set";
+		return null;
 	}
 	
 	public void setTitles(ArrayList<Lang> titles) {

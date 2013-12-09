@@ -105,8 +105,12 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	@Override
 	public void onStart() {
 		super.onStart();
-		setTitle(section.getTitle(prefs
-				.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+		String actionBarTitle = section.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+		if(actionBarTitle != null){
+			setTitle(actionBarTitle);
+		} else if (isBaseline) {
+			setTitle(getString(R.string.title_baseline));
+		}
 		actionBar.removeAllTabs();
 		activities = section.getActivities();
 		for (int i = 0; i < activities.size(); i++) {
