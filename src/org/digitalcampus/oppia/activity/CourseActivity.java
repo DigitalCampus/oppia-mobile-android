@@ -60,13 +60,14 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 	private ArrayList<Activity> activities;
 	private boolean isBaseline = false;
+	private ActionBar actionBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_course);
-		final ActionBar actionBar = getSupportActionBar();
+		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
@@ -83,21 +84,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			}
 			//set image
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
-			getSupportActionBar().setIcon(bm);
-			
-			activities = section.getActivities();
-			for (int i = 0; i < activities.size(); i++) {
-				String title = section
-						.getActivities()
-						.get(i)
-						.getTitle(
-								prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-				boolean tabSelected = false;
-				if(i == currentActivityNo){
-					tabSelected = true;
-				}
-				actionBar.addTab(actionBar.newTab().setText(title).setTabListener(this),tabSelected);
-			}
+			actionBar.setIcon(bm);
 		}
 	}
 
@@ -120,6 +107,20 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		super.onStart();
 		setTitle(section.getTitle(prefs
 				.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+		actionBar.removeAllTabs();
+		activities = section.getActivities();
+		for (int i = 0; i < activities.size(); i++) {
+			String title = section
+					.getActivities()
+					.get(i)
+					.getTitle(
+							prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+			boolean tabSelected = false;
+			if(i == currentActivityNo){
+				tabSelected = true;
+			}
+			actionBar.addTab(actionBar.newTab().setText(title).setTabListener(this),tabSelected);
+		}
 	}
 	
 	@Override
@@ -176,6 +177,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		UIUtils ui = new UIUtils();
 		ui.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
 			public Boolean call() throws Exception {
+				CourseActivity.this.onStart();
 				return true;
 			}
 		});
