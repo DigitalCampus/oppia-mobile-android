@@ -26,9 +26,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -37,20 +36,12 @@ public class MultiChoiceWidget extends QuestionWidget{
 
 	public static final String TAG = MultiChoiceWidget.class.getSimpleName();
 	
-	private Context ctx;
-	
-	public MultiChoiceWidget(Context context) {
-		this.ctx = context;
-		
-		LinearLayout ll = (LinearLayout) ((Activity) ctx).findViewById(R.id.quizResponseWidget);
-		ll.removeAllViews();
-		LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View vv = vi.inflate(R.layout.widget_quiz_multichoice, null);
-		ll.addView(vv);
+	public MultiChoiceWidget(Activity activity, ViewGroup container) {
+		init(activity,container,R.layout.widget_quiz_multichoice);
 	}
 
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
-		LinearLayout responsesLL = (LinearLayout) ((Activity) ctx).findViewById(R.id.questionresponses);
+		LinearLayout responsesLL = (LinearLayout) activity.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
     	RadioGroup responsesRG = new RadioGroup(ctx);
     	// TODO change to use getchild views (like the MultiSelect)
@@ -76,7 +67,7 @@ public class MultiChoiceWidget extends QuestionWidget{
 	
 	public List<String> getQuestionResponses(List<Response> responses){
 		// TODO change to use getchild views (like the MultiSelect)
-		RadioGroup responsesRG = (RadioGroup) ((Activity) ctx).findViewById(234523465);
+		RadioGroup responsesRG = (RadioGroup) activity.findViewById(234523465);
 		int resp = responsesRG.getCheckedRadioButtonId();
     	View rb = responsesRG.findViewById(resp);
     	int idx = responsesRG.indexOfChild(rb);

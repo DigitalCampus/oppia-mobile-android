@@ -19,7 +19,7 @@
 
 <resources>
 
-    <style name="Oppia.Theme.StartUp" parent="@style/Theme.Sherlock.Light">
+    <style name="Oppia.Theme.Light" parent="@style/Theme.Sherlock.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/background_light</item>
     </style>

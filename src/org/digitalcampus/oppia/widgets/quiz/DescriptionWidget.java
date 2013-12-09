@@ -6,18 +6,16 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
-import android.content.Context;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 public class DescriptionWidget extends QuestionWidget{
 
 	public static final String TAG = DescriptionWidget.class.getSimpleName();
-	private Context ctx;
 	
-	public DescriptionWidget(Context context) {
-		this.ctx = context;
-		
-		LinearLayout ll = (LinearLayout) ((Activity) ctx).findViewById(R.id.quizResponseWidget);
+	public DescriptionWidget(Activity activity, ViewGroup container) {
+			
+		LinearLayout ll = (LinearLayout) activity.findViewById(R.id.quizResponseWidget);
 		ll.removeAllViews();
 	}
 	

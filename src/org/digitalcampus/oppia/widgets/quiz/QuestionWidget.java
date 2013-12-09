@@ -19,13 +19,37 @@ package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.List;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
+
+import android.app.Activity;
+import android.content.Context;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 public abstract class QuestionWidget {
 
+	protected Activity activity;
+	protected Context ctx;
+	
 	// Abstract methods
 	public abstract void setQuestionResponses(List<Response> responses, List<String> currentAnswers);
 
 	public abstract List<String> getQuestionResponses(List<Response> responses);
+	
+	protected void init(Activity activity, ViewGroup container, int layout){
+		this.ctx = new ContextThemeWrapper(activity, R.style.Oppia_Theme_Light);
+		this.activity = activity;
+		
+		LinearLayout ll = (LinearLayout) activity.findViewById(R.id.quizResponseWidget);
+		ll.removeAllViews();
+		
+		LayoutInflater localInflater = ((LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).cloneInContext(ctx);
+		View vv = localInflater.inflate(layout ,container, false);
+		ll.addView(vv);
+	}
 
 }

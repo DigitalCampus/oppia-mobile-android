@@ -25,32 +25,21 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 public class ShortAnswerWidget extends QuestionWidget {
 
 	public static final String TAG = ShortAnswerWidget.class.getSimpleName();
 	
-	private Context ctx;
-	
-	public ShortAnswerWidget(Context context) {
-		this.ctx = context;
-		
-		LinearLayout ll = (LinearLayout) ((Activity) ctx).findViewById(R.id.quizResponseWidget);
-		ll.removeAllViews();
-		LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View vv = vi.inflate(R.layout.widget_quiz_shortanswer, null);
-		ll.addView(vv);
+	public ShortAnswerWidget(Activity activity, ViewGroup container) {
+		init(activity, container ,R.layout.widget_quiz_shortanswer);
 	}
 
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswers) {
-		EditText et = (EditText) ((Activity) ctx).findViewById(R.id.responsetext);
+		EditText et = (EditText) activity.findViewById(R.id.responsetext);
 		Iterator<String> itr = currentAnswers.iterator(); 
 		while(itr.hasNext()) {
 		    String answer = itr.next(); 
@@ -59,7 +48,7 @@ public class ShortAnswerWidget extends QuestionWidget {
 	}
 	
 	public List<String> getQuestionResponses(List<Response> responses){
-		EditText et = (EditText) ((Activity) ctx).findViewById(R.id.responsetext);
+		EditText et = (EditText) activity.findViewById(R.id.responsetext);
 		if(et.getText().toString().equals("")){
 			return null;
 		} else {

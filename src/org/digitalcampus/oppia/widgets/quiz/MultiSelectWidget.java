@@ -25,31 +25,22 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 public class MultiSelectWidget extends QuestionWidget {
 
 	public static final String TAG = MultiSelectWidget.class.getSimpleName();
-	private Context ctx;
 	private LinearLayout responsesLL;
 	
-	public MultiSelectWidget(Context context) {
-		this.ctx = context;
-		
-		LinearLayout ll = (LinearLayout) ((Activity) ctx).findViewById(R.id.quizResponseWidget);
-		ll.removeAllViews();
-		LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View vv = vi.inflate(R.layout.widget_quiz_multiselect, null);
-		ll.addView(vv);
+	public MultiSelectWidget(Activity activity, ViewGroup container) {
+		init(activity,container,R.layout.widget_quiz_multiselect);
 	}
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
-		responsesLL = (LinearLayout) ((Activity) ctx).findViewById(R.id.questionresponses);
+		responsesLL = (LinearLayout) activity.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
     	
     	for (Response r : responses){

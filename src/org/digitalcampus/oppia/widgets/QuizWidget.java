@@ -26,7 +26,6 @@ import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
-import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
@@ -40,7 +39,6 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
-import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
@@ -51,6 +49,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -59,6 +58,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +74,7 @@ import android.widget.Toast;
 public class QuizWidget extends WidgetFactory {
 
 	private static final String TAG = QuizWidget.class.getSimpleName();
-	private android.app.Activity ctx;
+	private Context ctx;
 	private Quiz quiz;
 	private QuestionWidget qw;
 	public Button prevBtn;
@@ -82,17 +82,24 @@ public class QuizWidget extends WidgetFactory {
 	private TextView qText;
 	private String quizContent;
 	private LinearLayout questionImage;
-	private boolean isOnResultsPage = false; 
+	private boolean isOnResultsPage = false;
+	private ViewGroup container;
 	
 	 @Override
 	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		ctx = super.getActivity();
+		//ctx = super.getActivity();
+		ctx = new ContextThemeWrapper(getActivity(), R.style.Oppia_Theme_Light);
+		
+		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
 		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, null);
+		
+		LayoutInflater localInflater = inflater.cloneInContext(ctx);
+		View vv = localInflater.inflate(R.layout.widget_quiz, container, false);
+		//View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, container, false);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;
@@ -101,10 +108,10 @@ public class QuizWidget extends WidgetFactory {
 	 @Override
 	 public void onActivityCreated(Bundle savedInstanceState) { 
 		super.onActivityCreated(savedInstanceState);
-		prevBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_prev_btn);
-		nextBtn = (Button) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_next_btn);
-		qText = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.question_text);
-		questionImage = (LinearLayout) ((android.app.Activity) this.ctx).findViewById(R.id.question_image);
+		prevBtn = (Button) super.getActivity().findViewById(R.id.mquiz_prev_btn);
+		nextBtn = (Button) super.getActivity().findViewById(R.id.mquiz_next_btn);
+		qText = (TextView) super.getActivity().findViewById(R.id.question_text);
+		questionImage = (LinearLayout) super.getActivity().findViewById(R.id.question_image);
 		
 		if(this.quiz == null){
 			this.quiz = new Quiz();
@@ -122,7 +129,7 @@ public class QuizWidget extends WidgetFactory {
 		try {
 			q = this.quiz.getCurrentQuestion();
 		} catch (InvalidQuizException e) {
-			Toast.makeText(this.ctx, this.ctx.getString(R.string.error_quiz_no_questions), Toast.LENGTH_LONG).show();
+			Toast.makeText(ctx, ctx.getString(R.string.error_quiz_no_questions), Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 			return;
 		}
@@ -137,7 +144,7 @@ public class QuizWidget extends WidgetFactory {
 			//File file = new File(fileUrl);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
-			ImageView iv = (ImageView) ((android.app.Activity) this.ctx).findViewById(R.id.question_image_image);
+			ImageView iv = (ImageView) super.getActivity().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
 			OnResourceClickListener orcl = new OnResourceClickListener(this.ctx, "image/*");
@@ -146,19 +153,17 @@ public class QuizWidget extends WidgetFactory {
 		}
 
 		if (q instanceof MultiChoice) {
-			qw = new MultiChoiceWidget(this.ctx);
-		} else if (q instanceof Essay) {
-			qw = new EssayWidget(this.ctx);
+			qw = new MultiChoiceWidget(super.getActivity(), container);
 		} else if (q instanceof MultiSelect) {
-			qw = new MultiSelectWidget(this.ctx);
+			qw = new MultiSelectWidget(super.getActivity(), container);
 		} else if (q instanceof ShortAnswer) {
-			qw = new ShortAnswerWidget(this.ctx);
+			qw = new ShortAnswerWidget(super.getActivity(), container);
 		} else if (q instanceof Matching) {
-			qw = new MatchingWidget(this.ctx);
+			qw = new MatchingWidget(super.getActivity(), container);
 		} else if (q instanceof Numerical) {
-			qw = new NumericalWidget(this.ctx);
+			qw = new NumericalWidget(super.getActivity(), container);
 		} else if (q instanceof Description) {
-			qw = new DescriptionWidget(this.ctx);
+			qw = new DescriptionWidget(super.getActivity(), container);
 		} else {
 			Log.d(TAG, "Class for question type not found");
 			return;
@@ -209,7 +214,7 @@ public class QuizWidget extends WidgetFactory {
 						showResults();
 					}
 				} else {
-					CharSequence text = ((android.app.Activity) ctx).getString(R.string.widget_quiz_noanswergiven);
+					CharSequence text = ctx.getString(R.string.widget_quiz_noanswergiven);
 					int duration = Toast.LENGTH_SHORT;
 					Toast toast = Toast.makeText(ctx, text, duration);
 					toast.show();
@@ -219,17 +224,17 @@ public class QuizWidget extends WidgetFactory {
 
 		// set label on next button
 		if (quiz.hasNext()) {
-			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_quiz_next));
+			nextBtn.setText(ctx.getString(R.string.widget_quiz_next));
 		} else {
-			nextBtn.setText(((android.app.Activity) ctx).getString(R.string.widget_quiz_getresults));
+			nextBtn.setText(ctx.getString(R.string.widget_quiz_getresults));
 		}
 	}
 
 	private void setProgress() {
-		TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
+		TextView progress = (TextView) super.getActivity().findViewById(R.id.mquiz_progress);
 		try {
 			if (quiz.getCurrentQuestion().responseExpected()){
-				progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_progress,
+				progress.setText(ctx.getString(R.string.widget_quiz_progress,
 					quiz.getCurrentQuestionNo(), quiz.getTotalNoQuestions()));
 			} else {
 				progress.setText("");
@@ -257,7 +262,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void showFeedback(String msg) {
-		AlertDialog.Builder builder = new AlertDialog.Builder((android.app.Activity) this.ctx);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this.ctx);
 		builder.setTitle(ctx.getString(R.string.feedback));
 		builder.setMessage(msg);
 		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -288,7 +293,7 @@ public class QuizWidget extends WidgetFactory {
 		db.close();
 		Log.d(TAG,data);
 		
-		LinearLayout responsesLL = (LinearLayout) ((android.app.Activity) ctx).findViewById(R.id.quizResponseWidget);
+		LinearLayout responsesLL = (LinearLayout) super.getActivity().findViewById(R.id.quizResponseWidget);
     	responsesLL.removeAllViews();
 		nextBtn.setVisibility(View.GONE);
 		prevBtn.setVisibility(View.GONE);
@@ -296,41 +301,41 @@ public class QuizWidget extends WidgetFactory {
 		questionImage.setVisibility(View.GONE);
 		
 		if (this.isBaseline){
-			TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
+			TextView progress = (TextView) super.getActivity().findViewById(R.id.mquiz_progress);
 			progress.setText("");
 			
 			TextView intro = new TextView(this.ctx);
-			intro.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_baseline_completed));
+			intro.setText(ctx.getString(R.string.widget_quiz_baseline_completed));
 			intro.setGravity(Gravity.CENTER);
 			intro.setTextSize(20);
 			intro.setPadding(0, 20, 0, 50);
 			responsesLL.addView(intro);
 			
 			Button restartBtn = new Button(this.ctx);
-			restartBtn.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_baseline_goto_course));
+			restartBtn.setText(ctx.getString(R.string.widget_quiz_baseline_goto_course));
 			restartBtn.setTextSize(20);
 			restartBtn.setTypeface(Typeface.DEFAULT_BOLD);
 			restartBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					QuizWidget.this.ctx.finish();
+					QuizWidget.this.getActivity().finish();
 				}
 			});
 			
 			responsesLL.addView(restartBtn);
 		} else {
 			// set page heading
-			TextView progress = (TextView) ((android.app.Activity) this.ctx).findViewById(R.id.mquiz_progress);
-			progress.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_results));
+			TextView progress = (TextView) super.getActivity().findViewById(R.id.mquiz_progress);
+			progress.setText(ctx.getString(R.string.widget_quiz_results));
 			
 			// show final score
 			TextView intro = new TextView(this.ctx);
-			intro.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_results_intro));
+			intro.setText(ctx.getString(R.string.widget_quiz_results_intro));
 			intro.setGravity(Gravity.CENTER);
 			intro.setTextSize(20);
 			responsesLL.addView(intro);
 			
 			TextView score = new TextView(this.ctx);
-			score.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_results_score,percent));
+			score.setText(ctx.getString(R.string.widget_quiz_results_score,percent));
 			score.setTextSize(60);
 			score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			score.setGravity(Gravity.CENTER);
@@ -339,7 +344,7 @@ public class QuizWidget extends WidgetFactory {
 			
 			
 			Button restartBtn = new Button(this.ctx);
-			restartBtn.setText(((android.app.Activity) this.ctx).getString(R.string.widget_quiz_results_restart));
+			restartBtn.setText(ctx.getString(R.string.widget_quiz_results_restart));
 			restartBtn.setTextSize(20);
 			restartBtn.setTypeface(Typeface.DEFAULT_BOLD);
 			restartBtn.setOnClickListener(new View.OnClickListener() {
