@@ -67,8 +67,8 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				
 				String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, MobileLearning.QUIZ_SUBMIT_PATH,true);
 				HttpPost httpPost = new HttpPost(url);
-				
-				StringEntity se = new StringEntity(tl.getContent());
+				Log.d(TAG,url);
+				StringEntity se = new StringEntity(tl.getContent(),"utf8");
 				Log.d(TAG,tl.getContent());
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPost.setEntity(se);
