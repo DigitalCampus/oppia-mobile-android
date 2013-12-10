@@ -111,4 +111,12 @@ public class ResourceWidget extends WidgetFactory {
 			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
 		}
 	}
+
+	@Override
+	public String getContentToRead() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 }

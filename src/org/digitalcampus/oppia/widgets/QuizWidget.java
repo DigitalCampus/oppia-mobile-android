@@ -398,4 +398,16 @@ public class QuizWidget extends WidgetFactory {
 			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
 		}
 	}
+
+	@Override
+	public String getContentToRead() {
+		//Get the current question text
+		String toRead = "";
+		try {
+			toRead = quiz.getCurrentQuestion().getTitle();
+		} catch (InvalidQuizException e) {
+			e.printStackTrace();
+		}
+		return toRead;
+	}
 }

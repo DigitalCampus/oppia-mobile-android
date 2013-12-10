@@ -17,7 +17,9 @@
 
 package org.digitalcampus.oppia.widgets;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,7 @@ public class PageWidget extends WidgetFactory {
 	private Context ctx;
 	private String mediaFileName;
 	private WebView wv;
+	
 	
 	
 	 @Override
@@ -196,7 +199,7 @@ public class PageWidget extends WidgetFactory {
 			obj = mdu.getMetaData(obj);
 			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
-             //obj.put("readaloud",readAloud);
+            obj.put("readaloud",readAloud);
 		} catch (JSONException e) {
 			// Do nothing
 		} 
@@ -206,5 +209,25 @@ public class PageWidget extends WidgetFactory {
 		} else {
 			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
 		}
+	}
+
+
+	@Override
+	public String getContentToRead() {
+		File f = new File ("/"+ course.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+		StringBuilder text = new StringBuilder();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(f));
+		    String line;
+
+		    while ((line = br.readLine()) != null) {
+		        text.append(line);
+		    }
+		    br.close();
+		}
+		catch (IOException e) {
+		    return "";
+		}
+		return android.text.Html.fromHtml(text.toString()).toString();
 	}
 }

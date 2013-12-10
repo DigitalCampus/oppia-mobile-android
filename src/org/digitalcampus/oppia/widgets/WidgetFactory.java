@@ -31,9 +31,16 @@ public abstract class WidgetFactory extends Fragment {
 	protected SharedPreferences prefs;
 	protected boolean isBaseline = false;
 	protected long startTime = System.currentTimeMillis()/1000;
+	protected boolean readAloud = false;
 	
 	protected abstract boolean getActivityCompleted();
 	protected abstract void saveTracker();
+	
+	public abstract String getContentToRead();
+	
+	public void setReadAloud(boolean readAloud){
+		this.readAloud = true;
+	}
 	
 	protected String getDigest() {
 		return activity.getDigest();
