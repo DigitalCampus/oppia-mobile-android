@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.widgets;
 
+import java.util.HashMap;
+
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 
@@ -49,4 +51,6 @@ public abstract class WidgetFactory extends Fragment {
 	public void setIsBaseline(boolean isBaseline) {
 		this.isBaseline = isBaseline;
 	}
+	public abstract HashMap<String,Object> getWidgetConfig();
+	public abstract void setWidgetConfig(HashMap<String,Object> config);
 }

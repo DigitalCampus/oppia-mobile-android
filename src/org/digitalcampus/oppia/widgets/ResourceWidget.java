@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
@@ -112,6 +113,28 @@ public class ResourceWidget extends WidgetFactory {
 		}
 	}
 
+	@Override
+	public HashMap<String, Object> getWidgetConfig() {
+		HashMap<String, Object> config = new HashMap<String, Object>();
+		config.put("Activity_StartTime", this.getStartTime());
+		return config;
+	}
+
+	@Override
+	public void setWidgetConfig(HashMap<String, Object> config) {
+		if (config.containsKey("Activity_StartTime")){
+			this.setStartTime((Long) config.get("Activity_StartTime"));
+		}
+	}
+	
+	private void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+	private long getStartTime() {
+		return this.startTime;
+	}
+	
 	@Override
 	public String getContentToRead() {
 		// TODO Auto-generated method stub

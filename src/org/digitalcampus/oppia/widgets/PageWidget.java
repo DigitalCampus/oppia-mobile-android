@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +38,8 @@ import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.bugsense.trace.BugSenseHandler;
 
 import android.content.Context;
 import android.content.Intent;
@@ -59,6 +62,8 @@ public class PageWidget extends WidgetFactory {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
 	private Context ctx;
+	private boolean mediaPlaying = false;
+	private long mediaStartTimeStamp;
 	private String mediaFileName;
 	private WebView wv;
 	
@@ -87,7 +92,6 @@ public class PageWidget extends WidgetFactory {
 			try {
 				wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", FileUtils.readFile(url), "text/html", "utf-8", null);
 			} catch (IOException e) {
-				e.printStackTrace();
 				wv.loadUrl("file://" + url);
 			}
 			
@@ -137,7 +141,8 @@ public class PageWidget extends WidgetFactory {
 							Toast.makeText(PageWidget.this.ctx, PageWidget.this.ctx.getString(R.string.error_media_app_not_found), Toast.LENGTH_LONG).show();
 							return true;
 						}
-						
+						PageWidget.this.mediaPlaying = true;
+						PageWidget.this.mediaStartTimeStamp = System.currentTimeMillis()/1000;
 						ctx.startActivity(intent);
 						
 						return true;
@@ -161,6 +166,18 @@ public class PageWidget extends WidgetFactory {
 		super.onStop();
 	}
 	 
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG,"resuming...");
+		if(this.mediaPlaying){
+			Log.d(TAG,"media playing = true");
+			this.mediaStopped();
+		} else {
+			Log.d(TAG,"media playing = false");
+		}
+	}
+	
 	@Override
 	protected boolean getActivityCompleted() {
 		// only show as being complete if all the videos on this page have been
@@ -211,7 +228,108 @@ public class PageWidget extends WidgetFactory {
 		}
 	}
 
+	private void mediaStopped() {
+		if(mediaPlaying){
+			long mediaEndTimeStamp = System.currentTimeMillis()/1000;
+			long timeTaken = mediaEndTimeStamp - mediaStartTimeStamp;
+			Log.d(TAG,"video playing for:" + String.valueOf(timeTaken));
+			mediaPlaying = false;
+			// track that the video has been played (or at least clicked on)
+			Tracker t = new Tracker(ctx);
+			// digest should be that of the video not the page
+			for(Media m: PageWidget.this.activity.getMedia()){
+				if(m.getFilename().equals(mediaFileName)){
+					Log.d(TAG,"media digest:" + m.getDigest());
+					Log.d(TAG,"media file:" + mediaFileName);
+					Log.d(TAG,"media length:" + m.getLength());
+					boolean completed = false;
+					if(timeTaken >= m.getLength()){
+						completed = true;
+					}
+					JSONObject data = new JSONObject();
+					try {
+						data.put("media", "played");
+						data.put("mediafile", mediaFileName);
+						data.put("timetaken", timeTaken);
+						String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+						data.put("lang", lang);
+					} catch (JSONException e) {
+						e.printStackTrace();
+						BugSenseHandler.sendException(e);
+					}
+					MetaDataUtils mdu = new MetaDataUtils(ctx);
+					// add in extra meta-data
+					try {
+						data = mdu.getMetaData(data);
+					} catch (JSONException e) {
+						// Do nothing
+					} 
+					t.saveTracker(PageWidget.this.course.getModId(), m.getDigest(), data, completed);
+				}
+			}
+		}
+		
+	}
+	
+	@Override
+	public void setWidgetConfig(HashMap<String,Object> config) {
+		if (config.containsKey("Media_Playing")){
+			this.setMediaPlaying((Boolean) config.get("Media_Playing"));
+		}
+		if (config.containsKey("Media_StartTime")){
+			this.setMediaStartTime((Long) config.get("Media_StartTime"));
+		}
+		if (config.containsKey("Media_File")){
+			this.setMediaFileName((String) config.get("Media_File"));
+		}
+		if (config.containsKey("Activity_StartTime")){
+			this.setStartTime((Long) config.get("Activity_StartTime"));
+		}
+	}
+	
+	@Override
+	public HashMap<String, Object> getWidgetConfig() {
+		HashMap<String, Object> config = new HashMap<String, Object>();
+		config.put("Media_Playing", this.getMediaPlaying());
+		config.put("Media_StartTime", this.getMediaStartTime());
+		config.put("Media_File", this.getMediaFileName());
+		config.put("Activity_StartTime", this.getStartTime());
+		return config;
+	}
+	
+	private boolean getMediaPlaying() {
+		return this.mediaPlaying;
+	}
 
+	private long getMediaStartTime() {
+		return this.mediaStartTimeStamp;
+	}
+
+	private void setMediaPlaying(boolean playing) {
+		this.mediaPlaying = playing;
+	}
+
+	private void setMediaStartTime(long mediaStartTime) {
+		this.mediaStartTimeStamp = mediaStartTime;
+	}
+
+	private String getMediaFileName() {
+		return this.mediaFileName;
+	}
+
+	private void setMediaFileName(String mediaFileName) {
+		this.mediaFileName = mediaFileName;	
+	}
+	
+	private void setStartTime(long startTime) {
+		this.startTime = startTime;
+		
+	}
+
+	private long getStartTime() {
+		return this.startTime;
+	}
+	
 	@Override
 	public String getContentToRead() {
 		File f = new File ("/"+ course.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));

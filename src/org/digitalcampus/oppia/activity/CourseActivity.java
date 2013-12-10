@@ -72,6 +72,8 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	private static TextToSpeech myTTS;
 	private boolean ttsRunning = false;
 
+	private HashMap<String, Object> widgetState = new HashMap<String, Object>();
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,8 +102,11 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 		// Serialize the current tab position.
 		outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getActionBar().getSelectedNavigationIndex());
+		outState.putSerializable("widget_config", currentActivity.getWidgetConfig());
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
@@ -110,6 +115,8 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
 			getActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
 		}
+		savedInstanceState.putSerializable("widget_config", currentActivity.getWidgetConfig());
+		super.onRestoreInstanceState(savedInstanceState);
 	}
 
 	@Override
@@ -144,6 +151,9 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			myTTS.shutdown();
 			myTTS = null;
 		}	
+		if (currentActivity != null) {
+			this.widgetState = currentActivity.getWidgetConfig();
+		}
 	}	
 	
 	@Override
@@ -240,6 +250,8 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		    fragment.setArguments(args);
 			getSupportFragmentManager().beginTransaction().replace(R.id.activity_widget, fragment).commit();
 			currentActivity = (WidgetFactory) fragment;
+			currentActivity.setWidgetConfig(this.widgetState);
+			this.widgetState = new HashMap<String, Object>();
 		}
 		
 	}

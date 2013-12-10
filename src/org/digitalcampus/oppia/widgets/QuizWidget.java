@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -399,6 +400,45 @@ public class QuizWidget extends WidgetFactory {
 		}
 	}
 
+	@Override
+	public HashMap<String, Object> getWidgetConfig() {
+		HashMap<String, Object> config = new HashMap<String, Object>();
+		//this.saveAnswer();
+		config.put("quiz", this.getQuiz());
+		config.put("Activity_StartTime", this.getStartTime());
+		config.put("OnResultsPage", this.isOnResultsPage);
+		return config;
+	}
+
+	@Override
+	public void setWidgetConfig(HashMap<String, Object> config) {
+		if (config.containsKey("quiz")){
+			this.setQuiz((Quiz) config.get("quiz"));
+		}
+		if (config.containsKey("Activity_StartTime")){
+			this.setStartTime((Long) config.get("Activity_StartTime"));
+		}
+		if (config.containsKey("OnResultsPage")){
+			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
+		}
+	}
+	
+	private void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+	private long getStartTime() {
+		return this.startTime;
+	}
+	
+	public Quiz getQuiz() {
+		return this.quiz;
+	}
+
+	private void setQuiz(Quiz quiz) {
+		this.quiz = quiz;
+	}
+	
 	@Override
 	public String getContentToRead() {
 		//Get the current question text
