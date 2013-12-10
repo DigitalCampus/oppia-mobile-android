@@ -46,16 +46,6 @@ public class HelpActivity extends AppActivity {
 		wv.loadUrl(url);
 		
 	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				this.finish();
-				return true;
-		}
-		return true;
-	}
+
 }
 

@@ -8,13 +8,13 @@
     </ListPreference>
 
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="prefShowScheduleReminders"
         android:summary="@string/prefShowScheduleReminders_summary"
         android:title="@string/prefShowScheduleReminders" />
 
     <ListPreference
-        android:defaultValue="3"
+        android:defaultValue="2"
         android:dependency="prefShowScheduleReminders"
         android:entries="@array/NoScheduleReminders"
         android:entryValues="@array/NoScheduleRemindersValues"

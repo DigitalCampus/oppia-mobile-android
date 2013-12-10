@@ -24,11 +24,14 @@ import java.util.Locale;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Lang;
 
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 
-public class PrefsActivity extends PreferenceActivity {
+public class PrefsActivity extends SherlockPreferenceActivity {
 	
 	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
@@ -36,6 +39,8 @@ public class PrefsActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.prefs); 
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         
 		ListPreference langsList = (ListPreference) findPreference(getString(R.string.prefs_language)); 
 		
@@ -63,6 +68,16 @@ public class PrefsActivity extends PreferenceActivity {
         langsList.setEntryValues(entryValsChar);
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				this.finish();
+				return true;
+		}
+		return true;
+	}
 	
 
 }
