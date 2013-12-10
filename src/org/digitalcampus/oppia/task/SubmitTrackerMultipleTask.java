@@ -128,17 +128,17 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 				}
 
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
 				payload.setResult(false);
 			} catch (ClientProtocolException e) {
-				e.printStackTrace();
 				payload.setResult(false);
 			} catch (IOException e) {
-				e.printStackTrace();
 				payload.setResult(false);
 			} catch (JSONException e) {
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
+				if(!MobileLearning.DEVELOPER_MODE){
+					BugSenseHandler.sendException(e);
+				} else {
+					e.printStackTrace();
+				}
 				payload.setResult(false);
 			}
 		}

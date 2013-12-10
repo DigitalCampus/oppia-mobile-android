@@ -110,19 +110,28 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 			dp.setMessage(ctx.getString(R.string.download_complete));
 			publishProgress(dp);
 			payload.setResult(true);
-		} catch (ClientProtocolException e1) { 
-			e1.printStackTrace(); 
-			BugSenseHandler.sendException(e1);
+		} catch (ClientProtocolException cpe) { 
+			if(!MobileLearning.DEVELOPER_MODE){
+				BugSenseHandler.sendException(cpe);
+			} else {
+				cpe.printStackTrace();
+			}
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (SocketTimeoutException ste){
-			ste.printStackTrace();
-			BugSenseHandler.sendException(ste);
+			if(!MobileLearning.DEVELOPER_MODE){
+				BugSenseHandler.sendException(ste);
+			} else {
+				ste.printStackTrace();
+			}
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
-		} catch (IOException e1) { 
-			e1.printStackTrace();
-			BugSenseHandler.sendException(e1);
+		} catch (IOException ioe) { 
+			if(!MobileLearning.DEVELOPER_MODE){
+				BugSenseHandler.sendException(ioe);
+			} else {
+				ioe.printStackTrace();
+			}
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}

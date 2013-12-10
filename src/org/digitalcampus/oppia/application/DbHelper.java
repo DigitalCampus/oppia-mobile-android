@@ -532,8 +532,11 @@ public class DbHelper extends SQLiteOpenHelper {
 				}
 				content = json.toString();
 			} catch (JSONException e) {
-				e.printStackTrace();
-				BugSenseHandler.sendException(e);
+				if(!MobileLearning.DEVELOPER_MODE){
+					BugSenseHandler.sendException(e);
+				} else {
+					e.printStackTrace();
+				}
 			}
 			
 			so.setContent(content);

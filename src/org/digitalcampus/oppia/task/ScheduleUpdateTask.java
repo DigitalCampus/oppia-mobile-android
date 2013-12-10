@@ -125,16 +125,17 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 			}
 		
 		} catch (JSONException e) {
-			BugSenseHandler.sendException(e);
-			e.printStackTrace();
+			if(!MobileLearning.DEVELOPER_MODE){
+				BugSenseHandler.sendException(e);
+			} else {
+				e.printStackTrace();
+			}
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
-			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}

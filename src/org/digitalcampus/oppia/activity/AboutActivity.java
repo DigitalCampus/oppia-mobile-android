@@ -21,6 +21,7 @@ import java.util.Locale;
 
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.content.SharedPreferences;
@@ -53,8 +54,11 @@ public class AboutActivity extends AppActivity {
 			String no = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
 			versionNo.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-			BugSenseHandler.sendException(e);
+			if(!MobileLearning.DEVELOPER_MODE){
+				BugSenseHandler.sendException(e);
+			} else {
+				e.printStackTrace();
+			}
 		}
 		
 	}

@@ -254,8 +254,11 @@ public class PageWidget extends WidgetFactory {
 						String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 						data.put("lang", lang);
 					} catch (JSONException e) {
-						e.printStackTrace();
-						BugSenseHandler.sendException(e);
+						if(!MobileLearning.DEVELOPER_MODE){
+							BugSenseHandler.sendException(e);
+						} else {
+							e.printStackTrace();
+						}
 					}
 					MetaDataUtils mdu = new MetaDataUtils(ctx);
 					// add in extra meta-data

@@ -133,8 +133,11 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				payload.setResult(false);
 				payload.setResultResponse(ctx.getString(R.string.error_media_download));
 			} catch (NoSuchAlgorithmException e) {
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
+				if(!MobileLearning.DEVELOPER_MODE){
+					BugSenseHandler.sendException(e);
+				} else {
+					e.printStackTrace();
+				}
 				payload.setResult(false);
 				payload.setResultResponse(ctx.getString(R.string.error_media_download));
 			}

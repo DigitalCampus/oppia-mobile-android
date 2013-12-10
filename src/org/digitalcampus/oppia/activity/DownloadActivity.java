@@ -165,8 +165,11 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 
 		} catch (Exception e) {
 			db.close();
-			e.printStackTrace();
-			BugSenseHandler.sendException(e);
+			if(!MobileLearning.DEVELOPER_MODE){
+				BugSenseHandler.sendException(e);
+			} else {
+				e.printStackTrace();
+			}
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
 		db.close();
@@ -182,9 +185,13 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 				json = new JSONObject(response.getResultResponse());
 				refreshCourseList();
 			} catch (JSONException e) {
-				BugSenseHandler.sendException(e);
+				if(!MobileLearning.DEVELOPER_MODE){
+					BugSenseHandler.sendException(e);
+				} else {
+					e.printStackTrace();
+				}
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);
-				e.printStackTrace();
+				
 			}
 		} else {
 			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, new Callable<Boolean>() {

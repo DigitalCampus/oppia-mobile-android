@@ -111,20 +111,20 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 
 			} catch (UnsupportedEncodingException e) {
 				payload.setResult(false);
-				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (ClientProtocolException e) {
 				payload.setResult(false);
-				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (IOException e) {
 				payload.setResult(false);
-				e.printStackTrace();
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (JSONException e) {
 				payload.setResult(false);
-				BugSenseHandler.sendException(e);
-				e.printStackTrace();
+				if(!MobileLearning.DEVELOPER_MODE){
+					BugSenseHandler.sendException(e);
+				} else {
+					e.printStackTrace();
+				}
 			} 
 			
 		}
