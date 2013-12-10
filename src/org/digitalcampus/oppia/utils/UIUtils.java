@@ -30,6 +30,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -52,14 +53,13 @@ public class UIUtils {
      */
 	public static void showUserData(Menu menu, Context ctx) {
 		MenuItem pointsItem = menu.findItem(R.id.points);
-		MenuItem badgesItem = menu.findItem(R.id.badges);
 
-		if(pointsItem == null || badgesItem == null){
+		if(pointsItem == null){
 			return;
 		}
 		
 		TextView points = (TextView) pointsItem.getActionView().findViewById(R.id.userpoints);
-		TextView badges = (TextView) badgesItem.getActionView().findViewById(R.id.userbadges);
+		TextView badges = (TextView) pointsItem.getActionView().findViewById(R.id.userbadges);
 
 		if(points == null || badges == null){
 			return;
@@ -68,13 +68,13 @@ public class UIUtils {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		boolean scoringEnabled = prefs.getBoolean(ctx.getString(R.string.prefs_scoring_enabled), true);
 		if (scoringEnabled) {
-			pointsItem.setVisible(true);
-			badgesItem.setVisible(true);
+			points.setVisibility(View.VISIBLE);
+			badges.setVisibility(View.VISIBLE);
 			points.setText(String.valueOf(prefs.getInt(ctx.getString(R.string.prefs_points), 0)));
 			badges.setText(String.valueOf(prefs.getInt(ctx.getString(R.string.prefs_badges), 0)));
 		} else {
-			pointsItem.setVisible(false);
-			badgesItem.setVisible(false);
+			points.setVisibility(View.GONE);
+			badges.setVisibility(View.GONE);
 		}
 	}
 	/**

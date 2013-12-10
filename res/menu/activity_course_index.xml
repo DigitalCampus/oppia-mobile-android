@@ -6,10 +6,6 @@
         android:showAsAction="always"
         android:actionLayout="@layout/points"/>
     <item
-        android:id="@+id/badges"
-        android:showAsAction="always"
-        android:actionLayout="@layout/badges"/>
-    <item
         android:id="@+id/menu_language"
         android:icon="@drawable/ic_menu_start_conversation"
         android:title="@string/menu_language"/>
