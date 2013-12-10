@@ -389,24 +389,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(TRACKER_LOG_C_ACTIVITYDIGEST, digest);
 		values.put(TRACKER_LOG_C_DATA, data);
 		values.put(TRACKER_LOG_C_COMPLETED, completed);
-		String sql = "SELECT * FROM " + TRACKER_LOG_TABLE + " ORDER BY " + TRACKER_LOG_C_DATETIME + " DESC LIMIT 0,1";
-		Cursor c = db.rawQuery(sql,null);
-		c.moveToFirst();
-		long toUpdate = 0;
-		while (c.isAfterLast() == false) {
-			if (c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)).equals(digest)
-					&& c.getInt(c.getColumnIndex(TRACKER_LOG_C_SUBMITTED)) == 0){
-				toUpdate = c.getLong(c.getColumnIndex(TRACKER_LOG_C_ID));
-			}
-			c.moveToNext();
-		}
-		c.close();
-		
-		if(toUpdate != 0){
-			db.update(TRACKER_LOG_TABLE,values,TRACKER_LOG_C_ID+"=?",new String [] {String.valueOf(toUpdate)});
-		} else {
-			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
-		}
+		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 	}
 	
 	public float getCourseProgress(int modId){

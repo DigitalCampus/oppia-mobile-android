@@ -280,11 +280,10 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	public void showResults() {
-		quiz.mark();
-		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
-		this.saveTracker();
+
 		// log the activity as complete
 		isOnResultsPage = true;
+		this.saveTracker();
 		
 		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
@@ -335,7 +334,7 @@ public class QuizWidget extends WidgetFactory {
 			responsesLL.addView(intro);
 			
 			TextView score = new TextView(this.ctx);
-			score.setText(ctx.getString(R.string.widget_quiz_results_score,percent));
+			score.setText(ctx.getString(R.string.widget_quiz_results_score,this.getPercent()));
 			score.setTextSize(60);
 			score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			score.setGravity(Gravity.CENTER);
@@ -367,8 +366,11 @@ public class QuizWidget extends WidgetFactory {
 
 	@Override
 	protected boolean getActivityCompleted() {
-		// TODO Auto-generated method stub
-		return false;
+		if (isOnResultsPage && this.getPercent() > 99){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	@Override
@@ -385,9 +387,7 @@ public class QuizWidget extends WidgetFactory {
 			obj.put("lang", lang);
 			obj.put("quiz_id", quiz.getID());
             obj.put("instance_id", quiz.getInstanceID());
-            quiz.mark();
-            float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
-            obj.put("score", percent);
+            obj.put("score", this.getPercent());
 		} catch (JSONException e) {
 			// Do nothing
 		} 
@@ -409,5 +409,11 @@ public class QuizWidget extends WidgetFactory {
 			e.printStackTrace();
 		}
 		return toRead;
+	}
+	
+	private float getPercent(){
+		quiz.mark();
+		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
+		return percent;
 	}
 }
