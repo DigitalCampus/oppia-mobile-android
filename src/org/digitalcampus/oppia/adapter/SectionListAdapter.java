@@ -66,7 +66,12 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
 	    
 	    Section s = sectionList.get(position);
-	    sectionTitle.setText(s.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+	    String title = "";
+	    if(prefs.getBoolean(ctx.getString(R.string.prefs_section_numbers_show), false)){
+	    	title += String.valueOf(s.getOrder()) + ". ";
+	    }
+	    title += s.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+	    sectionTitle.setText(title);
 	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.section_progress_bar);
 	    pb.setProgress((int) s.getProgress());

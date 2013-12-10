@@ -50,83 +50,95 @@ import android.widget.ListView;
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener {
 
 	public static final String TAG = CourseIndexActivity.class.getSimpleName();
-	
+
 	private Course course;
 	private CourseXMLReader mxr;
 	private ArrayList<Section> sections;
 	private SharedPreferences prefs;
 	private Activity baselineActivity;
 	private AlertDialog aDialog;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_index);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.registerOnSharedPreferenceChangeListener(this);
-        
-        Bundle bundle = this.getIntent().getExtras(); 
-        if(bundle != null) {
-        	course = (Course) bundle.getSerializable(Course.TAG);
-        	try {
-				mxr = new CourseXMLReader(course.getCourseXMLLocation());
-			
-	        	course.setMetaPages(mxr.getMetaPages());
-	        	
-	        	boolean baselineCompleted = this.isBaselineCompleted();
-	        	
-	        	String digest = (String) bundle.getSerializable("JumpTo");
-	        	if(digest != null && baselineCompleted){
-	        		// code to directly jump to a specific activity
-	        		sections = mxr.getSections(course.getModId(),CourseIndexActivity.this);
-	        		for(Section s: sections){
-	        			for(int i=0 ; i<s.getActivities().size(); i++){
-	        				Activity a = s.getActivities().get(i);
-	        				if(a.getDigest().equals(digest)){
-	        					Intent intent = new Intent(this, CourseActivity.class);
-	        					Bundle tb = new Bundle();
-	        					tb.putSerializable(Section.TAG, (Section) s);
-	        					tb.putSerializable(Course.TAG, (Course) course);
-	        					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) i);
-	        					intent.putExtras(tb);
-	        	         		startActivity(intent);
-	        				}
-	        			}
-	        		}
-	        		
-	        	}
-        	} catch (InvalidXMLException e) {
-        		UIUtils.showAlert(this, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
-    				public Boolean call() throws Exception {
-    					CourseIndexActivity.this.finish();
-    					return true;
-    				}
-    			});
-			}
-        }
-    	
-    }
 
-    @Override
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_course_index);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(this);
+
+		Bundle bundle = this.getIntent().getExtras();
+		if (bundle != null) {
+			course = (Course) bundle.getSerializable(Course.TAG);
+			try {
+				mxr = new CourseXMLReader(course.getCourseXMLLocation());
+
+				course.setMetaPages(mxr.getMetaPages());
+
+				boolean baselineCompleted = this.isBaselineCompleted();
+
+				String digest = (String) bundle.getSerializable("JumpTo");
+				if (digest != null && baselineCompleted) {
+					// code to directly jump to a specific activity
+					sections = mxr.getSections(course.getModId(), CourseIndexActivity.this);
+					for (Section s : sections) {
+						for (int i = 0; i < s.getActivities().size(); i++) {
+							Activity a = s.getActivities().get(i);
+							if (a.getDigest().equals(digest)) {
+								Intent intent = new Intent(this, CourseActivity.class);
+								Bundle tb = new Bundle();
+								tb.putSerializable(Section.TAG, (Section) s);
+								tb.putSerializable(Course.TAG, (Course) course);
+								tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) i);
+								intent.putExtras(tb);
+								startActivity(intent);
+							}
+						}
+					}
+
+				}
+			} catch (InvalidXMLException e) {
+				UIUtils.showAlert(this, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
+					public Boolean call() throws Exception {
+						CourseIndexActivity.this.finish();
+						return true;
+					}
+				});
+			}
+		}
+
+	}
+
+	@Override
 	public void onStart() {
 		super.onStart();
-		sections = mxr.getSections(course.getModId(),CourseIndexActivity.this);
-		setTitle(course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
-		
-    	// set image
-		if(course.getImageFile() != null){
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
+		sections = mxr.getSections(course.getModId(), CourseIndexActivity.this);
+		setTitle(course
+				.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+
+		// set image
+		if (course.getImageFile() != null) {
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(),
+					R.drawable.default_icon_course);
 			getSupportActionBar().setIcon(bm);
 		}
-    	
-    	ListView listView = (ListView) findViewById(R.id.section_list);
-    	SectionListAdapter sla = new SectionListAdapter(this, course, sections);
-    	listView.setAdapter(sla); 
-    	
-    	// start a new tracker service
+
+		ListView listView = (ListView) findViewById(R.id.section_list);
+		SectionListAdapter sla = new SectionListAdapter(this, course, sections);
+		listView.setAdapter(sla);
+
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (aDialog == null) {
+			this.isBaselineCompleted();
+		} else {
+			aDialog.show();
+		}
+		// start a new tracker service
 		Log.d(TAG, "Starting tracker service");
 		Intent service = new Intent(this, TrackerService.class);
 
@@ -134,120 +146,115 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		tb.putBoolean("backgroundData", true);
 		service.putExtras(tb);
 		this.startService(service);
-	
-    }
-    @Override
-   	public void onResume() {
-    	super.onResume();
-   		if(aDialog == null){
-   			this.isBaselineCompleted();
-   		} else {
-   			aDialog.show();
-   		}
-    }
-    
-    @Override
+	}
+
+	@Override
 	public void onPause() {
-		if(aDialog != null){
+		if (aDialog != null) {
 			aDialog.dismiss();
 			aDialog = null;
 		}
 		super.onPause();
-    }
-    
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-    	menu.clear();
-        getSupportMenuInflater().inflate(R.menu.activity_course_index, menu);
-        ArrayList<CourseMetaPage> ammp = course.getMetaPages();
-        int order = 104;
-        for(CourseMetaPage mmp: ammp){
-        	String title = mmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
-        	menu.add(0,mmp.getId(),order, title).setIcon(android.R.drawable.ic_menu_info_details);
-        	order++;
-        }
-        UIUtils.showUserData(menu,this);
-        return true;
-    }
-    
-    @Override
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		getSupportMenuInflater().inflate(R.menu.activity_course_index, menu);
+		ArrayList<CourseMetaPage> ammp = course.getMetaPages();
+		int order = 104;
+		for (CourseMetaPage mmp : ammp) {
+			String title = mmp.getLang(
+					prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()))
+					.getContent();
+			menu.add(0, mmp.getId(), order, title).setIcon(android.R.drawable.ic_menu_info_details);
+			order++;
+		}
+		UIUtils.showUserData(menu, this);
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-    	Intent i;
-    	Bundle tb = new Bundle();
+		Intent i;
+		Bundle tb = new Bundle();
 		// Handle item selection
 		switch (item.getItemId()) {
-			case R.id.menu_language:
-				createLanguageDialog();
-				return true;
-			case R.id.menu_help:
-				startActivity(new Intent(this, HelpActivity.class));
-				return true;
-			case android.R.id.home:
-				this.finish();
-				return true;
-			default:
-				i = new Intent(this, CourseMetaPageActivity.class);
-				tb.putSerializable(Course.TAG, course);
-				tb.putSerializable(CourseMetaPage.TAG, item.getItemId());
-				i.putExtras(tb);
-				startActivity(i);
-				return true;
+		case R.id.menu_language:
+			createLanguageDialog();
+			return true;
+		case R.id.menu_help:
+			startActivity(new Intent(this, HelpActivity.class));
+			return true;
+		case android.R.id.home:
+			this.finish();
+			return true;
+		default:
+			i = new Intent(this, CourseMetaPageActivity.class);
+			tb.putSerializable(Course.TAG, course);
+			tb.putSerializable(CourseMetaPage.TAG, item.getItemId());
+			i.putExtras(tb);
+			startActivity(i);
+			return true;
 		}
 	}
-    
-    private void createLanguageDialog() {
-    	UIUtils ui = new UIUtils();
-    	ui.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {	
+
+	private void createLanguageDialog() {
+		UIUtils ui = new UIUtils();
+		ui.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
 			public Boolean call() throws Exception {
 				CourseIndexActivity.this.onStart();
 				return true;
 			}
 		});
 	}
-    
-    private boolean isBaselineCompleted(){
-    	ArrayList<Activity> baselineActs = mxr.getBaselineActivities(course.getModId(),this);
-    	// TODO how to handle if more than one baseline activity
-    	for(Activity a: baselineActs){
-    		if(!a.isAttempted()){
-    			this.baselineActivity = a;
-    			Log.d(TAG,"adding dialog");
-    			aDialog = new AlertDialog.Builder(this).create();
-    			aDialog.setCancelable(false);
-    			aDialog.setTitle(R.string.alert_pretest);
-    			aDialog.setMessage(this.getString(R.string.alert_pretest_summary));
 
-    			aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, (CharSequence) this.getString(R.string.open), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-    					Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
-    					Bundle tb = new Bundle();
-    					Section section = new Section();
-    					section.addActivity(CourseIndexActivity.this.baselineActivity);
-    					tb.putSerializable(Section.TAG, section);
-    					tb.putSerializable(CourseActivity.BASELINE_TAG, true);
-    					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, 0);
-    					tb.putSerializable(Course.TAG, CourseIndexActivity.this.course);
-    					intent.putExtras(tb);
-    	         		startActivity(intent);	
-					}
-    			});
-    			aDialog.setButton(DialogInterface.BUTTON_POSITIVE,(CharSequence) this.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-    					CourseIndexActivity.this.finish();
-    				}
-    			});
-    			aDialog.show();
-    			return false;
-    		}
-    	}
-    	return true;
-    }
+	private boolean isBaselineCompleted() {
+		ArrayList<Activity> baselineActs = mxr.getBaselineActivities(course.getModId(), this);
+		// TODO how to handle if more than one baseline activity
+		for (Activity a : baselineActs) {
+			if (!a.isAttempted()) {
+				this.baselineActivity = a;
+				Log.d(TAG, "adding dialog");
+				aDialog = new AlertDialog.Builder(this).create();
+				aDialog.setCancelable(false);
+				aDialog.setTitle(R.string.alert_pretest);
+				aDialog.setMessage(this.getString(R.string.alert_pretest_summary));
+
+				aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, (CharSequence) this.getString(R.string.open),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
+								Bundle tb = new Bundle();
+								Section section = new Section();
+								section.addActivity(CourseIndexActivity.this.baselineActivity);
+								tb.putSerializable(Section.TAG, section);
+								tb.putSerializable(CourseActivity.BASELINE_TAG, true);
+								tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, 0);
+								tb.putSerializable(Course.TAG, CourseIndexActivity.this.course);
+								intent.putExtras(tb);
+								startActivity(intent);
+							}
+						});
+				aDialog.setButton(DialogInterface.BUTTON_POSITIVE, (CharSequence) this.getString(R.string.cancel),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								CourseIndexActivity.this.finish();
+							}
+						});
+				aDialog.show();
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if(key.equalsIgnoreCase(getString(R.string.prefs_points)) || key.equalsIgnoreCase(getString(R.string.prefs_badges))){
+		if (key.equalsIgnoreCase(getString(R.string.prefs_points))
+				|| key.equalsIgnoreCase(getString(R.string.prefs_badges))) {
 			supportInvalidateOptionsMenu();
 		}
-		
+
 	}
-    
+
 }

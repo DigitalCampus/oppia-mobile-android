@@ -27,8 +27,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.webkit.WebView;
 
-import com.actionbarsherlock.view.MenuItem;
-
 public class HelpActivity extends AppActivity {
 
 	public static final String TAG = HelpActivity.class.getSimpleName();

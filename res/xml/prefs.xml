@@ -27,6 +27,11 @@
         android:key="prefHighlightCompleted"
         android:title="@string/prefHighlightCompleted" />
     
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="prefShowSectionNumbers"
+        android:title="@string/prefShowSectionNumbers" />
+    
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
             android:defaultValue="@string/prefServerDefault"

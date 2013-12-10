@@ -14,6 +14,7 @@
     <string name="prefs_metadata">prefMetadata</string>
     <string name="prefs_schedule_reminders_no">prefNoScheduleReminders</string>
     <string name="prefs_schedule_reminders_show">prefShowScheduleReminders</string>
+    <string name="prefs_section_numbers_show">prefShowSectionNumbers</string>
     <string name="prefs_server">prefServer</string>
     <string name="prefs_server_timeout_connection">prefServerTimeoutConnection</string>
     <string name="prefs_server_timeout_response">prefServerTimeoutResponse</string>
