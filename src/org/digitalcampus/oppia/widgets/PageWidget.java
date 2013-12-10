@@ -169,13 +169,9 @@ public class PageWidget extends WidgetFactory {
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.d(TAG,"resuming...");
 		if(this.mediaPlaying){
-			Log.d(TAG,"media playing = true");
 			this.mediaStopped();
-		} else {
-			Log.d(TAG,"media playing = false");
-		}
+		} 
 	}
 	
 	@Override
