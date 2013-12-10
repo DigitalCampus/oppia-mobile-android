@@ -120,7 +120,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		// set image
 		if (course.getImageFile() != null) {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(),
-					R.drawable.default_icon_course);
+					R.drawable.dc_logo);
 			getSupportActionBar().setIcon(bm);
 		}
 

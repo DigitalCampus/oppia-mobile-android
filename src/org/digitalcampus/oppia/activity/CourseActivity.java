@@ -95,7 +95,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 				this.isBaseline = (Boolean) bundle.getBoolean(CourseActivity.BASELINE_TAG);
 			}
 			//set image
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.default_icon_course);
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.dc_logo);
 			actionBar.setIcon(bm);
 		}
 	}

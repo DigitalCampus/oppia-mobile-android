@@ -20,7 +20,7 @@
             android:layout_margin="4dp"
             android:gravity="center_vertical"
             android:contentDescription="@string/app_logo_alt"
-            android:src="@drawable/default_icon_course" />
+            android:src="@drawable/dc_logo" />
 
         <TextView
             android:id="@+id/course_title"
