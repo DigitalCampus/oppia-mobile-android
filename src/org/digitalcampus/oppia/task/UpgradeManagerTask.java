@@ -66,7 +66,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		return payload;
 	}
 	
-	/* rescans all the installed modules and reinstalls them, to ensure that 
+	/* rescans all the installed courses and reinstalls them, to ensure that 
 	 * the new titles etc are picked up
 	 */
 	protected void upgradeV17(){
@@ -90,13 +90,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				}
 				
 				// check a module.xml file exists and is a readable XML file
-				CourseXMLReader mxr;
-				CourseScheduleXMLReader msxr;
-				CourseTrackerXMLReader mtxr;
+				CourseXMLReader cxr;
+				CourseScheduleXMLReader csxr;
+				CourseTrackerXMLReader ctxr;
 				try {
-					mxr = new CourseXMLReader(courseXMLPath);
-					msxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-					mtxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+					cxr = new CourseXMLReader(courseXMLPath);
+					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
+					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
 					e.printStackTrace();
 					break;
@@ -104,26 +104,26 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				
 				//HashMap<String, String> hm = mxr.getMeta();
 				Course c = new Course();
-				c.setVersionId(mxr.getVersionId());
-				c.setTitles(mxr.getTitles());
+				c.setVersionId(cxr.getVersionId());
+				c.setTitles(cxr.getTitles());
 				c.setLocation(MobileLearning.COURSES_PATH + children[i]);
 				c.setShortname(children[i]);
-				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + mxr.getCourseImage());
-				c.setLangs(mxr.getLangs());
+				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + cxr.getCourseImage());
+				c.setLangs(cxr.getLangs());
 				
 				
 				DbHelper db = new DbHelper(ctx);
 				long modId = db.refreshCourse(c);
 				
 				if (modId != -1) {
-					db.insertActivities(mxr.getActivities(modId));
-					db.insertTrackers(mtxr.getTrackers(),modId);
+					db.insertActivities(cxr.getActivities(modId));
+					db.insertTrackers(ctxr.getTrackers(),modId);
 				} 
 				
 				// add schedule
-				// put this here so even if the module content isn't updated the schedule will be
-				db.insertSchedule(msxr.getSchedule());
-				db.updateScheduleVersion(modId, msxr.getScheduleVersion());
+				// put this here so even if the course content isn't updated the schedule will be
+				db.insertSchedule(csxr.getSchedule());
+				db.updateScheduleVersion(modId, csxr.getScheduleVersion());
 				
 				db.close();
 			}

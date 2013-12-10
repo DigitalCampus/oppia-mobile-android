@@ -75,10 +75,10 @@ public class TrackerService extends Service implements APIRequestListener{
 			DbHelper db = new DbHelper(this);
 			Payload p = null;
 			
-			// check for updated modules
+			// check for updated courses
 			// should only do this once a day or so....
 			prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			long lastRun = prefs.getLong("lastModuleUpdateCheck", 0);
+			long lastRun = prefs.getLong("lastCourseUpdateCheck", 0);
 			long now = System.currentTimeMillis()/1000;
 			if((lastRun + (3600*12)) < now){
 				APIRequestTask task = new APIRequestTask(this);
@@ -87,7 +87,7 @@ public class TrackerService extends Service implements APIRequestListener{
 				task.execute(p);
 				
 				Editor editor = prefs.edit();
-				editor.putLong("lastModuleUpdateCheck", now);
+				editor.putLong("lastCourseUpdateCheck", now);
 				editor.commit();
 			}
 

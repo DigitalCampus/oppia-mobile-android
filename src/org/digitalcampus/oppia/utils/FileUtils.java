@@ -110,9 +110,9 @@ public class FileUtils {
 					dest = new BufferedOutputStream(fos, BUFFER_SIZE);
 
 					// this counter is a hack to prevent getting stuck when
-					// installing corrupted or not fully downloaded module
+					// installing corrupted or not fully downloaded course
 					// packages
-					// it will prevent any module being installed with files
+					// it will prevent any course being installed with files
 					// larger than around 500kb
 					int counter = 0;
 					while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {

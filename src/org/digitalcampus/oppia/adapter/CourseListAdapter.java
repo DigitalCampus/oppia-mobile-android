@@ -42,13 +42,13 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	public static final String TAG = CourseListAdapter.class.getSimpleName();
 
 	private final Context ctx;
-	private final ArrayList<Course> moduleList;
+	private final ArrayList<Course> courseList;
 	private SharedPreferences prefs;
 	
-	public CourseListAdapter(Activity context, ArrayList<Course> moduleList) {
-		super(context, R.layout.course_list_row, moduleList);
+	public CourseListAdapter(Activity context, ArrayList<Course> courseList) {
+		super(context, R.layout.course_list_row, courseList);
 		this.ctx = context;
-		this.moduleList = moduleList;
+		this.courseList = courseList;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
@@ -57,19 +57,19 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 
 		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    View rowView = inflater.inflate(R.layout.course_list_row, parent, false);
-	    Course m = moduleList.get(position);
-	    rowView.setTag(m);
+	    Course c = courseList.get(position);
+	    rowView.setTag(c);
 	    
-	    TextView moduleTitle = (TextView) rowView.findViewById(R.id.course_title);
-	    moduleTitle.setText(m.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
+	    courseTitle.setText(c.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.course_progress_bar);
-	    pb.setProgress((int) m.getProgress());
+	    pb.setProgress((int) c.getProgress());
 	    
 		// set image
-		if(m.getImageFile() != null){
+		if(c.getImageFile() != null){
 			ImageView iv = (ImageView) rowView.findViewById(R.id.course_image);
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(m.getImageFile(), ctx.getResources(), R.drawable.dc_logo);
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFile(), ctx.getResources(), R.drawable.dc_logo);
 			iv.setImageDrawable(bm);
 		}
 	    return rowView;

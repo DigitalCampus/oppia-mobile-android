@@ -72,7 +72,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
 					break;
 				}
-				String[] moddirs = tempdir.list(); // use this to get the module
+				String[] courseDirs = tempdir.list(); // use this to get the course
 													// name
 				
 				String courseXMLPath = "";
@@ -80,9 +80,9 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				String courseTrackerXMLPath = "";
 				// check that it's unzipped etc correctly
 				try {
-					courseXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.COURSE_XML;
-					courseScheduleXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.COURSE_SCHEDULE_XML;
-					courseTrackerXMLPath = tempdir + "/" + moddirs[0] + "/" + MobileLearning.COURSE_TRACKER_XML;
+					courseXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_XML;
+					courseScheduleXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_SCHEDULE_XML;
+					courseTrackerXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
 					break;
@@ -106,9 +106,9 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				Course c = new Course();
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
-				c.setLocation(MobileLearning.COURSES_PATH + moddirs[0]);
-				c.setShortname(moddirs[0]);
-				c.setImageFile(MobileLearning.COURSES_PATH + moddirs[0] + "/" + cxr.getCourseImage());
+				c.setLocation(MobileLearning.COURSES_PATH + courseDirs[0]);
+				c.setShortname(courseDirs[0]);
+				c.setImageFile(MobileLearning.COURSES_PATH + courseDirs[0] + "/" + cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
 				String title = c.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 				
@@ -116,20 +116,20 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				publishProgress(dp);
 				
 				DbHelper db = new DbHelper(ctx);
-				long added = db.addOrUpdateModule(c);
+				long added = db.addOrUpdateCourse(c);
 				
 				if (added != -1) {
 					payload.addResponseData(c);
-					File src = new File(tempdir + "/" + moddirs[0]);
+					File src = new File(tempdir + "/" + courseDirs[0]);
 					File dest = new File(MobileLearning.COURSES_PATH);
 
 					db.insertActivities(cxr.getActivities(added));
 					db.insertTrackers(ctxr.getTrackers(),added);
-					// Delete old module
-					File oldMod = new File(MobileLearning.COURSES_PATH + moddirs[0]);
-					FileUtils.deleteDir(oldMod);
+					// Delete old course
+					File oldCourse = new File(MobileLearning.COURSES_PATH + courseDirs[0]);
+					FileUtils.deleteDir(oldCourse);
 
-					// move from temp to modules dir
+					// move from temp to courses dir
 					boolean success = src.renameTo(new File(dest, src.getName()));
 
 					if (success) {
@@ -145,7 +145,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				}
 				
 				// add schedule
-				// put this here so even if the module content isn't updated the schedule will be
+				// put this here so even if the course content isn't updated the schedule will be
 				db.insertSchedule(csxr.getSchedule());
 				db.updateScheduleVersion(added, csxr.getScheduleVersion());
 				

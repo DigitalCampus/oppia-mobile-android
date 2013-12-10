@@ -229,7 +229,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	// returns id of the row
-	public long addOrUpdateModule(Course course) {
+	public long addOrUpdateCourse(Course course) {
 
 		ContentValues values = new ContentValues();
 		values.put(COURSE_C_VERSIONID, course.getVersionId());

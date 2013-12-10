@@ -41,15 +41,15 @@ public class CourseScheduleXMLReader {
 	private Document document;
 	
 	public CourseScheduleXMLReader(String filename) throws InvalidXMLException {
-		File moduleXML = new File(filename);
-		if (moduleXML.exists()) {
+		File courseXML = new File(filename);
+		if (courseXML.exists()) {
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder builder;
 			try {
 				builder = factory.newDocumentBuilder();
-				document = builder.parse(moduleXML);
+				document = builder.parse(courseXML);
 			} catch (ParserConfigurationException e) {
 				throw new InvalidXMLException(e);
 			} catch (SAXException e) {

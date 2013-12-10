@@ -70,7 +70,7 @@ public class MobileLearning extends Application {
 	public static final int MAX_TRACKER_SUBMIT = 10;
 	public static final boolean DEVELOPER_MODE = false;
 	
-	// only used in case a module doesn't have any lang specified
+	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
 	
 	// for tracking if SubmitTrackerMultipleTask is already running
