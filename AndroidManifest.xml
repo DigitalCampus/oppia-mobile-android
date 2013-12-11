@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.digitalcampus.mobile.learning"
-    android:versionCode="34"
-    android:versionName="3.0.1">
+    android:versionCode="35"
+    android:versionName="3.0.2">
 
     <uses-sdk
         android:minSdkVersion="8"

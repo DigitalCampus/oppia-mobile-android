@@ -100,7 +100,6 @@ public class QuizWidget extends WidgetFactory {
 		
 		LayoutInflater localInflater = inflater.cloneInContext(ctx);
 		View vv = localInflater.inflate(R.layout.widget_quiz, container, false);
-		//View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, container, false);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;
