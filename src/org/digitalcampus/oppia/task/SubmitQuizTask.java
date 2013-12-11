@@ -64,15 +64,16 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 			TrackerLog tl = (TrackerLog) l;
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 			try {
-				
-				String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, MobileLearning.QUIZ_SUBMIT_PATH,true);
+
+				String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, MobileLearning.QUIZ_SUBMIT_PATH,
+						true);
 				HttpPost httpPost = new HttpPost(url);
-				Log.d(TAG,url);
-				StringEntity se = new StringEntity(tl.getContent(),"utf8");
-				Log.d(TAG,tl.getContent());
-                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-                httpPost.setEntity(se);
-                
+				Log.d(TAG, url);
+				StringEntity se = new StringEntity(tl.getContent(), "utf8");
+				Log.d(TAG, tl.getContent());
+				se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+				httpPost.setEntity(se);
+
 				// make request
 				HttpResponse response = client.execute(httpPost);
 				InputStream content = response.getEntity().getContent();
@@ -83,30 +84,39 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				while ((s = buffer.readLine()) != null) {
 					responseStr += s;
 				}
-				Log.d(TAG,responseStr);
-				
-				switch (response.getStatusLine().getStatusCode()){
-					case 201: // submitted
-						DbHelper db = new DbHelper(ctx);
-						db.markQuizSubmitted(tl.getId());
-						db.close();
-						payload.setResult(true);
-						// update points
-						JSONObject jsonResp = new JSONObject(responseStr);
-						Editor editor = prefs.edit();
-						editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("points"));
-						editor.putInt(ctx.getString(R.string.prefs_badges), jsonResp.getInt("badges"));
-				    	editor.commit();
-						break;
-					case 400: 	// bad request - so to prevent re-submitting over and over
-								// just mark as submitted
-						DbHelper dba = new DbHelper(ctx);
-						dba.markQuizSubmitted(tl.getId());
-						dba.close();
-						payload.setResult(false);
-						break;
-					default:
-						payload.setResult(false);
+				Log.d(TAG, responseStr);
+
+				switch (response.getStatusLine().getStatusCode()) {
+				case 201: // submitted
+					DbHelper db = new DbHelper(ctx);
+					db.markQuizSubmitted(tl.getId());
+					db.close();
+					payload.setResult(true);
+					// update points
+					JSONObject jsonResp = new JSONObject(responseStr);
+					Editor editor = prefs.edit();
+					editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("points"));
+					editor.putInt(ctx.getString(R.string.prefs_badges), jsonResp.getInt("badges"));
+					editor.commit();
+					break;
+				case 400: // bad request - so to prevent re-submitting over and
+							// over
+							// just mark as submitted
+					DbHelper dba = new DbHelper(ctx);
+					dba.markQuizSubmitted(tl.getId());
+					dba.close();
+					payload.setResult(false);
+					break;
+				case 500: // bad request - so to prevent re-submitting over and
+							// over
+					// just mark as submitted
+					DbHelper dbb = new DbHelper(ctx);
+					dbb.markQuizSubmitted(tl.getId());
+					dbb.close();
+					payload.setResult(false);
+					break;
+				default:
+					payload.setResult(false);
 				}
 
 			} catch (UnsupportedEncodingException e) {
@@ -120,27 +130,28 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (JSONException e) {
 				payload.setResult(false);
-				if(!MobileLearning.DEVELOPER_MODE){
+				if (!MobileLearning.DEVELOPER_MODE) {
 					BugSenseHandler.sendException(e);
 				} else {
 					e.printStackTrace();
 				}
-			} 
-			
+			}
+
 		}
-		
+
 		return payload;
 	}
-	
+
 	protected void onProgressUpdate(String... obj) {
 		Log.d(TAG, obj[0]);
 	}
-	
+
 	@Override
-    protected void onPostExecute(Payload p) {
-		// reset submittask back to null after completion - so next call can run properly
+	protected void onPostExecute(Payload p) {
+		// reset submittask back to null after completion - so next call can run
+		// properly
 		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
 		app.omSubmitQuizTask = null;
-    }
+	}
 
 }
