@@ -70,7 +70,8 @@ public class ResourceWidget extends WidgetFactory {
 			ImageView iv = new ImageView(this.ctx);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			iv.setImageBitmap(myBitmap);
-			//ll.addView(iv, lp);
+			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			ll.addView(iv, lp);
 			iv.setTag(file);
 			iv.setOnClickListener(orcl);
 		} else {

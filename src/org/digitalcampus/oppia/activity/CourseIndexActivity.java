@@ -33,9 +33,6 @@ import org.digitalcampus.oppia.utils.CourseXMLReader;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,6 +44,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener {
 
 	public static final String TAG = CourseIndexActivity.class.getSimpleName();
@@ -57,14 +57,15 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	private SharedPreferences prefs;
 	private Activity baselineActivity;
 	private AlertDialog aDialog;
-
+		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_index);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
-
+		//getSupportActionBar().setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
+		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 
