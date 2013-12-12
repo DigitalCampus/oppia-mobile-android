@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -49,6 +50,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 	private JSONObject json;
 	private DownloadCourseListAdapter dla;
 	private String url;
+	private ArrayList<Course> courses;
+	private boolean inProgress;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,8 +66,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
         	url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + "/";
         } else {
         	url = MobileLearning.SERVER_COURSES_PATH;
-        }
-        	
+        }        	
 	}
 	
 	@Override
@@ -74,7 +76,10 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		if(this.json == null){
 			this.getCourseList();
 		} else {
-			this.refreshCourseList();
+	        this.refreshCourseList(); 
+		}
+		if (dla != null && dla.isInProgress()){
+			dla.openDialog();
 		}
 	}
 
@@ -85,25 +90,33 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 			pDialog.dismiss();
 		}
 		if (dla != null){
-			dla.closeDialogs();
+			dla.closeDialog();
 		}
 		super.onPause();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-	    super.onRestoreInstanceState(savedInstanceState);
+		super.onRestoreInstanceState(savedInstanceState);
+	    this.courses = (ArrayList<Course>) savedInstanceState.getSerializable("courses");
+	    this.inProgress = savedInstanceState.getBoolean("inprogress");
 	    try {
 			this.json = new JSONObject(savedInstanceState.getString("json"));
 		} catch (JSONException e) {
 			// error in the json so just get the list again
 		}
+	    Log.d(TAG,"restored instance state");
+	    
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
-	    super.onSaveInstanceState(savedInstanceState);
+		super.onSaveInstanceState(savedInstanceState);
 	    savedInstanceState.putString("json", json.toString());
+	    savedInstanceState.putSerializable("courses", courses);
+	    savedInstanceState.putBoolean("inprogress", dla.isInProgress());
+	    Log.d(TAG,"saved instance state");
 	}
 	
 	private void getCourseList() {
@@ -126,7 +139,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 
 		DbHelper db = new DbHelper(this);
 		try {
-			ArrayList<Course> courses = new ArrayList<Course>();
+			this.courses = new ArrayList<Course>();
 			
 			for (int i = 0; i < (json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
@@ -156,7 +169,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 					dc.setScheduleURI(json_obj.getString("schedule_uri"));
 					dc.setToUpdateSchedule(db.toUpdateSchedule(dc.getShortname(), dc.getScheduleVersionID()));
 				}
-				courses.add(dc);
+				this.courses.add(dc);
 			}
 			
 			dla = new DownloadCourseListAdapter(this, courses);

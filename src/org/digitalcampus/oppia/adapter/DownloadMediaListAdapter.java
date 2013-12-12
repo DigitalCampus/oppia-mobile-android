@@ -100,11 +100,6 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		downloadDialog.show();
 	}
 	
-	public void removeProgressDialog(){
-		if(downloadDialog != null){
-			downloadDialog.dismiss();
-		}
-	}
 	public void setDownloadMediaListener(DownloadMediaListener dml) {
         synchronized (this) {
         	mDownloadListener = dml;
@@ -119,7 +114,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 	}
 
 	public void downloadComplete(Payload response) {
-		this.removeProgressDialog();
+		this.closeDialog();
 		this.inProgress = false;
 		synchronized (this) {
 			if (mDownloadListener != null) {

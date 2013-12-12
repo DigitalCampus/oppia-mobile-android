@@ -91,7 +91,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 			alertDialog.dismiss();
 		}
 		if (dmla != null){
-			dmla.removeProgressDialog();
+			dmla.closeDialog();
 		}
 		super.onPause();
 	}

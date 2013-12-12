@@ -30,7 +30,6 @@ import org.digitalcampus.oppia.task.DownloadCourseTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScheduleUpdateTask;
-import org.digitalcampus.oppia.utils.UIUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -52,9 +51,10 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 
 	private final Context ctx;
 	private final ArrayList<Course> courseList;
-	private ProgressDialog myProgress;
+	private ProgressDialog downloadDialog;
 	private SharedPreferences prefs;
-
+	private boolean inProgress = false;
+	
 	public DownloadCourseListAdapter(Activity context, ArrayList<Course> courseList) {
 		super(context, R.layout.course_download_row, courseList);
 		this.ctx = context;
@@ -107,14 +107,8 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
              		data.add(dm);
              		Payload p = new Payload(data);
              		
-             		myProgress = new ProgressDialog(ctx);
-             		myProgress.setTitle(R.string.install);
-             		myProgress.setMessage(ctx.getString(R.string.download_starting));
-             		myProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-             		myProgress.setProgress(0);
-             		myProgress.setMax(100);
-             		myProgress.setCancelable(true);
-             		myProgress.show();
+             		DownloadCourseListAdapter.this.showProgressDialog();
+            		DownloadCourseListAdapter.this.inProgress = true;
                      
              		DownloadCourseTask dmt = new DownloadCourseTask(ctx);
              		dmt.setInstallerListener(DownloadCourseListAdapter.this);
@@ -131,15 +125,10 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
              		ArrayList<Object> data = new ArrayList<Object>();
              		data.add(dm);
              		Payload p = new Payload(data);
-             		
-             		myProgress = new ProgressDialog(ctx);
-             		myProgress.setTitle(R.string.update);
-             		myProgress.setMessage(ctx.getString(R.string.update_starting));
-             		myProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-             		myProgress.setProgress(0);
-             		myProgress.setMax(100);
-             		myProgress.setCancelable(true);
-             		myProgress.show();
+	             		
+	             	// show progress dialog
+            		DownloadCourseListAdapter.this.showProgressDialog();
+            		DownloadCourseListAdapter.this.inProgress = true;
                      
              		ScheduleUpdateTask sut = new ScheduleUpdateTask(ctx);
              		sut.setUpdateListener(DownloadCourseListAdapter.this);
@@ -153,54 +142,64 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	public void downloadComplete(Payload p) {
 		if (p.isResult()){
 			// now set task to install
-			myProgress.setMessage(ctx.getString(R.string.download_complete));
-			myProgress.setIndeterminate(true);
+			downloadDialog.setMessage(ctx.getString(R.string.download_complete));
+			downloadDialog.setIndeterminate(true);
 			InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(ctx);
 			imTask.setInstallerListener(DownloadCourseListAdapter.this);
 			imTask.execute(p);
 		} else {
-			myProgress.dismiss();
-			UIUtils.showAlert(ctx, ctx.getString(R.string.error_download_failure), p.getResultResponse());
+			downloadDialog.setTitle(ctx.getString(R.string.error_download_failure));
+			downloadDialog.setMessage(p.getResultResponse());
+			downloadDialog.setIndeterminate(true);
 		}
 	}
 
 	public void installComplete(Payload p) {
-		myProgress.dismiss();
+		
 		
 		if(p.isResult()){
 			Editor e = prefs.edit();
 			e.putLong(ctx.getString(R.string.prefs_last_media_scan), 0);
 			e.commit();
-			UIUtils.showAlert(ctx, ctx.getString(R.string.install_complete), p.getResultResponse());
+			downloadDialog.setTitle(ctx.getString(R.string.install_complete));	
+			downloadDialog.setMessage(p.getResultResponse());
+			downloadDialog.setIndeterminate(false);
+			downloadDialog.setProgress(100);
 			// new refresh the course list
 			DownloadActivity da = (DownloadActivity) ctx;
 			da.refreshCourseList();
 		} else {
-			UIUtils.showAlert(ctx, ctx.getString(R.string.error_install_failure), p.getResultResponse());
+			downloadDialog.setTitle(ctx.getString(R.string.error_install_failure));	
+			downloadDialog.setMessage(p.getResultResponse());
+			downloadDialog.setIndeterminate(false);
+			downloadDialog.setProgress(100);
 		}
 		
+		this.inProgress = false;
 	}
 	
 	public void downloadProgressUpdate(DownloadProgress dp) {
-		myProgress.setMessage(dp.getMessage());	
-		myProgress.setProgress(dp.getProgress());
+		downloadDialog.setMessage(dp.getMessage());	
+		downloadDialog.setProgress(dp.getProgress());
 	}
 
 	public void installProgressUpdate(DownloadProgress dp) {
-		myProgress.setMessage(dp.getMessage());
-		myProgress.setProgress(dp.getProgress());
+		downloadDialog.setMessage(dp.getMessage());
+		downloadDialog.setProgress(dp.getProgress());
 	}
 	
 	public void updateProgressUpdate(DownloadProgress dp) {
-		myProgress.setMessage(dp.getMessage());	
-		myProgress.setProgress(dp.getProgress());
+		downloadDialog.setMessage(dp.getMessage());	
+		downloadDialog.setProgress(dp.getProgress());
 	}
 	
 	public void updateComplete(Payload p) {
-		myProgress.dismiss();
 		
 		if(p.isResult()){
-			UIUtils.showAlert(ctx, ctx.getString(R.string.update_complete), p.getResultResponse());
+			downloadDialog.setTitle(ctx.getString(R.string.update_complete));	
+			downloadDialog.setMessage(p.getResultResponse());
+			downloadDialog.setIndeterminate(false);
+			downloadDialog.setProgress(100);
 			// new refresh the course list
 			DownloadActivity da = (DownloadActivity) ctx;
 			da.refreshCourseList();
@@ -208,15 +207,46 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 			e.putLong(ctx.getString(R.string.prefs_last_media_scan), 0);
 			e.commit();
 		} else {
-			UIUtils.showAlert(ctx, ctx.getString(R.string.error_update_failure), p.getResultResponse());
+			downloadDialog.setTitle(ctx.getString(R.string.error_update_failure));	
+			downloadDialog.setMessage(p.getResultResponse());
+			downloadDialog.setIndeterminate(false);
+			downloadDialog.setProgress(100);
 		}
 		
+		this.inProgress = false;
 	}
 	
-	public void closeDialogs(){
-		if (myProgress != null){
-			myProgress.dismiss();
+	
+	public void showProgressDialog(){
+		// show progress dialog
+		downloadDialog = new ProgressDialog(ctx);
+ 		downloadDialog.setTitle(R.string.install);
+ 		downloadDialog.setMessage(ctx.getString(R.string.download_starting));
+ 		downloadDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+ 		downloadDialog.setProgress(0);
+ 		downloadDialog.setMax(100);
+ 		downloadDialog.setCancelable(true);
+ 		downloadDialog.show();
+	}
+	
+	public void closeDialog(){
+		if (downloadDialog != null){
+			downloadDialog.dismiss();
 		}
+	}
+	
+	public void openDialog(){
+		if (downloadDialog != null && this.inProgress){
+			downloadDialog.show();
+		}
+	}
+	
+	public boolean isInProgress(){
+		return this.inProgress;
+	}
+	
+	public void setInProgress(boolean inProgress){
+		this.inProgress = inProgress;
 	}
 
 }
