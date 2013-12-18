@@ -49,11 +49,14 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadActivity"
             android:label="@string/title_download_activity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout" >
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout"
+            android:screenOrientation="portrait" >
         </activity>
          <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
-            android:label="@string/title_tag_select_activity">
+            android:label="@string/title_tag_select_activity"
+            android:screenOrientation="portrait"
+   			android:configChanges="orientation|keyboardHidden">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
@@ -80,7 +83,8 @@
          <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"
             android:label="@string/title_download_media"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout"  />
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout" 
+            android:screenOrientation="portrait" />
          <activity
             android:name="org.digitalcampus.oppia.activity.ScoreActivity"
             android:label="@string/title_points" />
