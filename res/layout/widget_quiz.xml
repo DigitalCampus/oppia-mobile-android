@@ -44,7 +44,7 @@
                 <ImageView
                     android:id="@+id/question_image_image"
                     android:layout_width="fill_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="200dp"
                     android:layout_gravity="center"
                     android:layout_margin="4dp" />
 
