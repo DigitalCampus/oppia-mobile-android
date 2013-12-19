@@ -20,7 +20,16 @@
 <resources>
 
     <style name="Oppia.Theme.Light" parent="@style/Theme.Sherlock.Light">
-        <item name="android:windowNoTitle">true</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_om</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Om</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Om</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Om</item>
+        <item name="android:actionBarTabTextStyle">@style/OM.Light.TabText.Style</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Om</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Om</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_om</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_om</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Om</item>
         <item name="android:windowBackground">@color/background_light</item>
     </style>
     
@@ -50,7 +59,14 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20dp</item>
     </style>
-
+    
+    <style name="OM.Light.TabText.Style" parent="@style/Widget.Sherlock.ActionBar.TabText">       
+            <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+            <item name="android:textSize">12sp</item>
+            <item name="android:textStyle">normal</item>
+            <item name="android:textColor">@color/text_light</item>
+            <item name="android:textAllCaps">true</item>
+        </style>
 
     <style name="ActionBar.Transparent.Om" parent="@style/Widget.Sherlock.ActionBar">
         <item name="android:background">@drawable/ab_transparent_om</item>

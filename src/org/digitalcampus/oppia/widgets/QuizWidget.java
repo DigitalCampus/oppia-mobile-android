@@ -85,45 +85,62 @@ public class QuizWidget extends WidgetFactory {
 	private LinearLayout questionImage;
 	private boolean isOnResultsPage = false;
 	private ViewGroup container;
-	
-	 @Override
-	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+	public static QuizWidget newInstance(Activity activity, Course course, boolean isBaseline) {
+		QuizWidget myFragment = new QuizWidget();
+
+		Bundle args = new Bundle();
+		args.putSerializable(Activity.TAG, activity);
+		args.putSerializable(Course.TAG, course);
+		args.putBoolean(CourseActivity.BASELINE_TAG, isBaseline);
+		myFragment.setArguments(args);
+
+		return myFragment;
+	}
+
+	public QuizWidget() {
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		//ctx = super.getActivity();
 		ctx = new ContextThemeWrapper(getActivity(), R.style.Oppia_Theme_Light);
+		LayoutInflater localInflater = inflater.cloneInContext(ctx);
+		View vv = localInflater.inflate(R.layout.widget_quiz, container, false);
 		
 		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
-		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-		
-		LayoutInflater localInflater = inflater.cloneInContext(ctx);
-		View vv = localInflater.inflate(R.layout.widget_quiz, container, false);
+		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(
+				ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
+		vv.setId(activity.getActId());
 		return vv;
 	}
-	
-	 @Override
-	 public void onActivityCreated(Bundle savedInstanceState) { 
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		prevBtn = (Button) super.getActivity().findViewById(R.id.mquiz_prev_btn);
 		nextBtn = (Button) super.getActivity().findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) super.getActivity().findViewById(R.id.question_text);
 		questionImage = (LinearLayout) super.getActivity().findViewById(R.id.question_image);
-		
-		if(this.quiz == null){
+
+		if (this.quiz == null) {
 			this.quiz = new Quiz();
 			this.quiz.load(quizContent);
 		}
-		if (this.isOnResultsPage){
+		if (this.isOnResultsPage) {
 			this.showResults();
 		} else {
 			this.showQuestion();
 		}
 	}
-	
+
 	public void showQuestion() {
 		QuizQuestion q = null;
 		try {
@@ -136,12 +153,12 @@ public class QuizWidget extends WidgetFactory {
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
 		qText.setText(Html.fromHtml(q.getTitle()).toString());
-		
-		if (q.getProp("image") == null){
+
+		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
 		} else {
 			String fileUrl = course.getLocation() + q.getProp("image");
-			//File file = new File(fileUrl);
+			// File file = new File(fileUrl);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
 			ImageView iv = (ImageView) super.getActivity().findViewById(R.id.question_image_image);
@@ -176,7 +193,7 @@ public class QuizWidget extends WidgetFactory {
 	private void setNav() {
 		nextBtn.setVisibility(View.VISIBLE);
 		prevBtn.setVisibility(View.VISIBLE);
-		
+
 		if (this.quiz.hasPrevious()) {
 			prevBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
@@ -194,7 +211,6 @@ public class QuizWidget extends WidgetFactory {
 			prevBtn.setEnabled(false);
 		}
 
-		
 		nextBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// save answer
@@ -233,9 +249,9 @@ public class QuizWidget extends WidgetFactory {
 	private void setProgress() {
 		TextView progress = (TextView) super.getActivity().findViewById(R.id.mquiz_progress);
 		try {
-			if (quiz.getCurrentQuestion().responseExpected()){
-				progress.setText(ctx.getString(R.string.widget_quiz_progress,
-					quiz.getCurrentQuestionNo(), quiz.getTotalNoQuestions()));
+			if (quiz.getCurrentQuestion().responseExpected()) {
+				progress.setText(ctx.getString(R.string.widget_quiz_progress, quiz.getCurrentQuestionNo(),
+						quiz.getTotalNoQuestions()));
 			} else {
 				progress.setText("");
 			}
@@ -252,10 +268,10 @@ public class QuizWidget extends WidgetFactory {
 				quiz.getCurrentQuestion().setUserResponses(answers);
 				return true;
 			}
-			if(!quiz.getCurrentQuestion().responseExpected()){
+			if (!quiz.getCurrentQuestion().responseExpected()) {
 				return true;
 			}
-		} catch (InvalidQuizException e){
+		} catch (InvalidQuizException e) {
 			e.printStackTrace();
 		}
 		return false;
@@ -284,32 +300,32 @@ public class QuizWidget extends WidgetFactory {
 		// log the activity as complete
 		isOnResultsPage = true;
 		this.saveTracker();
-		
+
 		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
 		DbHelper db = new DbHelper(ctx);
 		db.insertQuizResult(data, course.getModId());
 		db.close();
-		Log.d(TAG,data);
-		
+		Log.d(TAG, data);
+
 		LinearLayout responsesLL = (LinearLayout) super.getActivity().findViewById(R.id.quizResponseWidget);
-    	responsesLL.removeAllViews();
+		responsesLL.removeAllViews();
 		nextBtn.setVisibility(View.GONE);
 		prevBtn.setVisibility(View.GONE);
 		qText.setVisibility(View.GONE);
 		questionImage.setVisibility(View.GONE);
-		
-		if (this.isBaseline){
+
+		if (this.isBaseline) {
 			TextView progress = (TextView) super.getActivity().findViewById(R.id.mquiz_progress);
 			progress.setText("");
-			
+
 			TextView intro = new TextView(this.ctx);
 			intro.setText(ctx.getString(R.string.widget_quiz_baseline_completed));
 			intro.setGravity(Gravity.CENTER);
 			intro.setTextSize(20);
 			intro.setPadding(0, 20, 0, 50);
 			responsesLL.addView(intro);
-			
+
 			Button restartBtn = new Button(this.ctx);
 			restartBtn.setText(ctx.getString(R.string.widget_quiz_baseline_goto_course));
 			restartBtn.setTextSize(20);
@@ -319,29 +335,28 @@ public class QuizWidget extends WidgetFactory {
 					QuizWidget.this.getActivity().finish();
 				}
 			});
-			
+
 			responsesLL.addView(restartBtn);
 		} else {
 			// set page heading
 			TextView progress = (TextView) super.getActivity().findViewById(R.id.mquiz_progress);
 			progress.setText(ctx.getString(R.string.widget_quiz_results));
-			
+
 			// show final score
 			TextView intro = new TextView(this.ctx);
 			intro.setText(ctx.getString(R.string.widget_quiz_results_intro));
 			intro.setGravity(Gravity.CENTER);
 			intro.setTextSize(20);
 			responsesLL.addView(intro);
-			
+
 			TextView score = new TextView(this.ctx);
-			score.setText(ctx.getString(R.string.widget_quiz_results_score,this.getPercent()));
+			score.setText(ctx.getString(R.string.widget_quiz_results_score, this.getPercent()));
 			score.setTextSize(60);
 			score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			score.setGravity(Gravity.CENTER);
 			score.setPadding(0, 20, 0, 20);
 			responsesLL.addView(score);
-			
-			
+
 			Button restartBtn = new Button(this.ctx);
 			restartBtn.setText(ctx.getString(R.string.widget_quiz_results_restart));
 			restartBtn.setTextSize(20);
@@ -351,13 +366,13 @@ public class QuizWidget extends WidgetFactory {
 					restart();
 				}
 			});
-			
+
 			responsesLL.addView(restartBtn);
 		}
 	}
 
 	private void restart() {
-		this.startTime = System.currentTimeMillis()/1000;
+		this.startTime = System.currentTimeMillis() / 1000;
 		quiz = new Quiz();
 		quiz.load(quizContent);
 		isOnResultsPage = false;
@@ -366,16 +381,16 @@ public class QuizWidget extends WidgetFactory {
 
 	@Override
 	protected boolean getActivityCompleted() {
-		if (isOnResultsPage && this.getPercent() > 99){
+		if (isOnResultsPage && this.getPercent() > 99) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	@Override
-	protected void saveTracker(){
-		long timetaken = System.currentTimeMillis()/1000 - startTime;
+	protected void saveTracker() {
+		long timetaken = System.currentTimeMillis() / 1000 - startTime;
 		Tracker t = new Tracker(ctx);
 		JSONObject obj = new JSONObject();
 		MetaDataUtils mdu = new MetaDataUtils(ctx);
@@ -386,13 +401,13 @@ public class QuizWidget extends WidgetFactory {
 			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("quiz_id", quiz.getID());
-            obj.put("instance_id", quiz.getInstanceID());
-            obj.put("score", this.getPercent());
+			obj.put("instance_id", quiz.getInstanceID());
+			obj.put("score", this.getPercent());
 		} catch (JSONException e) {
 			// Do nothing
-		} 
+		}
 		// if it's a baseline activity then assume completed
-		if(this.isBaseline){
+		if (this.isBaseline) {
 			t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
 		} else {
 			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
@@ -402,7 +417,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
-		//this.saveAnswer();
+		// this.saveAnswer();
 		config.put("quiz", this.getQuiz());
 		config.put("Activity_StartTime", this.getStartTime());
 		config.put("OnResultsPage", this.isOnResultsPage);
@@ -411,17 +426,17 @@ public class QuizWidget extends WidgetFactory {
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
-		if (config.containsKey("quiz")){
+		if (config.containsKey("quiz")) {
 			this.setQuiz((Quiz) config.get("quiz"));
 		}
-		if (config.containsKey("Activity_StartTime")){
+		if (config.containsKey("Activity_StartTime")) {
 			this.setStartTime((Long) config.get("Activity_StartTime"));
 		}
-		if (config.containsKey("OnResultsPage")){
+		if (config.containsKey("OnResultsPage")) {
 			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
 		}
 	}
-	
+
 	private void setStartTime(long startTime) {
 		this.startTime = startTime;
 	}
@@ -429,7 +444,7 @@ public class QuizWidget extends WidgetFactory {
 	private long getStartTime() {
 		return this.startTime;
 	}
-	
+
 	public Quiz getQuiz() {
 		return this.quiz;
 	}
@@ -437,10 +452,10 @@ public class QuizWidget extends WidgetFactory {
 	private void setQuiz(Quiz quiz) {
 		this.quiz = quiz;
 	}
-	
+
 	@Override
 	public String getContentToRead() {
-		//Get the current question text
+		// Get the current question text
 		String toRead = "";
 		try {
 			toRead = quiz.getCurrentQuestion().getTitle();
@@ -449,8 +464,8 @@ public class QuizWidget extends WidgetFactory {
 		}
 		return toRead;
 	}
-	
-	private float getPercent(){
+
+	private float getPercent() {
 		quiz.mark();
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		return percent;

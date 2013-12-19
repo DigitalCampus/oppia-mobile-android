@@ -31,24 +31,31 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.widgets.PageWidget;
+import org.digitalcampus.oppia.widgets.QuizWidget;
+import org.digitalcampus.oppia.widgets.ResourceWidget;
 import org.digitalcampus.oppia.widgets.WidgetFactory;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
-//OnInitListener
-public class CourseActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+public class CourseActivity extends SherlockFragmentActivity implements ActionBar.TabListener, OnInitListener {
 
 	public static final String TAG = CourseActivity.class.getSimpleName();
 	public static final String BASELINE_TAG = "BASELINE";
@@ -57,7 +64,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	private int currentActivityNo = 0;
 	private WidgetFactory currentActivity;
 	private SharedPreferences prefs;
-	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 	private ArrayList<Activity> activities;
 	private boolean isBaseline = false;
 	private ActionBar actionBar;
@@ -98,9 +104,17 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setHomeButtonEnabled(true);
 			List<Fragment> fragments = new Vector<Fragment>();
-			for (Activity a : activities) {
-				Fragment f = PageWidget.newInstance(a, course, isBaseline);
-				fragments.add(f);
+			for (Activity activity : activities) {
+				if (activity.getActType().equalsIgnoreCase("page")){
+					Fragment f = PageWidget.newInstance(activity, course, isBaseline);
+					fragments.add(f);
+				} else if (activity.getActType().equalsIgnoreCase("quiz")) {
+					Fragment f = QuizWidget.newInstance(activity, course, isBaseline);
+					fragments.add(f);
+				} else if (activity.getActType().equalsIgnoreCase("resource")) {
+					Fragment f = ResourceWidget.newInstance(activity, course, isBaseline);
+					fragments.add(f);
+				}
 			}
 			apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 			viewPager.setAdapter(apAdapter);
@@ -168,50 +182,46 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		}
 	}
 
-	/*
-	 * @Override public void onPause() { super.onPause(); if (myTTS != null) {
-	 * myTTS.shutdown(); myTTS = null; } if (currentActivity != null) {
-	 * this.widgetState = currentActivity.getWidgetConfig(); } }
-	 * 
-	 * @Override protected void onDestroy() { if (myTTS != null) {
-	 * myTTS.shutdown(); myTTS = null; }
-	 * 
-	 * super.onDestroy(); }
-	 * 
-	 * @Override public boolean onCreateOptionsMenu(Menu menu) {
-	 * getSupportMenuInflater().inflate(R.menu.activity_course, menu); return
-	 * true; }
-	 * 
-	 * @Override public boolean onPrepareOptionsMenu(Menu menu) { MenuItem item
-	 * = (MenuItem) menu.findItem(R.id.menu_tts); if (ttsRunning) {
-	 * item.setTitle(R.string.menu_stop_read_aloud); } else {
-	 * item.setTitle(R.string.menu_read_aloud); } return
-	 * super.onPrepareOptionsMenu(menu); }
-	 * 
-	 * @Override public boolean onOptionsItemSelected(MenuItem item) { // Handle
-	 * item selection switch (item.getItemId()) { case R.id.menu_language:
-	 * createLanguageDialog(); return true; case R.id.menu_help:
-	 * startActivity(new Intent(this, HelpActivity.class)); return true; case
-	 * android.R.id.home: this.finish(); return true; case R.id.menu_tts: if
-	 * (myTTS == null && !ttsRunning) { // check for TTS data Intent
-	 * checkTTSIntent = new Intent();
-	 * checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-	 * startActivityForResult(checkTTSIntent, TTS_CHECK); } else if (myTTS !=
-	 * null && ttsRunning) { this.stopReading(); } else { // TTS not installed
-	 * so show message Toast.makeText(this,
-	 * this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show(); }
-	 * supportInvalidateOptionsMenu(); return true; default: return
-	 * super.onOptionsItemSelected(item); } }
-	 * 
-	 * 
-	 * private void createLanguageDialog() { UIUtils ui = new UIUtils();
-	 * ui.createLanguageDialog(this, course.getLangs(), prefs, new
-	 * Callable<Boolean>() { public Boolean call() throws Exception {
-	 * CourseActivity.this.onStart(); return true; } }); }
-	 * 
-	 * public WidgetFactory getCurrentActivity() { return this.currentActivity;
-	 * }
-	 */
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (myTTS != null) {
+			myTTS.shutdown();
+			myTTS = null;
+		}	
+		if (currentActivity != null) {
+			this.widgetState = currentActivity.getWidgetConfig();
+		}
+	}	
+	
+	@Override
+	protected void onDestroy() {
+		if (myTTS != null) {
+			myTTS.shutdown();
+			myTTS = null;
+		}
+		
+		super.onDestroy();
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.activity_course, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		MenuItem item = (MenuItem) menu.findItem(R.id.menu_tts);
+		if (ttsRunning) {
+			item.setTitle(R.string.menu_stop_read_aloud);
+		} else {
+			item.setTitle(R.string.menu_read_aloud);
+		}
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	
 
 
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
@@ -224,38 +234,59 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 	}
 
-	/*
-	 * public void onInit(int status) { // check for successful instantiation if
-	 * (status == TextToSpeech.SUCCESS) { Log.d(TAG, "tts success"); ttsRunning
-	 * = true; currentActivity.setReadAloud(true);
-	 * supportInvalidateOptionsMenu(); HashMap<String,String> params = new
-	 * HashMap<String,String>();
-	 * params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,TAG);
-	 * myTTS.speak(currentActivity.getContentToRead(), TextToSpeech.QUEUE_FLUSH,
-	 * params); myTTS.setOnUtteranceProgressListener(new
-	 * UtteranceProgressListener() {
-	 * 
-	 * @Override public void onDone(String utteranceId){
-	 * Log.d(TAG,"Finished reading"); CourseActivity.this.ttsRunning = false;
-	 * myTTS = null; }
-	 * 
-	 * @Override public void onError(String utteranceId){ }
-	 * 
-	 * @Override public void onStart(String utteranceId){ } }); } else { // TTS
-	 * not installed so show message Toast.makeText(this,
-	 * this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show(); } }
-	 * 
-	 * @Override protected void onActivityResult(int requestCode, int
-	 * resultCode, Intent data) { if (requestCode == TTS_CHECK) { if (resultCode
-	 * == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) { // the user has the
-	 * necessary data - create the TTS myTTS = new TextToSpeech(this, this);
-	 * 
-	 * } } super.onActivityResult(requestCode, resultCode, data); }
-	 * 
-	 * private void stopReading() { if (myTTS != null) { myTTS.stop(); myTTS =
-	 * null; } this.ttsRunning = false;
-	 * 
-	 * }
-	 */
+	
+	public void onInit(int status) {
+		// check for successful instantiation
+		if (status == TextToSpeech.SUCCESS) {
+			Log.d(TAG, "tts success");
+			ttsRunning = true;
+			currentActivity.setReadAloud(true);
+			supportInvalidateOptionsMenu();
+			HashMap<String,String> params = new HashMap<String,String>();
+			params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,TAG);
+			myTTS.speak(currentActivity.getContentToRead(), TextToSpeech.QUEUE_FLUSH, params);
+			myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+				
+                @Override
+                public void onDone(String utteranceId){
+                	Log.d(TAG,"Finished reading");
+            		CourseActivity.this.ttsRunning = false;
+            		myTTS = null;
+                }
+
+                @Override
+                public void onError(String utteranceId){
+                }
+
+                @Override
+                public void onStart(String utteranceId){
+                }
+            	});
+		} else {
+			// TTS not installed so show message
+			Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == TTS_CHECK) {
+			if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+				// the user has the necessary data - create the TTS
+				myTTS = new TextToSpeech(this, this);
+				
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void stopReading() {
+		if (myTTS != null) {
+			myTTS.stop();
+			myTTS = null;
+		}
+		this.ttsRunning = false;
+
+	}
 
 }

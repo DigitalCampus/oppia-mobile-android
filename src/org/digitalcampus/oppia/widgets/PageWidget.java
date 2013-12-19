@@ -39,18 +39,14 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +56,9 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
-public class PageWidget extends Fragment {
+import com.bugsense.trace.BugSenseHandler;
+
+public class PageWidget extends WidgetFactory {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
 	private Context ctx;
@@ -68,12 +66,6 @@ public class PageWidget extends Fragment {
 	private long mediaStartTimeStamp;
 	private String mediaFileName;
 	private WebView wv;
-	protected Activity activity = null;
-	protected Course course = null;
-	protected SharedPreferences prefs;
-	protected boolean isBaseline = false;
-	protected long startTime = System.currentTimeMillis()/1000;
-	protected boolean readAloud = false;
 
 	
 	public static PageWidget newInstance(Activity activity, Course course, boolean isBaseline) {
@@ -110,10 +102,8 @@ public class PageWidget extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG,"Running onActivity created for: "+activity.getTitle("en"));
 		wv = (WebView) ((android.app.Activity) ctx).findViewById(activity.getActId());
 		// get the location data
-		
 		String url = course.getLocation()
 				+ activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault()
 						.getLanguage()));
@@ -209,6 +199,7 @@ public class PageWidget extends Fragment {
 	public void setIsBaseline(boolean isBaseline) {
 		this.isBaseline = isBaseline;
 	}
+	
 	protected boolean getActivityCompleted() {
 		// only show as being complete if all the videos on this page have been
 		// played

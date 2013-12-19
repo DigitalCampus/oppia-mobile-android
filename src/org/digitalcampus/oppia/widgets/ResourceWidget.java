@@ -8,6 +8,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.listener.OnResourceClickListener;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
@@ -33,6 +34,22 @@ public class ResourceWidget extends WidgetFactory {
 	public static final String TAG = ResourceWidget.class.getSimpleName();
 	private Context ctx;	
 	
+	public static ResourceWidget newInstance(Activity activity, Course course, boolean isBaseline) {
+		ResourceWidget myFragment = new ResourceWidget();
+
+		Bundle args = new Bundle();
+		args.putSerializable(Activity.TAG, activity);
+		args.putSerializable(Course.TAG, course);
+		args.putBoolean(CourseActivity.BASELINE_TAG, isBaseline);
+		myFragment.setArguments(args);
+
+		return myFragment;
+	}
+
+	public ResourceWidget() {
+
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
@@ -43,6 +60,7 @@ public class ResourceWidget extends WidgetFactory {
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_resource, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
+		vv.setId(activity.getActId());
 		return vv;
 	}
 	 
