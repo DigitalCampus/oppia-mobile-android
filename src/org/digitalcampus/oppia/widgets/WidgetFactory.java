@@ -24,6 +24,7 @@ import org.digitalcampus.oppia.model.Course;
 
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 
 public abstract class WidgetFactory extends Fragment {
 	

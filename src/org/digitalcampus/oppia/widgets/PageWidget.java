@@ -44,11 +44,13 @@ import com.bugsense.trace.BugSenseHandler;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +60,7 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
-public class PageWidget extends WidgetFactory {
+public class PageWidget extends Fragment {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
 	private Context ctx;
@@ -66,115 +68,147 @@ public class PageWidget extends WidgetFactory {
 	private long mediaStartTimeStamp;
 	private String mediaFileName;
 	private WebView wv;
+	protected Activity activity = null;
+	protected Course course = null;
+	protected SharedPreferences prefs;
+	protected boolean isBaseline = false;
+	protected long startTime = System.currentTimeMillis()/1000;
+	protected boolean readAloud = false;
+
 	
-	
-	
-	 @Override
-	 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public static PageWidget newInstance(Activity activity, Course course, boolean isBaseline) {
+		PageWidget myFragment = new PageWidget();
+
+	    Bundle args = new Bundle();
+	    args.putSerializable(Activity.TAG, activity);
+	    args.putSerializable(Course.TAG, course);
+	    args.putBoolean(CourseActivity.BASELINE_TAG, isBaseline);
+	    myFragment.setArguments(args);
+
+	    return myFragment;
+	}
+
+	public PageWidget(){
+		
+	}
+
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		course = (Course) getArguments().getSerializable(Course.TAG);
-		activity = (Activity) getArguments().getSerializable(Activity.TAG);
-		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
 		ctx = super.getActivity();
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_page, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
+		activity = (Activity) getArguments().getSerializable(Activity.TAG);
+		course = (Course) getArguments().getSerializable(Course.TAG);
+		isBaseline = getArguments().getBoolean(CourseActivity.BASELINE_TAG);
+		vv.setId(activity.getActId());
 		return vv;
 	}
-	
-	 
-	 @Override
-	 public void onActivityCreated(Bundle savedInstanceState) { 
-		 super.onActivityCreated(savedInstanceState);
-		 wv = (WebView) ((android.app.Activity) ctx).findViewById(R.id.page_webview);
-			// get the location data
-			String url = course.getLocation() + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-			try {
-				wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", FileUtils.readFile(url), "text/html", "utf-8", null);
-			} catch (IOException e) {
-				wv.loadUrl("file://" + url);
-			}
-			
-			
-			// set up the page to intercept videos
-			wv.setWebViewClient(new WebViewClient() {
-				@Override
-				public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-					if (url.contains("/video/")) {
-						Log.d(TAG, "Intercepting click on video url: " + url);
-						// extract video name from url
-						int startPos = url.indexOf("/video/") + 7;
-						mediaFileName = url.substring(startPos, url.length());
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG,"Running onActivity created for: "+activity.getTitle("en"));
+		wv = (WebView) ((android.app.Activity) ctx).findViewById(activity.getActId());
+		// get the location data
+		
+		String url = course.getLocation()
+				+ activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault()
+						.getLanguage()));
+		try {
+			wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", FileUtils.readFile(url), "text/html",
+					"utf-8", null);
+		} catch (IOException e) {
+			wv.loadUrl("file://" + url);
+		}
 
-						// check video file exists
-						boolean exists = FileUtils.mediaFileExists(mediaFileName);
-						if (!exists) {
-							Toast.makeText(ctx, ctx.getString(R.string.error_media_not_found,mediaFileName), Toast.LENGTH_LONG).show();
-							return true;
-						}
-						
-						String mimeType = FileUtils.getMimeType(MobileLearning.MEDIA_PATH + mediaFileName);
-						if(!FileUtils.supportedMediafileType(mimeType)){
-							Toast.makeText(ctx, ctx.getString(R.string.error_media_unsupported, mediaFileName), Toast.LENGTH_LONG).show();
-							return true;
-						}
-						
-						// check user has app installed to play the video
-						// launch intent to play video
-						Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-						Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
-						intent.setDataAndType(data, "video/mp4");
-						
-						PackageManager pm = PageWidget.this.ctx.getPackageManager();
+		// set up the page to intercept videos
+		wv.setWebViewClient(new WebViewClient() {
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-						List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
-						boolean appFound = false;
-						for (ResolveInfo info : infos) {
-							IntentFilter filter = info.filter;
-							if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
-								// Found an app with the right intent/filter
-								appFound = true;
-							}
-						}
-						if (!appFound){
-							Toast.makeText(PageWidget.this.ctx, PageWidget.this.ctx.getString(R.string.error_media_app_not_found), Toast.LENGTH_LONG).show();
-							return true;
-						}
-						PageWidget.this.mediaPlaying = true;
-						PageWidget.this.mediaStartTimeStamp = System.currentTimeMillis()/1000;
-						ctx.startActivity(intent);
-						
-						return true;
-					} else {
-						Intent intent = new Intent(Intent.ACTION_VIEW);
-						Uri data = Uri.parse(url);
-						intent.setData(data);
-						ctx.startActivity(intent);
-						// launch action in mobile browser - not the webview
-						// return true so doesn't follow link within webview
+				if (url.contains("/video/")) {
+					Log.d(TAG, "Intercepting click on video url: " + url);
+					// extract video name from url
+					int startPos = url.indexOf("/video/") + 7;
+					mediaFileName = url.substring(startPos, url.length());
+
+					// check video file exists
+					boolean exists = FileUtils.mediaFileExists(mediaFileName);
+					if (!exists) {
+						Toast.makeText(ctx, ctx.getString(R.string.error_media_not_found, mediaFileName),
+								Toast.LENGTH_LONG).show();
 						return true;
 					}
 
+					String mimeType = FileUtils.getMimeType(MobileLearning.MEDIA_PATH + mediaFileName);
+					if (!FileUtils.supportedMediafileType(mimeType)) {
+						Toast.makeText(ctx, ctx.getString(R.string.error_media_unsupported, mediaFileName),
+								Toast.LENGTH_LONG).show();
+						return true;
+					}
+
+					// check user has app installed to play the video
+					// launch intent to play video
+					Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+					Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
+					intent.setDataAndType(data, "video/mp4");
+
+					PackageManager pm = PageWidget.this.ctx.getPackageManager();
+
+					List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+					boolean appFound = false;
+					for (ResolveInfo info : infos) {
+						IntentFilter filter = info.filter;
+						if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
+							// Found an app with the right intent/filter
+							appFound = true;
+						}
+					}
+					if (!appFound) {
+						Toast.makeText(PageWidget.this.ctx,
+								PageWidget.this.ctx.getString(R.string.error_media_app_not_found), Toast.LENGTH_LONG)
+								.show();
+						return true;
+					}
+					PageWidget.this.mediaPlaying = true;
+					PageWidget.this.mediaStartTimeStamp = System.currentTimeMillis() / 1000;
+					ctx.startActivity(intent);
+
+					return true;
+				} else {
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					Uri data = Uri.parse(url);
+					intent.setData(data);
+					ctx.startActivity(intent);
+					// launch action in mobile browser - not the webview
+					// return true so doesn't follow link within webview
+					return true;
 				}
-			});
-	 }
+
+			}
+		});
+	}
 
 	@Override
 	public void onStop() {
 		this.saveTracker();
 		super.onStop();
 	}
-	 
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(this.mediaPlaying){
+		if (this.mediaPlaying) {
 			this.mediaStopped();
-		} 
+		}
 	}
-	
-	@Override
+
+	public void setIsBaseline(boolean isBaseline) {
+		this.isBaseline = isBaseline;
+	}
 	protected boolean getActivityCompleted() {
 		// only show as being complete if all the videos on this page have been
 		// played
@@ -194,12 +228,11 @@ public class PageWidget extends WidgetFactory {
 		}
 		return true;
 	}
-	
-	@Override
-	protected void saveTracker(){
-		long timetaken = System.currentTimeMillis()/1000 - startTime;
-		this.startTime = System.currentTimeMillis()/1000;
-		// only save tracker if over the time 
+
+	protected void saveTracker() {
+		long timetaken = System.currentTimeMillis() / 1000 - startTime;
+		this.startTime = System.currentTimeMillis() / 1000;
+		// only save tracker if over the time
 		if (timetaken < MobileLearning.PAGE_READ_TIME) {
 			return;
 		}
@@ -212,12 +245,12 @@ public class PageWidget extends WidgetFactory {
 			obj = mdu.getMetaData(obj);
 			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
-            obj.put("readaloud",readAloud);
+			obj.put("readaloud", readAloud);
 		} catch (JSONException e) {
 			// Do nothing
-		} 
+		}
 		// if it's a baseline activity then assume completed
-		if(this.isBaseline){
+		if (this.isBaseline) {
 			t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
 		} else {
 			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
@@ -225,21 +258,21 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	private void mediaStopped() {
-		if(mediaPlaying){
-			long mediaEndTimeStamp = System.currentTimeMillis()/1000;
+		if (mediaPlaying) {
+			long mediaEndTimeStamp = System.currentTimeMillis() / 1000;
 			long timeTaken = mediaEndTimeStamp - mediaStartTimeStamp;
-			Log.d(TAG,"video playing for:" + String.valueOf(timeTaken));
+			Log.d(TAG, "video playing for:" + String.valueOf(timeTaken));
 			mediaPlaying = false;
 			// track that the video has been played (or at least clicked on)
 			Tracker t = new Tracker(ctx);
 			// digest should be that of the video not the page
-			for(Media m: PageWidget.this.activity.getMedia()){
-				if(m.getFilename().equals(mediaFileName)){
-					Log.d(TAG,"media digest:" + m.getDigest());
-					Log.d(TAG,"media file:" + mediaFileName);
-					Log.d(TAG,"media length:" + m.getLength());
+			for (Media m : PageWidget.this.activity.getMedia()) {
+				if (m.getFilename().equals(mediaFileName)) {
+					Log.d(TAG, "media digest:" + m.getDigest());
+					Log.d(TAG, "media file:" + mediaFileName);
+					Log.d(TAG, "media length:" + m.getLength());
 					boolean completed = false;
-					if(timeTaken >= m.getLength()){
+					if (timeTaken >= m.getLength()) {
 						completed = true;
 					}
 					JSONObject data = new JSONObject();
@@ -247,10 +280,11 @@ public class PageWidget extends WidgetFactory {
 						data.put("media", "played");
 						data.put("mediafile", mediaFileName);
 						data.put("timetaken", timeTaken);
-						String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+						String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault()
+								.getLanguage());
 						data.put("lang", lang);
 					} catch (JSONException e) {
-						if(!MobileLearning.DEVELOPER_MODE){
+						if (!MobileLearning.DEVELOPER_MODE) {
 							BugSenseHandler.sendException(e);
 						} else {
 							e.printStackTrace();
@@ -262,31 +296,29 @@ public class PageWidget extends WidgetFactory {
 						data = mdu.getMetaData(data);
 					} catch (JSONException e) {
 						// Do nothing
-					} 
+					}
 					t.saveTracker(PageWidget.this.course.getModId(), m.getDigest(), data, completed);
 				}
 			}
 		}
-		
+
 	}
-	
-	@Override
-	public void setWidgetConfig(HashMap<String,Object> config) {
-		if (config.containsKey("Media_Playing")){
+
+	public void setWidgetConfig(HashMap<String, Object> config) {
+		if (config.containsKey("Media_Playing")) {
 			this.setMediaPlaying((Boolean) config.get("Media_Playing"));
 		}
-		if (config.containsKey("Media_StartTime")){
+		if (config.containsKey("Media_StartTime")) {
 			this.setMediaStartTime((Long) config.get("Media_StartTime"));
 		}
-		if (config.containsKey("Media_File")){
+		if (config.containsKey("Media_File")) {
 			this.setMediaFileName((String) config.get("Media_File"));
 		}
-		if (config.containsKey("Activity_StartTime")){
+		if (config.containsKey("Activity_StartTime")) {
 			this.setStartTime((Long) config.get("Activity_StartTime"));
 		}
 	}
-	
-	@Override
+
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
 		config.put("Media_Playing", this.getMediaPlaying());
@@ -295,7 +327,7 @@ public class PageWidget extends WidgetFactory {
 		config.put("Activity_StartTime", this.getStartTime());
 		return config;
 	}
-	
+
 	private boolean getMediaPlaying() {
 		return this.mediaPlaying;
 	}
@@ -317,33 +349,35 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	private void setMediaFileName(String mediaFileName) {
-		this.mediaFileName = mediaFileName;	
+		this.mediaFileName = mediaFileName;
 	}
-	
+
 	private void setStartTime(long startTime) {
 		this.startTime = startTime;
-		
+
 	}
 
 	private long getStartTime() {
 		return this.startTime;
 	}
-	
-	@Override
+
 	public String getContentToRead() {
-		File f = new File ("/"+ course.getLocation() + "/" + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+		File f = new File("/"
+				+ course.getLocation()
+				+ "/"
+				+ activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault()
+						.getLanguage())));
 		StringBuilder text = new StringBuilder();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(f));
-		    String line;
+			String line;
 
-		    while ((line = br.readLine()) != null) {
-		        text.append(line);
-		    }
-		    br.close();
-		}
-		catch (IOException e) {
-		    return "";
+			while ((line = br.readLine()) != null) {
+				text.append(line);
+			}
+			br.close();
+		} catch (IOException e) {
+			return "";
 		}
 		return android.text.Html.fromHtml(text.toString()).toString();
 	}
