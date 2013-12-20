@@ -68,13 +68,13 @@ public class ResourceWidget extends WidgetFactory {
 	public void onActivityCreated(Bundle savedInstanceState) { 
 		 super.onActivityCreated(savedInstanceState);
 		
-		LinearLayout ll = (LinearLayout) ((android.app.Activity) ctx).findViewById(R.id.widget_resource_object);
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.widget_resource_object);
 		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		Log.d(TAG,fileUrl);
 		// show description if any
 		String desc = activity.getDescription(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 
-		TextView descTV = (TextView) ((android.app.Activity) ctx).findViewById(R.id.widget_resource_description);
+		TextView descTV = (TextView) getView().findViewById(R.id.widget_resource_description);
 		if (desc.length() > 0){
 			descTV.setText(desc);
 		} else {
