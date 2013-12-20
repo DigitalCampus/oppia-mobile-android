@@ -36,12 +36,12 @@ public class MultiChoiceWidget extends QuestionWidget{
 
 	public static final String TAG = MultiChoiceWidget.class.getSimpleName();
 	
-	public MultiChoiceWidget(Activity activity, ViewGroup container) {
-		init(activity,container,R.layout.widget_quiz_multichoice);
+	public MultiChoiceWidget(Activity activity, View v, ViewGroup container) {
+		init(activity,container,R.layout.widget_quiz_multichoice,v);
 	}
 
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
-		LinearLayout responsesLL = (LinearLayout) activity.findViewById(R.id.questionresponses);
+		LinearLayout responsesLL = (LinearLayout) view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
     	RadioGroup responsesRG = new RadioGroup(ctx);
     	// TODO change to use getchild views (like the MultiSelect)
@@ -67,7 +67,7 @@ public class MultiChoiceWidget extends QuestionWidget{
 	
 	public List<String> getQuestionResponses(List<Response> responses){
 		// TODO change to use getchild views (like the MultiSelect)
-		RadioGroup responsesRG = (RadioGroup) activity.findViewById(234523465);
+		RadioGroup responsesRG = (RadioGroup) view.findViewById(234523465);
 		int resp = responsesRG.getCheckedRadioButtonId();
     	View rb = responsesRG.findViewById(resp);
     	int idx = responsesRG.indexOfChild(rb);

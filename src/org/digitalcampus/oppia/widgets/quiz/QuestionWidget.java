@@ -32,19 +32,19 @@ import android.widget.LinearLayout;
 
 public abstract class QuestionWidget {
 
-	protected Activity activity;
 	protected Context ctx;
+	protected View view;
 	
 	// Abstract methods
 	public abstract void setQuestionResponses(List<Response> responses, List<String> currentAnswers);
 
 	public abstract List<String> getQuestionResponses(List<Response> responses);
 	
-	protected void init(Activity activity, ViewGroup container, int layout){
+	protected void init(Activity activity, ViewGroup container, int layout, View v){
 		this.ctx = new ContextThemeWrapper(activity, R.style.Oppia_Theme_Light);
-		this.activity = activity;
+		this.view = v;
 		
-		LinearLayout ll = (LinearLayout) activity.findViewById(R.id.quizResponseWidget);
+		LinearLayout ll = (LinearLayout) v.findViewById(R.id.quizResponseWidget);
 		ll.removeAllViews();
 		
 		LayoutInflater localInflater = ((LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).cloneInContext(ctx);

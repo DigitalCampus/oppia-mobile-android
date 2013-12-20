@@ -125,10 +125,10 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		prevBtn = (Button) super.getActivity().findViewById(R.id.mquiz_prev_btn);
-		nextBtn = (Button) super.getActivity().findViewById(R.id.mquiz_next_btn);
-		qText = (TextView) super.getActivity().findViewById(R.id.question_text);
-		questionImage = (LinearLayout) super.getActivity().findViewById(R.id.question_image);
+		prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
+		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
+		qText = (TextView) getView().findViewById(R.id.question_text);
+		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
 
 		if (this.quiz == null) {
 			this.quiz = new Quiz();
@@ -161,7 +161,7 @@ public class QuizWidget extends WidgetFactory {
 			// File file = new File(fileUrl);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
-			ImageView iv = (ImageView) super.getActivity().findViewById(R.id.question_image_image);
+			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
 			OnResourceClickListener orcl = new OnResourceClickListener(this.ctx, "image/*");
@@ -170,17 +170,17 @@ public class QuizWidget extends WidgetFactory {
 		}
 
 		if (q instanceof MultiChoice) {
-			qw = new MultiChoiceWidget(super.getActivity(), container);
+			qw = new MultiChoiceWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof MultiSelect) {
-			qw = new MultiSelectWidget(super.getActivity(), container);
+			qw = new MultiSelectWidget(super.getActivity(), getView(),container);
 		} else if (q instanceof ShortAnswer) {
-			qw = new ShortAnswerWidget(super.getActivity(), container);
+			qw = new ShortAnswerWidget(super.getActivity(), getView(),container);
 		} else if (q instanceof Matching) {
-			qw = new MatchingWidget(super.getActivity(), container);
+			qw = new MatchingWidget(super.getActivity(), getView(),container);
 		} else if (q instanceof Numerical) {
-			qw = new NumericalWidget(super.getActivity(), container);
+			qw = new NumericalWidget(super.getActivity(), getView(),container);
 		} else if (q instanceof Description) {
-			qw = new DescriptionWidget(super.getActivity(), container);
+			qw = new DescriptionWidget(super.getActivity(), getView(),container);
 		} else {
 			Log.d(TAG, "Class for question type not found");
 			return;
@@ -247,7 +247,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void setProgress() {
-		TextView progress = (TextView) super.getActivity().findViewById(R.id.mquiz_progress);
+		TextView progress = (TextView) getView().findViewById(R.id.mquiz_progress);
 		try {
 			if (quiz.getCurrentQuestion().responseExpected()) {
 				progress.setText(ctx.getString(R.string.widget_quiz_progress, quiz.getCurrentQuestionNo(),
@@ -308,7 +308,7 @@ public class QuizWidget extends WidgetFactory {
 		db.close();
 		Log.d(TAG, data);
 
-		LinearLayout responsesLL = (LinearLayout) super.getActivity().findViewById(R.id.quizResponseWidget);
+		LinearLayout responsesLL = (LinearLayout) getView().findViewById(R.id.quizResponseWidget);
 		responsesLL.removeAllViews();
 		nextBtn.setVisibility(View.GONE);
 		prevBtn.setVisibility(View.GONE);
@@ -316,7 +316,7 @@ public class QuizWidget extends WidgetFactory {
 		questionImage.setVisibility(View.GONE);
 
 		if (this.isBaseline) {
-			TextView progress = (TextView) super.getActivity().findViewById(R.id.mquiz_progress);
+			TextView progress = (TextView) getView().findViewById(R.id.mquiz_progress);
 			progress.setText("");
 
 			TextView intro = new TextView(this.ctx);
@@ -339,7 +339,7 @@ public class QuizWidget extends WidgetFactory {
 			responsesLL.addView(restartBtn);
 		} else {
 			// set page heading
-			TextView progress = (TextView) super.getActivity().findViewById(R.id.mquiz_progress);
+			TextView progress = (TextView) getView().findViewById(R.id.mquiz_progress);
 			progress.setText(ctx.getString(R.string.widget_quiz_results));
 
 			// show final score

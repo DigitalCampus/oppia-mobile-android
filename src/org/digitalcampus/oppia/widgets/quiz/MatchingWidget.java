@@ -29,6 +29,7 @@ import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -42,13 +43,13 @@ public class MatchingWidget extends QuestionWidget {
 	private LinearLayout responsesLL;
 	private LinearLayout[] responseLayouts;
 	
-	public MatchingWidget(Activity activity, ViewGroup container) {
-		init(activity,container,R.layout.widget_quiz_matching);
+	public MatchingWidget(Activity activity, View v, ViewGroup container) {
+		init(activity,container,R.layout.widget_quiz_matching,v);
 	}
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
-		responsesLL = (LinearLayout) activity.findViewById(R.id.questionresponses);
+		responsesLL = (LinearLayout) view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
     	
     	// this could be tidied up - to use ArrayAdapters/Lists

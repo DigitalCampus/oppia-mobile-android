@@ -25,6 +25,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -34,13 +35,13 @@ public class MultiSelectWidget extends QuestionWidget {
 	public static final String TAG = MultiSelectWidget.class.getSimpleName();
 	private LinearLayout responsesLL;
 	
-	public MultiSelectWidget(Activity activity, ViewGroup container) {
-		init(activity,container,R.layout.widget_quiz_multiselect);
+	public MultiSelectWidget(Activity activity,  View v, ViewGroup container) {
+		init(activity,container,R.layout.widget_quiz_multiselect, v);
 	}
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
-		responsesLL = (LinearLayout) activity.findViewById(R.id.questionresponses);
+		responsesLL = (LinearLayout) view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
     	
     	for (Response r : responses){
