@@ -129,16 +129,24 @@ public class QuizWidget extends WidgetFactory {
 		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) getView().findViewById(R.id.question_text);
 		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
-
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
 		if (this.quiz == null) {
 			this.quiz = new Quiz();
 			this.quiz.load(quizContent);
+			Log.d(TAG,"this.quiz is null");
+		} else {
+			Log.d(TAG,"this.quiz is not null");
 		}
 		if (this.isOnResultsPage) {
 			this.showResults();
 		} else {
 			this.showQuestion();
 		}
+		Log.d(TAG,"Called quiz onResume");
 	}
 
 	public void showQuestion() {
@@ -427,7 +435,9 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
 		if (config.containsKey("quiz")) {
-			this.setQuiz((Quiz) config.get("quiz"));
+			this.quiz = (Quiz) config.get("quiz");
+			Log.d(TAG,"setWidgetConfig set quiz");
+			//Log.d(TAG,"quiz: "+quiz.getTitle());
 		}
 		if (config.containsKey("Activity_StartTime")) {
 			this.setStartTime((Long) config.get("Activity_StartTime"));
@@ -435,6 +445,7 @@ public class QuizWidget extends WidgetFactory {
 		if (config.containsKey("OnResultsPage")) {
 			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
 		}
+		Log.d(TAG,"Set quiz widget config");
 	}
 
 	private void setStartTime(long startTime) {
@@ -447,10 +458,6 @@ public class QuizWidget extends WidgetFactory {
 
 	public Quiz getQuiz() {
 		return this.quiz;
-	}
-
-	private void setQuiz(Quiz quiz) {
-		this.quiz = quiz;
 	}
 
 	@Override
@@ -469,5 +476,10 @@ public class QuizWidget extends WidgetFactory {
 		quiz.mark();
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		return percent;
+	}
+	
+	@Override
+	public void widgetStarted() {
+		this.startTime = System.currentTimeMillis()/1000;
 	}
 }

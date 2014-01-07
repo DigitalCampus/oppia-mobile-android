@@ -183,10 +183,11 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	@Override
-	public void onStop() {
-		this.saveTracker();
-		super.onStop();
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG,"page widget paused" + activity.getTitleJSONString());
 	}
+
 
 	@Override
 	public void onResume() {
@@ -371,5 +372,10 @@ public class PageWidget extends WidgetFactory {
 			return "";
 		}
 		return android.text.Html.fromHtml(text.toString()).toString();
+	}
+
+	@Override
+	public void widgetStarted() {
+		this.startTime = System.currentTimeMillis()/1000;
 	}
 }

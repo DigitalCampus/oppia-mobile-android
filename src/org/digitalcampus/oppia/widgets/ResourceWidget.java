@@ -160,5 +160,9 @@ public class ResourceWidget extends WidgetFactory {
 		return null;
 	}
 	
+	@Override
+	public void widgetStarted() {
+		this.startTime = System.currentTimeMillis()/1000;
+	}
 	
 }

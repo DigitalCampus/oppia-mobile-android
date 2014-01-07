@@ -21,9 +21,10 @@ import java.util.List;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class ActivityPagerAdapter extends FragmentStatePagerAdapter {
+public class ActivityPagerAdapter extends FragmentPagerAdapter {
 
 	public static final String TAG = ActivityPagerAdapter.class.getSimpleName();
 

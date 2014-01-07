@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.learning.R.id;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -184,7 +183,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	private void scanMedia() {
 		long now = System.currentTimeMillis()/1000;
 		if (prefs.getLong(getString(R.string.prefs_last_media_scan), 0)+3600 > now) {
-			LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
+			LinearLayout ll = (LinearLayout) this.findViewById(R.id.home_messages);
 			ll.setVisibility(View.GONE);
 			return;
 		}
@@ -381,19 +380,19 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	public void scanStart() {
-		TextView tv = (TextView) this.findViewById(id.home_message);
+		TextView tv = (TextView) this.findViewById(R.id.home_message);
 		tv.setText(this.getString(R.string.info_scan_media_start));
 	}
 
 	public void scanProgressUpdate(String msg) {
-		TextView tv = (TextView) this.findViewById(id.home_message);
+		TextView tv = (TextView) this.findViewById(R.id.home_message);
 		tv.setText(this.getString(R.string.info_scan_media_checking, msg));
 	}
 
 	public void scanComplete(Payload response) {
 		Editor e = prefs.edit();
-		LinearLayout ll = (LinearLayout) this.findViewById(id.home_messages);
-		TextView tv = (TextView) this.findViewById(id.home_message);
+		LinearLayout ll = (LinearLayout) this.findViewById(R.id.home_messages);
+		TextView tv = (TextView) this.findViewById(R.id.home_message);
 		Button btn = (Button) this.findViewById(R.id.message_action_button);
 		
 		if (response.getResponseData().size() > 0) {

@@ -54,4 +54,6 @@ public abstract class WidgetFactory extends Fragment {
 	}
 	public abstract HashMap<String,Object> getWidgetConfig();
 	public abstract void setWidgetConfig(HashMap<String,Object> config);
+	
+	public abstract void widgetStarted();
 }
