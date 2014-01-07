@@ -246,6 +246,7 @@ public class PageWidget extends WidgetFactory {
 			}
 		} catch (JSONException e) {
 			// Do nothing
+		// sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly
 		} catch (NullPointerException npe){
 			//do nothing
 		}

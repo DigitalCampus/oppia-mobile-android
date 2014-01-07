@@ -100,6 +100,7 @@ public class QuizWidget extends WidgetFactory {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
@@ -116,9 +117,18 @@ public class QuizWidget extends WidgetFactory {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		vv.setId(activity.getActId());
+		if ((savedInstanceState != null) && (savedInstanceState.getSerializable("widget_config") != null)){
+			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
+		}
 		return vv;
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putSerializable("widget_config", getWidgetConfig());
+	}
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -398,9 +408,12 @@ public class QuizWidget extends WidgetFactory {
 		long timetaken = System.currentTimeMillis() / 1000 - this.getStartTime();
 		Tracker t = new Tracker(super.getActivity());
 		JSONObject obj = new JSONObject();
-		MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
+		if(!isOnResultsPage){
+			return;
+		}
 		// add in extra meta-data
 		try {
+			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
 			String lang = prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault().getLanguage());
@@ -408,15 +421,18 @@ public class QuizWidget extends WidgetFactory {
 			obj.put("quiz_id", quiz.getID());
 			obj.put("instance_id", quiz.getInstanceID());
 			obj.put("score", this.getPercent());
+			// if it's a baseline activity then assume completed
+			if (this.isBaseline) {
+				t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
+			} else {
+				t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+			}
 		} catch (JSONException e) {
 			// Do nothing
+		} catch (NullPointerException npe){
+			//do nothing
 		}
-		// if it's a baseline activity then assume completed
-		if (this.isBaseline) {
-			t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
-		} else {
-			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
-		}
+		
 	}
 
 	@Override
