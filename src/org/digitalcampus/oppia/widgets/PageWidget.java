@@ -39,7 +39,6 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -61,7 +60,6 @@ import com.bugsense.trace.BugSenseHandler;
 public class PageWidget extends WidgetFactory {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
-	private Context ctx;
 	private boolean mediaPlaying = false;
 	private long mediaStartTimeStamp;
 	private String mediaFileName;
@@ -70,7 +68,6 @@ public class PageWidget extends WidgetFactory {
 	
 	public static PageWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		PageWidget myFragment = new PageWidget();
-
 	    Bundle args = new Bundle();
 	    args.putSerializable(Activity.TAG, activity);
 	    args.putSerializable(Course.TAG, course);
@@ -85,10 +82,10 @@ public class PageWidget extends WidgetFactory {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		ctx = super.getActivity();
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_page, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
@@ -96,16 +93,25 @@ public class PageWidget extends WidgetFactory {
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		isBaseline = getArguments().getBoolean(CourseActivity.BASELINE_TAG);
 		vv.setId(activity.getActId());
+		if ((savedInstanceState != null) && (savedInstanceState.getSerializable("widget_config") != null)){
+			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
+		}
 		return vv;
 	}
 
 	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putSerializable("widget_config", getWidgetConfig());
+	}
+	
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		wv = (WebView) ((android.app.Activity) ctx).findViewById(activity.getActId());
+		wv = (WebView) super.getActivity().findViewById(activity.getActId());
 		// get the location data
 		String url = course.getLocation()
-				+ activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault()
+				+ activity.getLocation(prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault()
 						.getLanguage()));
 		try {
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", FileUtils.readFile(url), "text/html",
@@ -128,14 +134,14 @@ public class PageWidget extends WidgetFactory {
 					// check video file exists
 					boolean exists = FileUtils.mediaFileExists(mediaFileName);
 					if (!exists) {
-						Toast.makeText(ctx, ctx.getString(R.string.error_media_not_found, mediaFileName),
+						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName),
 								Toast.LENGTH_LONG).show();
 						return true;
 					}
 
 					String mimeType = FileUtils.getMimeType(MobileLearning.MEDIA_PATH + mediaFileName);
 					if (!FileUtils.supportedMediafileType(mimeType)) {
-						Toast.makeText(ctx, ctx.getString(R.string.error_media_unsupported, mediaFileName),
+						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
 								Toast.LENGTH_LONG).show();
 						return true;
 					}
@@ -146,7 +152,7 @@ public class PageWidget extends WidgetFactory {
 					Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
 					intent.setDataAndType(data, "video/mp4");
 
-					PackageManager pm = PageWidget.this.ctx.getPackageManager();
+					PackageManager pm = PageWidget.super.getActivity().getPackageManager();
 
 					List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
 					boolean appFound = false;
@@ -158,21 +164,21 @@ public class PageWidget extends WidgetFactory {
 						}
 					}
 					if (!appFound) {
-						Toast.makeText(PageWidget.this.ctx,
-								PageWidget.this.ctx.getString(R.string.error_media_app_not_found), Toast.LENGTH_LONG)
+						Toast.makeText(PageWidget.super.getActivity(),
+								PageWidget.super.getActivity().getString(R.string.error_media_app_not_found), Toast.LENGTH_LONG)
 								.show();
 						return true;
 					}
 					PageWidget.this.mediaPlaying = true;
 					PageWidget.this.mediaStartTimeStamp = System.currentTimeMillis() / 1000;
-					ctx.startActivity(intent);
+					PageWidget.super.getActivity().startActivity(intent);
 
 					return true;
 				} else {
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					Uri data = Uri.parse(url);
 					intent.setData(data);
-					ctx.startActivity(intent);
+					PageWidget.super.getActivity().startActivity(intent);
 					// launch action in mobile browser - not the webview
 					// return true so doesn't follow link within webview
 					return true;
@@ -182,19 +188,13 @@ public class PageWidget extends WidgetFactory {
 		});
 	}
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		Log.d(TAG,"page widget paused" + activity.getTitleJSONString());
-	}
-
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (this.mediaPlaying) {
+		if (mediaPlaying) {
 			this.mediaStopped();
-		}
+		} 
 	}
 
 	public void setIsBaseline(boolean isBaseline) {
@@ -207,7 +207,7 @@ public class PageWidget extends WidgetFactory {
 		if (this.activity.hasMedia()) {
 			ArrayList<Media> mediaList = this.activity.getMedia();
 			boolean completed = true;
-			DbHelper db = new DbHelper(this.ctx);
+			DbHelper db = new DbHelper(super.getActivity());
 			for (Media m : mediaList) {
 				if (!db.activityCompleted(this.course.getModId(), m.getDigest())) {
 					completed = false;
@@ -227,15 +227,15 @@ public class PageWidget extends WidgetFactory {
 		if (timetaken < MobileLearning.PAGE_READ_TIME) {
 			return;
 		}
-		Tracker t = new Tracker(ctx);
+		Tracker t = new Tracker(super.getActivity());
 		JSONObject obj = new JSONObject();
 		
 		// add in extra meta-data
 		try {
-			MetaDataUtils mdu = new MetaDataUtils(ctx);
+			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+			String lang = prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("readaloud", readAloud);
 			// if it's a baseline activity then assume completed
@@ -260,7 +260,7 @@ public class PageWidget extends WidgetFactory {
 			Log.d(TAG, "video playing for:" + String.valueOf(timeTaken));
 			mediaPlaying = false;
 			// track that the video has been played (or at least clicked on)
-			Tracker t = new Tracker(ctx);
+			Tracker t = new Tracker(super.getActivity());
 			// digest should be that of the video not the page
 			for (Media m : PageWidget.this.activity.getMedia()) {
 				if (m.getFilename().equals(mediaFileName)) {
@@ -276,7 +276,7 @@ public class PageWidget extends WidgetFactory {
 						data.put("media", "played");
 						data.put("mediafile", mediaFileName);
 						data.put("timetaken", timeTaken);
-						String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault()
+						String lang = prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault()
 								.getLanguage());
 						data.put("lang", lang);
 					} catch (JSONException e) {
@@ -286,7 +286,7 @@ public class PageWidget extends WidgetFactory {
 							e.printStackTrace();
 						}
 					}
-					MetaDataUtils mdu = new MetaDataUtils(ctx);
+					MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 					// add in extra meta-data
 					try {
 						data = mdu.getMetaData(data);
@@ -300,7 +300,8 @@ public class PageWidget extends WidgetFactory {
 
 	}
 
-	public void setWidgetConfig(HashMap<String, Object> config) {
+	@Override
+	protected void setWidgetConfig(HashMap<String, Object> config) {
 		if (config.containsKey("Media_Playing")) {
 			this.setMediaPlaying((Boolean) config.get("Media_Playing"));
 		}
@@ -313,14 +314,23 @@ public class PageWidget extends WidgetFactory {
 		if (config.containsKey("Activity_StartTime")) {
 			this.setStartTime((Long) config.get("Activity_StartTime"));
 		}
+		if (config.containsKey("Activity")) {
+			activity = (Activity) config.get("Activity");
+		}
+		if (config.containsKey("Course")) {
+			course = (Course) config.get("Course");
+		}
 	}
 
-	public HashMap<String, Object> getWidgetConfig() {
+	@Override
+	protected HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
 		config.put("Media_Playing", this.getMediaPlaying());
 		config.put("Media_StartTime", this.getMediaStartTime());
 		config.put("Media_File", this.getMediaFileName());
 		config.put("Activity_StartTime", this.getStartTime());
+		config.put("Activity", this.activity);
+		config.put("Course", this.course);
 		return config;
 	}
 
@@ -352,7 +362,7 @@ public class PageWidget extends WidgetFactory {
 		File f = new File("/"
 				+ course.getLocation()
 				+ "/"
-				+ activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault()
+				+ activity.getLocation(prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault()
 						.getLanguage())));
 		StringBuilder text = new StringBuilder();
 		try {

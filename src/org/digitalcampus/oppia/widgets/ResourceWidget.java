@@ -14,7 +14,6 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -31,8 +30,7 @@ import android.widget.TextView;
 
 public class ResourceWidget extends WidgetFactory {
 
-	public static final String TAG = ResourceWidget.class.getSimpleName();
-	private Context ctx;	
+	public static final String TAG = ResourceWidget.class.getSimpleName();	
 	
 	public static ResourceWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		ResourceWidget myFragment = new ResourceWidget();
@@ -56,7 +54,6 @@ public class ResourceWidget extends WidgetFactory {
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = (org.digitalcampus.oppia.model.Activity) getArguments().getSerializable(org.digitalcampus.oppia.model.Activity.TAG);
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
-		ctx = super.getActivity();
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_resource, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
@@ -69,10 +66,10 @@ public class ResourceWidget extends WidgetFactory {
 		 super.onActivityCreated(savedInstanceState);
 		
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.widget_resource_object);
-		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 		Log.d(TAG,fileUrl);
 		// show description if any
-		String desc = activity.getDescription(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+		String desc = activity.getDescription(prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 
 		TextView descTV = (TextView) getView().findViewById(R.id.widget_resource_description);
 		if (desc.length() > 0){
@@ -82,10 +79,10 @@ public class ResourceWidget extends WidgetFactory {
 		}
 		
 		File file = new File(fileUrl);
-		OnResourceClickListener orcl = new OnResourceClickListener(this.ctx,activity.getMimeType());
+		OnResourceClickListener orcl = new OnResourceClickListener(super.getActivity(),activity.getMimeType());
 		// show image files
 		if (activity.getMimeType().equals("image/jpeg") || activity.getMimeType().equals("image/png")){
-			ImageView iv = new ImageView(this.ctx);
+			ImageView iv = new ImageView(super.getActivity());
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			iv.setImageBitmap(myBitmap);
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -94,9 +91,9 @@ public class ResourceWidget extends WidgetFactory {
 			iv.setOnClickListener(orcl);
 		} else {
 		// add button to open other filetypes in whatever app the user has installed as default for that filetype
-			Button btn = new Button(this.ctx);
-			btn.setText(this.ctx.getString(R.string.widget_resource_open_file,file.getName()));
-			btn.setTextAppearance(this.ctx, R.style.ButtonText);
+			Button btn = new Button(super.getActivity());
+			btn.setText(super.getActivity().getString(R.string.widget_resource_open_file,file.getName()));
+			btn.setTextAppearance(super.getActivity(), R.style.ButtonText);
 			ll.addView(btn);
 			btn.setTag(file);
 			btn.setOnClickListener(orcl);
@@ -105,21 +102,20 @@ public class ResourceWidget extends WidgetFactory {
 
 	@Override
 	public boolean getActivityCompleted() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	@Override
 	public void saveTracker(){
 		long timetaken = System.currentTimeMillis()/1000 - this.getStartTime();
-		Tracker t = new Tracker(ctx);
+		Tracker t = new Tracker(super.getActivity());
 		JSONObject obj = new JSONObject();
-		MetaDataUtils mdu = new MetaDataUtils(ctx);
+		MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 		// add in extra meta-data
 		try {
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+			String lang = prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 		} catch (JSONException e) {
 			// Do nothing
@@ -133,14 +129,14 @@ public class ResourceWidget extends WidgetFactory {
 	}
 
 	@Override
-	public HashMap<String, Object> getWidgetConfig() {
+	protected HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
 		config.put("Activity_StartTime", this.getStartTime());
 		return config;
 	}
 
 	@Override
-	public void setWidgetConfig(HashMap<String, Object> config) {
+	protected void setWidgetConfig(HashMap<String, Object> config) {
 		if (config.containsKey("Activity_StartTime")){
 			this.setStartTime((Long) config.get("Activity_StartTime"));
 		}
@@ -148,7 +144,6 @@ public class ResourceWidget extends WidgetFactory {
 	
 	@Override
 	public String getContentToRead() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

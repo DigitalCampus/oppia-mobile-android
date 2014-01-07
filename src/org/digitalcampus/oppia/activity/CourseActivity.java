@@ -72,8 +72,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	private static TextToSpeech myTTS;
 	private boolean ttsRunning = false;
 
-	private HashMap<String, Object> widgetState;
-
 	private ViewPager viewPager;
 	private ActivityPagerAdapter apAdapter;
 
@@ -118,7 +116,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		} else if (isBaseline) {
 			setTitle(getString(R.string.title_baseline));
 		}	
-		Log.d(TAG,"starting");
 		actionBar.removeAllTabs();
 		List<Fragment> fragments = new ArrayList<Fragment>();
 		for (int i = 0; i < activities.size(); i++) {
@@ -132,12 +129,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			} else if (activities.get(i).getActType().equalsIgnoreCase("resource")) {
 				f = ResourceWidget.newInstance(activities.get(i), course, isBaseline);
 				fragments.add(f);
-			}
-			
-			if (widgetState != null && i == currentActivityNo ){
-				
-				((WidgetFactory) f).setWidgetConfig(widgetState);
-				Log.d(TAG,"set widgetState: "+ i + ":" + currentActivityNo);
 			}
 		}
 		
@@ -176,17 +167,12 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("currentActivityNo", currentActivityNo);
-		outState.putSerializable("widgetState",((WidgetFactory) apAdapter.getItem(currentActivityNo)).getWidgetConfig());
-		Log.d(TAG,"saved instance state");
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		currentActivityNo = savedInstanceState.getInt("currentActivityNo");
-		widgetState  = (HashMap<String, Object>) savedInstanceState.getSerializable("widgetState");
-		Log.d(TAG,"restored instance state");
 	}
 	
 	@Override
@@ -196,9 +182,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			myTTS.shutdown();
 			myTTS = null;
 		}	
-		if (apAdapter.getItem(currentActivityNo) != null) {
-			this.widgetState = ((WidgetFactory) apAdapter.getItem(currentActivityNo)).getWidgetConfig();
-		}
 		((WidgetFactory) apAdapter.getItem(currentActivityNo)).saveTracker();
 	}	
 	
@@ -208,7 +191,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			myTTS.shutdown();
 			myTTS = null;
 		}
-		
 		super.onDestroy();
 	}
 	
@@ -277,20 +259,17 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		viewPager.setCurrentItem(tab.getPosition());
 		this.currentActivityNo = tab.getPosition();
-		Log.d(TAG,"tab selected: "+ currentActivityNo);
 		this.stopReading();
 		((WidgetFactory) apAdapter.getItem(currentActivityNo)).setStartTime(System.currentTimeMillis()/1000);
 	}
 
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		Log.d(TAG,"tab unselected: "+currentActivityNo);
 		((WidgetFactory) apAdapter.getItem(currentActivityNo)).saveTracker();
 	}
 
 	public void onInit(int status) {
 		// check for successful instantiation
 		if (status == TextToSpeech.SUCCESS) {
-			Log.d(TAG, "tts success");
 			ttsRunning = true;
 			((WidgetFactory) apAdapter.getItem(currentActivityNo)).setReadAloud(true);
 			supportInvalidateOptionsMenu();
