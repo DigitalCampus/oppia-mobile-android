@@ -24,7 +24,6 @@ import org.digitalcampus.oppia.model.Course;
 
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 
 public abstract class WidgetFactory extends Fragment {
 	
@@ -37,9 +36,13 @@ public abstract class WidgetFactory extends Fragment {
 	protected boolean readAloud = false;
 	
 	protected abstract boolean getActivityCompleted();
-	protected abstract void saveTracker();
+	public abstract void saveTracker();
 	
 	public abstract String getContentToRead();
+	public abstract HashMap<String,Object> getWidgetConfig();
+	public abstract void setWidgetConfig(HashMap<String,Object> config);
+	
+	//public abstract void widgetStarted();
 	
 	public void setReadAloud(boolean readAloud){
 		this.readAloud = true;
@@ -52,8 +55,12 @@ public abstract class WidgetFactory extends Fragment {
 	public void setIsBaseline(boolean isBaseline) {
 		this.isBaseline = isBaseline;
 	}
-	public abstract HashMap<String,Object> getWidgetConfig();
-	public abstract void setWidgetConfig(HashMap<String,Object> config);
 	
-	public abstract void widgetStarted();
+	public void setStartTime(long startTime){
+		this.startTime = System.currentTimeMillis()/1000;
+	}
+	
+	public long getStartTime(){
+		return this.startTime;
+	}
 }

@@ -221,32 +221,36 @@ public class PageWidget extends WidgetFactory {
 		return true;
 	}
 
-	protected void saveTracker() {
-		long timetaken = System.currentTimeMillis() / 1000 - startTime;
-		this.startTime = System.currentTimeMillis() / 1000;
+	public void saveTracker() {
+		long timetaken = System.currentTimeMillis() / 1000 - this.getStartTime();
 		// only save tracker if over the time
 		if (timetaken < MobileLearning.PAGE_READ_TIME) {
 			return;
 		}
 		Tracker t = new Tracker(ctx);
 		JSONObject obj = new JSONObject();
-		MetaDataUtils mdu = new MetaDataUtils(ctx);
+		
 		// add in extra meta-data
 		try {
+			MetaDataUtils mdu = new MetaDataUtils(ctx);
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
 			String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("readaloud", readAloud);
+			// if it's a baseline activity then assume completed
+			if (this.isBaseline) {
+				t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
+			} else {
+				t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+			}
 		} catch (JSONException e) {
 			// Do nothing
+		} catch (NullPointerException npe){
+			//do nothing
 		}
-		// if it's a baseline activity then assume completed
-		if (this.isBaseline) {
-			t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
-		} else {
-			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
-		}
+		
+		
 	}
 
 	private void mediaStopped() {
@@ -344,15 +348,6 @@ public class PageWidget extends WidgetFactory {
 		this.mediaFileName = mediaFileName;
 	}
 
-	private void setStartTime(long startTime) {
-		this.startTime = startTime;
-
-	}
-
-	private long getStartTime() {
-		return this.startTime;
-	}
-
 	public String getContentToRead() {
 		File f = new File("/"
 				+ course.getLocation()
@@ -372,10 +367,5 @@ public class PageWidget extends WidgetFactory {
 			return "";
 		}
 		return android.text.Html.fromHtml(text.toString()).toString();
-	}
-
-	@Override
-	public void widgetStarted() {
-		this.startTime = System.currentTimeMillis()/1000;
 	}
 }

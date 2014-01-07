@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
+import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ImageUtils;
+import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.widgets.PageWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.digitalcampus.oppia.widgets.ResourceWidget;
@@ -117,29 +118,8 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		} else if (isBaseline) {
 			setTitle(getString(R.string.title_baseline));
 		}	
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt("currentActivityNo", currentActivityNo);
-		outState.putSerializable("widgetState",((WidgetFactory) apAdapter.getItem(currentActivityNo)).getWidgetConfig());
-		Log.d(TAG,"saved instance state");
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		currentActivityNo = savedInstanceState.getInt("currentActivityNo");
-		widgetState  = (HashMap<String, Object>) savedInstanceState.getSerializable("widgetState");
-		Log.d(TAG,"restored instance state");
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		Log.d(TAG,"resuming");
+		Log.d(TAG,"starting");
+		actionBar.removeAllTabs();
 		List<Fragment> fragments = new ArrayList<Fragment>();
 		for (int i = 0; i < activities.size(); i++) {
 			Fragment f = null;
@@ -178,11 +158,11 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
+				// do nothing
 			}
 
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
+				// do nothing
 			}
 
 			public void onPageSelected(int arg0) {
@@ -190,6 +170,23 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			}
 
 		});
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("currentActivityNo", currentActivityNo);
+		outState.putSerializable("widgetState",((WidgetFactory) apAdapter.getItem(currentActivityNo)).getWidgetConfig());
+		Log.d(TAG,"saved instance state");
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		currentActivityNo = savedInstanceState.getInt("currentActivityNo");
+		widgetState  = (HashMap<String, Object>) savedInstanceState.getSerializable("widgetState");
+		Log.d(TAG,"restored instance state");
 	}
 	
 	@Override
@@ -202,6 +199,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		if (apAdapter.getItem(currentActivityNo) != null) {
 			this.widgetState = ((WidgetFactory) apAdapter.getItem(currentActivityNo)).getWidgetConfig();
 		}
+		((WidgetFactory) apAdapter.getItem(currentActivityNo)).saveTracker();
 	}	
 	
 	@Override
@@ -230,6 +228,48 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.menu_language:
+			createLanguageDialog();
+			return true;
+		case R.id.menu_help:
+			startActivity(new Intent(this, HelpActivity.class));
+			return true;
+		case android.R.id.home:
+			this.finish();
+			return true;
+		case R.id.menu_tts:
+			if (myTTS == null && !ttsRunning) {
+				// check for TTS data
+				Intent checkTTSIntent = new Intent();
+				checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+				startActivityForResult(checkTTSIntent, TTS_CHECK);
+			} else if (myTTS != null && ttsRunning) {
+				this.stopReading();
+			} else {
+				// TTS not installed so show message
+				Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
+			}
+			supportInvalidateOptionsMenu();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private void createLanguageDialog() {
+		UIUtils ui = new UIUtils();
+		ui.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+			public Boolean call() throws Exception {
+				CourseActivity.this.onStart();
+				return true;
+			}
+		});
+	}
 
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 	}
@@ -238,10 +278,13 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		viewPager.setCurrentItem(tab.getPosition());
 		this.currentActivityNo = tab.getPosition();
 		Log.d(TAG,"tab selected: "+ currentActivityNo);
+		this.stopReading();
+		((WidgetFactory) apAdapter.getItem(currentActivityNo)).setStartTime(System.currentTimeMillis()/1000);
 	}
 
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		Log.d(TAG,"tab unselected: "+currentActivityNo);
+		((WidgetFactory) apAdapter.getItem(currentActivityNo)).saveTracker();
 	}
 
 	public void onInit(int status) {
@@ -295,7 +338,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			myTTS = null;
 		}
 		this.ttsRunning = false;
-
 	}
 
 }

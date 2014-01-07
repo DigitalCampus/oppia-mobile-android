@@ -380,7 +380,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void restart() {
-		this.startTime = System.currentTimeMillis() / 1000;
+		this.setStartTime(System.currentTimeMillis() / 1000);
 		quiz = new Quiz();
 		quiz.load(quizContent);
 		isOnResultsPage = false;
@@ -397,8 +397,8 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	@Override
-	protected void saveTracker() {
-		long timetaken = System.currentTimeMillis() / 1000 - startTime;
+	public void saveTracker() {
+		long timetaken = System.currentTimeMillis() / 1000 - this.getStartTime();
 		Tracker t = new Tracker(ctx);
 		JSONObject obj = new JSONObject();
 		MetaDataUtils mdu = new MetaDataUtils(ctx);
@@ -448,14 +448,6 @@ public class QuizWidget extends WidgetFactory {
 		Log.d(TAG,"Set quiz widget config");
 	}
 
-	private void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
-
-	private long getStartTime() {
-		return this.startTime;
-	}
-
 	public Quiz getQuiz() {
 		return this.quiz;
 	}
@@ -476,10 +468,5 @@ public class QuizWidget extends WidgetFactory {
 		quiz.mark();
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		return percent;
-	}
-	
-	@Override
-	public void widgetStarted() {
-		this.startTime = System.currentTimeMillis()/1000;
 	}
 }

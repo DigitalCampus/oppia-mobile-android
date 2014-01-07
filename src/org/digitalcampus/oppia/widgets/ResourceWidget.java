@@ -110,8 +110,8 @@ public class ResourceWidget extends WidgetFactory {
 	}
 	
 	@Override
-	protected void saveTracker(){
-		long timetaken = System.currentTimeMillis()/1000 - startTime;
+	public void saveTracker(){
+		long timetaken = System.currentTimeMillis()/1000 - this.getStartTime();
 		Tracker t = new Tracker(ctx);
 		JSONObject obj = new JSONObject();
 		MetaDataUtils mdu = new MetaDataUtils(ctx);
@@ -146,23 +146,10 @@ public class ResourceWidget extends WidgetFactory {
 		}
 	}
 	
-	private void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
-
-	private long getStartTime() {
-		return this.startTime;
-	}
-	
 	@Override
 	public String getContentToRead() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	@Override
-	public void widgetStarted() {
-		this.startTime = System.currentTimeMillis()/1000;
 	}
 	
 }
