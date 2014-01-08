@@ -39,8 +39,8 @@ public abstract class WidgetFactory extends Fragment {
 	public abstract void saveTracker();
 	
 	public abstract String getContentToRead();
-	protected abstract HashMap<String,Object> getWidgetConfig();
-	protected abstract void setWidgetConfig(HashMap<String,Object> config);
+	public abstract HashMap<String,Object> getWidgetConfig();
+	public abstract void setWidgetConfig(HashMap<String,Object> config);
 	
 	public void setReadAloud(boolean readAloud){
 		this.readAloud = true;

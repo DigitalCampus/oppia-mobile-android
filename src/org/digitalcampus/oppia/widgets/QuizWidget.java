@@ -35,7 +35,6 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.listener.OnResourceClickListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
@@ -50,10 +49,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -63,6 +68,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -144,16 +150,12 @@ public class QuizWidget extends WidgetFactory {
 		if (this.quiz == null) {
 			this.quiz = new Quiz();
 			this.quiz.load(quizContent);
-			Log.d(TAG,"this.quiz is null");
-		} else {
-			Log.d(TAG,"this.quiz is not null");
 		}
 		if (this.isOnResultsPage) {
 			this.showResults();
 		} else {
 			this.showQuestion();
 		}
-		Log.d(TAG,"Called quiz onResume");
 	}
 
 	public void showQuestion() {
@@ -179,8 +181,8 @@ public class QuizWidget extends WidgetFactory {
 			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
-			OnResourceClickListener orcl = new OnResourceClickListener(super.getActivity(), "image/*");
-			iv.setOnClickListener(orcl);
+			OnImageClickListener oicl = new OnImageClickListener(super.getActivity(), "image/*");
+			iv.setOnClickListener(oicl);
 			questionImage.setVisibility(View.VISIBLE);
 		}
 
@@ -436,7 +438,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	@Override
-	protected HashMap<String, Object> getWidgetConfig() {
+	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
 		// this.saveAnswer();
 		config.put("quiz", this.quiz);
@@ -446,7 +448,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	@Override
-	protected void setWidgetConfig(HashMap<String, Object> config) {
+	public void setWidgetConfig(HashMap<String, Object> config) {
 		if (config.containsKey("quiz")) {
 			this.quiz = (Quiz) config.get("quiz");
 		}
@@ -475,5 +477,52 @@ public class QuizWidget extends WidgetFactory {
 		quiz.mark();
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		return percent;
+	}
+	
+	private class OnImageClickListener implements OnClickListener{
+
+		private Context ctx;
+		private String type;
+		
+		public OnImageClickListener(Context ctx, String type){
+			this.ctx = ctx;
+			this.type = type;
+		}
+
+		public void onClick(View v) {
+			File file = (File) v.getTag();
+			// check the file is on the file system (should be but just in case)
+			if(!file.exists()){
+				Toast.makeText(this.ctx,this.ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
+				return;
+			} 
+			Uri targetUri = Uri.fromFile(file);
+			
+			// check there is actually an app installed to open this filetype
+			
+			Intent intent = new Intent();
+			intent.setAction(android.content.Intent.ACTION_VIEW);
+			intent.setDataAndType(targetUri, type);
+			
+			PackageManager pm = this.ctx.getPackageManager();
+
+			List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+			boolean appFound = false;
+			for (ResolveInfo info : infos) {
+				IntentFilter filter = info.filter;
+				if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
+					// Found an app with the right intent/filter
+					appFound = true;
+				}
+			}
+
+			if(appFound){
+				this.ctx.startActivity(intent);
+			} else {
+				Toast.makeText(this.ctx,this.ctx.getString(R.string.error_resource_app_not_found,file.getName()), Toast.LENGTH_LONG).show();
+			}
+			return;
+		}
+		
 	}
 }

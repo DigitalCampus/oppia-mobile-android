@@ -250,8 +250,6 @@ public class PageWidget extends WidgetFactory {
 		} catch (NullPointerException npe){
 			//do nothing
 		}
-		
-		
 	}
 
 	private void mediaStopped() {
@@ -302,7 +300,7 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	@Override
-	protected void setWidgetConfig(HashMap<String, Object> config) {
+	public void setWidgetConfig(HashMap<String, Object> config) {
 		if (config.containsKey("Media_Playing")) {
 			this.setMediaPlaying((Boolean) config.get("Media_Playing"));
 		}
@@ -324,7 +322,7 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	@Override
-	protected HashMap<String, Object> getWidgetConfig() {
+	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
 		config.put("Media_Playing", this.getMediaPlaying());
 		config.put("Media_StartTime", this.getMediaStartTime());

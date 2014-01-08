@@ -62,6 +62,7 @@ public class MobileLearning extends Application {
 	public static final String BUGSENSE_API_KEY = "84d61fd0";
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
+	public static final int RESOURCE_READ_TIME = 3;
 	public static final String USER_AGENT = "OppiaMobile Android: ";
 	public static final int QUIZ_PASS_THRESHOLD = 100;
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
