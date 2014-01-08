@@ -15,7 +15,7 @@
         android:textStyle="normal" 
         android:paddingBottom="5dp"
         android:maxLines="1" 
-		android:ellipsize="end" />
+		android:ellipsize="end"
         android:textColor="@color/text_light"/>
 
     <HorizontalScrollView

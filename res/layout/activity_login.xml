@@ -20,8 +20,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="@string/login_username_title"
-                style="@style/FieldLabelText"/>
+                android:text="@string/login_username_title"/>
 
             <EditText
                 android:id="@+id/login_username_field"
@@ -35,8 +34,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="@string/login_password_title"
-                style="@style/FieldLabelText" />
+                android:text="@string/login_password_title" />
 
             <EditText
                 android:id="@+id/login_password_field"
