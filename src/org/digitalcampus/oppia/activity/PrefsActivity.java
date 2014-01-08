@@ -28,8 +28,7 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.PreferenceActivity;
+import android.preference.ListPreference;;
 
 public class PrefsActivity extends SherlockPreferenceActivity {
 	

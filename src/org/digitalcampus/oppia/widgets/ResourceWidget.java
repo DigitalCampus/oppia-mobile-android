@@ -131,10 +131,10 @@ public class ResourceWidget extends WidgetFactory {
 	public void onPause(){
 		super.onPause();
 		Editor editor = prefs.edit();
-		editor.putLong("widget_"+activity.getActId()+"_Activity_StartTime", this.getStartTime());
-		editor.putBoolean("widget_"+activity.getActId()+"_Resource_Viewing", this.isResourceViewing());
-		editor.putLong("widget_"+activity.getActId()+"_Resource_StartTime", this.getResourceStartTime());
-		editor.putString("widget_"+activity.getActId()+"_Resource_FileName", this.getResourceFileName());
+		editor.putLong("widget_"+activity.getDigest()+"_Activity_StartTime", this.getStartTime());
+		editor.putBoolean("widget_"+activity.getDigest()+"_Resource_Viewing", this.isResourceViewing());
+		editor.putLong("widget_"+activity.getDigest()+"_Resource_StartTime", this.getResourceStartTime());
+		editor.putString("widget_"+activity.getDigest()+"_Resource_FileName", this.getResourceFileName());
 		editor.commit();
 	}
 	
@@ -142,17 +142,17 @@ public class ResourceWidget extends WidgetFactory {
 	public void onResume() {
 		super.onResume();
 		// check to see if the vars are stored in shared prefs
-		if(prefs.contains("widget_"+activity.getActId()+"_Activity_StartTime")){
-			this.setStartTime(prefs.getLong("widget_"+activity.getActId()+"_Activity_StartTime", System.currentTimeMillis()/1000));
+		if(prefs.contains("widget_"+activity.getDigest()+"_Activity_StartTime")){
+			this.setStartTime(prefs.getLong("widget_"+activity.getDigest()+"_Activity_StartTime", System.currentTimeMillis()/1000));
 		}
-		if(prefs.contains("widget_"+activity.getActId()+"_Resource_Viewing")){
-			this.setResourceViewing(prefs.getBoolean("widget_"+activity.getActId()+"_Resource_Viewing", false));
+		if(prefs.contains("widget_"+activity.getDigest()+"_Resource_Viewing")){
+			this.setResourceViewing(prefs.getBoolean("widget_"+activity.getDigest()+"_Resource_Viewing", false));
 		}
-		if(prefs.contains("widget_"+activity.getActId()+"_Resource_StartTime")){
-			this.setResourceStartTime(prefs.getLong("widget_"+activity.getActId()+"_Resource_StartTime", System.currentTimeMillis()/1000));
+		if(prefs.contains("widget_"+activity.getDigest()+"_Resource_StartTime")){
+			this.setResourceStartTime(prefs.getLong("widget_"+activity.getDigest()+"_Resource_StartTime", System.currentTimeMillis()/1000));
 		}
-		if(prefs.contains("widget_"+activity.getActId()+"_Resource_FileName")){
-			this.setResourceFileName(prefs.getString("widget_"+activity.getActId()+"_Resource_FileName", ""));
+		if(prefs.contains("widget_"+activity.getDigest()+"_Resource_FileName")){
+			this.setResourceFileName(prefs.getString("widget_"+activity.getDigest()+"_Resource_FileName", ""));
 		}
 		
 		if (isResourceViewing()) {
@@ -163,7 +163,7 @@ public class ResourceWidget extends WidgetFactory {
 		Map<String,?> keys = prefs.getAll();
 
 		for(Map.Entry<String,?> entry : keys.entrySet()){
-			if (entry.getKey().startsWith("widget_"+activity.getActId())){
+			if (entry.getKey().startsWith("widget_"+activity.getDigest())){
 				editor.remove(entry.getKey());
 			}            
 		 }

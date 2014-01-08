@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.activity;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
@@ -37,6 +38,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -64,7 +66,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		setContentView(R.layout.activity_course_index);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
-		//getSupportActionBar().setListNavigationCallbacks(mSpinnerAdapter, mNavigationCallback);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -147,6 +148,17 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		tb.putBoolean("backgroundData", true);
 		service.putExtras(tb);
 		this.startService(service);
+		
+		// remove any saved state info from shared prefs in case they interfere with subsequent page views
+		Editor editor = prefs.edit();
+		Map<String,?> keys = prefs.getAll();
+
+		for(Map.Entry<String,?> entry : keys.entrySet()){
+			if (entry.getKey().startsWith("widget_")){
+				editor.remove(entry.getKey());
+			}            
+		 }
+		editor.commit();
 	}
 
 	@Override
