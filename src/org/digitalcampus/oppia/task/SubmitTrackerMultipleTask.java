@@ -54,7 +54,8 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 		Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
 		
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-		String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, MobileLearning.TRACKER_PATH,true);
+		
+		String url =client.getFullURL(MobileLearning.TRACKER_PATH);
 		
 		HttpPatch httpPatch = new HttpPatch(url);
 		
@@ -63,15 +64,19 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 			
 			try {
 
-				StringEntity se = new StringEntity(dataToSend);
+				StringEntity se = new StringEntity(dataToSend,"utf8");
                 se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 httpPatch.setEntity(se);
-			
+                
+                httpPatch.addHeader(client.getAuthHeader());
+
                 Log.d(TAG,url);
 				Log.d(TAG,dataToSend);
 				
                 // make request
-				HttpResponse response = client.execute(httpPatch);				
+				HttpResponse response = client.execute(httpPatch);	
+				
+				Log.d(TAG,String.valueOf(response.getStatusLine().getStatusCode()));
 				
 				InputStream content = response.getEntity().getContent();
 				BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);

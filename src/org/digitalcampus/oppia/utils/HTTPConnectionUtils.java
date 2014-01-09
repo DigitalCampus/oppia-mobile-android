@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
@@ -22,10 +23,13 @@ import android.preference.PreferenceManager;
 public class HTTPConnectionUtils extends DefaultHttpClient {
 	
 	private HttpParams httpParameters;
+	private SharedPreferences prefs;
+	private Context ctx;
 	
 	public HTTPConnectionUtils(Context ctx){
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		httpParameters = new BasicHttpParams();
+		this.prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		this.ctx = ctx;
+		this.httpParameters = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(
 				httpParameters,
 				Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_connection),
@@ -34,8 +38,8 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 				httpParameters,
 				Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_response),
 						ctx.getString(R.string.prefServerTimeoutResponseDefault))));
+		
 		// add user agent 
-        
 		String v = "0";
 		try {
 			v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
@@ -47,10 +51,18 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 		super.getParams().setParameter(CoreProtocolPNames.USER_AGENT, MobileLearning.USER_AGENT + v);
 	}
 	
-	public static String createUrlWithCredentials(Context ctx, SharedPreferences prefs, String baseUrl, boolean addServer){
-		if(addServer){
-			baseUrl = prefs.getString(ctx.getString(R.string.prefs_server), ctx.getString(R.string.prefServerDefault)) + baseUrl;
-		}
+	public BasicHeader getAuthHeader(){
+		return new BasicHeader("Authorization","ApiKey " + 
+				prefs.getString(ctx.getString(R.string.prefs_username), "") + 
+				":" + 
+				prefs.getString(ctx.getString(R.string.prefs_api_key), ""));
+	}
+	
+	public String getFullURL(String apiPath){
+		return prefs.getString(ctx.getString(R.string.prefs_server), ctx.getString(R.string.prefServerDefault)) + apiPath;
+	}
+
+	public String createUrlWithCredentials(String baseUrl){
 		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("username", prefs.getString(ctx.getString(R.string.prefs_username), "")));
 		pairs.add(new BasicNameValuePair("api_key", prefs.getString(ctx.getString(R.string.prefs_api_key), "")));

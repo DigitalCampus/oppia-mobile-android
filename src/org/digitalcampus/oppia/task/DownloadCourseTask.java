@@ -61,8 +61,9 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 		Course dm = (Course) payload.getData().get(0);
 		DownloadProgress dp = new DownloadProgress();
 		try { 
-			
-			String url =  HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, dm.getDownloadUrl(),false);
+			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+
+			String url =  client.createUrlWithCredentials(dm.getDownloadUrl());
 			
 			Log.d(TAG,"Downloading:" + url);
 			

@@ -30,20 +30,16 @@ import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 
 public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 	
 	public static final String TAG = APIRequestTask.class.getSimpleName();
 	protected Context ctx;
-	private SharedPreferences prefs;
 	private APIRequestListener requestListener;
 	
 	public APIRequestTask(Context ctx) {
 		this.ctx = ctx;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 	
 	@Override
@@ -52,10 +48,11 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 		Payload payload = params[0];
 		String responseStr = "";
 		
-		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);		
-		String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, payload.getUrl() ,true);
-		
+		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+		String url = client.getFullURL(payload.getUrl());
 		HttpGet httpGet = new HttpGet(url);
+		httpGet.addHeader(client.getAuthHeader());
+		
 		try {
 			
 			// make request

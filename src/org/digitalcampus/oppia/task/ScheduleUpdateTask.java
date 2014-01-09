@@ -31,8 +31,8 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
 import org.digitalcampus.oppia.model.ActivitySchedule;
-import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -40,9 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -50,12 +48,10 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 	
 	public final static String TAG = ScheduleUpdateTask.class.getSimpleName();
 	private Context ctx;
-	private SharedPreferences prefs;
 	private UpdateScheduleListener uStateListener;
 	
 	public ScheduleUpdateTask(Context ctx) {
 		this.ctx = ctx;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 	
 	@Override
@@ -65,16 +61,16 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 		Course dm = (Course) payload.getData().get(0);
 		DownloadProgress dp = new DownloadProgress();
 		
-		String url = HTTPConnectionUtils.createUrlWithCredentials(ctx, prefs, dm.getScheduleURI() ,true);
-		
 		dp.setProgress(0);
 		dp.setMessage(ctx.getString(R.string.updating));
 		publishProgress(dp);
 		
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+		String url = client.getFullURL(dm.getScheduleURI());
 		
 		String responseStr = "";
 		HttpGet httpGet = new HttpGet(url);
+		httpGet.addHeader(client.getAuthHeader());
 		try {
 			
 			// make request
