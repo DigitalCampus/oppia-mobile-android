@@ -63,7 +63,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,9 +109,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		LayoutInflater localInflater = inflater.cloneInContext(new ContextThemeWrapper(getActivity(), R.style.Oppia_Theme_Light));
-		View vv = localInflater.inflate(R.layout.widget_quiz, container, false);
-		
+		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, null);
 		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));

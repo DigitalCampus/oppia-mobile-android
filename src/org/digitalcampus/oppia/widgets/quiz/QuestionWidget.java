@@ -41,12 +41,11 @@ public abstract class QuestionWidget {
 	public abstract List<String> getQuestionResponses(List<Response> responses);
 	
 	protected void init(Activity activity, ViewGroup container, int layout, View v){
-		this.ctx = new ContextThemeWrapper(activity, R.style.Oppia_Theme_Light);
+		this.ctx = new ContextThemeWrapper(activity, R.style.Oppia_Theme);
 		this.view = v;
 		
 		LinearLayout ll = (LinearLayout) v.findViewById(R.id.quizResponseWidget);
 		ll.removeAllViews();
-		
 		LayoutInflater localInflater = ((LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).cloneInContext(ctx);
 		View vv = localInflater.inflate(layout ,container, false);
 		ll.addView(vv);

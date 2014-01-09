@@ -1,62 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:orientation="vertical"
+        android:padding="10dp" >
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/main_email_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:orientation="vertical"
-            android:padding="10dp" >
+            android:padding="5dp"
+            android:text="@string/login_username_title" />
 
-            <TextView
-                android:id="@+id/main_email_title"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/login_username_title"/>
+        <EditText
+            android:id="@+id/login_username_field"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:padding="5dp" />
 
-            <EditText
-                android:id="@+id/login_username_field"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:padding="5dp"/>
+        <TextView
+            android:id="@+id/main_password_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/login_password_title" />
 
-            <TextView
-                android:id="@+id/main_password_title"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/login_password_title" />
+        <EditText
+            android:id="@+id/login_password_field"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:padding="5dp" />
 
-            <EditText
-                android:id="@+id/login_password_field"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:padding="5dp"/>
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onLoginClick"
+            android:text="@string/title_login" />
 
-            <Button
-                android:id="@+id/login_btn"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onLoginClick"
-                android:text="@string/title_login"/>
+        <Button
+            android:id="@+id/register_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onRegisterClick"
+            android:text="@string/title_register" />
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/register_btn"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onRegisterClick"
-                android:text="@string/title_register"/>
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+</ScrollView>

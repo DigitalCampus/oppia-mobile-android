@@ -5,7 +5,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="15" />
+        android:targetSdkVersion="19" />
 
     <uses-permission
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,13 +21,13 @@
     <application
         android:icon="@drawable/dc_logo"
         android:label="@string/app_name"
-        android:theme="@style/Oppia.Theme.Light"
+        android:theme="@style/Oppia.Theme"
         android:allowBackup="true"
         android:name="org.digitalcampus.oppia.application.MobileLearning">
         <activity
             android:name="org.digitalcampus.oppia.activity.StartUpActivity"
             android:label="@string/app_name"
-            android:theme="@style/Oppia.Theme.Light">
+            android:theme="@style/Oppia.Theme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,12 +36,12 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.OppiaMobileActivity"
             android:label="@string/app_name"
-            android:theme="@style/Oppia.Theme">
+            android:theme="@style/Oppia.Theme.Dark">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseIndexActivity"
             android:label="@string/title_activity_course_index" 
-            android:theme="@style/Oppia.Theme">
+            android:theme="@style/Oppia.Theme.Dark">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseActivity"
@@ -53,14 +53,14 @@
             android:label="@string/title_download_activity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout"
             android:screenOrientation="portrait" 
-            android:theme="@style/Oppia.Theme">
+            android:theme="@style/Oppia.Theme.Dark">
         </activity>
          <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
             android:label="@string/title_tag_select_activity"
             android:screenOrientation="portrait"
    			android:configChanges="orientation|keyboardHidden"
-   			android:theme="@style/Oppia.Theme">
+   			android:theme="@style/Oppia.Theme.Dark">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
@@ -89,7 +89,7 @@
             android:label="@string/title_download_media"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout" 
             android:screenOrientation="portrait"
-            android:theme="@style/Oppia.Theme" />
+            android:theme="@style/Oppia.Theme.Dark" />
          <activity
             android:name="org.digitalcampus.oppia.activity.ScoreActivity"
             android:label="@string/title_points" />

@@ -37,7 +37,7 @@
                 android:id="@+id/register_form_email_field"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="textEmailAddress" />
 
             <TextView
                 android:id="@+id/register_form_password_title"

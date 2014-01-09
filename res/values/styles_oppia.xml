@@ -20,7 +20,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Oppia.Theme.Light" parent="@style/Theme.Sherlock.Light">
+    <style name="Oppia.Theme" parent="@style/Theme.Sherlock.Light">
         <item name="actionBarItemBackground">@drawable/selectable_background_om</item>
         <item name="popupMenuStyle">@style/PopupMenu.Om</item>
         <item name="dropDownListViewStyle">@style/DropDownListView.Om</item>
@@ -34,7 +34,7 @@
         <item name="android:windowBackground">@color/background_light</item>
     </style>
 
-    <style name="Oppia.Theme" parent="@style/Oppia.Theme.Light">
+    <style name="Oppia.Theme.Dark" parent="@style/Oppia.Theme">
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 

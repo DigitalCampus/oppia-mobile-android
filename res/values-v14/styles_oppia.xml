@@ -19,7 +19,7 @@
 
 <resources>
 
-    <style name="Oppia.Theme.Light" parent="@style/Theme.Sherlock.Light">
+    <style name="Oppia.Theme" parent="@style/Theme.Sherlock.Light">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_om</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.Om</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Om</item>
@@ -33,7 +33,7 @@
         <item name="android:windowBackground">@color/background_light</item>
     </style>
     
-    <style name="Oppia.Theme" parent="@style/Oppia.Theme.Light">
+    <style name="Oppia.Theme.Dark" parent="@style/Oppia.Theme">
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 
@@ -48,7 +48,7 @@
     <style name="Oppia.ActionBar.TitleTextStyle" parent="@style/Widget.Sherlock.ActionBar.Solid">
         <item name="android:textColor">@color/text_dark</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
     
     <style name="OM.Light.TabText.Style" parent="@style/Widget.Sherlock.ActionBar.TabText">       
