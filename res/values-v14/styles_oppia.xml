@@ -33,7 +33,16 @@
         <item name="android:windowBackground">@color/background_light</item>
     </style>
     
-    <style name="Oppia.Theme.Dark" parent="@style/Oppia.Theme">
+    <style name="Oppia.Theme.Dark" parent="@style/Theme.Sherlock">
+    	<item name="android:actionBarItemBackground">@drawable/selectable_background_om</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Om</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Om</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Om</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Om</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Om</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_om</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_om</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Om</item>
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 

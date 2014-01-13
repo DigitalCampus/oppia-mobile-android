@@ -82,8 +82,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			editor.putString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 			editor.commit();
 		}
-		
-
 	}
 
 	@Override
