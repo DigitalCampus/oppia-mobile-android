@@ -72,6 +72,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -329,60 +330,60 @@ public class QuizWidget extends WidgetFactory {
 		qText.setVisibility(View.GONE);
 		questionImage.setVisibility(View.GONE);
 
+		TextView progress = (TextView) getView().findViewById(R.id.mquiz_progress);
+		TextView intro = new TextView(super.getActivity());
+		progress.setText(super.getActivity().getString(R.string.widget_quiz_results));
+		intro.setText(super.getActivity().getString(R.string.widget_quiz_results_intro));
+		intro.setGravity(Gravity.CENTER);
+		intro.setTextSize(20);
+		intro.setPadding(0, 20, 0, 10);
+		responsesLL.addView(intro);
+		
+		TextView score = new TextView(super.getActivity());
+		score.setText(super.getActivity().getString(R.string.widget_quiz_results_score, this.getPercent()));
+		score.setTextSize(30);
+		score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		score.setGravity(Gravity.CENTER);
+		score.setPadding(0, 0, 0, 10);
+		responsesLL.addView(score);
+		
 		if (this.isBaseline) {
-			TextView progress = (TextView) getView().findViewById(R.id.mquiz_progress);
-			progress.setText("");
-
-			TextView intro = new TextView(super.getActivity());
-			intro.setText(super.getActivity().getString(R.string.widget_quiz_baseline_completed));
-			intro.setGravity(Gravity.CENTER);
-			intro.setTextSize(20);
-			intro.setPadding(0, 20, 0, 50);
-			responsesLL.addView(intro);
-
-			Button restartBtn = new Button(super.getActivity());
+			TextView baselineExtro = new TextView(super.getActivity());
+			baselineExtro.setText(super.getActivity().getString(R.string.widget_quiz_baseline_completed));
+			baselineExtro.setGravity(Gravity.CENTER);
+			baselineExtro.setTextSize(20);
+			baselineExtro.setPadding(0, 20, 0, 10);
+			responsesLL.addView(baselineExtro);
+		} 
+		
+		// @TODO add TextView here to give overall feedback if it's in the quiz
+		
+		// Show the detail of which questions were right/wrong
+		ListView questionFeedbackLV = new ListView(super.getActivity());
+		
+		responsesLL.addView(questionFeedbackLV);
+		
+		// Show restart or continue button
+		Button restartBtn = new Button(super.getActivity());
+		restartBtn.setTextSize(20);
+		restartBtn.setTypeface(Typeface.DEFAULT_BOLD);
+		
+		if (this.isBaseline) {
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_baseline_goto_course));
-			restartBtn.setTextSize(20);
-			restartBtn.setTypeface(Typeface.DEFAULT_BOLD);
 			restartBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					QuizWidget.this.getActivity().finish();
 				}
 			});
-
-			responsesLL.addView(restartBtn);
 		} else {
-			// set page heading
-			TextView progress = (TextView) getView().findViewById(R.id.mquiz_progress);
-			progress.setText(super.getActivity().getString(R.string.widget_quiz_results));
-
-			// show final score
-			TextView intro = new TextView(super.getActivity());
-			intro.setText(super.getActivity().getString(R.string.widget_quiz_results_intro));
-			intro.setGravity(Gravity.CENTER);
-			intro.setTextSize(20);
-			responsesLL.addView(intro);
-
-			TextView score = new TextView(super.getActivity());
-			score.setText(super.getActivity().getString(R.string.widget_quiz_results_score, this.getPercent()));
-			score.setTextSize(60);
-			score.setLayoutParams(new TableLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-			score.setGravity(Gravity.CENTER);
-			score.setPadding(0, 20, 0, 20);
-			responsesLL.addView(score);
-
-			Button restartBtn = new Button(super.getActivity());
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_results_restart));
-			restartBtn.setTextSize(20);
-			restartBtn.setTypeface(Typeface.DEFAULT_BOLD);
 			restartBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					restart();
 				}
 			});
-
-			responsesLL.addView(restartBtn);
 		}
+		responsesLL.addView(restartBtn);
 	}
 
 	private void restart() {
@@ -476,6 +477,11 @@ public class QuizWidget extends WidgetFactory {
 		return percent;
 	}
 	
+	private String getOverallFeedback(){
+		String feedback = "";
+		
+		return feedback;
+	}
 	private class OnImageClickListener implements OnClickListener{
 
 		private Context ctx;
