@@ -134,12 +134,12 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	}
 
 	public void downloadComplete(Payload p) {
-		// TODO Auto-generated method stub
+		// do nothing
 		
 	}
 
 	public void downloadProgressUpdate(DownloadProgress dp) {
-		// TODO Auto-generated method stub
+		// do nothing
 		
 	}
 

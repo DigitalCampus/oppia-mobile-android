@@ -36,9 +36,7 @@
     <string name="widget_quiz_getresults">Obterner resultados</string>
     <string name="widget_quiz_noanswergiven">Por favor dé una respuesta antes de pasar a la siguiente pregunta</string>
     <string name="widget_quiz_progress">Pregunta %1$d de %2$d</string>
- 	<string name="widget_quiz_results">Resultados</string>
- 	<string name="widget_quiz_results_intro">Su puntuación:</string>
- 	<string name="widget_quiz_results_score">%1$.0f%%</string>
+ 	<string name="widget_quiz_results_score">Su puntuación: %1$.0f%%</string>
  	<string name="widget_quiz_results_restart">Vuelva a pasar el test</string>
  	<string name="widget_quiz_baseline_completed">Thank you for completing the pre-test. You can now continue to the course.</string>
  	<string name="widget_quiz_baseline_goto_course">Continue to course &gt;&gt;</string>

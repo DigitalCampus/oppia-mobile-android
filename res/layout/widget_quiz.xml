@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/mquiz_progress"
+        android:id="@+id/quiz_progress"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -13,13 +13,13 @@
         android:textStyle="bold"/>
 
     <ScrollView
-        android:id="@+id/quizScrollView"
+        android:id="@+id/quiz_scroll_view"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
         android:layout_weight="1" >
 
         <LinearLayout
-            android:id="@+id/quizQuestion"
+            android:id="@+id/quiz_question"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
@@ -58,7 +58,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/quizResponseWidget"
+                android:id="@+id/quiz_response_widget"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="vertical" >

@@ -105,6 +105,7 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 		String lastname = (String) lastnameField.getText().toString();
 
 		// do validation
+		// TODO change to be proper lang strings
 		// check firstname
 		if (username.length() == 0) {
 			this.showAlert(getString(R.string.error), "Please enter a username", ONCLICK_TASK_NULL);

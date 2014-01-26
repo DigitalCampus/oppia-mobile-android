@@ -36,9 +36,7 @@
     <string name="widget_quiz_getresults">Get Results</string>
     <string name="widget_quiz_noanswergiven">Please give an answer before moving to the next question</string>
     <string name="widget_quiz_progress">Question %1$d of %2$d</string>
- 	<string name="widget_quiz_results">Results</string>
- 	<string name="widget_quiz_results_intro">You scored:</string>
- 	<string name="widget_quiz_results_score">%1$.0f%%</string>
+ 	<string name="widget_quiz_results_score">You scored: %1$.0f%%</string>
  	<string name="widget_quiz_results_restart">Retake this quiz</string>
  	<string name="widget_quiz_baseline_completed">Thank you for completing the pre-test. You can now continue to the course.</string>
  	<string name="widget_quiz_baseline_goto_course">Continue to course &gt;&gt;</string>

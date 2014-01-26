@@ -44,7 +44,7 @@ public abstract class QuestionWidget {
 		this.ctx = new ContextThemeWrapper(activity, R.style.Oppia_Theme);
 		this.view = v;
 		
-		LinearLayout ll = (LinearLayout) v.findViewById(R.id.quizResponseWidget);
+		LinearLayout ll = (LinearLayout) v.findViewById(R.id.quiz_response_widget);
 		ll.removeAllViews();
 		LayoutInflater localInflater = ((LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).cloneInContext(ctx);
 		View vv = localInflater.inflate(layout ,container, false);

@@ -15,19 +15,19 @@ public class DescriptionWidget extends QuestionWidget{
 	public static final String TAG = DescriptionWidget.class.getSimpleName();
 	
 	public DescriptionWidget(Activity activity,  View v, ViewGroup container) {
-		LinearLayout ll = (LinearLayout) v.findViewById(R.id.quizResponseWidget);
+		LinearLayout ll = (LinearLayout) v.findViewById(R.id.quiz_response_widget);
 		ll.removeAllViews();
 	}
 	
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswers) {
-		// TODO Auto-generated method stub
+		// do nothing
 		
 	}
 
 	@Override
 	public List<String> getQuestionResponses(List<Response> responses) {
-		// TODO Auto-generated method stub
+		// do nothing
 		return null;
 	}
 
