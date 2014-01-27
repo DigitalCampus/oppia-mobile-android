@@ -22,6 +22,7 @@ public class QuizFeedback {
 	private float score;
 	private String questionText;
 	private String feedbackText;
+	private String userResponse;
 	
 	public float getScore() {
 		return score;
@@ -40,5 +41,11 @@ public class QuizFeedback {
 	}
 	public void setFeedbackText(String feedbackText) {
 		this.feedbackText = feedbackText;
+	}
+	public String getUserResponse() {
+		return userResponse;
+	}
+	public void setUserResponse(String userResponse) {
+		this.userResponse = userResponse;
 	}
 }

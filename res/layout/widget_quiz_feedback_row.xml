@@ -11,19 +11,34 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        
         <ImageView
             android:id="@+id/quiz_question_feedback_image"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_margin="4dp"
             android:contentDescription="@string/app_logo_alt"
             android:src="@drawable/dc_logo" />
 
-        <TextView
-            android:id="@+id/quiz_question_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/quiz_question_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            
+            <TextView
+                android:id="@+id/quiz_question_user_response_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/quiz_question_feedback_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>

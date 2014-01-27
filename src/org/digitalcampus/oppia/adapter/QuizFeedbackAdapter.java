@@ -20,14 +20,17 @@ package org.digitalcampus.oppia.adapter;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.QuizFeedback;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
@@ -49,13 +52,25 @@ public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
 		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    View rowView = inflater.inflate(R.layout.widget_quiz_feedback_row, parent, false);
 	    QuizFeedback qf = quizFeedbackList.get(position);
-
 	    
 	    TextView qqt = (TextView) rowView.findViewById(R.id.quiz_question_text);
 	    qqt.setText(qf.getQuestionText());
 	    
+	    TextView qqurt = (TextView) rowView.findViewById(R.id.quiz_question_user_response_text);
+	    qqurt.setText(qf.getQuestionText());
+	    
+	    TextView qqft = (TextView) rowView.findViewById(R.id.quiz_question_feedback_text);
+	    qqft.setText(qf.getUserResponse());
 	    
 		// set image
+		ImageView iv = (ImageView) rowView.findViewById(R.id.quiz_question_feedback_image);
+		Log.d(TAG, String.valueOf(qf.getScore()));
+		if (qf.getScore() >= MobileLearning.QUIZ_PASS_THRESHOLD){
+			iv.setImageResource(R.drawable.quiz_tick);
+		} else {
+			iv.setImageResource(R.drawable.quiz_cross);
+		}
+		
 		
 	    return rowView;
 	}

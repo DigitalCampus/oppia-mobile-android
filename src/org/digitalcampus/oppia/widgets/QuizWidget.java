@@ -354,8 +354,9 @@ public class QuizWidget extends WidgetFactory {
 			QuizQuestion q = questions.get(i);
 			if(!(q instanceof Description)){
 				QuizFeedback qf = new QuizFeedback();
-				qf.setScore(q.getUserscore());
+				qf.setScore(q.getScoreAsPercent());
 				qf.setQuestionText(q.getTitle());
+				//qf.setUserResponse(q.getUserResponses());
 				qf.setFeedbackText(q.getFeedback());
 				quizFeedback.add(qf);
 			}
