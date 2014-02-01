@@ -15,29 +15,57 @@
             android:id="@+id/quiz_question_feedback_image"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_margin="4dp"
-            android:contentDescription="@string/app_logo_alt"
-            android:src="@drawable/dc_logo" />
+            android:layout_margin="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/quiz_question_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            
-            <TextView
-                android:id="@+id/quiz_question_user_response_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2" />
 
-            <TextView
-                android:id="@+id/quiz_question_feedback_text"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/quiz_question_user_response_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/widget_quiz_feedback_response_title"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/quiz_question_user_response_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/quiz_question_user_feedback_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/widget_quiz_feedback_feedback_title"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/quiz_question_user_feedback_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

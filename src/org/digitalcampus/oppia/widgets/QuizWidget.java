@@ -34,7 +34,6 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.Tracker;
@@ -61,23 +60,20 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -350,13 +346,12 @@ public class QuizWidget extends WidgetFactory {
 		ListView questionFeedbackLV = (ListView) getView().findViewById(R.id.quiz_results_feedback);
 		ArrayList<QuizFeedback> quizFeedback = new ArrayList<QuizFeedback>();
 		List<QuizQuestion> questions = this.quiz.getQuestions();
-		for(int i=0; i< this.quiz.getTotalNoQuestions(); i++){
-			QuizQuestion q = questions.get(i);
+		for(QuizQuestion q: questions){
 			if(!(q instanceof Description)){
 				QuizFeedback qf = new QuizFeedback();
 				qf.setScore(q.getScoreAsPercent());
 				qf.setQuestionText(q.getTitle());
-				//qf.setUserResponse(q.getUserResponses());
+				qf.setUserResponse(q.getUserResponses());
 				qf.setFeedbackText(q.getFeedback());
 				quizFeedback.add(qf);
 			}

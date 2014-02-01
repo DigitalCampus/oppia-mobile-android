@@ -25,7 +25,6 @@ import org.digitalcampus.oppia.model.QuizFeedback;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,14 +56,26 @@ public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
 	    qqt.setText(qf.getQuestionText());
 	    
 	    TextView qqurt = (TextView) rowView.findViewById(R.id.quiz_question_user_response_text);
-	    qqurt.setText(qf.getQuestionText());
+	    String userResponseText = "";
+	    for (int i=0; i<qf.getUserResponse().size();i++){
+	    	userResponseText += qf.getUserResponse().get(i);
+	    	if (i+1<qf.getUserResponse().size()){
+	    		userResponseText += "\n";
+	    	}
+	    }
+	    qqurt.setText(userResponseText);
 	    
-	    TextView qqft = (TextView) rowView.findViewById(R.id.quiz_question_feedback_text);
-	    qqft.setText(qf.getUserResponse());
+	    TextView qqft = (TextView) rowView.findViewById(R.id.quiz_question_user_feedback_text);
+	    if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
+	    	qqft.setText(qf.getFeedbackText());
+	    } else {
+	    	qqft.setVisibility(View.GONE);
+	    	TextView qqftitle = (TextView) rowView.findViewById(R.id.quiz_question_user_feedback_title);
+	    	qqftitle.setVisibility(View.GONE);
+	    }
 	    
 		// set image
 		ImageView iv = (ImageView) rowView.findViewById(R.id.quiz_question_feedback_image);
-		Log.d(TAG, String.valueOf(qf.getScore()));
 		if (qf.getScore() >= MobileLearning.QUIZ_PASS_THRESHOLD){
 			iv.setImageResource(R.drawable.quiz_tick);
 		} else {
