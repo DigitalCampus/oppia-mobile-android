@@ -34,16 +34,7 @@
         <item name="android:windowBackground">@color/background_light</item>
     </style>
 
-    <style name="Oppia.Theme.Dark" parent="@style/Theme.Sherlock">
-    	<item name="actionBarItemBackground">@drawable/selectable_background_om</item>
-        <item name="popupMenuStyle">@style/PopupMenu.Om</item>
-        <item name="dropDownListViewStyle">@style/DropDownListView.Om</item>
-        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Om</item>
-        <item name="actionDropDownStyle">@style/DropDownNav.Om</item>
-        <item name="actionBarStyle">@style/ActionBar.Solid.Om</item>
-        <item name="actionModeBackground">@drawable/cab_background_top_om</item>
-        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_om</item>
-        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Om</item>
+    <style name="Oppia.Theme.Dark" parent="@style/Oppia.Theme">
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 
@@ -68,10 +59,12 @@
 
     <style name="PopupMenu.Om" parent="@style/Widget.Sherlock.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_om</item>
+        
     </style>
 
     <style name="DropDownListView.Om" parent="@style/Widget.Sherlock.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_om</item>
+        <item name="android:textColor">@color/text_dark</item>
     </style>
 
     <style name="ActionBarTabStyle.Om" parent="@style/Widget.Sherlock.ActionBar.TabView">
