@@ -66,7 +66,9 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 				responseStr += s;
 			}
 			
+			
 			switch (response.getStatusLine().getStatusCode()){
+				// TODO check the unauthorised response code...
 				case 400: // unauthorised
 					payload.setResult(false);
 					payload.setResultResponse(ctx.getString(R.string.error_login));
