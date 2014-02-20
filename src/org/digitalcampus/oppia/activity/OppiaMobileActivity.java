@@ -166,9 +166,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	private void updateReminders(){
-		if(prefs.getBoolean(getString(R.string.prefs_schedule_reminders_show), true)){
+		if(prefs.getBoolean(getString(R.string.prefs_schedule_reminders_show), false)){
 			DbHelper db = new DbHelper(OppiaMobileActivity.this);
-			int max = Integer.valueOf(prefs.getString(getString(R.string.prefs_schedule_reminders_no), "3"));
+			int max = Integer.valueOf(prefs.getString(getString(R.string.prefs_schedule_reminders_no), "2"));
 			ArrayList<Activity> activities = db.getActivitiesDue(max);
 			db.close();
 			this.drawReminders(activities);
