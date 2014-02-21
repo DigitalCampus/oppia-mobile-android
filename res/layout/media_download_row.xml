@@ -16,13 +16,13 @@
 
         <TextView
             android:id="@+id/media_title"
-            style="@style/FieldLabelText"
+            style="@style/NormalTextDark"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical" />
         <TextView
             android:id="@+id/media_file_size"
-            style="@style/SmallTextLight"
+            style="@style/SmallTextDark"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical" />

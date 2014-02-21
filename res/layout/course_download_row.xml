@@ -16,14 +16,14 @@
 
         <TextView
             android:id="@+id/course_title"
-            style="@style/FieldLabelText"
+            style="@style/NormalTextDark"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical" />
 
         <TextView
             android:id="@+id/course_draft"
-            style="@style/SmallTextLightItalic"
+            style="@style/SmallTextDarkItalic"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical" />
