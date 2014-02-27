@@ -46,7 +46,7 @@ public class CourseXMLReader {
 
 	public static final String TAG = CourseXMLReader.class.getSimpleName();
 	private Document document;
-
+	
 	public CourseXMLReader(String filename) throws InvalidXMLException {
 		File courseXML = new File(filename);
 		if (courseXML.exists()) {
@@ -161,7 +161,6 @@ public class CourseXMLReader {
 	
 	public ArrayList<Activity> getBaselineActivities(long modId, Context ctx){
 		ArrayList<Activity>  acts = new ArrayList<Activity>();
-		//NodeList actlist = this.getChildNodeByName(document.getFirstChild().getFirstChild(),"activity").getChildNodes();
 		Node docMeta = document.getFirstChild().getFirstChild();
 		NodeList meta = docMeta.getChildNodes();
 		DbHelper db = new DbHelper(ctx);
@@ -302,33 +301,39 @@ public class CourseXMLReader {
 				
 				NamedNodeMap activityAttrs = activities.item(j).getAttributes();
 				String actType = activityAttrs.getNamedItem("type").getTextContent();
-				int actId = Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent());
-				String digest = activityAttrs.getNamedItem("digest").getTextContent();
-				Activity a = new Activity();				
-				a.setModId(modId);
-				a.setActId(actId);
-				a.setSectionId(sectionId);
-				a.setActType(actType);
-				a.setDigest(digest);
-				// get the titles
-				ArrayList<Lang> actTitles = new ArrayList<Lang>();
-				ArrayList<Lang> actDescriptions = new ArrayList<Lang>();
-				NodeList act = activities.item(j).getChildNodes();
-				for (int k=0; k<act.getLength(); k++) {
-					NamedNodeMap attrs = act.item(k).getAttributes();
-					if(act.item(k).getNodeName().equals("title")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
-						actTitles.add(new Lang(lang, act.item(k).getTextContent()));
-					}
-					if(act.item(k).getNodeName().equals("description")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
-						actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
+				
+				for(int sat = 0; sat< MobileLearning.SUPPORTED_ACTIVITY_TYPES.length; sat++){
+				
+					if (MobileLearning.SUPPORTED_ACTIVITY_TYPES[sat].equals(actType)){
+						int actId = Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent());
+						String digest = activityAttrs.getNamedItem("digest").getTextContent();
+						Activity a = new Activity();				
+						a.setModId(modId);
+						a.setActId(actId);
+						a.setSectionId(sectionId);
+						a.setActType(actType);
+						a.setDigest(digest);
+						// get the titles
+						ArrayList<Lang> actTitles = new ArrayList<Lang>();
+						ArrayList<Lang> actDescriptions = new ArrayList<Lang>();
+						NodeList act = activities.item(j).getChildNodes();
+						for (int k=0; k<act.getLength(); k++) {
+							NamedNodeMap attrs = act.item(k).getAttributes();
+							if(act.item(k).getNodeName().equals("title")){
+								String lang = attrs.getNamedItem("lang").getTextContent();
+								actTitles.add(new Lang(lang, act.item(k).getTextContent()));
+							}
+							if(act.item(k).getNodeName().equals("description")){
+								String lang = attrs.getNamedItem("lang").getTextContent();
+								actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
+							}
+						}
+						a.setTitles(actTitles);
+						a.setDescriptions(actDescriptions);
+						
+						acts.add(a);
 					}
 				}
-				a.setTitles(actTitles);
-				a.setDescriptions(actDescriptions);
-				
-				acts.add(a);
 			}
 		}
 		return acts;
@@ -378,69 +383,74 @@ public class CourseXMLReader {
 				NamedNodeMap nnm = acts.item(j).getAttributes();
 				String actType = nnm.getNamedItem("type").getTextContent();
 				String digest = nnm.getNamedItem("digest").getTextContent();
-				a.setActType(actType);
-				a.setModId(modId);
-				a.setSectionId(order);
-				a.setCompleted(db.activityCompleted(modId, digest));				
 				
-				ArrayList<Lang> actTitles = new ArrayList<Lang>();
-				ArrayList<Lang> actLocations = new ArrayList<Lang>();
-				ArrayList<Lang> actContents = new ArrayList<Lang>();
-				ArrayList<Lang> actDescriptions = new ArrayList<Lang>();
-				ArrayList<Media> actMedia = new ArrayList<Media>();
-				String actMimeType = null;
-				NodeList act = acts.item(j).getChildNodes();
-				for (int k=0; k<act.getLength(); k++) {
-					NamedNodeMap attrs = act.item(k).getAttributes();
-					if(act.item(k).getNodeName().equals("title")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
-						actTitles.add(new Lang(lang, act.item(k).getTextContent()));
-					} else if(act.item(k).getNodeName().equals("location")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
-						actLocations.add(new Lang(lang, act.item(k).getTextContent()));
-						try {
-							String mimeType = attrs.getNamedItem("type").getTextContent();
-							actMimeType = mimeType;
-						} catch (NullPointerException npe){
-							//do nothing
-						}
-					} else if(act.item(k).getNodeName().equals("content")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
-						actContents.add(new Lang(lang, act.item(k).getTextContent()));
-					} else if(act.item(k).getNodeName().equals("image")){
-						a.setImageFile(attrs.getNamedItem("filename").getTextContent());
-					} else if (act.item(k).getNodeName().equals("media")){
-						// add media
-						NodeList files = act.item(k).getChildNodes();
-						for (int m=0; m<files.getLength(); m++) {
-							if (files.item(m).getNodeName().equals("file")){
-								NamedNodeMap fileAttrs = files.item(m).getAttributes();
-								Media mObj = new Media();
-								mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
-								mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
-								mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
-								if(fileAttrs.getNamedItem("length") != null){
-									mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem("length").getTextContent()));
-								} else {
-									mObj.setLength(0);
+				for(int sat = 0; sat< MobileLearning.SUPPORTED_ACTIVITY_TYPES.length; sat++){
+					if (MobileLearning.SUPPORTED_ACTIVITY_TYPES[sat].equals(actType)){
+						a.setActType(actType);
+						a.setModId(modId);
+						a.setSectionId(order);
+						a.setCompleted(db.activityCompleted(modId, digest));				
+						
+						ArrayList<Lang> actTitles = new ArrayList<Lang>();
+						ArrayList<Lang> actLocations = new ArrayList<Lang>();
+						ArrayList<Lang> actContents = new ArrayList<Lang>();
+						ArrayList<Lang> actDescriptions = new ArrayList<Lang>();
+						ArrayList<Media> actMedia = new ArrayList<Media>();
+						String actMimeType = null;
+						NodeList act = acts.item(j).getChildNodes();
+						for (int k=0; k<act.getLength(); k++) {
+							NamedNodeMap attrs = act.item(k).getAttributes();
+							if(act.item(k).getNodeName().equals("title")){
+								String lang = attrs.getNamedItem("lang").getTextContent();
+								actTitles.add(new Lang(lang, act.item(k).getTextContent()));
+							} else if(act.item(k).getNodeName().equals("location")){
+								String lang = attrs.getNamedItem("lang").getTextContent();
+								actLocations.add(new Lang(lang, act.item(k).getTextContent()));
+								try {
+									String mimeType = attrs.getNamedItem("type").getTextContent();
+									actMimeType = mimeType;
+								} catch (NullPointerException npe){
+									//do nothing
 								}
-								actMedia.add(mObj);
+							} else if(act.item(k).getNodeName().equals("content")){
+								String lang = attrs.getNamedItem("lang").getTextContent();
+								actContents.add(new Lang(lang, act.item(k).getTextContent()));
+							} else if(act.item(k).getNodeName().equals("image")){
+								a.setImageFile(attrs.getNamedItem("filename").getTextContent());
+							} else if (act.item(k).getNodeName().equals("media")){
+								// add media
+								NodeList files = act.item(k).getChildNodes();
+								for (int m=0; m<files.getLength(); m++) {
+									if (files.item(m).getNodeName().equals("file")){
+										NamedNodeMap fileAttrs = files.item(m).getAttributes();
+										Media mObj = new Media();
+										mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
+										mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
+										mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
+										if(fileAttrs.getNamedItem("length") != null){
+											mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem("length").getTextContent()));
+										} else {
+											mObj.setLength(0);
+										}
+										actMedia.add(mObj);
+									}
+								}
+							} else if (act.item(k).getNodeName().equals("description")){
+								String lang = attrs.getNamedItem("lang").getTextContent();
+								actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
 							}
 						}
-					} else if (act.item(k).getNodeName().equals("description")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
-						actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
+						a.setTitles(actTitles);
+						a.setDescriptions(actDescriptions);
+						a.setLocations(actLocations);
+						a.setContents(actContents);
+						a.setDigest(digest);
+						a.setMedia(actMedia);
+						a.setMimeType(actMimeType);
+						
+						s.addActivity(a);
 					}
 				}
-				a.setTitles(actTitles);
-				a.setDescriptions(actDescriptions);
-				a.setLocations(actLocations);
-				a.setContents(actContents);
-				a.setDigest(digest);
-				a.setMedia(actMedia);
-				a.setMimeType(actMimeType);
-				
-				s.addActivity(a);
 			}
 			
 			sections.add(s);
