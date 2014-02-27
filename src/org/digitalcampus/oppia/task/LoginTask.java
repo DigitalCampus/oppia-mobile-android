@@ -77,7 +77,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 			// add post params
 			json.put("username", u.getUsername());
             json.put("password", u.getPassword());
-            StringEntity se = new StringEntity( json.toString());
+            StringEntity se = new StringEntity( json.toString(),"utf8");
             se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             httpPost.setEntity(se);
 

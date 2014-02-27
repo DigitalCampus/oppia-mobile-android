@@ -69,7 +69,7 @@ public class MobileLearning extends Application {
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
 	public static final int MAX_TRACKER_SUBMIT = 10;
-	public static final boolean DEVELOPER_MODE = true;
+	public static final boolean DEVELOPER_MODE = false;
 	
 	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
