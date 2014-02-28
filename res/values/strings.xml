@@ -31,6 +31,10 @@
     <string name="activity_course_button_prev">&lt;</string>
     <string name="activity_course_button_next">&gt;</string>
     
+    <string name="widget_feedback_submit">Submit</string>
+    
+    <string name="widget_feedback_submit_title">Thank you for submitting your feedback.</string>
+    
     <string name="widget_quiz_next">Next &gt;&gt;</string>
     <string name="widget_quiz_prev">&lt;&lt; Prev</string>
     <string name="widget_quiz_getresults">Get Results</string>

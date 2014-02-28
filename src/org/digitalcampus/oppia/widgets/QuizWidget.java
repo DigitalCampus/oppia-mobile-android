@@ -265,8 +265,7 @@ public class QuizWidget extends WidgetFactory {
 		TextView progress = (TextView) getView().findViewById(R.id.quiz_progress);
 		try {
 			if (quiz.getCurrentQuestion().responseExpected()) {
-				progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, quiz.getCurrentQuestionNo(),
-						quiz.getTotalNoQuestions()));
+				progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, quiz.getCurrentQuestionNo(), quiz.getTotalNoQuestions()));
 			} else {
 				progress.setText("");
 			}

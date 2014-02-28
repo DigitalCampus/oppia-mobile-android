@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -27,30 +26,20 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
-import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
-import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
-import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
-import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
-import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.QuizFeedback;
-import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
-import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
-import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
-import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
 import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
-import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -63,10 +52,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
 
 public class FeedbackWidget extends WidgetFactory {
 
@@ -175,7 +163,7 @@ public class FeedbackWidget extends WidgetFactory {
 		if (q instanceof MultiChoice) {
 			qw = new MultiChoiceWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Essay) {
-			qw = new EssayWidget(super.getActivity(), getView(),container);
+			qw = new EssayWidget(super.getActivity(), getView(), container);
 		} else {
 			Log.d(TAG, "Class for question type not found");
 			return;
@@ -210,15 +198,7 @@ public class FeedbackWidget extends WidgetFactory {
 			public void onClick(View v) {
 				// save answer
 				if (saveAnswer()) {
-					String feedback = "";
-					try {
-						feedback = FeedbackWidget.this.feedback.getCurrentQuestion().getFeedback();
-					} catch (InvalidQuizException e) {
-						e.printStackTrace();
-					}
-					if (!feedback.equals("") && !isBaseline) {
-						showFeedback(feedback);
-					} else if (FeedbackWidget.this.feedback.hasNext()) {
+					if (FeedbackWidget.this.feedback.hasNext()) {
 						FeedbackWidget.this.feedback.moveNext();
 						showQuestion();
 					} else {
@@ -237,7 +217,7 @@ public class FeedbackWidget extends WidgetFactory {
 		if (feedback.hasNext()) {
 			nextBtn.setText(super.getActivity().getString(R.string.widget_quiz_next));
 		} else {
-			nextBtn.setText(super.getActivity().getString(R.string.widget_quiz_getresults));
+			nextBtn.setText(super.getActivity().getString(R.string.widget_feedback_submit));
 		}
 	}
 	
@@ -259,44 +239,15 @@ public class FeedbackWidget extends WidgetFactory {
 	    ViewGroup parent = (ViewGroup) C.getParent();
 	    int index = parent.indexOfChild(C);
 	    parent.removeView(C);
-	    C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz_results, parent, false);
+	    C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_feedback_results, parent, false);
 	    parent.addView(C, index);
-		
-		TextView title = (TextView) getView().findViewById(R.id.quiz_results_score);
-		
-		if (this.isBaseline) {
-			TextView baselineExtro = (TextView) getView().findViewById(R.id.quiz_results_baseline);
-			baselineExtro.setVisibility(View.VISIBLE);
-			baselineExtro.setText(super.getActivity().getString(R.string.widget_quiz_baseline_completed));
-		} 
-		
-		// TODO add TextView here to give overall feedback if it's in the quiz
-		
-		// Show restart or continue button
-		Button restartBtn = (Button) getView().findViewById(R.id.quiz_results_button);
-		
-		restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_baseline_goto_course));
-		restartBtn.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				FeedbackWidget.this.getActivity().finish();
-			}
-		});
-	
+
 	}
 	
 	private void setProgress() {
 		TextView progress = (TextView) getView().findViewById(R.id.quiz_progress);
-		try {
-			if (this.feedback.getCurrentQuestion().responseExpected()) {
-				progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, feedback.getCurrentQuestionNo(),
-						this.feedback.getTotalNoQuestions()));
-			} else {
-				progress.setText("");
-			}
-		} catch (InvalidQuizException e) {
-			e.printStackTrace();
-		}
-
+		progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, feedback.getCurrentQuestionNo(),
+				this.feedback.getTotalNoQuestions()));
 	}
 	
 	
@@ -316,51 +267,75 @@ public class FeedbackWidget extends WidgetFactory {
 		return false;
 	}
 	
-	private void showFeedback(String msg) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(super.getActivity());
-		builder.setTitle(super.getActivity().getString(R.string.feedback));
-		builder.setMessage(msg);
-		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
-			public void onClick(DialogInterface arg0, int arg1) {
-				if (FeedbackWidget.this.feedback.hasNext()) {
-					FeedbackWidget.this.feedback.moveNext();
-					showQuestion();
-				} else {
-					showResults();
-				}
-			}
-		});
-		builder.show();
-	}
-	
 	@Override
 	protected boolean getActivityCompleted() {
-		// TODO Auto-generated method stub
-		return false;
+		if (isOnResultsPage) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public void saveTracker() {
-		// TODO Auto-generated method stub
+		long timetaken = System.currentTimeMillis() / 1000 - this.getStartTime();
+		Tracker t = new Tracker(super.getActivity());
+		JSONObject obj = new JSONObject();
+		if(!isOnResultsPage){
+			return;
+		}
+		// add in extra meta-data
+		try {
+			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
+			obj.put("timetaken", timetaken);
+			obj = mdu.getMetaData(obj);
+			String lang = prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+			obj.put("lang", lang);
+			obj.put("quiz_id", feedback.getID());
+			obj.put("instance_id", feedback.getInstanceID());
+			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+		} catch (JSONException e) {
+			// Do nothing
+		} catch (NullPointerException npe){
+			//do nothing
+		}
+		
 		
 	}
 
 	@Override
 	public String getContentToRead() {
-		// TODO Auto-generated method stub
-		return null;
+		// Get the current question text
+		String toRead = "";
+		try {
+			toRead = feedback.getCurrentQuestion().getTitle();
+		} catch (InvalidQuizException e) {
+			e.printStackTrace();
+		}
+		return toRead;
 	}
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<String, Object> config = new HashMap<String, Object>();
+		config.put("feedback", this.feedback);
+		config.put("Activity_StartTime", this.getStartTime());
+		config.put("OnResultsPage", this.isOnResultsPage);
+		return config;
 	}
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
-		// TODO Auto-generated method stub
+		if (config.containsKey("feedback")) {
+			this.feedback = (Quiz) config.get("feedback");
+		}
+		if (config.containsKey("Activity_StartTime")) {
+			this.setStartTime((Long) config.get("Activity_StartTime"));
+		}
+		if (config.containsKey("OnResultsPage")) {
+			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
+		}
+		Log.d(TAG,"Set feedback widget config");
 		
 	}
 
