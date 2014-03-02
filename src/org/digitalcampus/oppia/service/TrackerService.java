@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -179,7 +180,9 @@ public class TrackerService extends Service implements APIRequestListener{
 				);
 			mBuilder.setContentIntent(resultPendingIntent);
 			int mId = 001;
-			notificationManager.notify(mId, mBuilder.build());
+			Notification notification = mBuilder.build();
+			notification.flags |= Notification.FLAG_AUTO_CANCEL;
+			notificationManager.notify(mId, notification);
 		}
 	}
 
