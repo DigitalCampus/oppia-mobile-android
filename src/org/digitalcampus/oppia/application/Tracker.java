@@ -17,6 +17,9 @@
 
 package org.digitalcampus.oppia.application;
 
+import java.util.UUID;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -31,6 +34,14 @@ public class Tracker {
 	}
 	
 	public void saveTracker(int modId, String digest, JSONObject data, boolean completed){
+		// TODO add tracker UUID
+		UUID guid = java.util.UUID.randomUUID();
+		try {
+			data.put("uuid", guid.toString());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		DbHelper db = new DbHelper(this.ctx);
 		db.insertLog(modId, digest, data.toString(), completed);
 		db.close();
