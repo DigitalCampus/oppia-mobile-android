@@ -233,16 +233,17 @@ public class QuizWidget extends WidgetFactory {
 					String feedback = "";
 					try {
 						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback();
+					
+						if (!feedback.equals("") && !isBaseline && !QuizWidget.this.quiz.getCurrentQuestion().getFeedbackDisplayed()) {
+							showFeedback(feedback);
+						} else if (QuizWidget.this.quiz.hasNext()) {
+							QuizWidget.this.quiz.moveNext();
+							showQuestion();
+						} else {
+							showResults();
+						}
 					} catch (InvalidQuizException e) {
 						e.printStackTrace();
-					}
-					if (!feedback.equals("") && !isBaseline) {
-						showFeedback(feedback);
-					} else if (QuizWidget.this.quiz.hasNext()) {
-						QuizWidget.this.quiz.moveNext();
-						showQuestion();
-					} else {
-						showResults();
 					}
 				} else {
 					CharSequence text = QuizWidget.super.getActivity().getString(R.string.widget_quiz_noanswergiven);
@@ -307,6 +308,11 @@ public class QuizWidget extends WidgetFactory {
 			}
 		});
 		builder.show();
+		try {
+			this.quiz.getCurrentQuestion().setFeedbackDisplayed(true);
+		} catch (InvalidQuizException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void showResults() {
