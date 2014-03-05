@@ -139,7 +139,8 @@
 	<string name="info_scan_media_missing">Some media files are missing for your courses.</string>
 	
 	<string name="loading_courses">Loading courses</string>
-	<string name="loading_points">Loading points</string>
+	<string name="loading_points">Loading points...</string>
+	<string name="loading_badges">Loading badges...</string>
 	
 	<string name="scan_media_download_button">Download</string>
 	<string name="scan_media_download_via_pc_button">Download via PC</string>

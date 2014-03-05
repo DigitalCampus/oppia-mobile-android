@@ -3,6 +3,4 @@
     android:id="@+id/scorecard_fragment_webview"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_light" >
-
-</WebView>
+    android:background="@color/background_light" />

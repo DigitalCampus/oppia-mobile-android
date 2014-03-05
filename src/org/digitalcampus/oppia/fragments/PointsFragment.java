@@ -30,9 +30,7 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,8 +100,6 @@ public class PointsFragment extends Fragment implements APIRequestListener{
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			BugSenseHandler.sendException(e);
-			UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_processing_response);
 		}
 
 	}

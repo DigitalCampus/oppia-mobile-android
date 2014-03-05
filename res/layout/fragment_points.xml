@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/points_list"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:divider="@color/list_divider_light"
-    android:dividerHeight="1dp" />
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/fragment_points_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/loading_points"
+        style="@style/HeaderText"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <ListView
+        android:id="@+id/points_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/list_divider_light"
+        android:dividerHeight="1dp" />
+
+</LinearLayout>
