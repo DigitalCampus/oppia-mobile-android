@@ -27,6 +27,7 @@ public class User {
 	private String lastname;
 	private String api_key;
 	private boolean scoringEnabled = true;
+	private boolean badgingEnabled = true;
 	private int points = 0;
 	private int badges = 0;
 	
@@ -93,6 +94,13 @@ public class User {
 	}
 	public void setScoringEnabled(boolean scoringEnabled) {
 		this.scoringEnabled = scoringEnabled;
+	}
+	
+	public boolean isBadgingEnabled() {
+		return badgingEnabled;
+	}
+	public void setBadgingEnabled(boolean badgingEnabled) {
+		this.badgingEnabled = badgingEnabled;
 	}
 
 }

@@ -85,6 +85,7 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 	    	editor.putInt(getString(R.string.prefs_points), u.getPoints());
 	    	editor.putInt(getString(R.string.prefs_points), u.getBadges());
 	    	editor.putBoolean(getString(R.string.prefs_scoring_enabled), u.isScoringEnabled());
+	    	editor.putBoolean(getString(R.string.prefs_badging_enabled), u.isBadgingEnabled());
 	    	editor.commit();
 
 			showAlert("Register", "Registration successful", ONCLICK_TASK_REGISTERED);

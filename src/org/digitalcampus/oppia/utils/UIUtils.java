@@ -69,11 +69,16 @@ public class UIUtils {
 		boolean scoringEnabled = prefs.getBoolean(ctx.getString(R.string.prefs_scoring_enabled), true);
 		if (scoringEnabled) {
 			points.setVisibility(View.VISIBLE);
-			badges.setVisibility(View.VISIBLE);
 			points.setText(String.valueOf(prefs.getInt(ctx.getString(R.string.prefs_points), 0)));
-			badges.setText(String.valueOf(prefs.getInt(ctx.getString(R.string.prefs_badges), 0)));
 		} else {
 			points.setVisibility(View.GONE);
+		}
+		
+		boolean badgingEnabled = prefs.getBoolean(ctx.getString(R.string.prefs_badging_enabled), true);
+		if (badgingEnabled) {
+			badges.setVisibility(View.VISIBLE);
+			badges.setText(String.valueOf(prefs.getInt(ctx.getString(R.string.prefs_badges), 0)));
+		} else {
 			badges.setVisibility(View.GONE);
 		}
 	}
