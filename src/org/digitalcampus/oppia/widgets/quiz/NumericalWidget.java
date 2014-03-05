@@ -25,6 +25,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -43,7 +44,7 @@ public class NumericalWidget extends QuestionWidget {
 		EditText et = (EditText) view.findViewById(R.id.responsetext);
 		Iterator<String> itr = currentAnswers.iterator(); 
 		while(itr.hasNext()) {
-		    String answer = itr.next(); 
+		    String answer = itr.next();
 		    et.setText(answer);
 		} 
 	}
