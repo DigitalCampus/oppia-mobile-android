@@ -14,6 +14,10 @@
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/menu_download"/>
     <item
+        android:id="@+id/menu_scorecard"
+        android:icon="@drawable/ic_menu_start_conversation"
+        android:title="@string/menu_scorecard"/>
+    <item
         android:id="@+id/menu_language"
         android:icon="@drawable/ic_menu_start_conversation"
         android:title="@string/menu_language"/>
