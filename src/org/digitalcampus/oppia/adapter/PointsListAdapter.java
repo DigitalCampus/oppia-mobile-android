@@ -38,7 +38,7 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
 	private final ArrayList<Points> pointsList;
 	
 	public PointsListAdapter(Activity context, ArrayList<Points> pointsList) {
-		super(context, R.layout.points_list_row, pointsList);
+		super(context, R.layout.fragment_points_list_row, pointsList);
 		this.ctx = context;
 		this.pointsList = pointsList;
 	}
@@ -47,7 +47,7 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View rowView = inflater.inflate(R.layout.points_list_row, parent, false);
+	    View rowView = inflater.inflate(R.layout.fragment_points_list_row, parent, false);
 	    Points p = pointsList.get(position);
 	    
 	    TextView pointsDescription = (TextView) rowView.findViewById(R.id.points_description);
