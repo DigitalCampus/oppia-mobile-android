@@ -19,20 +19,14 @@ package org.digitalcampus.oppia.activity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
+import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.fragments.ScorecardFragment;
-import org.digitalcampus.oppia.widgets.FeedbackWidget;
-import org.digitalcampus.oppia.widgets.PageWidget;
-import org.digitalcampus.oppia.widgets.QuizWidget;
-import org.digitalcampus.oppia.widgets.ResourceWidget;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -45,7 +39,6 @@ import com.actionbarsherlock.view.MenuItem;
 public class ScorecardActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 
 	public static final String TAG = ScorecardActivity.class.getSimpleName();
-	private SharedPreferences prefs;
 	private ActionBar actionBar;
 	private ViewPager viewPager;
 	private ActivityPagerAdapter apAdapter;
@@ -57,7 +50,6 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 
 		setContentView(R.layout.activity_scorecard);
 		actionBar = getSupportActionBar();
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		viewPager = (ViewPager) findViewById(R.id.activity_scorecard_pager);
 		
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -75,15 +67,15 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 		
 		Fragment fScorecard = ScorecardFragment.newInstance();
 		fragments.add(fScorecard);
-		actionBar.addTab(actionBar.newTab().setText("Scorecard").setTabListener(this), true);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_scorecard)).setTabListener(this), true);
 	
 		Fragment fPoints = PointsFragment.newInstance();
 		fragments.add(fPoints);
-		actionBar.addTab(actionBar.newTab().setText("Points").setTabListener(this), true);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_points)).setTabListener(this), false);
 		
-		Fragment fBadges= ScorecardFragment.newInstance();
+		Fragment fBadges= BadgesFragment.newInstance();
 		fragments.add(fBadges);
-		actionBar.addTab(actionBar.newTab().setText("Badges").setTabListener(this), true);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_badges)).setTabListener(this), false);
 		
 		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(apAdapter);

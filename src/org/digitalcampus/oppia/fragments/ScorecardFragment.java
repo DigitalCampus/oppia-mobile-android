@@ -71,14 +71,16 @@ public class ScorecardFragment extends Fragment{
 		webView = (WebView) super.getActivity().findViewById(R.id.scorecard_fragment_webview);
 		webView.setWebViewClient(new ScoreCardWebViewClient());
 		webView.getSettings().setJavaScriptEnabled(true);
+		String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 		String url = "";
+		url = FileUtils.getLocalizedFilePath(super.getActivity(),lang,"webview_loading.html");
+		webView.loadUrl(url);
 		if(ConnectionUtils.isNetworkConnected(super.getActivity())){
 			url = prefs.getString(getString(R.string.prefs_server), getString(R.string.prefServer)) + "mobile/scorecard/?";
 			url += "username=" + prefs.getString(getString(R.string.prefs_username), "");
 			url += "&api_key=" + prefs.getString(getString(R.string.prefs_api_key), "");
 		} else {
-			String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
-        	url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(super.getActivity(),lang,"scorecard_not_available.html");
+        	url = FileUtils.getLocalizedFilePath(super.getActivity(),lang,"scorecard_not_available.html");
 		}
 		webView.loadUrl(url);
 
@@ -87,8 +89,8 @@ public class ScorecardFragment extends Fragment{
 	private class ScoreCardWebViewClient extends WebViewClient{
 		@Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        	String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
-        	String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(ScorecardFragment.this.getActivity(),lang,"scorecard_not_available.html");
+        	String lang = ScorecardFragment.this.prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+        	String url = FileUtils.getLocalizedFilePath(ScorecardFragment.this.getActivity(),lang,"scorecard_not_available.html");
         	webView.loadUrl(url);
         }
 	}

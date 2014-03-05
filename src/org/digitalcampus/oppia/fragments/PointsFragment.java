@@ -17,7 +17,18 @@
 
 package org.digitalcampus.oppia.fragments;
 
+import java.util.ArrayList;
+
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.PointsListAdapter;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.Points;
+import org.digitalcampus.oppia.task.APIRequestTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,14 +37,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 
-public class PointsFragment extends Fragment{
+import com.bugsense.trace.BugSenseHandler;
+
+public class PointsFragment extends Fragment implements APIRequestListener{
 
 	public static final String TAG = PointsFragment.class.getSimpleName();
-	private WebView webView;
-	private SharedPreferences prefs;
+	private JSONObject json;
 	
 	public static PointsFragment newInstance() {
 		PointsFragment myFragment = new PointsFragment();
@@ -46,7 +58,6 @@ public class PointsFragment extends Fragment{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_points, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
@@ -61,8 +72,53 @@ public class PointsFragment extends Fragment{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		
+		getPoints();
+	}
+	
+	private void getPoints(){		
+		APIRequestTask task = new APIRequestTask(super.getActivity());
+		Payload p = new Payload(MobileLearning.SERVER_POINTS_PATH);
+		task.setAPIRequestListener(this);
+		task.execute(p);
+	}
+
+	public void refreshPointsList() {
+		try {
+			ArrayList<Points> points = new ArrayList<Points>();
+			
+			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
+				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
+				Points p = new Points();
+				p.setDescription(json_obj.getString("description"));
+				p.setDateTime(json_obj.getString("date"));
+				p.setPoints(json_obj.getInt("points"));
+
+				points.add(p);
+			}
+			
+			PointsListAdapter pla = new PointsListAdapter(super.getActivity(), points);
+			ListView listView = (ListView) super.getActivity().findViewById(R.id.points_list);
+			listView.setAdapter(pla);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			BugSenseHandler.sendException(e);
+			UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_processing_response);
+		}
+
+	}
+	
+	public void apiRequestComplete(Payload response) {
+		if(response.isResult()){
+			try {
+				json = new JSONObject(response.getResultResponse());
+				refreshPointsList();
+			} catch (JSONException e) {
+				BugSenseHandler.sendException(e);
+				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
+				e.printStackTrace();
+			}
+		} 		
 	}
 
 

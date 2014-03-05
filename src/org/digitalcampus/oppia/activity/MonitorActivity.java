@@ -78,7 +78,7 @@ public class MonitorActivity extends AppActivity {
 			url += "&api_key=" + prefs.getString(getString(R.string.prefs_api_key), "");
 		} else {
 			String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
-        	url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+        	url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
 		}
 		webView.loadUrl(url);
 	}
@@ -123,7 +123,7 @@ public class MonitorActivity extends AppActivity {
 		@Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         	String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
-        	String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+        	String url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
         	webView.loadUrl(url);
         }
 	}

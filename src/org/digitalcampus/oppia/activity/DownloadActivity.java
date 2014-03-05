@@ -51,7 +51,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 	private DownloadCourseListAdapter dla;
 	private String url;
 	private ArrayList<Course> courses;
-	private boolean inProgress;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +99,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 	    this.courses = (ArrayList<Course>) savedInstanceState.getSerializable("courses");
-	    this.inProgress = savedInstanceState.getBoolean("inprogress");
 	    try {
 			this.json = new JSONObject(savedInstanceState.getString("json"));
 		} catch (JSONException e) {

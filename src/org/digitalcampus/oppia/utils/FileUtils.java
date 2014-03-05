@@ -255,7 +255,7 @@ public class FileUtils {
 			InputStream stream = act.getAssets().open(filePath);
 			stream.close();
 			Log.d(TAG, "assetExists exists: " + filePath);
-			return filePath;
+			return "file:///android_asset/" + filePath;
 		} catch (FileNotFoundException e) {
 			Log.d(TAG, "assetExists failed: " + e.toString());
 		} catch (IOException e) {
