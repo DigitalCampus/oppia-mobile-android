@@ -20,11 +20,11 @@ package org.digitalcampus.oppia.model;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.joda.time.DateTime;
 
-public class Points {
+public class Badges {
 
 	private DateTime datetime;
 	private String description;
-	private int points;
+	private String icon;
 	
 	public String getDateAsString() {
 		return MobileLearning.DATE_FORMAT.print(datetime);
@@ -46,11 +46,11 @@ public class Points {
 		this.description = description;
 	}
 	
-	public int getPoints() {
-		return points;
+	public String getIcon() {
+		return icon;
 	}
 	
-	public void setPoints(int points) {
-		this.points = points;
+	public void setPoints(String icon) {
+		this.icon = icon;
 	}
 }

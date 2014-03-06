@@ -37,10 +37,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class PointsFragment extends Fragment implements APIRequestListener{
+public class PointsFragment extends Fragment implements APIRequestListener {
 
 	public static final String TAG = PointsFragment.class.getSimpleName();
 	private JSONObject json;
@@ -80,7 +81,7 @@ public class PointsFragment extends Fragment implements APIRequestListener{
 		task.execute(p);
 	}
 
-	public void refreshPointsList() {
+	private void refreshPointsList() {
 		try {
 			ArrayList<Points> points = new ArrayList<Points>();
 			
@@ -93,6 +94,8 @@ public class PointsFragment extends Fragment implements APIRequestListener{
 
 				points.add(p);
 			}
+			TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_points_title);
+			tv.setVisibility(View.GONE);
 			
 			PointsListAdapter pla = new PointsListAdapter(super.getActivity(), points);
 			ListView listView = (ListView) super.getActivity().findViewById(R.id.points_list);

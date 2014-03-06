@@ -2,22 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
-        style="@style/PageHeadingText"
-        android:layout_width="fill_parent"
+        android:id="@+id/fragment_badges_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:text="@string/loading_badges"
+        style="@style/HeaderText"
         android:gravity="center"
-        android:text="@string/title_points" />
+        android:padding="5dp" />
 
     <ListView
-        android:id="@+id/points_list"
+        android:id="@+id/badges_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/list_divider"
-        android:dividerHeight="1dp" 
-        android:cacheColorHint="#00000000"/>
+        android:divider="@color/list_divider_light"
+        android:dividerHeight="1dp" />
 
 </LinearLayout>

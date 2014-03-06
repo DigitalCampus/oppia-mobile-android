@@ -17,23 +17,34 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import org.digitalcampus.mobile.learning.R;
+import java.util.ArrayList;
 
-import android.content.SharedPreferences;
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.BadgesListAdapter;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.Badges;
+import org.digitalcampus.oppia.task.APIRequestTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.TextView;
 
-public class BadgesFragment extends Fragment{
+import com.bugsense.trace.BugSenseHandler;
+
+public class BadgesFragment extends Fragment implements APIRequestListener {
 
 	public static final String TAG = BadgesFragment.class.getSimpleName();
-	private WebView webView;
-	private SharedPreferences prefs;
+	private JSONObject json;
 	
 	public static BadgesFragment newInstance() {
 		BadgesFragment myFragment = new BadgesFragment();
@@ -46,7 +57,6 @@ public class BadgesFragment extends Fragment{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_badges, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
@@ -61,8 +71,52 @@ public class BadgesFragment extends Fragment{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		
+		getPoints();
+	}
+	
+	private void getPoints(){		
+		APIRequestTask task = new APIRequestTask(super.getActivity());
+		Payload p = new Payload(MobileLearning.SERVER_POINTS_PATH);
+		task.setAPIRequestListener(this);
+		task.execute(p);
+	}
+
+	private void refreshPointsList() {
+		try {
+			ArrayList<Badges> badges = new ArrayList<Badges>();
+			
+			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
+				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
+				Badges b = new Badges();
+				b.setDescription(json_obj.getString("description"));
+				b.setDateTime(json_obj.getString("date"));
+
+				badges.add(b);
+			}
+			TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_badges_title);
+			tv.setVisibility(View.GONE);
+			
+			BadgesListAdapter pla = new BadgesListAdapter(super.getActivity(), badges);
+			ListView listView = (ListView) super.getActivity().findViewById(R.id.badges_list);
+			listView.setAdapter(pla);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void apiRequestComplete(Payload response) {
+		if(response.isResult()){
+			try {
+				json = new JSONObject(response.getResultResponse());
+				refreshPointsList();
+			} catch (JSONException e) {
+				BugSenseHandler.sendException(e);
+				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
+				e.printStackTrace();
+			}
+		} 		
 	}
 
 
