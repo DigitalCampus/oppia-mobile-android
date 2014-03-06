@@ -45,7 +45,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +57,7 @@ import android.widget.Toast;
 
 public class FeedbackWidget extends WidgetFactory {
 
-	private static final String TAG = FeedbackWidget.class.getSimpleName();
+	public static final String TAG = FeedbackWidget.class.getSimpleName();
 	private ViewGroup container;
 	private Quiz feedback;
 	private String feedbackContent;
@@ -165,7 +164,6 @@ public class FeedbackWidget extends WidgetFactory {
 		} else if (q instanceof Essay) {
 			qw = new EssayWidget(super.getActivity(), getView(), container);
 		} else {
-			Log.d(TAG, "Class for question type not found");
 			return;
 		}
 		qw.setQuestionResponses(q.getResponseOptions(), q.getUserResponses());
@@ -232,7 +230,6 @@ public class FeedbackWidget extends WidgetFactory {
 		DbHelper db = new DbHelper(super.getActivity());
 		db.insertQuizResult(data, course.getModId());
 		db.close();
-		Log.d(TAG, data);
 		
 		// load new layout
 		View C = getView().findViewById(R.id.quiz_progress);
@@ -334,9 +331,7 @@ public class FeedbackWidget extends WidgetFactory {
 		}
 		if (config.containsKey("OnResultsPage")) {
 			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
-		}
-		Log.d(TAG,"Set feedback widget config");
-		
+		}		
 	}
 
 }

@@ -43,7 +43,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.ListView;
 
 import com.actionbarsherlock.view.Menu;
@@ -141,7 +140,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 			aDialog.show();
 		}
 		// start a new tracker service
-		Log.d(TAG, "Starting tracker service");
 		Intent service = new Intent(this, TrackerService.class);
 
 		Bundle tb = new Bundle();
@@ -228,7 +226,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		for (Activity a : baselineActs) {
 			if (!a.isAttempted()) {
 				this.baselineActivity = a;
-				Log.d(TAG, "adding dialog");
 				aDialog = new AlertDialog.Builder(this).create();
 				aDialog.setCancelable(false);
 				aDialog.setTitle(R.string.alert_pretest);

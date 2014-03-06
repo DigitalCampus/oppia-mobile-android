@@ -42,7 +42,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -67,9 +66,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 
 				String url = client.getFullURL(MobileLearning.QUIZ_SUBMIT_PATH);
 				HttpPost httpPost = new HttpPost(url);
-				Log.d(TAG, url);
 				StringEntity se = new StringEntity(tl.getContent(), "utf8");
-				Log.d(TAG, tl.getContent());
 				se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 				httpPost.setEntity(se);
 				httpPost.addHeader(client.getAuthHeader());
@@ -83,7 +80,6 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				while ((s = buffer.readLine()) != null) {
 					responseStr += s;
 				}
-				Log.d(TAG, responseStr);
 
 				switch (response.getStatusLine().getStatusCode()) {
 				case 201: // submitted
@@ -142,7 +138,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 	}
 
 	protected void onProgressUpdate(String... obj) {
-		Log.d(TAG, obj[0]);
+		
 	}
 
 	@Override

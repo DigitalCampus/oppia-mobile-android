@@ -135,12 +135,11 @@ public class TrackerService extends Service implements APIRequestListener{
 
 	public void apiRequestComplete(Payload response) {
 		DbHelper db = new DbHelper(this);
-		Log.d(TAG,"completed getting course list");
 		
 		boolean updateAvailable = false;
 		try {
-			Log.d(TAG,response.getResultResponse());
 			JSONObject json = new JSONObject(response.getResultResponse());
+			Log.d(TAG,json.toString(4));
 			for (int i = 0; i < (json.getJSONArray("courses").length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("courses").get(i);
 				String shortName = json_obj.getString("shortname");

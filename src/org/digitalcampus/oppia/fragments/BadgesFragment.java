@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,17 +72,17 @@ public class BadgesFragment extends Fragment implements APIRequestListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getPoints();
+		getBadges();
 	}
 	
-	private void getPoints(){		
+	private void getBadges(){		
 		APIRequestTask task = new APIRequestTask(super.getActivity());
-		Payload p = new Payload(MobileLearning.SERVER_POINTS_PATH);
+		Payload p = new Payload(MobileLearning.SERVER_AWARDS_PATH);
 		task.setAPIRequestListener(this);
 		task.execute(p);
 	}
 
-	private void refreshPointsList() {
+	private void refreshBadgesList() {
 		try {
 			ArrayList<Badges> badges = new ArrayList<Badges>();
 			
@@ -89,7 +90,7 @@ public class BadgesFragment extends Fragment implements APIRequestListener {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
 				Badges b = new Badges();
 				b.setDescription(json_obj.getString("description"));
-				b.setDateTime(json_obj.getString("date"));
+				b.setDateTime(json_obj.getString("award_date"));
 
 				badges.add(b);
 			}
@@ -110,7 +111,8 @@ public class BadgesFragment extends Fragment implements APIRequestListener {
 		if(response.isResult()){
 			try {
 				json = new JSONObject(response.getResultResponse());
-				refreshPointsList();
+				Log.d(TAG,json.toString(4));
+				refreshBadgesList();
 			} catch (JSONException e) {
 				BugSenseHandler.sendException(e);
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);

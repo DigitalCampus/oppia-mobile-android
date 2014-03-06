@@ -48,7 +48,6 @@ import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -284,7 +283,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 				
                 @Override
                 public void onDone(String utteranceId){
-                	Log.d(TAG,"Finished reading");
             		CourseActivity.this.ttsRunning = false;
             		myTTS = null;
                 }

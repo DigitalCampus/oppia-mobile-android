@@ -37,7 +37,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -74,7 +73,6 @@ public class RegisterActivity extends AppActivity implements SubmitListener {
 
 	public void submitComplete(Payload response) {
 		pDialog.dismiss();
-		Log.d(TAG, "Login activity reports: " + response.getResultResponse());
 		if (response.isResult()) {
 			User u = (User) response.getData().get(0);
 			// set params

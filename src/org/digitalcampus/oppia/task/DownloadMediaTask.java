@@ -38,7 +38,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -111,9 +110,6 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				for (int i=0; i < digest.length; i++) {
 					resultMD5 += Integer.toString( ( digest[i] & 0xff ) + 0x100, 16).substring( 1 );
 			    }
-				
-				Log.d(TAG,"supplied   digest: " + m.getDigest());
-				Log.d(TAG,"calculated digest: " + resultMD5);
 				
 				if(!resultMD5.contains(m.getDigest())){
 					this.deleteFile(file);

@@ -77,7 +77,6 @@ public class MetaDataUtils {
 		Iterator<?> keys = metadata.keys();
 		while( keys.hasNext() ){
             String key = (String) keys.next();
-            //Log.d(TAG,key + ": " + metadata.getBoolean(key));
             editor.putBoolean(ctx.getString(R.string.prefs_metadata) + "_" + key, metadata.getBoolean(key));
         }
 		editor.commit();

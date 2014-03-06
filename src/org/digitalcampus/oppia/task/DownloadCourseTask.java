@@ -29,15 +29,14 @@ import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
-import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -65,8 +64,6 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 
 			String url =  client.createUrlWithCredentials(dm.getDownloadUrl());
 			
-			Log.d(TAG,"Downloading:" + url);
-			
 			URL u = new URL(url);
             HttpURLConnection c = (HttpURLConnection) u.openConnection();
             c.setRequestMethod("GET");
@@ -84,9 +81,6 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 			dp.setMessage(localFileName);
 			dp.setProgress(0);
 			publishProgress(dp);
-				
-			
-			Log.d(TAG,"saving to: "+localFileName);
 			
 			FileOutputStream f = new FileOutputStream(new File(MobileLearning.DOWNLOAD_PATH,localFileName));
 			InputStream in = c.getInputStream();

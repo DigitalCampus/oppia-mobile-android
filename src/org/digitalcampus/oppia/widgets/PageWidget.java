@@ -46,7 +46,6 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,7 +125,6 @@ public class PageWidget extends WidgetFactory {
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
 				if (url.contains("/video/")) {
-					Log.d(TAG, "Intercepting click on video url: " + url);
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
 					mediaFileName = url.substring(startPos, url.length());
@@ -256,16 +254,13 @@ public class PageWidget extends WidgetFactory {
 		if (mediaPlaying) {
 			long mediaEndTimeStamp = System.currentTimeMillis() / 1000;
 			long timeTaken = mediaEndTimeStamp - mediaStartTimeStamp;
-			Log.d(TAG, "video playing for:" + String.valueOf(timeTaken));
+
 			mediaPlaying = false;
 			// track that the video has been played (or at least clicked on)
 			Tracker t = new Tracker(super.getActivity());
 			// digest should be that of the video not the page
 			for (Media m : PageWidget.this.activity.getMedia()) {
 				if (m.getFilename().equals(mediaFileName)) {
-					Log.d(TAG, "media digest:" + m.getDigest());
-					Log.d(TAG, "media file:" + mediaFileName);
-					Log.d(TAG, "media length:" + m.getLength());
 					boolean completed = false;
 					if (timeTaken >= m.getLength()) {
 						completed = true;

@@ -42,7 +42,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -73,7 +72,6 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 		try {
 			// update progress dialog
 			publishProgress(ctx.getString(R.string.register_process));
-			Log.d(TAG, "Registering... " + u.getUsername());
 			// add post params
 			JSONObject json = new JSONObject();
 			json.put("username", u.getUsername());

@@ -42,7 +42,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -73,7 +72,6 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 		try {
 			// update progress dialog
 			publishProgress(ctx.getString(R.string.login_process));
-			Log.d(TAG,"logging in ...." + u.getUsername());
 			// add post params
 			json.put("username", u.getUsername());
             json.put("password", u.getPassword());
@@ -130,7 +128,6 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 					payload.setResultResponse(ctx.getString(R.string.login_complete));
 					break;
 				default:
-					Log.d(TAG,responseStr);
 					payload.setResult(false);
 					payload.setResultResponse(ctx.getString(R.string.error_connection));
 			}

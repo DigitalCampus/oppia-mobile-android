@@ -35,7 +35,6 @@ import java.util.zip.ZipInputStream;
 import org.digitalcampus.oppia.application.MobileLearning;
 
 import android.app.Activity;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -194,12 +193,10 @@ public class FileUtils {
 
 	public static void cleanUp(File tempDir, String path) {
 		FileUtils.deleteDir(tempDir);
-		Log.d(TAG, "Temp directory deleted");
 
 		// delete zip file from download dir
 		File zip = new File(path);
 		zip.delete();
-		Log.d(TAG, "Zip file deleted");
 	}
 
 	public static String readFile(String file) throws IOException {
@@ -254,36 +251,27 @@ public class FileUtils {
 		try {
 			InputStream stream = act.getAssets().open(filePath);
 			stream.close();
-			Log.d(TAG, "assetExists exists: " + filePath);
 			return "file:///android_asset/" + filePath;
 		} catch (FileNotFoundException e) {
-			Log.d(TAG, "assetExists failed: " + e.toString());
 		} catch (IOException e) {
-			Log.w(TAG, "assetExists failed: " + e.toString());
 		}
 
 		String localeFilePath = "www/" + Locale.getDefault().getLanguage() + "/" + fileName;
 		try {
 			InputStream stream = act.getAssets().open(localeFilePath);
 			stream.close();
-			Log.d(TAG, "assetExists exists: " + localeFilePath);
 			return "file:///android_asset/" + localeFilePath;
 		} catch (FileNotFoundException e) {
-			Log.d(TAG, "assetExists failed: " + e.toString());
 		} catch (IOException e) {
-			Log.w(TAG, "assetExists failed: " + e.toString());
 		}
 
 		String defaultFilePath = "www/" + MobileLearning.DEFAULT_LANG + "/" + fileName;
 		try {
 			InputStream stream = act.getAssets().open(defaultFilePath);
 			stream.close();
-			Log.d(TAG, "assetExists exists: " + defaultFilePath);
 			return "file:///android_asset/" + defaultFilePath;
 		} catch (FileNotFoundException e) {
-			Log.d(TAG, "assetExists failed: " + e.toString());
 		} catch (IOException e) {
-			Log.w(TAG, "assetExists failed: " + e.toString());
 		}
 		return "";
 

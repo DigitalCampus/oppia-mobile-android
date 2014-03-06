@@ -37,7 +37,6 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -103,9 +102,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 			this.json = new JSONObject(savedInstanceState.getString("json"));
 		} catch (JSONException e) {
 			// error in the json so just get the list again
-		}
-	    Log.d(TAG,"restored instance state");
-	    
+		}	    
 	}
 
 	@Override
@@ -114,7 +111,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 	    savedInstanceState.putString("json", json.toString());
 	    savedInstanceState.putSerializable("courses", courses);
 	    savedInstanceState.putBoolean("inprogress", dla.isInProgress());
-	    Log.d(TAG,"saved instance state");
 	}
 	
 	private void getCourseList() {

@@ -24,7 +24,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 public class TrackerScheduleReceiver extends BroadcastReceiver {
 
@@ -35,7 +34,6 @@ public class TrackerScheduleReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d(TAG, "running onReceive service");
 		AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		Intent i = new Intent(context, TrackerStartServiceReceiver.class);
 		

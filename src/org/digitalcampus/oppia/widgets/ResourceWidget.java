@@ -16,8 +16,6 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -29,17 +27,18 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bugsense.trace.BugSenseHandler;
 
 public class ResourceWidget extends WidgetFactory {
 
@@ -93,7 +92,6 @@ public class ResourceWidget extends WidgetFactory {
 		
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.widget_resource_object);
 		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-		Log.d(TAG,fileUrl);
 		// show description if any
 		String desc = activity.getDescription(prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 
@@ -174,7 +172,6 @@ public class ResourceWidget extends WidgetFactory {
 		if (resourceViewing) {
 			long resourceEndTime = System.currentTimeMillis() / 1000;
 			long timeTaken = resourceEndTime - this.getResourceStartTime();
-			Log.d(TAG, "resource viewed for:" + String.valueOf(timeTaken));
 			resourceViewing = false;
 			// track that the resource has been viewed (or at least clicked on)
 			Tracker t = new Tracker(super.getActivity());
@@ -277,7 +274,6 @@ public class ResourceWidget extends WidgetFactory {
 
 	private void setResourceViewing(boolean resourceViewing) {
 		this.resourceViewing = resourceViewing;
-		Log.d(TAG,"setResourceViewing: "+this.resourceViewing);
 	}
 
 	private long getResourceStartTime() {

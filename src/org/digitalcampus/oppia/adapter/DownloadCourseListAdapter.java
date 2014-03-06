@@ -37,7 +37,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +100,6 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	    	actionBtn.setOnClickListener(new View.OnClickListener() {
              	public void onClick(View v) {
              		Course dm = (Course) v.getTag();
-             		Log.d(TAG,dm.getDownloadUrl());
              		
              		ArrayList<Object> data = new ArrayList<Object>();
              		data.add(dm);
