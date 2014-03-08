@@ -3,38 +3,33 @@
     android:id="@+id/badges_row"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="5dp">
+    android:padding="5dp" >
 
-    <RelativeLayout
-        android:id="@+id/badges_datetime"
-        android:layout_width="80dp"
-        android:layout_height="fill_parent">
-
-        <TextView
-            android:id="@+id/badges_time"
-            style="@style/SmallTextDark"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingRight="5dp"/>
-
-        <TextView
-            android:id="@+id/badges_date"
-            style="@style/SmallTextDark"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/badges_time"
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
-            android:paddingRight="5dp" />
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/badges_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="4dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/trophy"
+        android:background="@drawable/points_background" />
+    
+    <TextView
+        android:id="@+id/badges_date"
+        style="@style/NormalTextDark"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/badges_icon"
+        android:gravity="center_vertical"
+        android:paddingRight="5dp" />
 
     <TextView
         android:id="@+id/badges_description"
-        style="@style/SmallTextDark"
+        style="@style/NormalTextDark"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:gravity="center_vertical"
-        android:layout_toRightOf="@id/badges_datetime" />
+        android:layout_toRightOf="@id/badges_date"
+        android:gravity="center_vertical" />
 
 </RelativeLayout>

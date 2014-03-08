@@ -117,7 +117,11 @@ public class PointsFragment extends Fragment implements APIRequestListener {
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
 				e.printStackTrace();
 			}
-		} 		
+		} else {
+			TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_points_title);
+			tv.setVisibility(View.VISIBLE);
+			tv.setText(R.string.error_connection_required);
+		}
 	}
 
 

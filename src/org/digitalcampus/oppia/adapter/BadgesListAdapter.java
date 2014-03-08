@@ -53,9 +53,6 @@ public class BadgesListAdapter extends ArrayAdapter<Badges>{
 	    TextView badgesDescription = (TextView) rowView.findViewById(R.id.badges_description);
 	    badgesDescription.setText(b.getDescription());
 	    
-	    TextView badgesTime = (TextView) rowView.findViewById(R.id.badges_time);
-	    badgesTime.setText(b.getTimeAsString());
-	    
 	    TextView badgesDate = (TextView) rowView.findViewById(R.id.badges_date);
 	    badgesDate.setText(b.getDateAsString());
 	    

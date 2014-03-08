@@ -85,7 +85,11 @@ public class BadgesFragment extends Fragment implements APIRequestListener {
 	private void refreshBadgesList() {
 		try {
 			ArrayList<Badges> badges = new ArrayList<Badges>();
-			
+			TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_badges_title);
+			if(json.getJSONArray("objects").length() == 0){
+				tv.setText(R.string.info_no_badges);
+				return;
+			}
 			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
 				Badges b = new Badges();
@@ -94,7 +98,6 @@ public class BadgesFragment extends Fragment implements APIRequestListener {
 
 				badges.add(b);
 			}
-			TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_badges_title);
 			tv.setVisibility(View.GONE);
 			
 			BadgesListAdapter pla = new BadgesListAdapter(super.getActivity(), badges);
@@ -118,6 +121,10 @@ public class BadgesFragment extends Fragment implements APIRequestListener {
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
 				e.printStackTrace();
 			}
+		} else {
+			TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_badges_title);
+			tv.setVisibility(View.VISIBLE);
+			tv.setText(R.string.error_connection_required);
 		} 		
 	}
 

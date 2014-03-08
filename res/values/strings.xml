@@ -142,6 +142,8 @@
 	<string name="loading_points">Loading points...</string>
 	<string name="loading_badges">Loading badges...</string>
 	
+	<string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+	
 	<string name="scan_media_download_button">Download</string>
 	<string name="scan_media_download_via_pc_button">Download via PC</string>
 	<string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>

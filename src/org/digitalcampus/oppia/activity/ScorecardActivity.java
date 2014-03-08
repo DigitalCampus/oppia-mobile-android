@@ -26,7 +26,9 @@ import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.fragments.ScorecardFragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -43,6 +45,7 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 	private ViewPager viewPager;
 	private ActivityPagerAdapter apAdapter;
 	private int currentTab = 0;
+	private SharedPreferences prefs;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,7 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 		
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 	
 	@Override
@@ -69,13 +73,19 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 		fragments.add(fScorecard);
 		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_scorecard)).setTabListener(this), true);
 	
-		Fragment fPoints = PointsFragment.newInstance();
-		fragments.add(fPoints);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_points)).setTabListener(this), false);
+		boolean scoringEnabled = prefs.getBoolean(this.getString(R.string.prefs_scoring_enabled), true);
+		if (scoringEnabled) {
+			Fragment fPoints = PointsFragment.newInstance();
+			fragments.add(fPoints);
+			actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_points)).setTabListener(this), false);
+		}
 		
-		Fragment fBadges= BadgesFragment.newInstance();
-		fragments.add(fBadges);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_badges)).setTabListener(this), false);
+		boolean badgingEnabled = prefs.getBoolean(this.getString(R.string.prefs_badging_enabled), true);
+		if (badgingEnabled) {
+			Fragment fBadges= BadgesFragment.newInstance();
+			fragments.add(fBadges);
+			actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_badges)).setTabListener(this), false);
+		}
 		
 		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(apAdapter);
