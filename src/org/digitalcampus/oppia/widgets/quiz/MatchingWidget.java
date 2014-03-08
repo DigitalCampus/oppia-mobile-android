@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.widgets.quiz;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,6 +55,7 @@ public class MatchingWidget extends QuestionWidget {
     	
     	// this could be tidied up - to use ArrayAdapters/Lists
     	HashMap<String,String> possibleAnswers = new HashMap<String,String>();
+    	ArrayList<String> possibleAnswersShuffle = new ArrayList<String>();
     	int noresponses = 0;
     	for (Response r : responses){
     		String[] temp = r.getTitle().split(Quiz.MATCHING_REGEX,-1);
@@ -61,7 +63,10 @@ public class MatchingWidget extends QuestionWidget {
     			noresponses++;
     		}
     		possibleAnswers.put(temp[0].trim(),temp[1].trim());
+    		possibleAnswersShuffle.add(temp[1].trim());
     	}
+    	
+    	
     	
     	Iterator<Entry<String, String>> responseIt = possibleAnswers.entrySet().iterator();
     	int counter = 0;
@@ -81,12 +86,13 @@ public class MatchingWidget extends QuestionWidget {
 	    		ArrayAdapter<CharSequence> responseAdapter = new ArrayAdapter<CharSequence>(ctx, android.R.layout.simple_spinner_item); 
 	    		responseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    		spinner.setAdapter(responseAdapter); 
-	    		Iterator<Entry<String, String>> it = possibleAnswers.entrySet().iterator();
-	    		responseAdapter.add(""); 
-	    	    while (it.hasNext()) {
-	    	        HashMap.Entry<String,String> pairs = (HashMap.Entry<String,String>) it.next();
-	    	        responseAdapter.add(pairs.getValue()); 
+	    		
+	    		responseAdapter.add("");
+	    		Collections.shuffle(possibleAnswersShuffle);
+	    		for (String s: possibleAnswersShuffle){
+	    	        responseAdapter.add(s); 
 	    	    }
+
 	    		responseLayout.addView(tv);
 	    		responseLayout.addView(spinner);
 	    		
