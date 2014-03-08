@@ -10,7 +10,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="4dp"
-        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:src="@drawable/trophy"
         android:background="@drawable/points_background" />
@@ -21,7 +21,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/badges_icon"
-        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
         android:paddingRight="5dp" />
 
     <TextView
@@ -30,6 +30,6 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_toRightOf="@id/badges_date"
-        android:gravity="center_vertical" />
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>
