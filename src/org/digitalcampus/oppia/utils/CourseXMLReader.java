@@ -87,6 +87,25 @@ public class CourseXMLReader {
 		return titles;
 	}
 	
+	public ArrayList<Lang> getDescriptions(){
+		ArrayList<Lang> descriptions = new ArrayList<Lang>();
+		Node m = null;
+		m = document.getFirstChild().getFirstChild();
+		NodeList meta = m.getChildNodes();
+		for (int j=0; j<meta.getLength(); j++) {
+			if(meta.item(j).getNodeName().equals("description")){
+				NamedNodeMap attrs = meta.item(j).getAttributes();
+				if(attrs.getNamedItem("lang") != null){
+					String lang = attrs.getNamedItem("lang").getTextContent();
+					descriptions.add(new Lang(lang, meta.item(j).getTextContent()));
+				} else {
+					descriptions.add(new Lang(MobileLearning.DEFAULT_LANG, meta.item(j).getTextContent()));
+				}
+			}
+		}
+		return descriptions;
+	}
+	
 	public ArrayList<Lang> getLangs(){
 		ArrayList<Lang> langs = new ArrayList<Lang>();
 		NodeList ls = document.getElementsByTagName("langs").item(0).getChildNodes();

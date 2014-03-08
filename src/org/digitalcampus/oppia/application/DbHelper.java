@@ -42,7 +42,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 15;
+	static final int DB_VERSION = 16;
 
 	private SQLiteDatabase db;
 	
@@ -50,6 +50,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String COURSE_C_ID = BaseColumns._ID;
 	private static final String COURSE_C_VERSIONID = "versionid";
 	private static final String COURSE_C_TITLE = "title";
+	private static final String COURSE_C_DESC = "description";
 	private static final String COURSE_C_SHORTNAME = "shortname";
 	private static final String COURSE_C_LOCATION = "location";
 	private static final String COURSE_C_SCHEDULE = "schedule";
@@ -104,6 +105,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				+ COURSE_C_VERSIONID + " int, " + COURSE_C_TITLE + " text, " + COURSE_C_LOCATION + " text, "
 				+ COURSE_C_SHORTNAME + " text," + COURSE_C_SCHEDULE + " int,"
 				+ COURSE_C_IMAGE + " text,"
+				+ COURSE_C_DESC + " text,"
 				+ COURSE_C_LANGS + " text)";
 		db.execSQL(m_sql);
 	}
@@ -221,6 +223,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(TRACKER_LOG_C_COMPLETED,true);
 			db.update(TRACKER_LOG_TABLE, values, null, null);
 		}
+		
+		if(oldVersion <= 15 && newVersion >= 16){
+			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_DESC + " text null;";
+			db.execSQL(sql);
+		}
 	}
 
 	public void onLogout(){
@@ -238,6 +245,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(COURSE_C_SHORTNAME, course.getShortname());
 		values.put(COURSE_C_LANGS, course.getLangsJSONString());
 		values.put(COURSE_C_IMAGE, course.getImageFile());
+		values.put(COURSE_C_DESC, course.getDescriptionJSONString());
 
 		if (!this.isInstalled(course.getShortname())) {
 			Log.v(TAG, "Record added");
@@ -261,6 +269,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(COURSE_C_VERSIONID, course.getVersionId());
 		values.put(COURSE_C_TITLE, course.getTitleJSONString());
+		values.put(COURSE_C_DESC, course.getDescriptionJSONString());
 		values.put(COURSE_C_LOCATION, course.getLocation());
 		values.put(COURSE_C_SHORTNAME, course.getShortname());
 		values.put(COURSE_C_LANGS, course.getLangsJSONString());

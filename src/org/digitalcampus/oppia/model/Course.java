@@ -40,6 +40,7 @@ public class Course implements Serializable {
 	private int modId;
 	private String location;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
+	private ArrayList<Lang> descriptions = new ArrayList<Lang>();
 	private String shortname;
 	private float progress = 0;
 	private Double versionId;
@@ -251,6 +252,56 @@ public class Course implements Serializable {
 		}
 		return array.toString();
 	}
+	
+	public String getDescription(String lang) {
+		for(Lang l: descriptions){
+			if(l.getLang().equals(lang)){
+				return l.getContent();
+			}
+		}
+		if(descriptions.size() > 0){
+			return descriptions.get(0).getContent();
+		}
+		return "No description set";
+	}
+	
+	public void setDescriptions(ArrayList<Lang> descriptions) {
+		this.descriptions = descriptions;
+	}
+	
+	public void setDescriptionsFromJSONString(String jsonStr) {
+		try {
+			JSONArray descriptionsArray = new JSONArray(jsonStr);
+			for(int i=0; i<descriptionsArray.length(); i++){
+				JSONObject descriptionObj = descriptionsArray.getJSONObject(i);
+				@SuppressWarnings("unchecked")
+				Iterator<String> iter = (Iterator<String>) descriptionObj.keys();
+				while(iter.hasNext()){
+					String key = iter.next().toString();
+					String description = descriptionObj.getString(key);
+					Lang l = new Lang(key,description);
+					this.descriptions.add(l);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getDescriptionJSONString(){
+		JSONArray array = new JSONArray();
+		for(Lang l: this.descriptions){
+			JSONObject obj = new JSONObject();
+			try {
+				obj.put(l.getLang(), l.getContent());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			array.put(obj);
+		}
+		return array.toString();
+	}
+	
 	
 	public boolean hasMedia(){
 		if(media.size() == 0){
