@@ -148,6 +148,19 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 					titles.add(l);
 		        }
 		        dc.setTitles(titles);
+		        
+		        ArrayList<Lang> descriptions = new ArrayList<Lang>();
+		        if (json_obj.has("description")){
+					JSONObject jsonDescriptions = json_obj.getJSONObject("description");
+					Iterator<?> dkeys = jsonDescriptions.keys();
+			        while( dkeys.hasNext() ){
+			            String key = (String) dkeys.next();
+			            Lang l = new Lang(key,jsonDescriptions.getString(key));
+			            descriptions.add(l);
+			        }
+			        dc.setDescriptions(descriptions);
+		        }
+		        
 		        dc.setShortname(json_obj.getString("shortname"));
 		        dc.setVersionId(json_obj.getDouble("version"));
 		        dc.setDownloadUrl(json_obj.getString("url"));
