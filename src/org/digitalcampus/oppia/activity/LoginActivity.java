@@ -133,6 +133,10 @@ public class LoginActivity extends AppActivity implements SubmitListener  {
 			Intent i = new Intent(this, PrefsActivity.class);
 			startActivity(i);
 			return true;
+		case R.id.menu_about:
+			Intent iA = new Intent(this, AboutActivity.class);
+			startActivity(iA);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
