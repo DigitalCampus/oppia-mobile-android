@@ -1,5 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    
+
     <style name="Header">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -19,13 +19,13 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
-    
+
     <style name="ButtonTextSmall">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
-    
+
     <style name="PageHeadingText">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
@@ -42,37 +42,43 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">normal</item>
     </style>
-    
+
+    <style name="MediumTextDarkItalic">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/text_dark</item>
+    </style>
+
     <style name="SmallTextLight">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
-    
-     <style name="SmallTextLightItalic">
+
+    <style name="SmallTextLightItalic">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
-    
-     <style name="SmallTextDarkItalic">
+
+    <style name="SmallTextDarkItalic">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
-    
+
     <style name="SmallTextDark">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
-    
+
     <style name="PointsText">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
-    
+
     <style name="NormalTextDark">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>

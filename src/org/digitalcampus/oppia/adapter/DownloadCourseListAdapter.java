@@ -78,6 +78,15 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	    } else {
 	    	courseDraft.setVisibility(View.GONE);
 	    }
+	    
+	    TextView courseDesc = (TextView) rowView.findViewById(R.id.course_description);
+	    String desc = c.getDescription(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+	    if (desc != null){
+	    	courseDesc.setText(desc);
+	    } else {
+	    	courseDesc.setVisibility(View.GONE);
+	    }
+
 	    Button actionBtn = (Button) rowView.findViewById(R.id.action_btn);
 	    
 	    if(c.isInstalled()){
