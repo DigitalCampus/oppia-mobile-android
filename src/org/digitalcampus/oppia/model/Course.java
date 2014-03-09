@@ -262,7 +262,7 @@ public class Course implements Serializable {
 		if(descriptions.size() > 0){
 			return descriptions.get(0).getContent();
 		}
-		return "No description set";
+		return null;
 	}
 	
 	public void setDescriptions(ArrayList<Lang> descriptions) {

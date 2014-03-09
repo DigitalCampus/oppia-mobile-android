@@ -150,7 +150,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		        dc.setTitles(titles);
 		        
 		        ArrayList<Lang> descriptions = new ArrayList<Lang>();
-		        if (json_obj.has("description")){
+		        if (json_obj.has("description") && !json_obj.isNull("description")){
 					JSONObject jsonDescriptions = json_obj.getJSONObject("description");
 					Iterator<?> dkeys = jsonDescriptions.keys();
 			        while( dkeys.hasNext() ){
