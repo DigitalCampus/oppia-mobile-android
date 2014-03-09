@@ -17,49 +17,114 @@
 
 package org.digitalcampus.oppia.activity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
+import org.digitalcampus.oppia.fragments.AboutFragment;
+import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
 import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.webkit.WebView;
-import android.widget.TextView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 
-import com.bugsense.trace.BugSenseHandler;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
-public class AboutActivity extends AppActivity {
+public class AboutActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 
 	public static final String TAG = AboutActivity.class.getSimpleName();
+	private ActionBar actionBar;
+	private ViewPager viewPager;
+	private ActivityPagerAdapter apAdapter;
+	private int currentTab = 0;
+	private SharedPreferences prefs;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_about);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(this,prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()) , "about.html");
-		WebView wv = (WebView) findViewById(R.id.about_webview);
-		wv.loadUrl(url);
+		actionBar = getSupportActionBar();
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		viewPager = (ViewPager) findViewById(R.id.activity_about_pager);
 		
-		TextView versionNo = (TextView)  findViewById(R.id.about_versionno);
-		try {
-			String no = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName;
-			versionNo.setText(getString(R.string.version,no));
-		} catch (NameNotFoundException e) {
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(e);
-			} else {
-				e.printStackTrace();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		actionBar.removeAllTabs();
+		List<Fragment> fragments = new ArrayList<Fragment>();
+		
+		Fragment fAbout = AboutFragment.newInstance();
+		fragments.add(fAbout);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_about)).setTabListener(this), true);
+
+		String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+		String url = FileUtils.getLocalizedFilePath(this,lang, "privacy.html");
+		Fragment fPrivacy = OppiaWebViewFragment.newInstance(url);
+		fragments.add(fPrivacy);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_privacy)).setTabListener(this), false);
+
+		
+		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
+		viewPager.setAdapter(apAdapter);
+
+		viewPager.setCurrentItem(currentTab);
+		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+			public void onPageScrollStateChanged(int arg0) {
+				// do nothing
 			}
-		}
+
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// do nothing
+			}
+
+			public void onPageSelected(int arg0) {
+				actionBar.setSelectedNavigationItem(arg0);
+			}
+
+		});
+	}
+
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		viewPager.setCurrentItem(tab.getPosition());
+		this.currentTab = tab.getPosition();
 		
+	}
+
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				this.finish();
+				return true;
+		}
+		return true;
 	}
 }
