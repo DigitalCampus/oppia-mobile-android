@@ -42,7 +42,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 16;
+	static final int DB_VERSION = 17;
 
 	private SQLiteDatabase db;
 	
@@ -56,6 +56,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String COURSE_C_SCHEDULE = "schedule";
 	private static final String COURSE_C_IMAGE = "imagelink";
 	private static final String COURSE_C_LANGS = "langs";
+	private static final String COURSE_C_ORDER_PRIORITY = "orderpriority";
 	
 	private static final String ACTIVITY_TABLE = "Activity";
 	private static final String ACTIVITY_C_ID = BaseColumns._ID;
@@ -106,6 +107,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				+ COURSE_C_SHORTNAME + " text," + COURSE_C_SCHEDULE + " int,"
 				+ COURSE_C_IMAGE + " text,"
 				+ COURSE_C_DESC + " text,"
+				+ COURSE_C_ORDER_PRIORITY + " integer default 0, " 
 				+ COURSE_C_LANGS + " text)";
 		db.execSQL(m_sql);
 	}
@@ -226,6 +228,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		if(oldVersion <= 15 && newVersion >= 16){
 			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_DESC + " text null;";
+			db.execSQL(sql);
+		}
+		
+		if(oldVersion <= 16 && newVersion >= 17){
+			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_ORDER_PRIORITY + " integer default 0;";
 			db.execSQL(sql);
 		}
 	}
