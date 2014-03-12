@@ -4,16 +4,40 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingLeft="5dp" 
+    android:paddingBottom="10dp"
+    android:paddingLeft="5dp"
     android:paddingRight="5dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingTop="10dp" >
 
-    <TextView
-        android:id="@+id/tag_name"
-        style="@style/NormalTextDark"
+    <ImageView
+        android:id="@+id/tag_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="@string/app_logo_alt"
+        android:gravity="center_vertical"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tag_name"
+            style="@style/NormalTextDark"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tag_description"
+            style="@style/MediumTextDarkItalic"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -34,6 +34,7 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -72,9 +73,6 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		// kill any open dialogs
 		if (pDialog != null){
 			pDialog.dismiss();
-		}
-		if (tla != null){
-			tla.closeDialogs();
 		}
 		super.onPause();
 	}
@@ -117,6 +115,27 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				t.setName(json_obj.getString("name"));
 				t.setId(json_obj.getInt("id"));
 				t.setCount(json_obj.getInt("count"));
+				
+				// Description
+				if (json_obj.has("description") && !json_obj.isNull("description")){
+					t.setDescription(json_obj.getString("description"));
+				}
+				
+				// icon
+				if (json_obj.has("icon") && !json_obj.isNull("icon")){
+					t.setIcon(json_obj.getString("icon"));
+				}
+				
+				// highlight
+				if (json_obj.has("highlight") && !json_obj.isNull("highlight")){
+					t.setHighlight(json_obj.getBoolean("highlight"));
+				}
+				
+				// order priority
+				if (json_obj.has("order_priority") && !json_obj.isNull("order_priority")){
+					t.setOrderPriority(json_obj.getInt("order_priority"));
+				}
+				
 				tags.add(t);
 			}
 			tla = new TagListAdapter(this, tags);

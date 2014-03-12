@@ -23,28 +23,34 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
 public class ImageUtils {
-	
+
 	public static final String TAG = ImageUtils.class.getSimpleName();
-	
-	public static BitmapDrawable LoadBMPsdcard(String path, Resources res, int defaultImageResource){  
-        File imageFile = new File(path);  
-        //if the file exists  
-        try {
-	        if(imageFile.exists()) {  
-	            //load the bitmap from the given path  
-	        	Bitmap bmp = BitmapFactory.decodeFile(path); 
-	            return new BitmapDrawable(res, bmp); 
-	        } else {  
-	            //return the standard 'Image not found' bitmap placed on the res folder   
-	            Bitmap bmp = BitmapFactory.decodeResource(res, defaultImageResource); 
-	            return new BitmapDrawable(res, bmp); 
-	        }  
-        } catch (OutOfMemoryError oome){
-        	Bitmap bmp = BitmapFactory.decodeResource(res, defaultImageResource); 
-            return new BitmapDrawable(res, bmp); 
-        }
-    }  
+
+	public static BitmapDrawable LoadBMPsdcard(String path, Resources res, int defaultImageResource) {
+		File imageFile = new File(path);
+		// if the file exists
+		try {
+			if (imageFile.exists()) {
+				// load the bitmap from the given path
+				Bitmap bmp = BitmapFactory.decodeFile(path);
+				return new BitmapDrawable(res, bmp);
+			} else {
+				// return the standard 'Image not found' bitmap placed on the
+				// res folder
+				Bitmap bmp = BitmapFactory.decodeResource(res, defaultImageResource);
+				return new BitmapDrawable(res, bmp);
+			}
+		} catch (OutOfMemoryError oome) {
+			Bitmap bmp = BitmapFactory.decodeResource(res, defaultImageResource);
+			return new BitmapDrawable(res, bmp);
+		}
+	}
+
+	public static  Drawable getDrawableFromUrl(String url, String src_name) throws java.net.MalformedURLException, java.io.IOException {
+		return Drawable.createFromStream(((java.io.InputStream) new java.net.URL(url).getContent()), src_name);
+	}
 
 }
