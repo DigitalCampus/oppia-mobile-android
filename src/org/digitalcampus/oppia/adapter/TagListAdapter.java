@@ -20,17 +20,12 @@ package org.digitalcampus.oppia.adapter;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.listener.GetImageListener;
-import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Tag;
-import org.digitalcampus.oppia.task.GetImageTask;
-import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.lazylist.ImageLoader;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,18 +33,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TagListAdapter extends ArrayAdapter<Tag> implements GetImageListener{
+public class TagListAdapter extends ArrayAdapter<Tag> {
 
 	public static final String TAG = TagListAdapter.class.getSimpleName();
 	
 	private final Context ctx;
 	private final ArrayList<Tag> tagList;
 	private ImageView tagIcon;
+	public ImageLoader imageLoader; 
 	
 	public TagListAdapter(Activity context, ArrayList<Tag> tagList) {
 		super(context, R.layout.tag_row, tagList);
 		this.ctx = context;
 		this.tagList = tagList;
+		imageLoader=new ImageLoader(ctx);
 	}
 	
 	@Override
@@ -75,24 +72,13 @@ public class TagListAdapter extends ArrayAdapter<Tag> implements GetImageListene
 	    
 	    tagIcon = (ImageView) rowView.findViewById(R.id.tag_icon);
 	    if(t.getIcon() != null){
-	    	Log.d(TAG,t.getIcon());
-	    	//GetImageTask task = new GetImageTask(this.ctx);
-			//Payload p = new Payload(t.getIcon());
-			//task.setGetImageListener(this);
-			//task.execute(p);
+	    	
+	    	
+	    	imageLoader.DisplayImage(t.getIcon(), tagIcon);
+	    	tagIcon.setVisibility(View.VISIBLE);
+
 	    }
 	    return rowView;
 	}
-
-	public void downloadComplete(Payload p) {
-		Log.d(TAG,"download complete");
-		Drawable d = (Drawable) p.getResponseData().get(0);
-		tagIcon.setImageDrawable(d);
-		tagIcon.setVisibility(View.VISIBLE);
-	}
-
-	public void downloadProgressUpdate(DownloadProgress dp) {
-		// TODO Auto-generated method stub
-		
-	}
 }
+
