@@ -41,6 +41,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
+import android.util.Log;
 
 public class CourseXMLReader {
 
@@ -70,8 +71,7 @@ public class CourseXMLReader {
 	
 	public ArrayList<Lang> getTitles(){
 		ArrayList<Lang> titles = new ArrayList<Lang>();
-		Node m = null;
-		m = document.getFirstChild().getFirstChild();
+		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
 			if(meta.item(j).getNodeName().equals("title")){
@@ -87,10 +87,22 @@ public class CourseXMLReader {
 		return titles;
 	}
 	
+	public int getPriority(){
+		Node m = document.getFirstChild().getFirstChild();
+		NodeList meta = m.getChildNodes();
+		for (int j=0; j<meta.getLength(); j++) {
+			Log.d(TAG,meta.item(j).getNodeName());
+			if(meta.item(j).getNodeName().equals("priority")){
+				Log.d(TAG,meta.item(j).getTextContent());
+				return Integer.valueOf(meta.item(j).getTextContent());
+			}
+		}
+		return 0;
+	}
+	
 	public ArrayList<Lang> getDescriptions(){
 		ArrayList<Lang> descriptions = new ArrayList<Lang>();
-		Node m = null;
-		m = document.getFirstChild().getFirstChild();
+		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
 			if(meta.item(j).getNodeName().equals("description")){

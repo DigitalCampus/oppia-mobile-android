@@ -253,7 +253,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(COURSE_C_LANGS, course.getLangsJSONString());
 		values.put(COURSE_C_IMAGE, course.getImageFile());
 		values.put(COURSE_C_DESC, course.getDescriptionJSONString());
-
+		values.put(COURSE_C_ORDER_PRIORITY, course.getPriority());
+		
 		if (!this.isInstalled(course.getShortname())) {
 			Log.v(TAG, "Record added");
 			return db.insertOrThrow(COURSE_TABLE, null, values);
@@ -281,6 +282,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(COURSE_C_SHORTNAME, course.getShortname());
 		values.put(COURSE_C_LANGS, course.getLangsJSONString());
 		values.put(COURSE_C_IMAGE, course.getImageFile());
+		values.put(COURSE_C_ORDER_PRIORITY, course.getPriority());
 		db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + modId, null);
 		// remove all the old activities
 		String s = ACTIVITY_C_COURSEID + "=?";
@@ -357,7 +359,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public ArrayList<Course> getCourses() {
 		ArrayList<Course> courses = new ArrayList<Course>();
-		String order = COURSE_C_TITLE + " ASC";
+		String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
@@ -370,6 +372,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
 			course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
 			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
+			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
 			courses.add(course);
 			c.moveToNext();
 		}

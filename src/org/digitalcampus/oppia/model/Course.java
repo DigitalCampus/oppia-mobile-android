@@ -55,6 +55,7 @@ public class Course implements Serializable {
 	private Double scheduleVersionID;
 	private String scheduleURI;
 	private boolean isDraft = false;
+	private int priority = 0;
 	
 	public Course() {
 
@@ -350,6 +351,14 @@ public class Course implements Serializable {
 
 	public void setDraft(boolean isDraft) {
 		this.isDraft = isDraft;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 	
 	
