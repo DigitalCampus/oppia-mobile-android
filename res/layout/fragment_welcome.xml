@@ -9,12 +9,23 @@
         android:gravity="left"
         android:orientation="vertical"
         android:padding="10dp" >
-		
-		<TextView
+
+        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:text="hello" />
+
+        <Button
+            android:id="@+id/welcome_register"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_register" />
+
+        <Button
+            android:id="@+id/welcome_login"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_login" />
     </LinearLayout>
 
 </ScrollView>

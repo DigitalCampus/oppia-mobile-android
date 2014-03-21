@@ -136,5 +136,10 @@ public class WelcomeActivity extends SherlockFragmentActivity implements ActionB
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	public void switchTab(int tab){
+		viewPager.setCurrentItem(tab);
+		this.currentTab = tab;
+	}
 }
 
