@@ -86,7 +86,6 @@
             android:id="@+id/register_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:onClick="onRegisterClick"
             android:text="@string/register_btn_text" />
     </LinearLayout>
 

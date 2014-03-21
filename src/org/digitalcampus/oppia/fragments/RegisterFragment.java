@@ -18,43 +18,43 @@
 package org.digitalcampus.oppia.fragments;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
-import org.digitalcampus.oppia.activity.RegisterActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
-import org.digitalcampus.oppia.utils.FileUtils;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.bugsense.trace.BugSenseHandler;
-
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
-public class RegisterFragment extends Fragment{
+public class RegisterFragment extends Fragment implements SubmitListener {
 
 
 	public static final String TAG = RegisterFragment.class.getSimpleName();
-	private WebView webView;
 	private SharedPreferences prefs;
+	private EditText usernameField;
+	private EditText emailField;
+	private EditText passwordField;
+	private EditText passwordAgainField;
+	private EditText firstnameField;
+	private EditText lastnameField;
+	private Button registerButton;
+	private ProgressDialog pDialog;
 	
 	public static RegisterFragment newInstance() {
 		RegisterFragment myFragment = new RegisterFragment();
@@ -83,12 +83,20 @@ public class RegisterFragment extends Fragment{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		usernameField = (EditText) findViewById(R.id.register_form_username_field);
-		emailField = (EditText) findViewById(R.id.register_form_email_field);
-		passwordField = (EditText) findViewById(R.id.register_form_password_field);
-		passwordAgainField = (EditText) findViewById(R.id.register_form_password_again_field);
-		firstnameField = (EditText) findViewById(R.id.register_form_firstname_field);
-		lastnameField = (EditText) findViewById(R.id.register_form_lastname_field);
+		usernameField = (EditText) super.getActivity().findViewById(R.id.register_form_username_field);
+		emailField = (EditText) super.getActivity().findViewById(R.id.register_form_email_field);
+		passwordField = (EditText) super.getActivity().findViewById(R.id.register_form_password_field);
+		passwordAgainField = (EditText) super.getActivity().findViewById(R.id.register_form_password_again_field);
+		firstnameField = (EditText) super.getActivity().findViewById(R.id.register_form_firstname_field);
+		lastnameField = (EditText) super.getActivity().findViewById(R.id.register_form_lastname_field);
+		
+		registerButton = (Button) super.getActivity().findViewById(R.id.register_btn);
+		registerButton.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				onRegisterClick(v);
+			}
+		});
 	}
 
 	public void submitComplete(Payload response) {
@@ -105,13 +113,14 @@ public class RegisterFragment extends Fragment{
 	    	editor.putBoolean(getString(R.string.prefs_scoring_enabled), u.isScoringEnabled());
 	    	editor.putBoolean(getString(R.string.prefs_badging_enabled), u.isBadgingEnabled());
 	    	editor.commit();
-
-			showAlert("Register", "Registration successful", ONCLICK_TASK_REGISTERED);
-
 		} else {
-			showAlert("Register", response.getResultResponse(), ONCLICK_TASK_NULL);
+			try {
+				JSONObject jo = new JSONObject(response.getResultResponse());
+				UIUtils.showAlert(super.getActivity(),R.string.error,jo.getString("error"));
+			} catch (JSONException je) {
+				UIUtils.showAlert(super.getActivity(),R.string.error,response.getResultResponse());
+			}
 		}
-
 	}
 
 	public void onRegisterClick(View view) {
@@ -127,39 +136,39 @@ public class RegisterFragment extends Fragment{
 		// TODO change to be proper lang strings
 		// check firstname
 		if (username.length() == 0) {
-			this.showAlert(getString(R.string.error), "Please enter a username", ONCLICK_TASK_NULL);
+			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_username);
 			return;
 		}
 				
 		// TODO check valid email address format
 		// android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 		if (email.length() == 0) {
-			this.showAlert(getString(R.string.error), "Please enter an email address", ONCLICK_TASK_NULL);
+			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_email);
 			return;
 		}
 		// check password length
 		if (password.length() < MobileLearning.PASSWORD_MIN_LENGTH) {
-			this.showAlert(getString(R.string.error), "Your password must be "+ MobileLearning.PASSWORD_MIN_LENGTH +" or more characters", ONCLICK_TASK_NULL);
+			UIUtils.showAlert(super.getActivity(),R.string.error,getString(R.string.error_register_password,  MobileLearning.PASSWORD_MIN_LENGTH ));
 			return;
 		}
 		// check password match
 		if (!password.equals(passwordAgain)) {
-			this.showAlert(getString(R.string.error), "Your passwords don't match", ONCLICK_TASK_NULL);
+			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_password_no_match);
 			return;
 		}
 		// check firstname
 		if (firstname.length() < 2) {
-			this.showAlert(getString(R.string.error), "Please enter your firstname", ONCLICK_TASK_NULL);
+			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_firstname);
 			return;
 		}
 
 		// check lastname
 		if (lastname.length() < 2) {
-			this.showAlert(getString(R.string.error), "Please enter your lastname", ONCLICK_TASK_NULL);
+			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_lastname);
 			return;
 		}
 
-		pDialog = new ProgressDialog(this);
+		pDialog = new ProgressDialog(super.getActivity());
 		pDialog.setTitle("Register");
 		pDialog.setMessage("Registering...");
 		pDialog.setCancelable(true);
@@ -175,38 +184,8 @@ public class RegisterFragment extends Fragment{
 		u.setEmail(email);
 		users.add(u);
 		Payload p = new Payload(users);
-		RegisterTask lt = new RegisterTask(this);
+		RegisterTask lt = new RegisterTask(super.getActivity());
 		lt.setLoginListener(this);
 		lt.execute(p);
-	}
-
-	private void showAlert(String title, String msg, int onClickTask) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-		builder.setTitle(title);
-		builder.setMessage(msg);
-		switch (onClickTask) {
-			case ONCLICK_TASK_NULL:
-				builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-	
-					public void onClick(DialogInterface dialog, int which) {
-						// do nothing
-	
-					}
-	
-				});
-				break;
-			case ONCLICK_TASK_REGISTERED :
-				builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-					
-					public void onClick(DialogInterface dialog, int which) {
-						// return to main activity
-						RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, OppiaMobileActivity.class));
-						RegisterActivity.this.finish();
-					}
-	
-				});
-				break;
-		}
-		builder.show();
 	}
 }

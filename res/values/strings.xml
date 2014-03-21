@@ -159,6 +159,12 @@
 	<string name="error_no_username">Please enter your username</string>
 	<string name="error_processing_response">Error processing response</string>
 	<string name="error_quiz_no_questions">There aren\'t any questions in this quiz.</string>
+	<string name="error_register_no_email">Please enter your email address</string>
+	<string name="error_register_password">Your password must be at least %1$d or more characters</string>
+	<string name="error_register_password_no_match">Your passwords don\'t match</string>
+	<string name="error_register_no_firstname">Please enter your first name</string>
+	<string name="error_register_no_lastname">Please enter your last name</string>
+	<string name="error_register_no_username">Please enter a username</string>
 	<string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
 	<string name="error_resource_not_found">File: \'%1$s\' not found.</string>
 	
