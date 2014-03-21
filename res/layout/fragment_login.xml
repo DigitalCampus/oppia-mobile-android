@@ -42,7 +42,6 @@
             android:id="@+id/login_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:onClick="onLoginClick"
             android:text="@string/title_login" />
 
     </LinearLayout>
