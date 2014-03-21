@@ -28,6 +28,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -80,7 +81,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 				while ((s = buffer.readLine()) != null) {
 					responseStr += s;
 				}
-
+				Log.d(TAG,responseStr);
 				switch (response.getStatusLine().getStatusCode()){
 					case 200: // submitted
 						DbHelper dbh = new DbHelper(ctx);

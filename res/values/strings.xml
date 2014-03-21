@@ -35,13 +35,8 @@
     <string name="title_tag_select_activity">Select Category</string>
     <string name="version">Version: %1$s</string>
     <string name="title_download_media">Download Media</string>
-    <string name="title_points">Your Points</string>
-    
-    <string name="activity_course_button_prev">&lt;</string>
-    <string name="activity_course_button_next">&gt;</string>
     
     <string name="widget_feedback_submit">Submit</string>
-    
     <string name="widget_feedback_submit_title">Thank you for submitting your feedback.</string>
     
     <string name="widget_quiz_next">Next &gt;&gt;</string>
@@ -141,8 +136,8 @@
 	<string name="info_scan_media_missing">Some media files are missing for your courses.</string>
 	
 	<string name="loading_courses">Loading courses</string>
-	<string name="loading_points">Loading points...</string>
-	<string name="loading_badges">Loading badges...</string>
+	<string name="loading_points">Loading points&#8230;</string>
+	<string name="loading_badges">Loading badges&#8230;</string>
 	
 	<string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
 	
@@ -150,7 +145,6 @@
 	<string name="scan_media_download_via_pc_button">Download via PC</string>
 	<string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>
 	<string name="media_file_size">%1$.1fMb</string>
-	<string name="media_file_size_unknown">unknown file size</string>
 	
 	<string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
 	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
