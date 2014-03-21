@@ -67,7 +67,7 @@
             android:name="org.digitalcampus.oppia.activity.AboutActivity"
             android:label="@string/title_about" />
         <activity
-            android:name="org.digitalcampus.oppia.activity.LoginActivity"
+            android:name="org.digitalcampus.oppia.activity.WelcomeActivity"
             android:label="@string/title_login" />
          <activity
             android:name="org.digitalcampus.oppia.activity.HelpActivity"

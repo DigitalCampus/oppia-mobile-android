@@ -90,7 +90,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	private void endStartUpScreen() {
         // launch new activity and close splash screen
 		if (!MobileLearning.isLoggedIn(this)) {
-			startActivity(new Intent(StartUpActivity.this, LoginActivity.class));
+			startActivity(new Intent(StartUpActivity.this, WelcomeActivity.class));
 			finish();
 		} else {
 			startActivity(new Intent(StartUpActivity.this, OppiaMobileActivity.class));

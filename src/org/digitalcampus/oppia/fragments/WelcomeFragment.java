@@ -37,26 +37,26 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
-public class RegisterFragment extends Fragment{
+public class WelcomeFragment extends Fragment{
 
 
-	public static final String TAG = RegisterFragment.class.getSimpleName();
+	public static final String TAG = WelcomeFragment.class.getSimpleName();
 	private WebView webView;
 	private SharedPreferences prefs;
 	
-	public static RegisterFragment newInstance() {
-		RegisterFragment myFragment = new RegisterFragment();
+	public static WelcomeFragment newInstance() {
+		WelcomeFragment myFragment = new WelcomeFragment();
 	    return myFragment;
 	}
 
-	public RegisterFragment(){
+	public WelcomeFragment(){
 		
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_register, null);
+		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_login, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;
