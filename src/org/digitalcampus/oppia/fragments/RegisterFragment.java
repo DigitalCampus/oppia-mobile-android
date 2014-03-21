@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.fragments;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
@@ -30,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -113,6 +115,9 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 	    	editor.putBoolean(getString(R.string.prefs_scoring_enabled), u.isScoringEnabled());
 	    	editor.putBoolean(getString(R.string.prefs_badging_enabled), u.isBadgingEnabled());
 	    	editor.commit();
+	    	
+	    	startActivity(new Intent(super.getActivity(), OppiaMobileActivity.class));
+	    	super.getActivity().finish();
 		} else {
 			try {
 				JSONObject jo = new JSONObject(response.getResultResponse());
