@@ -70,12 +70,12 @@ public class WelcomeActivity extends SherlockFragmentActivity implements ActionB
 
 		Fragment fLogin = LoginFragment.newInstance();
 		fragments.add(fLogin);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_login)).setTabListener(this), true);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_login)).setTabListener(this), false);
 
 		
 		Fragment fRegister = RegisterFragment.newInstance();
 		fragments.add(fRegister);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_register)).setTabListener(this), true);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_register)).setTabListener(this), false);
 
 		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(apAdapter);

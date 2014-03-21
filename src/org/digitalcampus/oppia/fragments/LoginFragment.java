@@ -66,15 +66,17 @@ public class LoginFragment extends Fragment{
 		return vv;
 	}
 
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
+
+
+	}
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 	}
 	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		
-
-	}
 }

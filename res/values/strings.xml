@@ -36,6 +36,7 @@
     <string name="title_prefs">Settings</string>
     <string name="title_scorecard">Scorecard</string>
     <string name="title_tag_select_activity">Select Category</string>
+    <string name="title_welcome">OppiaMobile</string>
     <string name="version">Version: %1$s</string>
     <string name="title_download_media">Download Media</string>
     

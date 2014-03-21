@@ -17,32 +17,19 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import java.util.Locale;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.utils.FileUtils;
 
-import com.bugsense.trace.BugSenseHandler;
-
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
 public class WelcomeFragment extends Fragment{
 
-
 	public static final String TAG = WelcomeFragment.class.getSimpleName();
-	private WebView webView;
-	private SharedPreferences prefs;
+
 	
 	public static WelcomeFragment newInstance() {
 		WelcomeFragment myFragment = new WelcomeFragment();
@@ -55,8 +42,7 @@ public class WelcomeFragment extends Fragment{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_login, null);
+		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_welcome, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;

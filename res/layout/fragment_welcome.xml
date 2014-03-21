@@ -9,8 +9,12 @@
         android:gravity="left"
         android:orientation="vertical"
         android:padding="10dp" >
-
-
+		
+		<TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="hello" />
     </LinearLayout>
 
 </ScrollView>

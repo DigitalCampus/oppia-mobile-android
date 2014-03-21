@@ -68,7 +68,7 @@
             android:label="@string/title_about" />
         <activity
             android:name="org.digitalcampus.oppia.activity.WelcomeActivity"
-            android:label="@string/title_login" />
+            android:label="@string/title_welcome" />
          <activity
             android:name="org.digitalcampus.oppia.activity.HelpActivity"
             android:label="@string/title_help" />
@@ -76,9 +76,6 @@
             android:name="org.digitalcampus.oppia.activity.MonitorActivity"
             android:label="@string/title_monitor"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout" />
-         <activity
-            android:name="org.digitalcampus.oppia.activity.RegisterActivity"
-            android:label="@string/title_register" />
          <activity
             android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"
             android:label="@string/title_course_meta" />
