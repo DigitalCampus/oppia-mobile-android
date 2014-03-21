@@ -17,16 +17,25 @@
 
 package org.digitalcampus.oppia.fragments;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.activity.RegisterActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.LoginTask;
+import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.FileUtils;
+import org.digitalcampus.oppia.utils.UIUtils;
 
 import com.bugsense.trace.BugSenseHandler;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -39,7 +48,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
-public class LoginFragment extends Fragment{
+public class LoginFragment extends Fragment implements LoginListener {
 
 
 	public static final String TAG = LoginFragment.class.getSimpleName();
@@ -71,9 +80,67 @@ public class LoginFragment extends Fragment{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-
-
+		usernameField = (EditText) super.getActivity().findViewById(R.id.login_username_field);
+        passwordField = (EditText) super.getActivity().findViewById(R.id.login_password_field);
 	}
+	
+	public void onLoginClick(View view){
+		String username = usernameField.getText().toString();
+    	//check valid email address format
+    	if(username.length() == 0){
+    		UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_no_username);
+    		return;
+    	}
+    	
+    	String password = passwordField.getText().toString();
+    	
+    	// show progress dialog
+        pDialog = new ProgressDialog(super.getActivity());
+        pDialog.setTitle(R.string.title_login);
+        pDialog.setMessage(this.getString(R.string.login_process));
+        pDialog.setCancelable(true);
+        pDialog.show();
+        
+    	ArrayList<Object> users = new ArrayList<Object>();
+    	User u = new User();
+    	u.setUsername(username);
+    	u.setPassword(password);
+    	users.add(u);
+    	
+    	Payload p = new Payload(users);
+    	LoginTask lt = new LoginTask(super.getActivity());
+    	lt.setLoginListener(this);
+    	lt.execute(p);
+	}
+	
+
+	public void submitComplete(Payload response) {
+		try {
+			pDialog.dismiss();
+		} catch (IllegalArgumentException iae){
+			//
+		}
+		if(response.isResult()){
+			User u = (User) response.getData().get(0);
+			// set params
+			Editor editor = prefs.edit();
+	    	editor.putString(getString(R.string.prefs_username), usernameField.getText().toString());
+	    	editor.putString(getString(R.string.prefs_api_key), u.getApi_key());
+	    	editor.putString(getString(R.string.prefs_display_name), u.getDisplayName());
+	    	editor.putInt(getString(R.string.prefs_points), u.getPoints());
+	    	editor.putInt(getString(R.string.prefs_badges), u.getBadges());
+	    	editor.putBoolean(getString(R.string.prefs_scoring_enabled), u.isScoringEnabled());
+	    	editor.putBoolean(getString(R.string.prefs_badging_enabled), u.isBadgingEnabled());
+	    	editor.commit();
+	    	
+			// return to main activity
+	    	startActivity(new Intent(super.getActivity(), OppiaMobileActivity.class));
+	    	super.getActivity().finish();
+		} else {
+			UIUtils.showAlert(super.getActivity(), R.string.title_login, response.getResultResponse());
+		}
+	}
+	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
