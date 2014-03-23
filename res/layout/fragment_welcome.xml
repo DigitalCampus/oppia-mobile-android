@@ -11,10 +11,32 @@
         android:padding="10dp" >
 
         <TextView
+            android:id="@+id/welcome_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="hello" />
+            android:text="@string/fragment_welcome_title"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            style="@style/HeaderText" />
 
+        <TextView
+            android:id="@+id/welcome_desc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_welcome_desc"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            style="@style/NormalTextDark" />
+        
+        <TextView
+            android:id="@+id/welcome_login_info"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_welcome_login_info"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            style="@style/NormalTextDark" />
+        
         <Button
             android:id="@+id/welcome_register"
             android:layout_width="fill_parent"
@@ -26,6 +48,15 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/title_login" />
+        
+        <TextView
+            android:id="@+id/welcome_privacy_info"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_welcome_privacy"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            style="@style/SmallTextDarkItalic" />
     </LinearLayout>
 
 </ScrollView>

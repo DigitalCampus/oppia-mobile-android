@@ -138,7 +138,6 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		String lastname = (String) lastnameField.getText().toString();
 
 		// do validation
-		// TODO change to be proper lang strings
 		// check firstname
 		if (username.length() == 0) {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_username);
