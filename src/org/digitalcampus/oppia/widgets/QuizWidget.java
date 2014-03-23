@@ -36,6 +36,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -406,7 +407,7 @@ public class QuizWidget extends WidgetFactory {
 
 	@Override
 	protected boolean getActivityCompleted() {
-		if (isOnResultsPage && this.getPercent() > 99) {
+		if (isOnResultsPage && this.getPercent() > MobileLearning.QUIZ_DEFAULT_PASS_THRESHOLD) {
 			return true;
 		} else {
 			return false;

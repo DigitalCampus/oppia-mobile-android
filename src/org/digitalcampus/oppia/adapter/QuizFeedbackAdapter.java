@@ -76,7 +76,7 @@ public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
 	    
 		// set image
 		ImageView iv = (ImageView) rowView.findViewById(R.id.quiz_question_feedback_image);
-		if (qf.getScore() >= MobileLearning.QUIZ_PASS_THRESHOLD){
+		if (qf.getScore() >= MobileLearning.QUIZ_QUESTION_PASS_THRESHOLD){
 			iv.setImageResource(R.drawable.quiz_tick);
 		} else {
 			iv.setImageResource(R.drawable.quiz_cross);
