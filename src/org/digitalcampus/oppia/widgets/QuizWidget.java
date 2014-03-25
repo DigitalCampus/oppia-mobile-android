@@ -295,6 +295,15 @@ public class QuizWidget extends WidgetFactory {
 		AlertDialog.Builder builder = new AlertDialog.Builder(super.getActivity());
 		builder.setTitle(super.getActivity().getString(R.string.feedback));
 		builder.setMessage(msg);
+		try {
+			if(this.quiz.getCurrentQuestion().getScoreAsPercent() >= MobileLearning.QUIZ_QUESTION_PASS_THRESHOLD){
+				builder.setIcon(R.drawable.quiz_tick);
+			} else {
+				builder.setIcon(R.drawable.quiz_cross);
+			}
+		} catch (InvalidQuizException e) {
+			e.printStackTrace();
+		}
 		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface arg0, int arg1) {
