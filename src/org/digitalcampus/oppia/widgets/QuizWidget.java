@@ -407,7 +407,13 @@ public class QuizWidget extends WidgetFactory {
 
 	@Override
 	protected boolean getActivityCompleted() {
-		if (isOnResultsPage && this.getPercent() > MobileLearning.QUIZ_DEFAULT_PASS_THRESHOLD) {
+		int passThreshold;
+		if (quiz.getPassThreshold() != 0){
+			passThreshold = quiz.getPassThreshold();
+		} else {
+			passThreshold = MobileLearning.QUIZ_DEFAULT_PASS_THRESHOLD;
+		}
+		if (isOnResultsPage && this.getPercent() >= passThreshold) {
 			return true;
 		} else {
 			return false;
