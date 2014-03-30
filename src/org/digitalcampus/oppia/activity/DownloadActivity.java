@@ -155,8 +155,10 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 					Iterator<?> dkeys = jsonDescriptions.keys();
 			        while( dkeys.hasNext() ){
 			            String key = (String) dkeys.next();
-			            Lang l = new Lang(key,jsonDescriptions.getString(key));
-			            descriptions.add(l);
+			            if (!jsonDescriptions.isNull(key)){
+				            Lang l = new Lang(key,jsonDescriptions.getString(key));
+				            descriptions.add(l);
+			            }
 			        }
 			        dc.setDescriptions(descriptions);
 		        }
