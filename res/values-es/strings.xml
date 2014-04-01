@@ -16,12 +16,19 @@
     
     <string name="service_tracker">OppiaMobile buscador de servicio</string>
     
-    <string name="tab_title_about">About</string>
+    <string name="fragment_welcome_title">Welcome to OppiaMobile</string>
+    <string name="fragment_welcome_desc">OppiaMobile is a mobile learning platform for delivering learning content, video and quizzes.\n\n\'Oppia\' means \'to learn\' in Finnish</string>
+    <string name="fragment_welcome_login_info">To get started with OppiaMobile, you will need to register or login.</string>
+    <string name="fragment_welcome_privacy">We take your privacy seriously, <a href="http://digital-campus.org/privacy/">find out more about Digital Campus\'s privacy policy</a></string>
     
+    <string name="tab_title_about">About</string>
     <string name="tab_title_badges">Badges</string>
+    <string name="tab_title_login">Login</string>
     <string name="tab_title_points">Points</string>
     <string name="tab_title_privacy">Privacy</string>
+    <string name="tab_title_register">Register</string>
     <string name="tab_title_scorecard">Scorecard</string>
+    <string name="tab_title_welcome">Welcome</string>
     
     <string name="title_about">Sobre</string>
     <string name="title_baseline">Baseline</string>
@@ -36,7 +43,8 @@
     <string name="title_activity_course">Activity</string>
     <string name="title_course_meta">About</string>
     <string name="title_scorecard">Scorecard</string>
-    
+    <string name="title_welcome">OppiaMobile</string>
+        
     <string name="widget_feedback_submit">Submit</string>
     <string name="widget_feedback_submit_title">Thank you for submitting your feedback.</string>
     
@@ -166,6 +174,13 @@
 	<string name="error_update_failure">Update failed</string>
 	<string name="error_install_failure">Install failed</string>
 	<string name="error_quiz_no_questions">There aren\'t any questions in this quiz.</string>
+	<string name="error_register_no_email">Please enter your email address</string>
+	<string name="error_register_password">Your password must be at least %1$d or more characters</string>
+	<string name="error_register_password_no_match">Your passwords don\'t match</string>
+	<string name="error_register_no_firstname">Please enter your first name</string>
+	<string name="error_register_no_lastname">Please enter your last name</string>
+	<string name="error_register_no_username">Please enter a username</string>
+	
 	<string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
 	<string name="error_resource_not_found">File: \'%1$s\' not found.</string>
 	
