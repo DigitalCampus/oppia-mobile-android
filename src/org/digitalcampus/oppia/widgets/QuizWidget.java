@@ -332,7 +332,7 @@ public class QuizWidget extends WidgetFactory {
 		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
 		DbHelper db = new DbHelper(super.getActivity());
-		db.insertQuizResult(data, course.getModId());
+		db.insertQuizResult(data, course.getCourseId());
 		db.close();
 		
 		// load new layout
@@ -449,9 +449,9 @@ public class QuizWidget extends WidgetFactory {
 			obj.put("score", this.getPercent());
 			// if it's a baseline activity then assume completed
 			if (this.isBaseline) {
-				t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true);
 			} else {
-				t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
 			}
 		} catch (JSONException e) {
 			// Do nothing

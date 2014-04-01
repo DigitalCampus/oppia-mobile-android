@@ -204,7 +204,7 @@ public class CourseXMLReader {
 				String actType = nnm.getNamedItem("type").getTextContent();
 				String digest = nnm.getNamedItem("digest").getTextContent();
 				a.setActType(actType);
-				a.setModId(modId);
+				a.setCourseId(modId);
 				a.setSectionId(0);
 				a.setAttempted(db.activityAttempted(modId, digest));				
 				
@@ -339,7 +339,7 @@ public class CourseXMLReader {
 						int actId = Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent());
 						String digest = activityAttrs.getNamedItem("digest").getTextContent();
 						Activity a = new Activity();				
-						a.setModId(modId);
+						a.setCourseId(modId);
 						a.setActId(actId);
 						a.setSectionId(sectionId);
 						a.setActType(actType);
@@ -418,7 +418,7 @@ public class CourseXMLReader {
 				for(int sat = 0; sat< MobileLearning.SUPPORTED_ACTIVITY_TYPES.length; sat++){
 					if (MobileLearning.SUPPORTED_ACTIVITY_TYPES[sat].equals(actType)){
 						a.setActType(actType);
-						a.setModId(modId);
+						a.setCourseId(modId);
 						a.setSectionId(order);
 						a.setCompleted(db.activityCompleted(modId, digest));				
 						

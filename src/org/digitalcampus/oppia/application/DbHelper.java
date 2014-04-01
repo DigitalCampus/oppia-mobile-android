@@ -42,7 +42,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 17;
+	static final int DB_VERSION = 18;
 
 	private SQLiteDatabase db;
 	
@@ -87,6 +87,11 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZRESULTS_C_SENT = "submitted";
 	private static final String QUIZRESULTS_C_COURSEID = "moduleid";
 	
+	private static final String SEARCH_TABLE = "search";
+	private static final String SEARCH_C_ID = BaseColumns._ID;
+	private static final String SEARCH_C_ACTID = "activityid";
+	private static final String SEARCH_C_TEXT = "fulltext";
+	
 	// Constructor
 	public DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
@@ -99,6 +104,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		createActivityTable(db);
 		createLogTable(db);
 		createQuizResultsTable(db);
+		createSearchTable(db);
 	}
 
 	public void createCourseTable(SQLiteDatabase db){
@@ -147,6 +153,15 @@ public class DbHelper extends SQLiteOpenHelper {
 							QUIZRESULTS_C_SENT + " integer default 0, "+
 							QUIZRESULTS_C_COURSEID + " integer)";
 		db.execSQL(m_sql);
+	}
+	
+	public void createSearchTable(SQLiteDatabase db){
+		String l_sql = "CREATE VIRTUAL TABLE ["+SEARCH_TABLE+"] USING FTS3 (" +
+                "["+SEARCH_C_ID+"]" + " integer primary key autoincrement, " +
+                "["+SEARCH_C_ACTID+"]" + " integer default 0, "+
+                "["+SEARCH_C_TEXT+"] TEXT" +
+            ");";
+		db.execSQL(l_sql);
 	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -235,6 +250,10 @@ public class DbHelper extends SQLiteOpenHelper {
 			String sql = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_ORDER_PRIORITY + " integer default 0;";
 			db.execSQL(sql);
 		}
+		
+		if(oldVersion <= 17 && newVersion >= 18){
+			this.createSearchTable(db);
+		}
 	}
 
 	public void onLogout(){
@@ -317,7 +336,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		// acts.listIterator();
 		for (Activity a : acts) {
 			ContentValues values = new ContentValues();
-			values.put(ACTIVITY_C_COURSEID, a.getModId());
+			values.put(ACTIVITY_C_COURSEID, a.getCourseId());
 			values.put(ACTIVITY_C_SECTIONID, a.getSectionId());
 			values.put(ACTIVITY_C_ACTID, a.getActId());
 			values.put(ACTIVITY_C_ACTTYPE, a.getActType());
@@ -366,7 +385,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			Course course = new Course();
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
-			course.setProgress(this.getCourseProgress(course.getModId()));
+			course.setProgress(this.getCourseProgress(course.getCourseId()));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
@@ -390,7 +409,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			m = new Course();
 			m.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			m.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
-			m.setProgress(this.getCourseProgress(m.getModId()));
+			m.setProgress(this.getCourseProgress(m.getCourseId()));
 			m.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			m.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
@@ -662,7 +681,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			Activity a = new Activity();
 			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
 				a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
-				a.setModId(c.getLong(c.getColumnIndex(ACTIVITY_C_COURSEID)));
+				a.setCourseId(c.getLong(c.getColumnIndex(ACTIVITY_C_COURSEID)));
 				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
 				activities.add(a);
 			}
@@ -685,7 +704,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				Activity a = new Activity();
 				if(c2.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
 					a.setTitlesFromJSONString(c2.getString(c2.getColumnIndex(ACTIVITY_C_TITLE)));
-					a.setModId(c2.getLong(c2.getColumnIndex(ACTIVITY_C_COURSEID)));
+					a.setCourseId(c2.getLong(c2.getColumnIndex(ACTIVITY_C_COURSEID)));
 					a.setDigest(c2.getString(c2.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
 					activities.add(a);
 				}

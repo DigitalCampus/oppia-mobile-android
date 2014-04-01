@@ -37,7 +37,7 @@ public class Course implements Serializable {
 	private static final long serialVersionUID = 4412987572522420704L;
 	
 	public static final String TAG = Course.class.getSimpleName();
-	private int modId;
+	private int courseId;
 	private String location;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private ArrayList<Lang> descriptions = new ArrayList<Lang>();
@@ -182,12 +182,12 @@ public class Course implements Serializable {
 		this.shortname = shortname.toLowerCase(Locale.US);
 	}
 
-	public int getModId() {
-		return modId;
+	public int getCourseId() {
+		return courseId;
 	}
 
-	public void setModId(int modId) {
-		this.modId = modId;
+	public void setModId(int courseId) {
+		this.courseId = courseId;
 	}
 
 	public String getLocation() {

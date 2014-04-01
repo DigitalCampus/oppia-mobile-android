@@ -40,7 +40,7 @@ public class Activity implements Serializable{
 
 	public static final String TAG = Activity.class.getSimpleName();
 	
-	private long modId;
+	private long courseId;
 	private int sectionId;
 	private int actId;
 	private String actType;
@@ -99,12 +99,12 @@ public class Activity implements Serializable{
 		this.digest = digest;
 	}
 	
-	public long getModId() {
-		return modId;
+	public long getCourseId() {
+		return courseId;
 	}
 
-	public void setModId(long modId) {
-		this.modId = modId;
+	public void setCourseId(long courseId) {
+		this.courseId = courseId;
 	}
 
 	public int getSectionId() {

@@ -1,12 +1,14 @@
 package org.digitalcampus.oppia.task;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.CourseTrackerXMLReader;
@@ -59,6 +61,15 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			editor.putBoolean("upgradeV29", true);
 			editor.commit();
 			publishProgress("Upgraded to v29");
+			payload.setResult(true);
+		}
+		
+		if(!prefs.getBoolean("upgradeV43",false)){
+			upgradeV43();
+			Editor editor = prefs.edit();
+			//editor.putBoolean("upgradeV43", true);
+			editor.commit();
+			publishProgress("Upgraded to v43");
 			payload.setResult(true);
 		}
 		
@@ -134,6 +145,27 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		Editor editor = prefs.edit();
 		editor.putString(ctx.getString(R.string.prefs_server), ctx.getString(R.string.prefServerDefault));
 		editor.commit();
+	}
+	
+	/* go through and add html content to tables
+	 */
+	protected void upgradeV43(){
+		//get all the courses
+		DbHelper db = new DbHelper(ctx);
+		ArrayList<Course> courses  = db.getCourses();
+		for (Course c : courses){
+			publishProgress(c.getTitle("en"));
+			try {
+				CourseXMLReader cxr = new CourseXMLReader(c.getCourseXMLLocation());
+				ArrayList<Activity> activities = cxr.getActivities(c.getCourseId());
+				for( Activity a : activities){
+					publishProgress(a.getTitle("en"));
+				}
+			} catch (InvalidXMLException e) {
+				// Ignore course
+			}
+		}
+		db.close();
 	}
 	
 	

@@ -207,7 +207,7 @@ public class PageWidget extends WidgetFactory {
 			boolean completed = true;
 			DbHelper db = new DbHelper(super.getActivity());
 			for (Media m : mediaList) {
-				if (!db.activityCompleted(this.course.getModId(), m.getDigest())) {
+				if (!db.activityCompleted(this.course.getCourseId(), m.getDigest())) {
 					completed = false;
 				}
 			}
@@ -238,9 +238,9 @@ public class PageWidget extends WidgetFactory {
 			obj.put("readaloud", readAloud);
 			// if it's a baseline activity then assume completed
 			if (this.isBaseline) {
-				t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true);
 			} else {
-				t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
 			}
 		} catch (JSONException e) {
 			// Do nothing
@@ -287,7 +287,7 @@ public class PageWidget extends WidgetFactory {
 					} catch (JSONException e) {
 						// Do nothing
 					}
-					t.saveTracker(PageWidget.this.course.getModId(), m.getDigest(), data, completed);
+					t.saveTracker(PageWidget.this.course.getCourseId(), m.getDigest(), data, completed);
 				}
 			}
 		}

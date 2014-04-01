@@ -115,7 +115,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 					c.validate();
 				} catch (CourseNotFoundException cnfe){
 					// remove from database
-					cnfe.deleteCourse(this, c.getModId());
+					cnfe.deleteCourse(this, c.getCourseId());
 					removeCourses.add(c);
 				}
 			}
@@ -321,7 +321,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			public void onClick(DialogInterface dialog, int which) {
 				// remove db records
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.deleteCourse(tempCourse.getModId());
+				db.deleteCourse(tempCourse.getCourseId());
 				db.close();
 				// remove files
 				File f = new File(tempCourse.getLocation());
@@ -348,7 +348,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.resetCourse(tempCourse.getModId());
+				db.resetCourse(tempCourse.getCourseId());
 				db.close();
 				displayCourses();
 			}

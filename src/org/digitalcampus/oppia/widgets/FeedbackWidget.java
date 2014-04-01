@@ -228,7 +228,7 @@ public class FeedbackWidget extends WidgetFactory {
 		// save results ready to send back to the quiz server
 		String data = feedback.getResultObject().toString();
 		DbHelper db = new DbHelper(super.getActivity());
-		db.insertQuizResult(data, course.getModId());
+		db.insertQuizResult(data, course.getCourseId());
 		db.close();
 		
 		// load new layout
@@ -290,7 +290,7 @@ public class FeedbackWidget extends WidgetFactory {
 			obj.put("lang", lang);
 			obj.put("quiz_id", feedback.getID());
 			obj.put("instance_id", feedback.getInstanceID());
-			t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+			t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
 		} catch (JSONException e) {
 			// Do nothing
 		} catch (NullPointerException npe){

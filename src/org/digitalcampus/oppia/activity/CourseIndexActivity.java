@@ -82,7 +82,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 				String digest = (String) bundle.getSerializable("JumpTo");
 				if (digest != null && baselineCompleted) {
 					// code to directly jump to a specific activity
-					sections = mxr.getSections(course.getModId(), CourseIndexActivity.this);
+					sections = mxr.getSections(course.getCourseId(), CourseIndexActivity.this);
 					for (Section s : sections) {
 						for (int i = 0; i < s.getActivities().size(); i++) {
 							Activity a = s.getActivities().get(i);
@@ -114,7 +114,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public void onStart() {
 		super.onStart();
-		sections = mxr.getSections(course.getModId(), CourseIndexActivity.this);
+		sections = mxr.getSections(course.getCourseId(), CourseIndexActivity.this);
 		setTitle(course
 				.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 
@@ -221,7 +221,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	private boolean isBaselineCompleted() {
-		ArrayList<Activity> baselineActs = mxr.getBaselineActivities(course.getModId(), this);
+		ArrayList<Activity> baselineActs = mxr.getBaselineActivities(course.getCourseId(), this);
 		// TODO how to handle if more than one baseline activity
 		for (Activity a : baselineActs) {
 			if (!a.isAttempted()) {

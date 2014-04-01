@@ -197,7 +197,7 @@ public class ResourceWidget extends WidgetFactory {
 			} catch (JSONException e) {
 				// Do nothing
 			}
-			t.saveTracker(course.getModId(), activity.getDigest(), data, true);
+			t.saveTracker(course.getCourseId(), activity.getDigest(), data, true);
 
 		}
 
@@ -226,9 +226,9 @@ public class ResourceWidget extends WidgetFactory {
 			obj.put("lang", lang);
 			// if it's a baseline activity then assume completed
 			if(this.isBaseline){
-				t.saveTracker(course.getModId(), activity.getDigest(), obj, true);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true);
 			} else {
-				t.saveTracker(course.getModId(), activity.getDigest(), obj, this.getActivityCompleted());
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
 			}
 		} catch (JSONException e) {
 			// Do nothing
