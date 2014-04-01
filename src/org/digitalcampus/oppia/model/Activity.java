@@ -43,6 +43,7 @@ public class Activity implements Serializable{
 	private long courseId;
 	private int sectionId;
 	private int actId;
+	private int dbId;
 	private String actType;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private ArrayList<Lang> locations = new ArrayList<Lang>();
@@ -189,7 +190,7 @@ public class Activity implements Serializable{
 		if(locations.size() > 0){
 			return locations.get(0).getContent();
 		}
-		return "No location set";
+		return null;
 	}
 	
 	public void setLocations(ArrayList<Lang> locations) {
@@ -274,5 +275,13 @@ public class Activity implements Serializable{
 
 	public void setAttempted(boolean attempted) {
 		this.attempted = attempted;
+	}
+
+	public int getDbId() {
+		return dbId;
+	}
+
+	public void setDbId(int dbId) {
+		this.dbId = dbId;
 	}
 }

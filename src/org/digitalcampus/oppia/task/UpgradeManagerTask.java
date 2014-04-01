@@ -1,7 +1,9 @@
 package org.digitalcampus.oppia.task;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -20,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
@@ -152,14 +155,26 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	protected void upgradeV43(){
 		//get all the courses
 		DbHelper db = new DbHelper(ctx);
+		db.flushSearchTable();
 		ArrayList<Course> courses  = db.getCourses();
 		for (Course c : courses){
-			publishProgress(c.getTitle("en"));
+			publishProgress("Indexing course: "+ c.getTitle("en"));
 			try {
 				CourseXMLReader cxr = new CourseXMLReader(c.getCourseXMLLocation());
 				ArrayList<Activity> activities = cxr.getActivities(c.getCourseId());
 				for( Activity a : activities){
-					publishProgress(a.getTitle("en"));
+					if (a.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())) != null){
+						String url = c.getLocation() + a.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+						Log.d(TAG,url);
+						try {
+							String fileContent = FileUtils.readFile(url);
+							// add file content to search table
+							db.insertActivityIntoSearchTable(db.getActivityByDigest(a.getDigest()).getDbId(), fileContent);
+						} catch (IOException e) {
+							// do nothing
+							e.printStackTrace();
+						}
+					}
 				}
 			} catch (InvalidXMLException e) {
 				// Ignore course

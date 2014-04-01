@@ -104,6 +104,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 		DbHelper db = new DbHelper(this);
 		courses = db.getCourses();
+		db.search("malaria");
 		db.close();
 		
 		if(MobileLearning.createDirs()){

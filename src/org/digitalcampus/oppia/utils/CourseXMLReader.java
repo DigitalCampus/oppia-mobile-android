@@ -347,6 +347,7 @@ public class CourseXMLReader {
 						// get the titles
 						ArrayList<Lang> actTitles = new ArrayList<Lang>();
 						ArrayList<Lang> actDescriptions = new ArrayList<Lang>();
+						ArrayList<Lang> actLocations = new ArrayList<Lang>();
 						NodeList act = activities.item(j).getChildNodes();
 						for (int k=0; k<act.getLength(); k++) {
 							NamedNodeMap attrs = act.item(k).getAttributes();
@@ -357,11 +358,15 @@ public class CourseXMLReader {
 							if(act.item(k).getNodeName().equals("description")){
 								String lang = attrs.getNamedItem("lang").getTextContent();
 								actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
+							} 
+							if(act.item(k).getNodeName().equals("location")){
+								String lang = attrs.getNamedItem("lang").getTextContent();
+								actLocations.add(new Lang(lang, act.item(k).getTextContent()));
 							}
 						}
 						a.setTitles(actTitles);
 						a.setDescriptions(actDescriptions);
-						
+						a.setLocations(actLocations);
 						acts.add(a);
 					}
 				}

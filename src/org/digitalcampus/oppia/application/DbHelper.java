@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -660,6 +661,24 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	public Activity getActivityByDigest(String digest){
+		String sql = "SELECT * FROM  "+ ACTIVITY_TABLE + " a " +
+					" WHERE " + ACTIVITY_C_ACTIVITYDIGEST + "='"+ digest + "'";
+		Cursor c = db.rawQuery(sql,null);
+		c.moveToFirst();
+		Activity a = new Activity();
+		while (c.isAfterLast() == false) {
+			
+			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
+				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+				a.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
+			}
+			c.moveToNext();
+		}
+		return a;
+	}
+	
+	
 	public ArrayList<Activity> getActivitiesDue(int max){
 		
 		ArrayList<Activity> activities = new ArrayList<Activity>();
@@ -714,5 +733,32 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		c.close();
 		return activities;
+	}
+	
+	public void flushSearchTable(){
+		db.delete(SEARCH_TABLE, null, null);
+	}
+	
+	public void insertActivityIntoSearchTable(int activityId, String fullText){
+		ContentValues values = new ContentValues();
+		values.put(SEARCH_C_ACTID, activityId);
+		values.put(SEARCH_C_TEXT, fullText);
+		db.insertOrThrow(SEARCH_TABLE, null, values);
+	}
+	
+	public LinkedList<String> search(String searchText){
+		LinkedList<String> results = new LinkedList<String>();
+		Cursor cursor = db.query(true, SEARCH_TABLE, new String[] { SEARCH_C_TEXT }, SEARCH_TABLE + " MATCH ?", new String[] { searchText }, null, null, null, null);
+	    if(cursor!=null && cursor.getCount()>0){
+	    	cursor.moveToFirst();
+	    	while (cursor.isAfterLast() == false) {
+	    		int sText = cursor.getColumnIndex(SEARCH_C_TEXT);
+	    		Log.d(TAG,cursor.getString(sText));
+				cursor.moveToNext();
+			}
+	    }
+	    cursor.close();
+	    return results;
+
 	}
 }
