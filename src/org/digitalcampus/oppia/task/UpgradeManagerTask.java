@@ -87,7 +87,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		if(!prefs.getBoolean("upgradeV43",false)){
 			upgradeV43();
 			Editor editor = prefs.edit();
-			//editor.putBoolean("upgradeV43", true);
+			editor.putBoolean("upgradeV43", true);
 			editor.commit();
 			publishProgress("Upgraded to v43");
 			payload.setResult(true);
@@ -170,10 +170,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	/* go through and add html content to tables
 	 */
 	protected void upgradeV43(){
-		//rebuild search index
-		DbHelper db = new DbHelper(ctx);
-		db.rebuildSearchIndex();
-		db.close();
+		SearchReIndex task = new SearchReIndex(ctx);
+		Payload p = new Payload();
+		task.execute(p);
 	}
 	
 	

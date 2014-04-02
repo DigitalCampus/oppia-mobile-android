@@ -149,6 +149,8 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				db.insertSchedule(csxr.getSchedule());
 				db.updateScheduleVersion(added, csxr.getScheduleVersion());
 				
+				// TODO run task to reindex
+				
 				
 				db.close();
 				// delete temp directory
