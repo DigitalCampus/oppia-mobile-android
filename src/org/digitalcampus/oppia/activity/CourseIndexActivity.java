@@ -53,7 +53,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	public static final String TAG = CourseIndexActivity.class.getSimpleName();
 
 	private Course course;
-	private CourseXMLReader mxr;
+	private CourseXMLReader cxr;
 	private ArrayList<Section> sections;
 	private SharedPreferences prefs;
 	private Activity baselineActivity;
@@ -73,16 +73,16 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		if (bundle != null) {
 			course = (Course) bundle.getSerializable(Course.TAG);
 			try {
-				mxr = new CourseXMLReader(course.getCourseXMLLocation());
+				cxr = new CourseXMLReader(course.getCourseXMLLocation(), CourseIndexActivity.this);
 
-				course.setMetaPages(mxr.getMetaPages());
+				course.setMetaPages(cxr.getMetaPages());
 
 				boolean baselineCompleted = this.isBaselineCompleted();
 
 				String digest = (String) bundle.getSerializable("JumpTo");
 				if (digest != null && baselineCompleted) {
 					// code to directly jump to a specific activity
-					sections = mxr.getSections(course.getCourseId(), CourseIndexActivity.this);
+					sections = cxr.getSections(course.getCourseId());
 					for (Section s : sections) {
 						for (int i = 0; i < s.getActivities().size(); i++) {
 							Activity a = s.getActivities().get(i);
@@ -114,7 +114,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public void onStart() {
 		super.onStart();
-		sections = mxr.getSections(course.getCourseId(), CourseIndexActivity.this);
+		sections = cxr.getSections(course.getCourseId());
 		setTitle(course
 				.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
 
@@ -221,7 +221,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	private boolean isBaselineCompleted() {
-		ArrayList<Activity> baselineActs = mxr.getBaselineActivities(course.getCourseId(), this);
+		ArrayList<Activity> baselineActs = cxr.getBaselineActivities(course.getCourseId());
 		// TODO how to handle if more than one baseline activity
 		for (Activity a : baselineActs) {
 			if (!a.isAttempted()) {

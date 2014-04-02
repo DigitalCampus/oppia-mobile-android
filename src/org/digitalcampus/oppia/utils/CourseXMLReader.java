@@ -47,8 +47,10 @@ public class CourseXMLReader {
 
 	public static final String TAG = CourseXMLReader.class.getSimpleName();
 	private Document document;
+	private Context ctx;
 	
-	public CourseXMLReader(String filename) throws InvalidXMLException {
+	public CourseXMLReader(String filename, Context ctx) throws InvalidXMLException {
+		this.ctx = ctx;
 		File courseXML = new File(filename);
 		if (courseXML.exists()) {
 
@@ -190,7 +192,7 @@ public class CourseXMLReader {
 		return ammp;
 	}
 	
-	public ArrayList<Activity> getBaselineActivities(long modId, Context ctx){
+	public ArrayList<Activity> getBaselineActivities(long modId){
 		ArrayList<Activity>  acts = new ArrayList<Activity>();
 		Node docMeta = document.getFirstChild().getFirstChild();
 		NodeList meta = docMeta.getChildNodes();
@@ -381,7 +383,7 @@ public class CourseXMLReader {
 		return s.getLength();
 	}
 	
-	public ArrayList<Section> getSections(int modId, Context ctx){
+	public ArrayList<Section> getSections(int modId){
 		ArrayList<Section> sections = new ArrayList<Section>();
 		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
 		DbHelper db = new DbHelper(ctx);
@@ -494,6 +496,35 @@ public class CourseXMLReader {
 		}
 		db.close();
 		return sections;
+	}
+	
+	public Section getSection(int order){
+		Section section = new Section();
+		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
+		for (int i=0; i<sects.getLength(); i++){
+			NamedNodeMap sectionAttrs = sects.item(i).getAttributes();
+			if (order == Integer.parseInt(sectionAttrs.getNamedItem("order").getTextContent())){
+				section.setOrder(order);
+				
+				//get section titles
+				NodeList nodes = sects.item(i).getChildNodes();
+				ArrayList<Lang> sectTitles = new ArrayList<Lang>();
+				String image = null;
+				for (int j=0; j<nodes.getLength(); j++) {
+					NamedNodeMap attrs = nodes.item(j).getAttributes();
+					if(nodes.item(j).getNodeName().equals("title")){
+						String lang = attrs.getNamedItem("lang").getTextContent();
+						sectTitles.add(new Lang(lang, nodes.item(j).getTextContent()));
+					} else if(nodes.item(j).getNodeName().equals("image")){
+						image = attrs.getNamedItem("filename").getTextContent();
+					}
+				}
+				section.setTitles(sectTitles);
+				section.setImageFile(image);
+				return section;
+			}			
+		}
+		return section;
 	}
 	
 	private Node getChildNodeByName(Node parent, String nodeName){

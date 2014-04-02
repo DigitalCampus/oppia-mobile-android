@@ -106,7 +106,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				CourseScheduleXMLReader csxr;
 				CourseTrackerXMLReader ctxr;
 				try {
-					cxr = new CourseXMLReader(courseXMLPath);
+					cxr = new CourseXMLReader(courseXMLPath,ctx);
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
 					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
@@ -153,33 +153,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	/* go through and add html content to tables
 	 */
 	protected void upgradeV43(){
-		//get all the courses
+		//rebuild search index
 		DbHelper db = new DbHelper(ctx);
-		db.flushSearchTable();
-		ArrayList<Course> courses  = db.getCourses();
-		for (Course c : courses){
-			publishProgress("Indexing course: "+ c.getTitle("en"));
-			try {
-				CourseXMLReader cxr = new CourseXMLReader(c.getCourseXMLLocation());
-				ArrayList<Activity> activities = cxr.getActivities(c.getCourseId());
-				for( Activity a : activities){
-					if (a.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())) != null){
-						String url = c.getLocation() + a.getLocation(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-						Log.d(TAG,url);
-						try {
-							String fileContent = FileUtils.readFile(url);
-							// add file content to search table
-							db.insertActivityIntoSearchTable(db.getActivityByDigest(a.getDigest()).getDbId(), fileContent);
-						} catch (IOException e) {
-							// do nothing
-							e.printStackTrace();
-						}
-					}
-				}
-			} catch (InvalidXMLException e) {
-				// Ignore course
-			}
-		}
+		//db.rebuildSearchIndex();
 		db.close();
 	}
 	

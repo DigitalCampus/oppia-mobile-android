@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.utils.FileUtils;
@@ -44,6 +45,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
@@ -104,7 +106,13 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 		DbHelper db = new DbHelper(this);
 		courses = db.getCourses();
-		db.search("malaria");
+		ArrayList<SearchResult> results = db.search("malaria");
+		for (SearchResult s: results){
+			Log.d(TAG,s.getCourse().getTitle("en"));
+			Log.d(TAG,s.getActivity().getTitle("en"));
+			Log.d(TAG,"section: "+ s.getSection().getTitle("en"));
+			Log.d(TAG,"----");
+		}
 		db.close();
 		
 		if(MobileLearning.createDirs()){
@@ -185,7 +193,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			ll.setVisibility(View.GONE);
 			return;
 		}
-		ScanMediaTask task = new ScanMediaTask();
+		ScanMediaTask task = new ScanMediaTask(this);
 		Payload p = new Payload(this.courses);
 		task.setScanMediaListener(this);
 		task.execute(p);

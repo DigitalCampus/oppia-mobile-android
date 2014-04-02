@@ -17,14 +17,18 @@
 
 package org.digitalcampus.oppia.application;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
+import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.FileUtils;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,9 +47,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 18;
+	static final int DB_VERSION = 27;
 
 	private SQLiteDatabase db;
+	private Context ctx;
 	
 	private static final String COURSE_TABLE = "Module";
 	private static final String COURSE_C_ID = BaseColumns._ID;
@@ -92,11 +97,15 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String SEARCH_C_ID = BaseColumns._ID;
 	private static final String SEARCH_C_ACTID = "activityid";
 	private static final String SEARCH_C_TEXT = "fulltext";
+	private static final String SEARCH_C_COURSETITLE = "coursetitle";
+	private static final String SEARCH_C_SECTIONTITLE = "sectiontitle";
+	private static final String SEARCH_C_ACTIVITYTITLE = "activitytitle";
 	
 	// Constructor
 	public DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
 		db = this.getWritableDatabase();
+		this.ctx = ctx;
 	}
 
 	@Override
@@ -160,7 +169,10 @@ public class DbHelper extends SQLiteOpenHelper {
 		String l_sql = "CREATE VIRTUAL TABLE ["+SEARCH_TABLE+"] USING FTS3 (" +
                 "["+SEARCH_C_ID+"]" + " integer primary key autoincrement, " +
                 "["+SEARCH_C_ACTID+"]" + " integer default 0, "+
-                "["+SEARCH_C_TEXT+"] TEXT" +
+                "["+SEARCH_C_TEXT+"] TEXT, " +
+                "["+SEARCH_C_COURSETITLE+"] TEXT, " +
+                "["+SEARCH_C_SECTIONTITLE+"] TEXT, " +
+                "["+SEARCH_C_ACTIVITYTITLE+"] TEXT " +
             ");";
 		db.execSQL(l_sql);
 	}
@@ -253,6 +265,12 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		
 		if(oldVersion <= 17 && newVersion >= 18){
+			this.createSearchTable(db);
+		}
+		
+		if(oldVersion <= 26 && newVersion >= 27){
+			String sql = "drop table if exists " + SEARCH_TABLE;
+			db.execSQL(sql);
 			this.createSearchTable(db);
 		}
 	}
@@ -400,26 +418,26 @@ public class DbHelper extends SQLiteOpenHelper {
 		return courses;
 	}
 	
-	public Course getCourse(long modId) {
-		Course m = null;
+	public Course getCourse(long courseId) {
+		Course course = null;
 		String s = COURSE_C_ID + "=?";
-		String[] args = new String[] { String.valueOf(modId) };
+		String[] args = new String[] { String.valueOf(courseId) };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			m = new Course();
-			m.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			m.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
-			m.setProgress(this.getCourseProgress(m.getCourseId()));
-			m.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
-			m.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
-			m.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
-			m.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
-			m.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
+			course = new Course();
+			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
+			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
+			course.setProgress(this.getCourseProgress(course.getCourseId()));
+			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
+			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
+			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
+			course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
+			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
 			c.moveToNext();
 		}
 		c.close();
-		return m;
+		return course;
 	}
 	
 	public void insertLog(int modId, String digest, String data, boolean completed){
@@ -672,6 +690,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
 				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
 				a.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
+				a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+				a.setSectionId(c.getInt(c.getColumnIndex(ACTIVITY_C_SECTIONID)));
 			}
 			c.moveToNext();
 		}
@@ -735,30 +755,86 @@ public class DbHelper extends SQLiteOpenHelper {
 		return activities;
 	}
 	
-	public void flushSearchTable(){
-		db.delete(SEARCH_TABLE, null, null);
-	}
-	
-	public void insertActivityIntoSearchTable(int activityId, String fullText){
+	public void insertActivityIntoSearchTable(String courseTitle, String sectionTitle, String activityTitle, int activityId, String fullText){
 		ContentValues values = new ContentValues();
 		values.put(SEARCH_C_ACTID, activityId);
 		values.put(SEARCH_C_TEXT, fullText);
+		values.put(SEARCH_C_COURSETITLE, courseTitle);
+		values.put(SEARCH_C_SECTIONTITLE, sectionTitle);
+		values.put(SEARCH_C_ACTIVITYTITLE, activityTitle);
 		db.insertOrThrow(SEARCH_TABLE, null, values);
 	}
 	
-	public LinkedList<String> search(String searchText){
-		LinkedList<String> results = new LinkedList<String>();
-		Cursor cursor = db.query(true, SEARCH_TABLE, new String[] { SEARCH_C_TEXT }, SEARCH_TABLE + " MATCH ?", new String[] { searchText }, null, null, null, null);
-	    if(cursor!=null && cursor.getCount()>0){
-	    	cursor.moveToFirst();
-	    	while (cursor.isAfterLast() == false) {
-	    		int sText = cursor.getColumnIndex(SEARCH_C_TEXT);
-	    		Log.d(TAG,cursor.getString(sText));
-				cursor.moveToNext();
+	public ArrayList<SearchResult> search(String searchText){
+		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
+		String sql = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid FROM %s ft " +
+									" INNER JOIN %s a ON a.%s = ft.%s" +
+									" INNER JOIN %s c ON a.%s = c.%s " +
+									" WHERE %s MATCH '%s' LIMIT 0,20 ",
+										COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE, 
+										ACTIVITY_TABLE, ACTIVITY_C_ID, SEARCH_C_ACTID, 
+										COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
+										SEARCH_C_TEXT, searchText);
+		Cursor c = db.rawQuery(sql,null);
+	    if(c !=null && c.getCount()>0){
+	    	c.moveToFirst();
+	    	while (c.isAfterLast() == false) {
+	    		SearchResult result = new SearchResult();
+	    		
+	    		int courseId = c.getColumnIndex("courseid");
+	    		Course course = this.getCourse(c.getLong(courseId));
+	    		result.setCourse(course);
+	    		
+	    		int digest = c.getColumnIndex("activitydigest");
+	    		Activity activity = this.getActivityByDigest(c.getString(digest));
+	    		result.setActivity(activity);
+				
+	    		int sectionOrderId = activity.getSectionId();
+	    		CourseXMLReader cxr;
+				try {
+					cxr = new CourseXMLReader(course.getCourseXMLLocation(),this.ctx);
+					result.setSection(cxr.getSection(sectionOrderId));
+		    		results.add(result);
+				} catch (InvalidXMLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    		
+	    		c.moveToNext();
 			}
 	    }
-	    cursor.close();
+	    c.close();
 	    return results;
 
+	}
+	
+	
+	public void rebuildSearchIndex(){
+		ArrayList<Course> courses  = this.getCourses();
+		for (Course c : courses){
+			try {
+				CourseXMLReader cxr = new CourseXMLReader(c.getCourseXMLLocation(),ctx);
+				ArrayList<Activity> activities = cxr.getActivities(c.getCourseId());
+				for( Activity a : activities){
+					if (a.getLocation("en") != null){
+						String url = c.getLocation() + a.getLocation("en");
+						try {
+							String fileContent = FileUtils.readFile(url);
+							// add file content to search table
+							this.insertActivityIntoSearchTable(this.getCourse(c.getCourseId()).getTitleJSONString(),
+															cxr.getSection(a.getSectionId()).getTitleJSONString(),
+															a.getTitleJSONString(),
+															this.getActivityByDigest(a.getDigest()).getDbId(), 
+															fileContent);
+						} catch (IOException e) {
+							// do nothing
+							e.printStackTrace();
+						}
+					}
+				}
+			} catch (InvalidXMLException e) {
+				// Ignore course
+			}
+		}
 	}
 }
