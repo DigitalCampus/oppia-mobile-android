@@ -106,7 +106,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 		DbHelper db = new DbHelper(this);
 		courses = db.getCourses();
-		ArrayList<SearchResult> results = db.search("malaria");
+		ArrayList<SearchResult> results = db.search("malaria pregnancy");
 		for (SearchResult s: results){
 			Log.d(TAG,s.getCourse().getTitle("en"));
 			Log.d(TAG,s.getActivity().getTitle("en"));

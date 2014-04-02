@@ -810,6 +810,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	
 	public void rebuildSearchIndex(){
+		// flush table
+		db.execSQL("DELETE FROM "+ SEARCH_TABLE);
+		
+		//now rebuild
 		ArrayList<Course> courses  = this.getCourses();
 		for (Course c : courses){
 			try {
