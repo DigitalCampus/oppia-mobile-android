@@ -22,14 +22,18 @@ import java.util.ArrayList;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class SearchActivity extends AppActivity {
 
@@ -80,5 +84,19 @@ public class SearchActivity extends AppActivity {
 			summary.setText(getString(R.string.search_no_results, searchString));
 			summary.setVisibility(View.VISIBLE);
 		}
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Course course = (Course) view.getTag(R.id.TAG_COURSE_ID);
+				String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
+				Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
+				Bundle tb = new Bundle();
+				tb.putSerializable(Course.TAG, course);
+				tb.putSerializable("JumpTo", digest);
+				i.putExtras(tb);
+				SearchActivity.this.startActivity(i);
+			}
+		});
 	}
 }
