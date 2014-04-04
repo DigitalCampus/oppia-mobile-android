@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.activity;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.DownloadCourseListAdapter;
 import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.model.SearchResult;
@@ -28,6 +27,7 @@ import org.digitalcampus.oppia.model.SearchResult;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,8 +35,9 @@ public class SearchActivity extends AppActivity {
 
 	public static final String TAG = SearchActivity.class.getSimpleName();
 
-	private EditText search;
+	private EditText searchText;
 	private SearchResultsListAdapter srla;
+	private TextView summary;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,15 +50,23 @@ public class SearchActivity extends AppActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		EditText search = (EditText) findViewById(R.id.search_string);
-		
-		doSearch();
+		searchText = (EditText) findViewById(R.id.search_string);
+		summary = (TextView) findViewById(R.id.search_results_summary);
+		ImageView searchNow = (ImageView) findViewById(R.id.searchbutton);
+		searchNow.setClickable(true);
+		searchNow.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				summary.setText(getString(R.string.search_searching));
+				doSearch();
+			}
+		});
 	}
 	
 	private void doSearch(){
-		String searchText = "malaria";
+		String searchString = searchText.getText().toString();
 		DbHelper db = new DbHelper(this);
-		ArrayList<SearchResult> results = db.search(searchText);
+		ArrayList<SearchResult> results = db.search(searchString,100);
 		db.close();
 		
 		srla = new SearchResultsListAdapter(this, results);
@@ -65,9 +74,11 @@ public class SearchActivity extends AppActivity {
 		listView.setAdapter(srla);
 		
 		if(results.size() > 0){
-			TextView tvSummary = (TextView) findViewById(R.id.search_results_summary);
-			tvSummary.setText(getString(R.string.search_result_summary, 1, results.size(), searchText));
-			tvSummary.setVisibility(View.VISIBLE);
+			summary.setText(getString(R.string.search_result_summary, results.size(), searchString));
+			summary.setVisibility(View.VISIBLE);
+		} else {
+			summary.setText(getString(R.string.search_no_results, searchString));
+			summary.setVisibility(View.VISIBLE);
 		}
 	}
 }

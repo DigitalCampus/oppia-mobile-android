@@ -84,5 +84,11 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
+    
+    <style name="NormalTextBoldDark">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@color/text_dark</item>
+    </style>
 
 </resources>

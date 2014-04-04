@@ -208,5 +208,7 @@
 	
 	<string name="course_draft">(Draft version)</string>
 	
-	<string name="search_result_summary">%1$d of %2$d search results for "%3$s"</string>
+	<string name="search_result_summary">%1$d results for \"%2$s\"</string>
+	<string name="search_searching">Searching...</string>
+	<string name="search_no_results">No results found for \"%1$s\"</string>
 </resources>

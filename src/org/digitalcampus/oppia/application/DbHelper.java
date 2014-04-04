@@ -765,16 +765,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.insertOrThrow(SEARCH_TABLE, null, values);
 	}
 	
-	public ArrayList<SearchResult> search(String searchText){
+	public ArrayList<SearchResult> search(String searchText, int limit){
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		String sql = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid FROM %s ft " +
 									" INNER JOIN %s a ON a.%s = ft.%s" +
 									" INNER JOIN %s c ON a.%s = c.%s " +
-									" WHERE %s MATCH '%s' LIMIT 0,20 ",
+									" WHERE %s MATCH '%s' "+
+									" LIMIT 0,%d",
 										COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE, 
 										ACTIVITY_TABLE, ACTIVITY_C_ID, SEARCH_C_ACTID, 
 										COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
-										SEARCH_C_TEXT, searchText);
+										SEARCH_C_TEXT, searchText,
+										limit);
 		Cursor c = db.rawQuery(sql,null);
 	    if(c !=null && c.getCount()>0){
 	    	c.moveToFirst();

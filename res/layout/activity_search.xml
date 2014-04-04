@@ -6,7 +6,8 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:padding="10dp" >
 
         <EditText
             android:id="@+id/search_string"
@@ -14,15 +15,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/searchbutton"
-            android:inputType="text"
-            android:padding="5dp" />
+            android:inputType="text"/>
 
-        <Button
+        <ImageView
             android:id="@+id/searchbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="Button 2" />
+            android:src="@drawable/abs__ic_search" />
 
     </RelativeLayout>
 
@@ -31,7 +31,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:visibility="gone" />
+        android:visibility="gone" 
+        android:gravity="center"
+        style="@style/NormalTextBoldDark"/>
 
     <ListView
         android:id="@+id/search_results_list"
