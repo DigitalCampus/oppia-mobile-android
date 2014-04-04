@@ -55,14 +55,14 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 	    View rowView = inflater.inflate(R.layout.schedule_reminder_list_row, parent, false);
 	    org.digitalcampus.oppia.model.Activity a = activityList.get(position);
 	    DbHelper db = new DbHelper(ctx);
-		Course m = db.getCourse(a.getCourseId());
+		Course c = db.getCourse(a.getCourseId());
 		db.close();
 	    
 		String lang = prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage());
 		
 		TextView scheduleTitle = (TextView) rowView.findViewById(R.id.schedule_title);
-		scheduleTitle.setText(m.getTitle(lang) + ": " + a.getTitle(lang));
-		rowView.setTag(R.id.TAG_COURSE_ID,m);
+		scheduleTitle.setText(c.getTitle(lang) + ": " + a.getTitle(lang));
+		rowView.setTag(R.id.TAG_COURSE_ID,c);
 		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,a.getDigest());
 
 	    return rowView;
