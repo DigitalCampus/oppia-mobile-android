@@ -42,7 +42,7 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 	private SharedPreferences prefs;
 	
 	public SearchResultsListAdapter(Activity context, ArrayList<SearchResult> searchResultList) {
-		super(context, R.layout.course_download_row, searchResultList);
+		super(context, R.layout.search_results_row, searchResultList);
 		this.ctx = context;
 		this.searchResultList = searchResultList;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

@@ -4,42 +4,13 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dp"
-    android:weightSum="1.0" >
+    android:padding="5dp" >
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/course_title"
+        style="@style/NormalTextDark"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0.65"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/course_title"
-            style="@style/NormalTextDark"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-
-        <TextView
-            android:id="@+id/course_draft"
-            style="@style/SmallTextDarkItalic"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-
-        <TextView
-            android:id="@+id/course_description"
-            style="@style/MediumTextDarkItalic"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/action_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight=".35" />
+        android:layout_gravity="center_vertical" />
 
 </LinearLayout>

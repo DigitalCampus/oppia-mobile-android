@@ -207,4 +207,6 @@
 	<string name="schedule_reminders">Suggested next activities:</string>
 	
 	<string name="course_draft">(Draft version)</string>
+	
+	<string name="search_result_summary">%1$d of %2$d search results for "%3$s"</string>
 </resources>
