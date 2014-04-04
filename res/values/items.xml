@@ -2,6 +2,6 @@
 <resources>
     <item type="id" name="TAG_SECTION_ID"/> 
     <item type="id" name="TAG_PLACEHOLDER_ID"/> 
-    <item type="id" name="TAG_COURSE_ID"/> 
+    <item type="id" name="TAG_COURSE"/> 
     <item type="id" name="TAG_ACTIVITY_DIGEST"/> 
 </resources>

@@ -88,7 +88,7 @@ public class SearchActivity extends AppActivity {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Course course = (Course) view.getTag(R.id.TAG_COURSE_ID);
+				Course course = (Course) view.getTag(R.id.TAG_COURSE);
 				String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
 				Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
 				Bundle tb = new Bundle();

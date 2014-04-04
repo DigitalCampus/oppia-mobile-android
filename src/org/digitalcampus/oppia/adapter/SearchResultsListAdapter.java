@@ -61,7 +61,7 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 	    String sTitle = sr.getSection().getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 	    String aTitle = sr.getActivity().getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 	    courseTitle.setText(cTitle + " > " + sTitle + " > " + aTitle);
-	    rowView.setTag(R.id.TAG_COURSE_ID,sr.getCourse());
+	    rowView.setTag(R.id.TAG_COURSE,sr.getCourse());
 		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,sr.getActivity().getDigest());
 	   
 	    return rowView;
