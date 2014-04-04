@@ -170,6 +170,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	/* go through and add html content to tables
 	 */
 	protected void upgradeV43(){
+		
 		SearchReIndex task = new SearchReIndex(ctx);
 		Payload p = new Payload();
 		task.execute(p);

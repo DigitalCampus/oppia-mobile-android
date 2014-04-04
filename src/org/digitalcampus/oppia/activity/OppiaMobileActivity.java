@@ -31,13 +31,13 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,7 +45,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
@@ -59,6 +58,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 
 public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener {
 
@@ -106,13 +106,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 		DbHelper db = new DbHelper(this);
 		courses = db.getCourses();
-		ArrayList<SearchResult> results = db.search("malaria pregnancy");
-		for (SearchResult s: results){
-			Log.d(TAG,s.getCourse().getTitle("en"));
-			Log.d(TAG,s.getActivity().getTitle("en"));
-			Log.d(TAG,"section: "+ s.getSection().getTitle("en"));
-			Log.d(TAG,"----");
-		}
 		db.close();
 		
 		if(MobileLearning.createDirs()){
@@ -243,6 +236,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				return true;
 			case R.id.menu_scorecard:
 				startActivity(new Intent(this, ScorecardActivity.class));
+				return true;
+			case R.id.menu_search:
+				startActivity(new Intent(this, SearchActivity.class));
 				return true;
 			case R.id.menu_logout:
 				logout();
