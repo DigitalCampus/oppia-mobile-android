@@ -42,7 +42,7 @@ public class Tracker {
 			e.printStackTrace();
 		}
 		DbHelper db = new DbHelper(this.ctx);
-		db.insertLog(modId, digest, data.toString(), completed);
+		db.insertTracker(modId, digest, data.toString(), completed);
 		db.close();
 	}
 

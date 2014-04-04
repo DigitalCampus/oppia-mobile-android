@@ -20,12 +20,14 @@ package org.digitalcampus.oppia.application;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.TrackerLog;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.CourseXMLReader;
 import org.digitalcampus.oppia.utils.FileUtils;
@@ -35,9 +37,11 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -47,10 +51,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 27;
+	static final int DB_VERSION = 29;
 
-	private SQLiteDatabase db;
+	public static SQLiteDatabase db;
 	private Context ctx;
+	private SharedPreferences prefs;
 	
 	private static final String COURSE_TABLE = "Module";
 	private static final String COURSE_C_ID = BaseColumns._ID;
@@ -76,7 +81,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String ACTIVITY_C_ENDDATE = "enddate";
 	private static final String ACTIVITY_C_TITLE = "title";
 
-	private static final String TRACKER_LOG_TABLE = "TrackerLog";
+	public static final String TRACKER_LOG_TABLE = "TrackerLog";
 	private static final String TRACKER_LOG_C_ID = BaseColumns._ID;
 	private static final String TRACKER_LOG_C_COURSEID = "modid"; // reference to COURSE_C_ID
 	private static final String TRACKER_LOG_C_DATETIME = "logdatetime";
@@ -85,6 +90,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String TRACKER_LOG_C_SUBMITTED = "logsubmitted";
 	private static final String TRACKER_LOG_C_INPROGRESS = "loginprogress";
 	private static final String TRACKER_LOG_C_COMPLETED = "completed";
+	public static final String TRACKER_LOG_C_USERID = "userid";
 	
 	private static final String QUIZRESULTS_TABLE = "results";
 	private static final String QUIZRESULTS_C_ID = BaseColumns._ID;
@@ -101,11 +107,20 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String SEARCH_C_SECTIONTITLE = "sectiontitle";
 	private static final String SEARCH_C_ACTIVITYTITLE = "activitytitle";
 	
+	private static final String USER_TABLE = "user";
+	private static final String USER_C_ID = BaseColumns._ID;
+	private static final String USER_C_USERNAME = "username";
+	private static final String USER_C_FIRSTNAME = "firstname";
+	private static final String USER_C_LASTNAME = "lastname";
+	private static final String USER_C_PASSWORD = "passwordencrypted";
+	private static final String USER_C_APIKEY = "apikey";
+	
 	// Constructor
 	public DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
 		db = this.getWritableDatabase();
 		this.ctx = ctx;
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
 	@Override
@@ -151,7 +166,9 @@ public class DbHelper extends SQLiteOpenHelper {
 				TRACKER_LOG_C_DATA + " text, " + 
 				TRACKER_LOG_C_SUBMITTED + " integer default 0, " + 
 				TRACKER_LOG_C_INPROGRESS + " integer default 0, " +
-				TRACKER_LOG_C_COMPLETED + " integer default 0)";
+				TRACKER_LOG_C_COMPLETED + " integer default 0 " + 
+				TRACKER_LOG_C_USERID + " integer default 0 " +
+				")";
 		db.execSQL(l_sql);
 	}
 
@@ -173,6 +190,18 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+SEARCH_C_COURSETITLE+"] TEXT, " +
                 "["+SEARCH_C_SECTIONTITLE+"] TEXT, " +
                 "["+SEARCH_C_ACTIVITYTITLE+"] TEXT " +
+            ");";
+		db.execSQL(l_sql);
+	}
+	
+	public void createUserTable(SQLiteDatabase db){
+		String l_sql = "CREATE TABLE ["+USER_TABLE+"] (" +
+                "["+USER_C_ID+"]" + " integer primary key autoincrement, " +
+                "["+USER_C_USERNAME +"]" + " integer default 0, "+
+                "["+USER_C_FIRSTNAME +"] TEXT, " +
+                "["+USER_C_LASTNAME+"] TEXT, " +
+                "["+USER_C_PASSWORD +"] TEXT, " +
+                "["+USER_C_APIKEY +"] TEXT " +
             ");";
 		db.execSQL(l_sql);
 	}
@@ -273,12 +302,24 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(sql);
 			this.createSearchTable(db);
 		}
+		
+		if(oldVersion <= 27 && newVersion >= 28){
+			String sql2 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_USERID + " integer default 0;";
+			db.execSQL(sql2);
+			this.createUserTable(db);
+		}
+		
+		if(oldVersion <= 28 && newVersion >= 29){
+			String sql = "drop table if exists " + USER_TABLE;
+			db.execSQL(sql);
+			this.createUserTable(db);
+		}
 	}
 
-	public void onLogout(){
+	/*public void onLogout(){
 		db.execSQL("DELETE FROM "+ TRACKER_LOG_TABLE);
 		db.execSQL("DELETE FROM "+ QUIZRESULTS_TABLE);
-	}
+	}*/
 	
 	// returns id of the row
 	public long addOrUpdateCourse(Course course) {
@@ -310,6 +351,40 @@ public class DbHelper extends SQLiteOpenHelper {
 		return -1;
 	}
 
+	// returns id of the row
+	public long addOrUpdateUser(User user) {
+		ContentValues values = new ContentValues();
+		values.put(USER_C_USERNAME, user.getUsername());
+		values.put(USER_C_FIRSTNAME, user.getFirstname());
+		values.put(USER_C_LASTNAME, user.getLastname());
+		values.put(USER_C_PASSWORD, user.getPasswordEncrypted());
+		values.put(USER_C_APIKEY, user.getApiKey());
+		
+		long userId = this.isUser(user.getUsername());
+		if (userId == -1) {
+			Log.v(TAG, "Record added");
+			return db.insertOrThrow(USER_TABLE, null, values);
+		} else {
+			db.update(USER_TABLE, values, USER_C_ID + "=" + userId, null);
+			return userId;
+		} 
+	}
+	
+	public long isUser(String username){
+		String s = USER_C_USERNAME + "=?";
+		String[] args = new String[] { username };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		if(c.getCount() == 0){
+			c.close();
+			return -1;
+		} else {
+			c.moveToFirst();
+			int userId = c.getInt(c.getColumnIndex(USER_C_ID));
+			c.close();
+			return userId;
+		}
+	}
+	
 	public long refreshCourse(Course course){
 		long modId = this.getCourseID(course.getShortname());
 		ContentValues values = new ContentValues();
@@ -376,7 +451,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void insertTrackers(ArrayList<TrackerLog> trackers, long modId) {
-		// acts.listIterator();
+		long userId = this.getCurrentUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
+		
 		for (TrackerLog t : trackers) {
 			ContentValues values = new ContentValues();
 			values.put(TRACKER_LOG_C_DATETIME, t.getDateTimeString());
@@ -384,6 +460,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(TRACKER_LOG_C_SUBMITTED, t.isSubmitted());
 			values.put(TRACKER_LOG_C_COURSEID, modId);
 			values.put(TRACKER_LOG_C_COMPLETED, true);
+			values.put(TRACKER_LOG_C_USERID, userId);
 			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 		}
 	}
@@ -440,12 +517,16 @@ public class DbHelper extends SQLiteOpenHelper {
 		return course;
 	}
 	
-	public void insertLog(int modId, String digest, String data, boolean completed){
+	public void insertTracker(int modId, String digest, String data, boolean completed){
+		//get current user id
+		long userId = this.getCurrentUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
+		
 		ContentValues values = new ContentValues();
 		values.put(TRACKER_LOG_C_COURSEID, modId);
 		values.put(TRACKER_LOG_C_ACTIVITYDIGEST, digest);
 		values.put(TRACKER_LOG_C_DATA, data);
 		values.put(TRACKER_LOG_C_COMPLETED, completed);
+		values.put(TRACKER_LOG_C_USERID, userId);
 		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 	}
 	
@@ -565,7 +646,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public Payload getUnsentLog(){
+	public long getCurrentUserId(String username){
+		String s = USER_C_USERNAME + "=? ";
+		String[] args = new String[] { username };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		c.moveToFirst();
+		while (c.isAfterLast() == false) {
+			return c.getLong(c.getColumnIndex(USER_C_ID));
+		}
+		return -1;
+	}
+	
+	public Payload getUnsentTrackers(){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
 		String[] args = new String[] { "0" };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);

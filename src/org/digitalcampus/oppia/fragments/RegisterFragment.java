@@ -108,7 +108,7 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString(getString(R.string.prefs_username), usernameField.getText().toString());
-	    	editor.putString(getString(R.string.prefs_api_key), u.getApi_key());
+	    	editor.putString(getString(R.string.prefs_api_key), u.getApiKey());
 	    	editor.putString(getString(R.string.prefs_display_name), u.getDisplayName());
 	    	editor.putInt(getString(R.string.prefs_points), u.getPoints());
 	    	editor.putInt(getString(R.string.prefs_points), u.getBadges());

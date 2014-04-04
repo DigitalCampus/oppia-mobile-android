@@ -269,11 +269,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setMessage(R.string.logout_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				// wipe activity data
-				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.onLogout();
-				db.close();
-
 				// wipe user prefs
 				Editor editor = prefs.edit();
 				editor.putString(getString(R.string.prefs_username), "");

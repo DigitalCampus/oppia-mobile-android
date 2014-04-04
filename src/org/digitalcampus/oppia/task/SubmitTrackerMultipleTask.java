@@ -47,7 +47,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 	@Override
 	protected Payload doInBackground(Payload... params) {
 		DbHelper db = new DbHelper(ctx);
-		Payload payload = db.getUnsentLog();
+		Payload payload = db.getUnsentTrackers();
 		db.close();
 		
 		@SuppressWarnings("unchecked")

@@ -27,6 +27,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -110,10 +111,10 @@ public class MobileLearning extends Application {
 		return true;
 	}
 	
-	public static boolean isLoggedIn(Activity act) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getBaseContext());
-		String username = prefs.getString(act.getString(R.string.prefs_username), "");
-		String apiKey = prefs.getString(act.getString(R.string.prefs_api_key), "");
+	public static boolean isLoggedIn(Context ctx) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String username = prefs.getString(ctx.getString(R.string.prefs_username), "");
+		String apiKey = prefs.getString(ctx.getString(R.string.prefs_api_key), "");
 		if (username.trim().equals("") || apiKey.trim().equals("")) {
 			return false;
 		} else {

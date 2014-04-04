@@ -29,11 +29,13 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.CourseXMLReader;
 import org.digitalcampus.oppia.utils.FileUtils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -90,6 +92,15 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			editor.putBoolean("upgradeV43", true);
 			editor.commit();
 			publishProgress("Upgraded to v43");
+			payload.setResult(true);
+		}
+		
+		if(!prefs.getBoolean("upgradeV43a",false)){
+			upgradeV43a();
+			Editor editor = prefs.edit();
+			editor.putBoolean("upgradeV43a", true);
+			editor.commit();
+			publishProgress("Upgraded to v43a");
 			payload.setResult(true);
 		}
 		
@@ -176,7 +187,26 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		task.execute(p);
 	}
 	
-	
+	/* add current user to user table and update all tracklogs to reflect this
+	 */
+	protected void upgradeV43a(){
+		//add user
+		if(MobileLearning.isLoggedIn(ctx)){
+			User user = new User();
+			user.setUsername(prefs.getString(ctx.getString(R.string.prefs_username), ""));
+			user.setApiKey(prefs.getString(ctx.getString(R.string.prefs_api_key), "") );
+			DbHelper db = new DbHelper(ctx);
+			long userId = db.addOrUpdateUser(user);
+			
+			// update existing trackers
+			ContentValues values = new ContentValues();
+			values.put(DbHelper.TRACKER_LOG_C_USERID, userId);
+			
+			DbHelper.db.update(DbHelper.TRACKER_LOG_TABLE, values, "1=1", null);
+			
+			db.close();
+		}
+	}
 	
 	@Override
 	protected void onProgressUpdate(String... obj) {

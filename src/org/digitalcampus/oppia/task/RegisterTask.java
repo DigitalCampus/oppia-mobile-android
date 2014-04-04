@@ -30,6 +30,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
@@ -104,7 +105,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 					break;
 				case 201: // logged in
 					JSONObject jsonResp = new JSONObject(responseStr);
-					u.setApi_key(jsonResp.getString("api_key"));
+					u.setApiKey(jsonResp.getString("api_key"));
 					try {
 						u.setPoints(jsonResp.getInt("points"));
 						u.setBadges(jsonResp.getInt("badges"));
@@ -128,6 +129,14 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 					}
 					u.setFirstname(jsonResp.getString("first_name"));
 					u.setLastname(jsonResp.getString("last_name"));
+					u.setPassword(u.getPassword());
+					u.setPasswordEncrypted();
+					
+					// add or update user in db
+					DbHelper db = new DbHelper(ctx);
+					db.addOrUpdateUser(u);
+					db.close();
+					
 					payload.setResult(true);
 					payload.setResultResponse(ctx.getString(R.string.register_complete));
 					break;
