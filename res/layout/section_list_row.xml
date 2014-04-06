@@ -32,14 +32,4 @@
             android:orientation="horizontal" >
         </LinearLayout>
     </HorizontalScrollView>
-
-    <ProgressBar
-        android:id="@+id/section_progress_bar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="5dp"
-        android:layout_margin="5dp"
-        android:progressDrawable="@drawable/progress_bar"
-        android:visibility="gone" />
-
 </LinearLayout>

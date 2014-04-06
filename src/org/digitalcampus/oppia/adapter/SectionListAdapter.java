@@ -38,7 +38,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SectionListAdapter extends ArrayAdapter<Section> {
@@ -72,9 +71,6 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    }
 	    title += s.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
 	    sectionTitle.setText(title);
-	    
-	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.section_progress_bar);
-	    pb.setProgress((int) s.getProgress());
 	    
 	    rowView.setTag(sectionList.get(position));
 	   

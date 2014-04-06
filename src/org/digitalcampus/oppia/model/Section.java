@@ -35,7 +35,6 @@ public class Section implements Serializable  {
 	private int order;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private ArrayList<Activity> activities;
-	private float progress = 0;
 	private String imageFile;
 	
 	public String getImageFile() {
@@ -44,14 +43,6 @@ public class Section implements Serializable  {
 
 	public void setImageFile(String imageFile) {
 		this.imageFile = imageFile;
-	}
-
-	public float getProgress() {
-		return progress;
-	}
-
-	public void setProgress(float progress) {
-		this.progress = progress;
 	}
 
 	public Section(){

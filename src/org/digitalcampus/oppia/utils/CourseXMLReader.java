@@ -41,6 +41,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class CourseXMLReader {
@@ -48,9 +50,11 @@ public class CourseXMLReader {
 	public static final String TAG = CourseXMLReader.class.getSimpleName();
 	private Document document;
 	private Context ctx;
+	private SharedPreferences prefs;
 	
 	public CourseXMLReader(String filename, Context ctx) throws InvalidXMLException {
 		this.ctx = ctx;
+		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 		File courseXML = new File(filename);
 		if (courseXML.exists()) {
 
@@ -208,7 +212,8 @@ public class CourseXMLReader {
 				a.setActType(actType);
 				a.setCourseId(modId);
 				a.setSectionId(0);
-				a.setAttempted(db.activityAttempted(modId, digest));				
+				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				a.setAttempted(db.activityAttempted(modId, digest, userId));				
 				
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
 				ArrayList<Lang> actLocations = new ArrayList<Lang>();
@@ -409,9 +414,6 @@ public class CourseXMLReader {
 			s.setTitles(sectTitles);
 			s.setImageFile(image);
 			
-			float progress = db.getSectionProgress(modId, order);
-			
-			s.setProgress(progress);
 			//now get activities
 			NodeList acts = this.getChildNodeByName(sects.item(i),"activities").getChildNodes();
 			for(int j=0; j<acts.getLength();j++){
@@ -427,7 +429,8 @@ public class CourseXMLReader {
 						a.setActType(actType);
 						a.setCourseId(modId);
 						a.setSectionId(order);
-						a.setCompleted(db.activityCompleted(modId, digest));				
+						long userId = db.getUserId(prefs.getString("prefUsername", ""));
+						a.setCompleted(db.activityCompleted(modId, digest, userId));				
 						
 						ArrayList<Lang> actTitles = new ArrayList<Lang>();
 						ArrayList<Lang> actLocations = new ArrayList<Lang>();

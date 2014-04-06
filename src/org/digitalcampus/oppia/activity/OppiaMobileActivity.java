@@ -37,7 +37,6 @@ import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import android.app.AlertDialog;
-import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -58,7 +57,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
 
 public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener {
 
@@ -66,6 +64,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	private SharedPreferences prefs;
 	private ArrayList<Course> courses;
 	private Course tempCourse;
+	private long userId = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,8 +86,11 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	@Override
 	public void onStart() {
-		super.onStart();		
-		displayCourses();		
+		super.onStart();
+		DbHelper db = new DbHelper(this);
+		userId = db.getUserId(prefs.getString("preUsername", ""));
+		db.close();
+		displayCourses(userId);		
 	}
 
 	@Override
@@ -102,10 +104,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		super.onPause();
 	}
 	
-	private void displayCourses() {
+	private void displayCourses(long userId) {
 
 		DbHelper db = new DbHelper(this);
-		courses = db.getCourses();
+		courses = db.getCourses(userId);
 		db.close();
 		
 		if(MobileLearning.createDirs()){
@@ -170,7 +172,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(prefs.getBoolean(getString(R.string.prefs_schedule_reminders_show), false)){
 			DbHelper db = new DbHelper(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString(getString(R.string.prefs_schedule_reminders_no), "2"));
-			ArrayList<Activity> activities = db.getActivitiesDue(max);
+			long userId = db.getUserId(prefs.getString(getString(R.string.prefs_username), ""));
+			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
 			db.close();
 			this.drawReminders(activities);
 		} else {
@@ -329,7 +332,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				Editor e = prefs.edit();
 				e.putLong(getString(R.string.prefs_last_media_scan), 0);
 				e.commit();
-				displayCourses();
+				displayCourses(userId);
 			}
 		});
 		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -348,9 +351,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.resetCourse(tempCourse.getCourseId());
+				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				db.resetCourse(tempCourse.getCourseId(),userId);
 				db.close();
-				displayCourses();
+				displayCourses(userId);
 			}
 		});
 		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -371,7 +375,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			}
 		}
 		if(key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_show)) || key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_no))){
-			displayCourses();
+			displayCourses(userId);
 		}
 		if(key.equalsIgnoreCase(getString(R.string.prefs_points)) || key.equalsIgnoreCase(getString(R.string.prefs_badges))){
 			supportInvalidateOptionsMenu();

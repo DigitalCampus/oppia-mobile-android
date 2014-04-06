@@ -26,7 +26,9 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -42,18 +44,24 @@ public class SearchActivity extends AppActivity {
 	private EditText searchText;
 	private SearchResultsListAdapter srla;
 	private TextView summary;
+	private SharedPreferences prefs;
+	private long userId = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);     	
+        getSupportActionBar().setHomeButtonEnabled(true);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 	
 	@Override
 	public void onStart(){
 		super.onStart();
+		DbHelper db = new DbHelper(this);
+		userId = db.getUserId(prefs.getString("preUsername", ""));
+		db.close();
 		searchText = (EditText) findViewById(R.id.search_string);
 		summary = (TextView) findViewById(R.id.search_results_summary);
 		ImageView searchNow = (ImageView) findViewById(R.id.searchbutton);
@@ -70,7 +78,7 @@ public class SearchActivity extends AppActivity {
 	private void doSearch(){
 		String searchString = searchText.getText().toString();
 		DbHelper db = new DbHelper(this);
-		ArrayList<SearchResult> results = db.search(searchString,100);
+		ArrayList<SearchResult> results = db.search(searchString, 100, userId);
 		db.close();
 		
 		srla = new SearchResultsListAdapter(this, results);

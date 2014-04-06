@@ -457,7 +457,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public void insertTrackers(ArrayList<TrackerLog> trackers, long modId) {
+	public void insertTrackers(ArrayList<TrackerLog> trackers, long courseId) {
 		long userId = this.getUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
 		
 		for (TrackerLog t : trackers) {
@@ -465,21 +465,21 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(TRACKER_LOG_C_DATETIME, t.getDateTimeString());
 			values.put(TRACKER_LOG_C_ACTIVITYDIGEST, t.getDigest());
 			values.put(TRACKER_LOG_C_SUBMITTED, t.isSubmitted());
-			values.put(TRACKER_LOG_C_COURSEID, modId);
+			values.put(TRACKER_LOG_C_COURSEID, courseId);
 			values.put(TRACKER_LOG_C_COMPLETED, true);
 			values.put(TRACKER_LOG_C_USERID, userId);
 			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 		}
 	}
 	
-	public void resetSchedule(int modId){
+	public void resetSchedule(int courseId){
 		ContentValues values = new ContentValues();
 		values.put(ACTIVITY_C_STARTDATE,"");
 		values.put(ACTIVITY_C_ENDDATE,"");
-		db.update(ACTIVITY_TABLE, values, ACTIVITY_C_COURSEID + "=" + modId, null);
+		db.update(ACTIVITY_TABLE, values, ACTIVITY_C_COURSEID + "=" + courseId, null);
 	}
 	
-	public ArrayList<Course> getCourses() {
+	public ArrayList<Course> getAllCourses() {
 		ArrayList<Course> courses = new ArrayList<Course>();
 		String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
@@ -488,7 +488,6 @@ public class DbHelper extends SQLiteOpenHelper {
 			Course course = new Course();
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
-			course.setProgress(this.getCourseProgress(course.getCourseId()));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
@@ -502,7 +501,30 @@ public class DbHelper extends SQLiteOpenHelper {
 		return courses;
 	}
 	
-	public Course getCourse(long courseId) {
+	public ArrayList<Course> getCourses(long userId) {
+		ArrayList<Course> courses = new ArrayList<Course>();
+		String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
+		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
+		c.moveToFirst();
+		while (c.isAfterLast() == false) {
+			Course course = new Course();
+			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
+			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
+			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
+			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
+			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
+			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
+			course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
+			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
+			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
+			courses.add(course);
+			c.moveToNext();
+		}
+		c.close();
+		return courses;
+	}
+	
+	public Course getCourse(long courseId, long userId) {
 		Course course = null;
 		String s = COURSE_C_ID + "=?";
 		String[] args = new String[] { String.valueOf(courseId) };
@@ -512,7 +534,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			course = new Course();
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
-			course.setProgress(this.getCourseProgress(course.getCourseId()));
+			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
@@ -526,7 +548,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void insertTracker(int modId, String digest, String data, boolean completed){
 		//get current user id
-		long userId = this.getUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
+		long userId = this.getUserId(prefs.getString("prefUsername", ""));
 		
 		ContentValues values = new ContentValues();
 		values.put(TRACKER_LOG_C_COURSEID, modId);
@@ -537,14 +559,15 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 	}
 	
-	public float getCourseProgress(int modId){
+	public float getCourseProgress(int courseId, long userId){
 		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
 				"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
 				" as d FROM "+ACTIVITY_TABLE + " a " +
 				" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM " + TRACKER_LOG_TABLE + 
-									" WHERE " + TRACKER_LOG_C_COMPLETED + "=1 AND " + TRACKER_LOG_C_COURSEID + "=" + String.valueOf(modId) + ") l " +
+									" WHERE " + TRACKER_LOG_C_COMPLETED + "=1 AND " + TRACKER_LOG_C_COURSEID + "=" + String.valueOf(courseId) + 
+									" AND " + TRACKER_LOG_C_USERID + "=" + String.valueOf(userId) +") l " +
 									" ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
-				" WHERE a."+ ACTIVITY_C_COURSEID +"=" + String.valueOf(modId);
+				" WHERE a."+ ACTIVITY_C_COURSEID +"=" + String.valueOf(courseId);
 		Cursor c = db.rawQuery(sql,null);
 		int noActs = c.getCount();
 		int noComplete = 0;
@@ -559,59 +582,25 @@ public class DbHelper extends SQLiteOpenHelper {
 		return noComplete*100/noActs;
 	}
 	
-	public float getSectionProgress(int modId, int sectionId){
-		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
-						"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
-						" as d FROM "+ACTIVITY_TABLE + " a " +
-						" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) l " +
-								" ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
-						" WHERE a."+ ACTIVITY_C_COURSEID +"=" + String.valueOf(modId) +
-						" AND a."+ ACTIVITY_C_SECTIONID +"=" + String.valueOf(sectionId);
-		
-		Cursor c = db.rawQuery(sql,null);
-		int noActs = c.getCount();
-		int noComplete = 0;
-		c.moveToFirst();
-		while (c.isAfterLast() == false) {
-			if(c.getString(c.getColumnIndex("d")) != null){
-				noComplete++;
-			}
-			c.moveToNext();
-		}
-		c.close();
-		if(noActs == 0){
-			return 0;
-		} else {
-			return noComplete*100/noActs;
-		}
-		
-	}
-	
-	public int resetCourse(int modId){
+	public int resetCourse(int courseId, long userId){
 		// delete quiz results
-		this.deleteQuizResults(modId);
+		this.deleteQuizResults(courseId, userId);
 		
-		String s = TRACKER_LOG_C_COURSEID + "=?";
-		String[] args = new String[] { String.valueOf(modId) };
+		String s = TRACKER_LOG_C_COURSEID + "=? " + TRACKER_LOG_C_USERID + "=? ";
+		String[] args = new String[] { String.valueOf(courseId), String.valueOf(userId) };
 		return db.delete(TRACKER_LOG_TABLE, s, args);
 	}
 	
-	public void deleteCourse(int modId){
-		// delete log
-		resetCourse(modId);
-		
+	public void deleteCourse(int courseId){
 		// delete activities
 		String s = ACTIVITY_C_COURSEID + "=?";
-		String[] args = new String[] { String.valueOf(modId) };
+		String[] args = new String[] { String.valueOf(courseId) };
 		db.delete(ACTIVITY_TABLE, s, args);
 		
 		// delete course
 		s = COURSE_C_ID + "=?";
-		args = new String[] { String.valueOf(modId) };
+		args = new String[] { String.valueOf(courseId) };
 		db.delete(COURSE_TABLE, s, args);
-		
-		// delete any quiz attempts
-		this.deleteQuizResults(modId);
 	}
 	
 	public boolean isInstalled(String shortname){
@@ -699,7 +688,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				json.put("tracker_date", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
 				json.put("digest", c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 				json.put("completed", c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
-				Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)));
+				Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 				if (m != null){
 					json.put("course", m.getShortname());
 				}
@@ -761,16 +750,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		return db.update(QUIZRESULTS_TABLE, values, QUIZRESULTS_C_ID + "=" + rowId, null);
 	}
 	
-	public void deleteQuizResults(int modId){
+	public void deleteQuizResults(int courseId, long userId){
 		// delete any quiz attempts
-		String s = QUIZRESULTS_C_COURSEID + "=?";
-		String[] args = new String[] { String.valueOf(modId) };
+		String s = QUIZRESULTS_C_COURSEID + "=? " + QUIZRESULTS_C_USERID +"=?";
+		String[] args = new String[] { String.valueOf(courseId), String.valueOf(userId) };
 		db.delete(QUIZRESULTS_TABLE, s, args);
 	}
 	
-	public boolean activityAttempted(long modId, String digest){
-		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_COURSEID + "=?";
-		String[] args = new String[] { digest, String.valueOf(modId) };
+	public boolean activityAttempted(long courseId, String digest, long userId){
+		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + 
+					TRACKER_LOG_C_USERID + "=? AND " +
+					TRACKER_LOG_C_COURSEID + "=?";
+		String[] args = new String[] { digest, String.valueOf(courseId), String.valueOf(userId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
 			c.close();
@@ -781,9 +772,12 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public boolean activityCompleted(int modId, String digest){
-		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_COURSEID + "=? AND " + TRACKER_LOG_C_COMPLETED + "=1";
-		String[] args = new String[] { digest, String.valueOf(modId) };
+	public boolean activityCompleted(int courseId, String digest, long userId){
+		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + 
+					TRACKER_LOG_C_COURSEID + "=? AND " + 
+					TRACKER_LOG_C_USERID + "=? AND " +
+					TRACKER_LOG_C_COMPLETED + "=1";
+		String[] args = new String[] { digest, String.valueOf(courseId), String.valueOf(userId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
 			c.close();
@@ -814,14 +808,14 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	
-	public ArrayList<Activity> getActivitiesDue(int max){
+	public ArrayList<Activity> getActivitiesDue(int max, long userId){
 		
 		ArrayList<Activity> activities = new ArrayList<Activity>();
 		DateTime now = new DateTime();
 		String nowDateString = MobileLearning.DATETIME_FORMAT.print(now);
 		String sql = "SELECT a.* FROM "+ ACTIVITY_TABLE + " a " +
 					" INNER JOIN " + COURSE_TABLE + " m ON a."+ ACTIVITY_C_COURSEID + " = m."+COURSE_C_ID +
-					" LEFT OUTER JOIN (SELECT * FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
+					" LEFT OUTER JOIN (SELECT * FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1 AND "+ TRACKER_LOG_C_USERID +"="+ userId + ") tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
 					" WHERE tl." + TRACKER_LOG_C_ID + " IS NULL "+
 					" AND a." + ACTIVITY_C_STARTDATE + "<='" + nowDateString + "'" +
 					" AND a." + ACTIVITY_C_TITLE + " IS NOT NULL " +
@@ -880,7 +874,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.insertOrThrow(SEARCH_TABLE, null, values);
 	}
 	
-	public ArrayList<SearchResult> search(String searchText, int limit){
+	public ArrayList<SearchResult> search(String searchText, int limit, long userId){
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		String sql = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid FROM %s ft " +
 									" INNER JOIN %s a ON a.%s = ft.%s" +
@@ -899,7 +893,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		SearchResult result = new SearchResult();
 	    		
 	    		int courseId = c.getColumnIndex("courseid");
-	    		Course course = this.getCourse(c.getLong(courseId));
+	    		Course course = this.getCourse(c.getLong(courseId),userId);
 	    		result.setCourse(course);
 	    		
 	    		int digest = c.getColumnIndex("activitydigest");
@@ -931,7 +925,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL("DELETE FROM "+ SEARCH_TABLE);
 		
 		//now rebuild
-		ArrayList<Course> courses  = this.getCourses();
+		ArrayList<Course> courses  = this.getAllCourses();
 		for (Course c : courses){
 			try {
 				CourseXMLReader cxr = new CourseXMLReader(c.getCourseXMLLocation(),ctx);
@@ -942,7 +936,7 @@ public class DbHelper extends SQLiteOpenHelper {
 						try {
 							String fileContent = FileUtils.readFile(url);
 							// add file content to search table
-							this.insertActivityIntoSearchTable(this.getCourse(c.getCourseId()).getTitleJSONString(),
+							this.insertActivityIntoSearchTable(c.getTitleJSONString(),
 															cxr.getSection(a.getSectionId()).getTitleJSONString(),
 															a.getTitleJSONString(),
 															this.getActivityByDigest(a.getDigest()).getDbId(), 
