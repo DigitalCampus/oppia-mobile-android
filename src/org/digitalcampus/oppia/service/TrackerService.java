@@ -17,11 +17,15 @@
 
 package org.digitalcampus.oppia.service;
 
+import java.util.ArrayList;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.TrackerLog;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.APIRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.SubmitQuizTask;
@@ -101,9 +105,16 @@ public class TrackerService extends Service implements APIRequestListener{
 			
 			// send quiz results
 			if(app.omSubmitQuizTask == null){
-				Payload mqp = db.getUnsentQuizResults();
-				app.omSubmitQuizTask = new SubmitQuizTask(this);
-				app.omSubmitQuizTask.execute(mqp);
+				ArrayList<User> users = db.getAllUsers();
+				for(User u: users){
+					//Payload mqp = 
+					ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(u.getUserid());
+					if (unsent.size() > 0){
+						p = new Payload(unsent);
+						app.omSubmitQuizTask = new SubmitQuizTask(this);
+						app.omSubmitQuizTask.execute(p);
+					}
+				}
 			}
 
 			db.close();

@@ -51,7 +51,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 29;
+	static final int DB_VERSION = 30;
 
 	public static SQLiteDatabase db;
 	private Context ctx;
@@ -98,6 +98,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZRESULTS_C_DATA = "content";
 	private static final String QUIZRESULTS_C_SENT = "submitted";
 	private static final String QUIZRESULTS_C_COURSEID = "moduleid";
+	public static final String QUIZRESULTS_C_USERID = "userid";
 	
 	private static final String SEARCH_TABLE = "search";
 	private static final String SEARCH_C_ID = BaseColumns._ID;
@@ -166,7 +167,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				TRACKER_LOG_C_DATA + " text, " + 
 				TRACKER_LOG_C_SUBMITTED + " integer default 0, " + 
 				TRACKER_LOG_C_INPROGRESS + " integer default 0, " +
-				TRACKER_LOG_C_COMPLETED + " integer default 0 " + 
+				TRACKER_LOG_C_COMPLETED + " integer default 0, " + 
 				TRACKER_LOG_C_USERID + " integer default 0 " +
 				")";
 		db.execSQL(l_sql);
@@ -178,7 +179,8 @@ public class DbHelper extends SQLiteOpenHelper {
 							QUIZRESULTS_C_DATETIME + " datetime default current_timestamp, " + 
 							QUIZRESULTS_C_DATA + " text, " +  
 							QUIZRESULTS_C_SENT + " integer default 0, "+
-							QUIZRESULTS_C_COURSEID + " integer)";
+							QUIZRESULTS_C_COURSEID + " integer, " +
+							QUIZRESULTS_C_USERID + " integer default 0 )";
 		db.execSQL(m_sql);
 	}
 	
@@ -313,6 +315,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			String sql = "drop table if exists " + USER_TABLE;
 			db.execSQL(sql);
 			this.createUserTable(db);
+		}
+		
+		if(oldVersion <= 29 && newVersion >= 30){
+			String sql2 = "ALTER TABLE " + QUIZRESULTS_TABLE + " ADD COLUMN " + QUIZRESULTS_C_USERID + " integer default 0;";
+			db.execSQL(sql2);
 		}
 	}
 
@@ -451,7 +458,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void insertTrackers(ArrayList<TrackerLog> trackers, long modId) {
-		long userId = this.getCurrentUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
+		long userId = this.getUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
 		
 		for (TrackerLog t : trackers) {
 			ContentValues values = new ContentValues();
@@ -519,7 +526,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void insertTracker(int modId, String digest, String data, boolean completed){
 		//get current user id
-		long userId = this.getCurrentUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
+		long userId = this.getUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
 		
 		ContentValues values = new ContentValues();
 		values.put(TRACKER_LOG_C_COURSEID, modId);
@@ -646,7 +653,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public long getCurrentUserId(String username){
+	public long getUserId(String username){
 		String s = USER_C_USERNAME + "=? ";
 		String[] args = new String[] { username };
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
@@ -722,30 +729,29 @@ public class DbHelper extends SQLiteOpenHelper {
 		return db.update(TRACKER_LOG_TABLE, values, TRACKER_LOG_C_ID + "=" + rowId, null);
 	}
 	
-	public long insertQuizResult(String data, int modId){
+	public long insertQuizResult(String data, int courseId){
+		long userId = this.getUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
 		ContentValues values = new ContentValues();
 		values.put(QUIZRESULTS_C_DATA, data);
-		values.put(QUIZRESULTS_C_COURSEID, modId);
+		values.put(QUIZRESULTS_C_COURSEID, courseId);
+		values.put(QUIZRESULTS_C_USERID, userId);
 		return db.insertOrThrow(QUIZRESULTS_TABLE, null, values);
 	}
 	
-	public Payload getUnsentQuizResults(){
-		String s = QUIZRESULTS_C_SENT + "=? ";
-		String[] args = new String[] { "0" };
+	public ArrayList<TrackerLog>  getUnsentQuizResults(int userId){
+		String s = QUIZRESULTS_C_SENT + "=? " + QUIZRESULTS_C_USERID + "=? ";
+		String[] args = new String[] { "0", String.valueOf(userId) };
 		Cursor c = db.query(QUIZRESULTS_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
-		ArrayList<Object> sl = new ArrayList<Object>();
+		ArrayList<TrackerLog> sl = new ArrayList<TrackerLog>();
 		while (c.isAfterLast() == false) {
 			TrackerLog so = new TrackerLog();
 			so.setId(c.getLong(c.getColumnIndex(QUIZRESULTS_C_ID)));
 			so.setContent(c.getString(c.getColumnIndex(QUIZRESULTS_C_DATA)));
 			sl.add(so);
 			c.moveToNext();
-		}
-		Payload p = new Payload(sl);
-		c.close();
-		
-		return p;
+		}		
+		return sl;
 	}
 	
 	public int markQuizSubmitted(long rowId){
