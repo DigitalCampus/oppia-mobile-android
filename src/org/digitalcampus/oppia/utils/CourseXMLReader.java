@@ -429,8 +429,8 @@ public class CourseXMLReader {
 						a.setActType(actType);
 						a.setCourseId(modId);
 						a.setSectionId(order);
-						long userId = db.getUserId(prefs.getString("prefUsername", ""));
-						a.setCompleted(db.activityCompleted(modId, digest, userId));				
+						//long userId = db.getUserId(prefs.getString("prefUsername", ""));
+						//a.setCompleted(db.activityCompleted(modId, digest, userId));				
 						
 						ArrayList<Lang> actTitles = new ArrayList<Lang>();
 						ArrayList<Lang> actLocations = new ArrayList<Lang>();

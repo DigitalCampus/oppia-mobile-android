@@ -51,7 +51,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 30;
+	static final int DB_VERSION = 31;
 
 	public static SQLiteDatabase db;
 	private Context ctx;
@@ -81,7 +81,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String ACTIVITY_C_ENDDATE = "enddate";
 	private static final String ACTIVITY_C_TITLE = "title";
 
-	public static final String TRACKER_LOG_TABLE = "TrackerLog";
+	private static final String TRACKER_LOG_TABLE = "TrackerLog";
 	private static final String TRACKER_LOG_C_ID = BaseColumns._ID;
 	private static final String TRACKER_LOG_C_COURSEID = "modid"; // reference to COURSE_C_ID
 	private static final String TRACKER_LOG_C_DATETIME = "logdatetime";
@@ -90,7 +90,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String TRACKER_LOG_C_SUBMITTED = "logsubmitted";
 	private static final String TRACKER_LOG_C_INPROGRESS = "loginprogress";
 	private static final String TRACKER_LOG_C_COMPLETED = "completed";
-	public static final String TRACKER_LOG_C_USERID = "userid";
+	private static final String TRACKER_LOG_C_USERID = "userid";
 	
 	private static final String QUIZRESULTS_TABLE = "results";
 	private static final String QUIZRESULTS_C_ID = BaseColumns._ID;
@@ -98,7 +98,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZRESULTS_C_DATA = "content";
 	private static final String QUIZRESULTS_C_SENT = "submitted";
 	private static final String QUIZRESULTS_C_COURSEID = "moduleid";
-	public static final String QUIZRESULTS_C_USERID = "userid";
+	private static final String QUIZRESULTS_C_USERID = "userid";
 	
 	private static final String SEARCH_TABLE = "search";
 	private static final String SEARCH_C_ID = BaseColumns._ID;
@@ -323,10 +323,19 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 
-	/*public void onLogout(){
-		db.execSQL("DELETE FROM "+ TRACKER_LOG_TABLE);
-		db.execSQL("DELETE FROM "+ QUIZRESULTS_TABLE);
-	}*/
+	public void updateV43b(long userId){
+		// update existing trackers
+		ContentValues values = new ContentValues();
+		values.put(TRACKER_LOG_C_USERID, userId);
+		
+		db.update(TRACKER_LOG_TABLE, values, "1=1", null);
+		
+		// update existing trackers
+		ContentValues values2 = new ContentValues();
+		values2.put(QUIZRESULTS_C_USERID, userId);
+		
+		db.update(QUIZRESULTS_TABLE, values2, "1=1", null);
+	}
 	
 	// returns id of the row
 	public long addOrUpdateCourse(Course course) {
@@ -647,10 +656,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { username };
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
+		long userId = -1;
 		while (c.isAfterLast() == false) {
-			return c.getLong(c.getColumnIndex(USER_C_ID));
+			userId = c.getLong(c.getColumnIndex(USER_C_ID));
+			c.moveToNext();
 		}
-		return -1;
+		c.close();
+		return userId;
 	}
 	
 	public ArrayList<User> getAllUsers(){
@@ -666,12 +678,14 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
 			users.add(u);
+			c.moveToNext();
 		}
+		c.close();
 		return users;
 	}
 	
 	public Payload getUnsentTrackers(int userId){
-		String s = TRACKER_LOG_C_SUBMITTED + "=? " + TRACKER_LOG_C_USERID + "=? ";
+		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
 		String[] args = new String[] { "0", String.valueOf(userId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
@@ -728,7 +742,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public ArrayList<TrackerLog>  getUnsentQuizResults(int userId){
-		String s = QUIZRESULTS_C_SENT + "=? " + QUIZRESULTS_C_USERID + "=? ";
+		String s = QUIZRESULTS_C_SENT + "=? AND " + QUIZRESULTS_C_USERID + "=? ";
 		String[] args = new String[] { "0", String.valueOf(userId) };
 		Cursor c = db.query(QUIZRESULTS_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();

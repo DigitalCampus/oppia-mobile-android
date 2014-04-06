@@ -90,12 +90,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 		
-		if(!prefs.getBoolean("upgradeV43a",false)){
-			upgradeV43a();
+
+		if(!prefs.getBoolean("upgradeV43b",false)){
+			upgradeV43b();
 			Editor editor = prefs.edit();
-			editor.putBoolean("upgradeV43a", true);
+			//editor.putBoolean("upgradeV43b", true);
 			editor.commit();
-			publishProgress("Upgraded to v43a");
+			publishProgress("Upgraded to v43b");
 			payload.setResult(true);
 		}
 		
@@ -176,31 +177,21 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	/* go through and add html content to tables
 	 */
 	protected void upgradeV43(){
-		
 		SearchReIndex task = new SearchReIndex(ctx);
 		Payload p = new Payload();
 		task.execute(p);
 	}
 	
-	/* add current user to user table and update all tracklogs to reflect this
-	 */
-	protected void upgradeV43a(){
-		//add user
-		if(MobileLearning.isLoggedIn(ctx)){
-			User user = new User();
-			user.setUsername(prefs.getString(ctx.getString(R.string.prefs_username), ""));
-			user.setApiKey(prefs.getString(ctx.getString(R.string.prefs_api_key), "") );
-			DbHelper db = new DbHelper(ctx);
-			long userId = db.addOrUpdateUser(user);
-			
-			// update existing trackers
-			ContentValues values = new ContentValues();
-			values.put(DbHelper.TRACKER_LOG_C_USERID, userId);
-			
-			DbHelper.db.update(DbHelper.TRACKER_LOG_TABLE, values, "1=1", null);
-			
-			db.close();
-		}
+	protected void upgradeV43b(){
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		User user = new User();
+		user.setUsername(prefs.getString("prefUsername", ""));
+		user.setApiKey(prefs.getString(ctx.getString(R.string.prefs_api_key), "") );
+		DbHelper db = new DbHelper(ctx);
+		long userId = db.addOrUpdateUser(user);
+		db.updateV43b(userId);
+		db.close();
+		
 	}
 	
 	@Override
