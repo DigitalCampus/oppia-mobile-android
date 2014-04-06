@@ -23,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class User {
 
+	private int userid;
 	private String username;
 	private String email;
 	private String password;
@@ -124,6 +125,12 @@ public class User {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	public int getUserid() {
+		return userid;
+	}
+	public void setUserid(int userid) {
+		this.userid = userid;
 	}
 
 }

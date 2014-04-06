@@ -58,6 +58,10 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 				prefs.getString(ctx.getString(R.string.prefs_api_key), ""));
 	}
 	
+	public BasicHeader getAuthHeader(String username, String apiKey){
+		return new BasicHeader("Authorization","ApiKey " + username + ":" + apiKey);
+	}
+	
 	public String getFullURL(String apiPath){
 		return prefs.getString(ctx.getString(R.string.prefs_server), ctx.getString(R.string.prefServerDefault)) + apiPath;
 	}

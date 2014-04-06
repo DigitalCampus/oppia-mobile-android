@@ -657,9 +657,26 @@ public class DbHelper extends SQLiteOpenHelper {
 		return -1;
 	}
 	
-	public Payload getUnsentTrackers(){
-		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
-		String[] args = new String[] { "0" };
+	public ArrayList<User> getAllUsers(){
+		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
+		c.moveToFirst();
+		
+		ArrayList<User> users = new ArrayList<User>();
+		while (c.isAfterLast() == false) {
+			User u = new User();
+			u.setUserid(c.getInt(c.getColumnIndex(USER_C_ID)));
+			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
+			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
+			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+			users.add(u);
+		}
+		return users;
+	}
+	
+	public Payload getUnsentTrackers(int userId){
+		String s = TRACKER_LOG_C_SUBMITTED + "=? " + TRACKER_LOG_C_USERID + "=? ";
+		String[] args = new String[] { "0", String.valueOf(userId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 
