@@ -18,7 +18,7 @@
     <string name="prefs_server">prefServer</string>
     <string name="prefs_server_timeout_connection">prefServerTimeoutConnection</string>
     <string name="prefs_server_timeout_response">prefServerTimeoutResponse</string>
-    <string name="prefs_username">prefUsername</string>
+    <!-- string name="prefs_username">prefUsername</string -->
     <string name="prefs_points">prefPoints</string>
     <string name="prefs_badges">prefBadges</string>
     <string name="prefs_scoring_enabled">prefScoringEnabled</string>

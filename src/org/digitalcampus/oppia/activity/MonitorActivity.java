@@ -74,7 +74,7 @@ public class MonitorActivity extends AppActivity {
 		String url = "";
 		if(ConnectionUtils.isNetworkConnected(this)){
 			url = prefs.getString(getString(R.string.prefs_server), getString(R.string.prefServer)) + "mobile/monitor/?";
-			url += "username=" + prefs.getString(getString(R.string.prefs_username), "");
+			url += "username=" + prefs.getString("prefUsername", "");
 			url += "&api_key=" + prefs.getString(getString(R.string.prefs_api_key), "");
 		} else {
 			String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());

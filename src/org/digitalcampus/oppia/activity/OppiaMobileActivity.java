@@ -172,7 +172,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(prefs.getBoolean(getString(R.string.prefs_schedule_reminders_show), false)){
 			DbHelper db = new DbHelper(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString(getString(R.string.prefs_schedule_reminders_no), "2"));
-			long userId = db.getUserId(prefs.getString(getString(R.string.prefs_username), ""));
+			long userId = db.getUserId(prefs.getString("prefUsername", ""));
 			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
 			db.close();
 			this.drawReminders(activities);
@@ -274,7 +274,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			public void onClick(DialogInterface dialog, int which) {
 				// wipe user prefs
 				Editor editor = prefs.edit();
-				editor.putString(getString(R.string.prefs_username), "");
+				editor.putString("prefUsername", "");
 				editor.putString(getString(R.string.prefs_api_key), "");
 				editor.putInt(getString(R.string.prefs_badges), 0);
 				editor.putInt(getString(R.string.prefs_points), 0);

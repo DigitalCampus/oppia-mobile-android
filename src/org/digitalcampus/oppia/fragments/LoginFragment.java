@@ -125,7 +125,7 @@ public class LoginFragment extends Fragment implements SubmitListener {
 			User u = (User) response.getData().get(0);
 			// set params
 			Editor editor = prefs.edit();
-	    	editor.putString(getString(R.string.prefs_username), usernameField.getText().toString());
+	    	editor.putString("prefUsername", usernameField.getText().toString());
 	    	editor.putString(getString(R.string.prefs_api_key), u.getApiKey());
 	    	editor.putString(getString(R.string.prefs_display_name), u.getDisplayName());
 	    	editor.putInt(getString(R.string.prefs_points), u.getPoints());

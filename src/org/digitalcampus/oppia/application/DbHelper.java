@@ -467,7 +467,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void insertTrackers(ArrayList<TrackerLog> trackers, long courseId) {
-		long userId = this.getUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
+		long userId = this.getUserId(prefs.getString("prefUsername", ""));
 		
 		for (TrackerLog t : trackers) {
 			ContentValues values = new ContentValues();
@@ -733,7 +733,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public long insertQuizResult(String data, int courseId){
-		long userId = this.getUserId(prefs.getString(ctx.getString(R.string.prefs_username), ""));
+		long userId = this.getUserId(prefs.getString("prefUsername", ""));
 		ContentValues values = new ContentValues();
 		values.put(QUIZRESULTS_C_DATA, data);
 		values.put(QUIZRESULTS_C_COURSEID, courseId);
@@ -753,7 +753,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			so.setContent(c.getString(c.getColumnIndex(QUIZRESULTS_C_DATA)));
 			sl.add(so);
 			c.moveToNext();
-		}		
+		}	
+		c.close();
 		return sl;
 	}
 	
