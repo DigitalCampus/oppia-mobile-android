@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.application;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -776,7 +775,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + 
 					TRACKER_LOG_C_USERID + "=? AND " +
 					TRACKER_LOG_C_COURSEID + "=?";
-		String[] args = new String[] { digest, String.valueOf(courseId), String.valueOf(userId) };
+		String[] args = new String[] { digest, String.valueOf(userId), String.valueOf(courseId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
 			c.close();
