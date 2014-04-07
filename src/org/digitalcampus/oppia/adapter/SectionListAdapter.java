@@ -66,7 +66,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    
 	    Section s = sectionList.get(position);
 	    String title = "";
-	    if(prefs.getBoolean(ctx.getString(R.string.prefs_section_numbers_show), false)){
+	    if(prefs.getBoolean("prefShowSectionNumbers", false)){
 	    	title += String.valueOf(s.getOrder()) + ". ";
 	    }
 	    title += s.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));

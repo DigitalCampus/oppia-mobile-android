@@ -32,11 +32,11 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 		this.httpParameters = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(
 				httpParameters,
-				Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_connection),
+				Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
 						ctx.getString(R.string.prefServerTimeoutConnectionDefault))));
 		HttpConnectionParams.setSoTimeout(
 				httpParameters,
-				Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_response),
+				Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
 						ctx.getString(R.string.prefServerTimeoutResponseDefault))));
 		
 		// add user agent 
@@ -63,7 +63,7 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 	}
 	
 	public String getFullURL(String apiPath){
-		return prefs.getString(ctx.getString(R.string.prefs_server), ctx.getString(R.string.prefServerDefault)) + apiPath;
+		return prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault)) + apiPath;
 	}
 
 	public String createUrlWithCredentials(String baseUrl){

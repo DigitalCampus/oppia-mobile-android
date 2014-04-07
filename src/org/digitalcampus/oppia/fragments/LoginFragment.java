@@ -130,8 +130,8 @@ public class LoginFragment extends Fragment implements SubmitListener {
 	    	editor.putString("prefDisplayName", u.getDisplayName());
 	    	editor.putInt("prefPoints", u.getPoints());
 	    	editor.putInt("prefBadges", u.getBadges());
-	    	editor.putBoolean(getString(R.string.prefs_scoring_enabled), u.isScoringEnabled());
-	    	editor.putBoolean(getString(R.string.prefs_badging_enabled), u.isBadgingEnabled());
+	    	editor.putBoolean("prefScoringEnabled", u.isScoringEnabled());
+	    	editor.putBoolean("prefBadgingEnabled", u.isBadgingEnabled());
 	    	editor.commit();
 	    	
 			// return to main activity

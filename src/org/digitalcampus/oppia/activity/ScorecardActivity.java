@@ -73,14 +73,14 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 		fragments.add(fScorecard);
 		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_scorecard)).setTabListener(this), true);
 	
-		boolean scoringEnabled = prefs.getBoolean(this.getString(R.string.prefs_scoring_enabled), true);
+		boolean scoringEnabled = prefs.getBoolean("prefScoringEnabled", true);
 		if (scoringEnabled) {
 			Fragment fPoints = PointsFragment.newInstance();
 			fragments.add(fPoints);
 			actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_points)).setTabListener(this), false);
 		}
 		
-		boolean badgingEnabled = prefs.getBoolean(this.getString(R.string.prefs_badging_enabled), true);
+		boolean badgingEnabled = prefs.getBoolean("prefBadgingEnabled", true);
 		if (badgingEnabled) {
 			Fragment fBadges= BadgesFragment.newInstance();
 			fragments.add(fBadges);

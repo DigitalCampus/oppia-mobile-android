@@ -169,9 +169,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	private void updateReminders(){
-		if(prefs.getBoolean(getString(R.string.prefs_schedule_reminders_show), false)){
+		if(prefs.getBoolean("prefShowScheduleReminders", false)){
 			DbHelper db = new DbHelper(OppiaMobileActivity.this);
-			int max = Integer.valueOf(prefs.getString(getString(R.string.prefs_schedule_reminders_no), "2"));
+			int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "2"));
 			long userId = db.getUserId(prefs.getString("prefUsername", ""));
 			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
 			db.close();
@@ -366,15 +366,15 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if(key.equalsIgnoreCase(getString(R.string.prefs_server))){
+		if(key.equalsIgnoreCase("prefServer")){
 			Editor editor = sharedPreferences.edit();
-			if(!sharedPreferences.getString(getString(R.string.prefs_server), "").endsWith("/")){
-				String newServer = sharedPreferences.getString(getString(R.string.prefs_server), "").trim()+"/";
-				editor.putString(getString(R.string.prefs_server), newServer);
+			if(!sharedPreferences.getString("prefServer", "").endsWith("/")){
+				String newServer = sharedPreferences.getString("prefServer", "").trim()+"/";
+				editor.putString("prefServer", newServer);
 		    	editor.commit();
 			}
 		}
-		if(key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_show)) || key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_no))){
+		if(key.equalsIgnoreCase("prefShowScheduleReminders") || key.equalsIgnoreCase("prefNoScheduleReminders")){
 			displayCourses(userId);
 		}
 		if(key.equalsIgnoreCase("prefPoints")

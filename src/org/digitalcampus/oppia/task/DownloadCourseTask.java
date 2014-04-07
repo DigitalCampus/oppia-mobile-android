@@ -69,9 +69,9 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
             c.setRequestMethod("GET");
             c.setDoOutput(true);
             c.connect();
-            c.setConnectTimeout(Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_connection),
+            c.setConnectTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
 							ctx.getString(R.string.prefServerTimeoutConnection))));
-            c.setReadTimeout(Integer.parseInt(prefs.getString(ctx.getString(R.string.prefs_server_timeout_response),
+            c.setReadTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
 							ctx.getString(R.string.prefServerTimeoutResponse))));
 			
 			int fileLength = c.getContentLength();
