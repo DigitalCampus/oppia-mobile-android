@@ -166,7 +166,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 		
 		if(p.isResult()){
 			Editor e = prefs.edit();
-			e.putLong(ctx.getString(R.string.prefs_last_media_scan), 0);
+			e.putLong("prefLastMediaScan", 0);
 			e.commit();
 			downloadDialog.setTitle(ctx.getString(R.string.install_complete));	
 			downloadDialog.setMessage(p.getResultResponse());
@@ -211,7 +211,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 			DownloadActivity da = (DownloadActivity) ctx;
 			da.refreshCourseList();
 			Editor e = prefs.edit();
-			e.putLong(ctx.getString(R.string.prefs_last_media_scan), 0);
+			e.putLong("prefLastMediaScan", 0);
 			e.commit();
 		} else {
 			downloadDialog.setTitle(ctx.getString(R.string.error_update_failure));	

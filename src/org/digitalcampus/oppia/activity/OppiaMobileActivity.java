@@ -184,7 +184,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	
 	private void scanMedia() {
 		long now = System.currentTimeMillis()/1000;
-		if (prefs.getLong(getString(R.string.prefs_last_media_scan), 0)+3600 > now) {
+		if (prefs.getLong("prefLastMediaScan", 0)+3600 > now) {
 			LinearLayout ll = (LinearLayout) this.findViewById(R.id.home_messages);
 			ll.setVisibility(View.GONE);
 			return;
@@ -330,7 +330,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				File f = new File(tempCourse.getLocation());
 				FileUtils.deleteDir(f);
 				Editor e = prefs.edit();
-				e.putLong(getString(R.string.prefs_last_media_scan), 0);
+				e.putLong("prefLastMediaScan", 0);
 				e.commit();
 				displayCourses(userId);
 			}
@@ -416,7 +416,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 					startActivity(i);
 				}
 			});
-			e.putLong(getString(R.string.prefs_last_media_scan), 0);
+			e.putLong("prefLastMediaScan", 0);
 			e.commit();
 		} else {
 			ll.setVisibility(View.GONE);
@@ -425,7 +425,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			btn.setOnClickListener(null);
 			btn.setTag(null);
 			long now = System.currentTimeMillis()/1000;
-			e.putLong(getString(R.string.prefs_last_media_scan), now);
+			e.putLong("prefLastMediaScan", now);
 			e.commit();
 		}
 	}
