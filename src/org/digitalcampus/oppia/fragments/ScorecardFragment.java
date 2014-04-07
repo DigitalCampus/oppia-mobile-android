@@ -71,7 +71,7 @@ public class ScorecardFragment extends Fragment{
 		webView = (WebView) super.getActivity().findViewById(R.id.scorecard_fragment_webview);
 		webView.setWebViewClient(new ScoreCardWebViewClient());
 		webView.getSettings().setJavaScriptEnabled(true);
-		String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 		String url = "";
 		url = FileUtils.getLocalizedFilePath(super.getActivity(),lang,"webview_loading.html");
 		webView.loadUrl(url);
@@ -89,7 +89,7 @@ public class ScorecardFragment extends Fragment{
 	private class ScoreCardWebViewClient extends WebViewClient{
 		@Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        	String lang = ScorecardFragment.this.prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+        	String lang = ScorecardFragment.this.prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
         	String url = FileUtils.getLocalizedFilePath(ScorecardFragment.this.getActivity(),lang,"scorecard_not_available.html");
         	webView.loadUrl(url);
         }

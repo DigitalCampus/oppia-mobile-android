@@ -54,7 +54,7 @@ public class UpgradeUtils {
             String title = ctx.getString(R.string.app_name) + " v" + versionInfo.versionName;
  
             //Includes the updates as well so users know what changed.
-            String messagePath = FileUtils.getLocalizedFilePath((Activity) ctx,prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()) , "upgrade.txt");
+            String messagePath = FileUtils.getLocalizedFilePath((Activity) ctx,prefs.getString("prefLanguage", Locale.getDefault().getLanguage()) , "upgrade.txt");
             
             String message = "";
 			try {

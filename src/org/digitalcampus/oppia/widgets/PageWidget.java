@@ -110,7 +110,7 @@ public class PageWidget extends WidgetFactory {
 		wv = (WebView) super.getActivity().findViewById(activity.getActId());
 		// get the location data
 		String url = course.getLocation()
-				+ activity.getLocation(prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault()
+				+ activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault()
 						.getLanguage()));
 		try {
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", FileUtils.readFile(url), "text/html",
@@ -234,7 +234,7 @@ public class PageWidget extends WidgetFactory {
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("readaloud", readAloud);
 			// if it's a baseline activity then assume completed
@@ -271,7 +271,7 @@ public class PageWidget extends WidgetFactory {
 						data.put("media", "played");
 						data.put("mediafile", mediaFileName);
 						data.put("timetaken", timeTaken);
-						String lang = prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault()
+						String lang = prefs.getString("prefLanguage", Locale.getDefault()
 								.getLanguage());
 						data.put("lang", lang);
 					} catch (JSONException e) {
@@ -357,7 +357,7 @@ public class PageWidget extends WidgetFactory {
 		File f = new File("/"
 				+ course.getLocation()
 				+ "/"
-				+ activity.getLocation(prefs.getString(super.getActivity().getString(R.string.prefs_language), Locale.getDefault()
+				+ activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault()
 						.getLanguage())));
 		StringBuilder text = new StringBuilder();
 		try {

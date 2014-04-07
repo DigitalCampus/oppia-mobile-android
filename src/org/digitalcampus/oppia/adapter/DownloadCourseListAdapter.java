@@ -70,7 +70,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	    rowView.setTag(c);
 	    
 	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
-	    courseTitle.setText(c.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+	    courseTitle.setText(c.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 	    
 	    TextView courseDraft = (TextView) rowView.findViewById(R.id.course_draft);
 	    if (c.isDraft()){
@@ -80,7 +80,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	    }
 	    
 	    TextView courseDesc = (TextView) rowView.findViewById(R.id.course_description);
-	    String desc = c.getDescription(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+	    String desc = c.getDescription(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 	    if (desc != null){
 	    	courseDesc.setText(desc);
 	    } else {

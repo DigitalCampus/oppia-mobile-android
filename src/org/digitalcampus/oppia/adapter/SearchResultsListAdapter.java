@@ -57,9 +57,9 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 	    rowView.setTag(sr);
 	    
 	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
-	    String cTitle = sr.getCourse().getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-	    String sTitle = sr.getSection().getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
-	    String aTitle = sr.getActivity().getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+	    String cTitle = sr.getCourse().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+	    String sTitle = sr.getSection().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+	    String aTitle = sr.getActivity().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 	    courseTitle.setText(cTitle + " > " + sTitle + " > " + aTitle);
 	    rowView.setTag(R.id.TAG_COURSE,sr.getCourse());
 		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,sr.getActivity().getDigest());

@@ -41,7 +41,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         
-		ListPreference langsList = (ListPreference) findPreference(getString(R.string.prefs_language)); 
+		ListPreference langsList = (ListPreference) findPreference("prefLanguage"); 
 		
 		List<String> entries = new ArrayList<String>();
 	    List<String> entryValues = new ArrayList<String>();

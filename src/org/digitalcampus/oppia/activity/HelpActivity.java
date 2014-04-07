@@ -39,7 +39,7 @@ public class HelpActivity extends AppActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(this,prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage()) , "help.html");
+		String url = "file:///android_asset/" + FileUtils.getLocalizedFilePath(this,prefs.getString("prefLanguage", Locale.getDefault().getLanguage()) , "help.html");
 		WebView wv = (WebView) findViewById(R.id.about_webview);
 		wv.loadUrl(url);
 		

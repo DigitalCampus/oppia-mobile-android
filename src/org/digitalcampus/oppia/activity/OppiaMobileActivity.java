@@ -77,9 +77,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 		
 		// set preferred lang to the default lang
-		if (prefs.getString(getString(R.string.prefs_language), "").equals("")) {
+		if (prefs.getString("prefLanguage", "").equals("")) {
 			Editor editor = prefs.edit();
-			editor.putString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+			editor.putString("prefLanguage", Locale.getDefault().getLanguage());
 			editor.commit();
 		}
 	}

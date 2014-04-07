@@ -52,13 +52,13 @@ public class CourseMetaPageActivity extends AppActivity {
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			course = (Course) bundle.getSerializable(Course.TAG);
-			setTitle(course.getTitle(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+			setTitle(course.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 			pageid = (Integer) bundle.getSerializable(CourseMetaPage.TAG);
 			cmp = course.getMetaPage(pageid);
 		}
 		
 		TextView titleTV = (TextView) findViewById(R.id.course_title);
-		String title = cmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getContent();
+		String title = cmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getContent();
 		titleTV.setText(title);
 		
 		TextView versionTV = (TextView) findViewById(R.id.course_versionid);
@@ -69,7 +69,7 @@ public class CourseMetaPageActivity extends AppActivity {
 		shortnameTV.setText(course.getShortname());
 		
 		WebView wv = (WebView) this.findViewById(R.id.metapage_webview);
-		String url = course.getLocation() + "/" +cmp.getLang(prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage())).getLocation();
+		String url = course.getLocation() + "/" +cmp.getLang(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).getLocation();
 		
 		try {
 			String content =  "<html><head>";

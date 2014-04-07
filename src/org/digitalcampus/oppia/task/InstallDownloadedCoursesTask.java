@@ -110,7 +110,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				c.setLangs(cxr.getLangs());
 				c.setDescriptions(cxr.getDescriptions());
 				c.setPriority(cxr.getPriority());
-				String title = c.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+				String title = c.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 				
 				dp.setMessage(ctx.getString(R.string.installing_course, title));
 				publishProgress(dp);

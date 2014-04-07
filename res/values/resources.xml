@@ -5,10 +5,10 @@
     <string name="prefServerTimeoutConnectionDefault">10000</string>
     <string name="prefServerTimeoutResponseDefault">20000</string>
    
-	<string name="prefs_background_data_connect">prefBackgroundDataConnect</string>
-	<string name="prefs_display_name">prefDisplayName</string>
-	<string name="prefs_highlightCompleted">prefHighlightCompleted</string>
-    <string name="prefs_language">prefLanguage</string>
+	<!--  string name="prefs_background_data_connect">prefBackgroundDataConnect</string>
+	<string name="prefs_display_name">prefDisplayName</string
+	<string name="prefs_highlightCompleted">prefHighlightCompleted</string
+    <string name="prefs_language">prefLanguage</string-->
     <string name="prefs_last_media_scan">prefLastMediaScan</string>
     <string name="prefs_metadata">prefMetadata</string>
     <string name="prefs_schedule_reminders_no">prefNoScheduleReminders</string>

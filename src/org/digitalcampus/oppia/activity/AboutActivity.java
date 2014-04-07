@@ -73,7 +73,7 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 		fragments.add(fAbout);
 		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_about)).setTabListener(this), true);
 
-		String lang = prefs.getString(getString(R.string.prefs_language), Locale.getDefault().getLanguage());
+		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 		String url = FileUtils.getLocalizedFilePath(this,lang, "privacy.html");
 		Fragment fPrivacy = OppiaWebViewFragment.newInstance(url);
 		fragments.add(fPrivacy);

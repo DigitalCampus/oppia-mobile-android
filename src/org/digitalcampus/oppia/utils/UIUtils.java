@@ -43,9 +43,7 @@ public class UIUtils {
 	private ArrayList<String> langStringList;
 	private ArrayList<Lang> langList;
 	private SharedPreferences prefs;
-	private Context ctx;
 
-	
 	
 	 /**
      * Displays the users points and badges scores in the app header
@@ -208,7 +206,6 @@ public class UIUtils {
 		this.langStringList = new ArrayList<String>();
 		this.langList = new ArrayList<Lang>();
 		this.prefs = prefs;
-		this.ctx = ctx;
 		
 		// make sure there aren't any duplicates
 		for(Lang l: langs){
@@ -229,7 +226,7 @@ public class UIUtils {
 			Locale loc = new Locale(l.getLang());
 			String langDisp = loc.getDisplayLanguage(loc);
 			langStringList.add(langDisp);
-			if (l.getLang().equals(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()))) {
+			if (l.getLang().equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
 				selected = i;
 			}
 			i++;
@@ -244,7 +241,7 @@ public class UIUtils {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							String newLang = langList.get(whichButton).getLang();
 							Editor editor = UIUtils.this.prefs.edit();
-							editor.putString(UIUtils.this.ctx.getString(R.string.prefs_language), newLang);
+							editor.putString("prefLanguage", newLang);
 							editor.commit();
 							dialog.dismiss();
 							try {

@@ -69,7 +69,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    if(prefs.getBoolean(ctx.getString(R.string.prefs_section_numbers_show), false)){
 	    	title += String.valueOf(s.getOrder()) + ". ";
 	    }
-	    title += s.getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage()));
+	    title += s.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 	    sectionTitle.setText(title);
 	    
 	    rowView.setTag(sectionList.get(position));
@@ -83,7 +83,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 		    ll.addView(horizRowItem);
 		    
 		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
-		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString(ctx.getString(R.string.prefs_language), Locale.getDefault().getLanguage())));
+		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 		    
 		    // set image
 		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);
@@ -96,7 +96,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
 	    	
 	    	// highlight if completed
-	    	if(s.getActivities().get(i).getCompleted() && prefs.getBoolean(ctx.getString(R.string.prefs_highlightCompleted), true)){
+	    	if(s.getActivities().get(i).getCompleted() && prefs.getBoolean("prefHighlightCompleted", true)){
 	    		activityObject.setBackgroundResource(R.drawable.activity_background_completed);
 	    	}
 	    	
