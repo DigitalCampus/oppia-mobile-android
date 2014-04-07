@@ -186,7 +186,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		User user = new User();
 		user.setUsername(prefs.getString("prefUsername", ""));
-		user.setApiKey(prefs.getString(ctx.getString(R.string.prefs_api_key), "") );
+		user.setApiKey(prefs.getString("prefApiKey", "") );
 		DbHelper db = new DbHelper(ctx);
 		long userId = db.addOrUpdateUser(user);
 		db.updateV43b(userId);

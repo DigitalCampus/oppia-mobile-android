@@ -55,7 +55,7 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 		return new BasicHeader("Authorization","ApiKey " + 
 				prefs.getString("prefUsername", "") + 
 				":" + 
-				prefs.getString(ctx.getString(R.string.prefs_api_key), ""));
+				prefs.getString("prefApiKey", ""));
 	}
 	
 	public BasicHeader getAuthHeader(String username, String apiKey){
@@ -69,7 +69,7 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 	public String createUrlWithCredentials(String baseUrl){
 		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
-		pairs.add(new BasicNameValuePair("api_key", prefs.getString(ctx.getString(R.string.prefs_api_key), "")));
+		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
 		pairs.add(new BasicNameValuePair("format", "json"));
 		String paramString = URLEncodedUtils.format(pairs, "utf-8");
 		if(!baseUrl.endsWith("?"))
