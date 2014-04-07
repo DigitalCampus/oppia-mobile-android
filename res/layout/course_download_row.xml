@@ -1,45 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/course_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp"
-    android:weightSum="1.0" >
+    android:padding="10dp" >
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/course_title"
+        style="@style/NormalTextDark"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
-        android:layout_weight="0.65"
-        android:orientation="vertical" >
+        android:layout_toLeftOf="@+id/download_course_btn" />
 
-        <TextView
-            android:id="@+id/course_title"
-            style="@style/NormalTextDark"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
+    <TextView
+        android:id="@+id/course_draft"
+        style="@style/SmallTextDarkItalic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@+id/course_title"
+        android:layout_toLeftOf="@+id/download_course_btn" />
 
-        <TextView
-            android:id="@+id/course_draft"
-            style="@style/SmallTextDarkItalic"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-
-        <TextView
-            android:id="@+id/course_description"
-            style="@style/MediumTextDarkItalic"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/course_description"
+        style="@style/MediumTextDarkItalic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@+id/course_draft"
+        android:layout_toLeftOf="@+id/download_course_btn" />
 
     <Button
-        android:id="@+id/action_btn"
-        android:layout_width="0dp"
+        android:id="@+id/download_course_btn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight=".35" />
+        android:layout_alignParentRight="true" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -87,7 +87,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	    	courseDesc.setVisibility(View.GONE);
 	    }
 
-	    Button actionBtn = (Button) rowView.findViewById(R.id.action_btn);
+	    Button actionBtn = (Button) rowView.findViewById(R.id.download_course_btn);
 	    
 	    if(c.isInstalled()){
 	    	if(c.isToUpdate()){
