@@ -18,7 +18,6 @@ package org.digitalcampus.oppia.utils;
 
 import java.util.Iterator;
 
-import org.digitalcampus.mobile.learning.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -77,32 +76,32 @@ public class MetaDataUtils {
 		Iterator<?> keys = metadata.keys();
 		while( keys.hasNext() ){
             String key = (String) keys.next();
-            editor.putBoolean(ctx.getString(R.string.prefs_metadata) + "_" + key, metadata.getBoolean(key));
+            editor.putBoolean("prefMetadata" + "_" + key, metadata.getBoolean(key));
         }
 		editor.commit();
 	}
 	
 	public JSONObject getMetaData(JSONObject json) throws JSONException{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		if(prefs.getBoolean(ctx.getString(R.string.prefs_metadata) + "_NETWORK", false)){
+		if(prefs.getBoolean("prefMetadata" + "_NETWORK", false)){
 			json.put("network",this.getNetworkProvider());
 		}
-		if(prefs.getBoolean(ctx.getString(R.string.prefs_metadata) + "_DEVICE_ID", false)){
+		if(prefs.getBoolean("prefMetadata" + "_DEVICE_ID", false)){
 			json.put("deviceid",this.getDeviceId());
 		}
-		if(prefs.getBoolean(ctx.getString(R.string.prefs_metadata) + "_SIM_SERIAL", false)){
+		if(prefs.getBoolean("prefMetadata" + "_SIM_SERIAL", false)){
 			json.put("simserial",this.getSimSerial());
 		}
-		if(prefs.getBoolean(ctx.getString(R.string.prefs_metadata) + "_WIFI_ON", false)){
+		if(prefs.getBoolean("prefMetadata" + "_WIFI_ON", false)){
 			json.put("wifion",ConnectionUtils.isOnWifi(ctx));
 		}
-		if(prefs.getBoolean(ctx.getString(R.string.prefs_metadata) + "_NETWORK_CONNECTED", false)){
+		if(prefs.getBoolean("prefMetadata" + "_NETWORK_CONNECTED", false)){
 			json.put("netconnected",ConnectionUtils.isNetworkConnected(ctx));
 		}
-		if(prefs.getBoolean(ctx.getString(R.string.prefs_metadata) + "_BATTERY_LEVEL", false)){
+		if(prefs.getBoolean("prefMetadata" + "_BATTERY_LEVEL", false)){
 			json.put("battery",this.getBatteryLevel());
 		}
-		if(prefs.getBoolean(ctx.getString(R.string.prefs_metadata) + "_GPS", false)){
+		if(prefs.getBoolean("prefMetadata" + "_GPS", false)){
 			json.put("gps","0,0");
 		}
 		return json;
