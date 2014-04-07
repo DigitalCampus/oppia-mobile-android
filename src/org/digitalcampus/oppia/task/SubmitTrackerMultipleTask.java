@@ -14,7 +14,6 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
-import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.TrackerLog;
@@ -53,9 +52,9 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 		Payload payload = new Payload();
 		
 		for(User u: users){
-			db = new DbHelper(ctx);
-			payload = db.getUnsentTrackers(u.getUserid());
-			db.close();
+			DbHelper db1 = new DbHelper(ctx);
+			payload = db1.getUnsentTrackers(u.getUserid());
+			db1.close();
 			
 			@SuppressWarnings("unchecked")
 			Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);

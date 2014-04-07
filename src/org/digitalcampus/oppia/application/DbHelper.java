@@ -17,7 +17,6 @@
 
 package org.digitalcampus.oppia.application;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -29,7 +28,6 @@ import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.CourseXMLReader;
-import org.digitalcampus.oppia.utils.FileUtils;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -173,30 +171,30 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 
 	public void createQuizResultsTable(SQLiteDatabase db){
-		String m_sql = "create table " + QUIZRESULTS_TABLE + " (" + 
+		String sql = "create table " + QUIZRESULTS_TABLE + " (" + 
 							QUIZRESULTS_C_ID + " integer primary key autoincrement, " + 
 							QUIZRESULTS_C_DATETIME + " datetime default current_timestamp, " + 
 							QUIZRESULTS_C_DATA + " text, " +  
 							QUIZRESULTS_C_SENT + " integer default 0, "+
 							QUIZRESULTS_C_COURSEID + " integer, " +
 							QUIZRESULTS_C_USERID + " integer default 0 )";
-		db.execSQL(m_sql);
+		db.execSQL(sql);
 	}
 	
 	public void createSearchTable(SQLiteDatabase db){
-		String l_sql = "CREATE VIRTUAL TABLE ["+SEARCH_TABLE+"] USING FTS3 (" +
-                "["+SEARCH_C_ID+"]" + " integer primary key autoincrement, " +
-                "["+SEARCH_C_ACTID+"]" + " integer default 0, "+
-                "["+SEARCH_C_TEXT+"] TEXT, " +
-                "["+SEARCH_C_COURSETITLE+"] TEXT, " +
-                "["+SEARCH_C_SECTIONTITLE+"] TEXT, " +
-                "["+SEARCH_C_ACTIVITYTITLE+"] TEXT " +
+		String sql = "CREATE VIRTUAL TABLE "+SEARCH_TABLE+" USING FTS3 (" +
+                SEARCH_C_ID + " integer primary key autoincrement, " +
+                SEARCH_C_ACTID + " integer default 0, "+
+                SEARCH_C_TEXT + " text, " +
+                SEARCH_C_COURSETITLE + " text, " +
+                SEARCH_C_SECTIONTITLE + " text, " +
+                SEARCH_C_ACTIVITYTITLE + " text " +
             ");";
-		db.execSQL(l_sql);
+		db.execSQL(sql);
 	}
 	
 	public void createUserTable(SQLiteDatabase db){
-		String l_sql = "CREATE TABLE ["+USER_TABLE+"] (" +
+		String sql = "CREATE TABLE ["+USER_TABLE+"] (" +
                 "["+USER_C_ID+"]" + " integer primary key autoincrement, " +
                 "["+USER_C_USERNAME +"]" + " integer default 0, "+
                 "["+USER_C_FIRSTNAME +"] TEXT, " +
@@ -204,7 +202,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_PASSWORD +"] TEXT, " +
                 "["+USER_C_APIKEY +"] TEXT " +
             ");";
-		db.execSQL(l_sql);
+		db.execSQL(sql);
 	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -238,7 +236,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(sql);
 		}
 		
-		// This is a fix as previous versioning may not have upgraded db tables correctly
+		// This is a fix as previous versions may not have upgraded db tables correctly
 		if(oldVersion <= 10 && newVersion >=11){
 			String sql1 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
 			String sql2 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
@@ -354,6 +352,10 @@ public class DbHelper extends SQLiteOpenHelper {
 			return db.insertOrThrow(COURSE_TABLE, null, values);
 		} else if(this.toUpdate(course.getShortname(), course.getVersionId())){
 			long toUpdate = this.getCourseID(course.getShortname());
+			
+			// remove existing course info from search index
+			this.searchIndexRemoveCourse(toUpdate);
+			
 			if (toUpdate != 0) {
 				db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + toUpdate, null);
 				// remove all the old activities
@@ -442,7 +444,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void insertActivities(ArrayList<Activity> acts) {
-		// acts.listIterator();
 		for (Activity a : acts) {
 			ContentValues values = new ContentValues();
 			values.put(ACTIVITY_C_COURSEID, a.getCourseId());
@@ -554,6 +555,23 @@ public class DbHelper extends SQLiteOpenHelper {
 		return course;
 	}
 	
+	public ArrayList<Activity> getCourseActivities(long courseId){
+		ArrayList<Activity> activities = new  ArrayList<Activity>();
+		String s = ACTIVITY_C_COURSEID + "=?";
+		String[] args = new String[] { String.valueOf(courseId) };
+		Cursor c = db.query(ACTIVITY_TABLE, null, s, args, null, null, null);
+		c.moveToFirst();
+		while (c.isAfterLast() == false) {
+			Activity activity = new Activity();
+			activity.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
+			activity.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+			activities.add(activity);
+			c.moveToNext();
+		}
+		c.close();
+		return activities;
+	}
+	
 	public void insertTracker(int modId, String digest, String data, boolean completed){
 		//get current user id
 		long userId = this.getUserId(prefs.getString("prefUsername", ""));
@@ -600,6 +618,9 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void deleteCourse(int courseId){
+		// remove from search index
+		this.searchIndexRemoveCourse(courseId);
+		
 		// delete activities
 		String s = ACTIVITY_C_COURSEID + "=?";
 		String[] args = new String[] { String.valueOf(courseId) };
@@ -609,6 +630,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		s = COURSE_C_ID + "=?";
 		args = new String[] { String.valueOf(courseId) };
 		db.delete(COURSE_TABLE, s, args);
+		
+		
 	}
 	
 	public boolean isInstalled(String shortname){
@@ -879,9 +902,23 @@ public class DbHelper extends SQLiteOpenHelper {
 		return activities;
 	}
 	
-	public void insertActivityIntoSearchTable(String courseTitle, String sectionTitle, String activityTitle, int activityId, String fullText){
+	/*
+	 * SEARCH Functions
+	 * 
+	 */
+	
+	public void searchIndexRemoveCourse(long courseId){
+		ArrayList<Activity> activities = this.getCourseActivities(courseId);
+		Log.d(TAG,"deleting course from index: "+ courseId);
+		for(Activity a: activities){
+			
+			this.deleteSearchRow(a.getDbId());
+		}
+	}
+	
+	public void insertActivityIntoSearchTable(String courseTitle, String sectionTitle, String activityTitle, int activityDbId, String fullText){
 		ContentValues values = new ContentValues();
-		values.put(SEARCH_C_ACTID, activityId);
+		values.put(SEARCH_C_ACTID, activityDbId);
 		values.put(SEARCH_C_TEXT, fullText);
 		values.put(SEARCH_C_COURSETITLE, courseTitle);
 		values.put(SEARCH_C_SECTIONTITLE, sectionTitle);
@@ -934,37 +971,21 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	}
 	
-	
-	public void rebuildSearchIndex(){
-		// flush table
+	/*
+	 * Delete the entire search index
+	 */
+	public void deleteSearchIndex(){
 		db.execSQL("DELETE FROM "+ SEARCH_TABLE);
-		
-		//now rebuild
-		ArrayList<Course> courses  = this.getAllCourses();
-		for (Course c : courses){
-			try {
-				CourseXMLReader cxr = new CourseXMLReader(c.getCourseXMLLocation(),ctx);
-				ArrayList<Activity> activities = cxr.getActivities(c.getCourseId());
-				for( Activity a : activities){
-					if (a.getLocation("en") != null){
-						String url = c.getLocation() + a.getLocation("en");
-						try {
-							String fileContent = FileUtils.readFile(url);
-							// add file content to search table
-							this.insertActivityIntoSearchTable(c.getTitleJSONString(),
-															cxr.getSection(a.getSectionId()).getTitleJSONString(),
-															a.getTitleJSONString(),
-															this.getActivityByDigest(a.getDigest()).getDbId(), 
-															fileContent);
-						} catch (IOException e) {
-							// do nothing
-							e.printStackTrace();
-						}
-					}
-				}
-			} catch (InvalidXMLException e) {
-				// Ignore course
-			}
-		}
+	}
+	
+	/*
+	 * Delete a particular activity from the search index
+	 */
+	public void deleteSearchRow(int activityDbId){
+		String s = SEARCH_C_ACTID + "=?";
+		String[] args = new String[] { String.valueOf(activityDbId) };
+		Log.d(TAG,"deleting activity: "+ activityDbId);
+		int result = db.delete(SEARCH_TABLE, s, args);
+		Log.d(TAG,"delete query result: " + result);
 	}
 }

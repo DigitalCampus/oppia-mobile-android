@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.utils.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.CourseXMLReader;
 import org.digitalcampus.oppia.utils.FileUtils;
+import org.digitalcampus.oppia.utils.SearchUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -96,6 +97,15 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			editor.putBoolean("upgradeV43b", true);
 			editor.commit();
 			publishProgress("Upgraded to v43b");
+			payload.setResult(true);
+		}
+		
+		if(!prefs.getBoolean("upgradeV43c",false)){
+			upgradeV43c();
+			Editor editor = prefs.edit();
+			//editor.putBoolean("upgradeV43c", true);
+			editor.commit();
+			publishProgress("Upgraded to v43c");
 			payload.setResult(true);
 		}
 		
@@ -176,9 +186,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	/* go through and add html content to tables
 	 */
 	protected void upgradeV43(){
-		SearchReIndex task = new SearchReIndex(ctx);
-		Payload p = new Payload();
-		task.execute(p);
+		SearchUtils.reindexAll(ctx);
 	}
 	
 	protected void upgradeV43b(){
@@ -191,6 +199,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		db.updateV43b(userId);
 		db.close();
 		
+	}
+	
+	protected void upgradeV43c(){
+		SearchUtils.reindexAll(ctx);
 	}
 	
 	@Override

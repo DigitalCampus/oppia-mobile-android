@@ -82,36 +82,36 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				}
 
 				switch (response.getStatusLine().getStatusCode()) {
-				case 201: // submitted
-					DbHelper db = new DbHelper(ctx);
-					db.markQuizSubmitted(tl.getId());
-					db.close();
-					payload.setResult(true);
-					// update points
-					JSONObject jsonResp = new JSONObject(responseStr);
-					Editor editor = prefs.edit();
-					editor.putInt("prefPoints", jsonResp.getInt("points"));
-					editor.putInt("prefBadges", jsonResp.getInt("badges"));
-					editor.commit();
-					break;
-				case 400: // bad request - so to prevent re-submitting over and
-							// over
-							// just mark as submitted
-					DbHelper dba = new DbHelper(ctx);
-					dba.markQuizSubmitted(tl.getId());
-					dba.close();
-					payload.setResult(false);
-					break;
-				case 500: // bad request - so to prevent re-submitting over and
-							// over
-					// just mark as submitted
-					DbHelper dbb = new DbHelper(ctx);
-					dbb.markQuizSubmitted(tl.getId());
-					dbb.close();
-					payload.setResult(false);
-					break;
-				default:
-					payload.setResult(false);
+					case 201: // submitted
+						DbHelper db = new DbHelper(ctx);
+						db.markQuizSubmitted(tl.getId());
+						db.close();
+						payload.setResult(true);
+						// update points
+						JSONObject jsonResp = new JSONObject(responseStr);
+						Editor editor = prefs.edit();
+						editor.putInt("prefPoints", jsonResp.getInt("points"));
+						editor.putInt("prefBadges", jsonResp.getInt("badges"));
+						editor.commit();
+						break;
+					case 400: // bad request - so to prevent re-submitting over and
+								// over
+								// just mark as submitted
+						DbHelper dba = new DbHelper(ctx);
+						dba.markQuizSubmitted(tl.getId());
+						dba.close();
+						payload.setResult(false);
+						break;
+					case 500: // bad request - so to prevent re-submitting over and
+								// over
+						// just mark as submitted
+						DbHelper dbb = new DbHelper(ctx);
+						dbb.markQuizSubmitted(tl.getId());
+						dbb.close();
+						payload.setResult(false);
+						break;
+					default:
+						payload.setResult(false);
 				}
 
 			} catch (UnsupportedEncodingException e) {
