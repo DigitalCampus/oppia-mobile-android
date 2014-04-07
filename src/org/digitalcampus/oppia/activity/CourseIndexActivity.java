@@ -260,8 +260,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (key.equalsIgnoreCase(getString(R.string.prefs_points))
-				|| key.equalsIgnoreCase(getString(R.string.prefs_badges))) {
+		if (key.equalsIgnoreCase("prefPoints")
+				|| key.equalsIgnoreCase("prefBadges")) {
 			supportInvalidateOptionsMenu();
 		}
 

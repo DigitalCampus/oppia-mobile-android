@@ -90,8 +90,8 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 					// update points
 					JSONObject jsonResp = new JSONObject(responseStr);
 					Editor editor = prefs.edit();
-					editor.putInt(ctx.getString(R.string.prefs_points), jsonResp.getInt("points"));
-					editor.putInt(ctx.getString(R.string.prefs_badges), jsonResp.getInt("badges"));
+					editor.putInt("prefPoints", jsonResp.getInt("points"));
+					editor.putInt("prefBadges", jsonResp.getInt("badges"));
 					editor.commit();
 					break;
 				case 400: // bad request - so to prevent re-submitting over and

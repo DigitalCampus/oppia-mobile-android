@@ -276,8 +276,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				Editor editor = prefs.edit();
 				editor.putString("prefUsername", "");
 				editor.putString(getString(R.string.prefs_api_key), "");
-				editor.putInt(getString(R.string.prefs_badges), 0);
-				editor.putInt(getString(R.string.prefs_points), 0);
+				editor.putInt("prefBadges", 0);
+				editor.putInt("prefPoints", 0);
 				editor.commit();
 
 				// restart the app
@@ -377,7 +377,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_show)) || key.equalsIgnoreCase(getString(R.string.prefs_schedule_reminders_no))){
 			displayCourses(userId);
 		}
-		if(key.equalsIgnoreCase(getString(R.string.prefs_points)) || key.equalsIgnoreCase(getString(R.string.prefs_badges))){
+		if(key.equalsIgnoreCase("prefPoints")
+				|| key.equalsIgnoreCase("prefBadges")){
 			supportInvalidateOptionsMenu();
 		}
 	}
