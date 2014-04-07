@@ -819,6 +819,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			}
 			c.moveToNext();
 		}
+		c.close();
 		return a;
 	}
 	

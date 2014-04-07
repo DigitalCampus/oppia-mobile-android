@@ -88,7 +88,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	public void onStart() {
 		super.onStart();
 		DbHelper db = new DbHelper(this);
-		userId = db.getUserId(prefs.getString("preUsername", ""));
+		userId = db.getUserId(prefs.getString("prefUsername", ""));
 		db.close();
 		displayCourses(userId);		
 	}
