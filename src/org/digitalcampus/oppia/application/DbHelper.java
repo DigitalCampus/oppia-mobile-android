@@ -906,9 +906,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void insertActivityIntoSearchTable(String courseTitle, String sectionTitle, String activityTitle, int activityDbId, String fullText){
+		// strip out all html tags from string (not needed for search)
+		String noHTMLString = fullText.replaceAll("\\<.*?\\>", " ");
+		
 		ContentValues values = new ContentValues();
 		values.put(SEARCH_C_ACTID, activityDbId);
-		values.put(SEARCH_C_TEXT, fullText);
+		values.put(SEARCH_C_TEXT, noHTMLString);
 		values.put(SEARCH_C_COURSETITLE, courseTitle);
 		values.put(SEARCH_C_SECTIONTITLE, sectionTitle);
 		values.put(SEARCH_C_ACTIVITYTITLE, activityTitle);
