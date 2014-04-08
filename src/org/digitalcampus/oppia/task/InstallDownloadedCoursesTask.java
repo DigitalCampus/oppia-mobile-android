@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.SearchUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -178,6 +179,11 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 	protected void onPostExecute(Payload p) {
 		synchronized (this) {
             if (mStateListener != null) {
+            	// add the course to the search index
+            	if(p.isResult()){
+            		Course c = (Course) p.getResponseData().get(0);
+            		SearchUtils.indexAddCourse(this.ctx, c);
+            	}
                mStateListener.installComplete(p);
             }
         }
