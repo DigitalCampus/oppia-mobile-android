@@ -60,7 +60,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV17", true);
 			editor.commit();
-			publishProgress("Upgraded to v17");
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v17"));
 			payload.setResult(true);
 		}
 		
@@ -69,7 +69,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV20", true);
 			editor.commit();
-			publishProgress("Upgraded to v20");
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v20"));
 			payload.setResult(true);
 		}
 		
@@ -77,7 +77,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV29", true);
 			editor.commit();
-			publishProgress("Upgraded to v29");
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v29"));
 			payload.setResult(true);
 		}
 		
@@ -86,26 +86,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV43", true);
 			editor.commit();
-			publishProgress("Upgraded to v43");
-			payload.setResult(true);
-		}
-		
-
-		if(!prefs.getBoolean("upgradeV43b",false)){
-			upgradeV43b();
-			Editor editor = prefs.edit();
-			editor.putBoolean("upgradeV43b", true);
-			editor.commit();
-			publishProgress("Upgraded to v43b");
-			payload.setResult(true);
-		}
-		
-		if(!prefs.getBoolean("upgradeV43c",false)){
-			upgradeV43c();
-			Editor editor = prefs.edit();
-			//editor.putBoolean("upgradeV43c", true);
-			editor.commit();
-			publishProgress("Upgraded to v43c");
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v43"));
 			payload.setResult(true);
 		}
 		
@@ -187,23 +168,16 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	 */
 	protected void upgradeV43(){
 		SearchUtils.reindexAll(ctx);
-	}
-	
-	protected void upgradeV43b(){
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		User user = new User();
 		user.setUsername(prefs.getString("prefUsername", ""));
 		user.setApiKey(prefs.getString("prefApiKey", "") );
 		DbHelper db = new DbHelper(ctx);
 		long userId = db.addOrUpdateUser(user);
-		db.updateV43b(userId);
+		db.updateV43(userId);
 		db.close();
-		
 	}
 	
-	protected void upgradeV43c(){
-		SearchUtils.reindexAll(ctx);
-	}
 	
 	@Override
 	protected void onProgressUpdate(String... obj) {

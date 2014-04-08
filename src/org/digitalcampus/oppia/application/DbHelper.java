@@ -48,7 +48,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 36;
+	static final int DB_VERSION = 18;
 
 	public static SQLiteDatabase db;
 	private Context ctx;
@@ -291,67 +291,26 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		
 		if(oldVersion <= 17 && newVersion >= 18){
+			//create search table
 			this.createSearchTable(db);
-		}
-		
-		if(oldVersion <= 26 && newVersion >= 27){
-			String sql = "drop table if exists " + SEARCH_TABLE;
-			db.execSQL(sql);
-			this.createSearchTable(db);
-		}
-		
-		if(oldVersion <= 27 && newVersion >= 28){
+			
+			// alter quiz results table
+			String sql1 = "ALTER TABLE " + QUIZRESULTS_TABLE + " ADD COLUMN " + QUIZRESULTS_C_USERID + " integer default 0;";
+			db.execSQL(sql1);
+			
+			// alter tracker table
 			String sql2 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_USERID + " integer default 0;";
 			db.execSQL(sql2);
+			
+			// create user table
 			this.createUserTable(db);
+			
 		}
 		
-		if(oldVersion <= 28 && newVersion >= 29){
-			String sql = "drop table if exists " + USER_TABLE;
-			db.execSQL(sql);
-			this.createUserTable(db);
-		}
-		
-		if(oldVersion <= 29 && newVersion >= 30){
-			String sql2 = "ALTER TABLE " + QUIZRESULTS_TABLE + " ADD COLUMN " + QUIZRESULTS_C_USERID + " integer default 0;";
-			db.execSQL(sql2);
-		}
-		
-		if(oldVersion <= 30 && newVersion >= 32){
-			String sql = "drop table if exists " + SEARCH_TABLE;
-			db.execSQL(sql);
-			this.createSearchTable(db);
-		}
-		if(oldVersion <= 32 && newVersion >= 33){
-			String sql = "drop table if exists " + SEARCH_TABLE;
-			Log.d(TAG,sql);
-			db.execSQL(sql);
-			this.createSearchTable(db);
-		}
-		
-		if(oldVersion <= 33 && newVersion >= 34){
-			String sql = "drop table if exists " + SEARCH_TABLE;
-			Log.d(TAG,sql);
-			db.execSQL(sql);
-			this.createSearchTable(db);
-		}
-		
-		if(oldVersion <= 34 && newVersion >= 35){
-			String sql = "drop table if exists " + SEARCH_TABLE;
-			Log.d(TAG,sql);
-			db.execSQL(sql);
-			this.createSearchTable(db);
-		}
-		
-		if(oldVersion <= 35 && newVersion >= 36){
-			String sql = "drop table if exists " + SEARCH_TABLE;
-			Log.d(TAG,sql);
-			db.execSQL(sql);
-			this.createSearchTable(db);
-		}
+	
 	}
 
-	public void updateV43b(long userId){
+	public void updateV43(long userId){
 		// update existing trackers
 		ContentValues values = new ContentValues();
 		values.put(TRACKER_LOG_C_USERID, userId);
