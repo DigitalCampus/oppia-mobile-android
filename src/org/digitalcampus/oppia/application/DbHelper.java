@@ -48,7 +48,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 31;
+	static final int DB_VERSION = 36;
 
 	public static SQLiteDatabase db;
 	private Context ctx;
@@ -98,7 +98,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZRESULTS_C_USERID = "userid";
 	
 	private static final String SEARCH_TABLE = "search";
-	private static final String SEARCH_C_ID = BaseColumns._ID;
 	private static final String SEARCH_C_ACTID = "activityid";
 	private static final String SEARCH_C_TEXT = "fulltext";
 	private static final String SEARCH_C_COURSETITLE = "coursetitle";
@@ -183,13 +182,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void createSearchTable(SQLiteDatabase db){
 		String sql = "CREATE VIRTUAL TABLE "+SEARCH_TABLE+" USING FTS3 (" +
-                SEARCH_C_ID + " integer primary key autoincrement, " +
-                SEARCH_C_ACTID + " integer default 0, "+
+                SEARCH_C_ACTID + " text, "+
                 SEARCH_C_TEXT + " text, " +
                 SEARCH_C_COURSETITLE + " text, " +
                 SEARCH_C_SECTIONTITLE + " text, " +
                 SEARCH_C_ACTIVITYTITLE + " text " +
-            ");";
+            ")";
 		db.execSQL(sql);
 	}
 	
@@ -317,6 +315,39 @@ public class DbHelper extends SQLiteOpenHelper {
 		if(oldVersion <= 29 && newVersion >= 30){
 			String sql2 = "ALTER TABLE " + QUIZRESULTS_TABLE + " ADD COLUMN " + QUIZRESULTS_C_USERID + " integer default 0;";
 			db.execSQL(sql2);
+		}
+		
+		if(oldVersion <= 30 && newVersion >= 32){
+			String sql = "drop table if exists " + SEARCH_TABLE;
+			db.execSQL(sql);
+			this.createSearchTable(db);
+		}
+		if(oldVersion <= 32 && newVersion >= 33){
+			String sql = "drop table if exists " + SEARCH_TABLE;
+			Log.d(TAG,sql);
+			db.execSQL(sql);
+			this.createSearchTable(db);
+		}
+		
+		if(oldVersion <= 33 && newVersion >= 34){
+			String sql = "drop table if exists " + SEARCH_TABLE;
+			Log.d(TAG,sql);
+			db.execSQL(sql);
+			this.createSearchTable(db);
+		}
+		
+		if(oldVersion <= 34 && newVersion >= 35){
+			String sql = "drop table if exists " + SEARCH_TABLE;
+			Log.d(TAG,sql);
+			db.execSQL(sql);
+			this.createSearchTable(db);
+		}
+		
+		if(oldVersion <= 35 && newVersion >= 36){
+			String sql = "drop table if exists " + SEARCH_TABLE;
+			Log.d(TAG,sql);
+			db.execSQL(sql);
+			this.createSearchTable(db);
 		}
 	}
 
@@ -911,7 +942,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		ArrayList<Activity> activities = this.getCourseActivities(courseId);
 		Log.d(TAG,"deleting course from index: "+ courseId);
 		for(Activity a: activities){
-			
 			this.deleteSearchRow(a.getDbId());
 		}
 	}
@@ -926,6 +956,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.insertOrThrow(SEARCH_TABLE, null, values);
 	}
 	
+	/*
+	 * Perform a search
+	 */
 	public ArrayList<SearchResult> search(String searchText, int limit, long userId){
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		String sql = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid FROM %s ft " +
@@ -976,16 +1009,31 @@ public class DbHelper extends SQLiteOpenHelper {
 	 */
 	public void deleteSearchIndex(){
 		db.execSQL("DELETE FROM "+ SEARCH_TABLE);
+		Log.d(TAG,"Deleted search index...");
 	}
 	
 	/*
 	 * Delete a particular activity from the search index
+	 * 
+	 * Note; for some reason need to lookup the rowid in the search table first
+	 * and then delete via the rowid (deleting via activityDbId directly didn't
+	 * work 
 	 */
 	public void deleteSearchRow(int activityDbId){
-		String s = SEARCH_C_ACTID + "=?";
-		String[] args = new String[] { String.valueOf(activityDbId) };
-		Log.d(TAG,"deleting activity: "+ activityDbId);
-		int result = db.delete(SEARCH_TABLE, s, args);
-		Log.d(TAG,"delete query result: " + result);
+		String sql1 = "SELECT rowid, docid FROM "+ SEARCH_TABLE + " WHERE "+ SEARCH_C_ACTID + "=" + activityDbId;
+		Cursor c = db.rawQuery(sql1,null);
+		c.moveToFirst();
+		ArrayList<Integer> toDelete = new ArrayList<Integer>();
+    	while (c.isAfterLast() == false) {
+    		toDelete.add(c.getInt(c.getColumnIndex("rowid")));
+    		c.moveToNext();
+    	}
+    	c.close();
+		
+		for( int i : toDelete){
+			String s = "rowid=?";
+			String[] args = new String[] { String.valueOf(i) };
+			db.delete(SEARCH_TABLE, s, args);
+		}
 	}
 }

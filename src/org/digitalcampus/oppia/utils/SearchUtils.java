@@ -28,6 +28,7 @@ import org.digitalcampus.oppia.task.Payload;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class SearchUtils {
 
@@ -85,6 +86,7 @@ public class SearchUtils {
 			ArrayList<Course> courses  = db.getAllCourses();
 			db.close();
 			for (Course c : courses){
+				Log.d(TAG,"indexing: "+ c.getTitle("en"));
 				SearchUtils.indexAddCourse(ctx,c);
 			}
 			return payload;
