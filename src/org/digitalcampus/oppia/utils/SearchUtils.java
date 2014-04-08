@@ -24,6 +24,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.Payload;
 
 import android.content.Context;
@@ -46,21 +47,29 @@ public class SearchUtils {
 			CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),ctx);
 			ArrayList<Activity> activities = cxr.getActivities(course.getCourseId());
 			for( Activity a : activities){
-				if (a.getLocation("en") != null){
-					String url = course.getLocation() + a.getLocation("en");
-					try {
-						String fileContent = FileUtils.readFile(url);
-						// add file content to search table
-						db.insertActivityIntoSearchTable(course.getTitleJSONString(),
-														cxr.getSection(a.getSectionId()).getTitleJSONString(),
-														a.getTitleJSONString(),
-														db.getActivityByDigest(a.getDigest()).getDbId(), 
-														fileContent);
-					} catch (IOException e) {
-						// do nothing
-						e.printStackTrace();
+				ArrayList<Lang> langs = course.getLangs();
+				String fileContent = "";
+				for (Lang l : langs){
+					if (a.getLocation(l.getLang()) != null){
+						String url = course.getLocation() + a.getLocation(l.getLang());
+						Log.d(TAG,"adding: "+ url);
+						try {
+							fileContent += " " + FileUtils.readFile(url);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
+				
+				if (!fileContent.equals("")){
+					db.insertActivityIntoSearchTable(course.getTitleJSONString(),
+							cxr.getSection(a.getSectionId()).getTitleJSONString(),
+							a.getTitleJSONString(),
+							db.getActivityByDigest(a.getDigest()).getDbId(), 
+							fileContent);
+				}
+			
 			}
 		} catch (InvalidXMLException e) {
 			// Ignore course
