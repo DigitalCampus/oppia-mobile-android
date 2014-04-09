@@ -98,7 +98,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZRESULTS_C_USERID = "userid";
 	
 	private static final String SEARCH_TABLE = "search";
-	private static final String SEARCH_C_ACTID = "activityid";
 	private static final String SEARCH_C_TEXT = "fulltext";
 	private static final String SEARCH_C_COURSETITLE = "coursetitle";
 	private static final String SEARCH_C_SECTIONTITLE = "sectiontitle";
@@ -182,7 +181,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void createSearchTable(SQLiteDatabase db){
 		String sql = "CREATE VIRTUAL TABLE "+SEARCH_TABLE+" USING FTS3 (" +
-                SEARCH_C_ACTID + " text, "+
                 SEARCH_C_TEXT + " text, " +
                 SEARCH_C_COURSETITLE + " text, " +
                 SEARCH_C_SECTIONTITLE + " text, " +
@@ -305,8 +303,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			// create user table
 			this.createUserTable(db);
 			
-		}
-		
+		}	
 	
 	}
 
@@ -910,7 +907,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String noHTMLString = fullText.replaceAll("\\<.*?\\>", " ");
 		
 		ContentValues values = new ContentValues();
-		values.put(SEARCH_C_ACTID, activityDbId);
+		values.put("docid", activityDbId);
 		values.put(SEARCH_C_TEXT, noHTMLString);
 		values.put(SEARCH_C_COURSETITLE, courseTitle);
 		values.put(SEARCH_C_SECTIONTITLE, sectionTitle);
@@ -923,16 +920,44 @@ public class DbHelper extends SQLiteOpenHelper {
 	 */
 	public ArrayList<SearchResult> search(String searchText, int limit, long userId){
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
-		String sql = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid FROM %s ft " +
-									" INNER JOIN %s a ON a.%s = ft.%s" +
+		String sqlSeachFullText = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 1 AS ranking FROM %s ft " +
+									" INNER JOIN %s a ON a.%s = ft.docid" +
 									" INNER JOIN %s c ON a.%s = c.%s " +
-									" WHERE %s MATCH '%s' "+
-									" LIMIT 0,%d",
+									" WHERE %s MATCH '%s' ",
 										COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE, 
-										ACTIVITY_TABLE, ACTIVITY_C_ID, SEARCH_C_ACTID, 
+										ACTIVITY_TABLE, ACTIVITY_C_ID, 
 										COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
-										SEARCH_C_TEXT, searchText,
-										limit);
+										SEARCH_C_TEXT, searchText);
+		String sqlActivityTitle = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 5 AS ranking FROM %s ft " +
+				" INNER JOIN %s a ON a.%s = ft.docid" +
+				" INNER JOIN %s c ON a.%s = c.%s " +
+				" WHERE %s MATCH '%s' ",
+					COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE, 
+					ACTIVITY_TABLE, ACTIVITY_C_ID, 
+					COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
+					SEARCH_C_ACTIVITYTITLE, searchText);
+		
+		String sqlSectionTitle = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 10 AS ranking FROM %s ft " +
+				" INNER JOIN %s a ON a.%s = ft.docid" +
+				" INNER JOIN %s c ON a.%s = c.%s " +
+				" WHERE %s MATCH '%s' ",
+					COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE, 
+					ACTIVITY_TABLE, ACTIVITY_C_ID, 
+					COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
+					SEARCH_C_SECTIONTITLE, searchText);
+		String sqlCourseTitle = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 15 AS ranking FROM %s ft " +
+				" INNER JOIN %s a ON a.%s = ft.docid" +
+				" INNER JOIN %s c ON a.%s = c.%s " +
+				" WHERE %s MATCH '%s' ",
+					COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE, 
+					ACTIVITY_TABLE, ACTIVITY_C_ID, 
+					COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
+					SEARCH_C_COURSETITLE, searchText);
+		
+		String sql = String.format("SELECT * FROM (" +
+				"%s UNION %s UNION %s UNION %s) ORDER BY ranking DESC LIMIT 0,%d", 
+				sqlSeachFullText, sqlActivityTitle, sqlSectionTitle, sqlCourseTitle, limit);
+		
 		Cursor c = db.rawQuery(sql,null);
 	    if(c !=null && c.getCount()>0){
 	    	c.moveToFirst();
@@ -976,26 +1001,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	/*
 	 * Delete a particular activity from the search index
-	 * 
-	 * Note; for some reason need to lookup the rowid in the search table first
-	 * and then delete via the rowid (deleting via activityDbId directly didn't
-	 * work 
 	 */
-	public void deleteSearchRow(int activityDbId){
-		String sql1 = "SELECT rowid, docid FROM "+ SEARCH_TABLE + " WHERE "+ SEARCH_C_ACTID + "=" + activityDbId;
-		Cursor c = db.rawQuery(sql1,null);
-		c.moveToFirst();
-		ArrayList<Integer> toDelete = new ArrayList<Integer>();
-    	while (c.isAfterLast() == false) {
-    		toDelete.add(c.getInt(c.getColumnIndex("rowid")));
-    		c.moveToNext();
-    	}
-    	c.close();
-		
-		for( int i : toDelete){
-			String s = "rowid=?";
-			String[] args = new String[] { String.valueOf(i) };
-			db.delete(SEARCH_TABLE, s, args);
-		}
+	public void deleteSearchRow(int activityDbId) {
+		String s = "docid=?";
+		String[] args = new String[] { String.valueOf(activityDbId) };
+		int result = db.delete(SEARCH_TABLE, s, args);
 	}
 }

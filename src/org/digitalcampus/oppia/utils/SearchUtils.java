@@ -42,7 +42,7 @@ public class SearchUtils {
 	}
 	
 	public static void indexAddCourse(Context ctx, Course course){
-		DbHelper db = new DbHelper(ctx);
+		
 		try {
 			CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),ctx);
 			ArrayList<Activity> activities = cxr.getActivities(course.getCourseId());
@@ -63,18 +63,20 @@ public class SearchUtils {
 				}
 				
 				if (!fileContent.equals("")){
+					DbHelper db = new DbHelper(ctx);
 					db.insertActivityIntoSearchTable(course.getTitleJSONString(),
 							cxr.getSection(a.getSectionId()).getTitleJSONString(),
 							a.getTitleJSONString(),
 							db.getActivityByDigest(a.getDigest()).getDbId(), 
 							fileContent);
+					db.close();
 				}
 			
 			}
 		} catch (InvalidXMLException e) {
 			// Ignore course
 		}
-		db.close();
+		
 	}
 	
 	

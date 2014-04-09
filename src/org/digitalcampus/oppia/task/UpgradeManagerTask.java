@@ -179,6 +179,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	}
 	
 	
+	
 	@Override
 	protected void onProgressUpdate(String... obj) {
 		synchronized (this) {
