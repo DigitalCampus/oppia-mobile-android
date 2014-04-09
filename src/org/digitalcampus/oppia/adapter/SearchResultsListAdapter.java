@@ -22,15 +22,18 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.SearchResult;
+import org.digitalcampus.oppia.utils.ImageUtils;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
@@ -56,13 +59,26 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 	    SearchResult sr = searchResultList.get(position);
 	    rowView.setTag(sr);
 	    
+	    TextView activityTitle = (TextView) rowView.findViewById(R.id.activity_title);
+	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
 	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
+	    
 	    String cTitle = sr.getCourse().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 	    String sTitle = sr.getSection().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 	    String aTitle = sr.getActivity().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
-	    courseTitle.setText(cTitle + " > " + sTitle + " > " + aTitle);
+	    
+	    activityTitle.setText(aTitle);
+	    sectionTitle.setText(sTitle);
+	    courseTitle.setText(cTitle);
+
 	    rowView.setTag(R.id.TAG_COURSE,sr.getCourse());
 		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,sr.getActivity().getDigest());
+		
+		if(sr.getCourse().getImageFile() != null){
+			ImageView iv = (ImageView) rowView.findViewById(R.id.course_image);
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(sr.getCourse().getImageFile(), ctx.getResources(), R.drawable.dc_logo);
+			iv.setImageDrawable(bm);
+		}
 	   
 	    return rowView;
 	}

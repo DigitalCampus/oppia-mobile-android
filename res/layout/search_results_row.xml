@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/search_results_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/course_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="4dp"
+        android:contentDescription="@string/app_logo_alt"
+        android:src="@drawable/dc_logo" />
+
+    <TextView
+        android:id="@+id/activity_title"
+        style="@style/NormalTextBoldDark"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@+id/course_image"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/section_title"
+        style="@style/MediumTextDarkItalic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/course_image"
+        android:layout_below="@+id/activity_title"/>
 
     <TextView
         android:id="@+id/course_title"
         style="@style/NormalTextDark"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
+        android:layout_below="@+id/section_title"
+        android:layout_toRightOf="@+id/course_image" />
 
-</LinearLayout>
+</RelativeLayout>
