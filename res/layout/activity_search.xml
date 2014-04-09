@@ -40,6 +40,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="@color/list_divider_light"
+        android:listSelector="@drawable/background_change_pressed"
         android:dividerHeight="1dp" />
 
 </LinearLayout>
