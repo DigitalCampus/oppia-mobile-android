@@ -85,7 +85,7 @@ public class PageWidget extends WidgetFactory {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_page, null);
+		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_webview, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		activity = (Activity) getArguments().getSerializable(Activity.TAG);
