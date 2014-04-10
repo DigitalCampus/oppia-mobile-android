@@ -43,6 +43,7 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 
 	public static final String TAG = AboutActivity.class.getSimpleName();
 	
+	public static final String TAB_ACTIVE = "TAB_ACTIVE";
 	public static final int TAB_ABOUT = 0;
 	public static final int TAB_HELP = 1;
 	public static final int TAB_PRIVACY = 2;
@@ -65,6 +66,11 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
+		
+		Bundle bundle = this.getIntent().getExtras();
+		if (bundle != null) {
+			currentTab = (Integer) bundle.getSerializable(AboutActivity.TAB_ACTIVE);
+		}
 	}
 	
 	@Override
@@ -91,9 +97,25 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(apAdapter);
 
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_about)).setTabListener(this), TAB_ABOUT, true);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_help)).setTabListener(this), TAB_HELP, false);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_privacy)).setTabListener(this), TAB_PRIVACY, false);
+		boolean setSelected = false;
+		if (currentTab == AboutActivity.TAB_ABOUT){
+			setSelected = true;
+		} else {
+			setSelected = false;
+		}
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_about)).setTabListener(this), TAB_ABOUT, setSelected);
+		if (currentTab == AboutActivity.TAB_HELP){
+			setSelected = true;
+		}else {
+			setSelected = false;
+		}
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_help)).setTabListener(this), TAB_HELP, setSelected);
+		if (currentTab == AboutActivity.TAB_PRIVACY){
+			setSelected = true;
+		}else {
+			setSelected = false;
+		}
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_privacy)).setTabListener(this), TAB_PRIVACY, setSelected);
 
 		viewPager.setCurrentItem(currentTab);
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
