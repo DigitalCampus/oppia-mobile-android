@@ -32,10 +32,6 @@
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="@string/menu_about"/>
     <item
-        android:id="@+id/menu_help"
-        android:icon="@android:drawable/ic_menu_help"
-        android:title="@string/menu_help"/>
-    <item
         android:id="@+id/menu_monitor"
         android:title="@string/menu_monitor"/>
     <item

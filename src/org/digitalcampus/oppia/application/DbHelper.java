@@ -1005,6 +1005,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void deleteSearchRow(int activityDbId) {
 		String s = "docid=?";
 		String[] args = new String[] { String.valueOf(activityDbId) };
-		int result = db.delete(SEARCH_TABLE, s, args);
+		db.delete(SEARCH_TABLE, s, args);
 	}
 }

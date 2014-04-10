@@ -42,6 +42,11 @@ import com.actionbarsherlock.view.MenuItem;
 public class AboutActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 
 	public static final String TAG = AboutActivity.class.getSimpleName();
+	
+	public static final int TAB_ABOUT = 0;
+	public static final int TAB_HELP = 1;
+	public static final int TAB_PRIVACY = 2;
+
 	private ActionBar actionBar;
 	private ViewPager viewPager;
 	private ActivityPagerAdapter apAdapter;
@@ -66,22 +71,29 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 	public void onStart() {
 		super.onStart();
 
+		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+		
 		actionBar.removeAllTabs();
 		List<Fragment> fragments = new ArrayList<Fragment>();
 		
 		Fragment fAbout = AboutFragment.newInstance();
 		fragments.add(fAbout);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_about)).setTabListener(this), true);
-
-		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+		
+		String urlHelp = FileUtils.getLocalizedFilePath(this,lang, "help.html");
+		Fragment fHelp = OppiaWebViewFragment.newInstance(TAB_HELP, urlHelp);
+		fragments.add(fHelp);
+		
 		String url = FileUtils.getLocalizedFilePath(this,lang, "privacy.html");
-		Fragment fPrivacy = OppiaWebViewFragment.newInstance(url);
+		Fragment fPrivacy = OppiaWebViewFragment.newInstance(TAB_PRIVACY, url);
 		fragments.add(fPrivacy);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_privacy)).setTabListener(this), false);
-
+		
 		
 		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(apAdapter);
+
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_about)).setTabListener(this), TAB_ABOUT, true);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_help)).setTabListener(this), TAB_HELP, false);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_privacy)).setTabListener(this), TAB_PRIVACY, false);
 
 		viewPager.setCurrentItem(currentTab);
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

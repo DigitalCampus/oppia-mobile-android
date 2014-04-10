@@ -195,7 +195,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 			createLanguageDialog();
 			return true;
 		case R.id.menu_help:
-			startActivity(new Intent(this, HelpActivity.class));
+			startActivity(new Intent(this, AboutActivity.class));
 			return true;
 		case android.R.id.home:
 			this.finish();

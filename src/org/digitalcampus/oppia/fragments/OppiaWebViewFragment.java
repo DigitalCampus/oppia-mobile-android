@@ -30,13 +30,17 @@ import android.widget.LinearLayout.LayoutParams;
 public class OppiaWebViewFragment extends Fragment{
 
 	public static final String TAG = OppiaWebViewFragment.class.getSimpleName();
+	private static final String TAG_ID = "OppiaWebViewFragment_TAG_ID";
+	
 	private WebView webView;
 	private String url;
+	private int id;
 	
-	public static OppiaWebViewFragment newInstance(String url) {
+	public static OppiaWebViewFragment newInstance(int id, String url) {
 		OppiaWebViewFragment myFragment = new OppiaWebViewFragment();
 		Bundle args = new Bundle();
 	    args.putSerializable(OppiaWebViewFragment.TAG, url);
+	    args.putSerializable(OppiaWebViewFragment.TAG_ID, id);
 	    myFragment.setArguments(args);
 	    return myFragment;
 	}
@@ -50,6 +54,8 @@ public class OppiaWebViewFragment extends Fragment{
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_webview, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
+		this.id = (Integer) getArguments().getSerializable(OppiaWebViewFragment.TAG_ID);
+		vv.setId(id);
 		return vv;
 	}
 
@@ -62,7 +68,7 @@ public class OppiaWebViewFragment extends Fragment{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		webView = (WebView) super.getActivity().findViewById(R.id.fragment_webview);
+		webView = (WebView) super.getActivity().findViewById(this.id);
 		webView.getSettings().setJavaScriptEnabled(true);
 		url = (String) getArguments().getString(OppiaWebViewFragment.TAG);
 		webView.loadUrl(url);

@@ -231,9 +231,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			case R.id.menu_language:
 				createLanguageDialog();
 				return true;
-			case R.id.menu_help:
-				startActivity(new Intent(this, HelpActivity.class));
-				return true;
 			case R.id.menu_monitor:
 				startActivity(new Intent(this, MonitorActivity.class));
 				return true;
