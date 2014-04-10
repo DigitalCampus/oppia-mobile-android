@@ -233,7 +233,9 @@ public class QuizWidget extends WidgetFactory {
 					try {
 						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback();
 					
-						if (!feedback.equals("") && !isBaseline && !QuizWidget.this.quiz.getCurrentQuestion().getFeedbackDisplayed()) {
+						if (!feedback.equals("") && 
+								quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS 
+								&& !QuizWidget.this.quiz.getCurrentQuestion().getFeedbackDisplayed()) {
 							showFeedback(feedback);
 						} else if (QuizWidget.this.quiz.hasNext()) {
 							QuizWidget.this.quiz.moveNext();
@@ -355,21 +357,23 @@ public class QuizWidget extends WidgetFactory {
 		// TODO add TextView here to give overall feedback if it's in the quiz
 		
 		// Show the detail of which questions were right/wrong
-		ListView questionFeedbackLV = (ListView) getView().findViewById(R.id.quiz_results_feedback);
-		ArrayList<QuizFeedback> quizFeedback = new ArrayList<QuizFeedback>();
-		List<QuizQuestion> questions = this.quiz.getQuestions();
-		for(QuizQuestion q: questions){
-			if(!(q instanceof Description)){
-				QuizFeedback qf = new QuizFeedback();
-				qf.setScore(q.getScoreAsPercent());
-				qf.setQuestionText(q.getTitle());
-				qf.setUserResponse(q.getUserResponses());
-				qf.setFeedbackText(q.getFeedback());
-				quizFeedback.add(qf);
+		if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ATEND){
+			ListView questionFeedbackLV = (ListView) getView().findViewById(R.id.quiz_results_feedback);
+			ArrayList<QuizFeedback> quizFeedback = new ArrayList<QuizFeedback>();
+			List<QuizQuestion> questions = this.quiz.getQuestions();
+			for(QuizQuestion q: questions){
+				if(!(q instanceof Description)){
+					QuizFeedback qf = new QuizFeedback();
+					qf.setScore(q.getScoreAsPercent());
+					qf.setQuestionText(q.getTitle());
+					qf.setUserResponse(q.getUserResponses());
+					qf.setFeedbackText(q.getFeedback());
+					quizFeedback.add(qf);
+				}
 			}
+			QuizFeedbackAdapter qfa = new QuizFeedbackAdapter(super.getActivity(), quizFeedback);
+			questionFeedbackLV.setAdapter(qfa);
 		}
-		QuizFeedbackAdapter qfa = new QuizFeedbackAdapter(super.getActivity(), quizFeedback);
-		questionFeedbackLV.setAdapter(qfa);
 		
 		// Show restart or continue button
 		Button restartBtn = (Button) getView().findViewById(R.id.quiz_results_button);
