@@ -2,7 +2,7 @@
     <string name="app_name">OppiaMobile</string>
     <string name="app_logo_alt">Digital Campus Logo</string>
     
-    <string name="menu_download">Manage Courses</string>
+    <string name="menu_download">Download Courses</string>
     <string name="menu_language">Change language</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_about">About</string>
