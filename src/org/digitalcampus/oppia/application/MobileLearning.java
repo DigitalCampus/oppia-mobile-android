@@ -64,8 +64,7 @@ public class MobileLearning extends Application {
 	public static final int PAGE_READ_TIME = 3;
 	public static final int RESOURCE_READ_TIME = 3;
 	public static final String USER_AGENT = "OppiaMobile Android: ";
-	public static final int QUIZ_DEFAULT_PASS_THRESHOLD = 99;
-	public static final int QUIZ_QUESTION_PASS_THRESHOLD = 100;
+	
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");

@@ -298,7 +298,7 @@ public class QuizWidget extends WidgetFactory {
 		builder.setTitle(super.getActivity().getString(R.string.feedback));
 		builder.setMessage(msg);
 		try {
-			if(this.quiz.getCurrentQuestion().getScoreAsPercent() >= MobileLearning.QUIZ_QUESTION_PASS_THRESHOLD){
+			if(this.quiz.getCurrentQuestion().getScoreAsPercent() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD){
 				builder.setIcon(R.drawable.quiz_tick);
 			} else {
 				builder.setIcon(R.drawable.quiz_cross);
@@ -424,7 +424,7 @@ public class QuizWidget extends WidgetFactory {
 		if (quiz.getPassThreshold() != 0){
 			passThreshold = quiz.getPassThreshold();
 		} else {
-			passThreshold = MobileLearning.QUIZ_DEFAULT_PASS_THRESHOLD;
+			passThreshold = Quiz.QUIZ_DEFAULT_PASS_THRESHOLD;
 		}
 		if (isOnResultsPage && this.getPercent() >= passThreshold) {
 			return true;
