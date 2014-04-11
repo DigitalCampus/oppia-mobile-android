@@ -127,8 +127,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					e.printStackTrace();
 					break;
 				}
-				
-				//HashMap<String, String> hm = mxr.getMeta();
+
 				Course c = new Course();
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
@@ -139,17 +138,17 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				
 				
 				DbHelper db = new DbHelper(ctx);
-				long modId = db.refreshCourse(c);
+				long courseId = db.addOrUpdateCourse(c);
 				
-				if (modId != -1) {
-					db.insertActivities(cxr.getActivities(modId));
-					db.insertTrackers(ctxr.getTrackers(),modId);
+				if (courseId != -1) {
+					db.insertActivities(cxr.getActivities(courseId));
+					db.insertTrackers(ctxr.getTrackers(),courseId);
 				} 
 				
 				// add schedule
 				// put this here so even if the course content isn't updated the schedule will be
 				db.insertSchedule(csxr.getSchedule());
-				db.updateScheduleVersion(modId, csxr.getScheduleVersion());
+				db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
 				
 				db.close();
 			}

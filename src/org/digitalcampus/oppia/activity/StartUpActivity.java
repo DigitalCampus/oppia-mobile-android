@@ -32,8 +32,6 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -43,6 +41,8 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
+
+import com.bugsense.trace.BugSenseHandler;
 
 public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener{
 
@@ -72,6 +72,28 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
  			builder.show();
  			return;
  		}
+ 		
+ 		/*if(MobileLearning.createDirs()){
+			// only remove courses if the SD card is present 
+			//- else it will remove the courses just because the SD card isn't in
+			DbHelper db = new DbHelper(this);
+			ArrayList<Course> courses = db.getAllCourses();
+ 			ArrayList<Course> removeCourses = new ArrayList<Course>();
+			for (Course c : courses) {
+				try {
+					c.validate();
+				} catch (CourseNotFoundException cnfe){
+					// remove from database
+					cnfe.deleteCourse(this, c.getCourseId());
+					removeCourses.add(c);
+				}
+			}
+			
+			for(Course c: removeCourses){
+				// remove from current list
+				courses.remove(c);
+			}
+		}*/
  		
  		UpgradeManagerTask umt = new UpgradeManagerTask(this);
 		umt.setUpgradeListener(this);

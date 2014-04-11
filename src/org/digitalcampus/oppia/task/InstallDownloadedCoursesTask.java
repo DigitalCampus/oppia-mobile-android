@@ -118,6 +118,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				
 				DbHelper db = new DbHelper(ctx);
 				long added = db.addOrUpdateCourse(c);
+				boolean success = false;
 				
 				if (added != -1) {
 					payload.addResponseData(c);
@@ -131,9 +132,10 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					FileUtils.deleteDir(oldCourse);
 
 					// move from temp to courses dir
-					boolean success = src.renameTo(new File(dest, src.getName()));
+					success = src.renameTo(new File(dest, src.getName()));
 
 					if (success) {
+						// add the course to the search index
 						payload.setResult(true);
 						payload.setResultResponse(ctx.getString(R.string.install_course_complete, title));
 					} else {
@@ -150,6 +152,10 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				db.insertSchedule(csxr.getSchedule());
 				db.updateScheduleVersion(added, csxr.getScheduleVersion());				
 				db.close();
+				
+				if (success){
+					SearchUtils.indexAddCourse(this.ctx, c);
+				}
 				
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);
@@ -176,11 +182,6 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 	protected void onPostExecute(Payload p) {
 		synchronized (this) {
             if (mStateListener != null) {
-            	// add the course to the search index
-            	if(p.isResult()){
-            		Course c = (Course) p.getResponseData().get(0);
-            		SearchUtils.indexAddCourse(this.ctx, c);
-            	}
                mStateListener.installComplete(p);
             }
         }

@@ -25,8 +25,6 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.exception.CourseNotFoundException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -110,26 +108,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		DbHelper db = new DbHelper(this);
 		courses = db.getCourses(userId);
 		db.close();
-		
-		if(MobileLearning.createDirs()){
-			// only remove courses if the SD card is present 
-			//- else it will remove the courses just because the SD card isn't in
-			ArrayList<Course> removeCourses = new ArrayList<Course>();
-			for (Course c : courses) {
-				try {
-					c.validate();
-				} catch (CourseNotFoundException cnfe){
-					// remove from database
-					cnfe.deleteCourse(this, c.getCourseId());
-					removeCourses.add(c);
-				}
-			}
-			
-			for(Course c: removeCourses){
-				// remove from current list
-				courses.remove(c);
-			}
-		}
 
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);

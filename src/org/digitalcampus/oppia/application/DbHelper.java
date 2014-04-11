@@ -126,6 +126,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		createLogTable(db);
 		createQuizResultsTable(db);
 		createSearchTable(db);
+		createUserTable(db);
 	}
 
 	public void createCourseTable(SQLiteDatabase db){
@@ -389,8 +390,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public long refreshCourse(Course course){
-		long modId = this.getCourseID(course.getShortname());
+	/*public long refreshCourse(Course course){
+		long courseId = this.getCourseID(course.getShortname());
 		ContentValues values = new ContentValues();
 		values.put(COURSE_C_VERSIONID, course.getVersionId());
 		values.put(COURSE_C_TITLE, course.getTitleJSONString());
@@ -400,13 +401,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(COURSE_C_LANGS, course.getLangsJSONString());
 		values.put(COURSE_C_IMAGE, course.getImageFile());
 		values.put(COURSE_C_ORDER_PRIORITY, course.getPriority());
-		db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + modId, null);
+		db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + courseId, null);
 		// remove all the old activities
 		String s = ACTIVITY_C_COURSEID + "=?";
-		String[] args = new String[] { String.valueOf(modId) };
+		String[] args = new String[] { String.valueOf(courseId) };
 		db.delete(ACTIVITY_TABLE, s, args);
-		return modId;
-	}
+		return courseId;
+	}*/
 	
 	
 	public int getCourseID(String shortname){
