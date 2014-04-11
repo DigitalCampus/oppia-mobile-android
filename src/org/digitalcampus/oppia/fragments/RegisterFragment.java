@@ -55,6 +55,8 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 	private EditText passwordAgainField;
 	private EditText firstnameField;
 	private EditText lastnameField;
+	private EditText jobTitleField;
+	private EditText organisationField;
 	private Button registerButton;
 	private ProgressDialog pDialog;
 	
@@ -91,6 +93,8 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		passwordAgainField = (EditText) super.getActivity().findViewById(R.id.register_form_password_again_field);
 		firstnameField = (EditText) super.getActivity().findViewById(R.id.register_form_firstname_field);
 		lastnameField = (EditText) super.getActivity().findViewById(R.id.register_form_lastname_field);
+		jobTitleField = (EditText) super.getActivity().findViewById(R.id.register_form_jobtitle_field);
+		organisationField = (EditText) super.getActivity().findViewById(R.id.register_form_organisation_field);
 		
 		registerButton = (Button) super.getActivity().findViewById(R.id.register_btn);
 		registerButton.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +140,9 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		String passwordAgain = (String) passwordAgainField.getText().toString();
 		String firstname = (String) firstnameField.getText().toString();
 		String lastname = (String) lastnameField.getText().toString();
-
+		String jobTitle = (String) jobTitleField.getText().toString();
+		String organisation = (String) organisationField.getText().toString();
+		
 		// do validation
 		// check firstname
 		if (username.length() == 0) {
@@ -186,6 +192,8 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		u.setFirstname(firstname);
 		u.setLastname(lastname);
 		u.setEmail(email);
+		u.setJobTitle(jobTitle);
+		u.setOrganisation(organisation);
 		users.add(u);
 		Payload p = new Payload(users);
 		RegisterTask lt = new RegisterTask(super.getActivity());

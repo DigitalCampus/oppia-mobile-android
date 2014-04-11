@@ -148,12 +148,9 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				// add schedule
 				// put this here so even if the course content isn't updated the schedule will be
 				db.insertSchedule(csxr.getSchedule());
-				db.updateScheduleVersion(added, csxr.getScheduleVersion());
-				
-				// TODO run task to reindex
-				
-				
+				db.updateScheduleVersion(added, csxr.getScheduleVersion());				
 				db.close();
+				
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);
 

@@ -32,6 +32,8 @@ public class User {
 	private String firstname;
 	private String lastname;
 	private String apiKey;
+	private String jobTitle;
+	private String organisation;
 	private boolean scoringEnabled = true;
 	private boolean badgingEnabled = true;
 	private int points = 0;
@@ -131,6 +133,18 @@ public class User {
 	}
 	public void setUserid(int userid) {
 		this.userid = userid;
+	}
+	public String getJobTitle() {
+		return jobTitle;
+	}
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+	public String getOrganisation() {
+		return organisation;
+	}
+	public void setOrganisation(String organisation) {
+		this.organisation = organisation;
 	}
 
 }

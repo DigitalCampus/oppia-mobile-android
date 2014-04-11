@@ -81,6 +81,8 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
             json.put("email",u.getEmail());
             json.put("firstname",u.getFirstname());
             json.put("lastname",u.getLastname());
+            json.put("jobtitle",u.getJobTitle());
+            json.put("organisation",u.getOrganisation());
             StringEntity se = new StringEntity(json.toString(),"utf8");
             se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             httpPost.setEntity(se);

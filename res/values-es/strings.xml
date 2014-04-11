@@ -95,12 +95,12 @@
 	<string name="login_password_title">Contraseña</string>
 	<string name="title_register">Registrar</string>
 	
-	<string name="register_form_username_title">Usuario</string>
-	<string name="register_form_email_title">Dirección e-mail</string>
-	<string name="register_form_firstname_title">Nombre</string>
-	<string name="register_form_lastname_title">Apellidos</string>
-	<string name="register_form_password_title">Contraseña</string>
-	<string name="register_form_password_again_title">Contraseña (repetir)</string>
+	<string name="register_form_username_title">Usuario (*)</string>
+	<string name="register_form_email_title">Dirección e-mail (*)</string>
+	<string name="register_form_firstname_title">Nombre (*)</string>
+	<string name="register_form_lastname_title">Apellidos (*)</string>
+	<string name="register_form_password_title">Contraseña (*)</string>
+	<string name="register_form_password_again_title">Contraseña (repetir) (*)</string>
 	<string name="register_btn_text">Registrar</string>
 	
 	<string name="yes">Sí</string>
