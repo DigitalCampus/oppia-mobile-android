@@ -23,6 +23,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
@@ -105,11 +106,26 @@ public class TrackerService extends Service implements APIRequestListener{
 			
 			// send quiz results
 			if(app.omSubmitQuizTask == null){
-				DbHelper db = new DbHelper(this);
-				ArrayList<User> users = db.getAllUsers();
-				db.close();
+				DbHelper db;
+				ArrayList<User> users = new ArrayList<User>();
+				try {
+					db = new DbHelper(this);
+					users = db.getAllUsers();
+					db.close();
+				} catch (DatabaseException e) {
+					e.printStackTrace();
+				}
+				
 				for(User u: users){
-					ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(u.getUserid());
+					DbHelper dbu;
+					ArrayList<TrackerLog> unsent = new ArrayList<TrackerLog>();
+					try {
+						dbu = new DbHelper(this);
+						unsent = dbu.getUnsentQuizResults(u.getUserid());
+						dbu.close();
+					} catch (DatabaseException e) {
+						e.printStackTrace();
+					}
 					if (unsent.size() > 0){
 						p = new Payload(unsent);
 						app.omSubmitQuizTask = new SubmitQuizTask(this);
@@ -146,10 +162,11 @@ public class TrackerService extends Service implements APIRequestListener{
 	}
 
 	public void apiRequestComplete(Payload response) {
-		DbHelper db = new DbHelper(this);
+		
 		
 		boolean updateAvailable = false;
 		try {
+			DbHelper db = new DbHelper(this);
 			JSONObject json = new JSONObject(response.getResultResponse());
 			Log.d(TAG,json.toString(4));
 			for (int i = 0; i < (json.getJSONArray("courses").length()); i++) {
@@ -166,10 +183,12 @@ public class TrackerService extends Service implements APIRequestListener{
 					}
 				}
 			}
+			db.close();
 		} catch (JSONException e) {
 			e.printStackTrace();
-		}	
-		db.close();
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
 		
 		if(updateAvailable){
 			Bitmap icon = BitmapFactory.decodeResource(getResources(),

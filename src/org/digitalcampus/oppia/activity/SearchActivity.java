@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
 
@@ -59,9 +60,15 @@ public class SearchActivity extends AppActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		DbHelper db = new DbHelper(this);
-		userId = db.getUserId(prefs.getString("preUsername", ""));
-		db.close();
+		DbHelper db;
+		try {
+			db = new DbHelper(this);
+			userId = db.getUserId(prefs.getString("preUsername", ""));
+			db.close();
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		
 		searchText = (EditText) findViewById(R.id.search_string);
 		summary = (TextView) findViewById(R.id.search_results_summary);
 		ImageView searchNow = (ImageView) findViewById(R.id.searchbutton);
@@ -77,9 +84,16 @@ public class SearchActivity extends AppActivity {
 	
 	private void doSearch(){
 		String searchString = searchText.getText().toString();
-		DbHelper db = new DbHelper(this);
-		ArrayList<SearchResult> results = db.search(searchString, 100, userId);
-		db.close();
+		DbHelper db;
+		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
+		try {
+			db = new DbHelper(this);
+			results = db.search(searchString, 100, userId);
+			db.close();
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		
 		
 		srla = new SearchResultsListAdapter(this, results);
 		ListView listView = (ListView) findViewById(R.id.search_results_list);

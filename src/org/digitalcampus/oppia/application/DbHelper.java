@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
 
+import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -112,12 +113,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_APIKEY = "apikey";
 	
 	// Constructor
-	public DbHelper(Context ctx) throws IllegalStateException { //
+	public DbHelper(Context ctx) throws DatabaseException { //
 		super(ctx, DB_NAME, null, DB_VERSION);
 		try {
 			db = this.getWritableDatabase();
 		} catch (IllegalStateException ise) {
-			throw new IllegalStateException(ise);
+			throw new DatabaseException();
 		}
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

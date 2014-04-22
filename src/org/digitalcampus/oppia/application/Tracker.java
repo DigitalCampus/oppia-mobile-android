@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import java.util.UUID;
 
+import org.digitalcampus.oppia.exception.DatabaseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,9 +42,15 @@ public class Tracker {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		DbHelper db = new DbHelper(this.ctx);
-		db.insertTracker(modId, digest, data.toString(), completed);
-		db.close();
+		DbHelper db;
+		try {
+			db = new DbHelper(this.ctx);
+			db.insertTracker(modId, digest, data.toString(), completed);
+			db.close();
+		} catch (DatabaseException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

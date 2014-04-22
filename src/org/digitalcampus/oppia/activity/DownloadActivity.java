@@ -25,6 +25,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadCourseListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Course;
@@ -131,7 +132,13 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		// process the response and display on screen in listview
 		// Create an array of courses, that will be put to our ListActivity
 
-		DbHelper db = new DbHelper(this);
+		DbHelper db;
+		try {
+			db = new DbHelper(this);
+		} catch (DatabaseException e1) {
+			e1.printStackTrace();
+			return;
+		}
 		try {
 			this.courses = new ArrayList<Course>();
 			
