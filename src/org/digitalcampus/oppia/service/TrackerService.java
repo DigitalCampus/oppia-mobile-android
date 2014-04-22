@@ -107,7 +107,6 @@ public class TrackerService extends Service implements APIRequestListener{
 			if(app.omSubmitQuizTask == null){
 				ArrayList<User> users = db.getAllUsers();
 				for(User u: users){
-					//Payload mqp = 
 					ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(u.getUserid());
 					if (unsent.size() > 0){
 						p = new Payload(unsent);
