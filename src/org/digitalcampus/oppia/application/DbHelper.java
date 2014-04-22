@@ -112,9 +112,13 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_APIKEY = "apikey";
 	
 	// Constructor
-	public DbHelper(Context ctx) { //
+	public DbHelper(Context ctx) throws IllegalStateException { //
 		super(ctx, DB_NAME, null, DB_VERSION);
-		db = this.getWritableDatabase();
+		try {
+			db = this.getWritableDatabase();
+		} catch (IllegalStateException ise) {
+			throw new IllegalStateException(ise);
+		}
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}

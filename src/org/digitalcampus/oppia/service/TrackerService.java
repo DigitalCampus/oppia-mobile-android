@@ -77,7 +77,7 @@ public class TrackerService extends Service implements APIRequestListener{
 		}
 
 		if (isOnline() && backgroundData) {
-			DbHelper db = new DbHelper(this);
+			
 			Payload p = null;
 			
 			// check for updated courses
@@ -105,7 +105,9 @@ public class TrackerService extends Service implements APIRequestListener{
 			
 			// send quiz results
 			if(app.omSubmitQuizTask == null){
+				DbHelper db = new DbHelper(this);
 				ArrayList<User> users = db.getAllUsers();
+				db.close();
 				for(User u: users){
 					ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(u.getUserid());
 					if (unsent.size() > 0){
@@ -116,7 +118,7 @@ public class TrackerService extends Service implements APIRequestListener{
 				}
 			}
 
-			db.close();
+			
 
 		}
 		return Service.START_NOT_STICKY;
