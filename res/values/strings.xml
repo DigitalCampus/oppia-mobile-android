@@ -156,8 +156,8 @@
 	<string name="info_upgrading">Upgrading to %1$s</string>
 	
 	<string name="loading_courses">Loading courses</string>
-	<string name="loading_points">Loading points&#8230;</string>
-	<string name="loading_badges">Loading badges&#8230;</string>
+	<string name="loading_points">Loading points &#8230;</string>
+	<string name="loading_badges">Loading badges &#8230;</string>
 	
 	<string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
 	

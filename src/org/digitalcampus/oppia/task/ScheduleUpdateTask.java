@@ -29,6 +29,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
@@ -134,6 +135,10 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 		} catch (IOException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch (DatabaseException e) {
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
+			e.printStackTrace();
 		}
 		
 		dp.setProgress(100);

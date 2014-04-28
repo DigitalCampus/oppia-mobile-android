@@ -32,6 +32,7 @@ import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
@@ -164,6 +165,10 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 			}
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
+		} catch (DatabaseException e) {
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
+			e.printStackTrace();
 		}
 		return payload;
 	}

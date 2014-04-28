@@ -32,6 +32,7 @@ import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.json.JSONException;
@@ -62,6 +63,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 		for (Object l : payload.getData()) {
 			TrackerLog tl = (TrackerLog) l;
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+			DbHelper db = null;
 			try {
 
 				String url = client.getFullURL(MobileLearning.QUIZ_SUBMIT_PATH);
@@ -81,11 +83,10 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 					responseStr += s;
 				}
 
+				db = new DbHelper(ctx);
 				switch (response.getStatusLine().getStatusCode()) {
 					case 201: // submitted
-						DbHelper db = new DbHelper(ctx);
 						db.markQuizSubmitted(tl.getId());
-						db.close();
 						payload.setResult(true);
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
@@ -97,23 +98,19 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 					case 400: // bad request - so to prevent re-submitting over and
 								// over
 								// just mark as submitted
-						DbHelper dba = new DbHelper(ctx);
-						dba.markQuizSubmitted(tl.getId());
-						dba.close();
+						db.markQuizSubmitted(tl.getId());
+						
 						payload.setResult(false);
 						break;
 					case 500: // bad request - so to prevent re-submitting over and
 								// over
 						// just mark as submitted
-						DbHelper dbb = new DbHelper(ctx);
-						dbb.markQuizSubmitted(tl.getId());
-						dbb.close();
+						db.markQuizSubmitted(tl.getId());
 						payload.setResult(false);
 						break;
 					default:
 						payload.setResult(false);
 				}
-
 			} catch (UnsupportedEncodingException e) {
 				payload.setResult(false);
 				publishProgress(ctx.getString(R.string.error_connection));
@@ -130,8 +127,12 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				} else {
 					e.printStackTrace();
 				}
+			} catch (DatabaseException e) {
+				payload.setResult(false);
+				publishProgress(ctx.getString(R.string.error_connection));
+				e.printStackTrace();
 			}
-
+			db.close();
 		}
 
 		return payload;
