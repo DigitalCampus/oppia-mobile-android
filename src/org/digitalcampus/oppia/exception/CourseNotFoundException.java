@@ -27,15 +27,9 @@ public class CourseNotFoundException extends Exception {
 	private static final long serialVersionUID = 6941152461497123259L;
 	
 	public void deleteCourse(Activity act, int id){
-		DbHelper db;
-		try {
-			db = new DbHelper(act);
-			db.deleteCourse(id);
-			db.close();
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-		}
-		
+		DbHelper db = new DbHelper(act);
+		db.deleteCourse(id);
+		db.close();
 	}
 
 }

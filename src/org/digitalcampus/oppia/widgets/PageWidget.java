@@ -213,11 +213,10 @@ public class PageWidget extends WidgetFactory {
 				}
 			}
 			db.close();
-			if (!completed) {
-				return false;
-			}
+			return completed;
+		} else {
+			return true;
 		}
-		return true;
 	}
 
 	public void saveTracker() {

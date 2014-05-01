@@ -22,7 +22,6 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.model.Course;
 
 import android.content.Context;
@@ -55,21 +54,17 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    View rowView = inflater.inflate(R.layout.schedule_reminder_list_row, parent, false);
 	    org.digitalcampus.oppia.model.Activity a = activityList.get(position);
-	    DbHelper db;
-		try {
-			db = new DbHelper(ctx);
-			long userId = db.getUserId(prefs.getString("prefUsername", ""));
-			Course course = db.getCourse(a.getCourseId(), userId);
-			db.close();
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
-			
-			TextView scheduleTitle = (TextView) rowView.findViewById(R.id.schedule_title);
-			scheduleTitle.setText(course.getTitle(lang) + ": " + a.getTitle(lang));
-			rowView.setTag(R.id.TAG_COURSE,course);
-			rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,a.getDigest());
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-		}
+	    DbHelper db  = new DbHelper(ctx);
+		long userId = db.getUserId(prefs.getString("prefUsername", ""));
+		Course course = db.getCourse(a.getCourseId(), userId);
+		db.close();
+		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+		
+		TextView scheduleTitle = (TextView) rowView.findViewById(R.id.schedule_title);
+		scheduleTitle.setText(course.getTitle(lang) + ": " + a.getTitle(lang));
+		rowView.setTag(R.id.TAG_COURSE,course);
+		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,a.getDigest());
+		
 	    return rowView;
 	}
 

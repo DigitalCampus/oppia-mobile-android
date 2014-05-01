@@ -25,7 +25,6 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -87,14 +86,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public void onStart() {
 		super.onStart();
-		DbHelper db;
-		try {
-			db = new DbHelper(this);
-			userId = db.getUserId(prefs.getString("prefUsername", ""));
-			db.close();
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-		}
+		DbHelper db = new DbHelper(this);
+		userId = db.getUserId(prefs.getString("prefUsername", ""));
+		db.close();
 		displayCourses(userId);		
 	}
 
@@ -111,14 +105,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	
 	private void displayCourses(long userId) {
 
-		DbHelper db;
-		try {
-			db = new DbHelper(this);
-			courses = db.getCourses(userId);
-			db.close();
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-		}
+		DbHelper db = new DbHelper(this);
+		courses = db.getCourses(userId);
+		db.close();
 		
 
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
@@ -161,19 +150,12 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	private void updateReminders(){
 		if(prefs.getBoolean("prefShowScheduleReminders", false)){
-			DbHelper db;
-			ArrayList<Activity> activities = new ArrayList<Activity>();
-			try {
-				db = new DbHelper(OppiaMobileActivity.this);
-				int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "2"));
-				long userId = db.getUserId(prefs.getString("prefUsername", ""));
-				activities = db.getActivitiesDue(max, userId);
-				db.close();
-			} catch (DatabaseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+			DbHelper db = new DbHelper(OppiaMobileActivity.this);
+			int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "2"));
+			long userId = db.getUserId(prefs.getString("prefUsername", ""));
+			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
+			db.close();
+
 			this.drawReminders(activities);
 		} else {
 			LinearLayout ll = (LinearLayout) findViewById(R.id.schedule_reminders);
@@ -320,15 +302,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				// remove db records
-				DbHelper db;
-				try {
-					db = new DbHelper(OppiaMobileActivity.this);
-					db.deleteCourse(tempCourse.getCourseId());
-					db.close();
-				} catch (DatabaseException e1) {
-					e1.printStackTrace();
-				}
-				
+				DbHelper db = new DbHelper(OppiaMobileActivity.this);
+				db.deleteCourse(tempCourse.getCourseId());
+				db.close();
+
 				// remove files
 				File f = new File(tempCourse.getLocation());
 				FileUtils.deleteDir(f);
@@ -353,15 +330,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setMessage(R.string.course_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				DbHelper db;
-				try {
-					db = new DbHelper(OppiaMobileActivity.this);
-					long userId = db.getUserId(prefs.getString("prefUsername", ""));
-					db.resetCourse(tempCourse.getCourseId(),userId);
-					db.close();
-				} catch (DatabaseException e) {
-					e.printStackTrace();
-				}
+				DbHelper db = new DbHelper(OppiaMobileActivity.this);
+				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				db.resetCourse(tempCourse.getCourseId(),userId);
+				db.close();
 				displayCourses(userId);
 			}
 		});

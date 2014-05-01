@@ -100,6 +100,8 @@ public class SearchUtils {
 				Log.d(TAG,"indexing: "+ c.getTitle("en"));
 				SearchUtils.indexAddCourse(ctx,c);
 			}
+
+			
 			return payload;
 		}
 	}

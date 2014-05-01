@@ -1,3 +1,20 @@
+/* 
+ * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * 
+ * OppiaMobile is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * OppiaMobile is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.digitalcampus.oppia.task;
 
 import java.io.BufferedReader;
@@ -46,107 +63,111 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 
 	@Override
 	protected Payload doInBackground(Payload... params) {
-		DbHelper db = new DbHelper(ctx);
-		ArrayList<User> users = db.getAllUsers();
-		db.close();
 		Payload payload = new Payload();
-		
-		for(User u: users){
-			DbHelper db1 = new DbHelper(ctx);
-			payload = db1.getUnsentTrackers(u.getUserid());
-			db1.close();
-			
-			@SuppressWarnings("unchecked")
-			Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
-			
-			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-			
-			String url =client.getFullURL(MobileLearning.TRACKER_PATH);
-			
-			HttpPatch httpPatch = new HttpPatch(url);
-			
-			for (Collection<TrackerLog> trackerBatch : result) {
-				String dataToSend = createDataString(trackerBatch);
+		DbHelper db = new DbHelper(ctx);
+		try {
+			// TODO - bit of a hack using this try/catch - 
+			// need to find the real cause of this IllegalStateException issue
+			ArrayList<User> users = db.getAllUsers();
+	
+			for(User u: users){
+				Log.d(TAG,u.getUsername());
+				payload = db.getUnsentTrackers(u.getUserid());
 				
-				try {
-	
-					StringEntity se = new StringEntity(dataToSend,"utf8");
-	                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-	                httpPatch.setEntity(se);
-	                
-	                httpPatch.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
+				@SuppressWarnings("unchecked")
+				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
+				
+				HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+				
+				String url =client.getFullURL(MobileLearning.TRACKER_PATH);
+				
+				HttpPatch httpPatch = new HttpPatch(url);
+				
+				for (Collection<TrackerLog> trackerBatch : result) {
+					String dataToSend = createDataString(trackerBatch);
 					
-	                // make request
-					HttpResponse response = client.execute(httpPatch);	
-					
-					InputStream content = response.getEntity().getContent();
-					BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
-					String responseStr = "";
-					String s = "";
-	
-					while ((s = buffer.readLine()) != null) {
-						responseStr += s;
-					}
-					Log.d(TAG,responseStr);
-					switch (response.getStatusLine().getStatusCode()){
-						case 200: // submitted
-							DbHelper dbh = new DbHelper(ctx);
-							for(TrackerLog tl: trackerBatch){
-								dbh.markLogSubmitted(tl.getId());
-							}
-							dbh.close();
-							payload.setResult(true);
-							// update points
-							JSONObject jsonResp = new JSONObject(responseStr);
-							Editor editor = prefs.edit();
-							
-							editor.putInt("prefPoints", jsonResp.getInt("points"));
-							editor.putInt("prefBadges", jsonResp.getInt("badges"));
-							try {
-								editor.putBoolean("prefScoringEnabled", jsonResp.getBoolean("scoring"));
-								editor.putBoolean("prefBadgingEnabled", jsonResp.getBoolean("badging"));
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-							editor.commit();
-							
-							try {
-								JSONObject metadata = jsonResp.getJSONObject("metadata");
-						        MetaDataUtils mu = new MetaDataUtils(ctx);
-						        mu.saveMetaData(metadata, prefs);
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-					    	
-							break;
-						case 400: // submitted but invalid digest - returned 400 Bad Request - so record as submitted so doesn't keep trying
-							DbHelper dbh2 = new DbHelper(ctx);
-							for(TrackerLog tl: trackerBatch){
-								dbh2.markLogSubmitted(tl.getId());
-							};
-							dbh2.close();
-							payload.setResult(true);
-							break;
-						default:
-							payload.setResult(false);
-					}
-	
-				} catch (UnsupportedEncodingException e) {
-					payload.setResult(false);
-				} catch (ClientProtocolException e) {
-					payload.setResult(false);
-				} catch (IOException e) {
-					payload.setResult(false);
-				} catch (JSONException e) {
-					if(!MobileLearning.DEVELOPER_MODE){
-						BugSenseHandler.sendException(e);
-					} else {
-						e.printStackTrace();
-					}
-					payload.setResult(false);
-				}
-			}
+					try {
 		
+						StringEntity se = new StringEntity(dataToSend,"utf8");
+		                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+		                httpPatch.setEntity(se);
+		                
+		                httpPatch.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
+						
+		                // make request
+						HttpResponse response = client.execute(httpPatch);	
+						
+						InputStream content = response.getEntity().getContent();
+						BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
+						String responseStr = "";
+						String s = "";
+		
+						while ((s = buffer.readLine()) != null) {
+							responseStr += s;
+						}
+						Log.d(TAG,responseStr);
+						switch (response.getStatusLine().getStatusCode()){
+							case 200: // submitted
+								for(TrackerLog tl: trackerBatch){
+									db.markLogSubmitted(tl.getId());
+								}
+								payload.setResult(true);
+								// update points
+								JSONObject jsonResp = new JSONObject(responseStr);
+								Editor editor = prefs.edit();
+								
+								editor.putInt("prefPoints", jsonResp.getInt("points"));
+								editor.putInt("prefBadges", jsonResp.getInt("badges"));
+								try {
+									editor.putBoolean("prefScoringEnabled", jsonResp.getBoolean("scoring"));
+									editor.putBoolean("prefBadgingEnabled", jsonResp.getBoolean("badging"));
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+								editor.commit();
+								
+								try {
+									JSONObject metadata = jsonResp.getJSONObject("metadata");
+							        MetaDataUtils mu = new MetaDataUtils(ctx);
+							        mu.saveMetaData(metadata, prefs);
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+						    	
+								break;
+							case 400: // submitted but invalid digest - returned 400 Bad Request - so record as submitted so doesn't keep trying
+								for(TrackerLog tl: trackerBatch){
+									db.markLogSubmitted(tl.getId());
+								};
+								payload.setResult(true);
+								break;
+							default:
+								payload.setResult(false);
+						}
+		
+					} catch (UnsupportedEncodingException e) {
+						payload.setResult(false);
+					} catch (ClientProtocolException e) {
+						payload.setResult(false);
+					} catch (IOException e) {
+						payload.setResult(false);
+					} catch (JSONException e) {
+						if(!MobileLearning.DEVELOPER_MODE){
+							BugSenseHandler.sendException(e);
+						} else {
+							e.printStackTrace();
+						}
+						payload.setResult(false);
+					}
+				}
+			
+			}
+	
+			db.close();
+		} catch (IllegalStateException ise) {
+			db.close();
+			ise.printStackTrace();
+			payload.setResult(false);
 		}
 		return payload;
 	}

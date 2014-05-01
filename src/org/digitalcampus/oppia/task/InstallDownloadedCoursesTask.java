@@ -23,7 +23,6 @@ import java.util.Locale;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -119,45 +118,40 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				
 				boolean success = false;
 				
-				DbHelper db;
-				try {
-					db = new DbHelper(ctx);
-					long added = db.addOrUpdateCourse(c);
-					if (added != -1) {
-						payload.addResponseData(c);
-						File src = new File(tempdir + "/" + courseDirs[0]);
-						File dest = new File(MobileLearning.COURSES_PATH);
-	
-						db.insertActivities(cxr.getActivities(added));
-						db.insertTrackers(ctxr.getTrackers(),added);
-						// Delete old course
-						File oldCourse = new File(MobileLearning.COURSES_PATH + courseDirs[0]);
-						FileUtils.deleteDir(oldCourse);
-	
-						// move from temp to courses dir
-						success = src.renameTo(new File(dest, src.getName()));
-	
-						if (success) {
-							// add the course to the search index
-							payload.setResult(true);
-							payload.setResultResponse(ctx.getString(R.string.install_course_complete, title));
-						} else {
-							payload.setResult(false);
-							payload.setResultResponse(ctx.getString(R.string.error_installing_course, title));
-						}
-					}  else {
+				DbHelper db = new DbHelper(ctx);
+				long added = db.addOrUpdateCourse(c);
+				if (added != -1) {
+					payload.addResponseData(c);
+					File src = new File(tempdir + "/" + courseDirs[0]);
+					File dest = new File(MobileLearning.COURSES_PATH);
+
+					db.insertActivities(cxr.getActivities(added));
+					db.insertTrackers(ctxr.getTrackers(),added);
+					// Delete old course
+					File oldCourse = new File(MobileLearning.COURSES_PATH + courseDirs[0]);
+					FileUtils.deleteDir(oldCourse);
+
+					// move from temp to courses dir
+					success = src.renameTo(new File(dest, src.getName()));
+
+					if (success) {
+						// add the course to the search index
+						payload.setResult(true);
+						payload.setResultResponse(ctx.getString(R.string.install_course_complete, title));
+					} else {
 						payload.setResult(false);
-						payload.setResultResponse(ctx.getString(R.string.error_latest_already_installed, title));
+						payload.setResultResponse(ctx.getString(R.string.error_installing_course, title));
 					}
-					
-					// add schedule
-					// put this here so even if the course content isn't updated the schedule will be
-					db.insertSchedule(csxr.getSchedule());
-					db.updateScheduleVersion(added, csxr.getScheduleVersion());				
-					db.close();
-				} catch (DatabaseException e) {
-					e.printStackTrace();
+				}  else {
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_latest_already_installed, title));
 				}
+				
+				// add schedule
+				// put this here so even if the course content isn't updated the schedule will be
+				db.insertSchedule(csxr.getSchedule());
+				db.updateScheduleVersion(added, csxr.getScheduleVersion());				
+				db.close();
 				
 				if (success){
 					SearchUtils.indexAddCourse(this.ctx, c);

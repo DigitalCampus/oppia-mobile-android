@@ -23,7 +23,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.exception.DatabaseException;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
@@ -106,26 +105,15 @@ public class TrackerService extends Service implements APIRequestListener{
 			
 			// send quiz results
 			if(app.omSubmitQuizTask == null){
-				DbHelper db;
-				ArrayList<User> users = new ArrayList<User>();
-				try {
-					db = new DbHelper(this);
-					users = db.getAllUsers();
-					db.close();
-				} catch (DatabaseException e) {
-					e.printStackTrace();
-				}
-				
+				DbHelper db = new DbHelper(this);
+				ArrayList<User> users = db.getAllUsers();
+				db.close();
+			
 				for(User u: users){
-					DbHelper dbu;
-					ArrayList<TrackerLog> unsent = new ArrayList<TrackerLog>();
-					try {
-						dbu = new DbHelper(this);
-						unsent = dbu.getUnsentQuizResults(u.getUserid());
-						dbu.close();
-					} catch (DatabaseException e) {
-						e.printStackTrace();
-					}
+					DbHelper dbu = new DbHelper(this);
+					ArrayList<TrackerLog> unsent = dbu.getUnsentQuizResults(u.getUserid());
+					dbu.close();
+			
 					if (unsent.size() > 0){
 						p = new Payload(unsent);
 						app.omSubmitQuizTask = new SubmitQuizTask(this);
@@ -186,9 +174,7 @@ public class TrackerService extends Service implements APIRequestListener{
 			db.close();
 		} catch (JSONException e) {
 			e.printStackTrace();
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-		}
+		} 
 		
 		if(updateAvailable){
 			Bitmap icon = BitmapFactory.decodeResource(getResources(),

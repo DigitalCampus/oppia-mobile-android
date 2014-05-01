@@ -230,14 +230,14 @@ public class FeedbackWidget extends WidgetFactory {
 		DbHelper db = new DbHelper(super.getActivity());
 		db.insertQuizResult(data, course.getCourseId());
 		db.close();
-		
+
 		// load new layout
-		View C = getView().findViewById(R.id.quiz_progress);
-	    ViewGroup parent = (ViewGroup) C.getParent();
-	    int index = parent.indexOfChild(C);
-	    parent.removeView(C);
-	    C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_feedback_results, parent, false);
-	    parent.addView(C, index);
+		View view = getView().findViewById(R.id.quiz_progress);
+	    ViewGroup parent = (ViewGroup) view.getParent();
+	    int index = parent.indexOfChild(view);
+	    parent.removeView(view);
+	    view = super.getActivity().getLayoutInflater().inflate(R.layout.widget_feedback_results, parent, false);
+	    parent.addView(view, index);
 
 	}
 	

@@ -36,7 +36,6 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -336,6 +335,7 @@ public class QuizWidget extends WidgetFactory {
 		DbHelper db = new DbHelper(super.getActivity());
 		db.insertQuizResult(data, course.getCourseId());
 		db.close();
+		
 		
 		// load new layout
 		View C = getView().findViewById(R.id.quiz_progress);

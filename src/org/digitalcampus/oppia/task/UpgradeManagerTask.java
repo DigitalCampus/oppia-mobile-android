@@ -137,7 +137,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				c.setLangs(cxr.getLangs());
 				
 				
-				DbHelper db = new DbHelper(ctx);
+				DbHelper db;
+				db = new DbHelper(ctx);
 				long courseId = db.addOrUpdateCourse(c);
 				
 				if (courseId != -1) {
@@ -151,6 +152,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
 				
 				db.close();
+
+				
 			}
 		}
 	}
@@ -175,6 +178,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		long userId = db.addOrUpdateUser(user);
 		db.updateV43(userId);
 		db.close();
+		
 	}
 	
 	
