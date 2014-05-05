@@ -179,8 +179,8 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		}
 
 		pDialog = new ProgressDialog(super.getActivity());
-		pDialog.setTitle("Register");
-		pDialog.setMessage("Registering...");
+		pDialog.setTitle(R.string.register_alert_title);
+		pDialog.setMessage(getString(R.string.register_process));
 		pDialog.setCancelable(true);
 		pDialog.show();
 
@@ -196,8 +196,8 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		u.setOrganisation(organisation);
 		users.add(u);
 		Payload p = new Payload(users);
-		RegisterTask lt = new RegisterTask(super.getActivity());
-		lt.setLoginListener(this);
-		lt.execute(p);
+		RegisterTask rt = new RegisterTask(super.getActivity());
+		rt.setRegisterListener(this);
+		rt.execute(p);
 	}
 }

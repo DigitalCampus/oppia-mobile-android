@@ -30,13 +30,9 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -44,17 +40,15 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-import com.bugsense.trace.BugSenseHandler;
+public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 
-public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
-
-	public static final String TAG = RegisterTask.class.getSimpleName();
+	public static final String TAG = ResetTask.class.getSimpleName();
 
 	private Context ctx;
 	private SharedPreferences prefs;
 	private SubmitListener mStateListener;
 
-	public RegisterTask(Context ctx) {
+	public ResetTask(Context ctx) {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
@@ -63,26 +57,17 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
-		User u = (User) payload.getData().get(0);
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
 		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault))
-				+ MobileLearning.REGISTER_PATH;
+				+ MobileLearning.RESET_PATH;
 		
 		HttpPost httpPost = new HttpPost(url);
 		try {
 			// update progress dialog
-			publishProgress(ctx.getString(R.string.register_process));
+			publishProgress(ctx.getString(R.string.reset_process));
 			// add post params
 			JSONObject json = new JSONObject();
-			json.put("username", u.getUsername());
-            json.put("password", u.getPassword());
-            json.put("passwordagain",u.getPasswordAgain());
-            json.put("email",u.getEmail());
-            json.put("firstname",u.getFirstname());
-            json.put("lastname",u.getLastname());
-            json.put("jobtitle",u.getJobTitle());
-            json.put("organisation",u.getOrganisation());
             StringEntity se = new StringEntity(json.toString(),"utf8");
             se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             httpPost.setEntity(se);
@@ -106,41 +91,9 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 					payload.setResultResponse(responseStr);
 					break;
 				case 201: // logged in
-					JSONObject jsonResp = new JSONObject(responseStr);
-					u.setApiKey(jsonResp.getString("api_key"));
-					try {
-						u.setPoints(jsonResp.getInt("points"));
-						u.setBadges(jsonResp.getInt("badges"));
-					} catch (JSONException e){
-						u.setPoints(0);
-						u.setBadges(0);
-					}
-					try {
-						u.setScoringEnabled(jsonResp.getBoolean("scoring"));
-						u.setBadgingEnabled(jsonResp.getBoolean("badging"));
-					} catch (JSONException e){
-						u.setScoringEnabled(true);
-						u.setBadgingEnabled(true);
-					}
-					try {
-						JSONObject metadata = jsonResp.getJSONObject("metadata");
-				        MetaDataUtils mu = new MetaDataUtils(ctx);
-				        mu.saveMetaData(metadata, prefs);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					u.setFirstname(jsonResp.getString("first_name"));
-					u.setLastname(jsonResp.getString("last_name"));
-					u.setPassword(u.getPassword());
-					u.setPasswordEncrypted();
-					
-					// add or update user in db
-					DbHelper db = new DbHelper(ctx);
-					db.addOrUpdateUser(u);
-					db.close();
 					
 					payload.setResult(true);
-					payload.setResultResponse(ctx.getString(R.string.register_complete));
+					payload.setResultResponse(ctx.getString(R.string.reset_complete));
 					break;
 				default:
 					payload.setResult(false);
@@ -156,15 +109,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 		} catch (IOException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
-		} catch (JSONException e) {
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(e);
-			} else {
-				e.printStackTrace();
-			}
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
-		} 
+		}
 		return payload;
 	}
 
@@ -177,7 +122,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 		}
 	}
 
-	public void setRegisterListener(SubmitListener srl) {
+	public void setResetListener(SubmitListener srl) {
 		synchronized (this) {
 			mStateListener = srl;
 		}

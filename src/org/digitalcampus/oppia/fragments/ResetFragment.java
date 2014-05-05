@@ -21,11 +21,10 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.RegisterTask;
+import org.digitalcampus.oppia.task.ResetTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,13 +78,13 @@ public class ResetFragment extends Fragment implements SubmitListener{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		usernameField = (EditText) super.getActivity().findViewById(R.id.register_form_username_field);
+		usernameField = (EditText) super.getActivity().findViewById(R.id.reset_username_field);
 		
-		resetButton = (Button) super.getActivity().findViewById(R.id.register_btn);
+		resetButton = (Button) super.getActivity().findViewById(R.id.reset_btn);
 		resetButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				onRegisterClick(v);
+				onResetClick(v);
 			}
 		});
 	}
@@ -117,7 +116,7 @@ public class ResetFragment extends Fragment implements SubmitListener{
 		}
 	}
 
-	public void onRegisterClick(View view) {
+	public void onResetClick(View view) {
 		// get form fields
 		String username = (String) usernameField.getText().toString();
 
@@ -131,8 +130,8 @@ public class ResetFragment extends Fragment implements SubmitListener{
 
 
 		pDialog = new ProgressDialog(super.getActivity());
-		pDialog.setTitle("Register");
-		pDialog.setMessage("Registering...");
+		pDialog.setTitle(R.string.reset_alert_title);
+		pDialog.setMessage(getString(R.string.reset_process));
 		pDialog.setCancelable(true);
 		pDialog.show();
 
@@ -141,8 +140,8 @@ public class ResetFragment extends Fragment implements SubmitListener{
 		u.setUsername(username);
 		users.add(u);
 		Payload p = new Payload(users);
-		RegisterTask lt = new RegisterTask(super.getActivity());
-		lt.setLoginListener(this);
-		lt.execute(p);
+		ResetTask rt = new ResetTask(super.getActivity());
+		rt.setResetListener(this);
+		rt.execute(p);
 	}
 }
