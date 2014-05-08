@@ -134,7 +134,7 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 
 	public void onRegisterClick(View view) {
 		// get form fields
-		String username = (String) usernameField.getText().toString();
+		String username = (String) usernameField.getText().toString().trim();
 		String email = (String) emailField.getText().toString();
 		String password = (String) passwordField.getText().toString();
 		String passwordAgain = (String) passwordAgainField.getText().toString();
@@ -144,12 +144,17 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		String organisation = (String) organisationField.getText().toString();
 		
 		// do validation
-		// check firstname
+		// check username
 		if (username.length() == 0) {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_username);
 			return;
 		}
-				
+			
+		if (username.contains(" ")) {
+			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_username_spaces);
+			return;
+		}
+		
 		// TODO check valid email address format
 		// android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 		if (email.length() == 0) {

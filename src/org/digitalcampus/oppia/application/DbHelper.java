@@ -600,7 +600,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		// delete quiz results
 		this.deleteQuizResults(courseId, userId);
 		
-		String s = TRACKER_LOG_C_COURSEID + "=? " + TRACKER_LOG_C_USERID + "=? ";
+		String s = TRACKER_LOG_C_COURSEID + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
 		String[] args = new String[] { String.valueOf(courseId), String.valueOf(userId) };
 		return db.delete(TRACKER_LOG_TABLE, s, args);
 	}
@@ -777,7 +777,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void deleteQuizResults(int courseId, long userId){
 		// delete any quiz attempts
-		String s = QUIZRESULTS_C_COURSEID + "=? " + QUIZRESULTS_C_USERID +"=?";
+		String s = QUIZRESULTS_C_COURSEID + "=? AND " + QUIZRESULTS_C_USERID +"=?";
 		String[] args = new String[] { String.valueOf(courseId), String.valueOf(userId) };
 		db.delete(QUIZRESULTS_TABLE, s, args);
 	}

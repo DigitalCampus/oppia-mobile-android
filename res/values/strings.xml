@@ -181,6 +181,7 @@
 	<string name="error_register_no_firstname">Please enter your first name</string>
 	<string name="error_register_no_lastname">Please enter your last name</string>
 	<string name="error_register_no_username">Please enter a username</string>
+	<string name="error_register_username_spaces">Your username cannot contain spaces</string>
 	<string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
 	<string name="error_resource_not_found">File: \'%1$s\' not found.</string>
 	

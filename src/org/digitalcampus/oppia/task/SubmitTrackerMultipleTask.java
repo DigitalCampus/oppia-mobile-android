@@ -158,7 +158,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 							e.printStackTrace();
 						}
 						payload.setResult(false);
-					}
+					} 
 				}
 			
 			}
@@ -168,7 +168,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 			db.close();
 			ise.printStackTrace();
 			payload.setResult(false);
-		}
+		} 
 		return payload;
 	}
 
