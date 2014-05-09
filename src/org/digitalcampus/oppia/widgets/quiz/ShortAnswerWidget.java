@@ -50,11 +50,11 @@ public class ShortAnswerWidget extends QuestionWidget {
 	
 	public List<String> getQuestionResponses(List<Response> responses){
 		EditText et = (EditText) view.findViewById(R.id.responsetext);
-		if(et.getText().toString().equals("")){
+		if(et.getText().toString().trim().equals("")){
 			return null;
 		} else {
 			List<String> response = new ArrayList<String>();
-			response.add(et.getText().toString());
+			response.add(et.getText().toString().trim());
 			return response;
 		}
 	}
