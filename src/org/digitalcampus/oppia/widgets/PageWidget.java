@@ -113,6 +113,7 @@ public class PageWidget extends WidgetFactory {
 				+ activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault()
 						.getLanguage()));
 		try {
+			wv.getSettings().setJavaScriptEnabled(true);
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", FileUtils.readFile(url), "text/html",
 					"utf-8", null);
 		} catch (IOException e) {
