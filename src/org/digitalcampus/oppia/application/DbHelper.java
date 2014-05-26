@@ -50,6 +50,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	static final String DB_NAME = "mobilelearning.db";
 	static final int DB_VERSION = 18;
 
+	private static DbHelper sInstance;
+	
 	public static SQLiteDatabase db;
 	private Context ctx;
 	private SharedPreferences prefs;
@@ -111,10 +113,20 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_PASSWORD = "passwordencrypted";
 	private static final String USER_C_APIKEY = "apikey";
 	
+	public static DbHelper getInstance(Context context) {
+
+	    // Use the application context, which will ensure that you 
+	    // don't accidentally leak an Activity's context.
+	    // See this article for more information: http://bit.ly/6LRzfx
+	    if (sInstance == null) {
+	      sInstance = new DbHelper(context.getApplicationContext());
+	    }
+	    return sInstance;
+	  }
+	
 	// Constructor
-	public DbHelper(Context ctx) { //
-		
-		SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+	private DbHelper(Context ctx) { //
+		super(ctx, DB_NAME, null, DB_VERSION);
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
@@ -1009,6 +1021,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void close(){
-		DatabaseManager.getInstance().closeDatabase();
+		db.close();
+		sInstance = null;
 	}
 }
