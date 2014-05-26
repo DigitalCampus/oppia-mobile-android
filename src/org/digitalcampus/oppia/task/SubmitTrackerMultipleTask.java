@@ -55,17 +55,20 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 
 	private Context ctx;
 	private SharedPreferences prefs;
+	private DbHelper db;
 
-	public SubmitTrackerMultipleTask(Context ctx) {
+	public SubmitTrackerMultipleTask(Context ctx, DbHelper db) {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		this.db = db;
 	}
 
 	@Override
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = new Payload();
-		DbHelper db = new DbHelper(ctx);
+		
 		try {
+			//DbHelper db = new DbHelper(ctx);
 			// TODO - bit of a hack using this try/catch - 
 			// need to find the real cause of this IllegalStateException issue
 			ArrayList<User> users = db.getAllUsers();
@@ -163,9 +166,9 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 			
 			}
 	
-			db.close();
+			//db.close();
 		} catch (IllegalStateException ise) {
-			db.close();
+			//db.close();
 			ise.printStackTrace();
 			payload.setResult(false);
 		} 

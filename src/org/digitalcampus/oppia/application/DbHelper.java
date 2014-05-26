@@ -113,9 +113,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	// Constructor
 	public DbHelper(Context ctx) { //
-		super(ctx, DB_NAME, null, DB_VERSION);
-		db = this.getWritableDatabase();
-		this.ctx = ctx;
+		
+		SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
@@ -1007,5 +1006,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = "docid=?";
 		String[] args = new String[] { String.valueOf(activityDbId) };
 		db.delete(SEARCH_TABLE, s, args);
+	}
+	
+	public void close(){
+		DatabaseManager.getInstance().closeDatabase();
 	}
 }

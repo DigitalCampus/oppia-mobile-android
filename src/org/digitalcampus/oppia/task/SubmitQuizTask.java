@@ -50,10 +50,12 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 	public final static String TAG = SubmitQuizTask.class.getSimpleName();
 	private Context ctx;
 	private SharedPreferences prefs;
-
-	public SubmitQuizTask(Context c) {
+	private DbHelper db;
+	
+	public SubmitQuizTask(Context c, DbHelper db) {
 		this.ctx = c;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		this.db = db;
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 		for (Object l : payload.getData()) {
 			TrackerLog tl = (TrackerLog) l;
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-			DbHelper db = null;
+			//DbHelper db = null;
 			try {
 
 				String url = client.getFullURL(MobileLearning.QUIZ_SUBMIT_PATH);
@@ -82,7 +84,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 					responseStr += s;
 				}
 
-				db = new DbHelper(ctx);
+				//db = new DbHelper(ctx);
 				switch (response.getStatusLine().getStatusCode()) {
 					case 201: // submitted
 						db.markQuizSubmitted(tl.getId());
@@ -127,7 +129,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 					e.printStackTrace();
 				}
 			} 
-			db.close();
+			//db.close();
 		}
 
 		return payload;
