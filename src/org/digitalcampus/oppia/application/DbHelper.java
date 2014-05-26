@@ -692,7 +692,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return users;
 	}
 	
-	public Payload getUnsentTrackers(int userId){
+	public Payload getUnsentTrackers(long userId){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
 		String[] args = new String[] { "0", String.valueOf(userId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
@@ -749,7 +749,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return db.insertOrThrow(QUIZRESULTS_TABLE, null, values);
 	}
 	
-	public ArrayList<TrackerLog>  getUnsentQuizResults(int userId){
+	public ArrayList<TrackerLog>  getUnsentQuizResults(long userId){
 		String s = QUIZRESULTS_C_SENT + "=? AND " + QUIZRESULTS_C_USERID + "=? ";
 		String[] args = new String[] { "0", String.valueOf(userId) };
 		Cursor c = db.query(QUIZRESULTS_TABLE, null, s, args, null, null, null);

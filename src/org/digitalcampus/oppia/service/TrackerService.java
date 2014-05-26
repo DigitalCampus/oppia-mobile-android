@@ -108,19 +108,14 @@ public class TrackerService extends Service implements APIRequestListener{
 			if(app.omSubmitQuizTask == null){
 				Log.d(TAG,"Sumitting quiz task");
 				DbHelper db = DbHelper.getInstance(this);
-				ArrayList<User> users = db.getAllUsers();
+				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(userId);
 				db.close();
-			
-				for(User u: users){
-					DbHelper dbu = DbHelper.getInstance(this);
-					ArrayList<TrackerLog> unsent = dbu.getUnsentQuizResults(u.getUserid());
-					dbu.close();
-			
-					if (unsent.size() > 0){
-						p = new Payload(unsent);
-						app.omSubmitQuizTask = new SubmitQuizTask(this);
-						app.omSubmitQuizTask.execute(p);
-					}
+		
+				if (unsent.size() > 0){
+					p = new Payload(unsent);
+					app.omSubmitQuizTask = new SubmitQuizTask(this);
+					app.omSubmitQuizTask.execute(p);
 				}
 			}
 

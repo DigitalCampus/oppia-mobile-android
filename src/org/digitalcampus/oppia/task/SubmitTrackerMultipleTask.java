@@ -66,17 +66,14 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 		Payload payload = new Payload();
 		
 		try {
-			
-			// TODO - bit of a hack using this try/catch - 
-			// need to find the real cause of this IllegalStateException issue
-			DbHelper db = DbHelper.getInstance(ctx);
-			ArrayList<User> users = db.getAllUsers();
-			db.close();
-			for(User u: users){
-				Log.d(TAG,u.getUsername());
-				DbHelper dbu = DbHelper.getInstance(ctx);
-				payload = dbu.getUnsentTrackers(u.getUserid());
-				dbu.close();
+				
+				DbHelper db1 = DbHelper.getInstance(ctx);
+				db1.close();
+				DbHelper db = DbHelper.getInstance(ctx);
+				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				Log.d(TAG,"userId: " + userId);
+				payload = db.getUnsentTrackers(userId);
+				db.close();
 				@SuppressWarnings("unchecked")
 				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
 				
@@ -95,7 +92,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 		                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 		                httpPatch.setEntity(se);
 		                
-		                httpPatch.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
+		                httpPatch.addHeader(client.getAuthHeader());
 						
 		                // make request
 						HttpResponse response = client.execute(httpPatch);	
@@ -168,7 +165,6 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 					} 
 				}
 			
-			}
 	
 		} catch (IllegalStateException ise) {
 			ise.printStackTrace();
