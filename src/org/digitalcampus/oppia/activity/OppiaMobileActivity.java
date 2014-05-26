@@ -24,6 +24,7 @@ import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
@@ -86,9 +87,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public void onStart() {
 		super.onStart();
-		DbHelper db = DbHelper.getInstance(this);
+		DbHelper db = new DbHelper(this);
 		userId = db.getUserId(prefs.getString("prefUsername", ""));
-		DbHelper.closeInstance();
+		DatabaseManager.getInstance().closeDatabase();
 		displayCourses(userId);		
 	}
 
@@ -105,9 +106,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	
 	private void displayCourses(long userId) {
 
-		DbHelper db = DbHelper.getInstance(this);
+		DbHelper db = new DbHelper(this);
 		courses = db.getCourses(userId);
-		DbHelper.closeInstance();
+		DatabaseManager.getInstance().closeDatabase();
 		
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
@@ -149,11 +150,11 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	private void updateReminders(){
 		if(prefs.getBoolean("prefShowScheduleReminders", false)){
-			DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
+			DbHelper db = new DbHelper(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "2"));
 			long userId = db.getUserId(prefs.getString("prefUsername", ""));
 			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
-			DbHelper.closeInstance();
+			DatabaseManager.getInstance().closeDatabase();
 
 			this.drawReminders(activities);
 		} else {
@@ -301,9 +302,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				// remove db records
-				DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
+				DbHelper db = new DbHelper(OppiaMobileActivity.this);
 				db.deleteCourse(tempCourse.getCourseId());
-				DbHelper.closeInstance();
+				DatabaseManager.getInstance().closeDatabase();
 
 				// remove files
 				File f = new File(tempCourse.getLocation());
@@ -329,10 +330,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setMessage(R.string.course_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
+				DbHelper db = new DbHelper(OppiaMobileActivity.this);
 				long userId = db.getUserId(prefs.getString("prefUsername", ""));
 				db.resetCourse(tempCourse.getCourseId(),userId);
-				DbHelper.closeInstance();
+				DatabaseManager.getInstance().closeDatabase();
 				displayCourses(userId);
 			}
 		});

@@ -34,6 +34,7 @@ public class MobileLearning extends Application {
 
 	public static final String TAG = MobileLearning.class.getSimpleName();
 
+	
 	// local storage vars
 	public static final String OPPIAMOBILE_ROOT = Environment
 			.getExternalStorageDirectory() + "/digitalcampus/";

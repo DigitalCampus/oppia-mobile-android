@@ -23,6 +23,7 @@ import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadCourseListAdapter;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -131,7 +132,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		// process the response and display on screen in listview
 		// Create an array of courses, that will be put to our ListActivity
 
-		DbHelper db = DbHelper.getInstance(this);
+		DbHelper db = new DbHelper(this);
 		try {
 			this.courses = new ArrayList<Course>();
 			
@@ -194,7 +195,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 			}
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
-		DbHelper.closeInstance();
+		DatabaseManager.getInstance().closeDatabase();
 
 	}
 	

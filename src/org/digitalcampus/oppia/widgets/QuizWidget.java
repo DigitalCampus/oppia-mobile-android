@@ -35,6 +35,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
@@ -332,9 +333,9 @@ public class QuizWidget extends WidgetFactory {
 
 		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
-		DbHelper db = DbHelper.getInstance(super.getActivity());
+		DbHelper db = new DbHelper(super.getActivity());
 		db.insertQuizResult(data, course.getCourseId());
-		DbHelper.closeInstance();
+		DatabaseManager.getInstance().closeDatabase();
 		
 		
 		// load new layout

@@ -27,6 +27,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
@@ -94,7 +95,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 					payload.setResultResponse("");
 					JSONObject jsonObj = new JSONObject(responseStr);
 					long scheduleVersion = jsonObj.getLong("version");
-					DbHelper db = DbHelper.getInstance(this.ctx);
+					DbHelper db = new DbHelper(this.ctx);
 					JSONArray schedule = jsonObj.getJSONArray("activityschedule");
 					ArrayList<ActivitySchedule> activitySchedule = new ArrayList<ActivitySchedule>();
 					for (int i = 0; i < (schedule.length()); i++) {
@@ -113,7 +114,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 					db.resetSchedule(modId);
 					db.insertSchedule(activitySchedule);
 					db.updateScheduleVersion(modId, scheduleVersion);
-					DbHelper.closeInstance();
+					DatabaseManager.getInstance().closeDatabase();
 					break;
 				default:
 					payload.setResult(false);

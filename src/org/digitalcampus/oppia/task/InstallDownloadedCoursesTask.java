@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -118,7 +119,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				
 				boolean success = false;
 				
-				DbHelper db = DbHelper.getInstance(ctx);
+				DbHelper db = new DbHelper(ctx);
 				long added = db.addOrUpdateCourse(c);
 				if (added != -1) {
 					payload.addResponseData(c);
@@ -151,7 +152,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				// put this here so even if the course content isn't updated the schedule will be
 				db.insertSchedule(csxr.getSchedule());
 				db.updateScheduleVersion(added, csxr.getScheduleVersion());				
-				DbHelper.closeInstance();
+				DatabaseManager.getInstance().closeDatabase();
 				
 				if (success){
 					SearchUtils.indexAddCourse(this.ctx, c);

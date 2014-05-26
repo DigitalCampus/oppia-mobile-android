@@ -30,6 +30,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
@@ -127,9 +128,9 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-					DbHelper db = DbHelper.getInstance(ctx);
+					DbHelper db = new DbHelper(ctx);
 					db.addOrUpdateUser(u);
-					DbHelper.closeInstance();
+					DatabaseManager.getInstance().closeDatabase();
 					payload.setResult(true);
 					payload.setResultResponse(ctx.getString(R.string.login_complete));
 					break;

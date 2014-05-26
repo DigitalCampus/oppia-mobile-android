@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.task;
 import java.io.File;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -136,7 +137,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
 				
-				DbHelper db = DbHelper.getInstance(ctx);
+				DbHelper db = new DbHelper(ctx);
 				long courseId = db.addOrUpdateCourse(c);
 				
 				if (courseId != -1) {
@@ -149,9 +150,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				db.insertSchedule(csxr.getSchedule());
 				db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
 				
-				DbHelper.closeInstance();
-
-				
+				DatabaseManager.getInstance().closeDatabase();
 			}
 		}
 	}
@@ -172,10 +171,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		User user = new User();
 		user.setUsername(prefs.getString("prefUsername", ""));
 		user.setApiKey(prefs.getString("prefApiKey", "") );
-		DbHelper db = DbHelper.getInstance(ctx);
+		DbHelper db = new DbHelper(ctx);
 		long userId = db.addOrUpdateUser(user);
 		db.updateV43(userId);
-		DbHelper.closeInstance();
+		DatabaseManager.getInstance().closeDatabase();
 		
 	}
 	

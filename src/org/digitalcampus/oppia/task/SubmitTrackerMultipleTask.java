@@ -31,10 +31,10 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.TrackerLog;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
@@ -67,11 +67,11 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 		
 		try {
 				
-				DbHelper db = DbHelper.getInstance(ctx);
+				DbHelper db = new DbHelper(ctx);
 				long userId = db.getUserId(prefs.getString("prefUsername", ""));
 				Log.d(TAG,"userId: " + userId);
 				payload = db.getUnsentTrackers(userId);
-				DbHelper.closeInstance();
+				DatabaseManager.getInstance().closeDatabase();
 				@SuppressWarnings("unchecked")
 				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
 				
@@ -107,9 +107,9 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 						switch (response.getStatusLine().getStatusCode()){
 							case 200: // submitted
 								for(TrackerLog tl: trackerBatch){
-									DbHelper db2 = DbHelper.getInstance(ctx);
+									DbHelper db2 = new DbHelper(ctx);
 									db2.markLogSubmitted(tl.getId());
-									DbHelper.closeInstance();
+									DatabaseManager.getInstance().closeDatabase();
 								}
 								payload.setResult(true);
 								// update points
@@ -137,9 +137,9 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 								break;
 							case 400: // submitted but invalid digest - returned 400 Bad Request - so record as submitted so doesn't keep trying
 								for(TrackerLog tl: trackerBatch){
-									DbHelper db3 = DbHelper.getInstance(ctx);
+									DbHelper db3 = new DbHelper(ctx);
 									db3.markLogSubmitted(tl.getId());
-									DbHelper.closeInstance();
+									DatabaseManager.getInstance().closeDatabase();
 								};
 								payload.setResult(true);
 								break;

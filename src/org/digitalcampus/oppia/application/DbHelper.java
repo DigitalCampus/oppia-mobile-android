@@ -37,7 +37,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
@@ -51,9 +50,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	static final String DB_NAME = "mobilelearning.db";
 	static final int DB_VERSION = 18;
 
-	private static DbHelper sInstance;
 	
-	public static SQLiteDatabase db;
+	private static SQLiteDatabase db;
 	private Context ctx;
 	private SharedPreferences prefs;
 	
@@ -113,33 +111,13 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_LASTNAME = "lastname";
 	private static final String USER_C_PASSWORD = "passwordencrypted";
 	private static final String USER_C_APIKEY = "apikey";
-	
-	public static DbHelper getInstance(Context context) {
-
-	    // Use the application context, which will ensure that you 
-	    // don't accidentally leak an Activity's context.
-	    // See this article for more information: http://bit.ly/6LRzfx
-	    if (sInstance == null) {
-	      sInstance = new DbHelper(context.getApplicationContext());
-	    }
-	    return sInstance;
-	  }
-	
-	public static void closeInstance(){
-		db.close();
-		sInstance = null;
-	}
-	
+		
 	// Constructor
-	private DbHelper(Context ctx) { //
+	public DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		try {
-			db = this.getWritableDatabase();
-		} catch (SQLiteException donce){
-			db.close();
-			db = this.getWritableDatabase();
-		}
+		DatabaseManager.initializeInstance(this);
+		db = DatabaseManager.getInstance().openDatabase();
 	}
 
 	@Override

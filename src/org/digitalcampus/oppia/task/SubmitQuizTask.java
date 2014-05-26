@@ -30,6 +30,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.TrackerLog;
@@ -84,9 +85,9 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				
 				switch (response.getStatusLine().getStatusCode()) {
 					case 201: // submitted
-						DbHelper db = DbHelper.getInstance(ctx);
+						DbHelper db = new DbHelper(ctx);
 						db.markQuizSubmitted(tl.getId());
-						DbHelper.closeInstance();
+						DatabaseManager.getInstance().closeDatabase();
 						payload.setResult(true);
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
@@ -98,17 +99,17 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 					case 400: // bad request - so to prevent re-submitting over and
 								// over
 								// just mark as submitted
-						DbHelper db2 = DbHelper.getInstance(ctx);
+						DbHelper db2 = new DbHelper(ctx);
 						db2.markQuizSubmitted(tl.getId());
-						DbHelper.closeInstance();
+						DatabaseManager.getInstance().closeDatabase();
 						payload.setResult(false);
 						break;
 					case 500: // bad request - so to prevent re-submitting over and
 								// over
 						// just mark as submitted
-						DbHelper db3 = DbHelper.getInstance(ctx);
+						DbHelper db3 = new DbHelper(ctx);
 						db3.markQuizSubmitted(tl.getId());
-						DbHelper.closeInstance();
+						DatabaseManager.getInstance().closeDatabase();
 						payload.setResult(false);
 						break;
 					default:

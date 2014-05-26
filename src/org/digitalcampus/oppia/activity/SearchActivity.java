@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
@@ -59,9 +60,9 @@ public class SearchActivity extends AppActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		DbHelper db = DbHelper.getInstance(this);
+		DbHelper db = new DbHelper(this);
 		userId = db.getUserId(prefs.getString("preUsername", ""));
-		DbHelper.closeInstance();
+		DatabaseManager.getInstance().closeDatabase();
 		
 		searchText = (EditText) findViewById(R.id.search_string);
 		summary = (TextView) findViewById(R.id.search_results_summary);
@@ -78,9 +79,9 @@ public class SearchActivity extends AppActivity {
 	
 	private void doSearch(){
 		String searchString = searchText.getText().toString();
-		DbHelper db = DbHelper.getInstance(this);
+		DbHelper db = new DbHelper(this);
 		ArrayList<SearchResult> results = db.search(searchString, 100, userId);
-		DbHelper.closeInstance();
+		DatabaseManager.getInstance().closeDatabase();
 	
 		srla = new SearchResultsListAdapter(this, results);
 		ListView listView = (ListView) findViewById(R.id.search_results_list);

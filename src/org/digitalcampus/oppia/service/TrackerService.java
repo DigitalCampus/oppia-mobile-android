@@ -21,11 +21,11 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.TrackerLog;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.APIRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.SubmitQuizTask;
@@ -107,10 +107,10 @@ public class TrackerService extends Service implements APIRequestListener{
 			// send quiz results
 			if(app.omSubmitQuizTask == null){
 				Log.d(TAG,"Sumitting quiz task");
-				DbHelper db = DbHelper.getInstance(this);
+				DbHelper db = new DbHelper(this);
 				long userId = db.getUserId(prefs.getString("prefUsername", ""));
 				ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(userId);
-				DbHelper.closeInstance();
+				DatabaseManager.getInstance().closeDatabase();
 		
 				if (unsent.size() > 0){
 					p = new Payload(unsent);
@@ -158,7 +158,7 @@ public class TrackerService extends Service implements APIRequestListener{
 				JSONObject json_obj = (JSONObject) json.getJSONArray("courses").get(i);
 				String shortName = json_obj.getString("shortname");
 				Double version = json_obj.getDouble("version");
-				DbHelper db = DbHelper.getInstance(this);
+				DbHelper db = new DbHelper(this);
 				if(db.toUpdate(shortName,version)){
 					updateAvailable = true;
 				}
@@ -168,7 +168,7 @@ public class TrackerService extends Service implements APIRequestListener{
 						updateAvailable = true;
 					}
 				}
-				DbHelper.closeInstance();
+				DatabaseManager.getInstance().closeDatabase();
 			}
 			
 		} catch (JSONException e) {

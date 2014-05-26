@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.utils;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
@@ -63,13 +64,13 @@ public class SearchUtils {
 				}
 				
 				if (!fileContent.equals("")){
-					DbHelper db = DbHelper.getInstance(ctx);
+					DbHelper db = new DbHelper(ctx);
 					db.insertActivityIntoSearchTable(course.getTitleJSONString(),
 							cxr.getSection(a.getSectionId()).getTitleJSONString(),
 							a.getTitleJSONString(),
 							db.getActivityByDigest(a.getDigest()).getDbId(), 
 							fileContent);
-					DbHelper.closeInstance();
+					DatabaseManager.getInstance().closeDatabase();
 				}
 			
 			}
@@ -92,10 +93,10 @@ public class SearchUtils {
 		@Override
 		protected Payload doInBackground(Payload... params) {
 			Payload payload = params[0];
-			DbHelper db = DbHelper.getInstance(ctx);
+			DbHelper db = new DbHelper(ctx);
 			db.deleteSearchIndex();
 			ArrayList<Course> courses  = db.getAllCourses();
-			DbHelper.closeInstance();
+			DatabaseManager.getInstance().closeDatabase();
 			for (Course c : courses){
 				Log.d(TAG,"indexing: "+ c.getTitle("en"));
 				SearchUtils.indexAddCourse(ctx,c);

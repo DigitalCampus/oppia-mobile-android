@@ -29,6 +29,7 @@ import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
@@ -227,9 +228,9 @@ public class FeedbackWidget extends WidgetFactory {
 
 		// save results ready to send back to the quiz server
 		String data = feedback.getResultObject().toString();
-		DbHelper db = DbHelper.getInstance(super.getActivity());
+		DbHelper db = new DbHelper(super.getActivity());
 		db.insertQuizResult(data, course.getCourseId());
-		DbHelper.closeInstance();
+		DatabaseManager.getInstance().closeDatabase();
 
 		// load new layout
 		View view = getView().findViewById(R.id.quiz_progress);
