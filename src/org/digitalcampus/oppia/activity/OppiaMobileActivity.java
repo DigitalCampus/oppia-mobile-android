@@ -86,7 +86,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public void onStart() {
 		super.onStart();
-		DbHelper db = new DbHelper(this);
+		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("prefUsername", ""));
 		db.close();
 		displayCourses(userId);		
@@ -105,7 +105,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	
 	private void displayCourses(long userId) {
 
-		DbHelper db = new DbHelper(this);
+		DbHelper db = DbHelper.getInstance(this);
 		courses = db.getCourses(userId);
 		db.close();
 		
@@ -150,7 +150,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	private void updateReminders(){
 		if(prefs.getBoolean("prefShowScheduleReminders", false)){
-			DbHelper db = new DbHelper(OppiaMobileActivity.this);
+			DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "2"));
 			long userId = db.getUserId(prefs.getString("prefUsername", ""));
 			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
@@ -302,7 +302,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				// remove db records
-				DbHelper db = new DbHelper(OppiaMobileActivity.this);
+				DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
 				db.deleteCourse(tempCourse.getCourseId());
 				db.close();
 
@@ -330,7 +330,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setMessage(R.string.course_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				DbHelper db = new DbHelper(OppiaMobileActivity.this);
+				DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
 				long userId = db.getUserId(prefs.getString("prefUsername", ""));
 				db.resetCourse(tempCourse.getCourseId(),userId);
 				db.close();

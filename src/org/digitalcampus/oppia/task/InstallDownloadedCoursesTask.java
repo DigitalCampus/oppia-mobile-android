@@ -118,7 +118,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				
 				boolean success = false;
 				
-				DbHelper db = new DbHelper(ctx);
+				DbHelper db = DbHelper.getInstance(ctx);
 				long added = db.addOrUpdateCourse(c);
 				if (added != -1) {
 					payload.addResponseData(c);

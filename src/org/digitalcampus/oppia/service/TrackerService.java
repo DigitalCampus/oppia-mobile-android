@@ -98,33 +98,31 @@ public class TrackerService extends Service implements APIRequestListener{
 
 			// send activity trackers
 			MobileLearning app = (MobileLearning) this.getApplication();
-			DbHelper db = new DbHelper(this);
 			if(app.omSubmitTrackerMultipleTask == null){
 				Log.d(TAG,"Sumitting trackers multiple task");
-				app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(this,db);
+				app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(this);
 				app.omSubmitTrackerMultipleTask.execute();
 			}
 			
 			// send quiz results
 			if(app.omSubmitQuizTask == null){
 				Log.d(TAG,"Sumitting quiz task");
-				
+				DbHelper db = DbHelper.getInstance(this);
 				ArrayList<User> users = db.getAllUsers();
-				
+				db.close();
 			
 				for(User u: users){
-					//DbHelper dbu = new DbHelper(this);
-					ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(u.getUserid());
-					//dbu.close();
+					DbHelper dbu = DbHelper.getInstance(this);
+					ArrayList<TrackerLog> unsent = dbu.getUnsentQuizResults(u.getUserid());
+					dbu.close();
 			
 					if (unsent.size() > 0){
 						p = new Payload(unsent);
-						app.omSubmitQuizTask = new SubmitQuizTask(this,db);
+						app.omSubmitQuizTask = new SubmitQuizTask(this);
 						app.omSubmitQuizTask.execute(p);
 					}
 				}
 			}
-			db.close();
 
 			
 
@@ -158,13 +156,14 @@ public class TrackerService extends Service implements APIRequestListener{
 		
 		boolean updateAvailable = false;
 		try {
-			DbHelper db = new DbHelper(this);
+			
 			JSONObject json = new JSONObject(response.getResultResponse());
 			Log.d(TAG,json.toString(4));
 			for (int i = 0; i < (json.getJSONArray("courses").length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("courses").get(i);
 				String shortName = json_obj.getString("shortname");
 				Double version = json_obj.getDouble("version");
+				DbHelper db = DbHelper.getInstance(this);
 				if(db.toUpdate(shortName,version)){
 					updateAvailable = true;
 				}
@@ -174,8 +173,9 @@ public class TrackerService extends Service implements APIRequestListener{
 						updateAvailable = true;
 					}
 				}
+				db.close();
 			}
-			db.close();
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} 

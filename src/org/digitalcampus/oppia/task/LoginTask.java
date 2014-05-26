@@ -127,7 +127,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-					DbHelper db = new DbHelper(ctx);
+					DbHelper db = DbHelper.getInstance(ctx);
 					db.addOrUpdateUser(u);
 					db.close();
 					payload.setResult(true);

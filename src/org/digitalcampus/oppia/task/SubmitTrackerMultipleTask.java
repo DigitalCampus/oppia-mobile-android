@@ -55,12 +55,10 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 
 	private Context ctx;
 	private SharedPreferences prefs;
-	private DbHelper db;
 
-	public SubmitTrackerMultipleTask(Context ctx, DbHelper db) {
+	public SubmitTrackerMultipleTask(Context ctx) {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		this.db = db;
 	}
 
 	@Override
@@ -68,15 +66,17 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 		Payload payload = new Payload();
 		
 		try {
-			//DbHelper db = new DbHelper(ctx);
+			
 			// TODO - bit of a hack using this try/catch - 
 			// need to find the real cause of this IllegalStateException issue
+			DbHelper db = DbHelper.getInstance(ctx);
 			ArrayList<User> users = db.getAllUsers();
-	
+			db.close();
 			for(User u: users){
 				Log.d(TAG,u.getUsername());
-				payload = db.getUnsentTrackers(u.getUserid());
-				
+				DbHelper dbu = DbHelper.getInstance(ctx);
+				payload = dbu.getUnsentTrackers(u.getUserid());
+				dbu.close();
 				@SuppressWarnings("unchecked")
 				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
 				
@@ -112,7 +112,9 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 						switch (response.getStatusLine().getStatusCode()){
 							case 200: // submitted
 								for(TrackerLog tl: trackerBatch){
-									db.markLogSubmitted(tl.getId());
+									DbHelper db2 = DbHelper.getInstance(ctx);
+									db2.markLogSubmitted(tl.getId());
+									db2.close();
 								}
 								payload.setResult(true);
 								// update points
@@ -140,7 +142,9 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 								break;
 							case 400: // submitted but invalid digest - returned 400 Bad Request - so record as submitted so doesn't keep trying
 								for(TrackerLog tl: trackerBatch){
-									db.markLogSubmitted(tl.getId());
+									DbHelper db3 = DbHelper.getInstance(ctx);
+									db3.markLogSubmitted(tl.getId());
+									db3.close();
 								};
 								payload.setResult(true);
 								break;
@@ -166,9 +170,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 			
 			}
 	
-			//db.close();
 		} catch (IllegalStateException ise) {
-			//db.close();
 			ise.printStackTrace();
 			payload.setResult(false);
 		} 

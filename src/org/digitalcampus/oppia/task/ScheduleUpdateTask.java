@@ -94,7 +94,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 					payload.setResultResponse("");
 					JSONObject jsonObj = new JSONObject(responseStr);
 					long scheduleVersion = jsonObj.getLong("version");
-					DbHelper db = new DbHelper(this.ctx);
+					DbHelper db = DbHelper.getInstance(this.ctx);
 					JSONArray schedule = jsonObj.getJSONArray("activityschedule");
 					ArrayList<ActivitySchedule> activitySchedule = new ArrayList<ActivitySchedule>();
 					for (int i = 0; i < (schedule.length()); i++) {

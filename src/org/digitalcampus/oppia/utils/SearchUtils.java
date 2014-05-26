@@ -63,7 +63,7 @@ public class SearchUtils {
 				}
 				
 				if (!fileContent.equals("")){
-					DbHelper db = new DbHelper(ctx);
+					DbHelper db = DbHelper.getInstance(ctx);
 					db.insertActivityIntoSearchTable(course.getTitleJSONString(),
 							cxr.getSection(a.getSectionId()).getTitleJSONString(),
 							a.getTitleJSONString(),
@@ -92,7 +92,7 @@ public class SearchUtils {
 		@Override
 		protected Payload doInBackground(Payload... params) {
 			Payload payload = params[0];
-			DbHelper db = new DbHelper(ctx);
+			DbHelper db = DbHelper.getInstance(ctx);
 			db.deleteSearchIndex();
 			ArrayList<Course> courses  = db.getAllCourses();
 			db.close();

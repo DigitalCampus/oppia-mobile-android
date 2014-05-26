@@ -37,6 +37,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
@@ -128,6 +129,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	private DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		try {
+			db = this.getWritableDatabase();
+		} catch (SQLiteException donce){
+			db.close();
+			db = this.getWritableDatabase();
+		}
 	}
 
 	@Override
@@ -401,25 +408,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	/*public long refreshCourse(Course course){
-		long courseId = this.getCourseID(course.getShortname());
-		ContentValues values = new ContentValues();
-		values.put(COURSE_C_VERSIONID, course.getVersionId());
-		values.put(COURSE_C_TITLE, course.getTitleJSONString());
-		values.put(COURSE_C_DESC, course.getDescriptionJSONString());
-		values.put(COURSE_C_LOCATION, course.getLocation());
-		values.put(COURSE_C_SHORTNAME, course.getShortname());
-		values.put(COURSE_C_LANGS, course.getLangsJSONString());
-		values.put(COURSE_C_IMAGE, course.getImageFile());
-		values.put(COURSE_C_ORDER_PRIORITY, course.getPriority());
-		db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + courseId, null);
-		// remove all the old activities
-		String s = ACTIVITY_C_COURSEID + "=?";
-		String[] args = new String[] { String.valueOf(courseId) };
-		db.delete(ACTIVITY_TABLE, s, args);
-		return courseId;
-	}*/
-	
 	
 	public int getCourseID(String shortname){
 		String s = COURSE_C_SHORTNAME + "=?";
@@ -456,7 +444,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 
 	public void insertSchedule(ArrayList<ActivitySchedule> actsched) {
-		// acts.listIterator();
 		for (ActivitySchedule as : actsched) {
 			ContentValues values = new ContentValues();
 			values.put(ACTIVITY_C_STARTDATE, as.getStartTimeString());

@@ -41,7 +41,7 @@ public class Tracker {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		DbHelper db = new DbHelper(this.ctx);
+		DbHelper db = DbHelper.getInstance(this.ctx);
 		db.insertTracker(modId, digest, data.toString(), completed);
 		db.close();
 		

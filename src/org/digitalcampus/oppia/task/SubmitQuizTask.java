@@ -50,12 +50,10 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 	public final static String TAG = SubmitQuizTask.class.getSimpleName();
 	private Context ctx;
 	private SharedPreferences prefs;
-	private DbHelper db;
 	
-	public SubmitQuizTask(Context c, DbHelper db) {
+	public SubmitQuizTask(Context c) {
 		this.ctx = c;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		this.db = db;
 	}
 
 	@Override
@@ -64,7 +62,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 		for (Object l : payload.getData()) {
 			TrackerLog tl = (TrackerLog) l;
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-			//DbHelper db = null;
+			
 			try {
 
 				String url = client.getFullURL(MobileLearning.QUIZ_SUBMIT_PATH);
@@ -83,11 +81,12 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				while ((s = buffer.readLine()) != null) {
 					responseStr += s;
 				}
-
-				//db = new DbHelper(ctx);
+				
 				switch (response.getStatusLine().getStatusCode()) {
 					case 201: // submitted
+						DbHelper db = DbHelper.getInstance(ctx);
 						db.markQuizSubmitted(tl.getId());
+						db.close();
 						payload.setResult(true);
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
@@ -99,14 +98,17 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 					case 400: // bad request - so to prevent re-submitting over and
 								// over
 								// just mark as submitted
-						db.markQuizSubmitted(tl.getId());
-						
+						DbHelper db2 = DbHelper.getInstance(ctx);
+						db2.markQuizSubmitted(tl.getId());
+						db2.close();
 						payload.setResult(false);
 						break;
 					case 500: // bad request - so to prevent re-submitting over and
 								// over
 						// just mark as submitted
-						db.markQuizSubmitted(tl.getId());
+						DbHelper db3 = DbHelper.getInstance(ctx);
+						db3.markQuizSubmitted(tl.getId());
+						db3.close();
 						payload.setResult(false);
 						break;
 					default:
@@ -129,7 +131,6 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 					e.printStackTrace();
 				}
 			} 
-			//db.close();
 		}
 
 		return payload;

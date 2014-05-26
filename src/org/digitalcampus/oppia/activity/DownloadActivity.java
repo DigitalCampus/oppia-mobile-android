@@ -131,7 +131,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		// process the response and display on screen in listview
 		// Create an array of courses, that will be put to our ListActivity
 
-		DbHelper db = new DbHelper(this);
+		DbHelper db = DbHelper.getInstance(this);
 		try {
 			this.courses = new ArrayList<Course>();
 			

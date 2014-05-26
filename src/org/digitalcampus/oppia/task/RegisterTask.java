@@ -135,7 +135,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 					u.setPasswordEncrypted();
 					
 					// add or update user in db
-					DbHelper db = new DbHelper(ctx);
+					DbHelper db = DbHelper.getInstance(ctx);
 					db.addOrUpdateUser(u);
 					db.close();
 					

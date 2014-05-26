@@ -59,7 +59,7 @@ public class SearchActivity extends AppActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		DbHelper db = new DbHelper(this);
+		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("preUsername", ""));
 		db.close();
 		
@@ -78,7 +78,7 @@ public class SearchActivity extends AppActivity {
 	
 	private void doSearch(){
 		String searchString = searchText.getText().toString();
-		DbHelper db = new DbHelper(this);
+		DbHelper db = DbHelper.getInstance(this);
 		ArrayList<SearchResult> results = db.search(searchString, 100, userId);
 		db.close();
 	

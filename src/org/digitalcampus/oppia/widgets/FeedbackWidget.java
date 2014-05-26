@@ -227,7 +227,7 @@ public class FeedbackWidget extends WidgetFactory {
 
 		// save results ready to send back to the quiz server
 		String data = feedback.getResultObject().toString();
-		DbHelper db = new DbHelper(super.getActivity());
+		DbHelper db = DbHelper.getInstance(super.getActivity());
 		db.insertQuizResult(data, course.getCourseId());
 		db.close();
 

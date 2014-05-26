@@ -200,7 +200,7 @@ public class CourseXMLReader {
 		ArrayList<Activity>  acts = new ArrayList<Activity>();
 		Node docMeta = document.getFirstChild().getFirstChild();
 		NodeList meta = docMeta.getChildNodes();
-		DbHelper db = new DbHelper(ctx);
+		DbHelper db = DbHelper.getInstance(ctx);
 		for (int i=0; i<meta.getLength(); i++) {
 			if(meta.item(i).getNodeName().toLowerCase(Locale.US).equals("activity")){
 				Activity a = new Activity();
@@ -392,7 +392,7 @@ public class CourseXMLReader {
 	public ArrayList<Section> getSections(int modId){
 		ArrayList<Section> sections = new ArrayList<Section>();
 		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
-		DbHelper db = new DbHelper(ctx);
+		DbHelper db = DbHelper.getInstance(ctx);
 		
 			for (int i=0; i<sects.getLength(); i++){
 				NamedNodeMap sectionAttrs = sects.item(i).getAttributes();
