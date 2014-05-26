@@ -213,7 +213,7 @@ public class PageWidget extends WidgetFactory {
 					completed = false;
 				}
 			}
-			db.close();
+			DbHelper.closeInstance();
 			return completed;
 		} else {
 			return true;

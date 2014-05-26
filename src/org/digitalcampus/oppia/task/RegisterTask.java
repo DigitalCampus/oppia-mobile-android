@@ -137,7 +137,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 					// add or update user in db
 					DbHelper db = DbHelper.getInstance(ctx);
 					db.addOrUpdateUser(u);
-					db.close();
+					DbHelper.closeInstance();
 					
 					payload.setResult(true);
 					payload.setResultResponse(ctx.getString(R.string.register_complete));

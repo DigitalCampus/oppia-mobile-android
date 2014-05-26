@@ -86,7 +86,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 					case 201: // submitted
 						DbHelper db = DbHelper.getInstance(ctx);
 						db.markQuizSubmitted(tl.getId());
-						db.close();
+						DbHelper.closeInstance();
 						payload.setResult(true);
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
@@ -100,7 +100,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 								// just mark as submitted
 						DbHelper db2 = DbHelper.getInstance(ctx);
 						db2.markQuizSubmitted(tl.getId());
-						db2.close();
+						DbHelper.closeInstance();
 						payload.setResult(false);
 						break;
 					case 500: // bad request - so to prevent re-submitting over and
@@ -108,7 +108,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 						// just mark as submitted
 						DbHelper db3 = DbHelper.getInstance(ctx);
 						db3.markQuizSubmitted(tl.getId());
-						db3.close();
+						DbHelper.closeInstance();
 						payload.setResult(false);
 						break;
 					default:

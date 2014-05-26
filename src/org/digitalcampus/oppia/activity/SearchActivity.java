@@ -61,7 +61,7 @@ public class SearchActivity extends AppActivity {
 		super.onStart();
 		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("preUsername", ""));
-		db.close();
+		DbHelper.closeInstance();
 		
 		searchText = (EditText) findViewById(R.id.search_string);
 		summary = (TextView) findViewById(R.id.search_results_summary);
@@ -80,7 +80,7 @@ public class SearchActivity extends AppActivity {
 		String searchString = searchText.getText().toString();
 		DbHelper db = DbHelper.getInstance(this);
 		ArrayList<SearchResult> results = db.search(searchString, 100, userId);
-		db.close();
+		DbHelper.closeInstance();
 	
 		srla = new SearchResultsListAdapter(this, results);
 		ListView listView = (ListView) findViewById(R.id.search_results_list);

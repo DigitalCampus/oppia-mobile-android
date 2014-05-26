@@ -88,7 +88,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		super.onStart();
 		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("prefUsername", ""));
-		db.close();
+		DbHelper.closeInstance();
 		displayCourses(userId);		
 	}
 
@@ -107,9 +107,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 		DbHelper db = DbHelper.getInstance(this);
 		courses = db.getCourses(userId);
-		db.close();
+		DbHelper.closeInstance();
 		
-
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
 		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_courses);
@@ -154,7 +153,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "2"));
 			long userId = db.getUserId(prefs.getString("prefUsername", ""));
 			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
-			db.close();
+			DbHelper.closeInstance();
 
 			this.drawReminders(activities);
 		} else {
@@ -304,7 +303,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				// remove db records
 				DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
 				db.deleteCourse(tempCourse.getCourseId());
-				db.close();
+				DbHelper.closeInstance();
 
 				// remove files
 				File f = new File(tempCourse.getLocation());
@@ -333,7 +332,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
 				long userId = db.getUserId(prefs.getString("prefUsername", ""));
 				db.resetCourse(tempCourse.getCourseId(),userId);
-				db.close();
+				DbHelper.closeInstance();
 				displayCourses(userId);
 			}
 		});

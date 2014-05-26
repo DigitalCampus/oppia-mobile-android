@@ -149,7 +149,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				db.insertSchedule(csxr.getSchedule());
 				db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
 				
-				db.close();
+				DbHelper.closeInstance();
 
 				
 			}
@@ -175,7 +175,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		DbHelper db = DbHelper.getInstance(ctx);
 		long userId = db.addOrUpdateUser(user);
 		db.updateV43(userId);
-		db.close();
+		DbHelper.closeInstance();
 		
 	}
 	

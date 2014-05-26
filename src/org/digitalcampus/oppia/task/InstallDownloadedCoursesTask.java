@@ -151,7 +151,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				// put this here so even if the course content isn't updated the schedule will be
 				db.insertSchedule(csxr.getSchedule());
 				db.updateScheduleVersion(added, csxr.getScheduleVersion());				
-				db.close();
+				DbHelper.closeInstance();
 				
 				if (success){
 					SearchUtils.indexAddCourse(this.ctx, c);

@@ -69,7 +69,7 @@ public class SearchUtils {
 							a.getTitleJSONString(),
 							db.getActivityByDigest(a.getDigest()).getDbId(), 
 							fileContent);
-					db.close();
+					DbHelper.closeInstance();
 				}
 			
 			}
@@ -95,7 +95,7 @@ public class SearchUtils {
 			DbHelper db = DbHelper.getInstance(ctx);
 			db.deleteSearchIndex();
 			ArrayList<Course> courses  = db.getAllCourses();
-			db.close();
+			DbHelper.closeInstance();
 			for (Course c : courses){
 				Log.d(TAG,"indexing: "+ c.getTitle("en"));
 				SearchUtils.indexAddCourse(ctx,c);

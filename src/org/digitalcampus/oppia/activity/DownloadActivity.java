@@ -194,7 +194,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 			}
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
-		db.close();
+		DbHelper.closeInstance();
 
 	}
 	

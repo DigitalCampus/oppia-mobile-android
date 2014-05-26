@@ -125,6 +125,11 @@ public class DbHelper extends SQLiteOpenHelper {
 	    return sInstance;
 	  }
 	
+	public static void closeInstance(){
+		db.close();
+		sInstance = null;
+	}
+	
 	// Constructor
 	private DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
@@ -1005,10 +1010,5 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = "docid=?";
 		String[] args = new String[] { String.valueOf(activityDbId) };
 		db.delete(SEARCH_TABLE, s, args);
-	}
-	
-	public void close(){
-		db.close();
-		sInstance = null;
 	}
 }

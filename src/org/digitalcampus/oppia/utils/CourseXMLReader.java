@@ -275,7 +275,7 @@ public class CourseXMLReader {
 				acts.add(a);
 			}
 		}
-		db.close();
+		DbHelper.closeInstance();
 
 		return acts;
 	}
@@ -498,7 +498,7 @@ public class CourseXMLReader {
 			
 			sections.add(s);
 		}
-		db.close();
+		DbHelper.closeInstance();
 		return sections;
 	}
 	

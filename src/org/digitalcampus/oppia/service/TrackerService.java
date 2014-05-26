@@ -110,7 +110,7 @@ public class TrackerService extends Service implements APIRequestListener{
 				DbHelper db = DbHelper.getInstance(this);
 				long userId = db.getUserId(prefs.getString("prefUsername", ""));
 				ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(userId);
-				db.close();
+				DbHelper.closeInstance();
 		
 				if (unsent.size() > 0){
 					p = new Payload(unsent);
@@ -168,7 +168,7 @@ public class TrackerService extends Service implements APIRequestListener{
 						updateAvailable = true;
 					}
 				}
-				db.close();
+				DbHelper.closeInstance();
 			}
 			
 		} catch (JSONException e) {

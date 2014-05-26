@@ -129,7 +129,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 					}
 					DbHelper db = DbHelper.getInstance(ctx);
 					db.addOrUpdateUser(u);
-					db.close();
+					DbHelper.closeInstance();
 					payload.setResult(true);
 					payload.setResultResponse(ctx.getString(R.string.login_complete));
 					break;

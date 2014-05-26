@@ -67,13 +67,11 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 		
 		try {
 				
-				DbHelper db1 = DbHelper.getInstance(ctx);
-				db1.close();
 				DbHelper db = DbHelper.getInstance(ctx);
 				long userId = db.getUserId(prefs.getString("prefUsername", ""));
 				Log.d(TAG,"userId: " + userId);
 				payload = db.getUnsentTrackers(userId);
-				db.close();
+				DbHelper.closeInstance();
 				@SuppressWarnings("unchecked")
 				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
 				
@@ -111,7 +109,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 								for(TrackerLog tl: trackerBatch){
 									DbHelper db2 = DbHelper.getInstance(ctx);
 									db2.markLogSubmitted(tl.getId());
-									db2.close();
+									DbHelper.closeInstance();
 								}
 								payload.setResult(true);
 								// update points
@@ -141,7 +139,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Object, Payloa
 								for(TrackerLog tl: trackerBatch){
 									DbHelper db3 = DbHelper.getInstance(ctx);
 									db3.markLogSubmitted(tl.getId());
-									db3.close();
+									DbHelper.closeInstance();
 								};
 								payload.setResult(true);
 								break;

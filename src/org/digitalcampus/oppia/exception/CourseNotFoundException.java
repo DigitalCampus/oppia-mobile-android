@@ -29,7 +29,7 @@ public class CourseNotFoundException extends Exception {
 	public void deleteCourse(Activity act, int id){
 		DbHelper db = DbHelper.getInstance(act);
 		db.deleteCourse(id);
-		db.close();
+		DbHelper.closeInstance();
 	}
 
 }

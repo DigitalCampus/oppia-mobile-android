@@ -334,7 +334,7 @@ public class QuizWidget extends WidgetFactory {
 		String data = quiz.getResultObject().toString();
 		DbHelper db = DbHelper.getInstance(super.getActivity());
 		db.insertQuizResult(data, course.getCourseId());
-		db.close();
+		DbHelper.closeInstance();
 		
 		
 		// load new layout

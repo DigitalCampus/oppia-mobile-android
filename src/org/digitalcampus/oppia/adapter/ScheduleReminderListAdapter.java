@@ -57,7 +57,7 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 	    DbHelper db = DbHelper.getInstance(ctx);
 		long userId = db.getUserId(prefs.getString("prefUsername", ""));
 		Course course = db.getCourse(a.getCourseId(), userId);
-		db.close();
+		DbHelper.closeInstance();
 		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 		
 		TextView scheduleTitle = (TextView) rowView.findViewById(R.id.schedule_title);

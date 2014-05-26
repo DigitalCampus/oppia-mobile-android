@@ -229,7 +229,7 @@ public class FeedbackWidget extends WidgetFactory {
 		String data = feedback.getResultObject().toString();
 		DbHelper db = DbHelper.getInstance(super.getActivity());
 		db.insertQuizResult(data, course.getCourseId());
-		db.close();
+		DbHelper.closeInstance();
 
 		// load new layout
 		View view = getView().findViewById(R.id.quiz_progress);

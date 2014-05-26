@@ -113,7 +113,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 					db.resetSchedule(modId);
 					db.insertSchedule(activitySchedule);
 					db.updateScheduleVersion(modId, scheduleVersion);
-					db.close();
+					DbHelper.closeInstance();
 					break;
 				default:
 					payload.setResult(false);

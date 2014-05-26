@@ -43,7 +43,7 @@ public class Tracker {
 		}
 		DbHelper db = DbHelper.getInstance(this.ctx);
 		db.insertTracker(modId, digest, data.toString(), completed);
-		db.close();
+		DbHelper.closeInstance();
 		
 	}
 
