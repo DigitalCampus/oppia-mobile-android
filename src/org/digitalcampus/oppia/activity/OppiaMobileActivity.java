@@ -113,8 +113,20 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
 		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_courses);
-		if (courses.size() > 0) {
+		if (courses.size() > 1) {
+			TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
+			tv.setText(R.string.no_courses);
 			llNone.setVisibility(View.GONE);
+		} else if (courses.size() > 0)  {
+			llNone.setVisibility(View.VISIBLE);
+			TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
+			tv.setText(R.string.more_courses);
+			Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
+			manageBtn.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
+				}
+			});
 		} else {
 			llNone.setVisibility(View.VISIBLE);
 			Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
