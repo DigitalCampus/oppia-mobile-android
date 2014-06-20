@@ -29,6 +29,7 @@
     <string name="tab_title_points">Points</string>
     <string name="tab_title_privacy">Privacy</string>
     <string name="tab_title_register">Register</string>
+    <string name="tab_title_reset">Reset Password</string>
     <string name="tab_title_scorecard">Scorecard</string>
     <string name="tab_title_welcome">Welcome</string>
     
@@ -208,7 +209,7 @@
 	
 	<string name="reset_alert_title">Reset</string>
 	<string name="reset_process">Resetting password ...</string>
-	<string name="reset_complete">Your password has now been reset.\n\n\Please check your email for your new password.</string>
+	<string name="reset_complete">Your password has now been reset.\n\nPlease check your email for your new password.</string>
 	
 	<string name="change_language">Change Language</string>
 	

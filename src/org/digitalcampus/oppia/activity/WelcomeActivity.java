@@ -24,6 +24,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
+import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
 
 import android.content.Intent;
@@ -77,6 +78,11 @@ public class WelcomeActivity extends SherlockFragmentActivity implements ActionB
 		fragments.add(fRegister);
 		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_register)).setTabListener(this), false);
 
+		Fragment fReset = ResetFragment.newInstance();
+		fragments.add(fReset);
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_reset)).setTabListener(this), false);
+
+		
 		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(apAdapter);
 

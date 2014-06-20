@@ -92,20 +92,7 @@ public class ResetFragment extends Fragment implements SubmitListener{
 	public void submitComplete(Payload response) {
 		pDialog.dismiss();
 		if (response.isResult()) {
-			User u = (User) response.getData().get(0);
-			// set params
-			Editor editor = prefs.edit();
-	    	editor.putString("prefUsername", usernameField.getText().toString());
-	    	editor.putString("prefApiKey", u.getApiKey());
-	    	editor.putString("prefDisplayName", u.getDisplayName());
-	    	editor.putInt("prefPoints", u.getPoints());
-	    	editor.putInt("prefBadges", u.getBadges());
-	    	editor.putBoolean("prefScoringEnabled", u.isScoringEnabled());
-	    	editor.putBoolean("prefBadgingEnabled", u.isBadgingEnabled());
-	    	editor.commit();
-	    	
-	    	startActivity(new Intent(super.getActivity(), OppiaMobileActivity.class));
-	    	super.getActivity().finish();
+			UIUtils.showAlert(super.getActivity(),R.string.reset_alert_title,response.getResultResponse());
 		} else {
 			try {
 				JSONObject jo = new JSONObject(response.getResultResponse());
@@ -127,7 +114,6 @@ public class ResetFragment extends Fragment implements SubmitListener{
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_username);
 			return;
 		}
-
 
 		pDialog = new ProgressDialog(super.getActivity());
 		pDialog.setTitle(R.string.reset_alert_title);

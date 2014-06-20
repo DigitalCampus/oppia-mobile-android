@@ -417,6 +417,7 @@ public class CourseXMLReader {
 				s.setTitles(sectTitles);
 				s.setImageFile(image);
 				
+				
 				//now get activities
 				NodeList acts = this.getChildNodeByName(sects.item(i),"activities").getChildNodes();
 				for(int j=0; j<acts.getLength();j++){
@@ -444,6 +445,7 @@ public class CourseXMLReader {
 							NodeList act = acts.item(j).getChildNodes();
 							for (int k=0; k<act.getLength(); k++) {
 								NamedNodeMap attrs = act.item(k).getAttributes();
+								
 								if(act.item(k).getNodeName().equals("title")){
 									String lang = attrs.getNamedItem("lang").getTextContent();
 									actTitles.add(new Lang(lang, act.item(k).getTextContent()));

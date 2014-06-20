@@ -32,13 +32,18 @@ import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.bugsense.trace.BugSenseHandler;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 
@@ -57,17 +62,19 @@ public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
+		User u = (User) payload.getData().get(0);
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
 		String url = prefs.getString("prefServer", ctx.getString(R.string.prefServerDefault))
 				+ MobileLearning.RESET_PATH;
-		
+		Log.d(TAG,url);
 		HttpPost httpPost = new HttpPost(url);
 		try {
 			// update progress dialog
 			publishProgress(ctx.getString(R.string.reset_process));
 			// add post params
 			JSONObject json = new JSONObject();
+			json.put("username", u.getUsername());
             StringEntity se = new StringEntity(json.toString(),"utf8");
             se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             httpPost.setEntity(se);
@@ -90,8 +97,7 @@ public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 					payload.setResult(false);
 					payload.setResultResponse(responseStr);
 					break;
-				case 201: // logged in
-					
+				case 201: // reset complete
 					payload.setResult(true);
 					payload.setResultResponse(ctx.getString(R.string.reset_complete));
 					break;
@@ -109,6 +115,14 @@ public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 		} catch (IOException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch (JSONException e) {
+			if(!MobileLearning.DEVELOPER_MODE){
+				BugSenseHandler.sendException(e);
+			} else {
+				e.printStackTrace();
+			}
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
 		}
 		return payload;
 	}
