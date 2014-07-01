@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/course_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="5dp" >
 
-    <ImageView
-        android:id="@+id/course_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_margin="10dp"
-        android:contentDescription="@string/app_logo_alt"
-        android:src="@drawable/dc_logo" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
 
-    <TextView
-        android:id="@+id/course_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_light"
-        android:textSize="18sp"
-        android:textStyle="normal"
-        android:layout_toRightOf="@+id/course_image" />
+        <ImageView
+            android:id="@+id/course_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/app_logo_alt"
+            android:src="@drawable/dc_logo" />
 
-    <TextView
-        android:id="@+id/course_description"
-        style="@style/MediumTextItalic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/course_image"
-        android:layout_below="@+id/course_title"  />
+        <TextView
+            android:id="@+id/course_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/course_image"
+            android:textColor="@color/text_light"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/course_description"
+            style="@style/MediumTextItalic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/course_title"
+            android:layout_toRightOf="@+id/course_image" />
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/course_progress_bar"
@@ -36,8 +43,6 @@
         android:layout_width="fill_parent"
         android:layout_height="5dp"
         android:layout_margin="5dp"
-        android:progressDrawable="@drawable/progress_bar"
-        android:layout_below="@+id/course_description"
-        />
+        android:progressDrawable="@drawable/progress_bar" />
 
-</RelativeLayout>
+</LinearLayout>
