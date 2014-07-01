@@ -53,8 +53,18 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 					String filename = MobileLearning.MEDIA_PATH + m.getFilename();
 					File mediaFile = new File(filename);
 					if(!mediaFile.exists()){
-						payload.addResponseData(m);
-						payload.setResult(true);
+						// check media not already in list
+						ArrayList<Object> currentMedia = payload.getResponseData();
+						boolean add = true;
+						for (Object cm: currentMedia){
+							if (((Media) cm).getFilename().equals(m.getFilename())){
+								add = false;
+							}
+						}
+						if (add){
+							payload.addResponseData(m);
+							payload.setResult(true);
+						}
 					}
 				}
 			} catch (InvalidXMLException e) {
