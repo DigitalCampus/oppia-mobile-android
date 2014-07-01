@@ -63,6 +63,9 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
 	    courseTitle.setText(c.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 	    
+	    TextView courseDescription = (TextView) rowView.findViewById(R.id.course_description);
+	    courseDescription.setText(c.getDescription(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.course_progress_bar);
 	    pb.setProgress((int) c.getProgress());
 	    

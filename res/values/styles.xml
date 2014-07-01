@@ -49,6 +49,12 @@
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
+     <style name="MediumTextItalic">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/text_light</item>
+    </style>
+    
     <style name="SmallTextLight">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>

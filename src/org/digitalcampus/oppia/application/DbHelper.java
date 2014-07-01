@@ -495,6 +495,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
 			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
 			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
+			course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
 			courses.add(course);
 			c.moveToNext();
 		}
