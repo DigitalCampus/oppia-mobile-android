@@ -26,6 +26,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -113,11 +114,16 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
 		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_courses);
-		if (courses.size() > 1) {
-			TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
-			tv.setText(R.string.no_courses);
-			llNone.setVisibility(View.GONE);
-		} else if (courses.size() > 0)  {
+		
+		if (courses.size() == 0){
+			llNone.setVisibility(View.VISIBLE);
+			Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
+			manageBtn.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
+				}
+			});
+		} else if (courses.size() < MobileLearning.DOWNLOAD_COURSES_DISPLAY) {
 			llNone.setVisibility(View.VISIBLE);
 			TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
 			tv.setText(R.string.more_courses);
@@ -128,13 +134,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				}
 			});
 		} else {
-			llNone.setVisibility(View.VISIBLE);
-			Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
-			manageBtn.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
-				}
-			});
+			TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
+			tv.setText(R.string.no_courses);
+			llNone.setVisibility(View.GONE);
 		}
 
 		CourseListAdapter mla = new CourseListAdapter(this, courses);

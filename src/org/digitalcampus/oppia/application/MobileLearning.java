@@ -62,6 +62,7 @@ public class MobileLearning extends Application {
 	
 	// general other settings
 	public static final String BUGSENSE_API_KEY = "84d61fd0";
+	public static final int DOWNLOAD_COURSES_DISPLAY = 2; //this no of courses must be displayed for the 'download more courses' option to disappear
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
 	public static final int RESOURCE_READ_TIME = 3;

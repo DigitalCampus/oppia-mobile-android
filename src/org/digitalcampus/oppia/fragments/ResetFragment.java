@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.fragments;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
@@ -30,11 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +41,6 @@ import android.widget.LinearLayout.LayoutParams;
 public class ResetFragment extends Fragment implements SubmitListener{
 
 	public static final String TAG = RegisterFragment.class.getSimpleName();
-	private SharedPreferences prefs;
 	private EditText usernameField;
 	private Button resetButton;
 	private ProgressDialog pDialog;
@@ -62,7 +56,6 @@ public class ResetFragment extends Fragment implements SubmitListener{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_reset, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
