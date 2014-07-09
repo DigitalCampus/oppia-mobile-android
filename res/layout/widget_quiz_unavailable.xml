@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/quiz_progress"
+        android:id="@+id/quiz_unavailable"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="50dp"
+        android:gravity="center_vertical|center"
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Quiz not available yet"/>
-
-    
+        android:textStyle="bold" />
 
 </LinearLayout>

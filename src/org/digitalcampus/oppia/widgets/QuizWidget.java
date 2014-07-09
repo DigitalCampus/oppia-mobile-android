@@ -158,12 +158,17 @@ public class QuizWidget extends WidgetFactory {
 			} else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_SECTION){
 				ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
 				vg.removeAllViews();
-				//LayoutInflater.from(getView().getContext()).inflate(R.layout.widget_quiz_unavailable, container);
 				vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
 				
-				//container.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+				TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
+				tv.setText(R.string.widget_quiz_unavailable_section);
 			} else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
+				ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
+				vg.removeAllViews();
+				vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
 				
+				TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
+				tv.setText(R.string.widget_quiz_unavailable_course);
 			}
 		}
 	}

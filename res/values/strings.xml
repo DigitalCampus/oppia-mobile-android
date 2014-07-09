@@ -66,6 +66,8 @@
  	<string name="widget_quiz_image_caption">Press the image to view larger version</string>
  	<string name="widget_quiz_feedback_response_title">You answered: </string>
  	<string name="widget_quiz_feedback_feedback_title">Feedback: </string>
+ 	<string name="widget_quiz_unavailable_section">You must complete all the previous activities in this section before this quiz becomes available to you.</string>
+ 	<string name="widget_quiz_unavailable_course">You must complete all the previous activities in this course before this quiz becomes available to you.</string>
  	
  	<string name="widget_resource_open_file">Open \'%1$s\'</string>
  	
