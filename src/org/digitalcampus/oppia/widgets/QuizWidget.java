@@ -152,7 +152,19 @@ public class QuizWidget extends WidgetFactory {
 		if (this.isOnResultsPage) {
 			this.showResults();
 		} else {
-			this.showQuestion();
+			// determine availability
+			if (this.quiz.getAvailability() == Quiz.AVAILABILITY_ALWAYS){
+				this.showQuestion();
+			} else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_SECTION){
+				ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
+				vg.removeAllViews();
+				//LayoutInflater.from(getView().getContext()).inflate(R.layout.widget_quiz_unavailable, container);
+				vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+				
+				//container.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+			} else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
+				
+			}
 		}
 	}
 
