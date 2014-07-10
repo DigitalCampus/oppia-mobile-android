@@ -815,6 +815,26 @@ public class DbHelper extends SQLiteOpenHelper {
 		return a;
 	}
 	
+	public Activity getActivityByActId(int actId){
+		String sql = "SELECT * FROM  "+ ACTIVITY_TABLE + " a " +
+					" WHERE " + ACTIVITY_C_ACTID + "="+ actId;
+		Cursor c = db.rawQuery(sql,null);
+		c.moveToFirst();
+		Activity a = new Activity();
+		while (c.isAfterLast() == false) {
+			
+			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
+				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+				a.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
+				a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+				a.setSectionId(c.getInt(c.getColumnIndex(ACTIVITY_C_SECTIONID)));
+			}
+			c.moveToNext();
+		}
+		c.close();
+		return a;
+	}
+	
 	
 	public ArrayList<Activity> getActivitiesDue(int max, long userId){
 		
@@ -989,5 +1009,89 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = "docid=?";
 		String[] args = new String[] { String.valueOf(activityDbId) };
 		db.delete(SEARCH_TABLE, s, args);
+	}
+	
+	/*
+	 * 
+	 */
+	public boolean isPreviousSectionActivitiesCompleted(Course course, Activity activity){
+		// get this activity
+		
+		Log.d(TAG,"this digest = " + activity.getDigest());
+		Log.d(TAG,"this actid = " + activity.getActId());
+		Log.d(TAG,"this modid = " + activity.getCourseId());
+		Log.d(TAG,"this sectionid = " + activity.getSectionId());
+		// get all the previous activities in this section
+		String sql =  String.format("SELECT * FROM " + ACTIVITY_TABLE + 
+						" WHERE " + ACTIVITY_C_ACTID + " < %d " +
+						" AND " + ACTIVITY_C_COURSEID + " = %d " +
+						" AND " + ACTIVITY_C_SECTIONID + " = %d", activity.getActId(), activity.getCourseId(), activity.getSectionId());
+		
+		Log.d(TAG,"sql: " + sql);
+		Cursor c = db.rawQuery(sql,null);
+	    if(c !=null && c.getCount()>0){
+	    	c.moveToFirst();
+	    	boolean completed = true;
+	    	// check if each activity has been completed or not
+	    	while (c.isAfterLast() == false) {
+	    		String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
+	    										" WHERE " + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
+	    										" AND " + TRACKER_LOG_C_COMPLETED + " =1",c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)) );
+	    		Cursor c2 = db.rawQuery(sqlCheck,null);
+	    		if (c2 == null || c2.getCount() == 0){
+	    			completed = false;
+	    		}
+	    		c2.close();
+	    		c.moveToNext();
+	    	}
+	    	c.close();
+	    	return completed;
+	    } else {
+	    	c.close();
+	    	return true;
+	    }
+	}
+	
+	/*
+	 * 
+	 */
+	public boolean isPreviousCourseActivitiesCompleted(Course course, Activity activity){
+		
+		Log.d(TAG,"this digest = " + activity.getDigest());
+		Log.d(TAG,"this actid = " + activity.getActId());
+		Log.d(TAG,"this modid = " + activity.getCourseId());
+		Log.d(TAG,"this sectionid = " + activity.getSectionId());
+		// get all the previous activities in this section
+		String sql =  String.format("SELECT * FROM " + ACTIVITY_TABLE + 
+						" WHERE (" + ACTIVITY_C_ACTID + " < %d " +
+						" AND " + ACTIVITY_C_COURSEID + " = %d " +
+						" AND " + ACTIVITY_C_SECTIONID + " < %d )" +
+						" OR (" + ACTIVITY_C_ACTID + " < %d " +
+						" AND " + ACTIVITY_C_COURSEID + " = %d " +
+						" AND " + ACTIVITY_C_SECTIONID + " = %d)", activity.getActId(), activity.getCourseId(), activity.getSectionId(), activity.getActId(), activity.getCourseId(), activity.getSectionId());
+		
+		Log.d(TAG,"sql: " + sql);
+		Cursor c = db.rawQuery(sql,null);
+	    if(c !=null && c.getCount()>0){
+	    	c.moveToFirst();
+	    	boolean completed = true;
+	    	// check if each activity has been completed or not
+	    	while (c.isAfterLast() == false) {
+	    		String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
+	    										" WHERE " + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
+	    										" AND " + TRACKER_LOG_C_COMPLETED + " =1",c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)) );
+	    		Cursor c2 = db.rawQuery(sqlCheck,null);
+	    		if (c2 == null || c2.getCount() == 0){
+	    			completed = false;
+	    		}
+	    		c2.close();
+	    		c.moveToNext();
+	    	}
+	    	c.close();
+	    	return completed;
+	    } else {
+	    	c.close();
+	    	return true;
+	    }
 	}
 }

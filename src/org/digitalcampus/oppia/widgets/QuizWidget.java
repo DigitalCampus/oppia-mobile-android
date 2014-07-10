@@ -156,19 +156,38 @@ public class QuizWidget extends WidgetFactory {
 			if (this.quiz.getAvailability() == Quiz.AVAILABILITY_ALWAYS){
 				this.showQuestion();
 			} else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_SECTION){
-				ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
-				vg.removeAllViews();
-				vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
 				
-				TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
-				tv.setText(R.string.widget_quiz_unavailable_section);
+				// check to see if all previous section activities have been completed
+				DbHelper db = new DbHelper(getView().getContext());
+				boolean completed = db.isPreviousSectionActivitiesCompleted(course, activity);
+				DatabaseManager.getInstance().closeDatabase();
+				
+				if (completed){
+					this.showQuestion();
+				} else {
+					ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
+					vg.removeAllViews();
+					vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+					
+					TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
+					tv.setText(R.string.widget_quiz_unavailable_section);
+				}
 			} else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
-				ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
-				vg.removeAllViews();
-				vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+				// check to see if all previous course activities have been completed
+				DbHelper db = new DbHelper(getView().getContext());
+				boolean completed = db.isPreviousCourseActivitiesCompleted(course, activity);
+				DatabaseManager.getInstance().closeDatabase();
 				
-				TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
-				tv.setText(R.string.widget_quiz_unavailable_course);
+				if (completed){
+					this.showQuestion();
+				} else {
+					ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
+					vg.removeAllViews();
+					vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+					
+					TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
+					tv.setText(R.string.widget_quiz_unavailable_course);
+				}
 			}
 		}
 	}
@@ -372,7 +391,7 @@ public class QuizWidget extends WidgetFactory {
 			baselineExtro.setText(super.getActivity().getString(R.string.widget_quiz_baseline_completed));
 		} 
 		
-		// TODO add TextView here to give overall feedback if it's in the quiz
+		// TODO add )TextView here to give overall feedback if it's in the quiz
 		
 		// Show the detail of which questions were right/wrong
 		if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ATEND){
