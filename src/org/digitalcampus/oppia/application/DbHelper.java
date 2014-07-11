@@ -1014,7 +1014,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	/*
 	 * 
 	 */
-	public boolean isPreviousSectionActivitiesCompleted(Course course, Activity activity){
+	public boolean isPreviousSectionActivitiesCompleted(Course course, Activity activity, long userId){
 		// get this activity
 		
 		Log.d(TAG,"this digest = " + activity.getDigest());
@@ -1035,11 +1035,13 @@ public class DbHelper extends SQLiteOpenHelper {
 	    	// check if each activity has been completed or not
 	    	while (c.isAfterLast() == false) {
 	    		String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
-	    										" WHERE " + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
-	    										" AND " + TRACKER_LOG_C_COMPLETED + " =1",c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)) );
+						" WHERE " + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
+						" AND " + TRACKER_LOG_C_COMPLETED + " =1" +
+						" AND " + TRACKER_LOG_C_USERID + " = %d",c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)), userId );
 	    		Cursor c2 = db.rawQuery(sqlCheck,null);
 	    		if (c2 == null || c2.getCount() == 0){
 	    			completed = false;
+	    			break;
 	    		}
 	    		c2.close();
 	    		c.moveToNext();
@@ -1055,7 +1057,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	/*
 	 * 
 	 */
-	public boolean isPreviousCourseActivitiesCompleted(Course course, Activity activity){
+	public boolean isPreviousCourseActivitiesCompleted(Course course, Activity activity, long userId){
 		
 		Log.d(TAG,"this digest = " + activity.getDigest());
 		Log.d(TAG,"this actid = " + activity.getActId());
@@ -1079,10 +1081,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	    	while (c.isAfterLast() == false) {
 	    		String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
 	    										" WHERE " + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
-	    										" AND " + TRACKER_LOG_C_COMPLETED + " =1",c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)) );
+	    										" AND " + TRACKER_LOG_C_COMPLETED + " =1" +
+	    										" AND " + TRACKER_LOG_C_USERID + " = %d",c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)), userId );
 	    		Cursor c2 = db.rawQuery(sqlCheck,null);
 	    		if (c2 == null || c2.getCount() == 0){
 	    			completed = false;
+	    			break;
 	    		}
 	    		c2.close();
 	    		c.moveToNext();
