@@ -1065,12 +1065,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		Log.d(TAG,"this sectionid = " + activity.getSectionId());
 		// get all the previous activities in this section
 		String sql =  String.format("SELECT * FROM " + ACTIVITY_TABLE + 
-						" WHERE (" + ACTIVITY_C_ACTID + " < %d " +
-						" AND " + ACTIVITY_C_COURSEID + " = %d " +
+						" WHERE (" + ACTIVITY_C_COURSEID + " = %d " +
 						" AND " + ACTIVITY_C_SECTIONID + " < %d )" +
 						" OR (" + ACTIVITY_C_ACTID + " < %d " +
 						" AND " + ACTIVITY_C_COURSEID + " = %d " +
-						" AND " + ACTIVITY_C_SECTIONID + " = %d)", activity.getActId(), activity.getCourseId(), activity.getSectionId(), activity.getActId(), activity.getCourseId(), activity.getSectionId());
+						" AND " + ACTIVITY_C_SECTIONID + " = %d)", activity.getCourseId(), activity.getSectionId(), activity.getActId(), activity.getCourseId(), activity.getSectionId());
 		
 		Log.d(TAG,"sql: " + sql);
 		Cursor c = db.rawQuery(sql,null);

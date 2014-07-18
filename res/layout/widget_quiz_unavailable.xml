@@ -12,7 +12,6 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="50dp"
         android:gravity="center_vertical|center"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="20sp"/>
 
 </LinearLayout>
