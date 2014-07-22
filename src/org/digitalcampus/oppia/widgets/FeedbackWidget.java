@@ -28,6 +28,8 @@ import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
+import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -37,7 +39,9 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
+import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
 import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
+import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -164,6 +168,10 @@ public class FeedbackWidget extends WidgetFactory {
 			qw = new MultiChoiceWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Essay) {
 			qw = new EssayWidget(super.getActivity(), getView(), container);
+		} else if (q instanceof ShortAnswer) {
+			qw = new ShortAnswerWidget(super.getActivity(), getView(), container);
+		} else if (q instanceof Numerical) {
+			qw = new NumericalWidget(super.getActivity(), getView(), container);
 		} else {
 			return;
 		}

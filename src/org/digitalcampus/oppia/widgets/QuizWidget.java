@@ -225,15 +225,15 @@ public class QuizWidget extends WidgetFactory {
 		if (q instanceof MultiChoice) {
 			qw = new MultiChoiceWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof MultiSelect) {
-			qw = new MultiSelectWidget(super.getActivity(), getView(),container);
+			qw = new MultiSelectWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof ShortAnswer) {
-			qw = new ShortAnswerWidget(super.getActivity(), getView(),container);
+			qw = new ShortAnswerWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Matching) {
-			qw = new MatchingWidget(super.getActivity(), getView(),container);
+			qw = new MatchingWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Numerical) {
-			qw = new NumericalWidget(super.getActivity(), getView(),container);
+			qw = new NumericalWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Description) {
-			qw = new DescriptionWidget(super.getActivity(), getView(),container);
+			qw = new DescriptionWidget(super.getActivity(), getView(), container);
 		} else {
 			return;
 		}
