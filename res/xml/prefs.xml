@@ -32,6 +32,11 @@
         android:key="prefShowSectionNumbers"
         android:title="@string/prefShowSectionNumbers" />
     
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="prefShowProgressBar"
+        android:title="@string/prefShowProgressBar" />
+    
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
             android:defaultValue="@string/prefServerDefault"

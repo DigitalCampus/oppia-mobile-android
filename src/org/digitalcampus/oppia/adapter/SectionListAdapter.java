@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
 
@@ -96,7 +97,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
 	    	
 	    	// highlight if completed
-	    	if(s.getActivities().get(i).getCompleted() && prefs.getBoolean("prefHighlightCompleted", true)){
+	    	if(s.getActivities().get(i).getCompleted() && prefs.getBoolean("prefHighlightCompleted", MobileLearning.DEFAULT_DISPLAY_COMPLETED)){
 	    		activityObject.setBackgroundResource(R.drawable.activity_background_completed);
 	    	}
 	    	
