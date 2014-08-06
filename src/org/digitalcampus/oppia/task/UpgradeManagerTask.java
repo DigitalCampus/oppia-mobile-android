@@ -136,6 +136,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				c.setShortname(children[i]);
 				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
+				c.setPriority(cxr.getPriority());
 				
 				DbHelper db = new DbHelper(ctx);
 				long courseId = db.addOrUpdateCourse(c);
