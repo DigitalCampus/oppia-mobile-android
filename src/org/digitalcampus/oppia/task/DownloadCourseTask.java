@@ -26,6 +26,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.params.CoreProtocolPNames;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -35,8 +36,10 @@ import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -64,15 +67,26 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 
 			String url =  client.createUrlWithCredentials(dm.getDownloadUrl());
 			
+			String v = "0";
+			try {
+				v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+			} catch (NameNotFoundException e) {
+				e.printStackTrace();
+			}
+			
 			URL u = new URL(url);
             HttpURLConnection c = (HttpURLConnection) u.openConnection();
             c.setRequestMethod("GET");
+            c.setRequestProperty(CoreProtocolPNames.USER_AGENT, MobileLearning.USER_AGENT + v);
+            Log.d(TAG,CoreProtocolPNames.USER_AGENT);
+            Log.d(TAG,MobileLearning.USER_AGENT + v);
             c.setDoOutput(true);
             c.connect();
             c.setConnectTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
 							ctx.getString(R.string.prefServerTimeoutConnection))));
             c.setReadTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
 							ctx.getString(R.string.prefServerTimeoutResponse))));
+            
 			
 			int fileLength = c.getContentLength();
 			
