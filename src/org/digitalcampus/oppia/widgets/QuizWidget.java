@@ -147,7 +147,7 @@ public class QuizWidget extends WidgetFactory {
 		super.onResume();
 		if (this.quiz == null) {
 			this.quiz = new Quiz();
-			this.quiz.load(quizContent);
+			this.quiz.load(quizContent,prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 		}
 		if (this.isOnResultsPage) {
 			this.showResults();
@@ -205,7 +205,7 @@ public class QuizWidget extends WidgetFactory {
 		}
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
-		qText.setText(Html.fromHtml(q.getTitle()).toString());
+		qText.setText(Html.fromHtml(q.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))).toString());
 
 		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
@@ -393,7 +393,7 @@ public class QuizWidget extends WidgetFactory {
 			baselineExtro.setText(super.getActivity().getString(R.string.widget_quiz_baseline_completed));
 		} 
 		
-		// TODO add )TextView here to give overall feedback if it's in the quiz
+		// TODO add TextView here to give overall feedback if it's in the quiz
 		
 		// Show the detail of which questions were right/wrong
 		if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ATEND){
@@ -404,7 +404,7 @@ public class QuizWidget extends WidgetFactory {
 				if(!(q instanceof Description)){
 					QuizFeedback qf = new QuizFeedback();
 					qf.setScore(q.getScoreAsPercent());
-					qf.setQuestionText(q.getTitle());
+					qf.setQuestionText(q.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 					qf.setUserResponse(q.getUserResponses());
 					qf.setFeedbackText(q.getFeedback());
 					quizFeedback.add(qf);
@@ -437,9 +437,9 @@ public class QuizWidget extends WidgetFactory {
 	private void restart() {
 		this.setStartTime(System.currentTimeMillis() / 1000);
 		
-		quiz = new Quiz();
-		quiz.load(quizContent);
-		isOnResultsPage = false;
+		this.quiz = new Quiz();
+		this.quiz.load(quizContent,prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+		this.isOnResultsPage = false;
 		
 		// reload quiz layout
 		View C = getView().findViewById(R.id.widget_quiz_results);
@@ -449,11 +449,11 @@ public class QuizWidget extends WidgetFactory {
 	    C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz, parent, false);
 	    parent.addView(C, index);
 	    
-	    prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
-		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
-		qText = (TextView) getView().findViewById(R.id.question_text);
-		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
-		questionImage.setVisibility(View.GONE);
+	    this.prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
+	    this.nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
+	    this.qText = (TextView) getView().findViewById(R.id.question_text);
+	    this.questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
+	    this.questionImage.setVisibility(View.GONE);
 		this.showQuestion();
 	}
 
@@ -532,7 +532,7 @@ public class QuizWidget extends WidgetFactory {
 		// Get the current question text
 		String toRead = "";
 		try {
-			toRead = quiz.getCurrentQuestion().getTitle();
+			toRead = quiz.getCurrentQuestion().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 		} catch (InvalidQuizException e) {
 			e.printStackTrace();
 		}
