@@ -269,7 +269,7 @@ public class QuizWidget extends WidgetFactory {
 				if (saveAnswer()) {
 					String feedback = "";
 					try {
-						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback();
+						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 					
 						if (!feedback.equals("") && 
 								quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS 
@@ -406,7 +406,7 @@ public class QuizWidget extends WidgetFactory {
 					qf.setScore(q.getScoreAsPercent());
 					qf.setQuestionText(q.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 					qf.setUserResponse(q.getUserResponses());
-					qf.setFeedbackText(q.getFeedback());
+					qf.setFeedbackText(q.getFeedback(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 					quizFeedback.add(qf);
 				}
 			}
@@ -540,17 +540,10 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private float getPercent() {
-		quiz.mark();
+		quiz.mark(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		return percent;
 	}
-	
-	// TODO
-	/*private String getOverallFeedback(){
-		String feedback = "";
-		
-		return feedback;
-	}*/
 	
 	private class OnImageClickListener implements OnClickListener{
 
