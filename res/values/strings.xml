@@ -89,6 +89,7 @@
 	<string name="prefServer">Server</string>
 	<string name="prefServerTimeoutConnection">Connection timeout</string>
 	<string name="prefServerTimeoutResponse">Response timeout</string>
+	<string name="prefShowCourseDescription">Show course description</string>
 	<string name="prefShowProgressBar">Show progress bar</string>
 	<string name="prefShowScheduleReminders">Display suggested activities</string>
 	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
