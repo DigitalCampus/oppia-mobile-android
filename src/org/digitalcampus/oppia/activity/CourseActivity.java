@@ -227,7 +227,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
 			i.putExtras(tb);
 			startActivity(i);
-			return true;
+			return true;			
 		case android.R.id.home:
 			this.finish();
 			return true;

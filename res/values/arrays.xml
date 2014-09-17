@@ -14,4 +14,18 @@
         <item name="4">4</item>
         <item name="5">5</item>
     </string-array>
+    <string-array name="TextSize">
+        <item name="12">Smallest</item>
+        <item name="14">Small</item>
+        <item name="16">Normal</item>
+        <item name="18">Large</item>
+        <item name="20">Largest</item>
+    </string-array>
+     <string-array name="TextSizeValues">
+        <item name="12">12</item>
+        <item name="14">14</item>
+        <item name="16">16</item>
+        <item name="18">18</item>
+        <item name="20">20</item>
+    </string-array>
 </resources>
