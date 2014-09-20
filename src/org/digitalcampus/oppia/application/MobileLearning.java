@@ -21,6 +21,7 @@ import java.io.File;
 
 import org.digitalcampus.oppia.task.SubmitQuizTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
+import org.digitalcampus.oppia.utils.FileUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -33,14 +34,7 @@ import android.preference.PreferenceManager;
 public class MobileLearning extends Application {
 
 	public static final String TAG = MobileLearning.class.getSimpleName();
-
 	
-	// local storage vars
-	public static final String OPPIAMOBILE_ROOT = Environment
-			.getExternalStorageDirectory() + "/digitalcampus/";
-	public static final String COURSES_PATH = OPPIAMOBILE_ROOT + "modules/";
-	public static final String MEDIA_PATH = OPPIAMOBILE_ROOT + "media/";
-	public static final String DOWNLOAD_PATH = OPPIAMOBILE_ROOT + "download/";
 	public static final String COURSE_XML = "module.xml";
 	public static final String COURSE_SCHEDULE_XML = "schedule.xml";
 	public static final String COURSE_TRACKER_XML = "tracker.xml";
@@ -97,7 +91,7 @@ public class MobileLearning extends Application {
 			return false;
 		}
 
-		String[] dirs = { OPPIAMOBILE_ROOT, COURSES_PATH, MEDIA_PATH, DOWNLOAD_PATH };
+		String[] dirs = { FileUtils.getStorageLocationRoot(), FileUtils.getCoursesPath(), FileUtils.getMediaPath(), FileUtils.getDownloadPath() };
 
 		for (String dirName : dirs) {
 			File dir = new File(dirName);

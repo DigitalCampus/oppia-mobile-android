@@ -107,7 +107,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	 * the new titles etc are picked up
 	 */
 	protected void upgradeV17(){
-		File dir = new File(MobileLearning.COURSES_PATH);
+		File dir = new File(FileUtils.getCoursesPath());
 		String[] children = dir.list();
 		if (children != null) {
 			for (int i = 0; i < children.length; i++) {
@@ -121,7 +121,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					courseScheduleXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_SCHEDULE_XML;
 					courseTrackerXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
-					FileUtils.cleanUp(dir, MobileLearning.DOWNLOAD_PATH + children[i]);
+					FileUtils.cleanUp(dir, FileUtils.getDownloadPath() + children[i]);
 					break;
 				}
 				
@@ -141,9 +141,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				Course c = new Course();
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
-				c.setLocation(MobileLearning.COURSES_PATH + children[i]);
+				c.setLocation(FileUtils.getCoursesPath() + children[i]);
 				c.setShortname(children[i]);
-				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + cxr.getCourseImage());
+				c.setImageFile(FileUtils.getCoursesPath() + children[i] + "/" + cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
 				c.setPriority(cxr.getPriority());
 				

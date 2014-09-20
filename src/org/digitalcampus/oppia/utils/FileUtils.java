@@ -35,6 +35,7 @@ import java.util.zip.ZipInputStream;
 import org.digitalcampus.oppia.application.MobileLearning;
 
 import android.app.Activity;
+import android.os.Environment;
 import android.webkit.MimeTypeMap;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -44,6 +45,22 @@ public class FileUtils {
 	public static final String TAG = FileUtils.class.getSimpleName();
 	public static final int BUFFER_SIZE = 1024;
 
+	public static String getStorageLocationRoot(){
+		return Environment.getExternalStorageDirectory() + "/digitalcampus/";
+	}
+	
+	public static String getCoursesPath(){
+		return getStorageLocationRoot() + "modules/";
+	}
+	
+	public static String getDownloadPath(){
+		return getStorageLocationRoot() + "download/";
+	}
+	
+	public static String getMediaPath(){
+		return getStorageLocationRoot() + "media/";
+	}
+	
 	// This function converts the zip file into uncompressed files which are
 	// placed in the
 	// destination directory
@@ -182,7 +199,7 @@ public class FileUtils {
 	}
 
 	public static boolean mediaFileExists(String filename) {
-		File media = new File(MobileLearning.MEDIA_PATH + filename);
+		File media = new File(FileUtils.getMediaPath() + filename);
 		if (media.exists()) {
 			return true;
 		} else {

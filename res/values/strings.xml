@@ -96,6 +96,7 @@
 	<string name="prefShowScheduleReminders">Display suggested activities</string>
 	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
 	<string name="prefShowSectionNumbers">Show section numbers</string>
+	<string name="prefStorageLocation">Storage Location</string>
 	<string name="prefTextSize">Text size</string>
 	<string name="prefUser">Username</string>
 	<string name="prefUserHint">(read only)</string>

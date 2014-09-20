@@ -33,6 +33,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -58,7 +59,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 		Payload payload = params[0];
 		for (Object o: payload.getData()){
 			Media m = (Media) o;
-			File file = new File(MobileLearning.MEDIA_PATH,m.getFilename());
+			File file = new File(FileUtils.getMediaPath(),m.getFilename());
 			try { 
 				
 				URL u = new URL(m.getDownloadUrl());

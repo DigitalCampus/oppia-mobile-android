@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
+import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -121,7 +122,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     }
 
 	private void installCourses(){
-		File dir = new File(MobileLearning.DOWNLOAD_PATH);
+		File dir = new File(FileUtils.getDownloadPath());
 		String[] children = dir.list();
 		if (children != null) {
 			ArrayList<Object> data = new ArrayList<Object>();

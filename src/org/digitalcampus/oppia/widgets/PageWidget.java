@@ -143,7 +143,7 @@ public class PageWidget extends WidgetFactory {
 						return true;
 					}
 
-					String mimeType = FileUtils.getMimeType(MobileLearning.MEDIA_PATH + mediaFileName);
+					String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath() + mediaFileName);
 					if (!FileUtils.supportedMediafileType(mimeType)) {
 						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
 								Toast.LENGTH_LONG).show();
@@ -153,7 +153,7 @@ public class PageWidget extends WidgetFactory {
 					// check user has app installed to play the video
 					// launch intent to play video
 					Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-					Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
+					Uri data = Uri.parse(FileUtils.getMediaPath() + mediaFileName);
 					intent.setDataAndType(data, "video/mp4");
 
 					PackageManager pm = PageWidget.super.getActivity().getPackageManager();
