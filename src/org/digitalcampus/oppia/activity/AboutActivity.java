@@ -47,6 +47,7 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 	public static final int TAB_ABOUT = 0;
 	public static final int TAB_HELP = 1;
 	public static final int TAB_PRIVACY = 2;
+	public static final int TAB_STATS = 3;
 
 	private ActionBar actionBar;
 	private ViewPager viewPager;

@@ -13,6 +13,15 @@
         android:textSize="15sp"
         android:textStyle="bold" />
     
+    <TextView
+        android:id="@+id/about_user"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+    
     <WebView
         android:id="@+id/about_webview"
         android:layout_width="fill_parent"

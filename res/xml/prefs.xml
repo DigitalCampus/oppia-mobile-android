@@ -50,12 +50,6 @@
         android:title="@string/prefShowCourseDescription" />
     
     <PreferenceCategory android:title="@string/prefAdvanced" >
-        <!-- EditTextPreference
-            android:defaultValue=""
-            android:key="prefUsername"
-            android:title="@string/prefUser"
-            android:summary="@string/prefUserHint">
-        </EditTextPreference -->
         <EditTextPreference
             android:defaultValue="@string/prefServerDefault"
             android:key="prefServer"

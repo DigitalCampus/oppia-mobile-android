@@ -91,6 +91,14 @@ public class AboutFragment extends Fragment{
 				e.printStackTrace();
 			}
 		}
+		
+		TextView userTV = (TextView) super.getActivity().findViewById(R.id.about_user);
+		String user = prefs.getString("prefUsername", "");
+		if (user.equals("")){
+			userTV.setText(getString(R.string.about_not_logged_in));
+		} else {
+			userTV.setText(getString(R.string.about_logged_in, user));
+		}
 
 	}
 }
