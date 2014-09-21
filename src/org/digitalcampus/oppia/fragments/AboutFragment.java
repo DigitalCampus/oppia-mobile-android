@@ -91,6 +91,5 @@ public class AboutFragment extends Fragment{
 				e.printStackTrace();
 			}
 		}
-
 	}
 }
