@@ -185,14 +185,15 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 	
 	@Override
     protected void onPostExecute(Payload p) {
-		// reset submittask back to null after completion - so next call can run properly
-		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-		app.omSubmitTrackerMultipleTask = null;
 		synchronized (this) {
             if (trackerServiceListener != null) {
             	trackerServiceListener.trackerComplete();
             }
         }
+		// reset submittask back to null after completion - so next call can run properly
+		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+		app.omSubmitTrackerMultipleTask = null;
+		
     }
 	
 	public void setTrackerServiceListener(TrackerServiceListener tsl) {

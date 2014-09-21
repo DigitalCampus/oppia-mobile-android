@@ -94,6 +94,7 @@ public class StatsFragment extends Fragment implements TrackerServiceListener {
 	}
 	
 	protected void onSendClick(){
+		sendBtn.setEnabled(false);
 		MobileLearning app = (MobileLearning) super.getActivity().getApplication();
 		if(app.omSubmitTrackerMultipleTask == null){
 			Log.d(TAG,"Sumitting trackers multiple task");
@@ -118,6 +119,7 @@ public class StatsFragment extends Fragment implements TrackerServiceListener {
 	public void trackerComplete() {
 		this.updateSent();
 		this.updateUnsent();
+		sendBtn.setEnabled(true);
 		
 	}
 
