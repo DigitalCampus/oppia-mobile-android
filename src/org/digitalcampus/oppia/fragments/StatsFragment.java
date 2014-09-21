@@ -20,23 +20,29 @@ package org.digitalcampus.oppia.fragments;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.listener.TrackerServiceListener;
+import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-public class StatsFragment extends Fragment{
+public class StatsFragment extends Fragment implements TrackerServiceListener {
 
 	public static final String TAG = StatsFragment.class.getSimpleName();
 	private SharedPreferences prefs;
 	private TextView sentTV;
 	private TextView unsentTV;
+	private Button sendBtn;
 	private long userId;
 	
 	public static StatsFragment newInstance() {
@@ -77,6 +83,24 @@ public class StatsFragment extends Fragment{
 		unsentTV = (TextView) super.getActivity().findViewById(R.id.stats_unsubmitted);
 		this.updateUnsent();
 		
+		sendBtn = (Button) super.getActivity().findViewById(R.id.submit_stats_btn);
+		sendBtn.setOnClickListener(new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				onSendClick();
+			}
+		});
+		
+	}
+	
+	protected void onSendClick(){
+		MobileLearning app = (MobileLearning) super.getActivity().getApplication();
+		if(app.omSubmitTrackerMultipleTask == null){
+			Log.d(TAG,"Sumitting trackers multiple task");
+			app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(this.getActivity());
+			app.omSubmitTrackerMultipleTask.setTrackerServiceListener(this);
+			app.omSubmitTrackerMultipleTask.execute();
+		}
 	}
 	
 	private void updateSent(){
@@ -89,5 +113,16 @@ public class StatsFragment extends Fragment{
 		DbHelper db = new DbHelper(super.getActivity());
 		unsentTV.setText(String.valueOf(db.getUnsentTrackersCount(userId)));
 		DatabaseManager.getInstance().closeDatabase();
+	}
+
+	public void trackerComplete() {
+		this.updateSent();
+		this.updateUnsent();
+		
+	}
+
+	public void trackerProgressUpdate() {
+		this.updateSent();
+		this.updateUnsent();	
 	}
 }
