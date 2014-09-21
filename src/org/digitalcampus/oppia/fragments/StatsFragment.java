@@ -17,30 +17,23 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import java.util.Locale;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.utils.FileUtils;
-
-import com.bugsense.trace.BugSenseHandler;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 public class StatsFragment extends Fragment{
 
 	public static final String TAG = StatsFragment.class.getSimpleName();
-	private WebView webView;
 	private SharedPreferences prefs;
 	
 	public static StatsFragment newInstance() {
@@ -70,6 +63,15 @@ public class StatsFragment extends Fragment{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
+		
+		DbHelper db = new DbHelper(super.getActivity());
+		long userId = db.getUserId(prefs.getString("prefUsername", ""));
+		TextView sentTV = (TextView) super.getActivity().findViewById(R.id.stats_submitted);
+		sentTV.setText(String.valueOf(db.getSentTrackersCount(userId)));
+		
+		TextView unsentTV = (TextView) super.getActivity().findViewById(R.id.stats_unsubmitted);
+		unsentTV.setText(String.valueOf(db.getUnsentTrackersCount(userId)));
+		DatabaseManager.getInstance().closeDatabase();
 		
 	}
 }

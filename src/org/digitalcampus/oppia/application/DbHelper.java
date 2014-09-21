@@ -676,6 +676,25 @@ public class DbHelper extends SQLiteOpenHelper {
 		return users;
 	}
 	
+	public int getSentTrackersCount(long userId){
+		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
+		String[] args = new String[] { "1", String.valueOf(userId) };
+		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return count;
+	}
+	
+	public int getUnsentTrackersCount(long userId){
+		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
+		String[] args = new String[] { "0", String.valueOf(userId) };
+		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return count;
+	}
+	
+	
 	public Payload getUnsentTrackers(long userId){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
 		String[] args = new String[] { "0", String.valueOf(userId) };

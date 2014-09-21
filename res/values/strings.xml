@@ -5,6 +5,7 @@
     <string name="about_logged_in">Logged in as: %1$s</string>
     <string name="about_not_logged_in">Not logged in</string>
     
+    
     <string name="menu_download">Download Courses</string>
     <string name="menu_language">Change language</string>
     <string name="menu_settings">Settings</string>
@@ -47,6 +48,8 @@
     <string name="title_activity_course">Activity</string>
     <string name="title_course_meta">About</string>
     <string name="title_monitor">Monitor</string>
+    <string name="title_stats_submitted">No activities submitted to server</string>
+    <string name="title_stats_unsubmitted">No activities waiting to submit</string>
     <string name="title_prefs">Settings</string>
     <string name="title_scorecard">Scorecard</string>
     <string name="title_search">Search</string>
