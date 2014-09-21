@@ -28,6 +28,7 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;;
 
 public class PrefsActivity extends SherlockPreferenceActivity {
@@ -65,6 +66,16 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         
         langsList.setEntries(entryCharSeq);
         langsList.setEntryValues(entryValsChar);
+        
+        EditTextPreference username = (EditTextPreference) findPreference("prefUsername");
+        if (username.getText().equals("")){
+        	username.setSummary(R.string.about_not_logged_in);
+        } else {
+        	 username.setSummary(getString(R.string.about_logged_in,username.getText()));
+        }
+        
+        EditTextPreference server = (EditTextPreference) findPreference("prefServer");
+        server.setSummary(server.getText());
 	}
 
 	@Override

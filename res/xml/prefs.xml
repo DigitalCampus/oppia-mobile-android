@@ -51,6 +51,13 @@
     
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
+            android:defaultValue=""
+            android:key="prefUsername"
+            android:title="@string/prefUser" 
+            android:selectable="false">
+            
+        </EditTextPreference>
+        <EditTextPreference
             android:defaultValue="@string/prefServerDefault"
             android:key="prefServer"
             android:title="@string/prefServer" >

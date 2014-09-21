@@ -17,9 +17,16 @@
 
 package org.digitalcampus.oppia.fragments;
 
+import java.util.Locale;
+
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.utils.FileUtils;
+
+import com.bugsense.trace.BugSenseHandler;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -27,39 +34,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
-public class OppiaWebViewFragment extends Fragment{
+public class StatsFragment extends Fragment{
 
-	public static final String TAG = OppiaWebViewFragment.class.getSimpleName();
-	private static final String TAG_ID = "OppiaWebViewFragment_TAG_ID";
-	
+	public static final String TAG = StatsFragment.class.getSimpleName();
 	private WebView webView;
-	private String url;
-	private int id;
 	private SharedPreferences prefs;
 	
-	public static OppiaWebViewFragment newInstance(int id, String url) {
-		OppiaWebViewFragment myFragment = new OppiaWebViewFragment();
-		Bundle args = new Bundle();
-	    args.putSerializable(OppiaWebViewFragment.TAG, url);
-	    args.putSerializable(OppiaWebViewFragment.TAG_ID, id);
-	    myFragment.setArguments(args);
+	public static StatsFragment newInstance() {
+		StatsFragment myFragment = new StatsFragment();
 	    return myFragment;
 	}
 
-	public OppiaWebViewFragment(){
+	public StatsFragment(){
 		
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_webview, null);
+		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
+		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_stats, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
-		this.id = (Integer) getArguments().getSerializable(OppiaWebViewFragment.TAG_ID);
-		vv.setId(id);
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		return vv;
 	}
 
@@ -71,14 +69,7 @@ public class OppiaWebViewFragment extends Fragment{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		
-		webView = (WebView) super.getActivity().findViewById(this.id);
-		webView.getSettings().setJavaScriptEnabled(true);
-		int defaultFontSize = Integer.parseInt(prefs.getString("prefTextSize", "16"));
-		webView.getSettings().setDefaultFontSize(defaultFontSize);
-		url = (String) getArguments().getString(OppiaWebViewFragment.TAG);
-		webView.loadUrl(url);
-
 	}
-
 }

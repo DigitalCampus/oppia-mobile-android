@@ -36,6 +36,7 @@
     <string name="tab_title_register">Register</string>
     <string name="tab_title_reset">Reset Password</string>
     <string name="tab_title_scorecard">Scorecard</string>
+    <string name="tab_title_activity">Activity</string>
     <string name="tab_title_welcome">Welcome</string>
     
     <string name="title_about">About</string>
