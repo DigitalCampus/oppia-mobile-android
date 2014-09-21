@@ -35,6 +35,9 @@ public class StatsFragment extends Fragment{
 
 	public static final String TAG = StatsFragment.class.getSimpleName();
 	private SharedPreferences prefs;
+	private TextView sentTV;
+	private TextView unsentTV;
+	private long userId;
 	
 	public static StatsFragment newInstance() {
 		StatsFragment myFragment = new StatsFragment();
@@ -65,13 +68,26 @@ public class StatsFragment extends Fragment{
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		
 		DbHelper db = new DbHelper(super.getActivity());
-		long userId = db.getUserId(prefs.getString("prefUsername", ""));
-		TextView sentTV = (TextView) super.getActivity().findViewById(R.id.stats_submitted);
-		sentTV.setText(String.valueOf(db.getSentTrackersCount(userId)));
-		
-		TextView unsentTV = (TextView) super.getActivity().findViewById(R.id.stats_unsubmitted);
-		unsentTV.setText(String.valueOf(db.getUnsentTrackersCount(userId)));
+		userId = db.getUserId(prefs.getString("prefUsername", ""));
 		DatabaseManager.getInstance().closeDatabase();
 		
+		sentTV = (TextView) super.getActivity().findViewById(R.id.stats_submitted);
+		this.updateSent();
+		
+		unsentTV = (TextView) super.getActivity().findViewById(R.id.stats_unsubmitted);
+		this.updateUnsent();
+		
+	}
+	
+	private void updateSent(){
+		DbHelper db = new DbHelper(super.getActivity());
+		sentTV.setText(String.valueOf(db.getSentTrackersCount(userId)));
+		DatabaseManager.getInstance().closeDatabase();
+	}
+	
+	private void updateUnsent(){
+		DbHelper db = new DbHelper(super.getActivity());
+		unsentTV.setText(String.valueOf(db.getUnsentTrackersCount(userId)));
+		DatabaseManager.getInstance().closeDatabase();
 	}
 }
