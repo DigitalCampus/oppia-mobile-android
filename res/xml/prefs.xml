@@ -7,6 +7,13 @@
         android:title="@string/prefLanguage" >
     </ListPreference>
 
+    <ListPreference
+        android:defaultValue="normal"
+      	android:entries="@array/TextSize"
+        android:entryValues="@array/TextSizeValues"
+        android:key="prefTextSize"
+        android:title="@string/prefTextSize" />
+    
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="prefShowScheduleReminders"
@@ -37,7 +44,19 @@
         android:key="prefShowProgressBar"
         android:title="@string/prefShowProgressBar" />
     
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="prefShowCourseDescription"
+        android:title="@string/prefShowCourseDescription" />
+    
     <PreferenceCategory android:title="@string/prefAdvanced" >
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="prefUsername"
+            android:title="@string/prefUser" 
+            android:selectable="false">
+            
+        </EditTextPreference>
         <EditTextPreference
             android:defaultValue="@string/prefServerDefault"
             android:key="prefServer"

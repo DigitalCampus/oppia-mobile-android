@@ -75,6 +75,9 @@ public class AboutFragment extends Fragment{
 		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
 		String url = FileUtils.getLocalizedFilePath(super.getActivity(),lang, "about.html");
 
+		int defaultFontSize = Integer.parseInt(prefs.getString("prefTextSize", "16"));
+		webView.getSettings().setDefaultFontSize(defaultFontSize);
+		
 		webView.loadUrl(url);
 		
 		TextView versionNo = (TextView) super.getActivity().findViewById(R.id.about_versionno);
@@ -88,6 +91,5 @@ public class AboutFragment extends Fragment{
 				e.printStackTrace();
 			}
 		}
-
 	}
 }

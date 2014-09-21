@@ -91,6 +91,15 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 		
+		if(!prefs.getBoolean("upgradeV46",false)){
+			Editor editor = prefs.edit();
+			editor.putBoolean("upgradeV46", true);
+			editor.putString("prefServer", ctx.getString(R.string.prefServerDefault));
+			editor.commit();
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v46"));
+			payload.setResult(true);
+		}
+		
 		return payload;
 	}
 	
@@ -136,6 +145,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				c.setShortname(children[i]);
 				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
+				c.setPriority(cxr.getPriority());
 				
 				DbHelper db = new DbHelper(ctx);
 				long courseId = db.addOrUpdateCourse(c);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="prefServerDefault">http://demo.oppia-mobile.org/</string>
+    <string name="prefServerDefault">https://demo.oppia-mobile.org/</string>
     <string name="prefServerTimeoutConnectionDefault">10000</string>
     <string name="prefServerTimeoutResponseDefault">20000</string>
 

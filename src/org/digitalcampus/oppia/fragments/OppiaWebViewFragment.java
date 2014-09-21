@@ -19,7 +19,9 @@ package org.digitalcampus.oppia.fragments;
 
 import org.digitalcampus.mobile.learning.R;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ public class OppiaWebViewFragment extends Fragment{
 	private WebView webView;
 	private String url;
 	private int id;
+	private SharedPreferences prefs;
 	
 	public static OppiaWebViewFragment newInstance(int id, String url) {
 		OppiaWebViewFragment myFragment = new OppiaWebViewFragment();
@@ -56,6 +59,7 @@ public class OppiaWebViewFragment extends Fragment{
 		vv.setLayoutParams(lp);
 		this.id = (Integer) getArguments().getSerializable(OppiaWebViewFragment.TAG_ID);
 		vv.setId(id);
+		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		return vv;
 	}
 
@@ -70,6 +74,8 @@ public class OppiaWebViewFragment extends Fragment{
 		
 		webView = (WebView) super.getActivity().findViewById(this.id);
 		webView.getSettings().setJavaScriptEnabled(true);
+		int defaultFontSize = Integer.parseInt(prefs.getString("prefTextSize", "16"));
+		webView.getSettings().setDefaultFontSize(defaultFontSize);
 		url = (String) getArguments().getString(OppiaWebViewFragment.TAG);
 		webView.loadUrl(url);
 

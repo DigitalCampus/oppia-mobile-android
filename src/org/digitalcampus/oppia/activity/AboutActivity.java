@@ -25,6 +25,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.AboutFragment;
 import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
+import org.digitalcampus.oppia.fragments.StatsFragment;
 import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.content.SharedPreferences;
@@ -47,6 +48,7 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 	public static final int TAB_ABOUT = 0;
 	public static final int TAB_HELP = 1;
 	public static final int TAB_PRIVACY = 2;
+	public static final int TAB_STATS = 3;
 
 	private ActionBar actionBar;
 	private ViewPager viewPager;
@@ -93,6 +95,9 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 		Fragment fPrivacy = OppiaWebViewFragment.newInstance(TAB_PRIVACY, url);
 		fragments.add(fPrivacy);
 		
+		Fragment fStats = StatsFragment.newInstance();
+		fragments.add(fStats);
+		
 		
 		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(apAdapter);
@@ -117,6 +122,12 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 		}
 		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_privacy)).setTabListener(this), TAB_PRIVACY, setSelected);
 
+		if (currentTab == AboutActivity.TAB_STATS){
+			setSelected = true;
+		}else {
+			setSelected = false;
+		}
+		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_activity)).setTabListener(this), TAB_STATS, setSelected);
 		viewPager.setCurrentItem(currentTab);
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

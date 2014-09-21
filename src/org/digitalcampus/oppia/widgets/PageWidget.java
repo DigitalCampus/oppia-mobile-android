@@ -113,6 +113,10 @@ public class PageWidget extends WidgetFactory {
 		String url = course.getLocation()
 				+ activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault()
 						.getLanguage()));
+		
+		int defaultFontSize = Integer.parseInt(prefs.getString("prefTextSize", "16"));
+		wv.getSettings().setDefaultFontSize(defaultFontSize);
+		
 		try {
 			wv.getSettings().setJavaScriptEnabled(true);
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", FileUtils.readFile(url), "text/html",
