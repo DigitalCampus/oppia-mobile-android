@@ -20,11 +20,14 @@ package org.digitalcampus.oppia.widgets.quiz;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -34,9 +37,11 @@ public class MultiSelectWidget extends QuestionWidget {
 
 	public static final String TAG = MultiSelectWidget.class.getSimpleName();
 	private LinearLayout responsesLL;
+	protected SharedPreferences prefs;
 	
 	public MultiSelectWidget(Activity activity,  View v, ViewGroup container) {
 		init(activity,container,R.layout.widget_quiz_multiselect, v);
+		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	}
 
 	@Override
@@ -46,12 +51,12 @@ public class MultiSelectWidget extends QuestionWidget {
     	
     	for (Response r : responses){
     		CheckBox chk= new CheckBox(ctx);  
-    		chk.setText(r.getTitle());
+    		chk.setText(r.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
     		responsesLL.addView(chk);
     		Iterator<String> itr = currentAnswer.iterator();
     		while(itr.hasNext()){
     			String a = itr.next(); 
-    			if(a.equals(r.getTitle())){
+    			if(a.equals(r.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())))){
     				chk.setChecked(true);
     			}
     		}

@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.digitalcampus.mobile.learning.R;
@@ -30,6 +31,8 @@ import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -43,9 +46,11 @@ public class MatchingWidget extends QuestionWidget {
 	
 	private LinearLayout responsesLL;
 	private LinearLayout[] responseLayouts;
+	protected SharedPreferences prefs;
 	
 	public MatchingWidget(Activity activity, View v, ViewGroup container) {
 		init(activity,container,R.layout.widget_quiz_matching,v);
+		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	}
 
 	@Override
@@ -58,7 +63,7 @@ public class MatchingWidget extends QuestionWidget {
     	ArrayList<String> possibleAnswersShuffle = new ArrayList<String>();
     	int noresponses = 0;
     	for (Response r : responses){
-    		String[] temp = r.getTitle().split(Quiz.MATCHING_REGEX,-1);
+    		String[] temp = r.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).split(Quiz.MATCHING_REGEX,-1);
     		if(!temp[0].equals("")){
     			noresponses++;
     		}
