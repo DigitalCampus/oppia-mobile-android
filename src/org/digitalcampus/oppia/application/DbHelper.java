@@ -50,9 +50,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	static final String DB_NAME = "mobilelearning.db";
 	static final int DB_VERSION = 18;
 
-	
 	private static SQLiteDatabase db;
-	private Context ctx;
 	private SharedPreferences prefs;
 	
 	private static final String COURSE_TABLE = "Module";
@@ -322,6 +320,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		db.update(QUIZRESULTS_TABLE, values2, "1=1", null);
 	}
+	
 	
 	// returns id of the row
 	public long addOrUpdateCourse(Course course) {

@@ -77,17 +77,17 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 				@SuppressWarnings("unchecked")
 				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
 				
-				HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 				
-				String url =client.getFullURL(MobileLearning.TRACKER_PATH);
-				
-				HttpPatch httpPatch = new HttpPatch(url);
 				
 				for (Collection<TrackerLog> trackerBatch : result) {
 					String dataToSend = createDataString(trackerBatch);
 					
 					try {
 		
+						HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+						String url = client.getFullURL(MobileLearning.TRACKER_PATH);
+						HttpPatch httpPatch = new HttpPatch(url);
+						
 						StringEntity se = new StringEntity(dataToSend,"utf8");
 		                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 		                httpPatch.setEntity(se);
