@@ -38,6 +38,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 	
@@ -67,12 +68,19 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				// extract to temp dir and check it's a valid package file
 				File tempdir = new File(MobileLearning.OPPIAMOBILE_ROOT + "temp/");
 				tempdir.mkdirs();
+				
+				File testDir = new File(MobileLearning.DOWNLOAD_PATH, children[i]);
+				
+				if (testDir.isDirectory()){
+					Log.d(TAG,children[i]);
+					continue;
+				}
 				boolean unzipResult = FileUtils.unzipFiles(MobileLearning.DOWNLOAD_PATH, children[i], tempdir.getAbsolutePath());
 				
 				if (!unzipResult){
 					//then was invalid zip file and should be removed
 					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
-					break;
+					continue;
 				}
 				String[] courseDirs = tempdir.list(); // use this to get the course
 													// name
@@ -87,7 +95,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					courseTrackerXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
-					break;
+					continue;
 				}
 				
 				// check a module.xml file exists and is a readable XML file
