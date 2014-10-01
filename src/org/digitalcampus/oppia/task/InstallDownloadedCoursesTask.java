@@ -72,7 +72,6 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				File testDir = new File(MobileLearning.DOWNLOAD_PATH, children[i]);
 				
 				if (testDir.isDirectory()){
-					Log.d(TAG,children[i]);
 					continue;
 				}
 				boolean unzipResult = FileUtils.unzipFiles(MobileLearning.DOWNLOAD_PATH, children[i], tempdir.getAbsolutePath());
