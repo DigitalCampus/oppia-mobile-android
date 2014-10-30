@@ -90,6 +90,9 @@
          <activity
             android:name="org.digitalcampus.oppia.activity.AppActivity"
             android:label="@string/app_name" />
+         <activity
+            android:name="org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity"
+            android:label="@string/media_player_description" />
         <service
             android:name="org.digitalcampus.oppia.service.TrackerService"
             android:icon="@drawable/dc_logo"

@@ -242,4 +242,7 @@
 	<string name="search_searching">Searching...</string>
 	<string name="search_no_results">No results found for \"%1$s\"</string>
 	<string name="submit_stats_btn_text">Send now</string>
+	
+	
+	<string name="media_player_description">Oppia Media Player</string>
 </resources>

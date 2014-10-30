@@ -37,6 +37,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -156,6 +157,9 @@ public class PageWidget extends WidgetFactory {
 					Uri data = Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName);
 					intent.setDataAndType(data, "video/mp4");
 
+					startActivity(new Intent(PageWidget.super.getActivity(), VideoPlayerActivity.class));
+					
+					/*
 					PackageManager pm = PageWidget.super.getActivity().getPackageManager();
 
 					List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
@@ -176,7 +180,7 @@ public class PageWidget extends WidgetFactory {
 					PageWidget.this.mediaPlaying = true;
 					PageWidget.this.mediaStartTimeStamp = System.currentTimeMillis() / 1000;
 					PageWidget.super.getActivity().startActivity(intent);
-
+					*/
 					return true;
 				} else {
 					Intent intent = new Intent(Intent.ACTION_VIEW);
