@@ -20,30 +20,51 @@
 package org.digitalcampus.oppia.utils.mediaplayer;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Locale;
 
-import android.app.Activity;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.FrameLayout;
 
-public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl {
+public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl {
 
+	public static final String TAG = VideoPlayerActivity.class.getSimpleName();
+	public static final String MEDIA_TAG = "mediaFileName";
+	
     SurfaceView videoSurface;
     MediaPlayer player;
     VideoControllerView controller;
-
+    
+    private String mediaFileName;
+    private long startTime = System.currentTimeMillis()/1000;
+    private Activity activity;
+    private Course course;
+    protected SharedPreferences prefs;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
-        
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
         SurfaceHolder videoHolder = videoSurface.getHolder();
         videoHolder.addCallback(this);
@@ -51,9 +72,18 @@ public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callb
         player = new MediaPlayer();
         controller = new VideoControllerView(this);
         
+        Bundle bundle = this.getIntent().getExtras();
+		if (bundle != null) {
+			mediaFileName = (String) bundle.getSerializable(MEDIA_TAG);
+			activity = (Activity) bundle.getSerializable(Activity.TAG);
+			course = (Course) bundle.getSerializable(Course.TAG);
+		} else {
+			this.finish();
+		}
+        
         try {
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            player.setDataSource(this, Uri.parse("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"));
+            player.setDataSource(this, Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName));
             player.setOnPreparedListener(this);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -66,13 +96,55 @@ public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callb
         }
     }
 
+    
+    @Override
+    protected void onStop(){
+    	saveTracker();
+    	super.onStop();
+    }
+    
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         controller.show();
         return false;
     }
 
-
+    private void saveTracker(){
+    	long endTime = System.currentTimeMillis() / 1000;
+		long timeTaken = endTime - startTime;
+		// track that the video has been played (or at least clicked on)
+		Tracker t = new Tracker(this);
+		// digest should be that of the video not the page
+		for (Media m : this.activity.getMedia()) {
+			if (m.getFilename().equals(mediaFileName)) {
+				Log.d(TAG,"saving tracker...");
+				boolean completed = false;
+				if (timeTaken >= m.getLength()) {
+					completed = true;
+				}
+				JSONObject data = new JSONObject();
+				try {
+					data.put("media", "played");
+					data.put("mediafile", mediaFileName);
+					data.put("timetaken", timeTaken);
+					String lang = prefs.getString("prefLanguage", Locale.getDefault()
+							.getLanguage());
+					data.put("lang", lang);
+					Log.d(TAG,data.toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				MetaDataUtils mdu = new MetaDataUtils(this);
+				// add in extra meta-data
+				try {
+					data = mdu.getMetaData(data);
+				} catch (JSONException e) {
+					// Do nothing
+				}
+				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed);
+			}
+		}
+	}
 
     // Implement MediaPlayer.OnPreparedListener
     public void onPrepared(MediaPlayer mp) {
