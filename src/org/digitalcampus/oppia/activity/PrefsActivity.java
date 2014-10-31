@@ -23,13 +23,16 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.utils.StorageUtils;
+import org.digitalcampus.oppia.utils.StorageUtils.StorageInfo;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;;
+import android.preference.ListPreference;
+import android.util.Log;
 
 public class PrefsActivity extends SherlockPreferenceActivity {
 	
@@ -60,6 +63,12 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         	}
         	
         }
+        
+        List<StorageInfo> storageList = StorageUtils.getStorageList();
+        for (StorageInfo temp : storageList) {
+    		Log.d(TAG,temp.getDisplayName());
+    		Log.d(TAG,temp.path);
+    	}
         
         final CharSequence[] entryCharSeq = entries.toArray(new CharSequence[entries.size()]);
         final CharSequence[] entryValsChar = entryValues.toArray(new CharSequence[entryValues.size()]);
