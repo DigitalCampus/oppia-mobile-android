@@ -64,17 +64,31 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         	
         }
         
-        List<StorageInfo> storageList = StorageUtils.getStorageList();
-        for (StorageInfo temp : storageList) {
-    		Log.d(TAG,temp.getDisplayName());
-    		Log.d(TAG,temp.path);
-    	}
-        
         final CharSequence[] entryCharSeq = entries.toArray(new CharSequence[entries.size()]);
         final CharSequence[] entryValsChar = entryValues.toArray(new CharSequence[entryValues.size()]);
         
         langsList.setEntries(entryCharSeq);
         langsList.setEntryValues(entryValsChar);
+        
+        
+        
+        ListPreference storageList = (ListPreference) findPreference("prefStorageLocation");
+        List<StorageInfo> storageOptionsList = StorageUtils.getStorageList();
+        
+        List<String> storageEntries = new ArrayList<String>();
+	    List<String> storageEntryValues = new ArrayList<String>();
+	    
+        for (StorageInfo temp : storageOptionsList) {
+    		Log.d(TAG,temp.getDisplayName());
+    		Log.d(TAG,temp.path);
+    		storageEntryValues.add(temp.path);
+    		storageEntries.add(temp.getDisplayName());
+    	}
+        final CharSequence[] storageEntryCharSeq = storageEntries.toArray(new CharSequence[storageEntries.size()]);
+        final CharSequence[] storageEntryValsChar = storageEntryValues.toArray(new CharSequence[storageEntryValues.size()]);
+        storageList.setEntries(storageEntryCharSeq);
+        storageList.setEntryValues(storageEntryValsChar);
+        
         
         EditTextPreference username = (EditTextPreference) findPreference("prefUsername");
         if (username.getText().equals("")){
