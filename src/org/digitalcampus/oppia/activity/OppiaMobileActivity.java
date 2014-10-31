@@ -31,6 +31,9 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.LoginTask;
+import org.digitalcampus.oppia.task.MoveStorageLocationTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.utils.FileUtils;
@@ -66,6 +69,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	private ArrayList<Course> courses;
 	private Course tempCourse;
 	private long userId = 0;
+	private String storageLocation;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -216,6 +220,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			case R.id.menu_settings:
 				Intent i = new Intent(this, PrefsActivity.class);
 				Bundle tb = new Bundle();
+				storageLocation = prefs.getString("prefStorageLocation", "");
 				ArrayList<Lang> langs = new ArrayList<Lang>();
 				for(Course m: courses){
 					langs.addAll(m.getLangs());
@@ -374,6 +379,18 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(key.equalsIgnoreCase("prefPoints")
 				|| key.equalsIgnoreCase("prefBadges")){
 			supportInvalidateOptionsMenu();
+		}
+		if(key.equalsIgnoreCase("prefStorageLocation")){
+			Log.d(TAG,storageLocation);
+			Log.d(TAG, sharedPreferences.getString("prefStorageLocation", ""));
+			// Move from old location to new
+			ArrayList<Object> strings = new ArrayList<Object>();
+	    	strings.add(storageLocation);
+	    	strings.add(sharedPreferences.getString("prefStorageLocation", ""));
+	    	
+	    	Payload p = new Payload(strings);
+	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask(this);
+	    	mslt.execute(p);
 		}
 	}
 
