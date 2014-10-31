@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.task;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.digitalcampus.oppia.utils.FileUtils;
 
@@ -43,14 +44,22 @@ public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload>
 		Payload payload = params[0];
 		
 		File source = new File((String) payload.getData().get(SOURCE) + "/" + FileUtils.APP_ROOT_DIR_NAME + "/");
-		File destination = new File((String) payload.getData().get(DESTINATION) + "/" + FileUtils.APP_ROOT_DIR_NAME + "/");
+		File destination = new File((String) payload.getData().get(DESTINATION) + "/"+ FileUtils.APP_ROOT_DIR_NAME );
 		
 		Log.d(TAG,"Task source: " + source);
 		Log.d(TAG,"Task destination: " + destination);
 		
 		boolean success = false;
 		
-		success = source.renameTo(destination);
+		try {
+			org.apache.commons.io.FileUtils.moveDirectoryToDirectory(source,destination,true);
+			Log.d(TAG,"completed");
+			success = true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.d(TAG,"failed");
+			e.printStackTrace();
+		}
 
 		Log.d(TAG, String.valueOf(success));
 		return payload;
