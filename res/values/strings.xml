@@ -142,6 +142,7 @@
 	<string name="download">Download</string>
 	<string name="downloaded">Downloaded</string>
 	<string name="open">Open</string>
+	<string name="storage_default">Default</string> 
 	
 	<string name="alert_pretest">Pre-test</string>
 	<string name="alert_pretest_summary">This course contains a pre-test which you need to complete before you can view the full course.</string>

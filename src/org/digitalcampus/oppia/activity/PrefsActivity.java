@@ -30,6 +30,7 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.util.Log;
@@ -77,6 +78,11 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         
         List<String> storageEntries = new ArrayList<String>();
 	    List<String> storageEntryValues = new ArrayList<String>();
+	    
+	    
+	    storageEntryValues.add(Environment.getExternalStorageDirectory().getPath());
+	    storageEntries.add(getString(R.string.storage_default));
+	    Log.d(TAG,Environment.getExternalStorageDirectory().getPath());
 	    
         for (StorageInfo temp : storageOptionsList) {
     		Log.d(TAG,temp.getDisplayName());
