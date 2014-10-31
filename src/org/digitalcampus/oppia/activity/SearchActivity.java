@@ -80,7 +80,7 @@ public class SearchActivity extends AppActivity {
 	private void doSearch(){
 		String searchString = searchText.getText().toString();
 		DbHelper db = new DbHelper(this);
-		ArrayList<SearchResult> results = db.search(searchString, 100, userId);
+		ArrayList<SearchResult> results = db.search(searchString, 100, userId, this);
 		DatabaseManager.getInstance().closeDatabase();
 	
 		srla = new SearchResultsListAdapter(this, results);

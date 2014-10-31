@@ -50,9 +50,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	static final String DB_NAME = "mobilelearning.db";
 	static final int DB_VERSION = 18;
 
-	
 	private static SQLiteDatabase db;
-	private Context ctx;
 	private SharedPreferences prefs;
 	
 	private static final String COURSE_TABLE = "Module";
@@ -322,6 +320,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		db.update(QUIZRESULTS_TABLE, values2, "1=1", null);
 	}
+	
 	
 	// returns id of the row
 	public long addOrUpdateCourse(Course course) {
@@ -940,7 +939,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	/*
 	 * Perform a search
 	 */
-	public ArrayList<SearchResult> search(String searchText, int limit, long userId){
+	public ArrayList<SearchResult> search(String searchText, int limit, long userId, Context ctx){
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		String sqlSeachFullText = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 1 AS ranking FROM %s ft " +
 									" INNER JOIN %s a ON a.%s = ft.docid" +
@@ -997,7 +996,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		int sectionOrderId = activity.getSectionId();
 	    		CourseXMLReader cxr;
 				try {
-					cxr = new CourseXMLReader(course.getCourseXMLLocation(),this.ctx);
+					cxr = new CourseXMLReader(course.getCourseXMLLocation(), ctx);
 					result.setSection(cxr.getSection(sectionOrderId));
 		    		results.add(result);
 				} catch (InvalidXMLException e) {

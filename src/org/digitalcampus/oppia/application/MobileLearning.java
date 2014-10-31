@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.application;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.digitalcampus.oppia.task.SubmitQuizTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
@@ -105,6 +106,18 @@ public class MobileLearning extends Application {
 				}
 			}
 		}
+		
+		// add .nomedia file to MEDIA_PATH
+		File nomedia = new File(FileUtils.getMediaPath() +".nomedia");
+		if (!nomedia.exists()){
+			File f = new File(FileUtils.getMediaPath()+".nomedia");	
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return true;
 	}
 	

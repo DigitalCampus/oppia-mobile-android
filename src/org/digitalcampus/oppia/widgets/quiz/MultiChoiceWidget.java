@@ -21,11 +21,14 @@ package org.digitalcampus.oppia.widgets.quiz;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -35,9 +38,11 @@ import android.widget.RadioGroup;
 public class MultiChoiceWidget extends QuestionWidget{
 
 	public static final String TAG = MultiChoiceWidget.class.getSimpleName();
+	protected SharedPreferences prefs;
 	
 	public MultiChoiceWidget(Activity activity, View v, ViewGroup container) {
 		init(activity,container,R.layout.widget_quiz_multichoice,v);
+		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	}
 
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
@@ -51,12 +56,12 @@ public class MultiChoiceWidget extends QuestionWidget{
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);
     		rb.setId(id);
-			rb.setText(r.getTitle());
+			rb.setText(r.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
 			responsesRG.addView(rb);
 			Iterator<String> itr = currentAnswer.iterator();
 			while(itr.hasNext()) {
 				String answer = itr.next(); 
-				if (r.getTitle() == answer){
+				if (r.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())) == answer){
 					rb.setChecked(true);
 				}
 			}
@@ -73,7 +78,7 @@ public class MultiChoiceWidget extends QuestionWidget{
     	int idx = responsesRG.indexOfChild(rb);
     	if (idx >= 0){
     		List<String> response = new ArrayList<String>();
-			response.add(responses.get(idx).getTitle());
+			response.add(responses.get(idx).getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
     		return response;
     	}
     	return null;

@@ -14,7 +14,7 @@
     </ListPreference>
     
     <ListPreference
-        android:defaultValue="normal"
+        android:defaultValue="16"
       	android:entries="@array/TextSize"
         android:entryValues="@array/TextSizeValues"
         android:key="prefTextSize"

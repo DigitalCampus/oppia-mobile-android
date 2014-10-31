@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.digitalcampus.mobile.learning"
-    android:versionCode="46"
-    android:versionName="4.1.0">
+    android:versionCode="48"
+    android:versionName="4.1.2">
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -90,6 +90,11 @@
          <activity
             android:name="org.digitalcampus.oppia.activity.AppActivity"
             android:label="@string/app_name" />
+         <activity
+            android:name="org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity"
+            android:label="@string/media_player_description"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <service
             android:name="org.digitalcampus.oppia.service.TrackerService"
             android:icon="@drawable/dc_logo"

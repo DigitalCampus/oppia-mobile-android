@@ -53,7 +53,6 @@ public class SearchUtils {
 				for (Lang l : langs){
 					if (a.getLocation(l.getLang()) != null){
 						String url = course.getLocation() + a.getLocation(l.getLang());
-						Log.d(TAG,"adding: "+ url);
 						try {
 							fileContent += " " + FileUtils.readFile(url);
 						} catch (IOException e) {

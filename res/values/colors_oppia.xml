@@ -12,4 +12,5 @@
     <color name="highlight_dark">#495525</color>
     <color name="default_icon_foreground">#666666</color>
     <color name="button_background">#eeeeee</color>
+    <color name="activity_icon_background">#ffffff</color>
 </resources>
