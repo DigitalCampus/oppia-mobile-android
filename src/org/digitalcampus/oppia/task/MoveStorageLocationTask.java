@@ -24,6 +24,7 @@ import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload> {
@@ -43,16 +44,25 @@ public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload>
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
-		File source = new File((String) payload.getData().get(SOURCE) + "/" + FileUtils.APP_ROOT_DIR_NAME + "/");
-		File destination = new File((String) payload.getData().get(DESTINATION) + "/"+ FileUtils.APP_ROOT_DIR_NAME );
+		File downloadSource = new File((String) payload.getData().get(SOURCE) + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME);
+		File mediaSource = new File((String) payload.getData().get(SOURCE) + "/" + FileUtils.APP_MEDIA_DIR_NAME);
+		File courseSource = new File((String) payload.getData().get(SOURCE) + "/" + FileUtils.APP_COURSES_DIR_NAME);
+		File destination = new File((String) payload.getData().get(DESTINATION));
 		
-		Log.d(TAG,"Task source: " + source);
+		Log.d(TAG,"Task source: " + downloadSource);
 		Log.d(TAG,"Task destination: " + destination);
 		
 		boolean success = false;
 		
+		/*File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
+		
+		for (File f: dirs){
+			Log.d(TAG,f.toString());
+		}*/
+		
+		
 		try {
-			org.apache.commons.io.FileUtils.moveDirectoryToDirectory(source,destination,true);
+			org.apache.commons.io.FileUtils.moveDirectoryToDirectory(downloadSource,destination,true);
 			Log.d(TAG,"completed");
 			success = true;
 		} catch (IOException e) {
@@ -61,6 +71,25 @@ public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload>
 			e.printStackTrace();
 		}
 
+		try {
+			org.apache.commons.io.FileUtils.moveDirectoryToDirectory(mediaSource,destination,true);
+			Log.d(TAG,"completed");
+			success = true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.d(TAG,"failed");
+			e.printStackTrace();
+		}
+		
+		try {
+			org.apache.commons.io.FileUtils.moveDirectoryToDirectory(courseSource,destination,true);
+			Log.d(TAG,"completed");
+			success = true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.d(TAG,"failed");
+			e.printStackTrace();
+		}
 		Log.d(TAG, String.valueOf(success));
 		return payload;
 	}

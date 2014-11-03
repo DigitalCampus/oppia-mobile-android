@@ -44,7 +44,12 @@ public class FileUtils {
 
 	public static final String TAG = FileUtils.class.getSimpleName();
 	public static final int BUFFER_SIZE = 1024;
+	
 	public static final String APP_ROOT_DIR_NAME = "digitalcampus";
+	
+	public static final String APP_COURSES_DIR_NAME = "modules";
+	public static final String APP_DOWNLOAD_DIR_NAME = "download";
+	public static final String APP_MEDIA_DIR_NAME = "media";
 
 	public static String getStorageLocationRoot(){
 		return Environment.getExternalStorageDirectory() + "/" + APP_ROOT_DIR_NAME +"/";

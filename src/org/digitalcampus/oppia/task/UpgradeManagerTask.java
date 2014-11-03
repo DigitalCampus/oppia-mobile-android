@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.task;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DatabaseManager;
@@ -37,7 +38,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 
 public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
@@ -97,6 +100,15 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			editor.putString("prefServer", ctx.getString(R.string.prefServerDefault));
 			editor.commit();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v46"));
+			payload.setResult(true);
+		}
+		
+		if(!prefs.getBoolean("upgradeV49a",false)){
+			upgradeV49();
+			Editor editor = prefs.edit();
+			//editor.putBoolean("upgradeV49a", true);
+			editor.commit();
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v49a"));
 			payload.setResult(true);
 		}
 		
@@ -188,6 +200,29 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		
 	}
 	
+	/*
+	 * Move files from current location into new one
+	 */
+	protected void upgradeV49(){
+		/*Editor editor = prefs.edit();
+		editor.putString("prefServer", ctx.getString(R.string.prefServerDefault));
+		editor.commit();*/
+		ArrayList<Object> strings = new ArrayList<Object>();
+    	strings.add(Environment.getExternalStorageDirectory() + "/" + FileUtils.APP_ROOT_DIR_NAME  +"/" );
+    	
+    	File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
+    	
+    	if(dirs.length > 0){
+	    	strings.add(dirs[0].getAbsolutePath());
+			Payload p = new Payload(strings);
+	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask(this.ctx);
+	    	mslt.execute(p);
+	    	
+	    	Editor editor = prefs.edit();
+	    	editor.putString("prefStorageLocation", ctx.getString(R.string.prefStorageLocation));
+			editor.commit();
+    	}
+	}
 	
 	
 	@Override

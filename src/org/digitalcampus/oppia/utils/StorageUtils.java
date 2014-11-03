@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import android.os.Environment;
+import android.util.Log;
 
 // Code from StackOverflow: http://stackoverflow.com/questions/9340332/how-can-i-get-the-list-of-mounted-external-storage-of-android-device/19982338#19982338
 
@@ -70,9 +71,9 @@ public class StorageUtils {
         try {
             buf_reader = new BufferedReader(new FileReader("/proc/mounts"));
             String line;
-            //Log.d(TAG, "/proc/mounts");
+            Log.d(TAG, "/proc/mounts");
             while ((line = buf_reader.readLine()) != null) {
-                //Log.d(TAG, line);
+                Log.d(TAG, line);
                 if (line.contains("vfat") || line.contains("/mnt")) {
                     StringTokenizer tokens = new StringTokenizer(line, " ");
                     String unused = tokens.nextToken(); //device
