@@ -112,12 +112,11 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					return payload;
 				}
 				
-				Course c = new Course();
+				Course c = new Course(ctx);
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
-				c.setLocation(FileUtils.getCoursesPath(ctx) + courseDirs[0]);
 				c.setShortname(courseDirs[0]);
-				c.setImageFile(FileUtils.getCoursesPath(ctx) + courseDirs[0] + "/" + cxr.getCourseImage());
+				c.setImageFile(cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
 				c.setDescriptions(cxr.getDescriptions());
 				c.setPriority(cxr.getPriority());

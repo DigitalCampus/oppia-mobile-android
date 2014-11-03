@@ -32,12 +32,17 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -61,6 +66,7 @@ public class FileUtils {
 				|| cardstatus.equals(Environment.MEDIA_UNMOUNTED)
 				|| cardstatus.equals(Environment.MEDIA_MOUNTED_READ_ONLY)
 				|| cardstatus.equals(Environment.MEDIA_SHARED)) {
+			Log.d(TAG, "card status: " + cardstatus);
 			return false;
 		}
 
@@ -68,19 +74,22 @@ public class FileUtils {
 
 		for (String dirName : dirs) {
 			File dir = new File(dirName);
+			Log.d(TAG, dir.toString());
 			if (!dir.exists()) {
 				if (!dir.mkdirs()) {
+					Log.d(TAG, "can't mkdirs");
 					return false;
 				}
 			} else {
 				if (!dir.isDirectory()) {
+					Log.d(TAG, "not a directory");
 					return false;
 				}
 			}
 		}
 		
 		// add .nomedia file to MEDIA_PATH
-		File nomedia = new File(FileUtils.getMediaPath(ctx) +".nomedia");
+		/*File nomedia = new File(FileUtils.getMediaPath(ctx) +".nomedia");
 		if (!nomedia.exists()){
 			File f = new File(FileUtils.getMediaPath(ctx)+".nomedia");	
 			try {
@@ -88,7 +97,7 @@ public class FileUtils {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 		
 		return true;
 	}
@@ -97,10 +106,18 @@ public class FileUtils {
 		File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
 		
 		//get from prefs
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 		
-		
-		
-		return Environment.getExternalStorageDirectory() + "/" + APP_ROOT_DIR_NAME +"/";
+		// if location not set - then set it to first of dirs
+		if (location.equals("") && dirs.length > 0){
+			location = dirs[0].toString();
+			Editor editor = prefs.edit();
+			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
+			editor.commit();
+			
+		}
+		return location;
 	}
 	
 	public static String getCoursesPath(Context ctx){

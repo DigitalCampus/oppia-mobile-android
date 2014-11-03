@@ -31,8 +31,6 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.task.MoveStorageLocationTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
@@ -115,6 +113,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		courses = db.getCourses(userId);
 		DatabaseManager.getInstance().closeDatabase();
 		
+		for (Course c: courses){
+			Log.d(TAG, c.getLocation());
+			Log.d(TAG, c.getImageFile());
+		}
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
 		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_courses);
@@ -220,7 +222,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			case R.id.menu_settings:
 				Intent i = new Intent(this, PrefsActivity.class);
 				Bundle tb = new Bundle();
-				storageLocation = prefs.getString("prefStorageLocation", "");
+				storageLocation = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 				ArrayList<Lang> langs = new ArrayList<Lang>();
 				for(Course m: courses){
 					langs.addAll(m.getLangs());
@@ -380,13 +382,13 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				|| key.equalsIgnoreCase("prefBadges")){
 			supportInvalidateOptionsMenu();
 		}
-		if(key.equalsIgnoreCase("prefStorageLocation")){
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_STORAGE_LOCATION)){
 			Log.d(TAG,storageLocation);
-			Log.d(TAG, sharedPreferences.getString("prefStorageLocation", ""));
+			Log.d(TAG, sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			// Move from old location to new
 			ArrayList<Object> strings = new ArrayList<Object>();
 	    	strings.add(storageLocation);
-	    	strings.add(sharedPreferences.getString("prefStorageLocation", ""));
+	    	strings.add(sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 	    	
 	    	Payload p = new Payload(strings);
 	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask(this);

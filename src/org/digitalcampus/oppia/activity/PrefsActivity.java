@@ -39,6 +39,8 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 	
 	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
+	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
@@ -73,7 +75,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         
         
         
-        ListPreference storageList = (ListPreference) findPreference("prefStorageLocation");
+        ListPreference storageList = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_LOCATION);
         List<StorageInfo> storageOptionsList = StorageUtils.getStorageList();
         
         List<String> storageEntries = new ArrayList<String>();

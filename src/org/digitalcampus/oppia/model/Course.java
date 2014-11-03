@@ -23,11 +23,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class Course implements Serializable {
 	
@@ -38,7 +43,7 @@ public class Course implements Serializable {
 	
 	public static final String TAG = Course.class.getSimpleName();
 	private int courseId;
-	private String location;
+	//private String location;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private ArrayList<Lang> descriptions = new ArrayList<Lang>();
 	private String shortname;
@@ -57,11 +62,14 @@ public class Course implements Serializable {
 	private boolean isDraft = false;
 	private int priority = 0;
 	
-	public Course() {
-
+	
+	private SharedPreferences prefs;
+	
+	public Course(Context ctx) {
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}	
 	
-	public boolean validate() throws CourseNotFoundException{
+	public boolean validate(String root) throws CourseNotFoundException{
 		File courseXML = new File(this.getCourseXMLLocation());
 		if(!courseXML.exists()){
 			throw new CourseNotFoundException();
@@ -191,19 +199,16 @@ public class Course implements Serializable {
 	}
 
 	public String getLocation() {
-		if (location.endsWith("/")){
-			return location;
-		} else {
-			return location + "/";
-		}
+		String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+		return root + "/" + this.getShortname() + "/";
+		
 	}
 
 	public String getCourseXMLLocation(){
-		return this.getLocation() + MobileLearning.COURSE_XML;
+		String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+		return root + MobileLearning.COURSE_XML;
 	}
-	public void setLocation(String location) {
-		this.location = location;
-	}
+	
 
 	public String getTitle(String lang) {
 		for(Lang l: titles){

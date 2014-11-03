@@ -150,12 +150,11 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					break;
 				}
 
-				Course c = new Course();
+				Course c = new Course(ctx);
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
-				c.setLocation(FileUtils.getCoursesPath(ctx) + children[i]);
 				c.setShortname(children[i]);
-				c.setImageFile(FileUtils.getCoursesPath(ctx) + children[i] + "/" + cxr.getCourseImage());
+				c.setImageFile(children[i] + "/" + cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
 				c.setPriority(cxr.getPriority());
 				

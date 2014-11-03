@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -50,6 +51,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	static final String DB_NAME = "mobilelearning.db";
 	static final int DB_VERSION = 18;
 
+	private Context ctx;
 	private static SQLiteDatabase db;
 	private SharedPreferences prefs;
 	
@@ -116,6 +118,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		DatabaseManager.initializeInstance(this);
 		db = DatabaseManager.getInstance().openDatabase();
+		this.ctx = ctx;
 	}
 
 	@Override
@@ -328,7 +331,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(COURSE_C_VERSIONID, course.getVersionId());
 		values.put(COURSE_C_TITLE, course.getTitleJSONString());
-		values.put(COURSE_C_LOCATION, course.getLocation());
 		values.put(COURSE_C_SHORTNAME, course.getShortname());
 		values.put(COURSE_C_LANGS, course.getLangsJSONString());
 		values.put(COURSE_C_IMAGE, course.getImageFile());
@@ -462,9 +464,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			Course course = new Course();
+			Course course = new Course(ctx);
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
@@ -484,9 +485,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			Course course = new Course();
+			Course course = new Course(ctx);
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
 			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
@@ -509,9 +509,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			course = new Course();
+			course = new Course(ctx);
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
 			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
