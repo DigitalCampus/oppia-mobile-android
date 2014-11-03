@@ -84,7 +84,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         
         try {
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            player.setDataSource(this, Uri.parse(FileUtils.getMediaPath() + mediaFileName));
+            player.setDataSource(this, Uri.parse(FileUtils.getMediaPath(this) + mediaFileName));
             player.setOnPreparedListener(this);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

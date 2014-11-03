@@ -51,7 +51,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 				ArrayList<Media> media = cxr.getMedia();
 				for(Media m: media){
 					publishProgress(m.getFilename());
-					String filename = FileUtils.getMediaPath() + m.getFilename();
+					String filename = FileUtils.getMediaPath(ctx) + m.getFilename();
 					File mediaFile = new File(filename);
 					if(!mediaFile.exists()){
 						// check media not already in list

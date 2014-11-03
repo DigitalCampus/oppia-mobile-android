@@ -59,7 +59,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 		Payload payload = params[0];
 		for (Object o: payload.getData()){
 			Media m = (Media) o;
-			File file = new File(FileUtils.getMediaPath(),m.getFilename());
+			File file = new File(FileUtils.getMediaPath(ctx),m.getFilename());
 			try { 
 				
 				URL u = new URL(m.getDownloadUrl());

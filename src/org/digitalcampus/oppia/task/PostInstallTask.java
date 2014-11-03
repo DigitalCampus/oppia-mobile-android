@@ -51,7 +51,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 			directory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_COURSES_DIR);
 			for (int index = 0; index < directory.length; index++)  {   
 		       if (directory[index].toString().endsWith(".zip")){
-		    	   FileOutputStream f = new FileOutputStream(new File(FileUtils.getDownloadPath(),directory[index].toString()));
+		    	   FileOutputStream f = new FileOutputStream(new File(FileUtils.getDownloadPath(ctx),directory[index].toString()));
 		    	   InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_COURSES_DIR + "/" + directory[index].toString());
 		    	   byte[] buffer = new byte[1024];
 		            int len = 0;
@@ -70,7 +70,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 			directory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_MEDIA_DIR);
 			for (int index = 0; index < directory.length; index++)  {   
 		       if (!directory[index].toString().endsWith(".txt")){
-		    	   FileOutputStream f = new FileOutputStream(new File(FileUtils.getMediaPath(),directory[index].toString()));
+		    	   FileOutputStream f = new FileOutputStream(new File(FileUtils.getMediaPath(ctx),directory[index].toString()));
 		    	   InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_MEDIA_DIR + "/" + directory[index].toString());
 		    	   byte[] buffer = new byte[1024];
 		            int len = 0;

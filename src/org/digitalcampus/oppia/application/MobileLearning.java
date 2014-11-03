@@ -82,44 +82,6 @@ public class MobileLearning extends Application {
 	// for tracking if SubmitQuizTask is already running
 	public SubmitQuizTask omSubmitQuizTask = null;
 	
-	public static boolean createDirs() {
-		String cardstatus = Environment.getExternalStorageState();
-		if (cardstatus.equals(Environment.MEDIA_REMOVED)
-				|| cardstatus.equals(Environment.MEDIA_UNMOUNTABLE)
-				|| cardstatus.equals(Environment.MEDIA_UNMOUNTED)
-				|| cardstatus.equals(Environment.MEDIA_MOUNTED_READ_ONLY)
-				|| cardstatus.equals(Environment.MEDIA_SHARED)) {
-			return false;
-		}
-
-		String[] dirs = { FileUtils.getStorageLocationRoot(), FileUtils.getCoursesPath(), FileUtils.getMediaPath(), FileUtils.getDownloadPath() };
-
-		for (String dirName : dirs) {
-			File dir = new File(dirName);
-			if (!dir.exists()) {
-				if (!dir.mkdirs()) {
-					return false;
-				}
-			} else {
-				if (!dir.isDirectory()) {
-					return false;
-				}
-			}
-		}
-		
-		// add .nomedia file to MEDIA_PATH
-		File nomedia = new File(FileUtils.getMediaPath() +".nomedia");
-		if (!nomedia.exists()){
-			File f = new File(FileUtils.getMediaPath()+".nomedia");	
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return true;
-	}
 	
 	public static boolean isLoggedIn(Context ctx) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

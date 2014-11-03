@@ -128,14 +128,14 @@ public class PageWidget extends WidgetFactory {
 					String mediaFileName = url.substring(startPos, url.length());
 
 					// check video file exists
-					boolean exists = FileUtils.mediaFileExists(mediaFileName);
+					boolean exists = FileUtils.mediaFileExists(PageWidget.super.getActivity(), mediaFileName);
 					if (!exists) {
 						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName),
 								Toast.LENGTH_LONG).show();
 						return true;
 					}
 
-					String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath() + mediaFileName);
+					String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath(PageWidget.super.getActivity()) + mediaFileName);
 
 					if (!FileUtils.supportedMediafileType(mimeType)) {
 						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),

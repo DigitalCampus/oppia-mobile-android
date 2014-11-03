@@ -97,7 +97,7 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 			dp.setProgress(0);
 			publishProgress(dp);
 			
-			FileOutputStream f = new FileOutputStream(new File(FileUtils.getDownloadPath(),localFileName));
+			FileOutputStream f = new FileOutputStream(new File(FileUtils.getDownloadPath(ctx),localFileName));
 			InputStream in = c.getInputStream();
 			
             byte[] buffer = new byte[1024];

@@ -35,7 +35,9 @@ import java.util.zip.ZipInputStream;
 import org.digitalcampus.oppia.application.MobileLearning;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.webkit.MimeTypeMap;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -51,20 +53,66 @@ public class FileUtils {
 	public static final String APP_DOWNLOAD_DIR_NAME = "download";
 	public static final String APP_MEDIA_DIR_NAME = "media";
 
-	public static String getStorageLocationRoot(){
+	
+	public static boolean createDirs(Context ctx) {
+		String cardstatus = Environment.getExternalStorageState();
+		if (cardstatus.equals(Environment.MEDIA_REMOVED)
+				|| cardstatus.equals(Environment.MEDIA_UNMOUNTABLE)
+				|| cardstatus.equals(Environment.MEDIA_UNMOUNTED)
+				|| cardstatus.equals(Environment.MEDIA_MOUNTED_READ_ONLY)
+				|| cardstatus.equals(Environment.MEDIA_SHARED)) {
+			return false;
+		}
+
+		String[] dirs = { FileUtils.getCoursesPath(ctx), FileUtils.getMediaPath(ctx), FileUtils.getDownloadPath(ctx) };
+
+		for (String dirName : dirs) {
+			File dir = new File(dirName);
+			if (!dir.exists()) {
+				if (!dir.mkdirs()) {
+					return false;
+				}
+			} else {
+				if (!dir.isDirectory()) {
+					return false;
+				}
+			}
+		}
+		
+		// add .nomedia file to MEDIA_PATH
+		File nomedia = new File(FileUtils.getMediaPath(ctx) +".nomedia");
+		if (!nomedia.exists()){
+			File f = new File(FileUtils.getMediaPath(ctx)+".nomedia");	
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
+	}
+	
+	public static String getStorageLocationRoot(Context ctx){
+		File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
+		
+		//get from prefs
+		
+		
+		
 		return Environment.getExternalStorageDirectory() + "/" + APP_ROOT_DIR_NAME +"/";
 	}
 	
-	public static String getCoursesPath(){
-		return getStorageLocationRoot() + "modules/";
+	public static String getCoursesPath(Context ctx){
+		return getStorageLocationRoot(ctx) + "modules/";
 	}
 	
-	public static String getDownloadPath(){
-		return getStorageLocationRoot() + "download/";
+	public static String getDownloadPath(Context ctx){
+		return getStorageLocationRoot(ctx) + "download/";
 	}
 	
-	public static String getMediaPath(){
-		return getStorageLocationRoot() + "media/";
+	public static String getMediaPath(Context ctx){
+		return getStorageLocationRoot(ctx) + "media/";
 	}
 	
 	// This function converts the zip file into uncompressed files which are
@@ -204,8 +252,8 @@ public class FileUtils {
 		return dir.delete();
 	}
 
-	public static boolean mediaFileExists(String filename) {
-		File media = new File(FileUtils.getMediaPath() + filename);
+	public static boolean mediaFileExists(Context ctx, String filename) {
+		File media = new File(FileUtils.getMediaPath(ctx) + filename);
 		if (media.exists()) {
 			return true;
 		} else {
