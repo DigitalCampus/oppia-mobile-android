@@ -2,7 +2,7 @@
 <resources>
     
     <string name="prefServerDefault">https://demo.oppia-mobile.org/</string>
-    <string name="prefServerTimeoutConnectionDefault">10000</string>
-    <string name="prefServerTimeoutResponseDefault">20000</string>
+    <string name="prefServerTimeoutConnectionDefault">60000</string>
+    <string name="prefServerTimeoutResponseDefault">60000</string>
 
 </resources>
