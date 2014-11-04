@@ -23,16 +23,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
+import org.digitalcampus.oppia.utils.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 public class Course implements Serializable {
 	
@@ -62,14 +58,13 @@ public class Course implements Serializable {
 	private boolean isDraft = false;
 	private int priority = 0;
 	
+	private String root;
 	
-	private SharedPreferences prefs;
-	
-	public Course(Context ctx) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+	public Course(String root) {
+		this.root = root;
 	}	
 	
-	public boolean validate(String root) throws CourseNotFoundException{
+	public boolean validate() throws CourseNotFoundException{
 		File courseXML = new File(this.getCourseXMLLocation());
 		if(!courseXML.exists()){
 			throw new CourseNotFoundException();
@@ -199,14 +194,13 @@ public class Course implements Serializable {
 	}
 
 	public String getLocation() {
-		String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		return root + "/" + this.getShortname() + "/";
+		return this.root + "/" + FileUtils.APP_COURSES_DIR_NAME + "/" + this.getShortname() + "/";
 		
 	}
 
 	public String getCourseXMLLocation(){
-		String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		return root + MobileLearning.COURSE_XML;
+		//String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+		return this.root + "/" + FileUtils.APP_COURSES_DIR_NAME + "/" + this.getShortname() + "/" + MobileLearning.COURSE_XML;
 	}
 	
 

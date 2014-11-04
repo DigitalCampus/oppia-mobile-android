@@ -88,17 +88,6 @@ public class FileUtils {
 			}
 		}
 		
-		// add .nomedia file to MEDIA_PATH
-		/*File nomedia = new File(FileUtils.getMediaPath(ctx) +".nomedia");
-		if (!nomedia.exists()){
-			File f = new File(FileUtils.getMediaPath(ctx)+".nomedia");	
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}*/
-		
 		return true;
 	}
 	
@@ -108,7 +97,7 @@ public class FileUtils {
 		//get from prefs
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		
+		Log.d(TAG,"location: " + location);
 		// if location not set - then set it to first of dirs
 		if (location.equals("") && dirs.length > 0){
 			location = dirs[0].toString();
@@ -121,15 +110,15 @@ public class FileUtils {
 	}
 	
 	public static String getCoursesPath(Context ctx){
-		return getStorageLocationRoot(ctx) + "modules/";
+		return getStorageLocationRoot(ctx) + "/modules/";
 	}
 	
 	public static String getDownloadPath(Context ctx){
-		return getStorageLocationRoot(ctx) + "download/";
+		return getStorageLocationRoot(ctx) + "/download/";
 	}
 	
 	public static String getMediaPath(Context ctx){
-		return getStorageLocationRoot(ctx) + "media/";
+		return getStorageLocationRoot(ctx) + "/media/";
 	}
 	
 	// This function converts the zip file into uncompressed files which are

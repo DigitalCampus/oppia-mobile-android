@@ -22,8 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
@@ -61,6 +59,13 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         tvProgress = (TextView) this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
+        
+        UpgradeManagerTask umt = new UpgradeManagerTask(this);
+		umt.setUpgradeListener(this);
+		ArrayList<Object> data = new ArrayList<Object>();
+ 		Payload p = new Payload(data);
+		umt.execute(p);
+		
         // set up local dirs
  		if(!FileUtils.createDirs(this)){
  			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -76,11 +81,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
  			return;
  		}
  		
- 		UpgradeManagerTask umt = new UpgradeManagerTask(this);
-		umt.setUpgradeListener(this);
-		ArrayList<Object> data = new ArrayList<Object>();
- 		Payload p = new Payload(data);
-		umt.execute(p);
+ 		
 	}
 	
 	

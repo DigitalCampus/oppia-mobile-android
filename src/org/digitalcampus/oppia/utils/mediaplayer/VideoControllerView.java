@@ -17,7 +17,6 @@
 package org.digitalcampus.oppia.utils.mediaplayer;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;

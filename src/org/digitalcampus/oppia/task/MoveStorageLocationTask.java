@@ -22,9 +22,7 @@ import java.io.IOException;
 
 import org.digitalcampus.oppia.utils.FileUtils;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload> {
@@ -34,10 +32,8 @@ public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload>
 	public static final int SOURCE = 0;
 	public static final int DESTINATION = 1;
 	
-	private Context ctx;
 	
-	public MoveStorageLocationTask(Context c) {
-		this.ctx = c;
+	public MoveStorageLocationTask() {
 	}
 	
 	@Override

@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -38,7 +39,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 	
@@ -112,7 +112,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					return payload;
 				}
 				
-				Course c = new Course(ctx);
+				Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
 				c.setShortname(courseDirs[0]);

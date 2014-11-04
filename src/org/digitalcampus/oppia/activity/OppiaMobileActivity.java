@@ -391,7 +391,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	    	strings.add(sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 	    	
 	    	Payload p = new Payload(strings);
-	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask(this);
+	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask();
 	    	mslt.execute(p);
 		}
 	}

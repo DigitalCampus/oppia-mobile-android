@@ -73,6 +73,8 @@ public class CourseXMLReader {
 			} catch (IOException e) {
 				throw new InvalidXMLException(e);
 			}
+		} else {
+			Log.d(TAG, "course XML not found at: " + filename);
 		}
 	}
 	

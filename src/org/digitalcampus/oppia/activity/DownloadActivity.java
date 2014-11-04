@@ -37,7 +37,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -45,7 +47,8 @@ import com.bugsense.trace.BugSenseHandler;
 public class DownloadActivity extends AppActivity implements APIRequestListener {
 	
 	public static final String TAG = DownloadActivity.class.getSimpleName();
-
+	
+	private SharedPreferences prefs;
 	private ProgressDialog pDialog;
 	private JSONObject json;
 	private DownloadCourseListAdapter dla;
@@ -59,6 +62,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		setContentView(R.layout.activity_download);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
 		Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
@@ -140,7 +144,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 			
 			for (int i = 0; i < (json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
-				Course dc = new Course(this);
+				Course dc = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 				
 				ArrayList<Lang> titles = new ArrayList<Lang>();
 				JSONObject jsonTitles = json_obj.getJSONObject("title");

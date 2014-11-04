@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -150,7 +151,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					break;
 				}
 
-				Course c = new Course(ctx);
+				Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
 				c.setShortname(children[i]);
@@ -203,9 +204,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	 * Move files from current location into new one
 	 */
 	protected void upgradeV49(){
-		/*Editor editor = prefs.edit();
-		editor.putString("prefServer", ctx.getString(R.string.prefServerDefault));
-		editor.commit();*/
+		Editor editor = prefs.edit();
+		editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+		editor.commit();
 		ArrayList<Object> strings = new ArrayList<Object>();
     	strings.add(Environment.getExternalStorageDirectory() + "/" + FileUtils.APP_ROOT_DIR_NAME  +"/" );
     	
@@ -214,12 +215,12 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
     	if(dirs.length > 0){
 	    	strings.add(dirs[0].getAbsolutePath());
 			Payload p = new Payload(strings);
-	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask(this.ctx);
+	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask();
 	    	mslt.execute(p);
 	    	
-	    	Editor editor = prefs.edit();
-	    	editor.putString("prefStorageLocation", ctx.getString(R.string.prefStorageLocation));
-			editor.commit();
+	    	Editor editor2 = prefs.edit();
+	    	editor2.putString(PrefsActivity.PREF_STORAGE_LOCATION, dirs[0].getAbsolutePath());
+			editor2.commit();
     	}
 	}
 	

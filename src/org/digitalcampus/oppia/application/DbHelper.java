@@ -51,7 +51,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	static final String DB_NAME = "mobilelearning.db";
 	static final int DB_VERSION = 18;
 
-	private Context ctx;
 	private static SQLiteDatabase db;
 	private SharedPreferences prefs;
 	
@@ -118,7 +117,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		DatabaseManager.initializeInstance(this);
 		db = DatabaseManager.getInstance().openDatabase();
-		this.ctx = ctx;
 	}
 
 	@Override
@@ -464,7 +462,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			Course course = new Course(ctx);
+			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
@@ -485,7 +483,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			Course course = new Course(ctx);
+			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
@@ -509,7 +507,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			course = new Course(ctx);
+			course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
