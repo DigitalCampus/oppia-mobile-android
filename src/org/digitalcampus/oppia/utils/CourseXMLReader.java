@@ -65,7 +65,6 @@ public class CourseXMLReader {
 			try {
 				builder = factory.newDocumentBuilder();
 				document = builder.parse(courseXML);
-
 			} catch (ParserConfigurationException e) {
 				throw new InvalidXMLException(e);
 			} catch (SAXException e) {
@@ -75,6 +74,7 @@ public class CourseXMLReader {
 			}
 		} else {
 			Log.d(TAG, "course XML not found at: " + filename);
+			throw new InvalidXMLException();
 		}
 	}
 	
