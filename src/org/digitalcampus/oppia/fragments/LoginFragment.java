@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.LoginTask;
@@ -125,7 +126,7 @@ public class LoginFragment extends Fragment implements SubmitListener {
 			User u = (User) response.getData().get(0);
 			// set params
 			Editor editor = prefs.edit();
-	    	editor.putString("prefUsername", usernameField.getText().toString());
+	    	editor.putString(PrefsActivity.PREF_USER_NAME, usernameField.getText().toString());
 	    	editor.putString("prefApiKey", u.getApiKey());
 	    	editor.putString("prefDisplayName", u.getDisplayName());
 	    	editor.putInt("prefPoints", u.getPoints());

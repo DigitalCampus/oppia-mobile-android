@@ -179,7 +179,7 @@ public class PageWidget extends WidgetFactory {
 			ArrayList<Media> mediaList = this.activity.getMedia();
 			boolean completed = true;
 			DbHelper db = new DbHelper(super.getActivity());
-			long userId = db.getUserId(prefs.getString("prefUsername", ""));
+			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 			for (Media m : mediaList) {
 				if (!db.activityCompleted(this.course.getCourseId(), m.getDigest(), userId)) {
 					completed = false;

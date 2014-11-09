@@ -13,6 +13,7 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 
 import android.content.Context;
@@ -53,7 +54,7 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 	
 	public BasicHeader getAuthHeader(){
 		return new BasicHeader("Authorization","ApiKey " + 
-				prefs.getString("prefUsername", "") + 
+				prefs.getString(PrefsActivity.PREF_USER_NAME, "") + 
 				":" + 
 				prefs.getString("prefApiKey", ""));
 	}
@@ -68,7 +69,7 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 
 	public String createUrlWithCredentials(String baseUrl){
 		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-		pairs.add(new BasicNameValuePair("username", prefs.getString("prefUsername", "")));
+		pairs.add(new BasicNameValuePair("username", prefs.getString(PrefsActivity.PREF_USER_NAME, "")));
 		pairs.add(new BasicNameValuePair("api_key", prefs.getString("prefApiKey", "")));
 		pairs.add(new BasicNameValuePair("format", "json"));
 		String paramString = URLEncodedUtils.format(pairs, "utf-8");

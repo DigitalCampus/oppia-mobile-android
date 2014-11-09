@@ -23,17 +23,13 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.utils.StorageUtils;
-import org.digitalcampus.oppia.utils.StorageUtils.StorageInfo;
+
+import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
-
-import android.os.Bundle;
-import android.os.Environment;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.util.Log;
 
 public class PrefsActivity extends SherlockPreferenceActivity {
 	
@@ -41,6 +37,11 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 	
 	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
 	public static final String PREF_LANGUAGE = "prefLanguage";
+	public static final String PREF_USER_NAME = "prefUsername";
+	//public static final String PREF_API_KEY = "prefApiKey";
+	//public static final String PREF_SERVER = "prefServer";
+	//public static final String PREF_BADGES = "prefBadges";
+	//public static final String PREF_POINTS = "prefPoints";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -49,7 +50,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         
-		ListPreference langsList = (ListPreference) findPreference(this.PREF_LANGUAGE); 
+		ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE); 
 		
 		List<String> entries = new ArrayList<String>();
 	    List<String> entryValues = new ArrayList<String>();
@@ -98,7 +99,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         
         */
         
-        EditTextPreference username = (EditTextPreference) findPreference("prefUsername");
+        EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
         if (username.getText().equals("")){
         	username.setSummary(R.string.about_not_logged_in);
         } else {

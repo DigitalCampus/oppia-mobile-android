@@ -91,7 +91,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	public void onStart() {
 		super.onStart();
 		DbHelper db = new DbHelper(this);
-		userId = db.getUserId(prefs.getString("prefUsername", ""));
+		userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		DatabaseManager.getInstance().closeDatabase();
 		displayCourses(userId);		
 	}
@@ -172,7 +172,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(prefs.getBoolean("prefShowScheduleReminders", false)){
 			DbHelper db = new DbHelper(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "2"));
-			long userId = db.getUserId(prefs.getString("prefUsername", ""));
+			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
 			DatabaseManager.getInstance().closeDatabase();
 
@@ -274,7 +274,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			public void onClick(DialogInterface dialog, int which) {
 				// wipe user prefs
 				Editor editor = prefs.edit();
-				editor.putString("prefUsername", "");
+				editor.putString(PrefsActivity.PREF_USER_NAME, "");
 				editor.putString("prefApiKey", "");
 				editor.putInt("prefBadges", 0);
 				editor.putInt("prefPoints", 0);
@@ -352,7 +352,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				db.resetCourse(tempCourse.getCourseId(),userId);
 				DatabaseManager.getInstance().closeDatabase();
 				displayCourses(userId);

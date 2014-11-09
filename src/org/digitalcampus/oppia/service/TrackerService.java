@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -108,7 +109,7 @@ public class TrackerService extends Service implements APIRequestListener {
 			if(app.omSubmitQuizTask == null){
 				Log.d(TAG,"Sumitting quiz task");
 				DbHelper db = new DbHelper(this);
-				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(userId);
 				DatabaseManager.getInstance().closeDatabase();
 		

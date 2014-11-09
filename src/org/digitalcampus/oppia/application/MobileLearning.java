@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.application;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.task.SubmitQuizTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.joda.time.format.DateTimeFormat;
@@ -80,7 +81,7 @@ public class MobileLearning extends Application {
 	
 	public static boolean isLoggedIn(Context ctx) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String username = prefs.getString("prefUsername", "");
+		String username = prefs.getString(PrefsActivity.PREF_USER_NAME, "");
 		String apiKey = prefs.getString("prefApiKey", "");
 		if (username.trim().equals("") || apiKey.trim().equals("")) {
 			return false;

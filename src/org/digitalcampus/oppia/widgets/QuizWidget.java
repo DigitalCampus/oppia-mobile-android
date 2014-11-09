@@ -160,7 +160,7 @@ public class QuizWidget extends WidgetFactory {
 				
 				// check to see if all previous section activities have been completed
 				DbHelper db = new DbHelper(getView().getContext());
-				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				boolean completed = db.isPreviousSectionActivitiesCompleted(course, activity, userId);
 				DatabaseManager.getInstance().closeDatabase();
 				
@@ -177,7 +177,7 @@ public class QuizWidget extends WidgetFactory {
 			} else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
 				// check to see if all previous course activities have been completed
 				DbHelper db = new DbHelper(getView().getContext());
-				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				boolean completed = db.isPreviousCourseActivitiesCompleted(course, activity, userId);
 				DatabaseManager.getInstance().closeDatabase();
 				

@@ -26,6 +26,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -215,7 +216,7 @@ public class CourseXMLReader {
 				a.setActType(actType);
 				a.setCourseId(modId);
 				a.setSectionId(0);
-				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				a.setAttempted(db.activityAttempted(modId, digest, userId));				
 				
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
@@ -435,7 +436,7 @@ public class CourseXMLReader {
 							a.setActType(actType);
 							a.setCourseId(modId);
 							a.setSectionId(order);
-							long userId = db.getUserId(prefs.getString("prefUsername", ""));
+							long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 							a.setCompleted(db.activityCompleted(modId, digest, userId));				
 							
 							ArrayList<Lang> actTitles = new ArrayList<Lang>();

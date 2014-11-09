@@ -78,7 +78,7 @@ public class ScorecardFragment extends Fragment{
 		webView.loadUrl(url);
 		if(ConnectionUtils.isNetworkConnected(super.getActivity())){
 			url = prefs.getString("prefServer", getString(R.string.prefServer)) + "mobile/scorecard/?";
-			url += "username=" + prefs.getString("prefUsername", "");
+			url += "username=" + prefs.getString(PrefsActivity.PREF_USER_NAME, "");
 			url += "&api_key=" + prefs.getString("prefApiKey", "");
 		} else {
         	url = FileUtils.getLocalizedFilePath(super.getActivity(),lang,"scorecard_not_available.html");
