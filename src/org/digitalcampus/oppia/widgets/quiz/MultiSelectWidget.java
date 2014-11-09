@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -51,12 +52,12 @@ public class MultiSelectWidget extends QuestionWidget {
     	
     	for (Response r : responses){
     		CheckBox chk= new CheckBox(ctx);  
-    		chk.setText(r.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+    		chk.setText(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
     		responsesLL.addView(chk);
     		Iterator<String> itr = currentAnswer.iterator();
     		while(itr.hasNext()){
     			String a = itr.next(); 
-    			if(a.equals(r.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())))){
+    			if(a.equals(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())))){
     				chk.setChecked(true);
     			}
     		}

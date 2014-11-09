@@ -109,7 +109,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	@Override
 	public void onStart() {
 		super.onStart();
-		String actionBarTitle = section.getTitle(prefs.getString("prefLanguage", Locale
+		String actionBarTitle = section.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale
 				.getDefault().getLanguage()));
 		if (actionBarTitle != null) {
 			setTitle(actionBarTitle);
@@ -140,7 +140,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 
 		for (int i = 0; i < activities.size(); i++) {
 			String title = activities.get(i).getTitle(
-					prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+					prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 			boolean tabSelected = false;
 			if (i == currentActivityNo) {
 				tabSelected = true;

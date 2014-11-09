@@ -79,7 +79,7 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 	public void onStart() {
 		super.onStart();
 
-		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		
 		actionBar.removeAllTabs();
 		List<Fragment> fragments = new ArrayList<Fragment>();

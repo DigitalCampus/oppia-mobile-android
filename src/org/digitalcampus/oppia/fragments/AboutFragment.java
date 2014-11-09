@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.fragments;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.utils.FileUtils;
 
@@ -72,7 +73,7 @@ public class AboutFragment extends Fragment{
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		webView = (WebView) super.getActivity().findViewById(R.id.about_webview);
-		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		String url = FileUtils.getLocalizedFilePath(super.getActivity(),lang, "about.html");
 
 		int defaultFontSize = Integer.parseInt(prefs.getString("prefTextSize", "16"));

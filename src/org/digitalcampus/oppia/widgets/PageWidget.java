@@ -27,6 +27,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -103,7 +104,7 @@ public class PageWidget extends WidgetFactory {
 		wv = (WebView) super.getActivity().findViewById(activity.getActId());
 		// get the location data
 		String url = course.getLocation()
-				+ activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault()
+				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 						.getLanguage()));
 		
 		int defaultFontSize = Integer.parseInt(prefs.getString("prefTextSize", "16"));
@@ -205,7 +206,7 @@ public class PageWidget extends WidgetFactory {
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("readaloud", readAloud);
 			// if it's a baseline activity then assume completed
@@ -248,7 +249,7 @@ public class PageWidget extends WidgetFactory {
 		File f = new File("/"
 				+ course.getLocation()
 				+ "/"
-				+ activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault()
+				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 						.getLanguage())));
 		StringBuilder text = new StringBuilder();
 		try {

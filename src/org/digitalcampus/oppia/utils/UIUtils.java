@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Lang;
 
 import android.app.AlertDialog;
@@ -226,7 +227,7 @@ public class UIUtils {
 			Locale loc = new Locale(l.getLang());
 			String langDisp = loc.getDisplayLanguage(loc);
 			langStringList.add(langDisp);
-			if (l.getLang().equals(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))) {
+			if (l.getLang().equals(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))) {
 				selected = i;
 			}
 			i++;
@@ -241,7 +242,7 @@ public class UIUtils {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							String newLang = langList.get(whichButton).getLang();
 							Editor editor = UIUtils.this.prefs.edit();
-							editor.putString("prefLanguage", newLang);
+							editor.putString(PrefsActivity.PREF_LANGUAGE, newLang);
 							editor.commit();
 							dialog.dismiss();
 							try {

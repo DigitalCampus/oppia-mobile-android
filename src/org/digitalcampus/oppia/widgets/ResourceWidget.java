@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
@@ -91,9 +92,9 @@ public class ResourceWidget extends WidgetFactory {
 		 super.onActivityCreated(savedInstanceState);
 		
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.widget_resource_object);
-		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		// show description if any
-		String desc = activity.getDescription(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+		String desc = activity.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
 		TextView descTV = (TextView) getView().findViewById(R.id.widget_resource_description);
 		if (desc.length() > 0){
@@ -180,7 +181,7 @@ public class ResourceWidget extends WidgetFactory {
 				data.put("resource", "viewed");
 				data.put("resourcefile", getResourceFileName());
 				data.put("timetaken", timeTaken);
-				String lang = prefs.getString("prefLanguage", Locale.getDefault()
+				String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 						.getLanguage());
 				data.put("lang", lang);
 			} catch (JSONException e) {
@@ -222,7 +223,7 @@ public class ResourceWidget extends WidgetFactory {
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			// if it's a baseline activity then assume completed
 			if(this.isBaseline){

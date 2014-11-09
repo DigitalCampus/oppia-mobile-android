@@ -32,6 +32,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.Tracker;
@@ -101,7 +102,7 @@ public class FeedbackWidget extends WidgetFactory {
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
 		feedbackContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(
-				"prefLanguage", Locale.getDefault().getLanguage()));
+				PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
@@ -132,7 +133,7 @@ public class FeedbackWidget extends WidgetFactory {
 		super.onResume();
 		if (this.feedback == null) {
 			this.feedback = new Quiz();
-			this.feedback.load(feedbackContent,prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+			this.feedback.load(feedbackContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		}
 		if (this.isOnResultsPage) {
 			this.showResults();
@@ -152,7 +153,7 @@ public class FeedbackWidget extends WidgetFactory {
 		}
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
-		qText.setText(Html.fromHtml(q.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).toString()));
+		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).toString()));
 
 		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
@@ -299,7 +300,7 @@ public class FeedbackWidget extends WidgetFactory {
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("quiz_id", feedback.getID());
 			obj.put("instance_id", feedback.getInstanceID());
@@ -318,7 +319,7 @@ public class FeedbackWidget extends WidgetFactory {
 		// Get the current question text
 		String toRead = "";
 		try {
-			toRead = feedback.getCurrentQuestion().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+			toRead = feedback.getCurrentQuestion().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		} catch (InvalidQuizException e) {
 			e.printStackTrace();
 		}

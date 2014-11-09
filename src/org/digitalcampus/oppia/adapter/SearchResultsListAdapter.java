@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.utils.ImageUtils;
 
@@ -63,9 +64,9 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
 	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
 	    
-	    String cTitle = sr.getCourse().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
-	    String sTitle = sr.getSection().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
-	    String aTitle = sr.getActivity().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+	    String cTitle = sr.getCourse().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    String sTitle = sr.getSection().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    String aTitle = sr.getActivity().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 	    
 	    activityTitle.setText(aTitle);
 	    sectionTitle.setText(sTitle);

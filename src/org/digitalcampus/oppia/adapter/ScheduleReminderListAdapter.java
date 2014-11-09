@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.model.Course;
@@ -59,7 +60,7 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 		long userId = db.getUserId(prefs.getString("prefUsername", ""));
 		Course course = db.getCourse(a.getCourseId(), userId);
 		DatabaseManager.getInstance().closeDatabase();
-		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		
 		TextView scheduleTitle = (TextView) rowView.findViewById(R.id.schedule_title);
 		scheduleTitle.setText(course.getTitle(lang) + ": " + a.getTitle(lang));

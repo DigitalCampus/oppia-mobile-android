@@ -34,6 +34,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -116,7 +117,7 @@ public class QuizWidget extends WidgetFactory {
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
 		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(
-				"prefLanguage", Locale.getDefault().getLanguage()));
+				PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
@@ -147,7 +148,7 @@ public class QuizWidget extends WidgetFactory {
 		super.onResume();
 		if (this.quiz == null) {
 			this.quiz = new Quiz();
-			this.quiz.load(quizContent,prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+			this.quiz.load(quizContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		}
 		if (this.isOnResultsPage) {
 			this.showResults();
@@ -205,7 +206,7 @@ public class QuizWidget extends WidgetFactory {
 		}
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
-		qText.setText(Html.fromHtml(q.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))).toString());
+		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))).toString());
 
 		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
@@ -269,7 +270,7 @@ public class QuizWidget extends WidgetFactory {
 				if (saveAnswer()) {
 					String feedback = "";
 					try {
-						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 					
 						if (!feedback.equals("") && 
 								quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS 
@@ -404,9 +405,9 @@ public class QuizWidget extends WidgetFactory {
 				if(!(q instanceof Description)){
 					QuizFeedback qf = new QuizFeedback();
 					qf.setScore(q.getScoreAsPercent());
-					qf.setQuestionText(q.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+					qf.setQuestionText(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 					qf.setUserResponse(q.getUserResponses());
-					qf.setFeedbackText(q.getFeedback(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+					qf.setFeedbackText(q.getFeedback(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 					quizFeedback.add(qf);
 				}
 			}
@@ -438,7 +439,7 @@ public class QuizWidget extends WidgetFactory {
 		this.setStartTime(System.currentTimeMillis() / 1000);
 		
 		this.quiz = new Quiz();
-		this.quiz.load(quizContent,prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+		this.quiz.load(quizContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		this.isOnResultsPage = false;
 		
 		// reload quiz layout
@@ -485,7 +486,7 @@ public class QuizWidget extends WidgetFactory {
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("quiz_id", quiz.getID());
 			obj.put("instance_id", quiz.getInstanceID());
@@ -532,7 +533,7 @@ public class QuizWidget extends WidgetFactory {
 		// Get the current question text
 		String toRead = "";
 		try {
-			toRead = quiz.getCurrentQuestion().getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+			toRead = quiz.getCurrentQuestion().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		} catch (InvalidQuizException e) {
 			e.printStackTrace();
 		}
@@ -540,7 +541,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private float getPercent() {
-		quiz.mark(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		return percent;
 	}

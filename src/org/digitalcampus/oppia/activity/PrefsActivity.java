@@ -40,6 +40,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
 	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
+	public static final String PREF_LANGUAGE = "prefLanguage";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -48,7 +49,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         
-		ListPreference langsList = (ListPreference) findPreference("prefLanguage"); 
+		ListPreference langsList = (ListPreference) findPreference(this.PREF_LANGUAGE); 
 		
 		List<String> entries = new ArrayList<String>();
 	    List<String> entryValues = new ArrayList<String>();

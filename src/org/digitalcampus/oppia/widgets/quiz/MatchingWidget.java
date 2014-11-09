@@ -29,6 +29,7 @@ import java.util.Map.Entry;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.Response;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -63,7 +64,7 @@ public class MatchingWidget extends QuestionWidget {
     	ArrayList<String> possibleAnswersShuffle = new ArrayList<String>();
     	int noresponses = 0;
     	for (Response r : responses){
-    		String[] temp = r.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())).split(Quiz.MATCHING_REGEX,-1);
+    		String[] temp = r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).split(Quiz.MATCHING_REGEX,-1);
     		if(!temp[0].equals("")){
     			noresponses++;
     		}
