@@ -19,8 +19,8 @@ package org.digitalcampus.oppia.listener;
 
 import org.digitalcampus.oppia.task.Payload;
 
-public interface UpgradeListener {
+public interface MoveStorageListener {
 
-	void upgradeComplete(Payload p);
-    void upgradeProgressUpdate(String s);
+	void moveStorageComplete(Payload p);
+    void moveStorageProgressUpdate(String s);
 }

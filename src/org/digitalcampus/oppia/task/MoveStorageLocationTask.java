@@ -50,14 +50,35 @@ public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload>
 		
 		boolean success = false;
 		
-		/*File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
-		
-		for (File f: dirs){
-			Log.d(TAG,f.toString());
-		}*/
-		
+		// delete anything that already exists in the destination dir
+		try {
+			org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME ));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME );
+			e.printStackTrace();
+		}
 		
 		try {
+			org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_MEDIA_DIR_NAME ));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_MEDIA_DIR_NAME );
+			e.printStackTrace();
+		}
+		
+		try {
+			org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_COURSES_DIR_NAME ));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_COURSES_DIR_NAME );
+			e.printStackTrace();
+		}
+		
+		
+		// now copy over 
+		try {
+			
 			org.apache.commons.io.FileUtils.moveDirectoryToDirectory(downloadSource,destination,true);
 			Log.d(TAG,"completed");
 			success = true;

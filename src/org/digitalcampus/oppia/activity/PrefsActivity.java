@@ -73,9 +73,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         langsList.setEntries(entryCharSeq);
         langsList.setEntryValues(entryValsChar);
         
-        
-        
-        ListPreference storageList = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_LOCATION);
+        /*ListPreference storageList = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_LOCATION);
         List<StorageInfo> storageOptionsList = StorageUtils.getStorageList();
         
         List<String> storageEntries = new ArrayList<String>();
@@ -97,6 +95,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         storageList.setEntries(storageEntryCharSeq);
         storageList.setEntryValues(storageEntryValsChar);
         
+        */
         
         EditTextPreference username = (EditTextPreference) findPreference("prefUsername");
         if (username.getText().equals("")){

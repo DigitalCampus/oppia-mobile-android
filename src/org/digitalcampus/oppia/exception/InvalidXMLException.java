@@ -30,8 +30,8 @@ public class InvalidXMLException extends Exception {
 		e.printStackTrace();
 	}
 	
-	public InvalidXMLException(){
-
+	public InvalidXMLException(String message){
+		super(message);
 	}
 
 }

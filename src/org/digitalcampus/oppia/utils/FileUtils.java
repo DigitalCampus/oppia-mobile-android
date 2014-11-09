@@ -97,15 +97,14 @@ public class FileUtils {
 		//get from prefs
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		Log.d(TAG,"location: " + location);
 		// if location not set - then set it to first of dirs
 		if (location.equals("") && dirs.length > 0){
 			location = dirs[0].toString();
 			Editor editor = prefs.edit();
 			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
 			editor.commit();
-			
 		}
+
 		return location;
 	}
 	

@@ -65,22 +65,6 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 		ArrayList<Object> data = new ArrayList<Object>();
  		Payload p = new Payload(data);
 		umt.execute(p);
-		
-        // set up local dirs
- 		if(!FileUtils.createDirs(this)){
- 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
- 			builder.setCancelable(false);
- 			builder.setTitle(R.string.error);
- 			builder.setMessage(R.string.error_sdcard);
- 			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
- 				public void onClick(DialogInterface dialog, int which) {
- 					StartUpActivity.this.finish();
- 				}
- 			});
- 			builder.show();
- 			return;
- 		}
- 		
  		
 	}
 	
@@ -117,6 +101,22 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	}
 	
 	public void upgradeComplete(Payload p) {
+		
+		 // set up local dirs
+ 		if(!FileUtils.createDirs(this)){
+ 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+ 			builder.setCancelable(false);
+ 			builder.setTitle(R.string.error);
+ 			builder.setMessage(R.string.error_sdcard);
+ 			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+ 				public void onClick(DialogInterface dialog, int which) {
+ 					StartUpActivity.this.finish();
+ 				}
+ 			});
+ 			builder.show();
+ 			return;
+ 		}
+ 		
 		if(p.isResult()){
 			Payload payload = new Payload();
 			PostInstallTask piTask = new PostInstallTask(this);

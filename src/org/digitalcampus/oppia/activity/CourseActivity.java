@@ -95,7 +95,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			}
 			// set image
 			BitmapDrawable bm = ImageUtils
-					.LoadBMPsdcard(course.getImageFile(), this.getResources(), R.drawable.dc_logo);
+					.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.dc_logo);
 			actionBar.setIcon(bm);
 
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

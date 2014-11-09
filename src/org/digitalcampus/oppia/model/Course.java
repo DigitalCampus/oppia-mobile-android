@@ -39,7 +39,6 @@ public class Course implements Serializable {
 	
 	public static final String TAG = Course.class.getSimpleName();
 	private int courseId;
-	//private String location;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private ArrayList<Lang> descriptions = new ArrayList<Lang>();
 	private String shortname;
@@ -92,6 +91,10 @@ public class Course implements Serializable {
 		return imageFile;
 	}
 
+	public String getImageFileFromRoot() {
+		return this.root + "/" + FileUtils.APP_COURSES_DIR_NAME + "/" + this.getShortname() + "/" + imageFile;
+	}
+	
 	public void setImageFile(String imageFile) {
 		this.imageFile = imageFile;
 	}

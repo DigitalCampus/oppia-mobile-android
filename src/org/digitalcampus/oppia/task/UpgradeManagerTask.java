@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.task;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
@@ -26,6 +27,7 @@ import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;
@@ -42,6 +44,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
@@ -107,7 +110,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		if(!prefs.getBoolean("upgradeV49a",false)){
 			upgradeV49();
 			Editor editor = prefs.edit();
-			//editor.putBoolean("upgradeV49a", true);
+			editor.putBoolean("upgradeV49a", true);
 			editor.commit();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v49a"));
 			payload.setResult(true);
@@ -204,24 +207,95 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	 * Move files from current location into new one
 	 */
 	protected void upgradeV49(){
-		Editor editor = prefs.edit();
-		editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		editor.commit();
-		ArrayList<Object> strings = new ArrayList<Object>();
-    	strings.add(Environment.getExternalStorageDirectory() + "/" + FileUtils.APP_ROOT_DIR_NAME  +"/" );
+		
+		String source = Environment.getExternalStorageDirectory() + "/" + FileUtils.APP_ROOT_DIR_NAME  +"/";
     	
     	File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
-    	
     	if(dirs.length > 0){
-	    	strings.add(dirs[0].getAbsolutePath());
-			Payload p = new Payload(strings);
-	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask();
-	    	mslt.execute(p);
 	    	
-	    	Editor editor2 = prefs.edit();
-	    	editor2.putString(PrefsActivity.PREF_STORAGE_LOCATION, dirs[0].getAbsolutePath());
-			editor2.commit();
+		
+	    	String destination = dirs[0].getAbsolutePath();
+	    	File downloadSource = new File(source + FileUtils.APP_DOWNLOAD_DIR_NAME);
+			File mediaSource = new File(source +  FileUtils.APP_MEDIA_DIR_NAME);
+			File courseSource = new File(source +  FileUtils.APP_COURSES_DIR_NAME);
+			
+			boolean success = true;
+	    	try {
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME ));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME );
+				e.printStackTrace();
+				success = false;
+			}
+			
+			try {
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_MEDIA_DIR_NAME ));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_MEDIA_DIR_NAME );
+				e.printStackTrace();
+				success = false;
+			}
+			
+			try {
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_COURSES_DIR_NAME ));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_COURSES_DIR_NAME );
+				e.printStackTrace();
+				success = false;
+			}
+			
+			
+			// now copy over 
+			try {
+				
+				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(downloadSource,new File(destination),true);
+				Log.d(TAG,"completed");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed");
+				e.printStackTrace();
+				success = false;
+			}
+
+			try {
+				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(mediaSource,new File(destination),true);
+				Log.d(TAG,"completed");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed");
+				e.printStackTrace();
+				success = false;
+			}
+			
+			try {
+				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(courseSource,new File(destination),true);
+				Log.d(TAG,"completed");
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed");
+				e.printStackTrace();
+				success = false;
+			}
+			
+			Editor editor = prefs.edit();
+			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, destination);
+			editor.commit();
+			
+			// delete original dir
+			try {
+				org.apache.commons.io.FileUtils.forceDelete(new File(source));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.d(TAG,"failed to delete original file");
+			}
     	}
+    	
+    	
 	}
 	
 	
@@ -249,5 +323,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
         	mUpgradeListener = srl;
         }
     }
+
 
 }

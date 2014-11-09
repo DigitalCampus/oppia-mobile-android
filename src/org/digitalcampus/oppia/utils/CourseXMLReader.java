@@ -74,7 +74,7 @@ public class CourseXMLReader {
 			}
 		} else {
 			Log.d(TAG, "course XML not found at: " + filename);
-			throw new InvalidXMLException();
+			throw new InvalidXMLException("Course XML not found at: " + filename);
 		}
 	}
 	
