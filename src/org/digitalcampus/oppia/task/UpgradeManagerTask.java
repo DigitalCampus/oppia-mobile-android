@@ -225,6 +225,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			File courseSource = new File(source +  FileUtils.APP_COURSES_DIR_NAME);
 			
 			boolean success = true;
+			publishProgress(this.ctx.getString(R.string.upgradev49_1,""));
 	    	try {
 				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME ));
 			} catch (IOException e) {
@@ -299,8 +300,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				Log.d(TAG,"failed to delete original file");
 			}
     	}
-    	
-    	
 	}
 	
 	
