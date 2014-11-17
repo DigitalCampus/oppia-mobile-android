@@ -113,10 +113,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		courses = db.getCourses(userId);
 		DatabaseManager.getInstance().closeDatabase();
 		
-		for (Course c: courses){
-			Log.d(TAG, "oppia location: " + c.getLocation());
-			Log.d(TAG, "oppia image: " + c.getImageFile());
-		}
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
 		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_courses);
