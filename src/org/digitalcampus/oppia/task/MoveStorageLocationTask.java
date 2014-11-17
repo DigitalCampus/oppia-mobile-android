@@ -40,9 +40,9 @@ public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload>
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
-		File downloadSource = new File((String) payload.getData().get(SOURCE) + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME);
-		File mediaSource = new File((String) payload.getData().get(SOURCE) + "/" + FileUtils.APP_MEDIA_DIR_NAME);
-		File courseSource = new File((String) payload.getData().get(SOURCE) + "/" + FileUtils.APP_COURSES_DIR_NAME);
+		File downloadSource = new File((String) payload.getData().get(SOURCE) + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME);
+		File mediaSource = new File((String) payload.getData().get(SOURCE) + File.separator + FileUtils.APP_MEDIA_DIR_NAME);
+		File courseSource = new File((String) payload.getData().get(SOURCE) + File.separator + FileUtils.APP_COURSES_DIR_NAME);
 		File destination = new File((String) payload.getData().get(DESTINATION));
 		
 		Log.d(TAG,"Task source: " + downloadSource);
@@ -52,26 +52,26 @@ public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload>
 		
 		// delete anything that already exists in the destination dir
 		try {
-			org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME ));
+			org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME ));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME );
+			Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME );
 			e.printStackTrace();
 		}
 		
 		try {
-			org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_MEDIA_DIR_NAME ));
+			org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME ));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_MEDIA_DIR_NAME );
+			Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME );
 			e.printStackTrace();
 		}
 		
 		try {
-			org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_COURSES_DIR_NAME ));
+			org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_COURSES_DIR_NAME ));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_COURSES_DIR_NAME );
+			Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_COURSES_DIR_NAME );
 			e.printStackTrace();
 		}
 		

@@ -82,7 +82,7 @@ public class MobileLearning extends Application {
 	public static boolean isLoggedIn(Context ctx) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String username = prefs.getString(PrefsActivity.PREF_USER_NAME, "");
-		String apiKey = prefs.getString("prefApiKey", "");
+		String apiKey = prefs.getString(PrefsActivity.PREF_API_KEY, "");
 		if (username.trim().equals("") || apiKey.trim().equals("")) {
 			return false;
 		} else {

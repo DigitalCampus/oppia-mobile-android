@@ -107,12 +107,12 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 		
-		if(!prefs.getBoolean("upgradeV49a",false)){
+		if(!prefs.getBoolean("upgradeV49b",false)){
 			upgradeV49();
 			Editor editor = prefs.edit();
-			editor.putBoolean("upgradeV49a", true);
+			editor.putBoolean("upgradeV49b", true);
 			editor.commit();
-			publishProgress(this.ctx.getString(R.string.info_upgrading,"v49a"));
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v49"));
 			payload.setResult(true);
 		}
 		
@@ -133,9 +133,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				String courseTrackerXMLPath = "";
 				// check that it's unzipped etc correctly
 				try {
-					courseXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_XML;
-					courseScheduleXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_SCHEDULE_XML;
-					courseTrackerXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_TRACKER_XML;
+					courseXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_XML;
+					courseScheduleXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
+					courseTrackerXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(dir, FileUtils.getDownloadPath(ctx) + children[i]);
 					break;
@@ -158,7 +158,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
 				c.setShortname(children[i]);
-				c.setImageFile(children[i] + "/" + cxr.getCourseImage());
+				c.setImageFile(children[i] + File.separator + cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
 				c.setPriority(cxr.getPriority());
 				
@@ -195,7 +195,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		User user = new User();
 		user.setUsername(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-		user.setApiKey(prefs.getString("prefApiKey", "") );
+		user.setApiKey(prefs.getString(PrefsActivity.PREF_API_KEY, "") );
 		DbHelper db = new DbHelper(ctx);
 		long userId = db.addOrUpdateUser(user);
 		db.updateV43(userId);
@@ -208,41 +208,46 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	 */
 	protected void upgradeV49(){
 		
-		String source = Environment.getExternalStorageDirectory() + "/" + FileUtils.APP_ROOT_DIR_NAME  +"/";
+		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+		if (location != ""){
+			return;
+		}
+		
+		String source = Environment.getExternalStorageDirectory() + File.separator + FileUtils.APP_ROOT_DIR_NAME  +File.separator;
     	
     	File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
     	if(dirs.length > 0){
 	    	
 		
-	    	String destination = dirs[0].getAbsolutePath();
+	    	String destination = dirs[dirs.length-1].getAbsolutePath();
 	    	File downloadSource = new File(source + FileUtils.APP_DOWNLOAD_DIR_NAME);
 			File mediaSource = new File(source +  FileUtils.APP_MEDIA_DIR_NAME);
 			File courseSource = new File(source +  FileUtils.APP_COURSES_DIR_NAME);
 			
 			boolean success = true;
 	    	try {
-				org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME ));
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME ));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_DOWNLOAD_DIR_NAME );
+				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME );
 				e.printStackTrace();
 				success = false;
 			}
 			
 			try {
-				org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_MEDIA_DIR_NAME ));
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME ));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_MEDIA_DIR_NAME );
+				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME );
 				e.printStackTrace();
 				success = false;
 			}
 			
 			try {
-				org.apache.commons.io.FileUtils.forceDelete(new File (destination + "/" + FileUtils.APP_COURSES_DIR_NAME ));
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_COURSES_DIR_NAME ));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				Log.d(TAG,"failed to delete: " + destination + "/" + FileUtils.APP_COURSES_DIR_NAME );
+				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_COURSES_DIR_NAME );
 				e.printStackTrace();
 				success = false;
 			}

@@ -275,7 +275,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				// wipe user prefs
 				Editor editor = prefs.edit();
 				editor.putString(PrefsActivity.PREF_USER_NAME, "");
-				editor.putString("prefApiKey", "");
+				editor.putString(PrefsActivity.PREF_API_KEY, "");
 				editor.putInt("prefBadges", 0);
 				editor.putInt("prefPoints", 0);
 				editor.commit();

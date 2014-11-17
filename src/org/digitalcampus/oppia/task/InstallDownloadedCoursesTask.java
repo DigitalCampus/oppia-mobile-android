@@ -91,9 +91,9 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				String courseTrackerXMLPath = "";
 				// check that it's unzipped etc correctly
 				try {
-					courseXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_XML;
-					courseScheduleXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_SCHEDULE_XML;
-					courseTrackerXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_TRACKER_XML;
+					courseXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_XML;
+					courseScheduleXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
+					courseTrackerXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(tempdir, FileUtils.getDownloadPath(ctx) + children[i]);
 					continue;
@@ -131,7 +131,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				long added = db.addOrUpdateCourse(c);
 				if (added != -1) {
 					payload.addResponseData(c);
-					File src = new File(tempdir + "/" + courseDirs[0]);
+					File src = new File(tempdir + File.separator + courseDirs[0]);
 					File dest = new File(FileUtils.getCoursesPath(ctx));
 
 					db.insertActivities(cxr.getActivities(added));

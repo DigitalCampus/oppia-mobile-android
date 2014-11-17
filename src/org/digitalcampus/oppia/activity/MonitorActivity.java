@@ -75,7 +75,7 @@ public class MonitorActivity extends AppActivity {
 		if(ConnectionUtils.isNetworkConnected(this)){
 			url = prefs.getString("prefServer", getString(R.string.prefServer)) + "mobile/monitor/?";
 			url += "username=" + prefs.getString(PrefsActivity.PREF_USER_NAME, "");
-			url += "&api_key=" + prefs.getString("prefApiKey", "");
+			url += "&api_key=" + prefs.getString(PrefsActivity.PREF_API_KEY, "");
 		} else {
 			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         	url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");

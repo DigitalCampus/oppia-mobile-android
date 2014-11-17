@@ -99,7 +99,7 @@ public class FileUtils {
 		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 		// if location not set - then set it to first of dirs
 		if (location.equals("") && dirs.length > 0){
-			location = dirs[0].toString();
+			location = dirs[dirs.length-1].toString();
 			Editor editor = prefs.edit();
 			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
 			editor.commit();
@@ -109,15 +109,15 @@ public class FileUtils {
 	}
 	
 	public static String getCoursesPath(Context ctx){
-		return getStorageLocationRoot(ctx) + "/modules/";
+		return getStorageLocationRoot(ctx) + File.separator + "modules" + File.separator;
 	}
 	
 	public static String getDownloadPath(Context ctx){
-		return getStorageLocationRoot(ctx) + "/download/";
+		return getStorageLocationRoot(ctx) + File.separator + "download" + File.separator;
 	}
 	
 	public static String getMediaPath(Context ctx){
-		return getStorageLocationRoot(ctx) + "/media/";
+		return getStorageLocationRoot(ctx) + File.separator + "media" + File.separator;
 	}
 	
 	// This function converts the zip file into uncompressed files which are
@@ -225,9 +225,9 @@ public class FileUtils {
 	private static void createDirIfNeeded(String destDirectory, ZipEntry entry) {
 		String name = entry.getName();
 
-		if (name.contains("/")) {
+		if (name.contains(File.separator)) {
 
-			int index = name.lastIndexOf("/");
+			int index = name.lastIndexOf(File.separator);
 			String dirSequence = name.substring(0, index);
 
 			File newDirs = new File(destDirectory + File.separator + dirSequence);
@@ -323,7 +323,7 @@ public class FileUtils {
 	}
 
 	public static String getLocalizedFilePath(Activity act, String currentLang, String fileName) {
-		String filePath = "www/" + currentLang + "/" + fileName;
+		String filePath = "www" + File.separator + currentLang + File.separator + fileName;
 		try {
 			InputStream stream = act.getAssets().open(filePath);
 			stream.close();
@@ -332,7 +332,7 @@ public class FileUtils {
 		} catch (IOException e) {
 		}
 
-		String localeFilePath = "www/" + Locale.getDefault().getLanguage() + "/" + fileName;
+		String localeFilePath = "www" + File.separator + Locale.getDefault().getLanguage() + File.separator + fileName;
 		try {
 			InputStream stream = act.getAssets().open(localeFilePath);
 			stream.close();
@@ -341,7 +341,7 @@ public class FileUtils {
 		} catch (IOException e) {
 		}
 
-		String defaultFilePath = "www/" + MobileLearning.DEFAULT_LANG + "/" + fileName;
+		String defaultFilePath = "www" + File.separator + MobileLearning.DEFAULT_LANG + File.separator + fileName;
 		try {
 			InputStream stream = act.getAssets().open(defaultFilePath);
 			stream.close();

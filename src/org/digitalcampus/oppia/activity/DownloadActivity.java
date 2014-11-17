@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.activity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.Callable;
@@ -67,7 +68,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 		Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	Tag t = (Tag) bundle.getSerializable(Tag.TAG);
-        	this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + "/";
+        	this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
         } else {
         	this.url = MobileLearning.SERVER_COURSES_PATH;
         	this.showUpdatesOnly = true;

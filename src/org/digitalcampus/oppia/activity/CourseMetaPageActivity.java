@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.activity;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -69,7 +70,7 @@ public class CourseMetaPageActivity extends AppActivity {
 		shortnameTV.setText(course.getShortname());
 		
 		WebView wv = (WebView) this.findViewById(R.id.metapage_webview);
-		String url = course.getLocation() + "/" +cmp.getLang(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).getLocation();
+		String url = course.getLocation() + File.separator +cmp.getLang(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).getLocation();
 		
 		try {
 			String content =  "<html><head>";
@@ -78,7 +79,7 @@ public class CourseMetaPageActivity extends AppActivity {
 			content += "</head>";
 			content += FileUtils.readFile(url);
 			content += "</html>";
-			wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", content, "text/html", "utf-8", null);
+			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, content, "text/html", "utf-8", null);
 		} catch (IOException e) {
 			e.printStackTrace();
 			wv.loadUrl("file://" + url);

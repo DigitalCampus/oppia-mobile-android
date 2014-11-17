@@ -92,7 +92,7 @@ public class Course implements Serializable {
 	}
 
 	public String getImageFileFromRoot() {
-		return this.root + "/" + FileUtils.APP_COURSES_DIR_NAME + "/" + this.getShortname() + "/" + imageFile;
+		return this.root + File.separator + FileUtils.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + imageFile;
 	}
 	
 	public void setImageFile(String imageFile) {
@@ -197,13 +197,13 @@ public class Course implements Serializable {
 	}
 
 	public String getLocation() {
-		return this.root + "/" + FileUtils.APP_COURSES_DIR_NAME + "/" + this.getShortname() + "/";
+		return this.root + File.separator + FileUtils.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator;
 		
 	}
 
 	public String getCourseXMLLocation(){
 		//String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		return this.root + "/" + FileUtils.APP_COURSES_DIR_NAME + "/" + this.getShortname() + "/" + MobileLearning.COURSE_XML;
+		return this.root + File.separator + FileUtils.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
 	}
 	
 

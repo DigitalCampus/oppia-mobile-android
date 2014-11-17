@@ -112,7 +112,7 @@ public class PageWidget extends WidgetFactory {
 		
 		try {
 			wv.getSettings().setJavaScriptEnabled(true);
-			wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", FileUtils.readFile(url), "text/html",
+			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html",
 					"utf-8", null);
 		} catch (IOException e) {
 			wv.loadUrl("file://" + url);
@@ -246,9 +246,9 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	public String getContentToRead() {
-		File f = new File("/"
+		File f = new File(File.separator
 				+ course.getLocation()
-				+ "/"
+				+ File.separator
 				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 						.getLanguage())));
 		StringBuilder text = new StringBuilder();
