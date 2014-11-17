@@ -22,8 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
@@ -33,6 +31,7 @@ import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
+import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -60,26 +59,13 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         tvProgress = (TextView) this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
-        // set up local dirs
- 		if(!MobileLearning.createDirs()){
- 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
- 			builder.setCancelable(false);
- 			builder.setTitle(R.string.error);
- 			builder.setMessage(R.string.error_sdcard);
- 			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
- 				public void onClick(DialogInterface dialog, int which) {
- 					StartUpActivity.this.finish();
- 				}
- 			});
- 			builder.show();
- 			return;
- 		}
- 		
- 		UpgradeManagerTask umt = new UpgradeManagerTask(this);
+        
+        UpgradeManagerTask umt = new UpgradeManagerTask(this);
 		umt.setUpgradeListener(this);
 		ArrayList<Object> data = new ArrayList<Object>();
  		Payload p = new Payload(data);
 		umt.execute(p);
+ 		
 	}
 	
 	
@@ -101,7 +87,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     }
 
 	private void installCourses(){
-		File dir = new File(MobileLearning.DOWNLOAD_PATH);
+		File dir = new File(FileUtils.getDownloadPath(this));
 		String[] children = dir.list();
 		if (children != null) {
 			ArrayList<Object> data = new ArrayList<Object>();
@@ -115,6 +101,22 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	}
 	
 	public void upgradeComplete(Payload p) {
+		
+		 // set up local dirs
+ 		if(!FileUtils.createDirs(this)){
+ 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+ 			builder.setCancelable(false);
+ 			builder.setTitle(R.string.error);
+ 			builder.setMessage(R.string.error_sdcard);
+ 			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+ 				public void onClick(DialogInterface dialog, int which) {
+ 					StartUpActivity.this.finish();
+ 				}
+ 			});
+ 			builder.show();
+ 			return;
+ 		}
+ 		
 		if(p.isResult()){
 			Payload payload = new Payload();
 			PostInstallTask piTask = new PostInstallTask(this);

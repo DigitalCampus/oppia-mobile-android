@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -70,7 +71,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	    rowView.setTag(c);
 	    
 	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
-	    courseTitle.setText(c.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+	    courseTitle.setText(c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 	    
 	    TextView courseDraft = (TextView) rowView.findViewById(R.id.course_draft);
 	    if (c.isDraft()){
@@ -80,7 +81,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements I
 	    }
 	    
 	    TextView courseDesc = (TextView) rowView.findViewById(R.id.course_description);
-	    String desc = c.getDescription(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+	    String desc = c.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 	    if (desc != null){
 	    	courseDesc.setText(desc);
 	    } else {

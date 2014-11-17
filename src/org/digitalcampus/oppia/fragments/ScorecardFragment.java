@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.fragments;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.FileUtils;
 
@@ -71,14 +72,14 @@ public class ScorecardFragment extends Fragment{
 		webView = (WebView) super.getActivity().findViewById(R.id.scorecard_fragment_webview);
 		webView.setWebViewClient(new ScoreCardWebViewClient());
 		webView.getSettings().setJavaScriptEnabled(true);
-		String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		String url = "";
 		url = FileUtils.getLocalizedFilePath(super.getActivity(),lang,"webview_loading.html");
 		webView.loadUrl(url);
 		if(ConnectionUtils.isNetworkConnected(super.getActivity())){
 			url = prefs.getString("prefServer", getString(R.string.prefServer)) + "mobile/scorecard/?";
-			url += "username=" + prefs.getString("prefUsername", "");
-			url += "&api_key=" + prefs.getString("prefApiKey", "");
+			url += "username=" + prefs.getString(PrefsActivity.PREF_USER_NAME, "");
+			url += "&api_key=" + prefs.getString(PrefsActivity.PREF_API_KEY, "");
 		} else {
         	url = FileUtils.getLocalizedFilePath(super.getActivity(),lang,"scorecard_not_available.html");
 		}
@@ -89,7 +90,7 @@ public class ScorecardFragment extends Fragment{
 	private class ScoreCardWebViewClient extends WebViewClient{
 		@Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        	String lang = ScorecardFragment.this.prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+        	String lang = ScorecardFragment.this.prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         	String url = FileUtils.getLocalizedFilePath(ScorecardFragment.this.getActivity(),lang,"scorecard_not_available.html");
         	webView.loadUrl(url);
         }

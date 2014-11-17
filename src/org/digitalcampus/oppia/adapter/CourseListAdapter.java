@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.ImageUtils;
@@ -62,11 +63,11 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	    rowView.setTag(c);
 	    
 	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
-	    courseTitle.setText(c.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+	    courseTitle.setText(c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 	    
 	    TextView courseDescription = (TextView) rowView.findViewById(R.id.course_description);
 	    if (prefs.getBoolean("prefShowCourseDescription", true)){
-	    	courseDescription.setText(c.getDescription(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+	    	courseDescription.setText(c.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 	    } else {
 	    	courseDescription.setVisibility(View.GONE);
 	    }
@@ -81,7 +82,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 		// set image
 		if(c.getImageFile() != null){
 			ImageView iv = (ImageView) rowView.findViewById(R.id.course_image);
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFile(), ctx.getResources(), R.drawable.dc_logo);
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFileFromRoot(), ctx.getResources(), R.drawable.dc_logo);
 			iv.setImageDrawable(bm);
 		}
 	    return rowView;

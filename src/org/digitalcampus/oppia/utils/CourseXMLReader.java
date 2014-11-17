@@ -26,6 +26,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -53,6 +54,23 @@ public class CourseXMLReader {
 	private Context ctx;
 	private SharedPreferences prefs;
 	
+	private static final String NODE_LANG = "lang";
+	private static final String NODE_TITLE = "title";
+	private static final String NODE_PRIORITY = "priority";
+	private static final String NODE_ID = "id";
+	private static final String NODE_DESCRIPTION = "description";
+	// versionid
+	// langs
+	// page
+	// location
+	// order
+	// type
+	// digest
+	// image
+	// filename
+	// length
+	// activity
+	
 	public CourseXMLReader(String filename, Context ctx) throws InvalidXMLException {
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
@@ -65,7 +83,6 @@ public class CourseXMLReader {
 			try {
 				builder = factory.newDocumentBuilder();
 				document = builder.parse(courseXML);
-
 			} catch (ParserConfigurationException e) {
 				throw new InvalidXMLException(e);
 			} catch (SAXException e) {
@@ -73,6 +90,9 @@ public class CourseXMLReader {
 			} catch (IOException e) {
 				throw new InvalidXMLException(e);
 			}
+		} else {
+			Log.d(TAG, "course XML not found at: " + filename);
+			throw new InvalidXMLException("Course XML not found at: " + filename);
 		}
 	}
 	
@@ -81,10 +101,10 @@ public class CourseXMLReader {
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
-			if(meta.item(j).getNodeName().equals("title")){
+			if(meta.item(j).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
 				NamedNodeMap attrs = meta.item(j).getAttributes();
-				if(attrs.getNamedItem("lang") != null){
-					String lang = attrs.getNamedItem("lang").getTextContent();
+				if(attrs.getNamedItem(CourseXMLReader.NODE_LANG) != null){
+					String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 					titles.add(new Lang(lang, meta.item(j).getTextContent()));
 				} else {
 					titles.add(new Lang(MobileLearning.DEFAULT_LANG, meta.item(j).getTextContent()));
@@ -99,7 +119,7 @@ public class CourseXMLReader {
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
 			Log.d(TAG,meta.item(j).getNodeName());
-			if(meta.item(j).getNodeName().equals("priority")){
+			if(meta.item(j).getNodeName().equals(CourseXMLReader.NODE_PRIORITY)){
 				Log.d(TAG,meta.item(j).getTextContent());
 				return Integer.valueOf(meta.item(j).getTextContent());
 			}
@@ -112,10 +132,10 @@ public class CourseXMLReader {
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
-			if(meta.item(j).getNodeName().equals("description")){
+			if(meta.item(j).getNodeName().equals(CourseXMLReader.NODE_DESCRIPTION)){
 				NamedNodeMap attrs = meta.item(j).getAttributes();
-				if(attrs.getNamedItem("lang") != null){
-					String lang = attrs.getNamedItem("lang").getTextContent();
+				if(attrs.getNamedItem(CourseXMLReader.NODE_LANG) != null){
+					String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 					descriptions.add(new Lang(lang, meta.item(j).getTextContent()));
 				} else {
 					descriptions.add(new Lang(MobileLearning.DEFAULT_LANG, meta.item(j).getTextContent()));
@@ -156,7 +176,7 @@ public class CourseXMLReader {
 				
 				NamedNodeMap pageAttrs = meta.item(j).getAttributes();
 				NodeList pages = meta.item(j).getChildNodes();
-				String key = pageAttrs.getNamedItem("id").getTextContent();
+				String key = pageAttrs.getNamedItem(CourseXMLReader.NODE_ID).getTextContent();
 				mmp.setId(Integer.parseInt(key));
 				
 				// get all the langs
@@ -164,7 +184,7 @@ public class CourseXMLReader {
 				for(int p=0; p<pages.getLength(); p++){
 					NamedNodeMap nodeAttrs = pages.item(p).getAttributes();
 					try {
-						String lang = nodeAttrs.getNamedItem("lang").getTextContent();
+						String lang = nodeAttrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						if(!langList.contains(lang)){
 							langList.add(lang);
 						}
@@ -179,10 +199,10 @@ public class CourseXMLReader {
 					String location = "";
 					for(int p=0; p<pages.getLength(); p++){
 						NamedNodeMap nodeAttrs = pages.item(p).getAttributes();
-						if(pages.item(p).getNodeName().toLowerCase(Locale.US).equals("title") && nodeAttrs.getNamedItem("lang").getTextContent().equals(lang)){
+						if(pages.item(p).getNodeName().toLowerCase(Locale.US).equals(CourseXMLReader.NODE_TITLE) && nodeAttrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent().equals(lang)){
 							title = pages.item(p).getTextContent();
 						} 
-						if(pages.item(p).getNodeName().toLowerCase(Locale.US).equals("location") && nodeAttrs.getNamedItem("lang").getTextContent().equals(lang)){
+						if(pages.item(p).getNodeName().toLowerCase(Locale.US).equals("location") && nodeAttrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent().equals(lang)){
 							location = pages.item(p).getTextContent();
 						} 
 					}
@@ -213,7 +233,7 @@ public class CourseXMLReader {
 				a.setActType(actType);
 				a.setCourseId(modId);
 				a.setSectionId(0);
-				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				a.setAttempted(db.activityAttempted(modId, digest, userId));				
 				
 				ArrayList<Lang> actTitles = new ArrayList<Lang>();
@@ -225,11 +245,11 @@ public class CourseXMLReader {
 				NodeList act = meta.item(i).getChildNodes();
 				for (int k=0; k<act.getLength(); k++) {
 					NamedNodeMap attrs = act.item(k).getAttributes();
-					if(act.item(k).getNodeName().equals("title")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
+					if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
+						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						actTitles.add(new Lang(lang, act.item(k).getTextContent()));
 					} else if(act.item(k).getNodeName().equals("location")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
+						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						actLocations.add(new Lang(lang, act.item(k).getTextContent()));
 						try {
 							String mimeType = attrs.getNamedItem("type").getTextContent();
@@ -238,7 +258,7 @@ public class CourseXMLReader {
 							//do nothing
 						}
 					} else if(act.item(k).getNodeName().equals("content")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
+						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						actContents.add(new Lang(lang, act.item(k).getTextContent()));
 					} else if(act.item(k).getNodeName().equals("image")){
 						a.setImageFile(attrs.getNamedItem("filename").getTextContent());
@@ -260,8 +280,8 @@ public class CourseXMLReader {
 								actMedia.add(mObj);
 							}
 						}
-					} else if (act.item(k).getNodeName().equals("description")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
+					} else if (act.item(k).getNodeName().equals(CourseXMLReader.NODE_DESCRIPTION)){
+						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
 					}
 				}
@@ -360,16 +380,16 @@ public class CourseXMLReader {
 						NodeList act = activities.item(j).getChildNodes();
 						for (int k=0; k<act.getLength(); k++) {
 							NamedNodeMap attrs = act.item(k).getAttributes();
-							if(act.item(k).getNodeName().equals("title")){
-								String lang = attrs.getNamedItem("lang").getTextContent();
+							if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
+								String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 								actTitles.add(new Lang(lang, act.item(k).getTextContent()));
 							}
-							if(act.item(k).getNodeName().equals("description")){
-								String lang = attrs.getNamedItem("lang").getTextContent();
+							if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_DESCRIPTION)){
+								String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 								actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
 							} 
 							if(act.item(k).getNodeName().equals("location")){
-								String lang = attrs.getNamedItem("lang").getTextContent();
+								String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 								actLocations.add(new Lang(lang, act.item(k).getTextContent()));
 							}
 						}
@@ -407,8 +427,8 @@ public class CourseXMLReader {
 				String image = null;
 				for (int j=0; j<nodes.getLength(); j++) {
 					NamedNodeMap attrs = nodes.item(j).getAttributes();
-					if(nodes.item(j).getNodeName().equals("title")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
+					if(nodes.item(j).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
+						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						sectTitles.add(new Lang(lang, nodes.item(j).getTextContent()));
 					} else if(nodes.item(j).getNodeName().equals("image")){
 						image = attrs.getNamedItem("filename").getTextContent();
@@ -433,7 +453,7 @@ public class CourseXMLReader {
 							a.setActType(actType);
 							a.setCourseId(modId);
 							a.setSectionId(order);
-							long userId = db.getUserId(prefs.getString("prefUsername", ""));
+							long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 							a.setCompleted(db.activityCompleted(modId, digest, userId));				
 							
 							ArrayList<Lang> actTitles = new ArrayList<Lang>();
@@ -446,11 +466,11 @@ public class CourseXMLReader {
 							for (int k=0; k<act.getLength(); k++) {
 								NamedNodeMap attrs = act.item(k).getAttributes();
 								
-								if(act.item(k).getNodeName().equals("title")){
-									String lang = attrs.getNamedItem("lang").getTextContent();
+								if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
+									String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 									actTitles.add(new Lang(lang, act.item(k).getTextContent()));
 								} else if(act.item(k).getNodeName().equals("location")){
-									String lang = attrs.getNamedItem("lang").getTextContent();
+									String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 									actLocations.add(new Lang(lang, act.item(k).getTextContent()));
 									try {
 										String mimeType = attrs.getNamedItem("type").getTextContent();
@@ -459,7 +479,7 @@ public class CourseXMLReader {
 										//do nothing
 									}
 								} else if(act.item(k).getNodeName().equals("content")){
-									String lang = attrs.getNamedItem("lang").getTextContent();
+									String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 									actContents.add(new Lang(lang, act.item(k).getTextContent()));
 								} else if(act.item(k).getNodeName().equals("image")){
 									a.setImageFile(attrs.getNamedItem("filename").getTextContent());
@@ -481,8 +501,8 @@ public class CourseXMLReader {
 											actMedia.add(mObj);
 										}
 									}
-								} else if (act.item(k).getNodeName().equals("description")){
-									String lang = attrs.getNamedItem("lang").getTextContent();
+								} else if (act.item(k).getNodeName().equals(CourseXMLReader.NODE_DESCRIPTION)){
+									String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 									actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
 								}
 							}
@@ -519,8 +539,8 @@ public class CourseXMLReader {
 				String image = null;
 				for (int j=0; j<nodes.getLength(); j++) {
 					NamedNodeMap attrs = nodes.item(j).getAttributes();
-					if(nodes.item(j).getNodeName().equals("title")){
-						String lang = attrs.getNamedItem("lang").getTextContent();
+					if(nodes.item(j).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
+						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						sectTitles.add(new Lang(lang, nodes.item(j).getTextContent()));
 					} else if(nodes.item(j).getNodeName().equals("image")){
 						image = attrs.getNamedItem("filename").getTextContent();

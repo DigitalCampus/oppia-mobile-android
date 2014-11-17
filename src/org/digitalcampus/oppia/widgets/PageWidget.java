@@ -27,6 +27,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -103,7 +104,7 @@ public class PageWidget extends WidgetFactory {
 		wv = (WebView) super.getActivity().findViewById(activity.getActId());
 		// get the location data
 		String url = course.getLocation()
-				+ activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault()
+				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 						.getLanguage()));
 		
 		int defaultFontSize = Integer.parseInt(prefs.getString("prefTextSize", "16"));
@@ -111,7 +112,7 @@ public class PageWidget extends WidgetFactory {
 		
 		try {
 			wv.getSettings().setJavaScriptEnabled(true);
-			wv.loadDataWithBaseURL("file://" + course.getLocation() + "/", FileUtils.readFile(url), "text/html",
+			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html",
 					"utf-8", null);
 		} catch (IOException e) {
 			wv.loadUrl("file://" + url);
@@ -128,22 +129,21 @@ public class PageWidget extends WidgetFactory {
 					String mediaFileName = url.substring(startPos, url.length());
 
 					// check video file exists
-					boolean exists = FileUtils.mediaFileExists(mediaFileName);
+					boolean exists = FileUtils.mediaFileExists(PageWidget.super.getActivity(), mediaFileName);
 					if (!exists) {
 						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName),
 								Toast.LENGTH_LONG).show();
 						return true;
 					}
 
-					String mimeType = FileUtils.getMimeType(mediaFileName);
+					String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath(PageWidget.super.getActivity()) + mediaFileName);
+
 					if (!FileUtils.supportedMediafileType(mimeType)) {
 						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
 								Toast.LENGTH_LONG).show();
 						return true;
 					}
-
-					// check user has app installed to play the video
-					// launch intent to play video
+					
 					Intent intent = new Intent(PageWidget.super.getActivity(), VideoPlayerActivity.class);
 					Bundle tb = new Bundle();
 					tb.putSerializable(VideoPlayerActivity.MEDIA_TAG, mediaFileName);
@@ -151,6 +151,7 @@ public class PageWidget extends WidgetFactory {
 					tb.putSerializable(Course.TAG, course);
 					intent.putExtras(tb);
 					startActivity(intent);
+
 
 					return true;
 				} else {
@@ -178,7 +179,7 @@ public class PageWidget extends WidgetFactory {
 			ArrayList<Media> mediaList = this.activity.getMedia();
 			boolean completed = true;
 			DbHelper db = new DbHelper(super.getActivity());
-			long userId = db.getUserId(prefs.getString("prefUsername", ""));
+			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 			for (Media m : mediaList) {
 				if (!db.activityCompleted(this.course.getCourseId(), m.getDigest(), userId)) {
 					completed = false;
@@ -205,7 +206,7 @@ public class PageWidget extends WidgetFactory {
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 			obj.put("readaloud", readAloud);
 			// if it's a baseline activity then assume completed
@@ -245,10 +246,10 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	public String getContentToRead() {
-		File f = new File("/"
+		File f = new File(File.separator
 				+ course.getLocation()
-				+ "/"
-				+ activity.getLocation(prefs.getString("prefLanguage", Locale.getDefault()
+				+ File.separator
+				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 						.getLanguage())));
 		StringBuilder text = new StringBuilder();
 		try {

@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -38,7 +39,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 	
@@ -58,7 +58,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 		Payload payload = params[0];
 		
 		// get folder
-		File dir = new File(MobileLearning.DOWNLOAD_PATH);
+		File dir = new File(FileUtils.getDownloadPath(ctx));
 		DownloadProgress dp = new DownloadProgress();
 		String[] children = dir.list();
 		if (children != null) {
@@ -66,20 +66,22 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 			for (int i = 0; i < children.length; i++) {
 
 				// extract to temp dir and check it's a valid package file
-				File tempdir = new File(MobileLearning.OPPIAMOBILE_ROOT + "temp/");
+				File tempdir = new File(FileUtils.getStorageLocationRoot(ctx) + "temp/");
 				tempdir.mkdirs();
 				
-				File testDir = new File(MobileLearning.DOWNLOAD_PATH, children[i]);
+				File testDir = new File(FileUtils.getDownloadPath(ctx), children[i]);
 				
 				if (testDir.isDirectory()){
 					continue;
 				}
-				boolean unzipResult = FileUtils.unzipFiles(MobileLearning.DOWNLOAD_PATH, children[i], tempdir.getAbsolutePath());
+				boolean unzipResult = FileUtils.unzipFiles(FileUtils.getDownloadPath(ctx), children[i], tempdir.getAbsolutePath());
+
 				
 				if (!unzipResult){
 					//then was invalid zip file and should be removed
-					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
-					continue;
+					FileUtils.cleanUp(tempdir, FileUtils.getDownloadPath(ctx) + children[i]);
+					break;
+
 				}
 				String[] courseDirs = tempdir.list(); // use this to get the course
 													// name
@@ -89,11 +91,11 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				String courseTrackerXMLPath = "";
 				// check that it's unzipped etc correctly
 				try {
-					courseXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_XML;
-					courseScheduleXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_SCHEDULE_XML;
-					courseTrackerXMLPath = tempdir + "/" + courseDirs[0] + "/" + MobileLearning.COURSE_TRACKER_XML;
+					courseXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_XML;
+					courseScheduleXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
+					courseTrackerXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
-					FileUtils.cleanUp(tempdir, MobileLearning.DOWNLOAD_PATH + children[i]);
+					FileUtils.cleanUp(tempdir, FileUtils.getDownloadPath(ctx) + children[i]);
 					continue;
 				}
 				
@@ -110,16 +112,15 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					return payload;
 				}
 				
-				Course c = new Course();
+				Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
-				c.setLocation(MobileLearning.COURSES_PATH + courseDirs[0]);
 				c.setShortname(courseDirs[0]);
-				c.setImageFile(MobileLearning.COURSES_PATH + courseDirs[0] + "/" + cxr.getCourseImage());
+				c.setImageFile(cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
 				c.setDescriptions(cxr.getDescriptions());
 				c.setPriority(cxr.getPriority());
-				String title = c.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+				String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 				
 				dp.setMessage(ctx.getString(R.string.installing_course, title));
 				publishProgress(dp);
@@ -130,13 +131,13 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				long added = db.addOrUpdateCourse(c);
 				if (added != -1) {
 					payload.addResponseData(c);
-					File src = new File(tempdir + "/" + courseDirs[0]);
-					File dest = new File(MobileLearning.COURSES_PATH);
+					File src = new File(tempdir + File.separator + courseDirs[0]);
+					File dest = new File(FileUtils.getCoursesPath(ctx));
 
 					db.insertActivities(cxr.getActivities(added));
 					db.insertTrackers(ctxr.getTrackers(),added);
 					// Delete old course
-					File oldCourse = new File(MobileLearning.COURSES_PATH + courseDirs[0]);
+					File oldCourse = new File(FileUtils.getCoursesPath(ctx) + courseDirs[0]);
 					FileUtils.deleteDir(oldCourse);
 
 					// move from temp to courses dir
@@ -169,7 +170,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				FileUtils.deleteDir(tempdir);
 
 				// delete zip file from download dir
-				File zip = new File(MobileLearning.DOWNLOAD_PATH + children[i]);
+				File zip = new File(FileUtils.getDownloadPath(ctx) + children[i]);
 				zip.delete();
 			}
 		}

@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -328,7 +329,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(COURSE_C_VERSIONID, course.getVersionId());
 		values.put(COURSE_C_TITLE, course.getTitleJSONString());
-		values.put(COURSE_C_LOCATION, course.getLocation());
 		values.put(COURSE_C_SHORTNAME, course.getShortname());
 		values.put(COURSE_C_LANGS, course.getLangsJSONString());
 		values.put(COURSE_C_IMAGE, course.getImageFile());
@@ -435,7 +435,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void insertTrackers(ArrayList<TrackerLog> trackers, long courseId) {
-		long userId = this.getUserId(prefs.getString("prefUsername", ""));
+		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		
 		for (TrackerLog t : trackers) {
 			ContentValues values = new ContentValues();
@@ -462,9 +462,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			Course course = new Course();
+			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
@@ -484,9 +483,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			Course course = new Course();
+			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
 			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
@@ -509,9 +507,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			course = new Course();
+			course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			course.setLocation(c.getString(c.getColumnIndex(COURSE_C_LOCATION)));
 			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
@@ -543,7 +540,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void insertTracker(int modId, String digest, String data, boolean completed){
 		//get current user id
-		long userId = this.getUserId(prefs.getString("prefUsername", ""));
+		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		
 		ContentValues values = new ContentValues();
 		values.put(TRACKER_LOG_C_COURSEID, modId);
@@ -743,7 +740,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public long insertQuizResult(String data, int courseId){
-		long userId = this.getUserId(prefs.getString("prefUsername", ""));
+		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		ContentValues values = new ContentValues();
 		values.put(QUIZRESULTS_C_DATA, data);
 		values.put(QUIZRESULTS_C_COURSEID, courseId);

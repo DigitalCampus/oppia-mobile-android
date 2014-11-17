@@ -31,6 +31,7 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -70,7 +71,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 		try {
 				
 				DbHelper db = new DbHelper(ctx);
-				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				Log.d(TAG,"userId: " + userId);
 				payload = db.getUnsentTrackers(userId);
 				DatabaseManager.getInstance().closeDatabase();

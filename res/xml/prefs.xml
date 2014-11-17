@@ -8,6 +8,12 @@
     </ListPreference>
 
     <ListPreference
+        android:defaultValue=""
+        android:key="prefStorageLocation"
+        android:title="@string/prefStorageLocation" >
+    </ListPreference>
+    
+    <ListPreference
         android:defaultValue="16"
       	android:entries="@array/TextSize"
         android:entryValues="@array/TextSizeValues"

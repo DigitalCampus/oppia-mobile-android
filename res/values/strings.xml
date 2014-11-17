@@ -103,6 +103,7 @@
 	<string name="prefShowScheduleReminders">Display suggested activities</string>
 	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
 	<string name="prefShowSectionNumbers">Show section numbers</string>
+	<string name="prefStorageLocation">Storage Location</string>
 	<string name="prefTextSize">Text size</string>
 	<string name="prefUser">Username</string>
 	<string name="prefUserHint">(read only)</string>
@@ -141,6 +142,7 @@
 	<string name="download">Download</string>
 	<string name="downloaded">Downloaded</string>
 	<string name="open">Open</string>
+	<string name="storage_default">Default</string> 
 	
 	<string name="alert_pretest">Pre-test</string>
 	<string name="alert_pretest_summary">This course contains a pre-test which you need to complete before you can view the full course.</string>
@@ -243,6 +245,8 @@
 	<string name="search_no_results">No results found for \"%1$s\"</string>
 	<string name="submit_stats_btn_text">Send now</string>
 	
-	
 	<string name="media_player_description">Oppia Media Player</string>
+	
+	<string name="upgradev49_1">Copying files to new location - this may take several minutes, so please be patient</string>
 </resources>
+

@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.task.MoveStorageLocationTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.utils.FileUtils;
@@ -66,6 +67,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	private ArrayList<Course> courses;
 	private Course tempCourse;
 	private long userId = 0;
+	private String storageLocation;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,9 +80,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
 		
 		// set preferred lang to the default lang
-		if (prefs.getString("prefLanguage", "").equals("")) {
+		if (prefs.getString(PrefsActivity.PREF_LANGUAGE, "").equals("")) {
 			Editor editor = prefs.edit();
-			editor.putString("prefLanguage", Locale.getDefault().getLanguage());
+			editor.putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			editor.commit();
 		}
 	}
@@ -89,7 +91,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	public void onStart() {
 		super.onStart();
 		DbHelper db = new DbHelper(this);
-		userId = db.getUserId(prefs.getString("prefUsername", ""));
+		userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		DatabaseManager.getInstance().closeDatabase();
 		displayCourses(userId);		
 	}
@@ -166,7 +168,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(prefs.getBoolean("prefShowScheduleReminders", false)){
 			DbHelper db = new DbHelper(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString("prefNoScheduleReminders", "2"));
-			long userId = db.getUserId(prefs.getString("prefUsername", ""));
+			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
 			DatabaseManager.getInstance().closeDatabase();
 
@@ -216,6 +218,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			case R.id.menu_settings:
 				Intent i = new Intent(this, PrefsActivity.class);
 				Bundle tb = new Bundle();
+				storageLocation = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 				ArrayList<Lang> langs = new ArrayList<Lang>();
 				for(Course m: courses){
 					langs.addAll(m.getLangs());
@@ -267,8 +270,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			public void onClick(DialogInterface dialog, int which) {
 				// wipe user prefs
 				Editor editor = prefs.edit();
-				editor.putString("prefUsername", "");
-				editor.putString("prefApiKey", "");
+				editor.putString(PrefsActivity.PREF_USER_NAME, "");
+				editor.putString(PrefsActivity.PREF_API_KEY, "");
 				editor.putInt("prefBadges", 0);
 				editor.putInt("prefPoints", 0);
 				editor.commit();
@@ -345,7 +348,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				long userId = db.getUserId(prefs.getString("prefUsername", ""));
+				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				db.resetCourse(tempCourse.getCourseId(),userId);
 				DatabaseManager.getInstance().closeDatabase();
 				displayCourses(userId);
@@ -374,6 +377,18 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(key.equalsIgnoreCase("prefPoints")
 				|| key.equalsIgnoreCase("prefBadges")){
 			supportInvalidateOptionsMenu();
+		}
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_STORAGE_LOCATION)){
+			Log.d(TAG,storageLocation);
+			Log.d(TAG, sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+			// Move from old location to new
+			ArrayList<Object> strings = new ArrayList<Object>();
+	    	strings.add(storageLocation);
+	    	strings.add(sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+	    	
+	    	Payload p = new Payload(strings);
+	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask();
+	    	mslt.execute(p);
 		}
 	}
 

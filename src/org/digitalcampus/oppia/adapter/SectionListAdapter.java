@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
@@ -70,7 +71,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    if(prefs.getBoolean("prefShowSectionNumbers", false)){
 	    	title += String.valueOf(s.getOrder()) + ". ";
 	    }
-	    title += s.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage()));
+	    title += s.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 	    sectionTitle.setText(title);
 	    
 	    rowView.setTag(sectionList.get(position));
@@ -84,7 +85,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 		    ll.addView(horizRowItem);
 		    
 		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
-		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 		    
 		    // set image
 		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);

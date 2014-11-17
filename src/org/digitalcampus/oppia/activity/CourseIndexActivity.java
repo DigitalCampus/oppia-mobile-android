@@ -116,11 +116,11 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		super.onStart();
 		sections = cxr.getSections(course.getCourseId());
 		setTitle(course
-				.getTitle(prefs.getString("prefLanguage", Locale.getDefault().getLanguage())));
+				.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 
 		// set image
 		if (course.getImageFile() != null) {
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFile(), this.getResources(),
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
 					R.drawable.dc_logo);
 			getSupportActionBar().setIcon(bm);
 		}
@@ -176,7 +176,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		int order = 104;
 		for (CourseMetaPage mmp : ammp) {
 			String title = mmp.getLang(
-					prefs.getString("prefLanguage", Locale.getDefault().getLanguage()))
+					prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))
 					.getContent();
 			menu.add(0, mmp.getId(), order, title).setIcon(android.R.drawable.ic_menu_info_details);
 			order++;

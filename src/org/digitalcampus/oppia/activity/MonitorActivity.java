@@ -74,10 +74,10 @@ public class MonitorActivity extends AppActivity {
 		String url = "";
 		if(ConnectionUtils.isNetworkConnected(this)){
 			url = prefs.getString("prefServer", getString(R.string.prefServer)) + "mobile/monitor/?";
-			url += "username=" + prefs.getString("prefUsername", "");
-			url += "&api_key=" + prefs.getString("prefApiKey", "");
+			url += "username=" + prefs.getString(PrefsActivity.PREF_USER_NAME, "");
+			url += "&api_key=" + prefs.getString(PrefsActivity.PREF_API_KEY, "");
 		} else {
-			String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         	url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
 		}
 		webView.loadUrl(url);
@@ -122,7 +122,7 @@ public class MonitorActivity extends AppActivity {
 		
 		@Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        	String lang = prefs.getString("prefLanguage", Locale.getDefault().getLanguage());
+        	String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         	String url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
         	webView.loadUrl(url);
         }

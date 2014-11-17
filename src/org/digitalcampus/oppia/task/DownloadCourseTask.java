@@ -32,6 +32,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 
 import android.content.Context;
@@ -96,7 +97,7 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 			dp.setProgress(0);
 			publishProgress(dp);
 			
-			FileOutputStream f = new FileOutputStream(new File(MobileLearning.DOWNLOAD_PATH,localFileName));
+			FileOutputStream f = new FileOutputStream(new File(FileUtils.getDownloadPath(ctx),localFileName));
 			InputStream in = c.getInputStream();
 			
             byte[] buffer = new byte[1024];

@@ -17,9 +17,7 @@
 
 package org.digitalcampus.oppia.application;
 
-import java.io.File;
-import java.io.IOException;
-
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.task.SubmitQuizTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.joda.time.format.DateTimeFormat;
@@ -28,20 +26,12 @@ import org.joda.time.format.DateTimeFormatter;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 
 public class MobileLearning extends Application {
 
 	public static final String TAG = MobileLearning.class.getSimpleName();
-
 	
-	// local storage vars
-	public static final String OPPIAMOBILE_ROOT = Environment
-			.getExternalStorageDirectory() + "/digitalcampus/";
-	public static final String COURSES_PATH = OPPIAMOBILE_ROOT + "modules/";
-	public static final String MEDIA_PATH = OPPIAMOBILE_ROOT + "media/";
-	public static final String DOWNLOAD_PATH = OPPIAMOBILE_ROOT + "download/";
 	public static final String COURSE_XML = "module.xml";
 	public static final String COURSE_SCHEDULE_XML = "schedule.xml";
 	public static final String COURSE_TRACKER_XML = "tracker.xml";
@@ -88,49 +78,11 @@ public class MobileLearning extends Application {
 	// for tracking if SubmitQuizTask is already running
 	public SubmitQuizTask omSubmitQuizTask = null;
 	
-	public static boolean createDirs() {
-		String cardstatus = Environment.getExternalStorageState();
-		if (cardstatus.equals(Environment.MEDIA_REMOVED)
-				|| cardstatus.equals(Environment.MEDIA_UNMOUNTABLE)
-				|| cardstatus.equals(Environment.MEDIA_UNMOUNTED)
-				|| cardstatus.equals(Environment.MEDIA_MOUNTED_READ_ONLY)
-				|| cardstatus.equals(Environment.MEDIA_SHARED)) {
-			return false;
-		}
-
-		String[] dirs = { OPPIAMOBILE_ROOT, COURSES_PATH, MEDIA_PATH, DOWNLOAD_PATH };
-
-		for (String dirName : dirs) {
-			File dir = new File(dirName);
-			if (!dir.exists()) {
-				if (!dir.mkdirs()) {
-					return false;
-				}
-			} else {
-				if (!dir.isDirectory()) {
-					return false;
-				}
-			}
-		}
-		
-		// add .nomedia file to MEDIA_PATH
-		File nomedia = new File(MEDIA_PATH+".nomedia");
-		if (!nomedia.exists()){
-			File f = new File(MEDIA_PATH+".nomedia");	
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return true;
-	}
 	
 	public static boolean isLoggedIn(Context ctx) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String username = prefs.getString("prefUsername", "");
-		String apiKey = prefs.getString("prefApiKey", "");
+		String username = prefs.getString(PrefsActivity.PREF_USER_NAME, "");
+		String apiKey = prefs.getString(PrefsActivity.PREF_API_KEY, "");
 		if (username.trim().equals("") || apiKey.trim().equals("")) {
 			return false;
 		} else {

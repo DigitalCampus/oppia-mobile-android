@@ -21,11 +21,12 @@ package org.digitalcampus.oppia.utils.mediaplayer;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,7 +84,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         
         try {
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            player.setDataSource(this, Uri.parse(MobileLearning.MEDIA_PATH + mediaFileName));
+            player.setDataSource(this, Uri.parse(FileUtils.getMediaPath(this) + mediaFileName));
             player.setOnPreparedListener(this);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -127,7 +128,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 					data.put("media", "played");
 					data.put("mediafile", mediaFileName);
 					data.put("timetaken", timeTaken);
-					String lang = prefs.getString("prefLanguage", Locale.getDefault()
+					String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 							.getLanguage());
 					data.put("lang", lang);
 					Log.d(TAG,data.toString());

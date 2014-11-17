@@ -18,12 +18,16 @@
 package org.digitalcampus.oppia.task;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;
@@ -37,7 +41,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
@@ -100,6 +107,15 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 		
+		if(!prefs.getBoolean("upgradeV49b",false)){
+			upgradeV49();
+			Editor editor = prefs.edit();
+			editor.putBoolean("upgradeV49b", true);
+			editor.commit();
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v49"));
+			payload.setResult(true);
+		}
+		
 		return payload;
 	}
 	
@@ -107,7 +123,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	 * the new titles etc are picked up
 	 */
 	protected void upgradeV17(){
-		File dir = new File(MobileLearning.COURSES_PATH);
+		File dir = new File(FileUtils.getCoursesPath(ctx));
 		String[] children = dir.list();
 		if (children != null) {
 			for (int i = 0; i < children.length; i++) {
@@ -117,11 +133,11 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				String courseTrackerXMLPath = "";
 				// check that it's unzipped etc correctly
 				try {
-					courseXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_XML;
-					courseScheduleXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_SCHEDULE_XML;
-					courseTrackerXMLPath = dir + "/" + children[i] + "/" + MobileLearning.COURSE_TRACKER_XML;
+					courseXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_XML;
+					courseScheduleXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
+					courseTrackerXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
-					FileUtils.cleanUp(dir, MobileLearning.DOWNLOAD_PATH + children[i]);
+					FileUtils.cleanUp(dir, FileUtils.getDownloadPath(ctx) + children[i]);
 					break;
 				}
 				
@@ -138,12 +154,11 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					break;
 				}
 
-				Course c = new Course();
+				Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
-				c.setLocation(MobileLearning.COURSES_PATH + children[i]);
 				c.setShortname(children[i]);
-				c.setImageFile(MobileLearning.COURSES_PATH + children[i] + "/" + cxr.getCourseImage());
+				c.setImageFile(children[i] + File.separator + cxr.getCourseImage());
 				c.setLangs(cxr.getLangs());
 				c.setPriority(cxr.getPriority());
 				
@@ -179,8 +194,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		SearchUtils.reindexAll(ctx);
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		User user = new User();
-		user.setUsername(prefs.getString("prefUsername", ""));
-		user.setApiKey(prefs.getString("prefApiKey", "") );
+		user.setUsername(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		user.setApiKey(prefs.getString(PrefsActivity.PREF_API_KEY, "") );
 		DbHelper db = new DbHelper(ctx);
 		long userId = db.addOrUpdateUser(user);
 		db.updateV43(userId);
@@ -188,6 +203,104 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		
 	}
 	
+	/*
+	 * Move files from current location into new one
+	 */
+	protected void upgradeV49(){
+		
+		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+		if (location != ""){
+			return;
+		}
+		
+		String source = Environment.getExternalStorageDirectory() + File.separator + FileUtils.APP_ROOT_DIR_NAME  +File.separator;
+    	
+    	File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
+    	if(dirs.length > 0){
+	    	
+		
+	    	String destination = dirs[dirs.length-1].getAbsolutePath();
+	    	File downloadSource = new File(source + FileUtils.APP_DOWNLOAD_DIR_NAME);
+			File mediaSource = new File(source +  FileUtils.APP_MEDIA_DIR_NAME);
+			File courseSource = new File(source +  FileUtils.APP_COURSES_DIR_NAME);
+			
+			boolean success = true;
+			publishProgress(this.ctx.getString(R.string.upgradev49_1,""));
+	    	try {
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME ));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME );
+				e.printStackTrace();
+				success = false;
+			}
+			
+			try {
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME ));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME );
+				e.printStackTrace();
+				success = false;
+			}
+			
+			try {
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_COURSES_DIR_NAME ));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_COURSES_DIR_NAME );
+				e.printStackTrace();
+				success = false;
+			}
+			
+			
+			// now copy over 
+			try {
+				
+				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(downloadSource,new File(destination),true);
+				Log.d(TAG,"completed");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed");
+				e.printStackTrace();
+				success = false;
+			}
+
+			try {
+				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(mediaSource,new File(destination),true);
+				Log.d(TAG,"completed");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed");
+				e.printStackTrace();
+				success = false;
+			}
+			
+			try {
+				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(courseSource,new File(destination),true);
+				Log.d(TAG,"completed");
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"failed");
+				e.printStackTrace();
+				success = false;
+			}
+			
+			Editor editor = prefs.edit();
+			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, destination);
+			editor.commit();
+			
+			// delete original dir
+			try {
+				org.apache.commons.io.FileUtils.forceDelete(new File(source));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.d(TAG,"failed to delete original file");
+			}
+    	}
+	}
 	
 	
 	@Override
@@ -214,5 +327,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
         	mUpgradeListener = srl;
         }
     }
+
 
 }

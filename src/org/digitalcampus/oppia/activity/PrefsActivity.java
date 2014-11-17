@@ -24,16 +24,24 @@ import java.util.Locale;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Lang;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;;
+import android.preference.ListPreference;
+
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 public class PrefsActivity extends SherlockPreferenceActivity {
 	
 	public static final String TAG = PrefsActivity.class.getSimpleName();
+	
+	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
+	public static final String PREF_LANGUAGE = "prefLanguage";
+	public static final String PREF_USER_NAME = "prefUsername";
+	public static final String PREF_API_KEY = "prefApiKey";
+	public static final String PREF_SERVER = "prefServer";
+	//public static final String PREF_BADGES = "prefBadges";
+	//public static final String PREF_POINTS = "prefPoints";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -42,7 +50,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         
-		ListPreference langsList = (ListPreference) findPreference("prefLanguage"); 
+		ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE); 
 		
 		List<String> entries = new ArrayList<String>();
 	    List<String> entryValues = new ArrayList<String>();
@@ -67,7 +75,31 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         langsList.setEntries(entryCharSeq);
         langsList.setEntryValues(entryValsChar);
         
-        EditTextPreference username = (EditTextPreference) findPreference("prefUsername");
+        /*ListPreference storageList = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_LOCATION);
+        List<StorageInfo> storageOptionsList = StorageUtils.getStorageList();
+        
+        List<String> storageEntries = new ArrayList<String>();
+	    List<String> storageEntryValues = new ArrayList<String>();
+	    
+	    
+	    storageEntryValues.add(Environment.getExternalStorageDirectory().getPath());
+	    storageEntries.add(getString(R.string.storage_default));
+	    Log.d(TAG,Environment.getExternalStorageDirectory().getPath());
+	    
+        for (StorageInfo temp : storageOptionsList) {
+    		Log.d(TAG,temp.getDisplayName());
+    		Log.d(TAG,temp.path);
+    		storageEntryValues.add(temp.path);
+    		storageEntries.add(temp.getDisplayName());
+    	}
+        final CharSequence[] storageEntryCharSeq = storageEntries.toArray(new CharSequence[storageEntries.size()]);
+        final CharSequence[] storageEntryValsChar = storageEntryValues.toArray(new CharSequence[storageEntryValues.size()]);
+        storageList.setEntries(storageEntryCharSeq);
+        storageList.setEntryValues(storageEntryValsChar);
+        
+        */
+        
+        EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
         if (username.getText().equals("")){
         	username.setSummary(R.string.about_not_logged_in);
         } else {

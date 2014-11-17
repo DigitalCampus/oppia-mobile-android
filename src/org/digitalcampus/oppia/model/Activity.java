@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.model;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -73,8 +74,8 @@ public class Activity implements Serializable{
 		} else if (actType.equals("page") && this.hasMedia()){
 			defaultImage = R.drawable.default_icon_video;
 		}
-		if(!prefix.endsWith("/")){
-			prefix += "/";
+		if(!prefix.endsWith(File.separator)){
+			prefix += File.separator;
 		}
 		return ImageUtils.LoadBMPsdcard(prefix + this.imageFile, res, defaultImage);
 	}

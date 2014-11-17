@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.fragments;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -74,7 +75,7 @@ public class StatsFragment extends Fragment implements TrackerServiceListener {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		
 		DbHelper db = new DbHelper(super.getActivity());
-		userId = db.getUserId(prefs.getString("prefUsername", ""));
+		userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		DatabaseManager.getInstance().closeDatabase();
 		
 		sentTV = (TextView) super.getActivity().findViewById(R.id.stats_submitted);

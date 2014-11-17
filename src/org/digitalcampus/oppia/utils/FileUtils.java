@@ -32,9 +32,17 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -43,7 +51,75 @@ public class FileUtils {
 
 	public static final String TAG = FileUtils.class.getSimpleName();
 	public static final int BUFFER_SIZE = 1024;
+	
+	public static final String APP_ROOT_DIR_NAME = "digitalcampus";
+	
+	public static final String APP_COURSES_DIR_NAME = "modules";
+	public static final String APP_DOWNLOAD_DIR_NAME = "download";
+	public static final String APP_MEDIA_DIR_NAME = "media";
 
+	
+	public static boolean createDirs(Context ctx) {
+		String cardstatus = Environment.getExternalStorageState();
+		if (cardstatus.equals(Environment.MEDIA_REMOVED)
+				|| cardstatus.equals(Environment.MEDIA_UNMOUNTABLE)
+				|| cardstatus.equals(Environment.MEDIA_UNMOUNTED)
+				|| cardstatus.equals(Environment.MEDIA_MOUNTED_READ_ONLY)
+				|| cardstatus.equals(Environment.MEDIA_SHARED)) {
+			Log.d(TAG, "card status: " + cardstatus);
+			return false;
+		}
+
+		String[] dirs = { FileUtils.getCoursesPath(ctx), FileUtils.getMediaPath(ctx), FileUtils.getDownloadPath(ctx) };
+
+		for (String dirName : dirs) {
+			File dir = new File(dirName);
+			Log.d(TAG, dir.toString());
+			if (!dir.exists()) {
+				if (!dir.mkdirs()) {
+					Log.d(TAG, "can't mkdirs");
+					return false;
+				}
+			} else {
+				if (!dir.isDirectory()) {
+					Log.d(TAG, "not a directory");
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public static String getStorageLocationRoot(Context ctx){
+		File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
+		
+		//get from prefs
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+		// if location not set - then set it to first of dirs
+		if (location.equals("") && dirs.length > 0){
+			location = dirs[dirs.length-1].toString();
+			Editor editor = prefs.edit();
+			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
+			editor.commit();
+		}
+
+		return location;
+	}
+	
+	public static String getCoursesPath(Context ctx){
+		return getStorageLocationRoot(ctx) + File.separator + "modules" + File.separator;
+	}
+	
+	public static String getDownloadPath(Context ctx){
+		return getStorageLocationRoot(ctx) + File.separator + "download" + File.separator;
+	}
+	
+	public static String getMediaPath(Context ctx){
+		return getStorageLocationRoot(ctx) + File.separator + "media" + File.separator;
+	}
+	
 	// This function converts the zip file into uncompressed files which are
 	// placed in the
 	// destination directory
@@ -149,9 +225,9 @@ public class FileUtils {
 	private static void createDirIfNeeded(String destDirectory, ZipEntry entry) {
 		String name = entry.getName();
 
-		if (name.contains("/")) {
+		if (name.contains(File.separator)) {
 
-			int index = name.lastIndexOf("/");
+			int index = name.lastIndexOf(File.separator);
 			String dirSequence = name.substring(0, index);
 
 			File newDirs = new File(destDirectory + File.separator + dirSequence);
@@ -181,8 +257,8 @@ public class FileUtils {
 		return dir.delete();
 	}
 
-	public static boolean mediaFileExists(String filename) {
-		File media = new File(MobileLearning.MEDIA_PATH + filename);
+	public static boolean mediaFileExists(Context ctx, String filename) {
+		File media = new File(FileUtils.getMediaPath(ctx) + filename);
 		if (media.exists()) {
 			return true;
 		} else {
@@ -247,7 +323,7 @@ public class FileUtils {
 	}
 
 	public static String getLocalizedFilePath(Activity act, String currentLang, String fileName) {
-		String filePath = "www/" + currentLang + "/" + fileName;
+		String filePath = "www" + File.separator + currentLang + File.separator + fileName;
 		try {
 			InputStream stream = act.getAssets().open(filePath);
 			stream.close();
@@ -256,7 +332,7 @@ public class FileUtils {
 		} catch (IOException e) {
 		}
 
-		String localeFilePath = "www/" + Locale.getDefault().getLanguage() + "/" + fileName;
+		String localeFilePath = "www" + File.separator + Locale.getDefault().getLanguage() + File.separator + fileName;
 		try {
 			InputStream stream = act.getAssets().open(localeFilePath);
 			stream.close();
@@ -265,7 +341,7 @@ public class FileUtils {
 		} catch (IOException e) {
 		}
 
-		String defaultFilePath = "www/" + MobileLearning.DEFAULT_LANG + "/" + fileName;
+		String defaultFilePath = "www" + File.separator + MobileLearning.DEFAULT_LANG + File.separator + fileName;
 		try {
 			InputStream stream = act.getAssets().open(defaultFilePath);
 			stream.close();
