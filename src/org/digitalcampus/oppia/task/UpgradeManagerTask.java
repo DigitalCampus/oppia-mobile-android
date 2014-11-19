@@ -211,9 +211,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 		if (location != ""){
 			return;
-		}
+		}  
 		
-		String source = Environment.getExternalStorageDirectory() + File.separator + FileUtils.APP_ROOT_DIR_NAME  +File.separator;
+		String source = Environment.getExternalStorageDirectory() + File.separator + FileUtils.APP_ROOT_DIR_NAME  + File.separator;
     	
     	File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
     	if(dirs.length > 0){

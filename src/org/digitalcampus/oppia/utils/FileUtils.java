@@ -74,7 +74,6 @@ public class FileUtils {
 
 		for (String dirName : dirs) {
 			File dir = new File(dirName);
-			Log.d(TAG, dir.toString());
 			if (!dir.exists()) {
 				if (!dir.mkdirs()) {
 					Log.d(TAG, "can't mkdirs");
