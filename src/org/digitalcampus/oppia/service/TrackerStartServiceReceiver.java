@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.service;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +34,7 @@ public class TrackerStartServiceReceiver extends BroadcastReceiver {
 	public void onReceive(Context ctx, Intent intent) {
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		boolean backgroundData = prefs.getBoolean("prefBackgroundDataConnect", true);
+		boolean backgroundData = prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, true);
 		Intent service = new Intent(ctx, TrackerService.class);
 		
 		Bundle tb = new Bundle();

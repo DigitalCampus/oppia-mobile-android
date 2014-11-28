@@ -68,7 +68,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    
 	    Section s = sectionList.get(position);
 	    String title = "";
-	    if(prefs.getBoolean("prefShowSectionNumbers", false)){
+	    if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false)){
 	    	title += String.valueOf(s.getOrder()) + ". ";
 	    }
 	    title += s.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
@@ -98,7 +98,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
 	    	
 	    	// highlight if completed
-	    	if(s.getActivities().get(i).getCompleted() && prefs.getBoolean("prefHighlightCompleted", MobileLearning.DEFAULT_DISPLAY_COMPLETED)){
+	    	if(s.getActivities().get(i).getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED)){
 	    		activityObject.setBackgroundResource(R.drawable.activity_background_completed);
 	    	}
 	    	

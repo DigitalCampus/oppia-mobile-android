@@ -30,6 +30,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -92,8 +93,8 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 						// update points
 						JSONObject jsonResp = new JSONObject(responseStr);
 						Editor editor = prefs.edit();
-						editor.putInt("prefPoints", jsonResp.getInt("points"));
-						editor.putInt("prefBadges", jsonResp.getInt("badges"));
+						editor.putInt(PrefsActivity.PREF_POINTS, jsonResp.getInt("points"));
+						editor.putInt(PrefsActivity.PREF_BADGES, jsonResp.getInt("badges"));
 						editor.commit();
 						break;
 					case 400: // bad request - so to prevent re-submitting over and

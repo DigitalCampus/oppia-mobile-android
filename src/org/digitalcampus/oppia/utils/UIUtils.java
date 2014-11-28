@@ -65,18 +65,18 @@ public class UIUtils {
 		}
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		boolean scoringEnabled = prefs.getBoolean("prefScoringEnabled", true);
+		boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
 		if (scoringEnabled) {
 			points.setVisibility(View.VISIBLE);
-			points.setText(String.valueOf(prefs.getInt("prefPoints", 0)));
+			points.setText(String.valueOf(prefs.getInt(PrefsActivity.PREF_POINTS, 0)));
 		} else {
 			points.setVisibility(View.GONE);
 		}
 		
-		boolean badgingEnabled = prefs.getBoolean("prefBadgingEnabled", true);
+		boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
 		if (badgingEnabled) {
 			badges.setVisibility(View.VISIBLE);
-			badges.setText(String.valueOf(prefs.getInt("prefBadges", 0)));
+			badges.setText(String.valueOf(prefs.getInt(PrefsActivity.PREF_BADGES, 0)));
 		} else {
 			badges.setVisibility(View.GONE);
 		}

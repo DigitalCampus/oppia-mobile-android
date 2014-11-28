@@ -73,7 +73,7 @@ public class MonitorActivity extends AppActivity {
 	private void loadMonitor(){ 
 		String url = "";
 		if(ConnectionUtils.isNetworkConnected(this)){
-			url = prefs.getString("prefServer", getString(R.string.prefServer)) + "mobile/monitor/?";
+			url = prefs.getString(PrefsActivity.PREF_SERVER, getString(R.string.prefServer)) + "mobile/monitor/?";
 			url += "username=" + prefs.getString(PrefsActivity.PREF_USER_NAME, "");
 			url += "&api_key=" + prefs.getString(PrefsActivity.PREF_API_KEY, "");
 		} else {

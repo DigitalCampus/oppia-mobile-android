@@ -119,11 +119,11 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 								JSONObject jsonResp = new JSONObject(responseStr);
 								Editor editor = prefs.edit();
 								
-								editor.putInt("prefPoints", jsonResp.getInt("points"));
-								editor.putInt("prefBadges", jsonResp.getInt("badges"));
+								editor.putInt(PrefsActivity.PREF_POINTS, jsonResp.getInt("points"));
+								editor.putInt(PrefsActivity.PREF_BADGES, jsonResp.getInt("badges"));
 								try {
-									editor.putBoolean("prefScoringEnabled", jsonResp.getBoolean("scoring"));
-									editor.putBoolean("prefBadgingEnabled", jsonResp.getBoolean("badging"));
+									editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
+									editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}

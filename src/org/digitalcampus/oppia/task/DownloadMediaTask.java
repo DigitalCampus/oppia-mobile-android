@@ -29,6 +29,7 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -67,9 +68,9 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
                 c.setRequestMethod("GET");
                 c.setDoOutput(true);
                 c.connect();
-                c.setConnectTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
+                c.setConnectTimeout(Integer.parseInt(prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_CONN,
 								ctx.getString(R.string.prefServerTimeoutConnection))));
-                c.setReadTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
+                c.setReadTimeout(Integer.parseInt(prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_RESP,
 								ctx.getString(R.string.prefServerTimeoutResponse))));
                 
                 int fileLength = c.getContentLength();

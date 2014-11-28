@@ -114,11 +114,10 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 			Editor editor = prefs.edit();
 	    	editor.putString(PrefsActivity.PREF_USER_NAME, usernameField.getText().toString());
 	    	editor.putString(PrefsActivity.PREF_API_KEY, u.getApiKey());
-	    	editor.putString("prefDisplayName", u.getDisplayName());
-	    	editor.putInt("prefPoints", u.getPoints());
-	    	editor.putInt("prefBadges", u.getBadges());
-	    	editor.putBoolean("prefScoringEnabled", u.isScoringEnabled());
-	    	editor.putBoolean("prefBadgingEnabled", u.isBadgingEnabled());
+	    	editor.putInt(PrefsActivity.PREF_POINTS, u.getPoints());
+	    	editor.putInt(PrefsActivity.PREF_BADGES, u.getBadges());
+	    	editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, u.isScoringEnabled());
+	    	editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, u.isBadgingEnabled());
 	    	editor.commit();
 	    	
 	    	startActivity(new Intent(super.getActivity(), OppiaMobileActivity.class));

@@ -107,7 +107,7 @@ public class PageWidget extends WidgetFactory {
 				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 						.getLanguage()));
 		
-		int defaultFontSize = Integer.parseInt(prefs.getString("prefTextSize", "16"));
+		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
 		
 		try {

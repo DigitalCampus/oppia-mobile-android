@@ -28,6 +28,7 @@ import java.net.URL;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.params.CoreProtocolPNames;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
@@ -83,9 +84,9 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
             Log.d(TAG,MobileLearning.USER_AGENT + v);
             c.setDoOutput(true);
             c.connect();
-            c.setConnectTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutConnection",
+            c.setConnectTimeout(Integer.parseInt(prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_CONN,
 							ctx.getString(R.string.prefServerTimeoutConnection))));
-            c.setReadTimeout(Integer.parseInt(prefs.getString("prefServerTimeoutResponse",
+            c.setReadTimeout(Integer.parseInt(prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_RESP,
 							ctx.getString(R.string.prefServerTimeoutResponse))));
             
 			

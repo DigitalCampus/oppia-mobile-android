@@ -40,8 +40,23 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 	public static final String PREF_USER_NAME = "prefUsername";
 	public static final String PREF_API_KEY = "prefApiKey";
 	public static final String PREF_SERVER = "prefServer";
-	//public static final String PREF_BADGES = "prefBadges";
-	//public static final String PREF_POINTS = "prefPoints";
+	public static final String PREF_BADGES = "prefBadges";
+	public static final String PREF_POINTS = "prefPoints";
+	public static final String PREF_SCORING_ENABLED = "prefScoringEnabled";
+	public static final String PREF_BADGING_ENABLED = "prefBadgingEnabled";
+	public static final String PREF_SHOW_SCHEDULE_REMINDERS = "prefShowScheduleReminders";
+	public static final String PREF_NO_SCHEDULE_REMINDERS = "prefNoScheduleReminders";
+	public static final String PREF_LAST_MEDIA_SCAN = "prefLastMediaScan";
+	public static final String PREF_SHOW_COURSE_DESC = "prefShowCourseDescription";
+	public static final String PREF_SHOW_PROGRESS_BAR = "prefShowProgressBar";
+	public static final String PREF_SHOW_SECTION_NOS = "prefShowSectionNumbers";
+	public static final String PREF_HIGHLIGHT_COMPLETED = "prefHighlightCompleted";
+	public static final String PREF_TEXT_SIZE = "prefTextSize";
+	public static final String PREF_SERVER_TIMEOUT_CONN = "prefServerTimeoutConnection";
+	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
+	public static final String PREF_METADATA = "prefMetadata";
+	public static final String PREF_BACKGROUND_DATA_CONNECT= "prefBackgroundDataConnect";
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -106,7 +121,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
         	 username.setSummary(getString(R.string.about_logged_in,username.getText()));
         }
         
-        EditTextPreference server = (EditTextPreference) findPreference("prefServer");
+        EditTextPreference server = (EditTextPreference) findPreference(PrefsActivity.PREF_SERVER);
         server.setSummary(server.getText());
 	}
 

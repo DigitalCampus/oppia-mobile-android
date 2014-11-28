@@ -150,7 +150,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	public void installComplete(Payload p) {
 		if(p.getResponseData().size()>0){
 			Editor e = prefs.edit();
-			e.putLong("prefLastMediaScan", 0);
+			e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
 			e.commit();
 		}
 		endStartUpScreen();	

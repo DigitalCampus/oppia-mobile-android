@@ -66,14 +66,14 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	    courseTitle.setText(c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 	    
 	    TextView courseDescription = (TextView) rowView.findViewById(R.id.course_description);
-	    if (prefs.getBoolean("prefShowCourseDescription", true)){
+	    if (prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)){
 	    	courseDescription.setText(c.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 	    } else {
 	    	courseDescription.setVisibility(View.GONE);
 	    }
 	    
 	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.course_progress_bar);
-	    if (prefs.getBoolean("prefShowProgressBar", MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)){
+	    if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)){
 	    	pb.setProgress((int) c.getProgress());
 	    } else {
 	    	pb.setVisibility(View.GONE);
