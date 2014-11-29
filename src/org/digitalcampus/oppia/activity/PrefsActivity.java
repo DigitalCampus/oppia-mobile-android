@@ -55,8 +55,9 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 	public static final String PREF_SERVER_TIMEOUT_CONN = "prefServerTimeoutConnection";
 	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
 	public static final String PREF_METADATA = "prefMetadata";
-	public static final String PREF_BACKGROUND_DATA_CONNECT= "prefBackgroundDataConnect";
+	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
 	
+	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 

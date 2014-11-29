@@ -86,6 +86,11 @@
             android:key="prefBackgroundDataConnect"
             android:summary="@string/prefBackgroudDataConnect_summary"
             android:title="@string/prefBackgroudDataConnect" />
+        
+        <CheckBoxPreference
+        	android:defaultValue="true"
+	        android:key="prefLogoutEnabled"
+	        android:title="@string/prefLogoutEnabled" />
     </PreferenceCategory>
 
 </PreferenceScreen>
