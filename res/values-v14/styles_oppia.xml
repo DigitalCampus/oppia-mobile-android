@@ -38,7 +38,7 @@
     </style>
 
     <style name="ActionBar.Solid.Om" parent="@style/Widget.Sherlock.ActionBar.Solid">
-        <item name="android:background">@drawable/green_background_gradient</item>
+        <item name="android:background">@drawable/actionbar_background_gradient</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_om</item>
         <item name="android:backgroundSplit">@drawable/ab_stacked_solid_om</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Om</item>
