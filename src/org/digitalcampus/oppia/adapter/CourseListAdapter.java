@@ -82,7 +82,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 		// set image
 		if(c.getImageFile() != null){
 			ImageView iv = (ImageView) rowView.findViewById(R.id.course_image);
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFileFromRoot(), ctx.getResources(), R.drawable.dc_logo);
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFileFromRoot(), ctx.getResources(), MobileLearning.APP_LOGO);
 			iv.setImageDrawable(bm);
 		}
 	    return rowView;

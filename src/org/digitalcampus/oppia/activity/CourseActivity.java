@@ -26,6 +26,7 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
@@ -95,7 +96,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			}
 			// set image
 			BitmapDrawable bm = ImageUtils
-					.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.dc_logo);
+					.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), MobileLearning.APP_LOGO);
 			actionBar.setIcon(bm);
 
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

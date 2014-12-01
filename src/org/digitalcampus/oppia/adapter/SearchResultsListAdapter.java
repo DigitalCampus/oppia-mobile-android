@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.utils.ImageUtils;
 
@@ -77,7 +78,7 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 		
 		if(sr.getCourse().getImageFile() != null){
 			ImageView iv = (ImageView) rowView.findViewById(R.id.course_image);
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(sr.getCourse().getImageFileFromRoot(), ctx.getResources(), R.drawable.dc_logo);
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(sr.getCourse().getImageFileFromRoot(), ctx.getResources(), MobileLearning.APP_LOGO);
 			iv.setImageDrawable(bm);
 		}
 	   

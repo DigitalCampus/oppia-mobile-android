@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.MobileLearning;
 
 import android.os.Handler;
 import android.content.Context;
@@ -45,7 +46,7 @@ public class ImageLoader {
         executorService=Executors.newFixedThreadPool(5);
     }
     
-    final int stub_id=R.drawable.dc_logo;
+    final int stub_id = MobileLearning.APP_LOGO;
     public void DisplayImage(String url, ImageView imageView)
     {
         imageViews.put(imageView, url);
