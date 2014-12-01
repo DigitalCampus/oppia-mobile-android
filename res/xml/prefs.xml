@@ -91,6 +91,11 @@
         	android:defaultValue="true"
 	        android:key="prefLogoutEnabled"
 	        android:title="@string/prefLogoutEnabled" />
+        
+        <CheckBoxPreference
+        	android:defaultValue="true"
+	        android:key="prefDeleteCourseEnabled"
+	        android:title="@string/prefDeleteCourseEnabled" />
     </PreferenceCategory>
 
 </PreferenceScreen>

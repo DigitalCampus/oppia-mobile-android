@@ -58,6 +58,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
 	
 	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
+	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 

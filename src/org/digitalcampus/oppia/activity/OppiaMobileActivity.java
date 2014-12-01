@@ -56,6 +56,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -294,17 +295,21 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
 		getMenuInflater().inflate(R.menu.course_context_menu, menu);
+		super.onCreateContextMenu(menu, v, menuInfo);
 	}
-
+	
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
 		android.widget.AdapterView.AdapterContextMenuInfo info = (android.widget.AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 		tempCourse = (Course) info.targetView.getTag();
 		switch (item.getItemId()) {
 			case R.id.course_context_delete:
-				confirmCourseDelete();
+				if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
+					confirmCourseDelete();
+				} else {
+					Toast.makeText(this, this.getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
+				}
 				return true;
 			case R.id.course_context_reset:
 				confirmCourseReset();
