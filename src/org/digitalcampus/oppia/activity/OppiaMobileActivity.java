@@ -370,6 +370,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SERVER)){
 			Editor editor = sharedPreferences.edit();
 			if(!sharedPreferences.getString(PrefsActivity.PREF_SERVER, "").endsWith("/")){
@@ -378,13 +379,16 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		    	editor.commit();
 			}
 		}
+		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)){
 			displayCourses(userId);
 		}
+		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_POINTS)
 				|| key.equalsIgnoreCase(PrefsActivity.PREF_BADGES)){
 			supportInvalidateOptionsMenu();
 		}
+		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_STORAGE_LOCATION)){
 			Log.d(TAG,storageLocation);
 			Log.d(TAG, sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
@@ -396,6 +400,12 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	    	Payload p = new Payload(strings);
 	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask();
 	    	mslt.execute(p);
+		}
+		
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED)){
+			boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
+			Log.d(TAG, "PREF_DOWNLOAD_VIA_CELLULAR_ENABLED" + newPref);
+			
 		}
 	}
 

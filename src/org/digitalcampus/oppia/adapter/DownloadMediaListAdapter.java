@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.adapter;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
@@ -14,6 +15,8 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 	public static final String TAG = DownloadMediaListAdapter.class.getSimpleName();
 
 	private final Context ctx;
+	private SharedPreferences prefs;
 	private ArrayList<Media> mediaList;
 	private DownloadMediaTask task;
 	private ProgressDialog downloadDialog;
@@ -36,6 +40,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		super(context, R.layout.media_download_row, mediaList);
 		this.ctx = context;
 		this.mediaList = mediaList;
+		this.prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 	}
 
 	public void setMediaList(ArrayList<Media> mediaList){
@@ -71,7 +76,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 	}
 
 	private void download(Media media) {
-		if(!ConnectionUtils.isOnWifi(ctx)){
+		if(!prefs.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false) && !ConnectionUtils.isOnWifi(ctx) ){
 			UIUtils.showAlert(ctx, R.string.warning, R.string.warning_wifi_required);
 			return;
 		}

@@ -96,6 +96,12 @@
         	android:defaultValue="true"
 	        android:key="prefDeleteCourseEnabled"
 	        android:title="@string/prefDeleteCourseEnabled" />
+        
+        <CheckBoxPreference
+        	android:defaultValue="false"
+	        android:key="prefDownloadViaCellularEnabled"
+	        android:title="@string/prefDownloadViaCellularEnabled"
+	        android:summary="@string/warning_download_via_cellular_enabled" />
     </PreferenceCategory>
 
 </PreferenceScreen>
