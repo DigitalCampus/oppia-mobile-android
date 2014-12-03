@@ -29,7 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-public class EssayWidget extends QuestionWidget{
+public class EssayWidget extends TextInputQuizWidget{
 
 	public static final String TAG = ShortAnswerWidget.class.getSimpleName();
 	
@@ -45,7 +45,8 @@ public class EssayWidget extends QuestionWidget{
 		while(itr.hasNext()) {
 		    String answer = itr.next(); 
 		    et.setText(answer);
-		} 
+		}
+        hideOnFocusLoss(et);
 	}
 	
 	public List<String> getQuestionResponses(List<Response> responses){
