@@ -42,20 +42,34 @@ public class BadgesListAdapter extends ArrayAdapter<Badges>{
 		this.ctx = context;
 		this.badgesList = badgesList;
 	}
-	
+
+    static class BadgeViewHolder{
+        TextView badgeDescription;
+        TextView badgeDate;
+    }
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View rowView = inflater.inflate(R.layout.fragment_badges_list_row, parent, false);
+        BadgeViewHolder viewHolder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView  = inflater.inflate(R.layout.fragment_badges_list_row, parent, false);
+            viewHolder = new BadgeViewHolder();
+            viewHolder.badgeDescription = (TextView) convertView.findViewById(R.id.badges_description);
+            viewHolder.badgeDate = (TextView) convertView.findViewById(R.id.badges_date);
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (BadgeViewHolder) convertView.getTag();
+        }
+
 	    Badges b = badgesList.get(position);
+        viewHolder.badgeDescription.setText(b.getDescription());
+        viewHolder.badgeDate.setText(b.getDateAsString());
 	    
-	    TextView badgesDescription = (TextView) rowView.findViewById(R.id.badges_description);
-	    badgesDescription.setText(b.getDescription());
-	    
-	    TextView badgesDate = (TextView) rowView.findViewById(R.id.badges_date);
-	    badgesDate.setText(b.getDateAsString());
-	    
-	    return rowView;
+	    return convertView;
 	}
+
 }

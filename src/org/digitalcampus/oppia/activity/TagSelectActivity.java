@@ -48,6 +48,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	private ProgressDialog pDialog;
 	private JSONObject json;
 	private TagListAdapter tla;
+    private ArrayList<Tag> tags;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,23 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		setContentView(R.layout.activity_download);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-	
+
+        tags = new ArrayList<Tag>();
+        tla = new TagListAdapter(this, tags);
+
+        ListView listView = (ListView) findViewById(R.id.tag_list);
+        listView.setAdapter(tla);
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Tag selectedTag = tags.get(position);
+                Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
+                Bundle tb = new Bundle();
+                tb.putSerializable(Tag.TAG, selectedTag);
+                i.putExtras(tb);
+                startActivity(i);
+            }
+        });
+
 	}
 	
 	@Override
@@ -106,7 +123,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	}
 
 	public void refreshTagList() {
-		ArrayList<Tag> tags = new ArrayList<Tag>();
+		tags.clear();
 		try {
 			for (int i = 0; i < (json.getJSONArray("tags").length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("tags").get(i);
@@ -134,24 +151,10 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				if (json_obj.has("order_priority") && !json_obj.isNull("order_priority")){
 					t.setOrderPriority(json_obj.getInt("order_priority"));
 				}
-				
 				tags.add(t);
 			}
-			tla = new TagListAdapter(this, tags);
-			ListView listView = (ListView) findViewById(R.id.tag_list);
-			listView.setAdapter(tla);
-			
-			listView.setOnItemClickListener(new OnItemClickListener() {
+            tla.notifyDataSetChanged();
 
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Tag t = (Tag) view.getTag();
-					Intent i = new Intent(TagSelectActivity.this, DownloadActivity.class);
-					Bundle tb = new Bundle();
-					tb.putSerializable(Tag.TAG, t);
-					i.putExtras(tb);
-					startActivity(i);
-				}
-			});
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
