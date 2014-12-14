@@ -42,25 +42,40 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
 		this.ctx = context;
 		this.pointsList = pointsList;
 	}
-	
+
+    static class PointsViewHolder{
+        TextView pointsDescription;
+        TextView pointsTime;
+        TextView pointsDate;
+        TextView pointsPoints;
+
+    }
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View rowView = inflater.inflate(R.layout.fragment_points_list_row, parent, false);
+        PointsViewHolder viewHolder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView  = inflater.inflate(R.layout.fragment_points_list_row, parent, false);
+            viewHolder = new PointsViewHolder();
+            viewHolder.pointsDescription = (TextView) convertView.findViewById(R.id.points_description);
+            viewHolder.pointsTime = (TextView) convertView.findViewById(R.id.points_time);
+            viewHolder.pointsDate = (TextView) convertView.findViewById(R.id.points_date);
+            viewHolder.pointsPoints = (TextView) convertView.findViewById(R.id.points_points);
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (PointsViewHolder) convertView.getTag();
+        }
+
 	    Points p = pointsList.get(position);
-	    
-	    TextView pointsDescription = (TextView) rowView.findViewById(R.id.points_description);
-	    pointsDescription.setText(p.getDescription());
-	    
-	    TextView pointsTime = (TextView) rowView.findViewById(R.id.points_time);
-	    pointsTime.setText(p.getTimeAsString());
-	    
-	    TextView pointsDate = (TextView) rowView.findViewById(R.id.points_date);
-	    pointsDate.setText(p.getDateAsString());
-	    
-	    TextView pointsPoints = (TextView) rowView.findViewById(R.id.points_points);
-	    pointsPoints.setText(String.valueOf(p.getPoints()));
-	    return rowView;
+        viewHolder.pointsDescription.setText(p.getDescription());
+        viewHolder.pointsTime.setText(p.getTimeAsString());
+        viewHolder.pointsDate.setText(p.getDateAsString());
+        viewHolder.pointsPoints.setText(String.valueOf(p.getPoints()));
+
+	    return convertView;
 	}
 }

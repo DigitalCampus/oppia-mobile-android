@@ -53,35 +53,50 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
+    static class SearchResultsViewHolder{
+        TextView activityTitle;
+        TextView sectionTitle;
+        TextView courseTitle;
+        ImageView courseImage;
+    }
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View rowView = inflater.inflate(R.layout.search_results_row, parent, false);
+        SearchResultsViewHolder viewHolder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView  = inflater.inflate(R.layout.search_results_row, parent, false);
+            viewHolder = new SearchResultsViewHolder();
+            viewHolder.activityTitle = (TextView) convertView.findViewById(R.id.activity_title);
+            viewHolder.sectionTitle = (TextView) convertView.findViewById(R.id.section_title);
+            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
+            viewHolder.courseImage = (ImageView) convertView.findViewById(R.id.course_image);
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (SearchResultsViewHolder) convertView.getTag();
+        }
+
 	    SearchResult sr = searchResultList.get(position);
-	    rowView.setTag(sr);
-	    
-	    TextView activityTitle = (TextView) rowView.findViewById(R.id.activity_title);
-	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
-	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
-	    
+
 	    String cTitle = sr.getCourse().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 	    String sTitle = sr.getSection().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 	    String aTitle = sr.getActivity().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-	    
-	    activityTitle.setText(aTitle);
-	    sectionTitle.setText(sTitle);
-	    courseTitle.setText(cTitle);
 
-	    rowView.setTag(R.id.TAG_COURSE,sr.getCourse());
-		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,sr.getActivity().getDigest());
+        viewHolder.activityTitle.setText(aTitle);
+        viewHolder.sectionTitle.setText(sTitle);
+        viewHolder.courseTitle.setText(cTitle);
+
+        convertView.setTag(R.id.TAG_COURSE,sr.getCourse());
+        convertView.setTag(R.id.TAG_ACTIVITY_DIGEST,sr.getActivity().getDigest());
 		
 		if(sr.getCourse().getImageFile() != null){
-			ImageView iv = (ImageView) rowView.findViewById(R.id.course_image);
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(sr.getCourse().getImageFileFromRoot(), ctx.getResources(), MobileLearning.APP_LOGO);
-			iv.setImageDrawable(bm);
+			BitmapDrawable courseImageBitmap = ImageUtils.LoadBMPsdcard(sr.getCourse().getImageFileFromRoot(), ctx.getResources(), MobileLearning.APP_LOGO);
+            viewHolder.courseImage.setImageDrawable(courseImageBitmap);
 		}
 	   
-	    return rowView;
+	    return convertView;
 	}
 }

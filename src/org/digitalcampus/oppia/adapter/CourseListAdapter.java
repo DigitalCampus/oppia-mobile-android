@@ -54,38 +54,54 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
+
+    static class CourseViewHolder{
+        TextView courseTitle;
+        TextView courseDescription;
+        ProgressBar courseProgress;
+        ImageView courseImage;
+    }
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View rowView = inflater.inflate(R.layout.course_list_row, parent, false);
+        CourseViewHolder viewHolder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView  = inflater.inflate(R.layout.course_list_row, parent, false);
+            viewHolder = new CourseViewHolder();
+            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
+            viewHolder.courseDescription = (TextView) convertView.findViewById(R.id.course_description);
+            viewHolder.courseProgress = (ProgressBar) convertView.findViewById(R.id.course_progress_bar);
+            viewHolder.courseImage = (ImageView) convertView.findViewById(R.id.course_image);
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (CourseViewHolder) convertView.getTag();
+        }
+
 	    Course c = courseList.get(position);
-	    rowView.setTag(c);
-	    
-	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
-	    courseTitle.setText(c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-	    
-	    TextView courseDescription = (TextView) rowView.findViewById(R.id.course_description);
+        viewHolder.courseTitle.setText(c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+
 	    if (prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)){
-	    	courseDescription.setText(c.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+            viewHolder.courseDescription.setText(c.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 	    } else {
-	    	courseDescription.setVisibility(View.GONE);
+            viewHolder.courseDescription.setVisibility(View.GONE);
 	    }
-	    
-	    ProgressBar pb = (ProgressBar) rowView.findViewById(R.id.course_progress_bar);
+
 	    if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)){
-	    	pb.setProgress((int) c.getProgress());
+            viewHolder.courseProgress.setProgress((int) c.getProgress());
 	    } else {
-	    	pb.setVisibility(View.GONE);
+            viewHolder.courseProgress.setVisibility(View.GONE);
 	    }
 	    
 		// set image
 		if(c.getImageFile() != null){
-			ImageView iv = (ImageView) rowView.findViewById(R.id.course_image);
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFileFromRoot(), ctx.getResources(), MobileLearning.APP_LOGO);
-			iv.setImageDrawable(bm);
+            viewHolder.courseImage.setImageDrawable(bm);
 		}
-	    return rowView;
+	    return convertView;
 	}
 
 }

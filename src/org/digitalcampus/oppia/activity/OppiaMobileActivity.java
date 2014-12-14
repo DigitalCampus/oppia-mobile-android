@@ -70,6 +70,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	private long userId = 0;
 	private String storageLocation;
 
+    private CourseListAdapter courseListAdapter;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -142,18 +144,18 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			llNone.setVisibility(View.GONE);
 		}
 
-		CourseListAdapter mla = new CourseListAdapter(this, courses);
+        courseListAdapter = new CourseListAdapter(this, courses);
 		ListView listView = (ListView) findViewById(R.id.course_list);
-		listView.setAdapter(mla);
+		listView.setAdapter(courseListAdapter);
 		registerForContextMenu(listView);
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Course m = (Course) view.getTag();
+				Course selectedCourse = courses.get(position);
 				Intent i = new Intent(OppiaMobileActivity.this, CourseIndexActivity.class);
 				Bundle tb = new Bundle();
-				tb.putSerializable(Course.TAG, m);
+				tb.putSerializable(Course.TAG, selectedCourse);
 				i.putExtras(tb);
 				startActivity(i);
 			}
@@ -301,8 +303,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
-		android.widget.AdapterView.AdapterContextMenuInfo info = (android.widget.AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-		tempCourse = (Course) info.targetView.getTag();
+
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        tempCourse = courses.get(info.position);
 		switch (item.getItemId()) {
 			case R.id.course_context_delete:
 				if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
