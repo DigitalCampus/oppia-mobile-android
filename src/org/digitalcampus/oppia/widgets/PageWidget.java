@@ -123,7 +123,7 @@ public class PageWidget extends WidgetFactory {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-				if (url.contains("/video/")) {
+				if (url.contains("/video/") && !url.contains("vimeo.com/video/")) {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
 					String mediaFileName = url.substring(startPos, url.length());
