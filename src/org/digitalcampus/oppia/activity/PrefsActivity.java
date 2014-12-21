@@ -42,6 +42,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 	public static final String PREF_SERVER = "prefServer";
 	public static final String PREF_BADGES = "prefBadges";
 	public static final String PREF_POINTS = "prefPoints";
+	public static final String PREF_COURSE_POINTS = "prefCoursePoints";
 	public static final String PREF_SCORING_ENABLED = "prefScoringEnabled";
 	public static final String PREF_BADGING_ENABLED = "prefBadgingEnabled";
 	public static final String PREF_SHOW_SCHEDULE_REMINDERS = "prefShowScheduleReminders";
