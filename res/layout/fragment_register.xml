@@ -83,6 +83,18 @@
             android:inputType="text" />
 
         <TextView
+            android:id="@+id/register_form_phoneno_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register_form_phoneno_title" />
+
+        <EditText
+            android:id="@+id/register_form_phoneno_field"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone" />
+        
+        <TextView
             android:id="@+id/register_form_jobtitle_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

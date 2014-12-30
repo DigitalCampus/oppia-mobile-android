@@ -45,6 +45,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -85,6 +86,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
             json.put("lastname",u.getLastname());
             json.put("jobtitle",u.getJobTitle());
             json.put("organisation",u.getOrganisation());
+            json.put("phoneno",u.getPhoneNo());
             StringEntity se = new StringEntity(json.toString(),"utf8");
             se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
             httpPost.setEntity(se);

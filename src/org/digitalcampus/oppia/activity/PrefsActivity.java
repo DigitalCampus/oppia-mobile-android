@@ -39,6 +39,7 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 	public static final String PREF_LANGUAGE = "prefLanguage";
 	public static final String PREF_USER_NAME = "prefUsername";
 	public static final String PREF_API_KEY = "prefApiKey";
+	public static final String PREF_PHONE_NO = "prefPhoneNo";
 	public static final String PREF_SERVER = "prefServer";
 	public static final String PREF_BADGES = "prefBadges";
 	public static final String PREF_POINTS = "prefPoints";

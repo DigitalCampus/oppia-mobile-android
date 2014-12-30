@@ -58,7 +58,7 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
         TagViewHolder viewHolder;
-
+        
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.tag_row, parent, false);
@@ -67,22 +67,29 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
             viewHolder.tagDescription = (TextView) convertView.findViewById(R.id.tag_description);
             viewHolder.tagIcon = (ImageView) convertView.findViewById(R.id.tag_icon);
             convertView.setTag(viewHolder);
-        }
-        else{
+        } else {
             viewHolder = (TagViewHolder) convertView.getTag();
         }
 
 	    Tag t = tagList.get(position);
 
         viewHolder.tagName.setText(ctx.getString(R.string.tag_label,t.getName(),t.getCount()));
-	    if(t.isHighlight()){ viewHolder.tagName.setTypeface(null, Typeface.BOLD); }
+	    if(t.isHighlight()){ 
+	    	viewHolder.tagName.setTypeface(null, Typeface.BOLD); 
+	    } else {
+	    	viewHolder.tagName.setTypeface(null, Typeface.NORMAL);
+	    }
 	    if(t.getDescription() != null && !t.getDescription().trim().equals("") ){
             viewHolder.tagDescription.setText(t.getDescription());
             viewHolder.tagDescription.setVisibility(View.VISIBLE);
+	    } else {
+	    	viewHolder.tagDescription.setVisibility(View.GONE);
 	    }
 	    if(t.getIcon() != null){
 	    	imageLoader.DisplayImage(t.getIcon(), viewHolder.tagIcon);
             viewHolder.tagIcon.setVisibility(View.VISIBLE);
+	    } else {
+	    	viewHolder.tagIcon.setVisibility(View.GONE);
 	    }
 
 	    return convertView;

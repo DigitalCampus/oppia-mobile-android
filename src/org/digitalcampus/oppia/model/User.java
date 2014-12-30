@@ -34,6 +34,7 @@ public class User {
 	private String apiKey;
 	private String jobTitle;
 	private String organisation;
+	private String phoneNo;
 	private boolean scoringEnabled = true;
 	private boolean badgingEnabled = true;
 	private int points = 0;
@@ -145,6 +146,12 @@ public class User {
 	}
 	public void setOrganisation(String organisation) {
 		this.organisation = organisation;
+	}
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
 	}
 
 }
