@@ -130,7 +130,7 @@
 	<string name="register_form_phoneno_title">Phone number (*)</string>
 	<string name="register_btn_text">Register</string>
 	
-	<string name="reset_username_title">Username</string>
+	<string name="reset_username_title">Username or Email</string>
 	
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
