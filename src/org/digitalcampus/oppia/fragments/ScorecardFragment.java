@@ -17,29 +17,44 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import java.util.Locale;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.utils.ConnectionUtils;
-import org.digitalcampus.oppia.utils.FileUtils;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.EmbossMaskFilter;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.androidplot.pie.PieChart;
+import com.androidplot.pie.PieRenderer;
+import com.androidplot.pie.Segment;
+import com.androidplot.pie.SegmentFormatter;
 
 public class ScorecardFragment extends Fragment{
 
 	public static final String TAG = ScorecardFragment.class.getSimpleName();
 	private WebView webView;
 	private SharedPreferences prefs;
+	
+	private TextView donutSizeTextView;
+    private SeekBar donutSizeSeekBar;
+
+    private PieChart pie;
+
+    private Segment s1;
+    private Segment s2;
+    private Segment s3;
+    private Segment s4;
 	
 	public static ScorecardFragment newInstance() {
 		ScorecardFragment myFragment = new ScorecardFragment();
@@ -69,30 +84,93 @@ public class ScorecardFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		webView = (WebView) super.getActivity().findViewById(R.id.scorecard_fragment_webview);
-		webView.setWebViewClient(new ScoreCardWebViewClient());
-		webView.getSettings().setJavaScriptEnabled(true);
-		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-		String url = "";
-		url = FileUtils.getLocalizedFilePath(super.getActivity(),lang,"webview_loading.html");
-		webView.loadUrl(url);
-		if(ConnectionUtils.isNetworkConnected(super.getActivity())){
-			url = prefs.getString(PrefsActivity.PREF_SERVER, getString(R.string.prefServer)) + "mobile/scorecard/?";
-			url += "username=" + prefs.getString(PrefsActivity.PREF_USER_NAME, "");
-			url += "&api_key=" + prefs.getString(PrefsActivity.PREF_API_KEY, "");
-		} else {
-        	url = FileUtils.getLocalizedFilePath(super.getActivity(),lang,"scorecard_not_available.html");
-		}
-		webView.loadUrl(url);
+		// initialize our XYPlot reference:
+        pie = (PieChart) super.getActivity().findViewById(R.id.mySimplePieChart);
+
+        // detect segment clicks:
+        pie.setOnTouchListener(new View.OnTouchListener(){
+        	
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                PointF click = new PointF(motionEvent.getX(), motionEvent.getY());
+                if(pie.getPieWidget().containsPoint(click)) {
+                    Segment segment = pie.getRenderer(PieRenderer.class).getContainingSegment(click);
+                    if(segment != null) {
+                        // handle the segment click...for now, just print
+                        // the clicked segment's title to the console:
+                        System.out.println("Clicked Segment: " + segment.getTitle());
+                    }
+                }
+                return false;
+            }
+        });
+
+
+        donutSizeSeekBar = (SeekBar) super.getActivity().findViewById(R.id.donutSizeSeekBar);
+
+        donutSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                pie.getRenderer(PieRenderer.class).setDonutSize(seekBar.getProgress()/100f,
+                        PieRenderer.DonutMode.PERCENT);
+                pie.redraw();
+                updateDonutText();
+            }
+
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				
+			}
+        });
+
+        donutSizeTextView = (TextView) super.getActivity().findViewById(R.id.donutSizeTextView);
+        updateDonutText();
+
+        s1 = new Segment("s1", 10);
+        s2 = new Segment("s2", 1);
+        s3 = new Segment("s3", 10);
+        s4 = new Segment("s4", 10);
+
+        EmbossMaskFilter emf = new EmbossMaskFilter(
+                new float[]{0, 0 ,0}, 0.4f, 10, 8.2f);
+
+        SegmentFormatter sf1 = new SegmentFormatter();
+        sf1.configure(super.getActivity().getApplicationContext(), R.xml.pie_segment_formatter1);
+
+        sf1.getFillPaint().setMaskFilter(emf);
+
+        SegmentFormatter sf2 = new SegmentFormatter();
+        sf2.configure(super.getActivity().getApplicationContext(), R.xml.pie_segment_formatter2);
+
+        sf2.getFillPaint().setMaskFilter(emf);
+
+        SegmentFormatter sf3 = new SegmentFormatter();
+        sf3.configure(super.getActivity().getApplicationContext(), R.xml.pie_segment_formatter3);
+
+        sf3.getFillPaint().setMaskFilter(emf);
+
+        SegmentFormatter sf4 = new SegmentFormatter();
+        sf4.configure(super.getActivity().getApplicationContext(), R.xml.pie_segment_formatter4);
+
+        sf4.getFillPaint().setMaskFilter(emf);
+
+        pie.addSeries(s1, sf1);
+        pie.addSeries(s2, sf2);
+        pie.addSeries(s3, sf3);
+        pie.addSeries(s4, sf4);
+
+        pie.getBorderPaint().setColor(Color.TRANSPARENT);
+        pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
 
 	}
+	
 
-	private class ScoreCardWebViewClient extends WebViewClient{
-		@Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        	String lang = ScorecardFragment.this.prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        	String url = FileUtils.getLocalizedFilePath(ScorecardFragment.this.getActivity(),lang,"scorecard_not_available.html");
-        	webView.loadUrl(url);
-        }
-	}
+    protected void updateDonutText() {
+        donutSizeTextView.setText(donutSizeSeekBar.getProgress() + "%");
+    }
+
 }
