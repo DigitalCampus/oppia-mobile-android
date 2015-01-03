@@ -368,6 +368,7 @@ public class CourseXMLReader {
 				NamedNodeMap activityAttrs = activities.item(j).getAttributes();
 				String actType = activityAttrs.getNamedItem(CourseXMLReader.NODE_TYPE).getTextContent();
 				
+				// TODO - make this more efficient - don't need to loop through all the supported types
 				for(int sat = 0; sat< MobileLearning.SUPPORTED_ACTIVITY_TYPES.length; sat++){
 				
 					if (MobileLearning.SUPPORTED_ACTIVITY_TYPES[sat].equals(actType)){

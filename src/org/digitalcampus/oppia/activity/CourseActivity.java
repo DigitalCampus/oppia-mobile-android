@@ -36,6 +36,7 @@ import org.digitalcampus.oppia.widgets.FeedbackWidget;
 import org.digitalcampus.oppia.widgets.PageWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.digitalcampus.oppia.widgets.ResourceWidget;
+import org.digitalcampus.oppia.widgets.UrlWidget;
 import org.digitalcampus.oppia.widgets.WidgetFactory;
 
 import android.content.Intent;
@@ -132,6 +133,9 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 				fragments.add(f);
 			} else if  (activities.get(i).getActType().equalsIgnoreCase("feedback")){
 				f = FeedbackWidget.newInstance(activities.get(i), course, isBaseline);
+				fragments.add(f);
+			} else if  (activities.get(i).getActType().equalsIgnoreCase("url")){
+				f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
 				fragments.add(f);
 			}
 		}
