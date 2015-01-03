@@ -368,7 +368,6 @@ public class QuizWidget extends WidgetFactory {
 
 		// log the activity as complete
 		isOnResultsPage = true;
-		this.saveTracker();
 
 		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
