@@ -23,7 +23,8 @@
         android:label="@string/app_name"
         android:theme="@style/Oppia.Theme"
         android:allowBackup="true"
-        android:name="org.digitalcampus.oppia.application.MobileLearning">
+        android:name="org.digitalcampus.oppia.application.MobileLearning"
+        android:hardwareAccelerated="true">
         <activity
             android:name="org.digitalcampus.oppia.activity.StartUpActivity"
             android:label="@string/app_name"
