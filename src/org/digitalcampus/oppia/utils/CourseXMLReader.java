@@ -59,17 +59,23 @@ public class CourseXMLReader {
 	private static final String NODE_PRIORITY = "priority";
 	private static final String NODE_ID = "id";
 	private static final String NODE_DESCRIPTION = "description";
-	// versionid
-	// langs
-	// page
-	// location
-	// order
-	// type
-	// digest
-	// image
-	// filename
-	// length
-	// activity
+	private static final String NODE_VERSIONID = "versionid";
+	private static final String NODE_LANGS = "langs";
+	private static final String NODE_PAGE = "page";
+	private static final String NODE_LOCATION = "location";
+	private static final String NODE_ORDER = "order";
+	private static final String NODE_TYPE = "type";
+	private static final String NODE_DIGEST = "digest";
+	private static final String NODE_IMAGE = "image";
+	private static final String NODE_FILENAME = "filename";
+	private static final String NODE_LENGTH = "length";
+	private static final String NODE_ACTIVITY = "activity";
+	private static final String NODE_CONTENT = "content";
+	private static final String NODE_MEDIA = "media";
+	private static final String NODE_DOWNLOAD_URL = "download_url";
+	private static final String NODE_FILE = "file";
+	private static final String NODE_ACTIVITIES = "activities";
+	private static final String NODE_FILESIZE = "filesize";
 	
 	public CourseXMLReader(String filename, Context ctx) throws InvalidXMLException {
 		this.ctx = ctx;
@@ -147,7 +153,7 @@ public class CourseXMLReader {
 	
 	public ArrayList<Lang> getLangs(){
 		ArrayList<Lang> langs = new ArrayList<Lang>();
-		NodeList ls = document.getElementsByTagName("langs").item(0).getChildNodes();
+		NodeList ls = document.getElementsByTagName(CourseXMLReader.NODE_LANGS).item(0).getChildNodes();
 		for (int j=0; j<ls.getLength(); j++) {
 			Lang l = new Lang(ls.item(j).getTextContent(),"");
 			langs.add(l);
@@ -159,7 +165,7 @@ public class CourseXMLReader {
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
-			if(meta.item(j).getNodeName().equals("versionid")){
+			if(meta.item(j).getNodeName().equals(CourseXMLReader.NODE_VERSIONID)){
 				return Double.valueOf(meta.item(j).getTextContent());
 			}
 		}
@@ -171,7 +177,7 @@ public class CourseXMLReader {
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
-			if(meta.item(j).getNodeName().toLowerCase(Locale.US).equals("page")){
+			if(meta.item(j).getNodeName().toLowerCase(Locale.US).equals(CourseXMLReader.NODE_PAGE)){
 				CourseMetaPage mmp = new CourseMetaPage();
 				
 				NamedNodeMap pageAttrs = meta.item(j).getAttributes();
@@ -202,7 +208,7 @@ public class CourseXMLReader {
 						if(pages.item(p).getNodeName().toLowerCase(Locale.US).equals(CourseXMLReader.NODE_TITLE) && nodeAttrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent().equals(lang)){
 							title = pages.item(p).getTextContent();
 						} 
-						if(pages.item(p).getNodeName().toLowerCase(Locale.US).equals("location") && nodeAttrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent().equals(lang)){
+						if(pages.item(p).getNodeName().toLowerCase(Locale.US).equals(CourseXMLReader.NODE_LOCATION) && nodeAttrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent().equals(lang)){
 							location = pages.item(p).getTextContent();
 						} 
 					}
@@ -223,13 +229,13 @@ public class CourseXMLReader {
 		NodeList meta = docMeta.getChildNodes();
 		DbHelper db = new DbHelper(ctx);
 		for (int i=0; i<meta.getLength(); i++) {
-			if(meta.item(i).getNodeName().toLowerCase(Locale.US).equals("activity")){
+			if(meta.item(i).getNodeName().toLowerCase(Locale.US).equals(CourseXMLReader.NODE_ACTIVITY)){
 				Activity a = new Activity();
 				NamedNodeMap activityAttrs = meta.item(i).getAttributes();
-				a.setActId(Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent()));
+				a.setActId(Integer.parseInt(activityAttrs.getNamedItem(CourseXMLReader.NODE_ORDER).getTextContent()));
 				NamedNodeMap nnm = meta.item(i).getAttributes();
-				String actType = nnm.getNamedItem("type").getTextContent();
-				String digest = nnm.getNamedItem("digest").getTextContent();
+				String actType = nnm.getNamedItem(CourseXMLReader.NODE_TYPE).getTextContent();
+				String digest = nnm.getNamedItem(CourseXMLReader.NODE_DIGEST).getTextContent();
 				a.setActType(actType);
 				a.setCourseId(modId);
 				a.setSectionId(0);
@@ -248,32 +254,32 @@ public class CourseXMLReader {
 					if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
 						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						actTitles.add(new Lang(lang, act.item(k).getTextContent()));
-					} else if(act.item(k).getNodeName().equals("location")){
+					} else if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_LOCATION)){
 						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						actLocations.add(new Lang(lang, act.item(k).getTextContent()));
 						try {
-							String mimeType = attrs.getNamedItem("type").getTextContent();
+							String mimeType = attrs.getNamedItem(CourseXMLReader.NODE_TYPE).getTextContent();
 							actMimeType = mimeType;
 						} catch (NullPointerException npe){
 							//do nothing
 						}
-					} else if(act.item(k).getNodeName().equals("content")){
+					} else if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_CONTENT)){
 						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						actContents.add(new Lang(lang, act.item(k).getTextContent()));
-					} else if(act.item(k).getNodeName().equals("image")){
-						a.setImageFile(attrs.getNamedItem("filename").getTextContent());
-					} else if (act.item(k).getNodeName().equals("media")){
+					} else if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_IMAGE)){
+						a.setImageFile(attrs.getNamedItem(CourseXMLReader.NODE_FILENAME).getTextContent());
+					} else if (act.item(k).getNodeName().equals(CourseXMLReader.NODE_MEDIA)){
 						// add media
 						NodeList files = act.item(k).getChildNodes();
 						for (int m=0; m<files.getLength(); m++) {
-							if (files.item(m).getNodeName().equals("file")){
+							if (files.item(m).getNodeName().equals(CourseXMLReader.NODE_FILE)){
 								NamedNodeMap fileAttrs = files.item(m).getAttributes();
 								Media mObj = new Media();
-								mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
-								mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
-								mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
-								if(fileAttrs.getNamedItem("length") != null){
-									mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem("length").getTextContent()));
+								mObj.setFilename(fileAttrs.getNamedItem(CourseXMLReader.NODE_FILENAME).getTextContent());
+								mObj.setDigest(fileAttrs.getNamedItem(CourseXMLReader.NODE_DIGEST).getTextContent());
+								mObj.setDownloadUrl(fileAttrs.getNamedItem(CourseXMLReader.NODE_DOWNLOAD_URL).getTextContent());
+								if(fileAttrs.getNamedItem(CourseXMLReader.NODE_LENGTH) != null){
+									mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem(CourseXMLReader.NODE_LENGTH).getTextContent()));
 								} else {
 									mObj.setLength(0);
 								}
@@ -305,22 +311,22 @@ public class CourseXMLReader {
 		ArrayList<Media> media = new ArrayList<Media>();
 		NodeList m = document.getFirstChild().getChildNodes();
 		for (int i=0; i<m.getLength(); i++) {
-			if(m.item(i).getNodeName().equals("media")){
+			if(m.item(i).getNodeName().equals(CourseXMLReader.NODE_MEDIA)){
 				NodeList files = m.item(i).getChildNodes();
 				for (int j=0; j<files.getLength(); j++) {
-					if (files.item(j).getNodeName().equals("file")){
+					if (files.item(j).getNodeName().equals(CourseXMLReader.NODE_FILE)){
 						NamedNodeMap fileAttrs = files.item(j).getAttributes();
 						Media mObj = new Media();
-						mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
-						mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
-						mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
-						if(fileAttrs.getNamedItem("length") != null){
-							mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem("length").getTextContent()));
+						mObj.setFilename(fileAttrs.getNamedItem(CourseXMLReader.NODE_FILENAME).getTextContent());
+						mObj.setDigest(fileAttrs.getNamedItem(CourseXMLReader.NODE_DIGEST).getTextContent());
+						mObj.setDownloadUrl(fileAttrs.getNamedItem(CourseXMLReader.NODE_DOWNLOAD_URL).getTextContent());
+						if(fileAttrs.getNamedItem(CourseXMLReader.NODE_LENGTH) != null){
+							mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem(CourseXMLReader.NODE_LENGTH).getTextContent()));
 						} else {
 							mObj.setLength(0);
 						}
-						if(fileAttrs.getNamedItem("filesize") != null){
-							mObj.setFileSize(Double.parseDouble(fileAttrs.getNamedItem("filesize").getTextContent()));
+						if(fileAttrs.getNamedItem(CourseXMLReader.NODE_FILESIZE) != null){
+							mObj.setFileSize(Double.parseDouble(fileAttrs.getNamedItem(CourseXMLReader.NODE_FILESIZE).getTextContent()));
 						} else {
 							mObj.setFileSize(0);
 						}
@@ -336,9 +342,9 @@ public class CourseXMLReader {
 		Node m = document.getFirstChild().getFirstChild();
 		NodeList meta = m.getChildNodes();
 		for (int j=0; j<meta.getLength(); j++) {
-			if(meta.item(j).getNodeName().equals("image")){
+			if(meta.item(j).getNodeName().equals(CourseXMLReader.NODE_IMAGE)){
 				NamedNodeMap attrs = meta.item(j).getAttributes();
-				image = attrs.getNamedItem("filename").getTextContent();
+				image = attrs.getNamedItem(CourseXMLReader.NODE_FILENAME).getTextContent();
 			}
 		}
 		return image;
@@ -355,18 +361,19 @@ public class CourseXMLReader {
 		for (int i=0; i<s.getLength(); i++) {
 			// get the id and acts
 			NamedNodeMap sectionAttrs = s.item(i).getAttributes();
-			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem("order").getTextContent());
+			int sectionId = Integer.parseInt(sectionAttrs.getNamedItem(CourseXMLReader.NODE_ORDER).getTextContent());
 			NodeList activities = s.item(i).getLastChild().getChildNodes();
 			for (int j=0; j<activities.getLength(); j++) {
 				
 				NamedNodeMap activityAttrs = activities.item(j).getAttributes();
-				String actType = activityAttrs.getNamedItem("type").getTextContent();
+				String actType = activityAttrs.getNamedItem(CourseXMLReader.NODE_TYPE).getTextContent();
 				
+				// TODO - make this more efficient - don't need to loop through all the supported types
 				for(int sat = 0; sat< MobileLearning.SUPPORTED_ACTIVITY_TYPES.length; sat++){
 				
 					if (MobileLearning.SUPPORTED_ACTIVITY_TYPES[sat].equals(actType)){
-						int actId = Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent());
-						String digest = activityAttrs.getNamedItem("digest").getTextContent();
+						int actId = Integer.parseInt(activityAttrs.getNamedItem(CourseXMLReader.NODE_ORDER).getTextContent());
+						String digest = activityAttrs.getNamedItem(CourseXMLReader.NODE_DIGEST).getTextContent();
 						Activity a = new Activity();				
 						a.setCourseId(modId);
 						a.setActId(actId);
@@ -388,7 +395,7 @@ public class CourseXMLReader {
 								String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 								actDescriptions.add(new Lang(lang, act.item(k).getTextContent()));
 							} 
-							if(act.item(k).getNodeName().equals("location")){
+							if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_LOCATION)){
 								String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 								actLocations.add(new Lang(lang, act.item(k).getTextContent()));
 							}
@@ -417,7 +424,7 @@ public class CourseXMLReader {
 		
 			for (int i=0; i<sects.getLength(); i++){
 				NamedNodeMap sectionAttrs = sects.item(i).getAttributes();
-				int order = Integer.parseInt(sectionAttrs.getNamedItem("order").getTextContent());
+				int order = Integer.parseInt(sectionAttrs.getNamedItem(CourseXMLReader.NODE_ORDER).getTextContent());
 				Section s = new Section();
 				s.setOrder(order);
 				
@@ -430,8 +437,8 @@ public class CourseXMLReader {
 					if(nodes.item(j).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
 						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						sectTitles.add(new Lang(lang, nodes.item(j).getTextContent()));
-					} else if(nodes.item(j).getNodeName().equals("image")){
-						image = attrs.getNamedItem("filename").getTextContent();
+					} else if(nodes.item(j).getNodeName().equals(CourseXMLReader.NODE_IMAGE)){
+						image = attrs.getNamedItem(CourseXMLReader.NODE_FILENAME).getTextContent();
 					}
 				}
 				s.setTitles(sectTitles);
@@ -439,14 +446,14 @@ public class CourseXMLReader {
 				
 				
 				//now get activities
-				NodeList acts = this.getChildNodeByName(sects.item(i),"activities").getChildNodes();
+				NodeList acts = this.getChildNodeByName(sects.item(i),CourseXMLReader.NODE_ACTIVITIES).getChildNodes();
 				for(int j=0; j<acts.getLength();j++){
 					Activity a = new Activity();
 					NamedNodeMap activityAttrs = acts.item(j).getAttributes();
-					a.setActId(Integer.parseInt(activityAttrs.getNamedItem("order").getTextContent()));
+					a.setActId(Integer.parseInt(activityAttrs.getNamedItem(CourseXMLReader.NODE_ORDER).getTextContent()));
 					NamedNodeMap nnm = acts.item(j).getAttributes();
-					String actType = nnm.getNamedItem("type").getTextContent();
-					String digest = nnm.getNamedItem("digest").getTextContent();
+					String actType = nnm.getNamedItem(CourseXMLReader.NODE_TYPE).getTextContent();
+					String digest = nnm.getNamedItem(CourseXMLReader.NODE_DIGEST).getTextContent();
 					
 					for(int sat = 0; sat< MobileLearning.SUPPORTED_ACTIVITY_TYPES.length; sat++){
 						if (MobileLearning.SUPPORTED_ACTIVITY_TYPES[sat].equals(actType)){
@@ -469,32 +476,32 @@ public class CourseXMLReader {
 								if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
 									String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 									actTitles.add(new Lang(lang, act.item(k).getTextContent()));
-								} else if(act.item(k).getNodeName().equals("location")){
+								} else if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_LOCATION)){
 									String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 									actLocations.add(new Lang(lang, act.item(k).getTextContent()));
 									try {
-										String mimeType = attrs.getNamedItem("type").getTextContent();
+										String mimeType = attrs.getNamedItem(CourseXMLReader.NODE_TYPE).getTextContent();
 										actMimeType = mimeType;
 									} catch (NullPointerException npe){
 										//do nothing
 									}
-								} else if(act.item(k).getNodeName().equals("content")){
+								} else if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_CONTENT)){
 									String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 									actContents.add(new Lang(lang, act.item(k).getTextContent()));
-								} else if(act.item(k).getNodeName().equals("image")){
-									a.setImageFile(attrs.getNamedItem("filename").getTextContent());
-								} else if (act.item(k).getNodeName().equals("media")){
+								} else if(act.item(k).getNodeName().equals(CourseXMLReader.NODE_IMAGE)){
+									a.setImageFile(attrs.getNamedItem(CourseXMLReader.NODE_FILENAME).getTextContent());
+								} else if (act.item(k).getNodeName().equals(CourseXMLReader.NODE_MEDIA)){
 									// add media
 									NodeList files = act.item(k).getChildNodes();
 									for (int m=0; m<files.getLength(); m++) {
-										if (files.item(m).getNodeName().equals("file")){
+										if (files.item(m).getNodeName().equals(CourseXMLReader.NODE_FILE)){
 											NamedNodeMap fileAttrs = files.item(m).getAttributes();
 											Media mObj = new Media();
-											mObj.setFilename(fileAttrs.getNamedItem("filename").getTextContent());
-											mObj.setDigest(fileAttrs.getNamedItem("digest").getTextContent());
-											mObj.setDownloadUrl(fileAttrs.getNamedItem("download_url").getTextContent());
-											if(fileAttrs.getNamedItem("length") != null){
-												mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem("length").getTextContent()));
+											mObj.setFilename(fileAttrs.getNamedItem(CourseXMLReader.NODE_FILENAME).getTextContent());
+											mObj.setDigest(fileAttrs.getNamedItem(CourseXMLReader.NODE_DIGEST).getTextContent());
+											mObj.setDownloadUrl(fileAttrs.getNamedItem(CourseXMLReader.NODE_DOWNLOAD_URL).getTextContent());
+											if(fileAttrs.getNamedItem(CourseXMLReader.NODE_LENGTH) != null){
+												mObj.setLength(Integer.parseInt(fileAttrs.getNamedItem(CourseXMLReader.NODE_LENGTH).getTextContent()));
 											} else {
 												mObj.setLength(0);
 											}
@@ -530,7 +537,7 @@ public class CourseXMLReader {
 		NodeList sects = document.getFirstChild().getFirstChild().getNextSibling().getChildNodes();
 		for (int i=0; i<sects.getLength(); i++){
 			NamedNodeMap sectionAttrs = sects.item(i).getAttributes();
-			if (order == Integer.parseInt(sectionAttrs.getNamedItem("order").getTextContent())){
+			if (order == Integer.parseInt(sectionAttrs.getNamedItem(CourseXMLReader.NODE_ORDER).getTextContent())){
 				section.setOrder(order);
 				
 				//get section titles
@@ -542,8 +549,8 @@ public class CourseXMLReader {
 					if(nodes.item(j).getNodeName().equals(CourseXMLReader.NODE_TITLE)){
 						String lang = attrs.getNamedItem(CourseXMLReader.NODE_LANG).getTextContent();
 						sectTitles.add(new Lang(lang, nodes.item(j).getTextContent()));
-					} else if(nodes.item(j).getNodeName().equals("image")){
-						image = attrs.getNamedItem("filename").getTextContent();
+					} else if(nodes.item(j).getNodeName().equals(CourseXMLReader.NODE_IMAGE)){
+						image = attrs.getNamedItem(CourseXMLReader.NODE_FILENAME).getTextContent();
 					}
 				}
 				section.setTitles(sectTitles);

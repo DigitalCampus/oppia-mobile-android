@@ -47,11 +47,12 @@ public class SearchUtils {
 		try {
 			CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),ctx);
 			ArrayList<Activity> activities = cxr.getActivities(course.getCourseId());
+			DbHelper db = new DbHelper(ctx);
 			for( Activity a : activities){
 				ArrayList<Lang> langs = course.getLangs();
 				String fileContent = "";
 				for (Lang l : langs){
-					if (a.getLocation(l.getLang()) != null){
+					if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")){
 						String url = course.getLocation() + a.getLocation(l.getLang());
 						try {
 							fileContent += " " + FileUtils.readFile(url);
@@ -63,20 +64,18 @@ public class SearchUtils {
 				}
 				
 				if (!fileContent.equals("")){
-					DbHelper db = new DbHelper(ctx);
 					db.insertActivityIntoSearchTable(course.getTitleJSONString(),
 							cxr.getSection(a.getSectionId()).getTitleJSONString(),
 							a.getTitleJSONString(),
 							db.getActivityByDigest(a.getDigest()).getDbId(), 
 							fileContent);
-					DatabaseManager.getInstance().closeDatabase();
 				}
 			
 			}
 		} catch (InvalidXMLException e) {
 			// Ignore course
 		}
-		
+		DatabaseManager.getInstance().closeDatabase();
 	}
 	
 	

@@ -154,9 +154,8 @@ public class PageWidget extends WidgetFactory {
 					tb.putSerializable(Course.TAG, course);
 					intent.putExtras(tb);
 					startActivity(intent);
-
-
 					return true;
+					
 				} else {
 					
 					try {
@@ -225,7 +224,7 @@ public class PageWidget extends WidgetFactory {
 			}
 		} catch (JSONException e) {
 			// Do nothing
-		// sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly
+			// sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly
 		} catch (NullPointerException npe){
 			//do nothing
 		}
