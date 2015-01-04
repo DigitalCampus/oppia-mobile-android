@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebSettings.PluginState;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -95,8 +96,14 @@ public class UrlWidget extends WidgetFactory {
 		WebView wv = (WebView) getView().findViewById(R.id.widget_url_webview);
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
-		wv.getSettings().setPluginState(PluginState.ON);
 		wv.getSettings().setJavaScriptEnabled(true);
+		wv.setWebViewClient(new WebViewClient() {
+	        @Override
+	        public boolean shouldOverrideUrlLoading(WebView view, String url)
+	        {
+	            return false;
+	        }
+	    });
 		wv.loadUrl(activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 		
 		
