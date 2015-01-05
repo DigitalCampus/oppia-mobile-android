@@ -151,11 +151,8 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (JSONException e) {
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(e);
-			} else {
-				e.printStackTrace();
-			}
+			BugSenseHandler.sendException(e);
+			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
 		} finally {

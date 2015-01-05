@@ -122,27 +122,18 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 			publishProgress(dp);
 			payload.setResult(true);
 		} catch (ClientProtocolException cpe) { 
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(cpe);
-			} else {
-				cpe.printStackTrace();
-			}
+			BugSenseHandler.sendException(cpe);
+			cpe.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (SocketTimeoutException ste){
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(ste);
-			} else {
-				ste.printStackTrace();
-			}
+			BugSenseHandler.sendException(ste);
+			ste.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException ioe) { 
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(ioe);
-			} else {
-				ioe.printStackTrace();
-			}
+			BugSenseHandler.sendException(ioe);
+			ioe.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}

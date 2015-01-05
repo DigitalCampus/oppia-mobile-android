@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.task;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -27,7 +26,6 @@ import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
-import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;

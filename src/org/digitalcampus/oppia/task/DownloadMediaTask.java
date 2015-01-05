@@ -30,7 +30,6 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
@@ -131,11 +130,8 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				payload.setResult(false);
 				payload.setResultResponse(ctx.getString(R.string.error_media_download));
 			} catch (NoSuchAlgorithmException e) {
-				if(!MobileLearning.DEVELOPER_MODE){
-					BugSenseHandler.sendException(e);
-				} else {
-					e.printStackTrace();
-				}
+				BugSenseHandler.sendException(e);
+				e.printStackTrace();
 				payload.setResult(false);
 				payload.setResultResponse(ctx.getString(R.string.error_media_download));
 			}

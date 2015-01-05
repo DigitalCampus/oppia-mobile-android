@@ -210,14 +210,10 @@ public class FileUtils {
 			zis.close();
 
 		} catch (Exception e) {
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(e);
-			} else {
-				e.printStackTrace();
-			}
+			BugSenseHandler.sendException(e);
+			e.printStackTrace();
 			return false;
 		}
-
 		return true;
 	}
 
