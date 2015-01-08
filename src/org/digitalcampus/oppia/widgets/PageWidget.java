@@ -46,10 +46,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
@@ -111,10 +111,9 @@ public class PageWidget extends WidgetFactory {
 		
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
-		
+
 		try {
-			wv.getSettings().setPluginState(PluginState.ON);
-			wv.getSettings().setJavaScriptEnabled(true);
+			wv.getSettings().setJavaScriptEnabled(true); 
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html",
 					"utf-8", null);
 		} catch (IOException e) {
@@ -126,6 +125,7 @@ public class PageWidget extends WidgetFactory {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
+				Log.d(TAG,url);
 				if (url.contains("/video/") && !url.contains("vimeo.com/video/")) {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
