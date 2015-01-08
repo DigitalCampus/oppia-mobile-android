@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OppiaMobile</string>
     <string name="app_logo_alt">Digital Campus Logo</string>
     
     <string name="about_logged_in">Logged in as: %1$s</string>
