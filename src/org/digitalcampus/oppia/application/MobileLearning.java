@@ -60,6 +60,7 @@ public class MobileLearning extends Application {
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
 	public static final int RESOURCE_READ_TIME = 3;
+	public static final int URL_READ_TIME = 5;
 	public static final String USER_AGENT = "OppiaMobile Android: ";
 	
 	public static final boolean DEFAULT_DISPLAY_COMPLETED = true;
@@ -70,7 +71,7 @@ public class MobileLearning extends Application {
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
 	public static final int MAX_TRACKER_SUBMIT = 10;
 	public static final boolean DEVELOPER_MODE = true;
-	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback"};
+	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
 	
 	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";

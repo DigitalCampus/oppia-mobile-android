@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OppiaMobile</string>
     <string name="app_logo_alt">Digital Campus Logo</string>
     
     <string name="about_logged_in">Logged in as: %1$s</string>
@@ -130,7 +130,7 @@
 	<string name="register_form_phoneno_title">Phone number (*)</string>
 	<string name="register_btn_text">Register</string>
 	
-	<string name="reset_username_title">Username</string>
+	<string name="reset_username_title">Username or Email</string>
 	
 	<string name="yes">Yes</string>
 	<string name="no">No</string>

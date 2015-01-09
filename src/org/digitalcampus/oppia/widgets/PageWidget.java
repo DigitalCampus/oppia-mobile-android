@@ -41,14 +41,15 @@ import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
@@ -110,10 +111,9 @@ public class PageWidget extends WidgetFactory {
 		
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
-		
+
 		try {
-			wv.getSettings().setPluginState(PluginState.ON);
-			wv.getSettings().setJavaScriptEnabled(true);
+			wv.getSettings().setJavaScriptEnabled(true); 
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html",
 					"utf-8", null);
 		} catch (IOException e) {
@@ -125,6 +125,7 @@ public class PageWidget extends WidgetFactory {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
+				Log.d(TAG,url);
 				if (url.contains("/video/") && !url.contains("vimeo.com/video/")) {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
@@ -153,14 +154,18 @@ public class PageWidget extends WidgetFactory {
 					tb.putSerializable(Course.TAG, course);
 					intent.putExtras(tb);
 					startActivity(intent);
-
-
 					return true;
+					
 				} else {
-					Intent intent = new Intent(Intent.ACTION_VIEW);
-					Uri data = Uri.parse(url);
-					intent.setData(data);
-					PageWidget.super.getActivity().startActivity(intent);
+					
+					try {
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						Uri data = Uri.parse(url);
+						intent.setData(data);
+						PageWidget.super.getActivity().startActivity(intent);
+					} catch (ActivityNotFoundException anfe) {
+						// do nothing
+					}
 					// launch action in mobile browser - not the webview
 					// return true so doesn't follow link within webview
 					return true;
@@ -219,7 +224,7 @@ public class PageWidget extends WidgetFactory {
 			}
 		} catch (JSONException e) {
 			// Do nothing
-		// sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly
+			// sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly
 		} catch (NullPointerException npe){
 			//do nothing
 		}
