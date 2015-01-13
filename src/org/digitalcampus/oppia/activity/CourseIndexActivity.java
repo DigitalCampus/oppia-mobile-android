@@ -203,6 +203,12 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		case android.R.id.home:
 			this.finish();
 			return true;
+		case R.id.menu_scorecard:
+			i = new Intent(this, ScorecardActivity.class);
+			tb.putSerializable(Course.TAG, course);
+			i.putExtras(tb);
+			startActivity(i);
+			return true;
 		default:
 			i = new Intent(this, CourseMetaPageActivity.class);
 			tb.putSerializable(Course.TAG, course);

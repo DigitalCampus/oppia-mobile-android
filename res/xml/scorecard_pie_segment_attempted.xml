@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config
-        fillPaint.color="#FF0000"
+        fillPaint.color="@color/highlight_light"
         labelPaint.textSize="@dimen/pie_segment_label_font_size"/>

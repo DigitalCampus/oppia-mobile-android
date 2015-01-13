@@ -71,6 +71,7 @@ public class Course implements Serializable {
 			return true;
 		}
 	}
+	
 	public Double getScheduleVersionID() {
 		return scheduleVersionID;
 	}
