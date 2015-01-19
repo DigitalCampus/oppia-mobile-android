@@ -64,8 +64,10 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	private String url;
 	private ArrayList<Course> courses;
 	private boolean showUpdatesOnly = false;
+
     private boolean taskInProgress = false;
-	
+	private DownloadProgress taskProgress;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -118,21 +120,34 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-	    this.courses = (ArrayList<Course>) savedInstanceState.getSerializable("courses");
+        ArrayList<Course> savedCourses = (ArrayList<Course>) savedInstanceState.getSerializable("courses");
+	    this.courses.addAll(savedCourses);
         this.taskInProgress = (Boolean) savedInstanceState.getBoolean("inProgress");
+        if (taskInProgress){
+            taskProgress = (DownloadProgress) savedInstanceState.getSerializable("taskProgress");
+        }
 	    try {
 			this.json = new JSONObject(savedInstanceState.getString("json"));
 		} catch (JSONException e) {
-			// error in the json so just get the list again
-		}	    
+            // error in the json so just get the list again
+        }
+
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
-	    savedInstanceState.putString("json", json.toString());
-	    savedInstanceState.putSerializable("courses", courses);
-	    savedInstanceState.putBoolean("inProgress", taskInProgress);
+	    if (json != null){
+            //Only save the instance if the request has been proccessed already
+            savedInstanceState.putString("json", json.toString());
+            savedInstanceState.putSerializable("courses", courses);
+            savedInstanceState.putBoolean("inProgress", taskInProgress);
+
+            if (taskInProgress){
+                savedInstanceState.putSerializable("taskProgress", taskProgress);
+            }
+        }
+
 	}
 	
 	private void getCourseList() {
@@ -208,6 +223,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 					this.courses.add(dc);
 				} 
 			}
+
             dla.notifyDataSetChanged();
 
 		} catch (Exception e) {
@@ -278,7 +294,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             InstallDownloadedCoursesTask installTask = new InstallDownloadedCoursesTask(this);
             installTask.setInstallerListener(this);
             installTask.execute(p);
-            
+
         } else {
             progressDialog.setTitle(getString(R.string.error_download_failure));
             progressDialog.setMessage(p.getResultResponse());
@@ -291,6 +307,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         Log.d("download-task", "downloadProgressUpdate " + dp.getProgress());
         progressDialog.setMessage(dp.getMessage());
         progressDialog.setProgress(dp.getProgress());
+        taskProgress = dp;
     }
 
     @Override
@@ -314,7 +331,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             progressDialog.setIndeterminate(false);
             progressDialog.setProgress(100);
         }
-
         this.taskInProgress = false;
 
     }
@@ -324,6 +340,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         Log.d("download-task", "installProgressUpdate " + dp.getProgress());
         progressDialog.setMessage(dp.getMessage());
         progressDialog.setProgress(dp.getProgress());
+        taskProgress = dp;
     }
 
     /******* UpdateScheduleListener methods ************/
@@ -358,6 +375,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         Log.d("download-task", "updateProgressUpdate");
         progressDialog.setMessage(dp.getMessage());
         progressDialog.setProgress(dp.getProgress());
+        taskProgress = dp;
     }
 
     private class CourseListListener implements DownloadCourseListClickListener {

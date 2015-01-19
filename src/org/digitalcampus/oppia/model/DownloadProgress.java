@@ -17,7 +17,9 @@
 
 package org.digitalcampus.oppia.model;
 
-public class DownloadProgress {
+import java.io.Serializable;
+
+public class DownloadProgress implements Serializable {
 
 	private String message = "";
 	private int progress = 0;
