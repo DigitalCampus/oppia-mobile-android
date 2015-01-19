@@ -204,8 +204,8 @@
 	<string name="error_register_username_spaces">Your username cannot contain spaces</string>
 	<string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
 	<string name="error_resource_not_found">File: \'%1$s\' not found.</string>
-	
-	
+
+    <string name="error_insufficient_storage_available">Insufficient storage available</string>
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
 	<string name="error_media_not_found">Media file: \'%1$s\' not found.</string>
 	<string name="error_media_unsupported">\'%1$s\' does not appear to be a supported media file type.</string>

@@ -74,53 +74,62 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 								ctx.getString(R.string.prefServerTimeoutResponse))));
                 
                 int fileLength = c.getContentLength();
-				
-                DownloadProgress dp = new DownloadProgress();
-				dp.setMessage(m.getFilename());
-				dp.setProgress(0);
-				publishProgress(dp);
-				
-				FileOutputStream f = new FileOutputStream(file);
-				InputStream in = c.getInputStream();
-				
-				MessageDigest md = MessageDigest.getInstance("MD5");
-				in = new DigestInputStream(in, md);
-				
-                byte[] buffer = new byte[8192];
-                int len1 = 0;
-                long total = 0;
-                int progress = 0;
-                while ((len1 = in.read(buffer)) > 0) {
-                    total += len1; 
-                    progress = (int)(total*100)/fileLength;
-                    if(progress > 0){
-	                    dp.setProgress(progress);
-	                    publishProgress(dp);
-                    }
-                    f.write(buffer, 0, len1);
+                int availableStorage = FileUtils.getAvailableStorageSize(ctx);
+
+                if (fileLength >= availableStorage){
+                    payload.setResult(false);
+                    payload.setResultResponse(ctx.getString(R.string.error_insufficient_storage_available));
                 }
-                f.close();
-				
-				dp.setProgress(100);
-				publishProgress(dp);
-				
-				// check the file digest matches, otherwise delete the file 
-				// (it's either been a corrupted download or it's the wrong file)
-				byte[] digest = md.digest();
-				String resultMD5 = "";
-				
-				for (int i=0; i < digest.length; i++) {
-					resultMD5 += Integer.toString( ( digest[i] & 0xff ) + 0x100, 16).substring( 1 );
-			    }
-				
-				if(!resultMD5.contains(m.getDigest())){
-					this.deleteFile(file);
-					payload.setResult(false);
-					payload.setResultResponse(ctx.getString(R.string.error_media_download));
-				} else {
-					payload.setResult(true);
-					payload.setResultResponse(ctx.getString(R.string.success_media_download,m.getFilename()));
-				}
+                else{
+
+                    DownloadProgress dp = new DownloadProgress();
+                    dp.setMessage(m.getFilename());
+                    dp.setProgress(0);
+                    publishProgress(dp);
+
+                    FileOutputStream f = new FileOutputStream(file);
+                    InputStream in = c.getInputStream();
+
+                    MessageDigest md = MessageDigest.getInstance("MD5");
+                    in = new DigestInputStream(in, md);
+
+                    byte[] buffer = new byte[8192];
+                    int len1 = 0;
+                    long total = 0;
+                    int progress = 0;
+                    while ((len1 = in.read(buffer)) > 0) {
+                        total += len1;
+                        progress = (int)(total*100)/fileLength;
+                        if(progress > 0){
+                            dp.setProgress(progress);
+                            publishProgress(dp);
+                        }
+                        f.write(buffer, 0, len1);
+                    }
+                    f.close();
+
+                    dp.setProgress(100);
+                    publishProgress(dp);
+
+                    // check the file digest matches, otherwise delete the file
+                    // (it's either been a corrupted download or it's the wrong file)
+                    byte[] digest = md.digest();
+                    String resultMD5 = "";
+
+                    for (int i=0; i < digest.length; i++) {
+                        resultMD5 += Integer.toString( ( digest[i] & 0xff ) + 0x100, 16).substring( 1 );
+                    }
+
+                    if(!resultMD5.contains(m.getDigest())){
+                        this.deleteFile(file);
+                        payload.setResult(false);
+                        payload.setResultResponse(ctx.getString(R.string.error_media_download));
+                    } else {
+                        payload.setResult(true);
+                        payload.setResultResponse(ctx.getString(R.string.success_media_download,m.getFilename()));
+                    }
+                }
+
 			} catch (ClientProtocolException e1) { 
 				e1.printStackTrace(); 
 				payload.setResult(false);

@@ -203,7 +203,6 @@ public class FileUtils {
 							return false;
 						}
 					}
-
 					// close the output streams
 					dest.flush();
 					dest.close();
