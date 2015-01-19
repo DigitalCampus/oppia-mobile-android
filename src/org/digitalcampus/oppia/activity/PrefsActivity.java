@@ -17,25 +17,34 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PrefsActivity extends SherlockPreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class PrefsActivity extends SherlockPreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
 	
 	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
@@ -60,20 +69,23 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
 	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
 	public static final String PREF_METADATA = "prefMetadata";
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
-
     public static final String PREF_STORAGE_OPTION = "prefStorageOption";
     public static final String STORAGE_OPTION_INTERNAL = "internal";
     public static final String STORAGE_OPTION_EXTERNAL = "external";
 
-
     public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
-	
+
+    private ListPreference storagePref;
+    private SharedPreferences prefs;
+    private ProgressDialog pDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.prefs); 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
 		ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE); 
 		
@@ -91,7 +103,6 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
 	        		entries.add(loc.getDisplayLanguage(loc));
         		}
         	}
-        	
         }
         
         final CharSequence[] entryCharSeq = entries.toArray(new CharSequence[entries.size()]);
@@ -99,31 +110,7 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
         
         langsList.setEntries(entryCharSeq);
         langsList.setEntryValues(entryValsChar);
-        
-        /*ListPreference storageList = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_LOCATION);
-        List<StorageInfo> storageOptionsList = StorageUtils.getStorageList();
-        
-        List<String> storageEntries = new ArrayList<String>();
-	    List<String> storageEntryValues = new ArrayList<String>();
-	    
-	    
-	    storageEntryValues.add(Environment.getExternalStorageDirectory().getPath());
-	    storageEntries.add(getString(R.string.storage_default));
-	    Log.d(TAG,Environment.getExternalStorageDirectory().getPath());
-	    
-        for (StorageInfo temp : storageOptionsList) {
-    		Log.d(TAG,temp.getDisplayName());
-    		Log.d(TAG,temp.path);
-    		storageEntryValues.add(temp.path);
-    		storageEntries.add(temp.getDisplayName());
-    	}
-        final CharSequence[] storageEntryCharSeq = storageEntries.toArray(new CharSequence[storageEntries.size()]);
-        final CharSequence[] storageEntryValsChar = storageEntryValues.toArray(new CharSequence[storageEntryValues.size()]);
-        storageList.setEntries(storageEntryCharSeq);
-        storageList.setEntryValues(storageEntryValsChar);
-        
-        */
-        
+
         EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
         if (username.getText().equals("")){
         	username.setSummary(R.string.about_not_logged_in);
@@ -133,6 +120,9 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
         
         EditTextPreference server = (EditTextPreference) findPreference(PrefsActivity.PREF_SERVER);
         server.setSummary(server.getText());
+
+        storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
+
 	}
 
 	@Override
@@ -161,18 +151,53 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d(TAG, key);
-        Log.d(TAG, sharedPreferences.getString(key, ""));
+        Log.d(TAG, "Preference changed: " + key);
 
-        if (key.equals(PrefsActivity.PREF_STORAGE_OPTION)) {
+        if (key.equalsIgnoreCase(PrefsActivity.PREF_STORAGE_OPTION)) {
             Preference storagePref = findPreference(key);
-            // Set summary to be the user-description for the selected value
 
-            String storageOption = sharedPreferences.getString(key, "");
-            if (!storageOption.equals(FileUtils.storageStrategy.getStorageType())){
-                //Lanzar asyncTask
+            String storageOption = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
+            Log.d(TAG, "Storage option selected: " + storageOption);
+            if (!storageOption.equals(FileUtils.getStorageStrategy().getStorageType())){
+
+                ArrayList<Object> data = new ArrayList<Object>();
+                data.add(storageOption);
+                Payload p = new Payload(data);
+                ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
+                changeStorageTask.setMoveStorageListener(this);
+
+                pDialog = new ProgressDialog(this);
+                pDialog.setTitle(R.string.loading);
+                pDialog.setMessage(getString(R.string.loading));
+                pDialog.setCancelable(false);
+                pDialog.show();
+
+                changeStorageTask.execute(p);
             }
         }
     }
 
+    @Override
+    public void moveStorageComplete(Payload p) {
+        pDialog.dismiss();
+
+        if (p.isResult()){
+            Log.d(TAG, "Move storage completed!");
+            Toast.makeText(this, this.getString(R.string.move_storage_completed), Toast.LENGTH_LONG).show();
+        }
+        else{
+            Log.d(TAG, "Move storage failed:" + p.getResultResponse());
+            UIUtils.showAlert(this, R.string.error, p.getResultResponse());
+
+            //We set the actual storage option (remove the one set by the user)
+            String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
+            storagePref.setValue(storageOption);
+        }
+
+    }
+
+    @Override
+    public void moveStorageProgressUpdate(String s) {
+
+    }
 }

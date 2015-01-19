@@ -249,5 +249,6 @@
 	<string name="media_player_description">Oppia Media Player</string>
 	
 	<string name="upgradev49_1">Copying files to new location - this may take several minutes, so please be patient</string>
+    <string name="move_storage_completed">Moving storage completed</string>
 </resources>
 

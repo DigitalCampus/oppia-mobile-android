@@ -56,11 +56,14 @@ public class FileUtils {
 
     public static int BUFFER_SIZE_CONFIG = 1024;
 
-    public static StorageAccessStrategy storageStrategy;
+    private static StorageAccessStrategy storageStrategy;
     public static void setStorageStrategy(StorageAccessStrategy strategy){
         storageStrategy = strategy;
     }
-	
+    public static StorageAccessStrategy getStorageStrategy() {
+        return storageStrategy;
+    }
+
 	public static boolean createDirs(Context ctx) {
 
         if (!storageStrategy.isStorageAvailable(ctx)){
@@ -217,7 +220,7 @@ public class FileUtils {
 		}
 	}
 
-    private static boolean cleanDir(File dir){
+    public static boolean cleanDir(File dir){
         if (dir.isDirectory()) {
             String[] children = dir.list();
             for (String dirFiles : children) {
@@ -278,7 +281,7 @@ public class FileUtils {
         return bytesAvailable;
     }
 
-    public static long totalStorageUsed(Context ctx){
+    public static long getTotalStorageUsed(Context ctx){
         File dir = new File(getStorageLocationRoot(ctx));
         return dirSize(dir);
     }
@@ -293,15 +296,7 @@ public class FileUtils {
 
 	public static String readFile(String file) throws IOException {
 		FileInputStream fstream = new FileInputStream(file);
-		DataInputStream in = new DataInputStream(fstream);
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		String strLine;
-		StringBuilder stringBuilder = new StringBuilder();
-		while ((strLine = br.readLine()) != null) {
-			stringBuilder.append(strLine);
-		}
-		in.close();
-		return stringBuilder.toString();
+        return readFile(fstream);
 	}
 
 	public static String readFile(InputStream fileStream) throws IOException {

@@ -1,0 +1,158 @@
+package org.digitalcampus.oppia.task;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.listener.InstallCourseListener;
+import org.digitalcampus.oppia.listener.MoveStorageListener;
+import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
+
+import java.io.File;
+import java.io.IOException;
+
+public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress, Payload> {
+
+    public static final String TAG = MoveStorageLocationTask.class.getSimpleName();
+
+    private Context ctx;
+    private SharedPreferences prefs;
+    private MoveStorageListener mStateListener;
+
+    public ChangeStorageOptionTask(Context ctx) {
+        this.ctx = ctx;
+        prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+    }
+
+    @Override
+    protected Payload doInBackground(Payload... params) {
+
+        Payload payload = params[0];
+        String storageType = (String)payload.getData().get(0);
+
+        StorageAccessStrategy previousStrategy = FileUtils.getStorageStrategy();
+        StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageType);
+
+        Log.d(TAG, "Checking if storage is available...");
+        if (!newStrategy.isStorageAvailable(ctx)){
+            resetStrategy(previousStrategy);
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error_sdcard));
+        }
+        else{
+            Log.d(TAG, "Getting storage sizes...");
+            long currentSize = FileUtils.getTotalStorageUsed(ctx);
+
+            FileUtils.setStorageStrategy(newStrategy);
+            int availableDestSize = FileUtils.getAvailableStorageSize(ctx);
+            Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
+            if (availableDestSize<currentSize){
+                resetStrategy(previousStrategy);
+                payload.setResult(false);
+                payload.setResultResponse(ctx.getString(R.string.error_insufficient_storage_available));
+            }
+            else{
+                String sourcePath = previousStrategy.getStorageLocation(ctx);
+                String destPath = newStrategy.getStorageLocation(ctx);
+
+                File destDir = new File(destPath);
+                if (destDir.exists()){
+                    FileUtils.cleanDir(destDir);
+                }
+                else{
+                    destDir.mkdir();
+                }
+
+                if (moveStorageDirs(sourcePath, destPath)){
+                    //Delete the files from source
+                    FileUtils.deleteDir(new File(sourcePath));
+                    newStrategy.updateStorageLocation(ctx);
+                    Log.d(TAG, "Update storage location succeeded!");
+                    payload.setResult(true);
+                }
+                else{
+                    //Delete the files that were actually copied
+                    FileUtils.deleteDir(destDir);
+                    resetStrategy(previousStrategy);
+                    payload.setResult(false);
+                    payload.setResultResponse(ctx.getString(R.string.error));
+                }
+
+            }
+        }
+
+        return payload;
+    }
+
+    private boolean moveStorageDirs(String sourcePath, String destinationPath){
+
+        File destination = new File(destinationPath);
+        String downloadPath = sourcePath + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME;
+        String mediaPath = sourcePath + File.separator + FileUtils.APP_MEDIA_DIR_NAME;
+        String coursePath = sourcePath + File.separator + FileUtils.APP_COURSES_DIR_NAME;
+
+        try {
+            File downloadSource = new File(downloadPath);
+            org.apache.commons.io.FileUtils.moveDirectoryToDirectory(downloadSource,destination,true);
+            Log.d(TAG,"Copying " + downloadPath + " completed");
+        } catch (IOException e) {
+            Log.d(TAG,"Copying " + downloadPath + "failed");
+            e.printStackTrace();
+            return false;
+        }
+
+        try {
+            File mediaSource = new File(mediaPath);
+            org.apache.commons.io.FileUtils.moveDirectoryToDirectory(mediaSource,destination,true);
+            Log.d(TAG,"Copying " + mediaPath + " completed");
+        } catch (IOException e) {
+            Log.d(TAG,"Copying " + mediaPath + "failed");
+            e.printStackTrace();
+            return false;
+        }
+
+        try {
+            File courseSource = new File(coursePath);
+            org.apache.commons.io.FileUtils.moveDirectoryToDirectory(courseSource,destination,true);
+            Log.d(TAG,"Copying " + coursePath + " completed");
+        } catch (IOException e) {
+            Log.d(TAG,"Copying " + coursePath + "failed");
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void resetStrategy(StorageAccessStrategy previousStrategy){
+        // If it fails, we reset the strategy to the previous one
+        FileUtils.setStorageStrategy(previousStrategy);
+
+        // And revert the storage option to the previos one
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, previousStrategy.getStorageType());
+        editor.commit();
+    }
+
+    @Override
+    protected void onPostExecute(Payload results) {
+        synchronized (this) {
+            if (mStateListener != null) {
+                mStateListener.moveStorageComplete(results);
+            }
+        }
+    }
+
+    public void setMoveStorageListener(MoveStorageListener srl) {
+        synchronized (this) {
+            mStateListener = srl;
+        }
+    }
+}

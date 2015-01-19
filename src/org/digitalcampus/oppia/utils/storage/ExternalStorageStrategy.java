@@ -1,7 +1,9 @@
 package org.digitalcampus.oppia.utils.storage;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -16,7 +18,11 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
 
     @Override
     public void updateStorageLocation(Context ctx) {
-
+        String location = this.getStorageLocation(ctx);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
+        editor.commit();
     }
 
     @Override

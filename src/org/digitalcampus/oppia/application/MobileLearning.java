@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -63,6 +64,7 @@ public class MobileLearning extends Application {
 	public static final int PAGE_READ_TIME = 3;
 	public static final int RESOURCE_READ_TIME = 3;
 	public static final String USER_AGENT = "OppiaMobile Android: ";
+    public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_INTERNAL;
 	
 	public static final boolean DEFAULT_DISPLAY_COMPLETED = true;
 	public static final boolean DEFAULT_DISPLAY_PROGRESS_BAR = true;
@@ -106,19 +108,15 @@ public class MobileLearning extends Application {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
         if ( (storageOption == null) || (storageOption.trim().equals("")) ){
-            //If there is not storage option set, default to external
-            storageOption = PrefsActivity.STORAGE_OPTION_INTERNAL;
+            //If there is not storage option set, set the default option
+            storageOption = DEFAULT_STORAGE_OPTION;
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption);
             editor.commit();
         }
 
         Log.d(TAG, "Storage option: " + storageOption);
-        StorageAccessStrategy strategy =
-                (storageOption.equals(PrefsActivity.STORAGE_OPTION_EXTERNAL))?
-                new ExternalStorageStrategy():
-                new InternalStorageStrategy();
-
+        StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
         strategy.updateStorageLocation(ctx);
         FileUtils.setStorageStrategy(strategy);
 

@@ -329,7 +329,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				DatabaseManager.getInstance().closeDatabase();
 
 				// remove files
-				File f = new File(tempCourse.getLocation());
+                String courseLocation = tempCourse.getLocation();
+				File f = new File(courseLocation);
 				FileUtils.deleteDir(f);
 				Editor e = prefs.edit();
 				e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
@@ -383,6 +384,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				|| key.equalsIgnoreCase(PrefsActivity.PREF_BADGES)){
 			supportInvalidateOptionsMenu();
 		}
+
+        //This is done elsewhere
+        /*
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_STORAGE_LOCATION)){
 			Log.d(TAG,storageLocation);
 			Log.d(TAG, sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
@@ -394,7 +398,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	    	Payload p = new Payload(strings);
 	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask();
 	    	mslt.execute(p);
-		}
+		}*/
 	}
 
 	public void scanStart() {
