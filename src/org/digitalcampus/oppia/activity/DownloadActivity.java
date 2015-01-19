@@ -28,16 +28,14 @@ import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
-import org.digitalcampus.oppia.listener.DownloadCourseListClickListener;
-import org.digitalcampus.oppia.listener.InstallCourseListener;
-import org.digitalcampus.oppia.listener.UpdateScheduleListener;
-import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.listener.DownloadCompleteListener;
+import org.digitalcampus.oppia.listener.DownloadCourseOnClickListener;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.task.APIRequestTask;
 import org.digitalcampus.oppia.task.DownloadCourseTask;
-import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
+import org.digitalcampus.oppia.task.DownloadTasksController;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScheduleUpdateTask;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -53,7 +51,7 @@ import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class DownloadActivity extends AppActivity implements APIRequestListener, InstallCourseListener, UpdateScheduleListener {
+public class DownloadActivity extends AppActivity implements APIRequestListener, DownloadCompleteListener {
 	
 	public static final String TAG = DownloadActivity.class.getSimpleName();
 	
@@ -65,8 +63,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	private ArrayList<Course> courses;
 	private boolean showUpdatesOnly = false;
 
-    private boolean taskInProgress = false;
-	private DownloadProgress taskProgress;
+	private DownloadTasksController tasksController;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,16 +92,23 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	@Override
 	public void onResume(){
 		super.onResume();
-		// Get Course list
-		if(this.json == null){
-			this.getCourseList();
-		} else {
-	        this.refreshCourseList(); 
+		if(json == null){
+            //The JSON download task has not started or been completed yet
+			getCourseList();
+		} else if ((courses != null) && courses.size()>0) {
+            //We already have loaded JSON and courses (coming from orientationchange)
+            dla.notifyDataSetChanged();
+        }
+        else{
+            //The JSON is downloaded but course list is not
+	        refreshCourseList();
 		}
 
-		if (this.taskInProgress){
-            startTaskDialog();
-		}
+        if (tasksController == null){
+            tasksController = new DownloadTasksController(this, prefs);
+        }
+        tasksController.setOnDownloadCompleteListener(this);
+        tasksController.setCtx(this);
 	}
 
 	@Override
@@ -122,16 +126,13 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		super.onRestoreInstanceState(savedInstanceState);
         ArrayList<Course> savedCourses = (ArrayList<Course>) savedInstanceState.getSerializable("courses");
 	    this.courses.addAll(savedCourses);
-        this.taskInProgress = (Boolean) savedInstanceState.getBoolean("inProgress");
-        if (taskInProgress){
-            taskProgress = (DownloadProgress) savedInstanceState.getSerializable("taskProgress");
-        }
+
 	    try {
 			this.json = new JSONObject(savedInstanceState.getString("json"));
 		} catch (JSONException e) {
             // error in the json so just get the list again
         }
-
+        tasksController = (DownloadTasksController) savedInstanceState.getSerializable("tasksProgress");
 	}
 
 	@Override
@@ -141,10 +142,10 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             //Only save the instance if the request has been proccessed already
             savedInstanceState.putString("json", json.toString());
             savedInstanceState.putSerializable("courses", courses);
-            savedInstanceState.putBoolean("inProgress", taskInProgress);
 
-            if (taskInProgress){
-                savedInstanceState.putSerializable("taskProgress", taskProgress);
+            if (tasksController != null){
+                tasksController.setOnDownloadCompleteListener(null);
+                savedInstanceState.putSerializable("tasksProgress", tasksController);
             }
         }
 
@@ -265,141 +266,31 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		}
 	}
 
-
-    private void startTaskDialog(){
-        taskInProgress = true;
-
-        if (progressDialog != null){
-            progressDialog.dismiss();
-        }
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle(R.string.install);
-        progressDialog.setMessage(getString(R.string.download_starting));
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setProgress(0);
-        progressDialog.setMax(100);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-    }
-
-    /******* InstallCourseListener methods ************/
     @Override
-    public void downloadComplete(Payload p) {
-        Log.d("download-task", "downloadComplete");
-        if (p.isResult()){
-            // If it finished correctly, start the task to install the course
-            progressDialog.setMessage(getString(R.string.download_complete));
-            progressDialog.setIndeterminate(true);
-
-            InstallDownloadedCoursesTask installTask = new InstallDownloadedCoursesTask(this);
-            installTask.setInstallerListener(this);
-            installTask.execute(p);
-
-        } else {
-            progressDialog.setTitle(getString(R.string.error_download_failure));
-            progressDialog.setMessage(p.getResultResponse());
-            progressDialog.setIndeterminate(true);
-        }
+    public void onComplete() {
+        refreshCourseList();
     }
 
-    @Override
-    public void downloadProgressUpdate(DownloadProgress dp) {
-        Log.d("download-task", "downloadProgressUpdate " + dp.getProgress());
-        progressDialog.setMessage(dp.getMessage());
-        progressDialog.setProgress(dp.getProgress());
-        taskProgress = dp;
-    }
-
-    @Override
-    public void installComplete(Payload p) {
-        Log.d("download-task", "installComplete");
-        if(p.isResult()){
-            SharedPreferences.Editor e = prefs.edit();
-            e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-            e.commit();
-            progressDialog.setTitle(getString(R.string.install_complete));
-            progressDialog.setMessage(p.getResultResponse());
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgress(100);
-
-            refreshCourseList();
-            progressDialog.dismiss();
-
-        } else {
-            progressDialog.setTitle(getString(R.string.error_install_failure));
-            progressDialog.setMessage(p.getResultResponse());
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgress(100);
-        }
-        this.taskInProgress = false;
-
-    }
-
-    @Override
-    public void installProgressUpdate(DownloadProgress dp) {
-        Log.d("download-task", "installProgressUpdate " + dp.getProgress());
-        progressDialog.setMessage(dp.getMessage());
-        progressDialog.setProgress(dp.getProgress());
-        taskProgress = dp;
-    }
-
-    /******* UpdateScheduleListener methods ************/
-    @Override
-    public void updateComplete(Payload p) {
-        Log.d("download-task", "updateComplete");
-        if(p.isResult()){
-            progressDialog.setTitle(getString(R.string.update_complete));
-            progressDialog.setMessage(p.getResultResponse());
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgress(100);
-
-            // new refresh the course list
-            refreshCourseList();
-            SharedPreferences.Editor e = prefs.edit();
-            e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-            e.commit();
-            progressDialog.dismiss();
-
-        } else {
-            progressDialog.setTitle(getString(R.string.error_update_failure));
-            progressDialog.setMessage(p.getResultResponse());
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgress(100);
-        }
-
-        this.taskInProgress = false;
-    }
-
-    @Override
-    public void updateProgressUpdate(DownloadProgress dp) {
-        Log.d("download-task", "updateProgressUpdate");
-        progressDialog.setMessage(dp.getMessage());
-        progressDialog.setProgress(dp.getProgress());
-        taskProgress = dp;
-    }
-
-    private class CourseListListener implements DownloadCourseListClickListener {
-
+    private class CourseListListener implements DownloadCourseOnClickListener {
         @Override
         public void onClick(int position) {
+            Log.d("course-download", "Clicked " + position);
             Course courseSelected = courses.get(position);
-            if (!taskInProgress){
+            if (!tasksController.isTaskInProgress()){
                 ArrayList<Object> data = new ArrayList<Object>();
                 data.add(courseSelected);
                 Payload p = new Payload(data);
 
                 if(!courseSelected.isInstalled() || courseSelected.isToUpdate()){
-
-                    startTaskDialog();
+                    tasksController.showDialog();
                     DownloadCourseTask downloadTask = new DownloadCourseTask(DownloadActivity.this);
-                    downloadTask.setInstallerListener(DownloadActivity.this);
+                    downloadTask.setInstallerListener(tasksController);
                     downloadTask.execute(p);
                 }
                 else if(courseSelected.isToUpdateSchedule()){
-
-                    startTaskDialog();
+                    tasksController.showDialog();
                     ScheduleUpdateTask updateTask = new ScheduleUpdateTask(DownloadActivity.this);
-                    updateTask.setUpdateListener(DownloadActivity.this);
+                    updateTask.setUpdateListener(tasksController);
                     updateTask.execute(p);
                 }
             }

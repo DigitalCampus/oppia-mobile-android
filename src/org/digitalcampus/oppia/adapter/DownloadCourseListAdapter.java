@@ -21,23 +21,13 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.listener.DownloadCourseListClickListener;
-import org.digitalcampus.oppia.listener.InstallCourseListener;
-import org.digitalcampus.oppia.listener.UpdateScheduleListener;
-import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.listener.DownloadCourseOnClickListener;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.task.DownloadCourseTask;
-import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.ScheduleUpdateTask;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +44,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course>{
 	private final ArrayList<Course> courseList;
 	private SharedPreferences prefs;
 
-    private DownloadCourseListClickListener onClickListener;
+    private DownloadCourseOnClickListener onClickListener;
 	
 	public DownloadCourseListAdapter(Activity context, ArrayList<Course> courseList) {
 		super(context, R.layout.course_download_row, courseList);
@@ -136,7 +126,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course>{
 	    return convertView;
 	}
 
-    public void setOnClickListener(DownloadCourseListClickListener onClickListener) {
+    public void setOnClickListener(DownloadCourseOnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 }
