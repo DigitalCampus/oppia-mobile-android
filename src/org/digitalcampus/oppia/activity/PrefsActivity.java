@@ -17,21 +17,25 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Lang;
-
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
+import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-public class PrefsActivity extends SherlockPreferenceActivity {
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class PrefsActivity extends SherlockPreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 	
 	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
@@ -56,8 +60,13 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
 	public static final String PREF_METADATA = "prefMetadata";
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
-	
-	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
+
+    public static final String PREF_STORAGE_OPTION = "prefStorageOption";
+    public static final String STORAGE_OPTION_INTERNAL = "internal";
+    public static final String STORAGE_OPTION_EXTERNAL = "external";
+
+
+    public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -136,6 +145,34 @@ public class PrefsActivity extends SherlockPreferenceActivity {
 		}
 		return true;
 	}
-	
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Set up a listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister the listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.d(TAG, key);
+        Log.d(TAG, sharedPreferences.getString(key, ""));
+
+        if (key.equals(PrefsActivity.PREF_STORAGE_OPTION)) {
+            Preference storagePref = findPreference(key);
+            // Set summary to be the user-description for the selected value
+
+            String storageOption = sharedPreferences.getString(key, "");
+            if (!storageOption.equals(FileUtils.storageStrategy.getStorageType())){
+                //Lanzar asyncTask
+            }
+        }
+    }
 
 }

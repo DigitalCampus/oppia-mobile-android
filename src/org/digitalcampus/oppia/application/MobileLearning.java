@@ -17,16 +17,21 @@
 
 package org.digitalcampus.oppia.application;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.task.SubmitQuizTask;
-import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.task.SubmitQuizTask;
+import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
+import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class MobileLearning extends Application {
 
@@ -52,7 +57,7 @@ public class MobileLearning extends Application {
 	public static final String SERVER_COURSES_NAME = "courses";
 	
 	// general other settings
-	public static final String BUGSENSE_API_KEY = "84d61fd0";
+	public static final String BUGSENSE_API_KEY = "26c9c657";
 	public static final int DOWNLOAD_COURSES_DISPLAY = 1; //this no of courses must be displayed for the 'download more courses' option to disappear
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
@@ -89,5 +94,34 @@ public class MobileLearning extends Application {
 			return true;
 		}
 	}
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        // this method fires once at application start
+        Log.d(TAG, "Application start");
+
+        Context ctx = getApplicationContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
+        if ( (storageOption == null) || (storageOption.trim().equals("")) ){
+            //If there is not storage option set, default to external
+            storageOption = PrefsActivity.STORAGE_OPTION_INTERNAL;
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption);
+            editor.commit();
+        }
+
+        Log.d(TAG, "Storage option: " + storageOption);
+        StorageAccessStrategy strategy =
+                (storageOption.equals(PrefsActivity.STORAGE_OPTION_EXTERNAL))?
+                new ExternalStorageStrategy():
+                new InternalStorageStrategy();
+
+        strategy.updateStorageLocation(ctx);
+        FileUtils.setStorageStrategy(strategy);
+
+    }
 
 }

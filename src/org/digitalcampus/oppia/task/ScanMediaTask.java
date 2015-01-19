@@ -25,7 +25,7 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.CourseXMLReader;
-import org.digitalcampus.oppia.utils.FileUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;

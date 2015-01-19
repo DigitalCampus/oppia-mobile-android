@@ -17,17 +17,6 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
-import org.digitalcampus.oppia.fragments.AboutFragment;
-import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
-import org.digitalcampus.oppia.fragments.StatsFragment;
-import org.digitalcampus.oppia.utils.FileUtils;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -39,6 +28,17 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
+import org.digitalcampus.oppia.fragments.AboutFragment;
+import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
+import org.digitalcampus.oppia.fragments.StatsFragment;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class AboutActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 

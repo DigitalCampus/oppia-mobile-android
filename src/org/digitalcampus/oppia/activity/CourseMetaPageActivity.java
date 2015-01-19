@@ -17,21 +17,21 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CourseMetaPage;
-import org.digitalcampus.oppia.utils.FileUtils;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.webkit.WebView;
 import android.widget.TextView;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CourseMetaPage;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Locale;
 
 public class CourseMetaPageActivity extends AppActivity {
 

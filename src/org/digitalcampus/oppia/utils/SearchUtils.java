@@ -17,8 +17,9 @@
 
 package org.digitalcampus.oppia.utils;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -27,10 +28,10 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class SearchUtils {
 

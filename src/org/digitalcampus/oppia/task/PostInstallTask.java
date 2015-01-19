@@ -25,7 +25,7 @@ import java.io.InputStream;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.utils.FileUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;
