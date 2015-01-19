@@ -60,7 +60,7 @@ public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView  = inflater.inflate(R.layout.fragment_badges_list_row, parent, false);
+            convertView  = inflater.inflate(R.layout.widget_quiz_feedback_row, parent, false);
             viewHolder = new QuizFeedbackViewHolder();
             viewHolder.quizQuestion = (TextView) convertView.findViewById(R.id.quiz_question_text);
             viewHolder.quizUserResponse = (TextView) convertView.findViewById(R.id.quiz_question_user_response_text);

@@ -3,21 +3,25 @@ package org.digitalcampus.oppia.task;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.DownloadCompleteListener;
+import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 
 import java.io.Serializable;
 
-public class DownloadTasksController implements Serializable, InstallCourseListener, UpdateScheduleListener {
+public class DownloadTasksController implements Parcelable, InstallCourseListener, UpdateScheduleListener, DownloadMediaListener {
 
     private Context ctx;
     private DownloadCompleteListener onDownloadCompleteListener;
+    private DownloadCompleteListener onDownloadMediaCompleteListener;
     private SharedPreferences prefs;
 
     private DownloadProgress currentProgress;
@@ -34,31 +38,40 @@ public class DownloadTasksController implements Serializable, InstallCourseListe
         if (progressDialog != null){
             progressDialog.dismiss();
         }
-        progressDialog = new ProgressDialog(ctx);
-        progressDialog.setTitle(R.string.install);
-        progressDialog.setMessage(ctx.getString(R.string.download_starting));
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setProgress(0);
-        progressDialog.setMax(100);
-        progressDialog.setCancelable(true);
+        if (ctx != null){
+            progressDialog = new ProgressDialog(ctx);
+            progressDialog.setTitle(R.string.install);
+            progressDialog.setMessage(ctx.getString(R.string.download_starting));
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setProgress(0);
+            progressDialog.setMax(100);
+            progressDialog.setCancelable(true);
 
-        if (isTaskInProgress()){
-            updateDialogMessage();
-            showDialog();
+            if (isTaskInProgress()){
+                updateDialogMessage();
+                showDialog();
+            }
         }
+
     }
 
     public boolean isTaskInProgress() {
         return taskInProgress;
     }
+    public void setTaskInProgress(boolean inProgress){ taskInProgress = inProgress; }
 
     public void setOnDownloadCompleteListener(DownloadCompleteListener onDownloadCompleteListener) {
         this.onDownloadCompleteListener = onDownloadCompleteListener;
         if (progressDialog != null) progressDialog.dismiss();
     }
 
+    public void setOnDownloadMediaCompleteListener(DownloadCompleteListener onDownloadCompleteListener) {
+        this.onDownloadMediaCompleteListener = onDownloadCompleteListener;
+        if (progressDialog != null) progressDialog.dismiss();
+    }
+
     public void showDialog(){
-        if (!progressDialog.isShowing()){
+        if (!progressDialog.isShowing() && ctx != null){
             progressDialog.show();
         }
     }
@@ -74,19 +87,27 @@ public class DownloadTasksController implements Serializable, InstallCourseListe
     @Override
     public void downloadComplete(Payload p) {
         Log.d("download-task", "downloadComplete");
-        if (p.isResult()){
-            //If it finished correctly, start the task to install the course
-            progressDialog.setMessage(ctx.getString(R.string.download_complete));
-            progressDialog.setIndeterminate(true);
 
-            InstallDownloadedCoursesTask installTask = new InstallDownloadedCoursesTask(ctx);
-            installTask.setInstallerListener(this);
-            installTask.execute(p);
+        if (onDownloadMediaCompleteListener != null) {
+            onDownloadMediaCompleteListener.onComplete(p);
+        }
+        else if (p.isResult()){
+            //If it finished correctly, start the task to install the course
+            if (ctx != null){
+                progressDialog.setMessage(ctx.getString(R.string.download_complete));
+                progressDialog.setIndeterminate(true);
+
+                InstallDownloadedCoursesTask installTask = new InstallDownloadedCoursesTask(ctx);
+                installTask.setInstallerListener(this);
+                installTask.execute(p);
+            }
 
         } else {
-            progressDialog.setTitle(ctx.getString(R.string.error_download_failure));
-            progressDialog.setMessage(p.getResultResponse());
-            progressDialog.setIndeterminate(true);
+            if (ctx != null) {
+                progressDialog.setTitle(ctx.getString(R.string.error_download_failure));
+                progressDialog.setMessage(p.getResultResponse());
+                progressDialog.setIndeterminate(true);
+            }
             taskInProgress = false;
         }
 
@@ -99,21 +120,29 @@ public class DownloadTasksController implements Serializable, InstallCourseListe
             SharedPreferences.Editor e = prefs.edit();
             e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
             e.commit();
-            progressDialog.setTitle(ctx.getString(R.string.install_complete));
-            progressDialog.setMessage(p.getResultResponse());
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgress(100);
 
-            if (onDownloadCompleteListener != null) {
-                onDownloadCompleteListener.onComplete();
+            if (ctx != null) {
+                progressDialog.setTitle(ctx.getString(R.string.install_complete));
+                progressDialog.setMessage(p.getResultResponse());
+                progressDialog.setIndeterminate(false);
+                progressDialog.setProgress(100);
+                progressDialog.dismiss();
             }
-            progressDialog.dismiss();
+
+            synchronized (this) {
+                if (onDownloadCompleteListener != null) {
+                    onDownloadCompleteListener.onComplete(p);
+                }
+            }
+
 
         } else {
-            progressDialog.setTitle(ctx.getString(R.string.error_install_failure));
-            progressDialog.setMessage(p.getResultResponse());
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgress(100);
+            if (ctx != null) {
+                progressDialog.setTitle(ctx.getString(R.string.error_install_failure));
+                progressDialog.setMessage(p.getResultResponse());
+                progressDialog.setIndeterminate(false);
+                progressDialog.setProgress(100);
+            }
         }
         taskInProgress = false;
     }
@@ -127,13 +156,16 @@ public class DownloadTasksController implements Serializable, InstallCourseListe
         updateDialogMessage();
 
         if(p.isResult()){
-            progressDialog.setTitle(ctx.getString(R.string.update_complete));
-
-            //Notify the activity
-            if (onDownloadCompleteListener != null) {
-                onDownloadCompleteListener.onComplete();
+            if (ctx != null){
+                progressDialog.setTitle(ctx.getString(R.string.update_complete));
             }
 
+            //Notify the activity
+            synchronized (this) {
+                if (onDownloadCompleteListener != null) {
+                    onDownloadCompleteListener.onComplete(p);
+                }
+            }
             SharedPreferences.Editor e = prefs.edit();
             e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
             e.commit();
@@ -167,4 +199,31 @@ public class DownloadTasksController implements Serializable, InstallCourseListe
         updateDialogMessage();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeValue(currentProgress);
+        parcel.writeByte((byte) (taskInProgress ? 0x01 : 0x00));
+        //parcel.writeValue(progressDialog);
+    }
+
+    public DownloadTasksController(Parcel in) {
+        currentProgress = (DownloadProgress) in.readValue(DownloadProgress.class.getClassLoader());
+        taskInProgress = in.readByte() != 0x00;
+        //progressDialog = (ProgressDialog) in.readValue(ProgressDialog.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public DownloadTasksController createFromParcel(Parcel in) {
+            return new DownloadTasksController(in);
+        }
+
+        public DownloadTasksController[] newArray(int size) {
+            return new DownloadTasksController[size];
+        }
+    };
 }

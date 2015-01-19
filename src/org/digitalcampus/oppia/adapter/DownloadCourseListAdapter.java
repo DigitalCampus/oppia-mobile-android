@@ -22,7 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.listener.DownloadCourseOnClickListener;
+import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Course;
 
 import android.app.Activity;
@@ -44,7 +44,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course>{
 	private final ArrayList<Course> courseList;
 	private SharedPreferences prefs;
 
-    private DownloadCourseOnClickListener onClickListener;
+    private ListInnerBtnOnClickListener onClickListener;
 	
 	public DownloadCourseListAdapter(Activity context, ArrayList<Course> courseList) {
 		super(context, R.layout.course_download_row, courseList);
@@ -126,7 +126,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course>{
 	    return convertView;
 	}
 
-    public void setOnClickListener(DownloadCourseOnClickListener onClickListener) {
+    public void setOnClickListener(ListInnerBtnOnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 }
