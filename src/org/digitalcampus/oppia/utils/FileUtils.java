@@ -35,11 +35,14 @@ import java.util.zip.ZipInputStream;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Environment;
+import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -58,6 +61,7 @@ public class FileUtils {
 	public static final String APP_DOWNLOAD_DIR_NAME = "download";
 	public static final String APP_MEDIA_DIR_NAME = "media";
 
+    public static int BUFFER_SIZE_CONFIG = 1024;
 	
 	public static boolean createDirs(Context ctx) {
 		String cardstatus = Environment.getExternalStorageState();
@@ -69,6 +73,7 @@ public class FileUtils {
 			Log.d(TAG, "card status: " + cardstatus);
 			return false;
 		}
+        BUFFER_SIZE_CONFIG = 21;
 
 		String[] dirs = { FileUtils.getCoursesPath(ctx), FileUtils.getMediaPath(ctx), FileUtils.getDownloadPath(ctx) };
 
@@ -225,10 +230,8 @@ public class FileUtils {
 		String name = entry.getName();
 
 		if (name.contains(File.separator)) {
-
 			int index = name.lastIndexOf(File.separator);
 			String dirSequence = name.substring(0, index);
-
 			File newDirs = new File(destDirectory + File.separator + dirSequence);
 
 			// create the directory
@@ -236,24 +239,32 @@ public class FileUtils {
 		}
 	}
 
+    private static boolean cleanDir(File dir){
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                File delFile = new File(dir, children[i]);
+                boolean success = deleteDir(delFile);
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 	// Deletes all files and subdirectories under dir.
 	// Returns true if all deletions were successful.
 	// If a deletion fails, the method stops attempting to delete and returns
 	// false.
 	public static boolean deleteDir(File dir) {
-		if (dir.isDirectory()) {
-			String[] children = dir.list();
-			for (int i = 0; i < children.length; i++) {
-				File delFile = new File(dir, children[i]);
-				boolean success = deleteDir(delFile);
-				if (!success) {
-					return false;
-				}
-			}
-		}
-
-		// The directory is now empty so delete it
-		return dir.delete();
+        if (cleanDir(dir)){
+            // The directory is now empty so delete it
+            return dir.delete();
+        }
+        else {
+            return false;
+        }
 	}
 
 	public static boolean mediaFileExists(Context ctx, String filename) {
@@ -263,8 +274,40 @@ public class FileUtils {
 		} else {
 			return false;
 		}
-
 	}
+
+    private static long dirSize(File dir){
+        if (dir.exists() && dir.isDirectory()) {
+            long result = 0;
+            File[] fileList = dir.listFiles();
+            for(int i = 0; i < fileList.length; i++) {
+                if(fileList[i].isDirectory()) {
+                    result += dirSize(fileList [i]);
+                } else {
+                    result += fileList[i].length();
+                }
+            }
+            return result;
+        }
+        return 0;
+    }
+
+    public static int getAvailableStorageSize(Context ctx){
+        StatFs stat = new StatFs(getStorageLocationRoot(ctx));
+        int bytesAvailable;
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            bytesAvailable = (int)(stat.getBlockSizeLong() * stat.getAvailableBlocksLong());
+        }
+        else{
+            bytesAvailable = stat.getBlockSize() * stat.getAvailableBlocks();
+        }
+        return bytesAvailable;
+    }
+
+    public static long totalStorageUsed(Context ctx){
+        File dir = new File(getStorageLocationRoot(ctx));
+        return dirSize(dir);
+    }
 
 	public static void cleanUp(File tempDir, String path) {
 		FileUtils.deleteDir(tempDir);
