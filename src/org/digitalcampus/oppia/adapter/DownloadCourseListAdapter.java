@@ -23,6 +23,7 @@ import java.util.Locale;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.listener.DownloadCourseListClickListener;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -45,216 +46,97 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DownloadCourseListAdapter extends ArrayAdapter<Course> implements InstallCourseListener, UpdateScheduleListener{
+public class DownloadCourseListAdapter extends ArrayAdapter<Course>{
 
 	public static final String TAG = DownloadCourseListAdapter.class.getSimpleName();
 
 	private final Context ctx;
 	private final ArrayList<Course> courseList;
-	private ProgressDialog downloadDialog;
 	private SharedPreferences prefs;
-	private boolean inProgress = false;
+
+    private DownloadCourseListClickListener onClickListener;
 	
 	public DownloadCourseListAdapter(Activity context, ArrayList<Course> courseList) {
 		super(context, R.layout.course_download_row, courseList);
 		this.ctx = context;
 		this.courseList = courseList;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		this.prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
+
+    static class DownloadCourseViewHolder{
+        TextView courseTitle;
+        TextView courseDraft;
+        TextView courseDescription;
+        Button actionBtn;
+    }
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    View rowView = inflater.inflate(R.layout.course_download_row, parent, false);
+        DownloadCourseViewHolder viewHolder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView  = inflater.inflate(R.layout.course_download_row, parent, false);
+            viewHolder = new DownloadCourseViewHolder();
+            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
+            viewHolder.courseDraft = (TextView) convertView.findViewById(R.id.course_draft);
+            viewHolder.courseDescription = (TextView) convertView.findViewById(R.id.course_description);
+            viewHolder.actionBtn = (Button) convertView.findViewById(R.id.download_course_btn);
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (DownloadCourseViewHolder) convertView.getTag();
+        }
+
 	    Course c = courseList.get(position);
-	    rowView.setTag(c);
-	    
-	    TextView courseTitle = (TextView) rowView.findViewById(R.id.course_title);
-	    courseTitle.setText(c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-	    
-	    TextView courseDraft = (TextView) rowView.findViewById(R.id.course_draft);
+
+        viewHolder.courseTitle.setText(c.getTitle(
+                prefs.getString(PrefsActivity.PREF_LANGUAGE,
+                Locale.getDefault().getLanguage())));
+
 	    if (c.isDraft()){
-	    	courseDraft.setText(ctx.getString(R.string.course_draft));
+            viewHolder.courseDraft.setText(ctx.getString(R.string.course_draft));
 	    } else {
-	    	courseDraft.setVisibility(View.GONE);
+            viewHolder.courseDraft.setVisibility(View.GONE);
 	    }
-	    
-	    TextView courseDesc = (TextView) rowView.findViewById(R.id.course_description);
+
 	    String desc = c.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 	    if (desc != null){
-	    	courseDesc.setText(desc);
+            viewHolder.courseDescription.setText(desc);
 	    } else {
-	    	courseDesc.setVisibility(View.GONE);
+            viewHolder.courseDescription.setVisibility(View.GONE);
 	    }
 
-	    Button actionBtn = (Button) rowView.findViewById(R.id.download_course_btn);
-	    
 	    if(c.isInstalled()){
 	    	if(c.isToUpdate()){
-	    		actionBtn.setText(R.string.update);
-		    	actionBtn.setEnabled(true);
+                viewHolder.actionBtn.setText(R.string.update);
+                viewHolder.actionBtn.setEnabled(true);
 	    	} else if (c.isToUpdateSchedule()){
-	    		actionBtn.setText(R.string.update_schedule);
-		    	actionBtn.setEnabled(true);
+                viewHolder.actionBtn.setText(R.string.update_schedule);
+                viewHolder.actionBtn.setEnabled(true);
 	    	} else {
-	    		actionBtn.setText(R.string.installed);
-		    	actionBtn.setEnabled(false);
+                viewHolder.actionBtn.setText(R.string.installed);
+                viewHolder.actionBtn.setEnabled(false);
 	    	}
 	    } else {
-	    	actionBtn.setText(R.string.install);
-	    	actionBtn.setEnabled(true);
+            viewHolder.actionBtn.setText(R.string.install);
+            viewHolder.actionBtn.setEnabled(true);
 	    }
-	    if(!c.isInstalled() || c.isToUpdate()){
-	    	actionBtn.setTag(c);
-	    	actionBtn.setOnClickListener(new View.OnClickListener() {
-             	public void onClick(View v) {
-             		Course dm = (Course) v.getTag();
-             		
-             		ArrayList<Object> data = new ArrayList<Object>();
-             		data.add(dm);
-             		Payload p = new Payload(data);
-             		
-             		DownloadCourseListAdapter.this.showProgressDialog();
-            		DownloadCourseListAdapter.this.inProgress = true;
-                     
-             		DownloadCourseTask dmt = new DownloadCourseTask(ctx);
-             		dmt.setInstallerListener(DownloadCourseListAdapter.this);
-             		dmt.execute(p);
-             	}
-             });
-	    }
-	    if(c.isToUpdateSchedule()){
-	    	actionBtn.setTag(c);
-	    	actionBtn.setOnClickListener(new View.OnClickListener() {
-             	public void onClick(View v) {
-             		Course dm = (Course) v.getTag();
-             		
-             		ArrayList<Object> data = new ArrayList<Object>();
-             		data.add(dm);
-             		Payload p = new Payload(data);
-	             		
-	             	// show progress dialog
-            		DownloadCourseListAdapter.this.showProgressDialog();
-            		DownloadCourseListAdapter.this.inProgress = true;
-                     
-             		ScheduleUpdateTask sut = new ScheduleUpdateTask(ctx);
-             		sut.setUpdateListener(DownloadCourseListAdapter.this);
-             		sut.execute(p);
-             	}
-             });
-	    }
-	    return rowView;
+
+        viewHolder.actionBtn.setTag(position); //For passing the list item index
+        viewHolder.actionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onClickListener != null)
+                    onClickListener.onClick((Integer) v.getTag());
+            }
+        });
+
+	    return convertView;
 	}
 
-	public void downloadComplete(Payload p) {
-		if (p.isResult()){
-			// now set task to install
-			downloadDialog.setMessage(ctx.getString(R.string.download_complete));
-			downloadDialog.setIndeterminate(true);
-			InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(ctx);
-			imTask.setInstallerListener(DownloadCourseListAdapter.this);
-			imTask.execute(p);
-		} else {
-			downloadDialog.setTitle(ctx.getString(R.string.error_download_failure));
-			downloadDialog.setMessage(p.getResultResponse());
-			downloadDialog.setIndeterminate(true);
-		}
-	}
-
-	public void installComplete(Payload p) {
-		
-		
-		if(p.isResult()){
-			Editor e = prefs.edit();
-			e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-			e.commit();
-			downloadDialog.setTitle(ctx.getString(R.string.install_complete));	
-			downloadDialog.setMessage(p.getResultResponse());
-			downloadDialog.setIndeterminate(false);
-			downloadDialog.setProgress(100);
-			// new refresh the course list
-			DownloadActivity da = (DownloadActivity) ctx;
-			da.refreshCourseList();
-		} else {
-			downloadDialog.setTitle(ctx.getString(R.string.error_install_failure));	
-			downloadDialog.setMessage(p.getResultResponse());
-			downloadDialog.setIndeterminate(false);
-			downloadDialog.setProgress(100);
-		}
-		
-		this.inProgress = false;
-	}
-	
-	public void downloadProgressUpdate(DownloadProgress dp) {
-		downloadDialog.setMessage(dp.getMessage());	
-		downloadDialog.setProgress(dp.getProgress());
-	}
-
-	public void installProgressUpdate(DownloadProgress dp) {
-		downloadDialog.setMessage(dp.getMessage());
-		downloadDialog.setProgress(dp.getProgress());
-	}
-	
-	public void updateProgressUpdate(DownloadProgress dp) {
-		downloadDialog.setMessage(dp.getMessage());	
-		downloadDialog.setProgress(dp.getProgress());
-	}
-	
-	public void updateComplete(Payload p) {
-		
-		if(p.isResult()){
-			downloadDialog.setTitle(ctx.getString(R.string.update_complete));	
-			downloadDialog.setMessage(p.getResultResponse());
-			downloadDialog.setIndeterminate(false);
-			downloadDialog.setProgress(100);
-			// new refresh the course list
-			DownloadActivity da = (DownloadActivity) ctx;
-			da.refreshCourseList();
-			Editor e = prefs.edit();
-			e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-			e.commit();
-		} else {
-			downloadDialog.setTitle(ctx.getString(R.string.error_update_failure));	
-			downloadDialog.setMessage(p.getResultResponse());
-			downloadDialog.setIndeterminate(false);
-			downloadDialog.setProgress(100);
-		}
-		
-		this.inProgress = false;
-	}
-	
-	
-	public void showProgressDialog(){
-		// show progress dialog
-		downloadDialog = new ProgressDialog(ctx);
- 		downloadDialog.setTitle(R.string.install);
- 		downloadDialog.setMessage(ctx.getString(R.string.download_starting));
- 		downloadDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
- 		downloadDialog.setProgress(0);
- 		downloadDialog.setMax(100);
- 		downloadDialog.setCancelable(true);
- 		downloadDialog.show();
-	}
-	
-	public void closeDialog(){
-		if (downloadDialog != null){
-			downloadDialog.dismiss();
-		}
-	}
-	
-	public void openDialog(){
-		if (downloadDialog != null && this.inProgress){
-			downloadDialog.show();
-		}
-	}
-	
-	public boolean isInProgress(){
-		return this.inProgress;
-	}
-	
-	public void setInProgress(boolean inProgress){
-		this.inProgress = inProgress;
-	}
-
+    public void setOnClickListener(DownloadCourseListClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 }
