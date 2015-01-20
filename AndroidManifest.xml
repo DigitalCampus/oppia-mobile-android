@@ -51,8 +51,7 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadActivity"
             android:label="@string/title_download_activity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout"
-            android:screenOrientation="portrait">
+        >
         </activity>
          <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
@@ -79,8 +78,7 @@
          <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"
             android:label="@string/title_download_media"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout" 
-            android:screenOrientation="portrait"/>
+        />
          <activity
             android:name="org.digitalcampus.oppia.activity.ScorecardActivity"
             android:label="@string/title_scorecard" />

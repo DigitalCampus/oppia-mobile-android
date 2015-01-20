@@ -1,3 +1,20 @@
+/* 
+ * This file is part of OppiaMobile - https://digital-campus.org/
+ * 
+ * OppiaMobile is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * OppiaMobile is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.digitalcampus.oppia.adapter;
 
 import java.util.ArrayList;
@@ -5,6 +22,7 @@ import java.util.ArrayList;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
+import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.task.DownloadMediaTask;
@@ -24,17 +42,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements DownloadMediaListener {
+public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 
 	public static final String TAG = DownloadMediaListAdapter.class.getSimpleName();
 
 	private final Context ctx;
 	private SharedPreferences prefs;
 	private ArrayList<Media> mediaList;
-	private DownloadMediaTask task;
-	private ProgressDialog downloadDialog;
-	private DownloadMediaListener mDownloadListener;
-	private boolean inProgress = false;
+
+    private ListInnerBtnOnClickListener onClickListener;
 	
 	public DownloadMediaListAdapter(Activity context, ArrayList<Media> mediaList) {
 		super(context, R.layout.media_download_row, mediaList);
@@ -43,36 +59,47 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 	}
 
-	public void setMediaList(ArrayList<Media> mediaList){
-		this.mediaList = mediaList;
-	}
-	
+    static class DownloadMediaViewHolder{
+        TextView mediaTitle;
+        TextView mediaFileSize;
+        Button downloadBtn;
+    }
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.media_download_row, parent, false);
-		Media m = mediaList.get(position);
-		rowView.setTag(m);
-		TextView mediaTitle = (TextView) rowView.findViewById(R.id.media_title);
-		mediaTitle.setText(m.getFilename());
-		TextView mediaFileSize = (TextView) rowView.findViewById(R.id.media_file_size);
+        DownloadMediaViewHolder viewHolder;
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView  = inflater.inflate(R.layout.media_download_row, parent, false);
+            viewHolder = new DownloadMediaViewHolder();
+            viewHolder.mediaTitle = (TextView) convertView.findViewById(R.id.media_title);
+            viewHolder.mediaFileSize = (TextView) convertView.findViewById(R.id.media_file_size);
+            viewHolder.downloadBtn = (Button) convertView.findViewById(R.id.action_btn);
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (DownloadMediaViewHolder) convertView.getTag();
+        }
+
+        Media m = mediaList.get(position);
+
+        viewHolder.mediaTitle.setText(m.getFilename());
 		if(m.getFileSize() != 0){
-			mediaFileSize.setText(ctx.getString(R.string.media_file_size,m.getFileSize()/(1024*1024)));
+            viewHolder.mediaFileSize.setText(ctx.getString(R.string.media_file_size,m.getFileSize()/(1024*1024)));
 		} else {
-			mediaFileSize.setVisibility(View.GONE);
+            viewHolder.mediaFileSize.setVisibility(View.GONE);
 		}
-		
-		
-		Button downloadBtn = (Button) rowView.findViewById(R.id.action_btn);
-		downloadBtn.setTag(m);
-		downloadBtn.setOnClickListener(new View.OnClickListener() {
+
+        viewHolder.downloadBtn.setTag(position); //For passing the list item index
+        viewHolder.downloadBtn.setOnClickListener(new View.OnClickListener() {
          	public void onClick(View v) {
-         		Media m = (Media) v.getTag();
-         		DownloadMediaListAdapter.this.download(m);
+                if(onClickListener != null)
+                    onClickListener.onClick((Integer) v.getTag());
          	}
          });
-		return rowView;
+		return convertView;
 	}
 
 	private void download(Media media) {
@@ -80,19 +107,12 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 			UIUtils.showAlert(ctx, R.string.warning, R.string.warning_wifi_required);
 			return;
 		}
-
-		// show progress dialog
-		this.showProgressDialog();
-		this.inProgress = true;
-		
-		ArrayList<Media> alMedia = new ArrayList<Media>();
-		alMedia.add(media);
-		task = new DownloadMediaTask(ctx);
-		Payload p = new Payload(alMedia);
-		task.setDownloadListener(this);
-		task.execute(p);
 	}
 	
+    public void setOnClickListener(ListInnerBtnOnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+    /*
 	public void showProgressDialog(){
 		// show progress dialog
 		downloadDialog = new ProgressDialog(ctx);
@@ -139,4 +159,5 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> implements Dow
 			downloadDialog.show();
 		}
 	}
+	*/
 }
