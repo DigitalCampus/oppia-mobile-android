@@ -127,11 +127,8 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (JSONException e) {
 				payload.setResult(false);
-				if (!MobileLearning.DEVELOPER_MODE) {
-					BugSenseHandler.sendException(e);
-				} else {
-					e.printStackTrace();
-				}
+				BugSenseHandler.sendException(e);
+				e.printStackTrace();
 			} 
 		}
 

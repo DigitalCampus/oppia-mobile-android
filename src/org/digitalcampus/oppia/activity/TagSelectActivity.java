@@ -170,13 +170,9 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				json = new JSONObject(response.getResultResponse());
 				refreshTagList();
 			} catch (JSONException e) {
-				if(!MobileLearning.DEVELOPER_MODE){
-					BugSenseHandler.sendException(e);
-				} else {
-					e.printStackTrace();
-				}
+				BugSenseHandler.sendException(e);
+				e.printStackTrace();
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);
-				
 			}
 		} else {
 			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, new Callable<Boolean>() {

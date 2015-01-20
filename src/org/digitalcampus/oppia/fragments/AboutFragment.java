@@ -21,10 +21,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
-
-import com.bugsense.trace.BugSenseHandler;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -35,8 +32,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+
+import com.bugsense.trace.BugSenseHandler;
 
 public class AboutFragment extends Fragment{
 
@@ -86,11 +85,8 @@ public class AboutFragment extends Fragment{
 			String no = super.getActivity().getPackageManager().getPackageInfo(super.getActivity().getPackageName(), 0).versionName;
 			versionNo.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(e);
-			} else {
-				e.printStackTrace();
-			}
+			BugSenseHandler.sendException(e);
+			e.printStackTrace();
 		}
 	}
 }
