@@ -28,4 +28,12 @@
         <item name="18">18</item>
         <item name="20">20</item>
     </string-array>
+    <string-array name="StorageOptions">
+        <item name="internal">Internal</item>
+        <item name="external">External</item>
+    </string-array>
+    <string-array name="StorageOptionValues">
+        <item name="internal">internal</item>
+        <item name="external">external</item>
+    </string-array>
 </resources>
