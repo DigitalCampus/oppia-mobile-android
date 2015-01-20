@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -39,6 +40,8 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
+import org.digitalcampus.oppia.utils.storage.StorageUtils;
+import org.digitalcampus.oppia.utils.storage.StorageUtils.StorageInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +134,27 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
         server.setSummary(server.getText());
 
         storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
+        /*ListPreference storageList = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_LOCATION);
+        List<StorageInfo> storageOptionsList = StorageUtils.getStorageList();
+        
+        List<String> storageEntries = new ArrayList<String>();
+	    List<String> storageEntryValues = new ArrayList<String>();
+	    
+	    
+	    storageEntryValues.add(Environment.getExternalStorageDirectory().getPath());
+	    storageEntries.add(getString(R.string.storage_default));
+	    Log.d(TAG,Environment.getExternalStorageDirectory().getPath());
+	    
+        for (StorageInfo temp : storageOptionsList) {
+    		Log.d(TAG,temp.getDisplayName());
+    		Log.d(TAG,temp.path);
+    		storageEntryValues.add(temp.path);
+    		storageEntries.add(temp.getDisplayName());
+    	}
+        final CharSequence[] storageEntryCharSeq = storageEntries.toArray(new CharSequence[storageEntries.size()]);
+        final CharSequence[] storageEntryValsChar = storageEntryValues.toArray(new CharSequence[storageEntryValues.size()]);
+        storageList.setEntries(storageEntryCharSeq);
+        storageList.setEntryValues(storageEntryValsChar);*/
 
 	}
 
