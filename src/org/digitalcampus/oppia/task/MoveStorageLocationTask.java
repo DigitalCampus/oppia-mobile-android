@@ -17,13 +17,13 @@
 
 package org.digitalcampus.oppia.task;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.digitalcampus.oppia.utils.FileUtils;
-
 import android.os.AsyncTask;
 import android.util.Log;
+
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload> {
 	

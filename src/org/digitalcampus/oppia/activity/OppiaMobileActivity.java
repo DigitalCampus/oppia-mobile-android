@@ -17,26 +17,6 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.concurrent.Callable;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.CourseListAdapter;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.listener.ScanMediaListener;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.task.MoveStorageLocationTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.ScanMediaTask;
-import org.digitalcampus.oppia.utils.FileUtils;
-import org.digitalcampus.oppia.utils.UIUtils;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -60,6 +40,25 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.CourseListAdapter;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.listener.ScanMediaListener;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.ScanMediaTask;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.concurrent.Callable;
 
 public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener {
 
@@ -334,7 +333,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				DatabaseManager.getInstance().closeDatabase();
 
 				// remove files
-				File f = new File(tempCourse.getLocation());
+                String courseLocation = tempCourse.getLocation();
+				File f = new File(courseLocation);
 				FileUtils.deleteDir(f);
 				Editor e = prefs.edit();
 				e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
@@ -391,7 +391,16 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				|| key.equalsIgnoreCase(PrefsActivity.PREF_BADGES)){
 			supportInvalidateOptionsMenu();
 		}
-		
+
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED)){
+			boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
+			Log.d(TAG, "PREF_DOWNLOAD_VIA_CELLULAR_ENABLED" + newPref);
+			
+		}
+
+        //This is done elsewhere
+        /*
+
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_STORAGE_LOCATION)){
 			Log.d(TAG,storageLocation);
 			Log.d(TAG, sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
@@ -405,11 +414,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	    	mslt.execute(p);
 		}
 		
-		if(key.equalsIgnoreCase(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED)){
-			boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
-			Log.d(TAG, "PREF_DOWNLOAD_VIA_CELLULAR_ENABLED" + newPref);
-			
-		}
+		}*/
+
 	}
 
 	public void scanStart() {
