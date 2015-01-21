@@ -7,12 +7,15 @@
         android:title="@string/prefLanguage" >
     </ListPreference>
 
-    <!-- ListPreference
+    <ListPreference
         android:defaultValue=""
-        android:key="prefStorageLocation"
-        android:title="@string/prefStorageLocation" >
-    </ListPreference -->
-    
+        android:key="prefStorageOption"
+        android:title="@string/prefStorageLocation"
+        android:entries="@array/StorageOptions"
+        android:entryValues="@array/StorageOptionValues">
+    </ListPreference>
+
+
     <ListPreference
         android:defaultValue="16"
       	android:entries="@array/TextSize"

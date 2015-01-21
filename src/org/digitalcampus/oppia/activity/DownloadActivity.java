@@ -28,11 +28,16 @@ import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.listener.DownloadCompleteListener;
+import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.task.APIRequestTask;
+import org.digitalcampus.oppia.task.DownloadCourseTask;
+import org.digitalcampus.oppia.task.DownloadTasksController;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.ScheduleUpdateTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,22 +46,25 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class DownloadActivity extends AppActivity implements APIRequestListener {
+public class DownloadActivity extends AppActivity implements APIRequestListener, DownloadCompleteListener {
 	
 	public static final String TAG = DownloadActivity.class.getSimpleName();
 	
 	private SharedPreferences prefs;
-	private ProgressDialog pDialog;
+	private ProgressDialog progressDialog;
 	private JSONObject json;
 	private DownloadCourseListAdapter dla;
 	private String url;
 	private ArrayList<Course> courses;
 	private boolean showUpdatesOnly = false;
-	
+
+	private DownloadTasksController tasksController;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,62 +80,91 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
         } else {
         	this.url = MobileLearning.SERVER_COURSES_PATH;
         	this.showUpdatesOnly = true;
-        }        	
+        }
+
+        courses = new ArrayList<Course>();
+        dla = new DownloadCourseListAdapter(this, courses);
+        dla.setOnClickListener(new CourseListListener());
+        ListView listView = (ListView) findViewById(R.id.tag_list);
+        listView.setAdapter(dla);
 	}
 	
 	@Override
 	public void onResume(){
 		super.onResume();
-		// Get Course list
-		if(this.json == null){
-			this.getCourseList();
-		} else {
-	        this.refreshCourseList(); 
+		if(json == null){
+            //The JSON download task has not started or been completed yet
+			getCourseList();
+		} else if ((courses != null) && courses.size()>0) {
+            //We already have loaded JSON and courses (coming from orientationchange)
+            dla.notifyDataSetChanged();
+        }
+        else{
+            //The JSON is downloaded but course list is not
+	        refreshCourseList();
 		}
-		if (dla != null && dla.isInProgress()){
-			dla.openDialog();
-		}
+
+        if (tasksController == null){
+            tasksController = new DownloadTasksController(this, prefs);
+        }
+        tasksController.setOnDownloadCompleteListener(this);
+        tasksController.setCtx(this);
 	}
 
 	@Override
 	public void onPause(){
-		// kill any open dialogs
-		if (pDialog != null){
-			pDialog.dismiss();
-		}
-		if (dla != null){
-			dla.closeDialog();
-		}
+		//Kill any open dialogs
+		if (progressDialog != null){
+            progressDialog.dismiss();
+        }
 		super.onPause();
 	}
+
+    @Override
+    public void onDestroy(){
+        tasksController.setOnDownloadCompleteListener(null);
+        tasksController.setCtx(null);
+        super.onDestroy();
+    }
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-	    this.courses = (ArrayList<Course>) savedInstanceState.getSerializable("courses");
+        ArrayList<Course> savedCourses = (ArrayList<Course>) savedInstanceState.getSerializable("courses");
+	    this.courses.addAll(savedCourses);
+
 	    try {
 			this.json = new JSONObject(savedInstanceState.getString("json"));
 		} catch (JSONException e) {
-			// error in the json so just get the list again
-		}	    
+            // error in the json so just get the list again
+        }
+        tasksController = (DownloadTasksController) savedInstanceState.getParcelable("tasksProgress");
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
-	    savedInstanceState.putString("json", json.toString());
-	    savedInstanceState.putSerializable("courses", courses);
-	    savedInstanceState.putBoolean("inprogress", dla.isInProgress());
+	    if (json != null){
+            //Only save the instance if the request has been proccessed already
+            savedInstanceState.putString("json", json.toString());
+            savedInstanceState.putSerializable("courses", courses);
+
+            if (tasksController != null){
+                tasksController.setOnDownloadCompleteListener(null);
+                savedInstanceState.putParcelable("tasksProgress", tasksController);
+            }
+        }
+
 	}
 	
 	private void getCourseList() {
 		// show progress dialog
-		pDialog = new ProgressDialog(this);
-		pDialog.setTitle(R.string.loading);
-		pDialog.setMessage(getString(R.string.loading));
-		pDialog.setCancelable(true);
-		pDialog.show();
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle(R.string.loading);
+		progressDialog.setMessage(getString(R.string.loading));
+		progressDialog.setCancelable(true);
+		progressDialog.show();
 
 		APIRequestTask task = new APIRequestTask(this);
 		Payload p = new Payload(url);
@@ -141,7 +178,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 
 		DbHelper db = new DbHelper(this);
 		try {
-			this.courses = new ArrayList<Course>();
+			this.courses.clear();
 			
 			for (int i = 0; i < (json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
@@ -194,38 +231,29 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 					this.courses.add(dc);
 				} 
 			}
-			
-			dla = new DownloadCourseListAdapter(this, courses);
-			ListView listView = (ListView) findViewById(R.id.tag_list);
-			listView.setAdapter(dla);
+
+            dla.notifyDataSetChanged();
 
 		} catch (Exception e) {
 			db.close();
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(e);
-			} else {
-				e.printStackTrace();
-			}
+			BugSenseHandler.sendException(e);
+			e.printStackTrace();
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
 		DatabaseManager.getInstance().closeDatabase();
-
 	}
 	
 	public void apiRequestComplete(Payload response) {
 		// close dialog and process results
-		pDialog.dismiss();
+		progressDialog.dismiss();
 	
 		if(response.isResult()){
 			try {
 				json = new JSONObject(response.getResultResponse());
 				refreshCourseList();
 			} catch (JSONException e) {
-				if(!MobileLearning.DEVELOPER_MODE){
-					BugSenseHandler.sendException(e);
-				} else {
-					e.printStackTrace();
-				}
+				BugSenseHandler.sendException(e);
+				e.printStackTrace();
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);
 				
 			}
@@ -237,7 +265,39 @@ public class DownloadActivity extends AppActivity implements APIRequestListener 
 				}
 			});
 		}
-
 	}
+
+    //@Override
+    public void onComplete(Payload p) {
+        refreshCourseList();
+    }
+
+    private class CourseListListener implements ListInnerBtnOnClickListener {
+        //@Override
+        public void onClick(int position) {
+            Log.d("course-download", "Clicked " + position);
+            Course courseSelected = courses.get(position);
+            if (!tasksController.isTaskInProgress()){
+                ArrayList<Object> data = new ArrayList<Object>();
+                data.add(courseSelected);
+                Payload p = new Payload(data);
+
+                if(!courseSelected.isInstalled() || courseSelected.isToUpdate()){
+                    tasksController.setTaskInProgress(true);
+                    tasksController.showDialog();
+                    DownloadCourseTask downloadTask = new DownloadCourseTask(DownloadActivity.this);
+                    downloadTask.setInstallerListener(tasksController);
+                    downloadTask.execute(p);
+                }
+                else if(courseSelected.isToUpdateSchedule()){
+                    tasksController.setTaskInProgress(true);
+                    tasksController.showDialog();
+                    ScheduleUpdateTask updateTask = new ScheduleUpdateTask(DownloadActivity.this);
+                    updateTask.setUpdateListener(tasksController);
+                    updateTask.execute(p);
+                }
+            }
+        }
+    }
 
 }

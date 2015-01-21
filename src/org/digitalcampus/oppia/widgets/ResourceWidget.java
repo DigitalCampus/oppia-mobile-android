@@ -202,11 +202,8 @@ public class ResourceWidget extends WidgetFactory {
 						.getLanguage());
 				data.put("lang", lang);
 			} catch (JSONException e) {
-				if (!MobileLearning.DEVELOPER_MODE) {
-					BugSenseHandler.sendException(e);
-				} else {
-					e.printStackTrace();
-				}
+				BugSenseHandler.sendException(e);
+				e.printStackTrace();
 			}
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			// add in extra meta-data

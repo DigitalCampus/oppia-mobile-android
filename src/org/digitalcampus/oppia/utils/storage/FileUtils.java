@@ -15,7 +15,18 @@
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.digitalcampus.oppia.utils;
+package org.digitalcampus.oppia.utils.storage;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Build;
+import android.os.StatFs;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
+
+import com.bugsense.trace.BugSenseHandler;
+
+import org.digitalcampus.oppia.application.MobileLearning;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -32,21 +43,6 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.webkit.MimeTypeMap;
-
-import com.bugsense.trace.BugSenseHandler;
-
 public class FileUtils {
 
 	public static final String TAG = FileUtils.class.getSimpleName();
@@ -58,17 +54,24 @@ public class FileUtils {
 	public static final String APP_DOWNLOAD_DIR_NAME = "download";
 	public static final String APP_MEDIA_DIR_NAME = "media";
 
-	
+    public static int BUFFER_SIZE_CONFIG = 1024;
+
+    private static StorageAccessStrategy storageStrategy;
+    public static void setStorageStrategy(StorageAccessStrategy strategy){
+        storageStrategy = strategy;
+    }
+    public static StorageAccessStrategy getStorageStrategy() {
+        return storageStrategy;
+    }
+
 	public static boolean createDirs(Context ctx) {
-		String cardstatus = Environment.getExternalStorageState();
-		if (cardstatus.equals(Environment.MEDIA_REMOVED)
-				|| cardstatus.equals(Environment.MEDIA_UNMOUNTABLE)
-				|| cardstatus.equals(Environment.MEDIA_UNMOUNTED)
-				|| cardstatus.equals(Environment.MEDIA_MOUNTED_READ_ONLY)
-				|| cardstatus.equals(Environment.MEDIA_SHARED)) {
-			Log.d(TAG, "card status: " + cardstatus);
-			return false;
-		}
+
+        if (!storageStrategy.isStorageAvailable(ctx)){
+            Log.d(TAG, "Storage not available");
+            return false;
+        }
+
+        BUFFER_SIZE_CONFIG = 21;
 
 		String[] dirs = { FileUtils.getCoursesPath(ctx), FileUtils.getMediaPath(ctx), FileUtils.getDownloadPath(ctx) };
 
@@ -91,20 +94,7 @@ public class FileUtils {
 	}
 	
 	public static String getStorageLocationRoot(Context ctx){
-		File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
-		
-		//get from prefs
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		// if location not set - then set it to first of dirs
-		if (location.equals("") && dirs.length > 0){
-			location = dirs[dirs.length-1].toString();
-			Editor editor = prefs.edit();
-			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
-			editor.commit();
-		}
-
-		return location;
+		return storageStrategy.getStorageLocation(ctx);
 	}
 	
 	public static String getCoursesPath(Context ctx){
@@ -120,8 +110,7 @@ public class FileUtils {
 	}
 	
 	// This function converts the zip file into uncompressed files which are
-	// placed in the
-	// destination directory
+	// placed in the destination directory
 	// destination directory should be created first
 	public static boolean unzipFiles(String srcDirectory, String srcFile, String destDirectory) {
 		try {
@@ -160,12 +149,10 @@ public class FileUtils {
 			}
 
 			// now start with unzip process
-			BufferedOutputStream dest = null;
-
+			BufferedOutputStream dest;
 			FileInputStream fis = new FileInputStream(sourceFile);
 			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
-
-			ZipEntry entry = null;
+			ZipEntry entry;
 
 			while ((entry = zis.getNextEntry()) != null) {
 				String outputFilename = destDirectory + File.separator + entry.getName();
@@ -198,7 +185,6 @@ public class FileUtils {
 							return false;
 						}
 					}
-
 					// close the output streams
 					dest.flush();
 					dest.close();
@@ -210,11 +196,7 @@ public class FileUtils {
 			zis.close();
 
 		} catch (Exception e) {
-			if(!MobileLearning.DEVELOPER_MODE){
-				BugSenseHandler.sendException(e);
-			} else {
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 			return false;
 		}
 
@@ -225,10 +207,8 @@ public class FileUtils {
 		String name = entry.getName();
 
 		if (name.contains(File.separator)) {
-
 			int index = name.lastIndexOf(File.separator);
 			String dirSequence = name.substring(0, index);
-
 			File newDirs = new File(destDirectory + File.separator + dirSequence);
 
 			// create the directory
@@ -236,35 +216,71 @@ public class FileUtils {
 		}
 	}
 
+    public static boolean cleanDir(File dir){
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (String dirFiles : children) {
+                File fileToDelete = new File(dir, dirFiles);
+                boolean success = deleteDir(fileToDelete);
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 	// Deletes all files and subdirectories under dir.
 	// Returns true if all deletions were successful.
 	// If a deletion fails, the method stops attempting to delete and returns
 	// false.
 	public static boolean deleteDir(File dir) {
-		if (dir.isDirectory()) {
-			String[] children = dir.list();
-			for (int i = 0; i < children.length; i++) {
-				File delFile = new File(dir, children[i]);
-				boolean success = deleteDir(delFile);
-				if (!success) {
-					return false;
-				}
-			}
-		}
-
-		// The directory is now empty so delete it
-		return dir.delete();
+        if (cleanDir(dir)){
+            // The directory is now empty so delete it
+            return dir.delete();
+        }
+        else {
+            return false;
+        }
 	}
 
 	public static boolean mediaFileExists(Context ctx, String filename) {
 		File media = new File(FileUtils.getMediaPath(ctx) + filename);
-		if (media.exists()) {
-			return true;
-		} else {
-			return false;
-		}
-
+        return media.exists();
 	}
+
+    private static long dirSize(File dir){
+        if (dir.exists() && dir.isDirectory()) {
+            long result = 0;
+            File[] fileList = dir.listFiles();
+            for (File file : fileList) {
+                if (file.isDirectory()) {
+                    result += dirSize(file);
+                } else {
+                    result += file.length();
+                }
+            }
+            return result;
+        }
+        return 0;
+    }
+
+    public static int getAvailableStorageSize(Context ctx){
+        StatFs stat = new StatFs(getStorageLocationRoot(ctx));
+        int bytesAvailable;
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            bytesAvailable = (int)(stat.getBlockSizeLong() * stat.getAvailableBlocksLong());
+        }
+        else{
+            bytesAvailable = stat.getBlockSize() * stat.getAvailableBlocks();
+        }
+        return bytesAvailable;
+    }
+
+    public static long getTotalStorageUsed(Context ctx){
+        File dir = new File(getStorageLocationRoot(ctx));
+        return dirSize(dir);
+    }
 
 	public static void cleanUp(File tempDir, String path) {
 		FileUtils.deleteDir(tempDir);
@@ -276,15 +292,7 @@ public class FileUtils {
 
 	public static String readFile(String file) throws IOException {
 		FileInputStream fstream = new FileInputStream(file);
-		DataInputStream in = new DataInputStream(fstream);
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		String strLine;
-		StringBuilder stringBuilder = new StringBuilder();
-		while ((strLine = br.readLine()) != null) {
-			stringBuilder.append(strLine);
-		}
-		in.close();
-		return stringBuilder.toString();
+        return readFile(fstream);
 	}
 
 	public static String readFile(InputStream fileStream) throws IOException {

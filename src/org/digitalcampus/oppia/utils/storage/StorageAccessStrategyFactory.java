@@ -15,28 +15,17 @@
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.digitalcampus.oppia.model;
+package org.digitalcampus.oppia.utils.storage;
 
-import java.io.Serializable;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 
-public class DownloadProgress implements Serializable {
-
-	private String message = "";
-	private int progress = 0;
-	
-	public String getMessage() {
-		return message;
-	}
-	
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
-	public int getProgress() {
-		return progress;
-	}
-	
-	public void setProgress(int progress) {
-		this.progress = progress;
-	}
+public class StorageAccessStrategyFactory {
+    public static StorageAccessStrategy createStrategy(String type){
+        if ((type!=null)&&(type.equals(PrefsActivity.STORAGE_OPTION_EXTERNAL))){
+            return new ExternalStorageStrategy();
+        }
+        else{
+            return new InternalStorageStrategy();
+        }
+    }
 }

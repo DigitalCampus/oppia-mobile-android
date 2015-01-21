@@ -18,21 +18,6 @@
 package org.digitalcampus.oppia.activity;
 
 
-import java.io.File;
-import java.util.ArrayList;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.listener.InstallCourseListener;
-import org.digitalcampus.oppia.listener.PostInstallListener;
-import org.digitalcampus.oppia.listener.UpgradeListener;
-import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.PostInstallTask;
-import org.digitalcampus.oppia.task.UpgradeManagerTask;
-import org.digitalcampus.oppia.utils.FileUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -45,6 +30,21 @@ import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.listener.InstallCourseListener;
+import org.digitalcampus.oppia.listener.PostInstallListener;
+import org.digitalcampus.oppia.listener.UpgradeListener;
+import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.PostInstallTask;
+import org.digitalcampus.oppia.task.UpgradeManagerTask;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+
 public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener{
 
 	public final static String TAG = StartUpActivity.class.getSimpleName();
@@ -55,10 +55,11 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BugSenseHandler.initAndStartSession(this, MobileLearning.BUGSENSE_API_KEY);
+        
         setContentView(R.layout.start_up);
         tvProgress = (TextView) this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        
+        BugSenseHandler.setUserIdentifier(prefs.getString(PrefsActivity.PREF_USER_NAME, "anon"));
         
         UpgradeManagerTask umt = new UpgradeManagerTask(this);
 		umt.setUpgradeListener(this);

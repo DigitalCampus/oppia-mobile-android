@@ -27,10 +27,13 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadMediaListAdapter;
-import org.digitalcampus.oppia.listener.DownloadMediaListener;
-import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.listener.DownloadCompleteListener;
+import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.task.DownloadMediaTask;
+import org.digitalcampus.oppia.task.DownloadTasksController;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import android.app.AlertDialog;
@@ -39,6 +42,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -46,12 +50,15 @@ import android.widget.ListView;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener{
+public class DownloadMediaActivity extends AppActivity implements DownloadCompleteListener {
 
 	public static final String TAG = DownloadMediaActivity.class.getSimpleName();
-	private ArrayList<Media> missingMedia = new ArrayList<Media>();
+
+    private SharedPreferences prefs;
+    private ArrayList<Media> missingMedia;
 	private DownloadMediaListAdapter dmla;
-	private AlertDialog alertDialog;
+
+    private DownloadTasksController tasksController;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -60,15 +67,20 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		setContentView(R.layout.activity_download_media);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			missingMedia = (ArrayList<Media>) bundle.getSerializable(DownloadMediaActivity.TAG);
 		}
-		
-		ListView listView = (ListView) findViewById(R.id.missing_media_list);
+        else{
+            missingMedia = new ArrayList<Media>();
+        }
+
 		dmla = new DownloadMediaListAdapter(this, missingMedia);
-		dmla.setDownloadMediaListener(this);
+        dmla.setOnClickListener(new DownloadMediaListener());
+
+        ListView listView = (ListView) findViewById(R.id.missing_media_list);
 		listView.setAdapter(dmla);
 		
 		Button downloadViaPCBtn = (Button) this.findViewById(R.id.download_media_via_pc_btn);
@@ -77,32 +89,52 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 				downloadViaPC();
 			}
 		});
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
 		Editor e = prefs.edit();
 		e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
 		e.commit();
 	}
 	
 	@Override
-	public void onPause(){
-		// kill any open dialogs
-		if (alertDialog != null){
-			alertDialog.dismiss();
-		}
-		if (dmla != null){
-			dmla.closeDialog();
-		}
-		super.onPause();
-	}
-	
-	@Override
 	public void onResume(){
 		super.onResume();
-		if (dmla != null){
-			dmla.openDialog();
-		}
+        if ((missingMedia != null) && missingMedia.size()>0) {
+            //We already have loaded media (coming from orientationchange)
+            dmla.notifyDataSetChanged();
+        }
+        if (tasksController == null){
+            tasksController = new DownloadTasksController(this, prefs);
+        }
+        tasksController.setOnDownloadCompleteListener(this);
+        tasksController.setCtx(this);
 	}
+
+    @Override
+    public void onDestroy(){
+        tasksController.setOnDownloadCompleteListener(null);
+        tasksController.setCtx(null);
+        super.onDestroy();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        ArrayList<Media> savedMissingMedia = (ArrayList<Media>) savedInstanceState.getSerializable(TAG);
+        this.missingMedia.clear();
+        this.missingMedia.addAll(savedMissingMedia);
+        tasksController = (DownloadTasksController) savedInstanceState.getParcelable("tasksProgress");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable(TAG, missingMedia);
+        if (tasksController != null){
+            tasksController.setOnDownloadCompleteListener(null);
+            savedInstanceState.putParcelable("tasksProgress", tasksController);
+        }
+    }
 	
 	private void downloadViaPC(){
 		String filename = "mobile-learning-media.html";
@@ -137,17 +169,39 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		}
 	}
 
-	public void downloadProgressUpdate(DownloadProgress msg) {
+    //@Override
+    public void onComplete(Payload response) {
+        if (response.isResult()){
+            missingMedia.remove((Media) response.getData().get(0));
+            dmla.notifyDataSetChanged();
+            UIUtils.showAlert(this, R.string.info,response.getResultResponse());
+        } else {
+            UIUtils.showAlert(this, R.string.error,response.getResultResponse());
+        }
+    }
 
-	}
+    private class DownloadMediaListener implements ListInnerBtnOnClickListener {
+        //@Override
+        public void onClick(int position) {
 
-	public void downloadComplete(Payload response) {
-		if (response.isResult()){
-			missingMedia.remove((Media) response.getData().get(0));
-			dmla.notifyDataSetChanged();
-			alertDialog = UIUtils.showAlert(this, R.string.info,response.getResultResponse());
-		} else {
-			alertDialog = UIUtils.showAlert(this, R.string.error,response.getResultResponse());
-		}
-	}
+            if(!ConnectionUtils.isOnWifi(DownloadMediaActivity.this)){
+                UIUtils.showAlert(DownloadMediaActivity.this, R.string.warning, R.string.warning_wifi_required);
+                return;
+            }
+            Log.d("media-download", "Clicked " + position);
+            Media mediaToDownload = missingMedia.get(position);
+            if (!tasksController.isTaskInProgress()){
+                ArrayList<Object> data = new ArrayList<Object>();
+                data.add(mediaToDownload);
+                Payload p = new Payload(data);
+
+                DownloadMediaTask task = new DownloadMediaTask(DownloadMediaActivity.this);
+                task.setDownloadListener(tasksController);
+                tasksController.setTaskInProgress(true);
+                tasksController.showDialog();
+                task.execute(p);
+            }
+        }
+    }
+
 }

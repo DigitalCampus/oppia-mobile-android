@@ -18,7 +18,12 @@
 package org.digitalcampus.oppia.fragments;
 
 import org.digitalcampus.mobile.learning.R;
+
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
