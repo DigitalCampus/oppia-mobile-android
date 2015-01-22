@@ -492,7 +492,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
 			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
 			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
-			course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));;
+			course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
+			course = this.courseSetProgress(course, userId);
 			courses.add(course);
 			c.moveToNext();
 		}
@@ -507,7 +508,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
-			 course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+			course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
@@ -516,52 +517,39 @@ public class DbHelper extends SQLiteOpenHelper {
 			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
 			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
 			course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
+			course = this.courseSetProgress(course, userId);
 			c.moveToNext();
 		}
 		c.close();
 		return course;
 	}
 	
-	private Course createCourseObject(Cursor c, long userId){
-		Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-		course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-		course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
-		course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
-		course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
-		course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
-		course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
-		course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
-		course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
-		
-		String sqlActs = "SELECT a."+ ACTIVITY_C_ID + ", " +
-				"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
-				" as d FROM "+ACTIVITY_TABLE + " a " +
-				" LEFT OUTER JOIN (SELECT DISTINCT " +TRACKER_LOG_C_ACTIVITYDIGEST +" FROM " + TRACKER_LOG_TABLE + 
-									" WHERE " + TRACKER_LOG_C_COMPLETED + "=1 AND " + TRACKER_LOG_C_COURSEID + "=" + String.valueOf(c.getInt(c.getColumnIndex(COURSE_C_ID))) + 
-									" AND " + TRACKER_LOG_C_USERID + "=" + String.valueOf(userId) +") l " +
-									" ON a."+ ACTIVITY_C_ACTIVITYDIGEST +" = l."+TRACKER_LOG_C_ACTIVITYDIGEST + 
-				" WHERE a."+ ACTIVITY_C_COURSEID +"=" + String.valueOf(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-		Cursor cActs = db.rawQuery(sqlActs,null);
-		
-		// set no activities
-		course.setNoActivities(cActs.getCount());
-		
-		int noComplete = 0;
-		int noStarted = 0;
-		cActs.moveToFirst();
-		while (cActs.isAfterLast() == false) {
-			if(cActs.getString(c.getColumnIndex("d")) != null){
-				noComplete++;
-			} 
-			c.moveToNext();
-		}
+	private Course courseSetProgress(Course course, long userId){
+		// get no activities
+		String s = ACTIVITY_C_COURSEID + "=?";
+		String[] args = new String[] { String.valueOf(course.getCourseId()) };
+		Cursor c = db.query(ACTIVITY_TABLE, null, s, args, null, null, null);
+		course.setNoActivities(c.getCount());
 		c.close();
 		
-		// set no activities completed
-		course.setNoActivitiesCompleted(noComplete);
+		// get no completed
+		String sqlCompleted = "SELECT DISTINCT " + TRACKER_LOG_C_ACTIVITYDIGEST + " FROM " + TRACKER_LOG_TABLE +
+						" WHERE " + TRACKER_LOG_C_COURSEID + "=" + course.getCourseId() + 
+						" AND " + TRACKER_LOG_C_USERID + "=" + userId +
+						" AND " + TRACKER_LOG_C_COMPLETED + "=1";
+		c = db.rawQuery(sqlCompleted,null);
+		course.setNoActivitiesCompleted(c.getCount());
+		c.close();
 		
-		// set no activities started
-		course.setNoActivitiesStarted(noStarted);
+		// get no started
+		String sqlStarted = "SELECT DISTINCT " + TRACKER_LOG_C_ACTIVITYDIGEST + " FROM " + TRACKER_LOG_TABLE +
+				" WHERE " + TRACKER_LOG_C_COURSEID + "=" + course.getCourseId() + 
+				" AND " + TRACKER_LOG_C_USERID + "=" + userId +
+				" AND " + TRACKER_LOG_C_COMPLETED + "=0" +
+				" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " NOT IN (" + sqlCompleted + ")";
+		c = db.rawQuery(sqlStarted,null);
+		course.setNoActivitiesStarted(c.getCount());
+		c.close();
 		
 		return course;
 	}

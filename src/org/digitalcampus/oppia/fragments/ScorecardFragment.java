@@ -105,12 +105,6 @@ public class ScorecardFragment extends Fragment{
 		
 		Log.d(TAG,course.getTitleJSONString());
 		
-		// Get total no activities
-		// Get no activities completed
-		// Get activities attempted
-		// Get no activities not started 
-		
-		
 		// initialize our XYPlot reference:
         pie = (PieChart) super.getActivity().findViewById(chartViewId);
 
@@ -131,27 +125,22 @@ public class ScorecardFragment extends Fragment{
             }
         });
   
-        //s1 = new Segment("s1", course.getNoActivitiesNotStarted());
-        //s2 = new Segment("s2", course.getNoActivitiesCompleted());
-        //s3 = new Segment("s3", course.getNoActivitiesStarted());
-
-        s1 = new Segment("s1", 13);
-        s2 = new Segment("s2", 15);
-        s3 = new Segment("s3", 5);
-        
-        EmbossMaskFilter emf = new EmbossMaskFilter(new float[]{0, 0 ,0}, 0.4f, 10, 8.2f);
+        Log.d(TAG, "No Activities Total: " + course.getNoActivities());
+        Log.d(TAG, "No Activities Completed: " + course.getNoActivitiesCompleted());
+        Log.d(TAG, "No Activities Started: " + course.getNoActivitiesStarted());
+        Log.d(TAG, "No Activities Not Started: " + course.getNoActivitiesNotStarted());
+        s1 = new Segment("s1", course.getNoActivitiesNotStarted());
+        s2 = new Segment("s2", course.getNoActivitiesCompleted());
+        s3 = new Segment("s3", course.getNoActivitiesStarted());
 
         SegmentFormatter sf1 = new SegmentFormatter();
-        sf1.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_attempted);
-        sf1.getFillPaint().setMaskFilter(emf);
+        sf1.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_not_started);
 
         SegmentFormatter sf2 = new SegmentFormatter();
         sf2.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_completed);
-        sf2.getFillPaint().setMaskFilter(emf);
 
         SegmentFormatter sf3 = new SegmentFormatter();
-        sf3.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_not_started);
-        sf3.getFillPaint().setMaskFilter(emf);
+        sf3.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_started);
 
 
         pie.addSeries(s1, sf1);
