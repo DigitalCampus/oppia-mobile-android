@@ -42,7 +42,6 @@ public class Course implements Serializable {
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
 	private ArrayList<Lang> descriptions = new ArrayList<Lang>();
 	private String shortname;
-	private float progress = 0;
 	private Double versionId;
 	private boolean installed;
 	private boolean toUpdate;
@@ -56,6 +55,9 @@ public class Course implements Serializable {
 	private String scheduleURI;
 	private boolean isDraft = false;
 	private int priority = 0;
+	private int noActivities = 0;
+	private int noActivitiesCompleted = 0;
+	private int noActivitiesStarted = 0;
 	
 	private String root;
 	
@@ -173,12 +175,13 @@ public class Course implements Serializable {
 		this.toUpdate = toUpdate;
 	}
 
-	public float getProgress() {
-		return progress;
-	}
-
-	public void setProgress(float progress) {
-		this.progress = progress;
+	public float getProgressPercent() {
+		// prevent divide by zero errors
+		if (this.noActivities != 0){
+			return this.noActivitiesCompleted*100/this.noActivities;
+		} else {
+			return 0;
+		}
 	}
 
 	public String getShortname() {
@@ -362,6 +365,34 @@ public class Course implements Serializable {
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+
+	public int getNoActivities() {
+		return noActivities;
+	}
+
+	public void setNoActivities(int noActivities) {
+		this.noActivities = noActivities;
+	}
+
+	public int getNoActivitiesCompleted() {
+		return noActivitiesCompleted;
+	}
+
+	public void setNoActivitiesCompleted(int noActivitiesCompleted) {
+		this.noActivitiesCompleted = noActivitiesCompleted;
+	}
+
+	public int getNoActivitiesStarted() {
+		return noActivitiesStarted;
+	}
+
+	public void setNoActivitiesStarted(int noActivitiesStarted) {
+		this.noActivitiesStarted = noActivitiesStarted;
+	}
+	
+	public int getNoActivitiesNotStarted(){
+		return this.getNoActivities() - this.getNoActivitiesCompleted() - this.getNoActivitiesStarted();
 	}
 	
 	

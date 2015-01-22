@@ -91,7 +91,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	    }
 
 	    if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)){
-            viewHolder.courseProgress.setProgress((int) c.getProgress());
+            viewHolder.courseProgress.setProgress((int) c.getProgressPercent());
 	    } else {
             viewHolder.courseProgress.setVisibility(View.GONE);
 	    }

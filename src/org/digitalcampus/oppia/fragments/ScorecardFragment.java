@@ -103,8 +103,6 @@ public class ScorecardFragment extends Fragment{
 	
 	private void drawChartForCourse(int chartViewId, Course course){
 		
-		
-		Log.d(TAG,course.getTitleJSONString());
 		Log.d(TAG,course.getTitleJSONString());
 		
 		// Get total no activities
@@ -133,23 +131,27 @@ public class ScorecardFragment extends Fragment{
             }
         });
   
-        s1 = new Segment("s1", course.getProgress());
-        s2 = new Segment("s2", 1);
-        s3 = new Segment("s3", 10);
+        //s1 = new Segment("s1", course.getNoActivitiesNotStarted());
+        //s2 = new Segment("s2", course.getNoActivitiesCompleted());
+        //s3 = new Segment("s3", course.getNoActivitiesStarted());
 
-        //EmbossMaskFilter emf = new EmbossMaskFilter(new float[]{0, 0 ,0}, 0.4f, 10, 8.2f);
+        s1 = new Segment("s1", 13);
+        s2 = new Segment("s2", 15);
+        s3 = new Segment("s3", 5);
+        
+        EmbossMaskFilter emf = new EmbossMaskFilter(new float[]{0, 0 ,0}, 0.4f, 10, 8.2f);
 
         SegmentFormatter sf1 = new SegmentFormatter();
         sf1.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_attempted);
-        //sf1.getFillPaint().setMaskFilter(emf);
+        sf1.getFillPaint().setMaskFilter(emf);
 
         SegmentFormatter sf2 = new SegmentFormatter();
         sf2.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_completed);
-       //sf2.getFillPaint().setMaskFilter(emf);
+        sf2.getFillPaint().setMaskFilter(emf);
 
         SegmentFormatter sf3 = new SegmentFormatter();
         sf3.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_not_started);
-        //sf3.getFillPaint().setMaskFilter(emf);
+        sf3.getFillPaint().setMaskFilter(emf);
 
 
         pie.addSeries(s1, sf1);
