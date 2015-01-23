@@ -5,24 +5,20 @@
     android:orientation="vertical"
     android:padding="5dp" >
 
-
-
         <TextView
             android:id="@+id/course_title"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_light"
+            android:textColor="@color/text_dark"
             android:textSize="18sp"
-            android:layout_marginTop="10dp"
-            android:textStyle="normal" />
+            android:textStyle="normal" 
+            android:gravity="center"/>
 
         <com.androidplot.pie.PieChart
-            android:id="@+id/mySimplePieChart"
+            android:id="@+id/scorecardPieChart"
             android:layout_width="fill_parent"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            androidPlot.title="A Simple Pie Chart"
-            androidPlot.titleWidget.labelPaint.textSize="12"/>
+            android:layout_height="150dp"
+            android:layout_weight="1"/>
 
 
 </LinearLayout>

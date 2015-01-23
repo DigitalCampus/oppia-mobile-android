@@ -3,10 +3,8 @@
               android:orientation="vertical">
 
     <com.androidplot.pie.PieChart
-            android:id="@+id/mySimplePieChart"
+            android:id="@+id/scorecardPieChart"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
-            androidPlot.titleWidget.labelPaint.textSize="20dp"
-            androidPLot.titleWidget.labelPaint.textColor="#000"/>
+            android:layout_weight="1"/>
 </LinearLayout>
