@@ -269,11 +269,11 @@ public class FileUtils {
         return 0;
     }
 
-    public static int getAvailableStorageSize(Context ctx){
+    public static long getAvailableStorageSize(Context ctx){
         StatFs stat = new StatFs(getStorageLocationRoot(ctx));
-        int bytesAvailable;
+        long bytesAvailable;
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            bytesAvailable = (int)(stat.getBlockSizeLong() * stat.getAvailableBlocksLong());
+            bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
         }
         else{
             bytesAvailable = stat.getBlockSize() * stat.getAvailableBlocks();

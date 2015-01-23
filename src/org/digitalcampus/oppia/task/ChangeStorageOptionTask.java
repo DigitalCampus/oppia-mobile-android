@@ -51,7 +51,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             long currentSize = FileUtils.getTotalStorageUsed(ctx);
 
             FileUtils.setStorageStrategy(newStrategy);
-            int availableDestSize = FileUtils.getAvailableStorageSize(ctx);
+            long availableDestSize = FileUtils.getAvailableStorageSize(ctx);
             Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
             if (availableDestSize<currentSize){
                 resetStrategy(previousStrategy);
