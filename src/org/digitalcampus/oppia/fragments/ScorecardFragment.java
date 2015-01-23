@@ -26,6 +26,7 @@ import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.ScorecardPieChart;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -82,7 +83,12 @@ public class ScorecardFragment extends Fragment{
 			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecard, null);
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			vv.setLayoutParams(lp);
+			// refresh course to get most recent info (otherwise gets the info from when course first opened)
 			this.course = (Course) getArguments().getSerializable(Course.TAG);
+			DbHelper db = new DbHelper(super.getActivity());
+			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			this.course = db.getCourse(this.course.getCourseId(), userId);
+			DatabaseManager.getInstance().closeDatabase();	
 		} else {
 			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecards, null);
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -102,7 +108,9 @@ public class ScorecardFragment extends Fragment{
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 
 		if(this.course != null){
-			this.drawChartForCourse(R.id.scorecardPieChart, course);
+			PieChart pie = (PieChart) super.getActivity().findViewById(R.id.scorecardPieChart);
+			ScorecardPieChart spc = new ScorecardPieChart(super.getActivity(), pie, this.course);
+			spc.drawChart(50, true);
 		} else {
 			DbHelper db = new DbHelper(super.getActivity());
 			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
@@ -112,45 +120,6 @@ public class ScorecardFragment extends Fragment{
 			ListView listView = (ListView) super.getActivity().findViewById(R.id.scorecards_list);
 			listView.setAdapter(scorecardListAdapter);
 		}
-	}
-	
-	private void drawChartForCourse(int chartViewId, Course course){
-		
-		// initialize our XYPlot reference:
-        pie = (PieChart) super.getActivity().findViewById(chartViewId);
-        pie.setPlotMargins(50, 50, 50, 50);
-        pie.setTitle(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-        
-        
-        segmentCompleted = new Segment("Completed (" + course.getNoActivitiesCompleted() + ")", course.getNoActivitiesCompleted());
-        segmentStarted = new Segment("Started (" + course.getNoActivitiesStarted() + ")", course.getNoActivitiesStarted());
-        segmentNotStarted = new Segment("Not Started (" + course.getNoActivitiesNotStarted() + ")", course.getNoActivitiesNotStarted());
-        
-        SegmentFormatter sfNotStarted = new SegmentFormatter();
-        sfNotStarted.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_not_started);
-
-        SegmentFormatter sfCompleted = new SegmentFormatter();
-        sfCompleted.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_completed);
-
-        SegmentFormatter sfStarted = new SegmentFormatter();
-        sfStarted.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_started);
-
-        
-        if (course.getNoActivitiesCompleted() != 0){
-        	pie.addSeries(segmentCompleted, sfCompleted);
-        }
-        if (course.getNoActivitiesStarted() != 0){
-        	pie.addSeries(segmentStarted, sfStarted);
-        }
-        if (course.getNoActivitiesNotStarted() != 0){
-        	pie.addSeries(segmentNotStarted, sfNotStarted);
-        }
-        
-        pie.getRenderer(PieRenderer.class).setDonutSize(60/100f, PieRenderer.DonutMode.PERCENT);
-
-        pie.getBorderPaint().setColor(Color.TRANSPARENT);
-        pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
-		
 	}
 
 }
