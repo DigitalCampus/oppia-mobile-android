@@ -24,6 +24,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TagListAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.task.APIRequestTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -78,10 +79,17 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	@Override
 	public void onResume(){
 		super.onResume();
-		// Get Course list
+		// Get tags list
 		if(this.json == null){
 			this.getTagList();
-		}
+        } else if ((tags != null) && tags.size()>0) {
+            //We already have loaded JSON and tags (coming from orientationchange)
+            tla.notifyDataSetChanged();
+        }
+        else{
+            //The JSON is downloaded but tag list is not
+            refreshTagList();
+        }
 	}
 
 	@Override
@@ -98,6 +106,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	    super.onRestoreInstanceState(savedInstanceState);
 	    try {
 			this.json = new JSONObject(savedInstanceState.getString("json"));
+            ArrayList<Tag> savedTags = (ArrayList<Tag>) savedInstanceState.getSerializable("tags");
+            this.tags.addAll(savedTags);
 		} catch (JSONException e) {
 		}
 	}
@@ -105,7 +115,11 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 	    super.onSaveInstanceState(savedInstanceState);
-	    savedInstanceState.putString("json", json.toString());
+        if (json != null){
+            //Only save the instance if the request has been proccessed already
+            savedInstanceState.putString("json", json.toString());
+            savedInstanceState.putSerializable("tags", tags);
+        }
 	}
 	
 	private void getTagList() {
@@ -131,22 +145,18 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				t.setName(json_obj.getString("name"));
 				t.setId(json_obj.getInt("id"));
 				t.setCount(json_obj.getInt("count"));
-				
 				// Description
 				if (json_obj.has("description") && !json_obj.isNull("description")){
 					t.setDescription(json_obj.getString("description"));
 				}
-				
 				// icon
 				if (json_obj.has("icon") && !json_obj.isNull("icon")){
 					t.setIcon(json_obj.getString("icon"));
 				}
-				
 				// highlight
 				if (json_obj.has("highlight") && !json_obj.isNull("highlight")){
 					t.setHighlight(json_obj.getBoolean("highlight"));
 				}
-				
 				// order priority
 				if (json_obj.has("order_priority") && !json_obj.isNull("order_priority")){
 					t.setOrderPriority(json_obj.getInt("order_priority"));

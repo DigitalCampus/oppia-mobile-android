@@ -47,18 +47,16 @@
             android:name="org.digitalcampus.oppia.activity.CourseActivity"
             android:label="@string/title_activity_course" 
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:hardwareAccelerated="true">
+            android:theme="@style/Oppia.Theme.DarkLandscapeDropdown">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadActivity"
-            android:label="@string/title_download_activity"
-        >
+            android:label="@string/title_download_activity">
         </activity>
          <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
             android:label="@string/title_tag_select_activity"
-            android:screenOrientation="portrait"
-   			android:configChanges="orientation|keyboardHidden">
+   			android:configChanges="keyboardHidden">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"

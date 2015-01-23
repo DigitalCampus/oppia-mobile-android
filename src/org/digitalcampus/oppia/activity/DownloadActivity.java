@@ -131,12 +131,12 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-        ArrayList<Course> savedCourses = (ArrayList<Course>) savedInstanceState.getSerializable("courses");
-	    this.courses.addAll(savedCourses);
 
 	    try {
 			this.json = new JSONObject(savedInstanceState.getString("json"));
-		} catch (JSONException e) {
+            ArrayList<Course> savedCourses = (ArrayList<Course>) savedInstanceState.getSerializable("courses");
+            this.courses.addAll(savedCourses);
+		} catch (Exception e) {
             // error in the json so just get the list again
         }
         tasksController = (DownloadTasksController) savedInstanceState.getParcelable("tasksProgress");

@@ -73,8 +73,8 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
                 c.setReadTimeout(Integer.parseInt(prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_RESP,
 								ctx.getString(R.string.prefServerTimeoutResponse))));
                 
-                int fileLength = c.getContentLength();
-                int availableStorage = FileUtils.getAvailableStorageSize(ctx);
+                long fileLength = c.getContentLength();
+                long availableStorage = FileUtils.getAvailableStorageSize(ctx);
 
                 if (fileLength >= availableStorage){
                     payload.setResult(false);
@@ -99,7 +99,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
                     int progress = 0;
                     while ((len1 = in.read(buffer)) > 0) {
                         total += len1;
-                        progress = (int)(total*100)/fileLength;
+                        progress = (int)((total*100)/fileLength);
                         if(progress > 0){
                             dp.setProgress(progress);
                             publishProgress(dp);
