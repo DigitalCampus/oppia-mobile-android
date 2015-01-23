@@ -57,8 +57,7 @@
          <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
             android:label="@string/title_tag_select_activity"
-            android:screenOrientation="portrait"
-   			android:configChanges="orientation|keyboardHidden">
+   			android:configChanges="keyboardHidden">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
