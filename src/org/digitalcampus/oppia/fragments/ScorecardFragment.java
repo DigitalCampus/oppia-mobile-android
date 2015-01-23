@@ -17,13 +17,18 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import org.digitalcampus.mobile.learning.R;
+import java.util.ArrayList;
+import java.util.Locale;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.adapter.CourseListAdapter;
+import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
-
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -37,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.androidplot.pie.PieChart;
@@ -55,7 +61,8 @@ public class ScorecardFragment extends Fragment{
     private Segment s1;
     private Segment s2;
     private Segment s3;
-    private Segment s4;
+    
+    private ScorecardListAdapter scorecardListAdapter;
 	
     public static ScorecardFragment newInstance() {
 		ScorecardFragment myFragment = new ScorecardFragment();
@@ -77,11 +84,16 @@ public class ScorecardFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecard, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
+		View vv = null;
 		if( getArguments() != null && getArguments().containsKey(Course.TAG)){
+			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecard, null);
+			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			vv.setLayoutParams(lp);
 			this.course = (Course) getArguments().getSerializable(Course.TAG);
+		} else {
+			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecards, null);
+			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			vv.setLayoutParams(lp);
 		}
 		return vv;
 	}
@@ -98,6 +110,14 @@ public class ScorecardFragment extends Fragment{
 
 		if(this.course != null){
 			this.drawChartForCourse(R.id.mySimplePieChart, course);
+		} else {
+			DbHelper db = new DbHelper(super.getActivity());
+			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			ArrayList<Course> courses = db.getCourses(userId);
+			DatabaseManager.getInstance().closeDatabase();
+			scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
+			ListView listView = (ListView) super.getActivity().findViewById(R.id.scorecards_list);
+			listView.setAdapter(scorecardListAdapter);
 		}
 	}
 	
@@ -108,6 +128,7 @@ public class ScorecardFragment extends Fragment{
 		// initialize our XYPlot reference:
         pie = (PieChart) super.getActivity().findViewById(chartViewId);
 
+        pie.setTitle(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
         // detect segment clicks:
         pie.setOnTouchListener(new View.OnTouchListener(){
         	
@@ -129,9 +150,9 @@ public class ScorecardFragment extends Fragment{
         Log.d(TAG, "No Activities Completed: " + course.getNoActivitiesCompleted());
         Log.d(TAG, "No Activities Started: " + course.getNoActivitiesStarted());
         Log.d(TAG, "No Activities Not Started: " + course.getNoActivitiesNotStarted());
-        s1 = new Segment("s1", course.getNoActivitiesNotStarted());
-        s2 = new Segment("s2", course.getNoActivitiesCompleted());
-        s3 = new Segment("s3", course.getNoActivitiesStarted());
+        s1 = new Segment("Not Started (" + course.getNoActivitiesNotStarted() + ")", course.getNoActivitiesNotStarted());
+        s2 = new Segment("Completed (" + course.getNoActivitiesCompleted() + ")", course.getNoActivitiesCompleted());
+        s3 = new Segment("Started (" + course.getNoActivitiesStarted() + ")", course.getNoActivitiesStarted());
 
         SegmentFormatter sf1 = new SegmentFormatter();
         sf1.configure(super.getActivity().getApplicationContext(), R.xml.scorecard_pie_segment_not_started);
