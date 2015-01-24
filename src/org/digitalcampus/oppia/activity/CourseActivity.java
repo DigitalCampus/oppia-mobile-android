@@ -222,36 +222,42 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
+		Bundle tb = new Bundle();
 		switch (item.getItemId()) {
-		case R.id.menu_language:
-			createLanguageDialog();
-			return true;
-		case R.id.menu_help:
-			Bundle tb = new Bundle();
-			Intent i = new Intent(this, AboutActivity.class);
-			tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
-			i.putExtras(tb);
-			startActivity(i);
-			return true;			
-		case android.R.id.home:
-			this.finish();
-			return true;
-		case R.id.menu_tts:
-			if (myTTS == null && !ttsRunning) {
-				// check for TTS data
-				Intent checkTTSIntent = new Intent();
-				checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-				startActivityForResult(checkTTSIntent, TTS_CHECK);
-			} else if (myTTS != null && ttsRunning) {
-				this.stopReading();
-			} else {
-				// TTS not installed so show message
-				Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
-			}
-			supportInvalidateOptionsMenu();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.menu_language:
+				createLanguageDialog();
+				return true;
+			case R.id.menu_help:
+				Intent i = new Intent(this, AboutActivity.class);
+				tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
+				i.putExtras(tb);
+				startActivity(i);
+				return true;			
+			case android.R.id.home:
+				this.finish();
+				return true;
+			case R.id.menu_scorecard:
+				i = new Intent(this, ScorecardActivity.class);
+				tb.putSerializable(Course.TAG, course);
+				i.putExtras(tb);
+				startActivity(i);
+				return true;
+			case R.id.menu_tts:
+				if (myTTS == null && !ttsRunning) {
+					// check for TTS data
+					Intent checkTTSIntent = new Intent();
+					checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+					startActivityForResult(checkTTSIntent, TTS_CHECK);
+				} else if (myTTS != null && ttsRunning) {
+					this.stopReading();
+				} else {
+					// TTS not installed so show message
+					Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
+				}
+				supportInvalidateOptionsMenu();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 	
