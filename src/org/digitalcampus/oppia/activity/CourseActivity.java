@@ -229,6 +229,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
             } else if (activities.get(i).getActType().equalsIgnoreCase("quiz")) {
                 QuizWidget newQuiz = QuizWidget.newInstance(activities.get(i), course, isBaseline);
                 if (apAdapter != null){
+                    //If there was a previous quizWidget, we apply its current config to the new one
                     QuizWidget previousQuiz = (QuizWidget) apAdapter.getItem(i);
                     newQuiz.setWidgetConfig(previousQuiz.getWidgetConfig());
                 }
@@ -237,8 +238,13 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
                 f = ResourceWidget.newInstance(activities.get(i), course, isBaseline);
                 fragments.add(f);
             } else if  (activities.get(i).getActType().equalsIgnoreCase("feedback")){
-                f = FeedbackWidget.newInstance(activities.get(i), course, isBaseline);
-                fragments.add(f);
+                FeedbackWidget newFeedback = FeedbackWidget.newInstance(activities.get(i), course, isBaseline);
+                if (apAdapter != null){
+                    //If there was a previous feedbackWidget, we apply its current config to the new one
+                    FeedbackWidget previousWidget = (FeedbackWidget) apAdapter.getItem(i);
+                    newFeedback.setWidgetConfig(previousWidget.getWidgetConfig());
+                }
+                fragments.add(newFeedback);
             }
         }
 
