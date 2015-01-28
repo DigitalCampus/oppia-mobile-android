@@ -126,22 +126,28 @@ public class FeedbackWidget extends WidgetFactory {
 		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) getView().findViewById(R.id.question_text);
 		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
+
+        loadFeedback();
 	}
 	
 	@Override
 	public void onResume(){
 		super.onResume();
-		if (this.feedback == null) {
-			this.feedback = new Quiz();
-			this.feedback.load(feedbackContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-		}
-		if (this.isOnResultsPage) {
-			this.showResults();
-		} else {
-			this.showQuestion();
-		}
+        loadFeedback();
 	}
-	
+
+    private void loadFeedback(){
+        if (this.feedback == null) {
+            this.feedback = new Quiz();
+            this.feedback.load(feedbackContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        }
+        if (this.isOnResultsPage) {
+            this.showResults();
+        } else {
+            this.showQuestion();
+        }
+    }
+
 	public void showQuestion() {
 		QuizQuestion q = null;
 		try {
@@ -235,24 +241,28 @@ public class FeedbackWidget extends WidgetFactory {
 	
 	public void showResults() {
 
-		// log the activity as complete
-		isOnResultsPage = true;
-		this.saveTracker();
+        if (!isOnResultsPage){
+            // log the activity as complete
+            isOnResultsPage = true;
+            this.saveTracker();
 
-		// save results ready to send back to the quiz server
-		String data = feedback.getResultObject().toString();
-		DbHelper db = new DbHelper(super.getActivity());
-		db.insertQuizResult(data, course.getCourseId());
-		DatabaseManager.getInstance().closeDatabase();
+            // save results ready to send back to the quiz server
+            String data = feedback.getResultObject().toString();
+            DbHelper db = new DbHelper(super.getActivity());
+            db.insertQuizResult(data, course.getCourseId());
+            DatabaseManager.getInstance().closeDatabase();
+        }
 
-		// load new layout
-		View view = getView().findViewById(R.id.quiz_progress);
-	    ViewGroup parent = (ViewGroup) view.getParent();
-	    int index = parent.indexOfChild(view);
-	    parent.removeView(view);
-	    view = super.getActivity().getLayoutInflater().inflate(R.layout.widget_feedback_results, parent, false);
-	    parent.addView(view, index);
-
+        //Check if feedback results layout is already loaded
+        View feedbackResultsLayout = getView().findViewById(R.id.widget_feedback_results);
+        if (feedbackResultsLayout == null){
+            View view = getView().findViewById(R.id.quiz_progress);
+            ViewGroup parent = (ViewGroup) view.getParent();
+            int index = parent.indexOfChild(view);
+            parent.removeView(view);
+            view = super.getActivity().getLayoutInflater().inflate(R.layout.widget_feedback_results, parent, false);
+            parent.addView(view, index);
+        }
 	}
 	
 	private void setProgress() {

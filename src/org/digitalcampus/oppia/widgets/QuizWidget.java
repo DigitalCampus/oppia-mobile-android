@@ -125,6 +125,7 @@ public class QuizWidget extends WidgetFactory {
 		if ((savedInstanceState != null) && (savedInstanceState.getSerializable("widget_config") != null)){
 			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
 		}
+
 		return vv;
 	}
 
@@ -141,59 +142,65 @@ public class QuizWidget extends WidgetFactory {
 		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) getView().findViewById(R.id.question_text);
 		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
+
+        loadQuiz();
 	}
 	
 	@Override
 	public void onResume(){
 		super.onResume();
-		if (this.quiz == null) {
-			this.quiz = new Quiz();
-			this.quiz.load(quizContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-		}
-		if (this.isOnResultsPage) {
-			this.showResults();
-		} else {
-			// determine availability
-			if (this.quiz.getAvailability() == Quiz.AVAILABILITY_ALWAYS){
-				this.showQuestion();
-			} else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_SECTION){
-				
-				// check to see if all previous section activities have been completed
-				DbHelper db = new DbHelper(getView().getContext());
-				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-				boolean completed = db.isPreviousSectionActivitiesCompleted(course, activity, userId);
-				DatabaseManager.getInstance().closeDatabase();
-				
-				if (completed){
-					this.showQuestion();
-				} else {
-					ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
-					vg.removeAllViews();
-					vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
-					
-					TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
-					tv.setText(R.string.widget_quiz_unavailable_section);
-				}
-			} else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
-				// check to see if all previous course activities have been completed
-				DbHelper db = new DbHelper(getView().getContext());
-				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-				boolean completed = db.isPreviousCourseActivitiesCompleted(course, activity, userId);
-				DatabaseManager.getInstance().closeDatabase();
-				
-				if (completed){
-					this.showQuestion();
-				} else {
-					ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
-					vg.removeAllViews();
-					vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
-					
-					TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
-					tv.setText(R.string.widget_quiz_unavailable_course);
-				}
-			}
-		}
+		loadQuiz();
 	}
+
+    public void loadQuiz(){
+        if (this.quiz == null) {
+            this.quiz = new Quiz();
+            this.quiz.load(quizContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        }
+        if (this.isOnResultsPage) {
+            this.showResults();
+        } else {
+            // determine availability
+            if (this.quiz.getAvailability() == Quiz.AVAILABILITY_ALWAYS){
+                this.showQuestion();
+            } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_SECTION){
+
+                // check to see if all previous section activities have been completed
+                DbHelper db = new DbHelper(getView().getContext());
+                long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+                boolean completed = db.isPreviousSectionActivitiesCompleted(course, activity, userId);
+                DatabaseManager.getInstance().closeDatabase();
+
+                if (completed){
+                    this.showQuestion();
+                } else {
+                    ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
+                    vg.removeAllViews();
+                    vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+
+                    TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
+                    tv.setText(R.string.widget_quiz_unavailable_section);
+                }
+            } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
+                // check to see if all previous course activities have been completed
+                DbHelper db = new DbHelper(getView().getContext());
+                long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+                boolean completed = db.isPreviousCourseActivitiesCompleted(course, activity, userId);
+                DatabaseManager.getInstance().closeDatabase();
+
+                if (completed){
+                    this.showQuestion();
+                } else {
+                    ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
+                    vg.removeAllViews();
+                    vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
+
+                    TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
+                    tv.setText(R.string.widget_quiz_unavailable_course);
+                }
+            }
+        }
+    }
 
 	public void showQuestion() {
 		QuizQuestion q = null;
@@ -375,15 +382,18 @@ public class QuizWidget extends WidgetFactory {
 		db.insertQuizResult(data, course.getCourseId());
 		DatabaseManager.getInstance().closeDatabase();
 		
-		
-		// load new layout
-		View C = getView().findViewById(R.id.quiz_progress);
-	    ViewGroup parent = (ViewGroup) C.getParent();
-	    int index = parent.indexOfChild(C);
-	    parent.removeView(C);
-	    C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz_results, parent, false);
-	    parent.addView(C, index);
-		
+		//Check if quiz results layout is already loaded
+        View quizResultsLayout = getView().findViewById(R.id.widget_quiz_results);
+        if (quizResultsLayout == null){
+            // load new layout
+            View C = getView().findViewById(R.id.quiz_progress);
+            ViewGroup parent = (ViewGroup) C.getParent();
+            int index = parent.indexOfChild(C);
+            parent.removeView(C);
+            C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz_results, parent, false);
+            parent.addView(C, index);
+        }
+
 		TextView title = (TextView) getView().findViewById(R.id.quiz_results_score);
 		title.setText(super.getActivity().getString(R.string.widget_quiz_results_score, this.getPercent()));
 
