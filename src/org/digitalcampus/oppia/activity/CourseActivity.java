@@ -212,8 +212,8 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	}
 
     private void loadActivities(){
-        String actionBarTitle = section.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale
-                .getDefault().getLanguage()));
+        String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        String actionBarTitle = section.getTitle(currentLang);
         if (actionBarTitle != null) {
             setTitle(actionBarTitle);
         } else if (isBaseline) {
@@ -221,24 +221,24 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
         }
         actionBar.removeAllTabs();
         List<Fragment> fragments = new ArrayList<Fragment>();
+
         for (int i = 0; i < activities.size(); i++) {
-            Fragment f = null;
-            if (activities.get(i).getActType().equalsIgnoreCase("page")){
-                f = PageWidget.newInstance(activities.get(i), course, isBaseline);
-                fragments.add(f);
-            } else if (activities.get(i).getActType().equalsIgnoreCase("quiz")) {
-                QuizWidget newQuiz = QuizWidget.newInstance(activities.get(i), course, isBaseline);
+            Activity activity = activities.get(i);
+            //Fragment creation
+            if (activity.getActType().equalsIgnoreCase("page")){
+                fragments.add( PageWidget.newInstance(activity, course, isBaseline) );
+            } else if (activity.getActType().equalsIgnoreCase("quiz")) {
+                QuizWidget newQuiz = QuizWidget.newInstance(activity, course, isBaseline);
                 if (apAdapter != null){
                     //If there was a previous quizWidget, we apply its current config to the new one
                     QuizWidget previousQuiz = (QuizWidget) apAdapter.getItem(i);
                     newQuiz.setWidgetConfig(previousQuiz.getWidgetConfig());
                 }
                 fragments.add(newQuiz);
-            } else if (activities.get(i).getActType().equalsIgnoreCase("resource")) {
-                f = ResourceWidget.newInstance(activities.get(i), course, isBaseline);
-                fragments.add(f);
-            } else if  (activities.get(i).getActType().equalsIgnoreCase("feedback")){
-                FeedbackWidget newFeedback = FeedbackWidget.newInstance(activities.get(i), course, isBaseline);
+            } else if (activity.getActType().equalsIgnoreCase("resource")) {
+                fragments.add( ResourceWidget.newInstance(activity, course, isBaseline) );
+            } else if  (activity.getActType().equalsIgnoreCase("feedback")){
+                FeedbackWidget newFeedback = FeedbackWidget.newInstance(activity, course, isBaseline);
                 if (apAdapter != null){
                     //If there was a previous feedbackWidget, we apply its current config to the new one
                     FeedbackWidget previousWidget = (FeedbackWidget) apAdapter.getItem(i);
@@ -251,15 +251,14 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
         apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(apAdapter);
 
-        for (int i = 0; i < activities.size(); i++) {
-            String title = activities.get(i).getTitle(
-                    prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-            boolean tabSelected = false;
-            if (i == currentActivityNo) {
-                tabSelected = true;
-            }
-            actionBar.addTab(actionBar.newTab().setText(title).setTabListener(this), tabSelected);
-
+        //Tab creation
+        for (int i=0; i<activities.size(); i++){
+            Activity activity = activities.get(i);
+            String title = activity.getTitle(currentLang);
+            actionBar.addTab(
+                    actionBar.newTab().setText(title).setTabListener(this),
+                    (currentActivityNo == i) //Set the current active activity as active tab
+            );
         }
         viewPager.setCurrentItem(currentActivityNo);
     }
