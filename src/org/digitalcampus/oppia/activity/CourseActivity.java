@@ -298,7 +298,10 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
                     newFeedback.setWidgetConfig(previousWidget.getWidgetConfig());
                 }
                 fragments.add(newFeedback);
-            }
+            }  else if (activities.get(i).getActType().equalsIgnoreCase("url")) {
+                f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
+                fragments.add(f);
+            } 
         }
 
         apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);

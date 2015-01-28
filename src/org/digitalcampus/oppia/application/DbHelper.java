@@ -536,7 +536,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		String sqlCompleted = "SELECT DISTINCT " + TRACKER_LOG_C_ACTIVITYDIGEST + " FROM " + TRACKER_LOG_TABLE +
 						" WHERE " + TRACKER_LOG_C_COURSEID + "=" + course.getCourseId() + 
 						" AND " + TRACKER_LOG_C_USERID + "=" + userId +
-						" AND " + TRACKER_LOG_C_COMPLETED + "=1";
+						" AND " + TRACKER_LOG_C_COMPLETED + "=1" +
+						" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " IN ( SELECT " + ACTIVITY_C_ACTIVITYDIGEST + " FROM " + ACTIVITY_TABLE + " WHERE " + ACTIVITY_C_COURSEID + "=" + course.getCourseId() + ")";
 		c = db.rawQuery(sqlCompleted,null);
 		course.setNoActivitiesCompleted(c.getCount());
 		c.close();
@@ -546,7 +547,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				" WHERE " + TRACKER_LOG_C_COURSEID + "=" + course.getCourseId() + 
 				" AND " + TRACKER_LOG_C_USERID + "=" + userId +
 				" AND " + TRACKER_LOG_C_COMPLETED + "=0" +
-				" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " NOT IN (" + sqlCompleted + ")";
+				" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " NOT IN (" + sqlCompleted + ")" +
+				" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " IN ( SELECT " + ACTIVITY_C_ACTIVITYDIGEST + " FROM " + ACTIVITY_TABLE + " WHERE " + ACTIVITY_C_COURSEID + "=" + course.getCourseId() + ")";
 		c = db.rawQuery(sqlStarted,null);
 		course.setNoActivitiesStarted(c.getCount());
 		c.close();
