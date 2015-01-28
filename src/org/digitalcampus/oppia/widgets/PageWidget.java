@@ -36,6 +36,7 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
@@ -119,30 +120,28 @@ public class PageWidget extends WidgetFactory {
 		
 		try {
 			wv.getSettings().setJavaScriptEnabled(true);
-            wv.addJavascriptInterface(new OpenImagesJsInterface(this.getActivity()), "OppiaAndroid");
+            //We inject the interface to launch intents from the HTML
+            wv.addJavascriptInterface(
+                    new JSInterfaceForResourceImages(this.getActivity(), course.getLocation()),
+                    JSInterfaceForResourceImages.InterfaceExposedName);
+
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html", "utf-8", null);
 		} catch (IOException e) {
 			wv.loadUrl("file://" + url);
 		}
 
 
-		// set up the page to intercept videos
 		wv.setWebViewClient(new WebViewClient() {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-
-                String javascript="javascript: $(function(){\n" +
-                        "\t$('img').on('click', function(){\n" +
-                        "\t\tOppiaAndroid.openFile($(this).attr('src'));\t\n" +
-                        "\t});\n" +
-                        "});";
-                view.loadUrl(javascript);
+                //We execute the necessary JS code to bind click on images with our JavascriptInterface
+                view.loadUrl(JSInterfaceForResourceImages.JSInjection);
             }
 
+            // set up the page to intercept videos
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
 				if (url.contains("/video/")) {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
@@ -285,41 +284,5 @@ public class PageWidget extends WidgetFactory {
 		return android.text.Html.fromHtml(text.toString()).toString();
 	}
 
-    public class OpenImagesJsInterface {
-        Context _ctx;
 
-        /** Instantiate the interface and set the context */
-        OpenImagesJsInterface(Context c) {
-            _ctx = c;
-        }
-
-        @JavascriptInterface   // must be added for API 17 or higher
-        public void openFile(String relativeFilePath) {
-            String fileUrl = PageWidget.this.course.getLocation() + relativeFilePath;
-            File file = new File(fileUrl);
-            Uri targetUri = Uri.fromFile(file);
-            // check there is actually an app installed to open this filetype
-            Intent intent = new Intent();
-            intent.setAction(android.content.Intent.ACTION_VIEW);
-            intent.setDataAndType(targetUri, MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(fileUrl)) );
-
-            PackageManager pm = this._ctx.getPackageManager();
-
-            List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
-            boolean appFound = false;
-            for (ResolveInfo info : infos) {
-                IntentFilter filter = info.filter;
-                if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
-                    // Found an app with the right intent/filter
-                    appFound = true;
-                }
-            }
-
-            if(appFound){
-                _ctx.startActivity(intent);
-            } else {
-                Toast.makeText(_ctx,_ctx.getString(R.string.error_resource_app_not_found, fileUrl), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 }
