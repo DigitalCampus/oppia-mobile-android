@@ -20,21 +20,11 @@ package org.digitalcampus.oppia.adapter;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
-import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.task.DownloadMediaTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.ConnectionUtils;
-import org.digitalcampus.oppia.utils.UIUtils;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +37,6 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 	public static final String TAG = DownloadMediaListAdapter.class.getSimpleName();
 
 	private final Context ctx;
-	private SharedPreferences prefs;
 	private ArrayList<Media> mediaList;
 
     private ListInnerBtnOnClickListener onClickListener;
@@ -56,7 +45,6 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 		super(context, R.layout.media_download_row, mediaList);
 		this.ctx = context;
 		this.mediaList = mediaList;
-		this.prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 	}
 
     static class DownloadMediaViewHolder{
@@ -101,63 +89,8 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
          });
 		return convertView;
 	}
-
-	private void download(Media media) {
-		if(!prefs.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false) && !ConnectionUtils.isOnWifi(ctx) ){
-			UIUtils.showAlert(ctx, R.string.warning, R.string.warning_wifi_required);
-			return;
-		}
-	}
 	
     public void setOnClickListener(ListInnerBtnOnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
-    /*
-	public void showProgressDialog(){
-		// show progress dialog
-		downloadDialog = new ProgressDialog(ctx);
-		downloadDialog.setTitle(R.string.downloading);
-		downloadDialog.setMessage(ctx.getString(R.string.download_starting));
-		downloadDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		downloadDialog.setProgress(0);
-		downloadDialog.setMax(100);
-		downloadDialog.setCancelable(false);	
-		downloadDialog.show();
-	}
-	
-	public void setDownloadMediaListener(DownloadMediaListener dml) {
-        synchronized (this) {
-        	mDownloadListener = dml;
-        }
-    }
-
-	public void downloadProgressUpdate(DownloadProgress msg) {
-		if(downloadDialog != null){
-			downloadDialog.setMessage(msg.getMessage());
-			downloadDialog.setProgress(msg.getProgress());
-		}
-	}
-
-	public void downloadComplete(Payload response) {
-		this.closeDialog();
-		this.inProgress = false;
-		synchronized (this) {
-			if (mDownloadListener != null) {
-				mDownloadListener.downloadComplete(response);
-			}
-		}
-	}
-	
-	public void closeDialog(){
-		if (downloadDialog != null){
-			downloadDialog.dismiss();
-		}
-	}
-	
-	public void openDialog(){
-		if (downloadDialog != null && this.inProgress){
-			downloadDialog.show();
-		}
-	}
-	*/
 }

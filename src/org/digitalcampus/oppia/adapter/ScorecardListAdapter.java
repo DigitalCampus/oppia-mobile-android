@@ -26,11 +26,16 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.ScorecardPieChart;
 
 import com.androidplot.pie.PieChart;
+import com.androidplot.pie.PieRenderer;
+import com.androidplot.pie.Segment;
+import com.androidplot.pie.SegmentFormatter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +61,11 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
     static class ScorecardViewHolder{
         TextView courseTitle;
         PieChart pie;
+        ScorecardPieChart spc; 
+        SegmentFormatter sfNotStarted;
+        SegmentFormatter sfCompleted;
+        SegmentFormatter sfStarted;
+        
     }
 
 	@Override
@@ -63,22 +73,63 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
 		ScorecardViewHolder viewHolder;
 
-		Course c = courseList.get(position);
+	
+		
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.scorecard_list_row, parent, false);
             viewHolder = new ScorecardViewHolder();
             viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
             viewHolder.pie = (PieChart) convertView.findViewById(R.id.scorecardPieChart);
-            ScorecardPieChart scp = new ScorecardPieChart(ctx, viewHolder.pie, c);
-            scp.drawChart(0, false);
-            convertView.setTag(viewHolder);
+            viewHolder.sfNotStarted = new SegmentFormatter();
+            viewHolder.sfNotStarted.configure(ctx, R.xml.scorecard_pie_segment_not_started);
+
+            viewHolder.sfCompleted = new SegmentFormatter();
+            viewHolder.sfCompleted.configure(ctx, R.xml.scorecard_pie_segment_completed);
+
+            viewHolder.sfStarted = new SegmentFormatter();
+            viewHolder.sfStarted.configure(ctx, R.xml.scorecard_pie_segment_started);
+            
         } else {
             viewHolder = (ScorecardViewHolder) convertView.getTag();
         }
 
-        viewHolder.courseTitle.setText(c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-       	
+    	Course course = courseList.get(position);
+		Log.d(TAG, String.valueOf(position));
+        viewHolder.courseTitle.setText(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+        viewHolder.pie.setPlotMargins(0, 0, 0, 0);
+        
+        //if (showSegmentTitles) {
+          Segment segmentCompleted = new Segment("Completed (" + course.getNoActivitiesCompleted() + ")", course.getNoActivitiesCompleted());
+          Segment segmentStarted = new Segment("Started (" + course.getNoActivitiesStarted() + ")", course.getNoActivitiesStarted());
+          Segment segmentNotStarted = new Segment("Not Started (" + course.getNoActivitiesNotStarted() + ")", course.getNoActivitiesNotStarted());
+          /*} else {
+          	segmentCompleted = new Segment("", course.getNoActivitiesCompleted());
+  	        segmentStarted = new Segment("", course.getNoActivitiesStarted());
+  	        segmentNotStarted = new Segment("", course.getNoActivitiesNotStarted());
+          }*/
+          
+          
+
+          
+          if (course.getNoActivitiesCompleted() != 0){
+          	Log.d(TAG,"adding: "+ segmentCompleted.getTitle());
+          	viewHolder.pie.addSeries(segmentCompleted, viewHolder.sfCompleted);
+          }
+          if (course.getNoActivitiesStarted() != 0){
+          	viewHolder.pie.addSeries(segmentStarted, viewHolder.sfStarted);
+          }
+          if (course.getNoActivitiesNotStarted() != 0){
+          	viewHolder.pie.addSeries(segmentNotStarted, viewHolder.sfNotStarted);
+          }
+          
+          viewHolder.pie.getRenderer(PieRenderer.class).setDonutSize(60/100f, PieRenderer.DonutMode.PERCENT);
+
+          viewHolder.pie.getBorderPaint().setColor(Color.TRANSPARENT);
+          viewHolder.pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
+          convertView.setTag(viewHolder);
+        
+        
 	    return convertView;
 	}
 }

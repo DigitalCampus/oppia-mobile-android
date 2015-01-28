@@ -36,7 +36,6 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;

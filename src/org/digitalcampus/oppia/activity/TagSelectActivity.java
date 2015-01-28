@@ -24,7 +24,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TagListAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
-import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.task.APIRequestTask;
 import org.digitalcampus.oppia.task.Payload;

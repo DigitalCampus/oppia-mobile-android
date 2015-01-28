@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.fragments;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -29,7 +28,6 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.ScorecardPieChart;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -40,21 +38,12 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
 import com.androidplot.pie.PieChart;
-import com.androidplot.pie.PieRenderer;
-import com.androidplot.pie.Segment;
-import com.androidplot.pie.SegmentFormatter;
 
 public class ScorecardFragment extends Fragment{
 
 	public static final String TAG = ScorecardFragment.class.getSimpleName();
 	private SharedPreferences prefs;
 	private Course course = null;
-	
-    private PieChart pie;
-
-    private Segment segmentCompleted;
-    private Segment segmentStarted;
-    private Segment segmentNotStarted;
     
     private ScorecardListAdapter scorecardListAdapter;
 	
