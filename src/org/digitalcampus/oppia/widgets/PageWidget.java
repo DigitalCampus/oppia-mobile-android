@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
@@ -41,13 +42,19 @@ import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.MimeTypeMap;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
@@ -112,14 +119,27 @@ public class PageWidget extends WidgetFactory {
 		
 		try {
 			wv.getSettings().setJavaScriptEnabled(true);
-			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html",
-					"utf-8", null);
+            wv.addJavascriptInterface(new OpenImagesJsInterface(this.getActivity()), "OppiaAndroid");
+			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html", "utf-8", null);
 		} catch (IOException e) {
 			wv.loadUrl("file://" + url);
 		}
 
+
 		// set up the page to intercept videos
 		wv.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+
+                String javascript="javascript: $(function(){\n" +
+                        "\t$('img').on('click', function(){\n" +
+                        "\t\tOppiaAndroid.openFile($(this).attr('src'));\t\n" +
+                        "\t});\n" +
+                        "});";
+                view.loadUrl(javascript);
+            }
+
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
@@ -173,8 +193,7 @@ public class PageWidget extends WidgetFactory {
 	}
 	
 	protected boolean getActivityCompleted() {
-		// only show as being complete if all the videos on this page have been
-		// played
+		// only show as being complete if all the videos on this page have been played
 		if (this.activity.hasMedia()) {
 			ArrayList<Media> mediaList = this.activity.getMedia();
 			boolean completed = true;
@@ -265,4 +284,42 @@ public class PageWidget extends WidgetFactory {
 		}
 		return android.text.Html.fromHtml(text.toString()).toString();
 	}
+
+    public class OpenImagesJsInterface {
+        Context _ctx;
+
+        /** Instantiate the interface and set the context */
+        OpenImagesJsInterface(Context c) {
+            _ctx = c;
+        }
+
+        @JavascriptInterface   // must be added for API 17 or higher
+        public void openFile(String relativeFilePath) {
+            String fileUrl = PageWidget.this.course.getLocation() + relativeFilePath;
+            File file = new File(fileUrl);
+            Uri targetUri = Uri.fromFile(file);
+            // check there is actually an app installed to open this filetype
+            Intent intent = new Intent();
+            intent.setAction(android.content.Intent.ACTION_VIEW);
+            intent.setDataAndType(targetUri, MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(fileUrl)) );
+
+            PackageManager pm = this._ctx.getPackageManager();
+
+            List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+            boolean appFound = false;
+            for (ResolveInfo info : infos) {
+                IntentFilter filter = info.filter;
+                if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
+                    // Found an app with the right intent/filter
+                    appFound = true;
+                }
+            }
+
+            if(appFound){
+                _ctx.startActivity(intent);
+            } else {
+                Toast.makeText(_ctx,_ctx.getString(R.string.error_resource_app_not_found, fileUrl), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }
