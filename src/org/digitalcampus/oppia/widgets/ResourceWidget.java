@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -309,11 +310,11 @@ public class ResourceWidget extends WidgetFactory {
 	
 	private class OnResourceClickListener implements OnClickListener{
 
-		private Context ctx;
+		private Context _ctx;
 		private String type;
 		
 		public OnResourceClickListener(Context ctx, String type){
-			this.ctx = ctx;
+			this._ctx = ctx;
 			this.type = type;
 		}
 
@@ -321,37 +322,21 @@ public class ResourceWidget extends WidgetFactory {
 			File file = (File) v.getTag();
 			// check the file is on the file system (should be but just in case)
 			if(!file.exists()){
-				Toast.makeText(this.ctx,this.ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
+				Toast.makeText(_ctx, _ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
 				return;
 			} 
 			Uri targetUri = Uri.fromFile(file);
-			
-			// check there is actually an app installed to open this filetype
-			
-			Intent intent = new Intent();
-			intent.setAction(android.content.Intent.ACTION_VIEW);
-			intent.setDataAndType(targetUri, type);
-			
-			PackageManager pm = this.ctx.getPackageManager();
 
-			List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
-			boolean appFound = false;
-			for (ResolveInfo info : infos) {
-				IntentFilter filter = info.filter;
-				if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
-					// Found an app with the right intent/filter
-					appFound = true;
-				}
-			}
-
-			if(appFound){
-				ResourceWidget.this.setResourceViewing(true);
-				ResourceWidget.this.setResourceStartTime(System.currentTimeMillis()/1000);
-				this.ctx.startActivity(intent);
-			} else {
-				Toast.makeText(this.ctx,this.ctx.getString(R.string.error_resource_app_not_found,file.getName()), Toast.LENGTH_LONG).show();
-			}
-			return;
+            Intent intent = ExternalResourceOpener.getIntentToOpenResource(_ctx, targetUri, type);
+            if(intent != null){
+                ResourceWidget.this.setResourceViewing(true);
+                ResourceWidget.this.setResourceStartTime(System.currentTimeMillis()/1000);
+                _ctx.startActivity(intent);
+            } else {
+                Toast.makeText(_ctx,
+                        _ctx.getString(R.string.error_resource_app_not_found, file.getName()),
+                        Toast.LENGTH_LONG).show();
+            }
 		}
 		
 	}

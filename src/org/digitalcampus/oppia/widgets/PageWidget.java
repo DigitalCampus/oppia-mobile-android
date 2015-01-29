@@ -35,9 +35,10 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
+import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,7 +47,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,20 +113,31 @@ public class PageWidget extends WidgetFactory {
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
 
 		try {
-			wv.getSettings().setJavaScriptEnabled(true); 
-			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html",
-					"utf-8", null);
+			wv.getSettings().setJavaScriptEnabled(true);
+            //We inject the interface to launch intents from the HTML
+            wv.addJavascriptInterface(
+                    new JSInterfaceForResourceImages(this.getActivity(), course.getLocation()),
+                    JSInterfaceForResourceImages.InterfaceExposedName);
+
+			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html", "utf-8", null);
 		} catch (IOException e) {
 			wv.loadUrl("file://" + url);
 		}
 
-		// set up the page to intercept videos
+
 		wv.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                //We execute the necessary JS code to bind click on images with our JavascriptInterface
+                view.loadUrl(JSInterfaceForResourceImages.JSInjection);
+            }
+
+            // set up the page to intercept videos
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-				Log.d(TAG,url);
-				if (url.contains("/video/") && !url.contains("vimeo.com/video/")) {
+				if (url.contains("/video/")) {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
 					String mediaFileName = url.substring(startPos, url.length());
@@ -180,8 +191,7 @@ public class PageWidget extends WidgetFactory {
 	}
 	
 	protected boolean getActivityCompleted() {
-		// only show as being complete if all the videos on this page have been
-		// played
+		// only show as being complete if all the videos on this page have been played
 		if (this.activity.hasMedia()) {
 			ArrayList<Media> mediaList = this.activity.getMedia();
 			boolean completed = true;
@@ -272,4 +282,6 @@ public class PageWidget extends WidgetFactory {
 		}
 		return android.text.Html.fromHtml(text.toString()).toString();
 	}
+
+
 }

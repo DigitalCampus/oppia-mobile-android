@@ -26,7 +26,6 @@ import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.fragments.ScorecardFragment;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Section;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

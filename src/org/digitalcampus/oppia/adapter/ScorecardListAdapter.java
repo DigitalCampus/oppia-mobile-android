@@ -65,7 +65,9 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         SegmentFormatter sfNotStarted;
         SegmentFormatter sfCompleted;
         SegmentFormatter sfStarted;
-        
+        Segment segmentCompleted;
+        Segment segmentStarted;
+        Segment segmentNotStarted;        
     }
 
 	@Override
@@ -73,7 +75,8 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
 		ScorecardViewHolder viewHolder;
 
-	
+		Course course = courseList.get(position);
+		Log.i(TAG, course.getTitle("en") + ": " + position);
 		
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -90,46 +93,39 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
             viewHolder.sfStarted = new SegmentFormatter();
             viewHolder.sfStarted.configure(ctx, R.xml.scorecard_pie_segment_started);
             
+            viewHolder.segmentCompleted = new Segment("Completed (" + course.getNoActivitiesCompleted() + ")", course.getNoActivitiesCompleted());
+            Log.i(TAG, viewHolder.segmentCompleted.getTitle());
+            viewHolder.segmentStarted = new Segment("Started (" + course.getNoActivitiesStarted() + ")", course.getNoActivitiesStarted());
+            Log.i(TAG, viewHolder.segmentStarted.getTitle());
+            viewHolder.segmentNotStarted = new Segment("Not Started (" + course.getNoActivitiesNotStarted() + ")", course.getNoActivitiesNotStarted());
+            Log.i(TAG, viewHolder.segmentNotStarted.getTitle()); 
+            convertView.setTag(viewHolder);
         } else {
             viewHolder = (ScorecardViewHolder) convertView.getTag();
         }
 
-    	Course course = courseList.get(position);
-		Log.d(TAG, String.valueOf(position));
+    	
         viewHolder.courseTitle.setText(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+        viewHolder.pie.clear();
         viewHolder.pie.setPlotMargins(0, 0, 0, 0);
         
-        //if (showSegmentTitles) {
-          Segment segmentCompleted = new Segment("Completed (" + course.getNoActivitiesCompleted() + ")", course.getNoActivitiesCompleted());
-          Segment segmentStarted = new Segment("Started (" + course.getNoActivitiesStarted() + ")", course.getNoActivitiesStarted());
-          Segment segmentNotStarted = new Segment("Not Started (" + course.getNoActivitiesNotStarted() + ")", course.getNoActivitiesNotStarted());
-          /*} else {
-          	segmentCompleted = new Segment("", course.getNoActivitiesCompleted());
-  	        segmentStarted = new Segment("", course.getNoActivitiesStarted());
-  	        segmentNotStarted = new Segment("", course.getNoActivitiesNotStarted());
-          }*/
-          
-          
-
-          
-          if (course.getNoActivitiesCompleted() != 0){
-          	Log.d(TAG,"adding: "+ segmentCompleted.getTitle());
-          	viewHolder.pie.addSeries(segmentCompleted, viewHolder.sfCompleted);
+                   
+        
+        if (course.getNoActivitiesCompleted() != 0){
+          	viewHolder.pie.addSeries(viewHolder.segmentCompleted, viewHolder.sfCompleted);
           }
           if (course.getNoActivitiesStarted() != 0){
-          	viewHolder.pie.addSeries(segmentStarted, viewHolder.sfStarted);
+          	viewHolder.pie.addSeries(viewHolder.segmentStarted, viewHolder.sfStarted);
           }
           if (course.getNoActivitiesNotStarted() != 0){
-          	viewHolder.pie.addSeries(segmentNotStarted, viewHolder.sfNotStarted);
+          	viewHolder.pie.addSeries(viewHolder.segmentNotStarted, viewHolder.sfNotStarted);
           }
           
           viewHolder.pie.getRenderer(PieRenderer.class).setDonutSize(60/100f, PieRenderer.DonutMode.PERCENT);
 
           viewHolder.pie.getBorderPaint().setColor(Color.TRANSPARENT);
           viewHolder.pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
-          convertView.setTag(viewHolder);
-        
-        
+
 	    return convertView;
 	}
 }
