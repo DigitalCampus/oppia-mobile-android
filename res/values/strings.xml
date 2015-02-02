@@ -73,6 +73,7 @@
  	<string name="widget_quiz_baseline_completed">Thank you for completing the pre-test. You can now continue to the course.</string>
  	<string name="widget_quiz_baseline_goto_course">Continue to course &gt;&gt;</string>
  	<string name="widget_quiz_image_caption">Press the image to view larger version</string>
+ 	<string name="widget_quiz_media_caption">Press the image to start the video</string>
  	<string name="widget_quiz_feedback_response_title">You answered: </string>
  	<string name="widget_quiz_feedback_feedback_title">Feedback: </string>
  	<string name="widget_quiz_unavailable_section">You must complete all the previous activities in this section before this quiz becomes available to you.</string>
