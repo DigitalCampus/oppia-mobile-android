@@ -66,6 +66,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -470,11 +471,13 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	protected boolean getActivityCompleted() {
 		int passThreshold;
+		Log.d(TAG, "Threshold:" + quiz.getPassThreshold() );
 		if (quiz.getPassThreshold() != 0){
 			passThreshold = quiz.getPassThreshold();
 		} else {
 			passThreshold = Quiz.QUIZ_DEFAULT_PASS_THRESHOLD;
 		}
+		Log.d(TAG, "Percent:" + this.getPercent() );
 		if (isOnResultsPage && this.getPercent() >= passThreshold) {
 			return true;
 		} else {
