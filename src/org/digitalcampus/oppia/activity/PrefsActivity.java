@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +17,18 @@
 
 package org.digitalcampus.oppia.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.listener.MoveStorageListener;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,20 +42,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.listener.MoveStorageListener;
-import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 public class PrefsActivity extends SherlockPreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
 	
 	public static final String TAG = PrefsActivity.class.getSimpleName();
@@ -52,9 +50,11 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
 	public static final String PREF_LANGUAGE = "prefLanguage";
 	public static final String PREF_USER_NAME = "prefUsername";
 	public static final String PREF_API_KEY = "prefApiKey";
+	public static final String PREF_PHONE_NO = "prefPhoneNo";
 	public static final String PREF_SERVER = "prefServer";
 	public static final String PREF_BADGES = "prefBadges";
 	public static final String PREF_POINTS = "prefPoints";
+	public static final String PREF_COURSE_POINTS = "prefCoursePoints";
 	public static final String PREF_SCORING_ENABLED = "prefScoringEnabled";
 	public static final String PREF_BADGING_ENABLED = "prefBadgingEnabled";
 	public static final String PREF_SHOW_SCHEDULE_REMINDERS = "prefShowScheduleReminders";
@@ -69,15 +69,23 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
 	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
 	public static final String PREF_METADATA = "prefMetadata";
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
+
+	
+	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
+	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
+	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
+	
+
     public static final String PREF_STORAGE_OPTION = "prefStorageOption";
     public static final String STORAGE_OPTION_INTERNAL = "internal";
     public static final String STORAGE_OPTION_EXTERNAL = "external";
 
-    public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
+
 
     private ListPreference storagePref;
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -122,7 +130,6 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
         server.setSummary(server.getText());
 
         storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
-
 	}
 
 	@Override
@@ -177,7 +184,7 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
         }
     }
 
-    @Override
+    //@Override
     public void moveStorageComplete(Payload p) {
         pDialog.dismiss();
 
@@ -196,7 +203,7 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
 
     }
 
-    @Override
+    //@Override
     public void moveStorageProgressUpdate(String s) {
 
     }

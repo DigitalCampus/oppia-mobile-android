@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,6 @@
 
 package org.digitalcampus.oppia.task;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-
-import com.bugsense.trace.BugSenseHandler;
-
-import org.apache.http.client.ClientProtocolException;
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.listener.DownloadMediaListener;
-import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,6 +26,22 @@ import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import org.apache.http.client.ClientProtocolException;
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.listener.DownloadMediaListener;
+import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+
+import com.bugsense.trace.BugSenseHandler;
+
 
 public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
@@ -140,11 +140,8 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 				payload.setResult(false);
 				payload.setResultResponse(ctx.getString(R.string.error_media_download));
 			} catch (NoSuchAlgorithmException e) {
-				if(!MobileLearning.DEVELOPER_MODE){
-					BugSenseHandler.sendException(e);
-				} else {
-					e.printStackTrace();
-				}
+				BugSenseHandler.sendException(e);
+				e.printStackTrace();
 				payload.setResult(false);
 				payload.setResultResponse(ctx.getString(R.string.error_media_download));
 			}

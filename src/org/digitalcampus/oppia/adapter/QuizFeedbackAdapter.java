@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.quiz.Quiz;
-import org.digitalcampus.oppia.model.QuizFeedback;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -31,6 +25,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.Quiz;
+import org.digitalcampus.oppia.model.QuizFeedback;
+
+import java.util.ArrayList;
 
 public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
 

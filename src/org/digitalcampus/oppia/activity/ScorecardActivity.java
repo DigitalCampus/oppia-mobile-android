@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.fragments.ScorecardFragment;
+import org.digitalcampus.oppia.model.Course;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 	private ActivityPagerAdapter apAdapter;
 	private int currentTab = 0;
 	private SharedPreferences prefs;
+	private Course course = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,11 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 		actionBar.setHomeButtonEnabled(true);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		Bundle bundle = this.getIntent().getExtras();
+		if (bundle != null) {
+			this.course = (Course) bundle.getSerializable(Course.TAG);
+		}
 	}
 	
 	@Override
@@ -69,7 +76,13 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 		actionBar.removeAllTabs();
 		List<Fragment> fragments = new ArrayList<Fragment>();
 		
-		Fragment fScorecard = ScorecardFragment.newInstance();
+		Fragment fScorecard;
+		if(this.course != null){
+			fScorecard = ScorecardFragment.newInstance(course);
+		} else {
+			fScorecard = ScorecardFragment.newInstance();
+		}
+		
 		fragments.add(fScorecard);
 		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_scorecard)).setTabListener(this), true);
 	

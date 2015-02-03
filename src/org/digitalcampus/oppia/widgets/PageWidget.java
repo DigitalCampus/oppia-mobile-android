@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
@@ -36,26 +35,21 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
+import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
-import android.webkit.MimeTypeMap;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
@@ -117,7 +111,7 @@ public class PageWidget extends WidgetFactory {
 		
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
-		
+
 		try {
 			wv.getSettings().setJavaScriptEnabled(true);
             //We inject the interface to launch intents from the HTML
@@ -142,6 +136,7 @@ public class PageWidget extends WidgetFactory {
             // set up the page to intercept videos
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
 				if (url.contains("/video/")) {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
@@ -170,14 +165,18 @@ public class PageWidget extends WidgetFactory {
 					tb.putSerializable(Course.TAG, course);
 					intent.putExtras(tb);
 					startActivity(intent);
-
-
 					return true;
+					
 				} else {
-					Intent intent = new Intent(Intent.ACTION_VIEW);
-					Uri data = Uri.parse(url);
-					intent.setData(data);
-					PageWidget.super.getActivity().startActivity(intent);
+					
+					try {
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						Uri data = Uri.parse(url);
+						intent.setData(data);
+						PageWidget.super.getActivity().startActivity(intent);
+					} catch (ActivityNotFoundException anfe) {
+						// do nothing
+					}
 					// launch action in mobile browser - not the webview
 					// return true so doesn't follow link within webview
 					return true;
@@ -235,7 +234,7 @@ public class PageWidget extends WidgetFactory {
 			}
 		} catch (JSONException e) {
 			// Do nothing
-		// sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly
+			// sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly
 		} catch (NullPointerException npe){
 			//do nothing
 		}

@@ -7,12 +7,6 @@
         android:title="@string/prefLanguage" >
     </ListPreference>
 
-    <!-- ListPreference
-        android:defaultValue=""
-        android:key="prefStorageLocation"
-        android:title="@string/prefStorageLocation" >
-    </ListPreference -->
-
     <ListPreference
         android:defaultValue=""
         android:key="prefStorageOption"
@@ -20,6 +14,7 @@
         android:entries="@array/StorageOptions"
         android:entryValues="@array/StorageOptionValues">
     </ListPreference>
+
 
     <ListPreference
         android:defaultValue="16"
@@ -99,6 +94,17 @@
         	android:defaultValue="true"
 	        android:key="prefLogoutEnabled"
 	        android:title="@string/prefLogoutEnabled" />
+        
+        <CheckBoxPreference
+        	android:defaultValue="true"
+	        android:key="prefDeleteCourseEnabled"
+	        android:title="@string/prefDeleteCourseEnabled" />
+        
+        <CheckBoxPreference
+        	android:defaultValue="false"
+	        android:key="prefDownloadViaCellularEnabled"
+	        android:title="@string/prefDownloadViaCellularEnabled"
+	        android:summary="@string/warning_download_via_cellular_enabled" />
     </PreferenceCategory>
 
 </PreferenceScreen>

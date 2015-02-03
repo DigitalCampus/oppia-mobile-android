@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,14 +91,14 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	    }
 
 	    if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)){
-            viewHolder.courseProgress.setProgress((int) c.getProgress());
+            viewHolder.courseProgress.setProgress((int) c.getProgressPercent());
 	    } else {
             viewHolder.courseProgress.setVisibility(View.GONE);
 	    }
 	    
 		// set image
 		if(c.getImageFile() != null){
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFileFromRoot(), ctx.getResources(), R.drawable.dc_logo);
+			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFileFromRoot(), ctx.getResources(), MobileLearning.APP_LOGO);
             viewHolder.courseImage.setImageDrawable(bm);
 		}
 	    return convertView;

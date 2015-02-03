@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,28 @@
 
 package org.digitalcampus.oppia.application;
 
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.task.SubmitQuizTask;
+import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.task.SubmitQuizTask;
-import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 public class MobileLearning extends Application {
 
 	public static final String TAG = MobileLearning.class.getSimpleName();
+	
+	public static final int APP_LOGO = R.drawable.dc_logo;
 	
 	public static final String COURSE_XML = "module.xml";
 	public static final String COURSE_SCHEDULE_XML = "schedule.xml";
@@ -63,6 +65,7 @@ public class MobileLearning extends Application {
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
 	public static final int RESOURCE_READ_TIME = 3;
+	public static final int URL_READ_TIME = 5;
 	public static final String USER_AGENT = "OppiaMobile Android: ";
     public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_EXTERNAL;
 	
@@ -73,8 +76,7 @@ public class MobileLearning extends Application {
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
 	public static final int MAX_TRACKER_SUBMIT = 10;
-	public static final boolean DEVELOPER_MODE = true;
-	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback"};
+	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
 	
 	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";

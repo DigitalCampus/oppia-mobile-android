@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,6 +58,7 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 	private EditText lastnameField;
 	private EditText jobTitleField;
 	private EditText organisationField;
+	private EditText phoneNoField;
 	private Button registerButton;
 	private ProgressDialog pDialog;
 	
@@ -96,6 +97,7 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		lastnameField = (EditText) super.getActivity().findViewById(R.id.register_form_lastname_field);
 		jobTitleField = (EditText) super.getActivity().findViewById(R.id.register_form_jobtitle_field);
 		organisationField = (EditText) super.getActivity().findViewById(R.id.register_form_organisation_field);
+		phoneNoField = (EditText) super.getActivity().findViewById(R.id.register_form_phoneno_field);
 		
 		registerButton = (Button) super.getActivity().findViewById(R.id.register_btn);
 		registerButton.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +115,7 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString(PrefsActivity.PREF_USER_NAME, usernameField.getText().toString());
+	    	editor.putString(PrefsActivity.PREF_PHONE_NO, phoneNoField.getText().toString());
 	    	editor.putString(PrefsActivity.PREF_API_KEY, u.getApiKey());
 	    	editor.putInt(PrefsActivity.PREF_POINTS, u.getPoints());
 	    	editor.putInt(PrefsActivity.PREF_BADGES, u.getBadges());
@@ -140,6 +143,7 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		String passwordAgain = (String) passwordAgainField.getText().toString();
 		String firstname = (String) firstnameField.getText().toString();
 		String lastname = (String) lastnameField.getText().toString();
+		String phoneNo = (String) phoneNoField.getText().toString();
 		String jobTitle = (String) jobTitleField.getText().toString();
 		String organisation = (String) organisationField.getText().toString();
 		
@@ -161,16 +165,19 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_email);
 			return;
 		}
+		
 		// check password length
 		if (password.length() < MobileLearning.PASSWORD_MIN_LENGTH) {
 			UIUtils.showAlert(super.getActivity(),R.string.error,getString(R.string.error_register_password,  MobileLearning.PASSWORD_MIN_LENGTH ));
 			return;
 		}
+		
 		// check password match
 		if (!password.equals(passwordAgain)) {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_password_no_match);
 			return;
 		}
+		
 		// check firstname
 		if (firstname.length() < 2) {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_firstname);
@@ -183,6 +190,12 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 			return;
 		}
 
+		// check phone no
+		if (phoneNo.length() < 8) {
+			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_phoneno);
+			return;
+		}
+				
 		pDialog = new ProgressDialog(super.getActivity());
 		pDialog.setTitle(R.string.register_alert_title);
 		pDialog.setMessage(getString(R.string.register_process));
@@ -199,6 +212,7 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 		u.setEmail(email);
 		u.setJobTitle(jobTitle);
 		u.setOrganisation(organisation);
+		u.setPhoneNo(phoneNo);
 		users.add(u);
 		Payload p = new Payload(users);
 		RegisterTask rt = new RegisterTask(super.getActivity());

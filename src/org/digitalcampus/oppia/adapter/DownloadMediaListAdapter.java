@@ -1,19 +1,29 @@
+/* 
+ * This file is part of OppiaMobile - https://digital-campus.org/
+ * 
+ * OppiaMobile is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * OppiaMobile is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.digitalcampus.oppia.adapter;
 
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
-import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.task.DownloadMediaTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.ConnectionUtils;
-import org.digitalcampus.oppia.utils.UIUtils;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,59 +87,10 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
                     onClickListener.onClick((Integer) v.getTag());
          	}
          });
-
 		return convertView;
 	}
-
+	
     public void setOnClickListener(ListInnerBtnOnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
-    /*
-	public void showProgressDialog(){
-		// show progress dialog
-		downloadDialog = new ProgressDialog(ctx);
-		downloadDialog.setTitle(R.string.downloading);
-		downloadDialog.setMessage(ctx.getString(R.string.download_starting));
-		downloadDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		downloadDialog.setProgress(0);
-		downloadDialog.setMax(100);
-		downloadDialog.setCancelable(false);	
-		downloadDialog.show();
-	}
-	
-	public void setDownloadMediaListener(DownloadMediaListener dml) {
-        synchronized (this) {
-        	mDownloadListener = dml;
-        }
-    }
-
-	public void downloadProgressUpdate(DownloadProgress msg) {
-		if(downloadDialog != null){
-			downloadDialog.setMessage(msg.getMessage());
-			downloadDialog.setProgress(msg.getProgress());
-		}
-	}
-
-	public void downloadComplete(Payload response) {
-		this.closeDialog();
-		this.inProgress = false;
-		synchronized (this) {
-			if (mDownloadListener != null) {
-				mDownloadListener.downloadComplete(response);
-			}
-		}
-	}
-	
-	public void closeDialog(){
-		if (downloadDialog != null){
-			downloadDialog.dismiss();
-		}
-	}
-	
-	public void openDialog(){
-		if (downloadDialog != null && this.inProgress){
-			downloadDialog.show();
-		}
-	}
-	*/
 }

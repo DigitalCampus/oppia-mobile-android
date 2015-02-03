@@ -2,6 +2,11 @@
     xmlns:oppiamobile="http://schemas.android.com/apk/res-auto" >
 
     <item
+        android:id="@+id/menu_scorecard"
+        android:icon="@drawable/ic_menu_start_conversation"
+        android:title="@string/menu_scorecard"/>
+    
+    <item
         android:id="@+id/menu_language"
         android:icon="@drawable/ic_menu_start_conversation"
         android:title="@string/menu_language"/>

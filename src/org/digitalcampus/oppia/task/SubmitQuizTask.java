@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -127,11 +127,8 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (JSONException e) {
 				payload.setResult(false);
-				if (!MobileLearning.DEVELOPER_MODE) {
-					BugSenseHandler.sendException(e);
-				} else {
-					e.printStackTrace();
-				}
+				BugSenseHandler.sendException(e);
+				e.printStackTrace();
 			} 
 		}
 

@@ -1,3 +1,20 @@
+/* 
+ * This file is part of OppiaMobile - https://digital-campus.org/
+ * 
+ * OppiaMobile is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * OppiaMobile is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.digitalcampus.oppia.task;
 
 import android.app.ProgressDialog;
@@ -84,7 +101,7 @@ public class DownloadTasksController implements Parcelable, InstallCourseListene
         showDialog();
     }
 
-    @Override
+    //@Override
     public void downloadComplete(Payload p) {
         Log.d("download-task", "downloadComplete");
 
@@ -113,7 +130,7 @@ public class DownloadTasksController implements Parcelable, InstallCourseListene
 
     }
 
-    @Override
+    //@Override
     public void installComplete(Payload p) {
         Log.d("download-task", "installComplete");
         if(p.isResult()){
@@ -147,7 +164,7 @@ public class DownloadTasksController implements Parcelable, InstallCourseListene
         taskInProgress = false;
     }
 
-    @Override
+    //@Override
     public void updateComplete(Payload p) {
         Log.d("download-task", "updateComplete");
 
@@ -178,33 +195,33 @@ public class DownloadTasksController implements Parcelable, InstallCourseListene
 
     }
 
-    @Override
+    //@Override
     public void downloadProgressUpdate(DownloadProgress dp) {
         Log.d("download-task", "downloadProgressUpdate " + dp.getProgress());
         currentProgress = dp;
         updateDialogMessage();
     }
 
-    @Override
+    //@Override
     public void installProgressUpdate(DownloadProgress dp) {
         Log.d("download-task", "installProgressUpdate " + dp.getProgress());
         currentProgress = dp;
         updateDialogMessage();
     }
 
-    @Override
+    //@Override
     public void updateProgressUpdate(DownloadProgress dp) {
         Log.d("download-task", "updateProgressUpdate");
         currentProgress = dp;
         updateDialogMessage();
     }
 
-    @Override
+    //@Override
     public int describeContents() {
         return 0;
     }
 
-    @Override
+    //@Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeValue(currentProgress);
         parcel.writeByte((byte) (taskInProgress ? 0x01 : 0x00));

@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
@@ -35,6 +36,7 @@ import org.digitalcampus.oppia.widgets.FeedbackWidget;
 import org.digitalcampus.oppia.widgets.PageWidget;
 import org.digitalcampus.oppia.widgets.QuizWidget;
 import org.digitalcampus.oppia.widgets.ResourceWidget;
+import org.digitalcampus.oppia.widgets.UrlWidget;
 import org.digitalcampus.oppia.widgets.WidgetFactory;
 
 import android.content.Intent;
@@ -95,7 +97,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 			}
 			// set image
 			BitmapDrawable bm = ImageUtils
-					.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.dc_logo);
+					.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), MobileLearning.APP_LOGO);
 			actionBar.setIcon(bm);
 
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -109,6 +111,51 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	@Override
 	public void onStart() {
 		super.onStart();
+
+		String actionBarTitle = section.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale
+				.getDefault().getLanguage()));
+		if (actionBarTitle != null) {
+			setTitle(actionBarTitle);
+		} else if (isBaseline) {
+			setTitle(getString(R.string.title_baseline));
+		}	
+		actionBar.removeAllTabs();
+		List<Fragment> fragments = new ArrayList<Fragment>();
+		for (int i = 0; i < activities.size(); i++) {
+			Fragment f = null;
+			if (activities.get(i).getActType().equalsIgnoreCase("page")){
+				f = PageWidget.newInstance(activities.get(i), course, isBaseline);
+				fragments.add(f);
+			} else if (activities.get(i).getActType().equalsIgnoreCase("quiz")) {
+				f = QuizWidget.newInstance(activities.get(i), course, isBaseline);
+				fragments.add(f);
+			} else if (activities.get(i).getActType().equalsIgnoreCase("resource")) {
+				f = ResourceWidget.newInstance(activities.get(i), course, isBaseline);
+				fragments.add(f);
+			} else if  (activities.get(i).getActType().equalsIgnoreCase("feedback")){
+				f = FeedbackWidget.newInstance(activities.get(i), course, isBaseline);
+				fragments.add(f);
+			} else if  (activities.get(i).getActType().equalsIgnoreCase("url")){
+				f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
+				fragments.add(f);
+			}
+		}
+		
+		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
+		viewPager.setAdapter(apAdapter);
+
+		for (int i = 0; i < activities.size(); i++) {
+			String title = activities.get(i).getTitle(
+					prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+			boolean tabSelected = false;
+			if (i == currentActivityNo) {
+				tabSelected = true;
+			}
+			actionBar.addTab(actionBar.newTab().setText(title).setTabListener(this), tabSelected);
+
+		}
+		viewPager.setCurrentItem(currentActivityNo);
+
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			public void onPageScrollStateChanged(int arg0) {
@@ -178,36 +225,42 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
+		Bundle tb = new Bundle();
 		switch (item.getItemId()) {
-		case R.id.menu_language:
-			createLanguageDialog();
-			return true;
-		case R.id.menu_help:
-			Bundle tb = new Bundle();
-			Intent i = new Intent(this, AboutActivity.class);
-			tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
-			i.putExtras(tb);
-			startActivity(i);
-			return true;			
-		case android.R.id.home:
-			this.finish();
-			return true;
-		case R.id.menu_tts:
-			if (myTTS == null && !ttsRunning) {
-				// check for TTS data
-				Intent checkTTSIntent = new Intent();
-				checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-				startActivityForResult(checkTTSIntent, TTS_CHECK);
-			} else if (myTTS != null && ttsRunning) {
-				this.stopReading();
-			} else {
-				// TTS not installed so show message
-				Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
-			}
-			supportInvalidateOptionsMenu();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.menu_language:
+				createLanguageDialog();
+				return true;
+			case R.id.menu_help:
+				Intent i = new Intent(this, AboutActivity.class);
+				tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
+				i.putExtras(tb);
+				startActivity(i);
+				return true;			
+			case android.R.id.home:
+				this.finish();
+				return true;
+			case R.id.menu_scorecard:
+				i = new Intent(this, ScorecardActivity.class);
+				tb.putSerializable(Course.TAG, course);
+				i.putExtras(tb);
+				startActivity(i);
+				return true;
+			case R.id.menu_tts:
+				if (myTTS == null && !ttsRunning) {
+					// check for TTS data
+					Intent checkTTSIntent = new Intent();
+					checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+					startActivityForResult(checkTTSIntent, TTS_CHECK);
+				} else if (myTTS != null && ttsRunning) {
+					this.stopReading();
+				} else {
+					// TTS not installed so show message
+					Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
+				}
+				supportInvalidateOptionsMenu();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -245,7 +298,10 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
                     newFeedback.setWidgetConfig(previousWidget.getWidgetConfig());
                 }
                 fragments.add(newFeedback);
-            }
+            }  else if (activities.get(i).getActType().equalsIgnoreCase("url")) {
+                UrlWidget f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
+                fragments.add(f);
+            } 
         }
 
         apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);

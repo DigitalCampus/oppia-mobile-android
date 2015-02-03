@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TagListAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
-import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.task.APIRequestTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -180,13 +179,9 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				json = new JSONObject(response.getResultResponse());
 				refreshTagList();
 			} catch (JSONException e) {
-				if(!MobileLearning.DEVELOPER_MODE){
-					BugSenseHandler.sendException(e);
-				} else {
-					e.printStackTrace();
-				}
+				BugSenseHandler.sendException(e);
+				e.printStackTrace();
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);
-				
 			}
 		} else {
 			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, new Callable<Boolean>() {

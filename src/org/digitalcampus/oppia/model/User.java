@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ public class User {
 	private String apiKey;
 	private String jobTitle;
 	private String organisation;
+	private String phoneNo;
 	private boolean scoringEnabled = true;
 	private boolean badgingEnabled = true;
 	private int points = 0;
@@ -145,6 +146,12 @@ public class User {
 	}
 	public void setOrganisation(String organisation) {
 		this.organisation = organisation;
+	}
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
 	}
 
 }

@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -49,7 +50,6 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.task.MoveStorageLocationTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -67,7 +67,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	private ArrayList<Course> courses;
 	private Course tempCourse;
 	private long userId = 0;
-	private String storageLocation;
 
     private CourseListAdapter courseListAdapter;
 
@@ -222,7 +221,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			case R.id.menu_settings:
 				Intent i = new Intent(this, PrefsActivity.class);
 				Bundle tb = new Bundle();
-				storageLocation = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 				ArrayList<Lang> langs = new ArrayList<Lang>();
 				for(Course m: courses){
 					langs.addAll(m.getLangs());
@@ -296,10 +294,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
 		getMenuInflater().inflate(R.menu.course_context_menu, menu);
+		super.onCreateContextMenu(menu, v, menuInfo);
 	}
-
+	
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
 
@@ -307,7 +305,11 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         tempCourse = courses.get(info.position);
 		switch (item.getItemId()) {
 			case R.id.course_context_delete:
-				confirmCourseDelete();
+				if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
+					confirmCourseDelete();
+				} else {
+					Toast.makeText(this, this.getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
+				}
 				return true;
 			case R.id.course_context_reset:
 				confirmCourseReset();
@@ -369,6 +371,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SERVER)){
 			Editor editor = sharedPreferences.edit();
 			if(!sharedPreferences.getString(PrefsActivity.PREF_SERVER, "").endsWith("/")){
@@ -377,28 +380,22 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		    	editor.commit();
 			}
 		}
+		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)){
 			displayCourses(userId);
 		}
+		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_POINTS)
 				|| key.equalsIgnoreCase(PrefsActivity.PREF_BADGES)){
 			supportInvalidateOptionsMenu();
 		}
 
-        //This is done elsewhere
-        /*
-		if(key.equalsIgnoreCase(PrefsActivity.PREF_STORAGE_LOCATION)){
-			Log.d(TAG,storageLocation);
-			Log.d(TAG, sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-			// Move from old location to new
-			ArrayList<Object> strings = new ArrayList<Object>();
-	    	strings.add(storageLocation);
-	    	strings.add(sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-	    	
-	    	Payload p = new Payload(strings);
-	    	MoveStorageLocationTask mslt = new MoveStorageLocationTask();
-	    	mslt.execute(p);
-		}*/
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED)){
+			boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
+			Log.d(TAG, "PREF_DOWNLOAD_VIA_CELLULAR_ENABLED" + newPref);
+			
+		}
+
 	}
 
 	public void scanStart() {

@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -157,11 +157,8 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 					} catch (IOException e) {
 						payload.setResult(false);
 					} catch (JSONException e) {
-						if(!MobileLearning.DEVELOPER_MODE){
-							BugSenseHandler.sendException(e);
-						} else {
-							e.printStackTrace();
-						}
+						BugSenseHandler.sendException(e);
+						e.printStackTrace();
 						payload.setResult(false);
 					} 
 					publishProgress(0);

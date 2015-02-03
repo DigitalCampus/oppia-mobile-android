@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -169,7 +168,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadComple
 		}
 	}
 
-    @Override
+    //@Override
     public void onComplete(Payload response) {
         if (response.isResult()){
             missingMedia.remove((Media) response.getData().get(0));
@@ -181,7 +180,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadComple
     }
 
     private class DownloadMediaListener implements ListInnerBtnOnClickListener {
-        @Override
+        //@Override
         public void onClick(int position) {
 
             if(!ConnectionUtils.isOnWifi(DownloadMediaActivity.this)){

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/course_row"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/course_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp"
+            android:textStyle="normal" 
+            android:gravity="center"/>
+
+        <com.androidplot.pie.PieChart
+            android:id="@+id/scorecardPieChart"
+            android:layout_width="fill_parent"
+            android:layout_height="150dp"
+            android:layout_weight="1"/>
+
+
+</LinearLayout>

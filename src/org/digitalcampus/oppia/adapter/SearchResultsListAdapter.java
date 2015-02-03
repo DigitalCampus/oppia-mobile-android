@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.utils.ImageUtils;
 
@@ -92,7 +93,7 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
         convertView.setTag(R.id.TAG_ACTIVITY_DIGEST,sr.getActivity().getDigest());
 		
 		if(sr.getCourse().getImageFile() != null){
-			BitmapDrawable courseImageBitmap = ImageUtils.LoadBMPsdcard(sr.getCourse().getImageFileFromRoot(), ctx.getResources(), R.drawable.dc_logo);
+			BitmapDrawable courseImageBitmap = ImageUtils.LoadBMPsdcard(sr.getCourse().getImageFileFromRoot(), ctx.getResources(), MobileLearning.APP_LOGO);
             viewHolder.courseImage.setImageDrawable(courseImageBitmap);
 		}
 	   

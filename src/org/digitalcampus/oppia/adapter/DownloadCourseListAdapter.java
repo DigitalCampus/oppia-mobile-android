@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,7 +116,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course>{
 
         viewHolder.actionBtn.setTag(position); //For passing the list item index
         viewHolder.actionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
+            //@Override
             public void onClick(View v) {
                 if(onClickListener != null)
                     onClickListener.onClick((Integer) v.getTag());

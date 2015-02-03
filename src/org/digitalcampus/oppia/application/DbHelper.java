@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -483,9 +483,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
 		while (c.isAfterLast() == false) {
+			
 			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
@@ -493,6 +493,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
 			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
 			course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
+			course = this.courseSetProgress(course, userId);
 			courses.add(course);
 			c.moveToNext();
 		}
@@ -509,15 +510,49 @@ public class DbHelper extends SQLiteOpenHelper {
 		while (c.isAfterLast() == false) {
 			course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setModId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-			course.setProgress(this.getCourseProgress(course.getCourseId(), userId));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
 			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
 			course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
 			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
+			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
+			course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
+			course = this.courseSetProgress(course, userId);
 			c.moveToNext();
 		}
 		c.close();
+		return course;
+	}
+	
+	private Course courseSetProgress(Course course, long userId){
+		// get no activities
+		String s = ACTIVITY_C_COURSEID + "=?";
+		String[] args = new String[] { String.valueOf(course.getCourseId()) };
+		Cursor c = db.query(ACTIVITY_TABLE, null, s, args, null, null, null);
+		course.setNoActivities(c.getCount());
+		c.close();
+		
+		// get no completed
+		String sqlCompleted = "SELECT DISTINCT " + TRACKER_LOG_C_ACTIVITYDIGEST + " FROM " + TRACKER_LOG_TABLE +
+						" WHERE " + TRACKER_LOG_C_COURSEID + "=" + course.getCourseId() + 
+						" AND " + TRACKER_LOG_C_USERID + "=" + userId +
+						" AND " + TRACKER_LOG_C_COMPLETED + "=1" +
+						" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " IN ( SELECT " + ACTIVITY_C_ACTIVITYDIGEST + " FROM " + ACTIVITY_TABLE + " WHERE " + ACTIVITY_C_COURSEID + "=" + course.getCourseId() + ")";
+		c = db.rawQuery(sqlCompleted,null);
+		course.setNoActivitiesCompleted(c.getCount());
+		c.close();
+		
+		// get no started
+		String sqlStarted = "SELECT DISTINCT " + TRACKER_LOG_C_ACTIVITYDIGEST + " FROM " + TRACKER_LOG_TABLE +
+				" WHERE " + TRACKER_LOG_C_COURSEID + "=" + course.getCourseId() + 
+				" AND " + TRACKER_LOG_C_USERID + "=" + userId +
+				" AND " + TRACKER_LOG_C_COMPLETED + "=0" +
+				" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " NOT IN (" + sqlCompleted + ")" +
+				" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " IN ( SELECT " + ACTIVITY_C_ACTIVITYDIGEST + " FROM " + ACTIVITY_TABLE + " WHERE " + ACTIVITY_C_COURSEID + "=" + course.getCourseId() + ")";
+		c = db.rawQuery(sqlStarted,null);
+		course.setNoActivitiesStarted(c.getCount());
+		c.close();
+		
 		return course;
 	}
 	
@@ -551,7 +586,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 	}
 	
-	public float getCourseProgress(int courseId, long userId){
+	/*public float getCourseProgress(int courseId, long userId){
 		String sql = "SELECT a."+ ACTIVITY_C_ID + ", " +
 				"l."+ TRACKER_LOG_C_ACTIVITYDIGEST + 
 				" as d FROM "+ACTIVITY_TABLE + " a " +
@@ -572,7 +607,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		c.close();
 		return noComplete*100/noActs;
-	}
+	}*/
 	
 	public int resetCourse(int courseId, long userId){
 		// delete quiz results
@@ -715,11 +750,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				}
 				content = json.toString();
 			} catch (JSONException e) {
-				if(!MobileLearning.DEVELOPER_MODE){
-					BugSenseHandler.sendException(e);
-				} else {
-					e.printStackTrace();
-				}
+				BugSenseHandler.sendException(e);
+				e.printStackTrace();
 			}
 			
 			so.setContent(content);

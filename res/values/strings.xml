@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OppiaMobile</string>
     <string name="app_logo_alt">Digital Campus Logo</string>
     
     <string name="about_logged_in">Logged in as: %1$s</string>
@@ -108,6 +108,8 @@
 	<string name="prefUser">Username</string>
 	<string name="prefUserHint">(read only)</string>
 	<string name="prefLogoutEnabled">Enable logout from homepage</string>
+	<string name="prefDeleteCourseEnabled">Enable deleting of courses</string>
+	<string name="prefDownloadViaCellularEnabled">Download media via cellular network</string>
 	
 	<string name="notification_course_update_title">New course updates</string>
 	<string name="notification_course_update_text">Updates are available for your courses.</string>
@@ -125,9 +127,10 @@
 	<string name="register_form_organisation_title">Organsiation</string>
 	<string name="register_form_password_title">Password (*)</string>
 	<string name="register_form_password_again_title">Password (again) (*)</string>
+	<string name="register_form_phoneno_title">Phone number (*)</string>
 	<string name="register_btn_text">Register</string>
 	
-	<string name="reset_username_title">Username</string>
+	<string name="reset_username_title">Username or Email</string>
 	
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
@@ -200,6 +203,7 @@
 	<string name="error_register_password_no_match">Your passwords don\'t match</string>
 	<string name="error_register_no_firstname">Please enter your first name</string>
 	<string name="error_register_no_lastname">Please enter your last name</string>
+	<string name="error_register_no_phoneno">Please enter your phone number</string>
 	<string name="error_register_no_username">Please enter a username</string>
 	<string name="error_register_username_spaces">Your username cannot contain spaces</string>
 	<string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
@@ -216,6 +220,8 @@
 	<string name="error_reading_xml">An error occurred trying to load the course. Please reinstall the course.</string>
 	<string name="error_tts_start">Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled</string>
 	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
+	<string name="warning_delete_disabled">Sorry, deleting a course is currently disabled - please update your settings to allow deleting of courses.</string>
+	<string name="warning_download_via_cellular_enabled">Warning! Allowing media files to be downloaded via your mobile (cellular) network may incur high charges for data download.\n\n It is not recommended to enable this if you are on a slow mobile network.</string>
 	
 	<string name="login_process">Logging in</string>
 	<string name="login_complete">Logged in</string>

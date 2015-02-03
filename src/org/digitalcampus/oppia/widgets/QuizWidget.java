@@ -1,5 +1,5 @@
 /* 
- * This file is part of OppiaMobile - http://oppia-mobile.org/
+ * This file is part of OppiaMobile - https://digital-campus.org/
  * 
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -375,7 +376,6 @@ public class QuizWidget extends WidgetFactory {
 
 		// log the activity as complete
 		isOnResultsPage = true;
-		this.saveTracker();
 
 		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
@@ -471,11 +471,13 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	protected boolean getActivityCompleted() {
 		int passThreshold;
+		Log.d(TAG, "Threshold:" + quiz.getPassThreshold() );
 		if (quiz.getPassThreshold() != 0){
 			passThreshold = quiz.getPassThreshold();
 		} else {
 			passThreshold = Quiz.QUIZ_DEFAULT_PASS_THRESHOLD;
 		}
+		Log.d(TAG, "Percent:" + this.getPercent() );
 		if (isOnResultsPage && this.getPercent() >= passThreshold) {
 			return true;
 		} else {
