@@ -71,7 +71,7 @@ public class FileUtils {
             return false;
         }
 
-        BUFFER_SIZE_CONFIG = 21;
+        //BUFFER_SIZE_CONFIG = 21;
 
 		String[] dirs = { FileUtils.getCoursesPath(ctx), FileUtils.getMediaPath(ctx), FileUtils.getDownloadPath(ctx) };
 
@@ -173,13 +173,11 @@ public class FileUtils {
 					// this counter is a hack to prevent getting stuck when
 					// installing corrupted or not fully downloaded course
 					// packages
-					// it will prevent any course being installed with files
-					// larger than around 500kb
 					int counter = 0;
 					while ((count = zis.read(data, 0, BUFFER_SIZE)) != -1) {
 						dest.write(data, 0, count);
 						counter++;
-						if (counter > 5000) {
+						if (counter > 11000) {
 							dest.flush();
 							dest.close();
 							return false;
