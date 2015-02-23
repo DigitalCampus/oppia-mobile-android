@@ -30,6 +30,10 @@ import com.androidplot.pie.PieRenderer;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -46,6 +50,7 @@ import android.widget.TextView;
 public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
 	public static final String TAG = ScorecardListAdapter.class.getSimpleName();
+    private static final int ANIM_DURATION = 900;
 
 	private final Activity ctx;
 	private final ArrayList<Course> courseList;
@@ -76,6 +81,7 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         Segment segmentCompleted;
         Segment segmentStarted;
         Segment segmentNotStarted;
+        PieSegmentsAnimator animatorListener;
     }
 
 	@Override
@@ -99,7 +105,7 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
             viewHolder.segmentCompleted = new Segment("",0);
             viewHolder.segmentStarted = new Segment("",0);
             viewHolder.segmentNotStarted = new Segment("",0);
-
+            viewHolder.animatorListener = new PieSegmentsAnimator(viewHolder);
 
             convertView.setTag(viewHolder);
         } else {
@@ -126,14 +132,47 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         }
 
         int numNotStarted = course.getNoActivitiesNotStarted();
-        if (numNotStarted != 0){
-            Segment segmentNotStarted = viewHolder.segmentNotStarted;
-            segmentNotStarted.setTitle("Not Started (" + numNotStarted + ")");
-            segmentNotStarted.setValue(numNotStarted);
-            viewHolder.pie.addSeries(segmentNotStarted, sfNotStarted);
-        }
+        Segment segmentNotStarted = viewHolder.segmentNotStarted;
+        segmentNotStarted.setTitle( (numNotStarted != 0)? "Not Started (" + numNotStarted + ")" : "");
+        segmentNotStarted.setValue(numNotStarted);
+        viewHolder.pie.addSeries(segmentNotStarted, sfNotStarted);
 
+        createAnimator(viewHolder.animatorListener, numCompleted, numStarted, numNotStarted);
         viewHolder.pie.getRenderer(PieRenderer.class).setDonutSize(60/100f, PieRenderer.DonutMode.PERCENT);
 	    return convertView;
 	}
+
+    private void createAnimator(PieSegmentsAnimator animatorListener, int numCompleted, int numStarted, int numNotStarted){
+
+        int total = numCompleted + numStarted + numNotStarted;
+        //We create the thre valueHolders for the animation
+        PropertyValuesHolder completedHolder = PropertyValuesHolder.ofInt("completed", 0, numCompleted);
+        PropertyValuesHolder startedHolder = PropertyValuesHolder.ofInt("started", 0, numStarted);
+        //The notStarted animates from the total number of activities to its number
+        PropertyValuesHolder notStartedHolder = PropertyValuesHolder.ofInt("notStarted", total, numNotStarted);
+
+        //We create and start the animation assigning its listener
+        ValueAnimator anim = ObjectAnimator.ofPropertyValuesHolder(completedHolder, startedHolder, notStartedHolder);
+        anim.addUpdateListener(animatorListener);
+        anim.setDuration(ANIM_DURATION).start();
+    }
+
+    class PieSegmentsAnimator implements ValueAnimator.AnimatorUpdateListener{
+
+        //reference to the view to wich the animation is going to be applied
+        private ScorecardViewHolder viewHolder;
+
+        public PieSegmentsAnimator (ScorecardViewHolder holder){
+            viewHolder = holder;
+        }
+
+        @Override
+        public void onAnimationUpdate(ValueAnimator animator) {
+
+            viewHolder.segmentCompleted.setValue((Integer)animator.getAnimatedValue("completed"));
+            viewHolder.segmentStarted.setValue((Integer) animator.getAnimatedValue("started"));
+            viewHolder.segmentNotStarted.setValue((Integer)animator.getAnimatedValue("notStarted"));
+            viewHolder.pie.invalidate();
+        }
+    }
 }
