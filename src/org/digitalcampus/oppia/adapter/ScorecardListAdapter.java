@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.ScorecardPieChart;
 
@@ -50,7 +51,6 @@ import android.widget.TextView;
 public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
 	public static final String TAG = ScorecardListAdapter.class.getSimpleName();
-    private static final int ANIM_DURATION = 900;
 
 	private final Activity ctx;
 	private final ArrayList<Course> courseList;
@@ -154,7 +154,7 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         //We create and start the animation assigning its listener
         ValueAnimator anim = ObjectAnimator.ofPropertyValuesHolder(completedHolder, startedHolder, notStartedHolder);
         anim.addUpdateListener(animatorListener);
-        anim.setDuration(ANIM_DURATION).start();
+        anim.setDuration(MobileLearning.SCORECARD_ANIM_DURATION).start();
     }
 
     class PieSegmentsAnimator implements ValueAnimator.AnimatorUpdateListener{
