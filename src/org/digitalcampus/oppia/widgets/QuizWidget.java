@@ -42,7 +42,9 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizFeedback;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -226,9 +228,20 @@ public class QuizWidget extends WidgetFactory {
 			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
-			OnImageClickListener oicl = new OnImageClickListener(super.getActivity(), "image/*");
-			iv.setOnClickListener(oicl);
-			questionImage.setVisibility(View.VISIBLE);
+			if (q.getProp("media") == null){
+				OnImageClickListener oicl = new OnImageClickListener(super.getActivity(), "image/*");
+				iv.setOnClickListener(oicl);
+				TextView tv = (TextView) getView().findViewById(R.id.question_image_caption);
+				tv.setText(R.string.widget_quiz_image_caption);
+				questionImage.setVisibility(View.VISIBLE);
+			} else {
+				TextView tv = (TextView) getView().findViewById(R.id.question_image_caption);
+				tv.setText(R.string.widget_quiz_media_caption);
+				OnMediaClickListener omcl = new OnMediaClickListener(q.getProp("media"));
+				iv.setOnClickListener(omcl);
+				questionImage.setVisibility(View.VISIBLE);
+			}
+			
 		}
 
 		if (q instanceof MultiChoice) {
@@ -601,6 +614,40 @@ public class QuizWidget extends WidgetFactory {
 				Toast.makeText(this.ctx,this.ctx.getString(R.string.error_resource_app_not_found,file.getName()), Toast.LENGTH_LONG).show();
 			}
 			return;
+		}
+		
+	}
+	
+	private class OnMediaClickListener implements OnClickListener{
+
+		private String mediaFileName;
+		
+		public OnMediaClickListener(String mediaFileName){
+			this.mediaFileName = mediaFileName;
+		}
+
+		public void onClick(View v) {
+			// check video file exists
+			boolean exists = FileUtils.mediaFileExists(QuizWidget.super.getActivity(), mediaFileName);
+			if (!exists) {
+				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName),
+						Toast.LENGTH_LONG).show();
+			}
+
+			String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath(QuizWidget.super.getActivity()) + mediaFileName);
+
+			if (!FileUtils.supportedMediafileType(mimeType)) {
+				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
+						Toast.LENGTH_LONG).show();
+			}
+			
+			Intent intent = new Intent(QuizWidget.super.getActivity(), VideoPlayerActivity.class);
+			Bundle tb = new Bundle();
+			tb.putSerializable(VideoPlayerActivity.MEDIA_TAG, mediaFileName);
+			tb.putSerializable(Activity.TAG, activity);
+			tb.putSerializable(Course.TAG, course);
+			intent.putExtras(tb);
+			startActivity(intent);
 		}
 		
 	}
