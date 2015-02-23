@@ -73,6 +73,9 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
     static class ScorecardViewHolder{
         TextView courseTitle;
         PieChart pie;
+        Segment segmentCompleted;
+        Segment segmentStarted;
+        Segment segmentNotStarted;
     }
 
 	@Override
@@ -93,6 +96,11 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
             viewHolder.pie.getBorderPaint().setColor(Color.TRANSPARENT);
             viewHolder.pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
 
+            viewHolder.segmentCompleted = new Segment("",0);
+            viewHolder.segmentStarted = new Segment("",0);
+            viewHolder.segmentNotStarted = new Segment("",0);
+
+
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ScorecardViewHolder) convertView.getTag();
@@ -101,20 +109,29 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         viewHolder.courseTitle.setText(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
         viewHolder.pie.clear();
 
-
-        if (course.getNoActivitiesCompleted() != 0){
-            Segment segmentCompleted = new Segment("Completed (" + course.getNoActivitiesCompleted() + ")", course.getNoActivitiesCompleted());
+        int numCompleted = course.getNoActivitiesCompleted();
+        if (numCompleted != 0){
+            Segment segmentCompleted = viewHolder.segmentCompleted;
+            segmentCompleted.setTitle("Completed (" + numCompleted + ")");
+            segmentCompleted.setValue(numCompleted);
             viewHolder.pie.addSeries(segmentCompleted, sfCompleted);
+        }
 
-          }
-          if (course.getNoActivitiesStarted() != 0){
-              Segment segmentStarted = new Segment("Started (" + course.getNoActivitiesStarted() + ")", course.getNoActivitiesStarted());
-              viewHolder.pie.addSeries(segmentStarted, sfStarted);
-          }
-          if (course.getNoActivitiesNotStarted() != 0){
-            Segment segmentNotStarted = new Segment("Not Started (" + course.getNoActivitiesNotStarted() + ")", course.getNoActivitiesNotStarted());
+        int numStarted = course.getNoActivitiesStarted();
+        if (numStarted != 0){
+            Segment segmentStarted = viewHolder.segmentStarted;
+            segmentStarted.setTitle("Started (" + numStarted + ")");
+            segmentStarted.setValue(numStarted);
+            viewHolder.pie.addSeries(segmentStarted, sfStarted);
+        }
+
+        int numNotStarted = course.getNoActivitiesNotStarted();
+        if (numNotStarted != 0){
+            Segment segmentNotStarted = viewHolder.segmentNotStarted;
+            segmentNotStarted.setTitle("Not Started (" + numNotStarted + ")");
+            segmentNotStarted.setValue(numNotStarted);
             viewHolder.pie.addSeries(segmentNotStarted, sfNotStarted);
-          }
+        }
 
         viewHolder.pie.getRenderer(PieRenderer.class).setDonutSize(60/100f, PieRenderer.DonutMode.PERCENT);
 	    return convertView;
