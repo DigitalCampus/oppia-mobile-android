@@ -23,18 +23,22 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -42,7 +46,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-public class PrefsActivity extends SherlockPreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
+public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
 	
 	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
@@ -70,17 +74,13 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
 	public static final String PREF_METADATA = "prefMetadata";
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
 
-	
 	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
 	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
-	
 
     public static final String PREF_STORAGE_OPTION = "prefStorageOption";
     public static final String STORAGE_OPTION_INTERNAL = "internal";
     public static final String STORAGE_OPTION_EXTERNAL = "external";
-
-
 
     private ListPreference storagePref;
     private SharedPreferences prefs;
@@ -89,48 +89,67 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.prefs); 
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        
-		ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE); 
-		
-		List<String> entries = new ArrayList<String>();
-	    List<String> entryValues = new ArrayList<String>();
-	    
-	    Bundle bundle = this.getIntent().getExtras(); 
-        if(bundle != null) {
-        	@SuppressWarnings("unchecked")
-			ArrayList<Lang> langs = (ArrayList<Lang>) bundle.getSerializable("langs");
-        	for(Lang l: langs){
-        		if(!entryValues.contains(l.getLang())){
-	        		entryValues.add(l.getLang());
-	        		Locale loc = new Locale(l.getLang());
-	        		entries.add(loc.getDisplayLanguage(loc));
-        		}
-        	}
-        }
-        
-        final CharSequence[] entryCharSeq = entries.toArray(new CharSequence[entries.size()]);
-        final CharSequence[] entryValsChar = entryValues.toArray(new CharSequence[entryValues.size()]);
-        
-        langsList.setEntries(entryCharSeq);
-        langsList.setEntryValues(entryValsChar);
 
-        EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
-        if (username.getText().equals("")){
-        	username.setSummary(R.string.about_not_logged_in);
-        } else {
-        	 username.setSummary(getString(R.string.about_logged_in,username.getText()));
-        }
-        
-        EditTextPreference server = (EditTextPreference) findPreference(PrefsActivity.PREF_SERVER);
-        server.setSummary(server.getText());
+        FragmentManager mFragmentManager = getFragmentManager();
+        FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+        PrefsFragment mPrefsFragment = new PrefsFragment();
+        mFragmentTransaction.replace(android.R.id.content, mPrefsFragment);
+        mFragmentTransaction.commit();
 
-        storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
+        Bundle bundle = this.getIntent().getExtras();
+        if(bundle != null) { mPrefsFragment.setArguments(bundle); }
+
 	}
+
+    public static class PrefsFragment extends PreferenceFragment {
+
+        @Override
+        public void onCreate(Bundle savedInstance) {
+            super.onCreate(savedInstance);
+
+            // Load the preferences from an XML resource
+            addPreferencesFromResource(R.xml.prefs);
+
+            ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE);
+
+            List<String> entries = new ArrayList<String>();
+            List<String> entryValues = new ArrayList<String>();
+
+            Bundle bundle = getArguments();
+            if(bundle != null) {
+                @SuppressWarnings("unchecked")
+                ArrayList<Lang> langs = (ArrayList<Lang>) bundle.getSerializable("langs");
+                for(Lang l: langs){
+                    if(!entryValues.contains(l.getLang())){
+                        entryValues.add(l.getLang());
+                        Locale loc = new Locale(l.getLang());
+                        entries.add(loc.getDisplayLanguage(loc));
+                    }
+                }
+            }
+
+            final CharSequence[] entryCharSeq = entries.toArray(new CharSequence[entries.size()]);
+            final CharSequence[] entryValsChar = entryValues.toArray(new CharSequence[entryValues.size()]);
+
+            langsList.setEntries(entryCharSeq);
+            langsList.setEntryValues(entryValsChar);
+
+            EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
+            if (username.getText().equals("")){
+                username.setSummary(R.string.about_not_logged_in);
+            } else {
+                username.setSummary(getString(R.string.about_logged_in, username.getText()));
+            }
+
+            EditTextPreference server = (EditTextPreference) findPreference(PrefsActivity.PREF_SERVER);
+            server.setSummary(server.getText());
+        }
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -146,22 +165,19 @@ public class PrefsActivity extends SherlockPreferenceActivity implements SharedP
     @Override
     protected void onResume() {
         super.onResume();
-        // Set up a listener whenever a key changes
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // Unregister the listener whenever a key changes
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "Preference changed: " + key);
 
         if (key.equalsIgnoreCase(PrefsActivity.PREF_STORAGE_OPTION)) {
-            Preference storagePref = findPreference(key);
 
             String storageOption = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
             Log.d(TAG, "Storage option selected: " + storageOption);
