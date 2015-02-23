@@ -51,7 +51,7 @@ public class ScorecardPieChart {
 		this.course = course;
 	}
 
-	public void drawChart(int margin, boolean showSegementTitles){
+	public void drawChart(int margin, boolean showSegementTitles, boolean delayedStart){
 		
         pie.setPlotMargins(margin, margin, margin, margin);
         SegmentFormatter sfNotStarted = new SegmentFormatter();
@@ -87,11 +87,11 @@ public class ScorecardPieChart {
         pie.getBorderPaint().setColor(Color.TRANSPARENT);
         pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
 
-        createAnimator(numCompleted, numStarted, numNotStarted);
+        createAnimator(numCompleted, numStarted, numNotStarted, delayedStart);
 		
 	}
 
-    private void createAnimator(int numCompleted, int numStarted, int numNotStarted){
+    private void createAnimator(int numCompleted, int numStarted, int numNotStarted, boolean delayedStart){
 
         int total = numCompleted + numStarted + numNotStarted;
         //We create the thre valueHolders for the animation
@@ -99,6 +99,10 @@ public class ScorecardPieChart {
         PropertyValuesHolder startedHolder = PropertyValuesHolder.ofInt("started", 0, numStarted);
         //The notStarted animates from the total number of activities to its number
         PropertyValuesHolder notStartedHolder = PropertyValuesHolder.ofInt("notStarted", total, numNotStarted);
+
+        segmentCompleted.setValue(0);
+        segmentStarted.setValue(0);
+        segmentNotStarted.setValue(total);
 
         //We create and start the animation assigning its listener
         ValueAnimator anim = ObjectAnimator.ofPropertyValuesHolder(completedHolder, startedHolder, notStartedHolder);
@@ -111,7 +115,9 @@ public class ScorecardPieChart {
                 pie.invalidate();
             }
         });
-        anim.setDuration(MobileLearning.SCORECARD_ANIM_DURATION).start();
+        if (delayedStart){ anim.setStartDelay(500); }
+        anim.setDuration(MobileLearning.SCORECARD_ANIM_DURATION);
+        anim.start();
     }
 
 }
