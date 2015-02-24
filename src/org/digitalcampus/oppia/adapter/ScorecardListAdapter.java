@@ -146,10 +146,10 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
         int total = numCompleted + numStarted + numNotStarted;
         //We create the thre valueHolders for the animation
-        PropertyValuesHolder completedHolder = PropertyValuesHolder.ofInt("completed", 0, numCompleted);
-        PropertyValuesHolder startedHolder = PropertyValuesHolder.ofInt("started", 0, numStarted);
+        PropertyValuesHolder completedHolder = PropertyValuesHolder.ofFloat("completed", 0, numCompleted);
+        PropertyValuesHolder startedHolder = PropertyValuesHolder.ofFloat("started", 0, numStarted);
         //The notStarted animates from the total number of activities to its number
-        PropertyValuesHolder notStartedHolder = PropertyValuesHolder.ofInt("notStarted", total, numNotStarted);
+        PropertyValuesHolder notStartedHolder = PropertyValuesHolder.ofFloat("notStarted", total, numNotStarted);
 
         //We create and start the animation assigning its listener
         ValueAnimator anim = ObjectAnimator.ofPropertyValuesHolder(completedHolder, startedHolder, notStartedHolder);
@@ -169,9 +169,9 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         @Override
         public void onAnimationUpdate(ValueAnimator animator) {
 
-            viewHolder.segmentCompleted.setValue((Integer)animator.getAnimatedValue("completed"));
-            viewHolder.segmentStarted.setValue((Integer) animator.getAnimatedValue("started"));
-            viewHolder.segmentNotStarted.setValue((Integer)animator.getAnimatedValue("notStarted"));
+            viewHolder.segmentCompleted.setValue((Float)animator.getAnimatedValue("completed"));
+            viewHolder.segmentStarted.setValue((Float) animator.getAnimatedValue("started"));
+            viewHolder.segmentNotStarted.setValue((Float)animator.getAnimatedValue("notStarted"));
             viewHolder.pie.invalidate();
         }
     }

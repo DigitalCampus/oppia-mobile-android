@@ -95,10 +95,10 @@ public class ScorecardPieChart {
 
         int total = numCompleted + numStarted + numNotStarted;
         //We create the thre valueHolders for the animation
-        PropertyValuesHolder completedHolder = PropertyValuesHolder.ofInt("completed", 0, numCompleted);
-        PropertyValuesHolder startedHolder = PropertyValuesHolder.ofInt("started", 0, numStarted);
+        PropertyValuesHolder completedHolder = PropertyValuesHolder.ofFloat("completed", 0, numCompleted);
+        PropertyValuesHolder startedHolder = PropertyValuesHolder.ofFloat("started", 0, numStarted);
         //The notStarted animates from the total number of activities to its number
-        PropertyValuesHolder notStartedHolder = PropertyValuesHolder.ofInt("notStarted", total, numNotStarted);
+        PropertyValuesHolder notStartedHolder = PropertyValuesHolder.ofFloat("notStarted", total, numNotStarted);
 
         segmentCompleted.setValue(0);
         segmentStarted.setValue(0);
@@ -109,9 +109,9 @@ public class ScorecardPieChart {
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animator) {
-                segmentCompleted.setValue((Integer) animator.getAnimatedValue("completed"));
-                segmentStarted.setValue((Integer) animator.getAnimatedValue("started"));
-                segmentNotStarted.setValue((Integer)animator.getAnimatedValue("notStarted"));
+                segmentCompleted.setValue((Float) animator.getAnimatedValue("completed"));
+                segmentStarted.setValue((Float) animator.getAnimatedValue("started"));
+                segmentNotStarted.setValue((Float)animator.getAnimatedValue("notStarted"));
                 pie.invalidate();
             }
         });
