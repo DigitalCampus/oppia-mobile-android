@@ -112,50 +112,6 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	public void onStart() {
 		super.onStart();
 
-		String actionBarTitle = section.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale
-				.getDefault().getLanguage()));
-		if (actionBarTitle != null) {
-			setTitle(actionBarTitle);
-		} else if (isBaseline) {
-			setTitle(getString(R.string.title_baseline));
-		}	
-		actionBar.removeAllTabs();
-		List<Fragment> fragments = new ArrayList<Fragment>();
-		for (int i = 0; i < activities.size(); i++) {
-			Fragment f = null;
-			if (activities.get(i).getActType().equalsIgnoreCase("page")){
-				f = PageWidget.newInstance(activities.get(i), course, isBaseline);
-				fragments.add(f);
-			} else if (activities.get(i).getActType().equalsIgnoreCase("quiz")) {
-				f = QuizWidget.newInstance(activities.get(i), course, isBaseline);
-				fragments.add(f);
-			} else if (activities.get(i).getActType().equalsIgnoreCase("resource")) {
-				f = ResourceWidget.newInstance(activities.get(i), course, isBaseline);
-				fragments.add(f);
-			} else if  (activities.get(i).getActType().equalsIgnoreCase("feedback")){
-				f = FeedbackWidget.newInstance(activities.get(i), course, isBaseline);
-				fragments.add(f);
-			} else if  (activities.get(i).getActType().equalsIgnoreCase("url")){
-				f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
-				fragments.add(f);
-			}
-		}
-		
-		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
-		viewPager.setAdapter(apAdapter);
-
-		for (int i = 0; i < activities.size(); i++) {
-			String title = activities.get(i).getTitle(
-					prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-			boolean tabSelected = false;
-			if (i == currentActivityNo) {
-				tabSelected = true;
-			}
-			actionBar.addTab(actionBar.newTab().setText(title).setTabListener(this), tabSelected);
-
-		}
-		viewPager.setCurrentItem(currentActivityNo);
-
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			public void onPageScrollStateChanged(int arg0) {

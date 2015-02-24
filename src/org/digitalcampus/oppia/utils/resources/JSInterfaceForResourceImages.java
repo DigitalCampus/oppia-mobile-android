@@ -22,9 +22,24 @@ public class JSInterfaceForResourceImages {
     public static String InterfaceExposedName = "OppiaAndroid";
 
     //Script to inject in the webView after load
-    public static String JSInjection = "javascript: $(function(){$('img').on('click',function(){if ($(this).parent()[0].nodeName.toLowerCase()!=='a'){" + InterfaceExposedName + ".openFile($(this).attr('src'));}});});";
+    public static String JSInjection = "javascript: (function(){var imgs = document.querySelectorAll('img'); Array.prototype.forEach.call(imgs, function(img, i){if (img.parentNode.nodeName.toLowerCase()!=='a'){img.addEventListener('click', function(){"+InterfaceExposedName+".openFile(img.getAttribute('src'));});}});})();";
+
     /**
      The JS not minified:
+
+     //CURRENT VERSION (plain JS)
+     (function(){
+       var images = document.querySelectorAll('img');
+       Array.prototype.forEach.call(images, function(img, i){
+         if (img.parentNode.nodeName.toLowerCase()  !== 'a'){
+             img.addEventListener('click', function(){
+                  #InterfaceExposedName##.openFile(img.getAttribute('src'));
+             });
+         }
+       });
+     })();
+
+     //OLD VERSION (using jQuery)
      $(function(){
         $('img').on('click', function(){
             if ($(this).parent()[0].nodeName.toLowerCase() !== 'a'){
@@ -34,6 +49,7 @@ public class JSInterfaceForResourceImages {
      });
 
      */
+     //public static String JSInjection = "javascript: $(function(){$('img').on('click',function(){if ($(this).parent()[0].nodeName.toLowerCase()!=='a'){" + InterfaceExposedName + ".openFile($(this).attr('src'));}});});";
 
     Context _ctx;
     String resourcesLocation;
