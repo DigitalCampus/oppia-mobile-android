@@ -42,6 +42,7 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizFeedback;
+import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
@@ -589,31 +590,13 @@ public class QuizWidget extends WidgetFactory {
 				return;
 			} 
 			Uri targetUri = Uri.fromFile(file);
-			
 			// check there is actually an app installed to open this filetype
-			
-			Intent intent = new Intent();
-			intent.setAction(android.content.Intent.ACTION_VIEW);
-			intent.setDataAndType(targetUri, type);
-			
-			PackageManager pm = this.ctx.getPackageManager();
-
-			List<ResolveInfo> infos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
-			boolean appFound = false;
-			for (ResolveInfo info : infos) {
-				IntentFilter filter = info.filter;
-				if (filter != null && filter.hasAction(Intent.ACTION_VIEW)) {
-					// Found an app with the right intent/filter
-					appFound = true;
-				}
-			}
-
-			if(appFound){
+			Intent intent = ExternalResourceOpener.getIntentToOpenResource(ctx, targetUri, type);
+			if(intent != null){
 				this.ctx.startActivity(intent);
 			} else {
 				Toast.makeText(this.ctx,this.ctx.getString(R.string.error_resource_app_not_found,file.getName()), Toast.LENGTH_LONG).show();
 			}
-			return;
 		}
 		
 	}
@@ -630,15 +613,15 @@ public class QuizWidget extends WidgetFactory {
 			// check video file exists
 			boolean exists = FileUtils.mediaFileExists(QuizWidget.super.getActivity(), mediaFileName);
 			if (!exists) {
-				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName),
-						Toast.LENGTH_LONG).show();
-			}
+				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName), Toast.LENGTH_LONG).show();
+			    return;
+            }
 
 			String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath(QuizWidget.super.getActivity()) + mediaFileName);
-
 			if (!FileUtils.supportedMediafileType(mimeType)) {
 				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
 						Toast.LENGTH_LONG).show();
+                return;
 			}
 			
 			Intent intent = new Intent(QuizWidget.super.getActivity(), VideoPlayerActivity.class);
