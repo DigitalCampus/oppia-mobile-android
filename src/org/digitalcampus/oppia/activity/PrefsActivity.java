@@ -133,6 +133,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "Preference changed: " + key);
         if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
+            String currentStorage = FileUtils.getStorageStrategy().getStorageType();
             String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
             String storageOption   = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
             String path = null;
@@ -150,7 +151,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 //The storage option is different from the current one
                 (!storageOption.equals(FileUtils.getStorageStrategy().getStorageType())) ||
                 //The storage is set to external, and is a different path
-                ((path != null) && storageOption.equals(STORAGE_OPTION_EXTERNAL) && !currentLocation.startsWith(path))
+                ((path != null) && !currentLocation.startsWith(path))
             ){
 
                 ArrayList<Object> data = new ArrayList<Object>();
@@ -178,6 +179,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         if (p.isResult()){
             Log.d(TAG, "Move storage completed!");
             Toast.makeText(this, this.getString(R.string.move_storage_completed), Toast.LENGTH_LONG).show();
+            //To handle the possibility that is in an inconsistent state
+            String storageOption = prefs.getString(PREF_STORAGE_OPTION, "");
+            if (!storageOption.equals(STORAGE_OPTION_INTERNAL)){
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL);
+                editor.commit();
+            }
         }
         else{
             Log.d(TAG, "Move storage failed:" + p.getResultResponse());
