@@ -9,6 +9,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class PreferencesFragment extends PreferenceFragment {
 
     public void updateStorageList(){
 
-        List<StorageUtils.StorageInfo> storageLocations = StorageUtils.getStorageList();
+        List<StorageLocationInfo> storageLocations = StorageUtils.getStorageList();
         if (storageLocations.size() > 1){
             //If there is more than one storage option, we create a preferences list
 
@@ -73,10 +74,10 @@ public class PreferencesFragment extends PreferenceFragment {
             entries.add(getString(R.string.prefStorageOptionInternal));
             entryValues.add(PrefsActivity.STORAGE_OPTION_INTERNAL);
 
-            for (StorageUtils.StorageInfo storageLoc : storageLocations){
+            for (StorageLocationInfo storageLoc : storageLocations){
                 //Only add it as an option if it is writable
                 if (!storageLoc.readonly){
-                    entries.add(storageLoc.getDisplayName());
+                    entries.add(storageLoc.getDisplayName(getActivity()));
                     entryValues.add(storageLoc.path);
                     writableLocations++;
 

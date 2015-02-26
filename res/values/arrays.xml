@@ -29,8 +29,8 @@
         <item name="20">20</item>
     </string-array>
     <string-array name="StorageOptions">
-        <item name="internal">Internal</item>
-        <item name="external">External</item>
+        <item name="internal">@string/prefStorageOptionInternal</item>
+        <item name="external">@string/prefStorageOptionExternal</item>
     </string-array>
     <string-array name="StorageOptionValues">
         <item name="internal">internal</item>

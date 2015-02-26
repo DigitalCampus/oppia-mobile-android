@@ -163,7 +163,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
                 pDialog = new ProgressDialog(this);
                 pDialog.setTitle(R.string.loading);
-                pDialog.setMessage(getString(R.string.loading));
+                pDialog.setMessage(getString(R.string.moving_storage_location));
                 pDialog.setCancelable(false);
                 pDialog.show();
 
