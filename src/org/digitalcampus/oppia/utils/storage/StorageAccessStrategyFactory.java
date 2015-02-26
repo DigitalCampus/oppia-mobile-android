@@ -21,11 +21,11 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 
 public class StorageAccessStrategyFactory {
     public static StorageAccessStrategy createStrategy(String type){
-        if ((type!=null)&&(type.equals(PrefsActivity.STORAGE_OPTION_EXTERNAL))){
-            return new ExternalStorageStrategy();
+        if ((type!=null)&&(type.equals(PrefsActivity.STORAGE_OPTION_INTERNAL))){
+            return new InternalStorageStrategy();
         }
         else{
-            return new InternalStorageStrategy();
+            return new ExternalStorageStrategy();
         }
     }
 }

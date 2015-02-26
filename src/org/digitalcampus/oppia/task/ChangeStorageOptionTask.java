@@ -58,10 +58,8 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         String previousLocation = PreferenceManager.getDefaultSharedPreferences(ctx).getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
         StorageAccessStrategy previousStrategy = FileUtils.getStorageStrategy();
         String sourcePath = previousStrategy.getStorageLocation(ctx);
-
         StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageType);
-        newStrategy.updateStorageLocation(ctx, location);
-        String destPath = newStrategy.getStorageLocation(ctx);
+
 
         Log.d(TAG, "Checking if storage is available...");
         if (!newStrategy.isStorageAvailable(ctx)){
@@ -73,6 +71,8 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             Log.d(TAG, "Getting storage sizes...");
             long currentSize = FileUtils.getTotalStorageUsed(ctx);
 
+            newStrategy.updateStorageLocation(ctx, location);
+            String destPath = newStrategy.getStorageLocation(ctx);
             FileUtils.setStorageStrategy(newStrategy);
 
             long availableDestSize;

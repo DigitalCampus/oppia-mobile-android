@@ -176,24 +176,24 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public void moveStorageComplete(Payload p) {
         pDialog.dismiss();
 
+        String storageOption = prefs.getString(PREF_STORAGE_OPTION, "");
         if (p.isResult()){
             Log.d(TAG, "Move storage completed!");
             Toast.makeText(this, this.getString(R.string.move_storage_completed), Toast.LENGTH_LONG).show();
-            //To handle the possibility that is in an inconsistent state
-            String storageOption = prefs.getString(PREF_STORAGE_OPTION, "");
-            if (!storageOption.equals(STORAGE_OPTION_INTERNAL)){
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL);
-                editor.commit();
-            }
         }
         else{
             Log.d(TAG, "Move storage failed:" + p.getResultResponse());
             UIUtils.showAlert(this, R.string.error, p.getResultResponse());
 
             //We set the actual storage option (remove the one set by the user)
-            String storageOption = prefs.getString(PREF_STORAGE_OPTION, "");
             mPrefsFragment.updateStoragePref(storageOption);
+        }
+
+        //Finally, to handle the possibility that is in an inconsistent state
+        if (!storageOption.equals(STORAGE_OPTION_INTERNAL)){
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL);
+            editor.commit();
         }
 
     }
