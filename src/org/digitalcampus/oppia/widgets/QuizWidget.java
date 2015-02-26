@@ -74,6 +74,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -297,6 +298,9 @@ public class QuizWidget extends WidgetFactory {
 						if (!feedback.equals("") && 
 								quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS 
 								&& !QuizWidget.this.quiz.getCurrentQuestion().getFeedbackDisplayed()) {
+                            //We hide the keyboard before showing the dialog
+                            InputMethodManager imm =  (InputMethodManager) QuizWidget.super.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 							showFeedback(feedback);
 						} else if (QuizWidget.this.quiz.hasNext()) {
 							QuizWidget.this.quiz.moveNext();
