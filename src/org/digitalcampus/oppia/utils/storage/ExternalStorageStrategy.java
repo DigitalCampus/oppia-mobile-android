@@ -32,7 +32,7 @@ import java.io.File;
 public class ExternalStorageStrategy implements StorageAccessStrategy{
 
     public static final String TAG = FileUtils.class.getSimpleName();
-    private static String internalPath = "/Android/data/org.digitalcampus.mobile.learning/files";
+    private static String internalPath;
 
     @Override
     public void updateStorageLocation(Context ctx){
@@ -54,7 +54,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         String currentLocation = this.getStorageLocation(ctx);
         if (currentLocation.startsWith(mount)){ return; }
 
-        String location = mount + getInternalBasePath();
+        String location = mount + getInternalBasePath(ctx);
         updateLocationPreference(ctx, location);
     }
 
@@ -65,9 +65,8 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 
         if ((location == null) || location.equals("")){
-            //If location is not set yet, update it
+            //If location is not set yet, update it and get it again
             updateStorageLocation(ctx);
-            //We get it again
             location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
         }
 
@@ -102,9 +101,11 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         editor.commit();
     }
 
-    private static String getInternalBasePath(){
+    private static String getInternalBasePath(Context ctx){
         if (internalPath == null){
-            //We get the base internal path
+            String packageName = ctx.getPackageName();
+            // internalPath: /Android/data/{{packageName}}/files
+            internalPath = File.separator + "Android" + File.separator + "data" + File.separator + packageName + File.separator + "files";
         }
         return internalPath;
     }
