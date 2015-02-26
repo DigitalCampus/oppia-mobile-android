@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.fragments.PreferencesFragment;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Lang;
@@ -82,9 +83,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String STORAGE_OPTION_INTERNAL = "internal";
     public static final String STORAGE_OPTION_EXTERNAL = "external";
 
-    private ListPreference storagePref;
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
+    private PreferencesFragment mPrefsFragment;
 
 
 	@Override
@@ -97,7 +98,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
         FragmentManager mFragmentManager = getFragmentManager();
         FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
-        PrefsFragment mPrefsFragment = new PrefsFragment();
+        mPrefsFragment = PreferencesFragment.newInstance();
         mFragmentTransaction.replace(android.R.id.content, mPrefsFragment);
         mFragmentTransaction.commit();
 
@@ -105,51 +106,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         if(bundle != null) { mPrefsFragment.setArguments(bundle); }
 
 	}
-
-    public static class PrefsFragment extends PreferenceFragment {
-
-        @Override
-        public void onCreate(Bundle savedInstance) {
-            super.onCreate(savedInstance);
-
-            // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.prefs);
-
-            ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE);
-
-            List<String> entries = new ArrayList<String>();
-            List<String> entryValues = new ArrayList<String>();
-
-            Bundle bundle = getArguments();
-            if(bundle != null) {
-                @SuppressWarnings("unchecked")
-                ArrayList<Lang> langs = (ArrayList<Lang>) bundle.getSerializable("langs");
-                for(Lang l: langs){
-                    if(!entryValues.contains(l.getLang())){
-                        entryValues.add(l.getLang());
-                        Locale loc = new Locale(l.getLang());
-                        entries.add(loc.getDisplayLanguage(loc));
-                    }
-                }
-            }
-
-            final CharSequence[] entryCharSeq = entries.toArray(new CharSequence[entries.size()]);
-            final CharSequence[] entryValsChar = entryValues.toArray(new CharSequence[entryValues.size()]);
-
-            langsList.setEntries(entryCharSeq);
-            langsList.setEntryValues(entryValsChar);
-
-            EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
-            if (username.getText().equals("")){
-                username.setSummary(R.string.about_not_logged_in);
-            } else {
-                username.setSummary(getString(R.string.about_logged_in, username.getText()));
-            }
-
-            EditTextPreference server = (EditTextPreference) findPreference(PrefsActivity.PREF_SERVER);
-            server.setSummary(server.getText());
-        }
-    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -176,15 +132,30 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "Preference changed: " + key);
+        if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
+            String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+            String storageOption   = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
+            String path = null;
 
-        if (key.equalsIgnoreCase(PrefsActivity.PREF_STORAGE_OPTION)) {
-
-            String storageOption = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
             Log.d(TAG, "Storage option selected: " + storageOption);
-            if (!storageOption.equals(FileUtils.getStorageStrategy().getStorageType())){
+
+            if ((!storageOption.equals(STORAGE_OPTION_EXTERNAL)) &&
+                (!storageOption.equals(STORAGE_OPTION_INTERNAL))){
+                //The option selected is a path
+                path = storageOption;
+                storageOption = STORAGE_OPTION_EXTERNAL;
+            }
+
+            if (
+                //The storage option is different from the current one
+                (!storageOption.equals(FileUtils.getStorageStrategy().getStorageType())) ||
+                //The storage is set to external, and is a different path
+                ((path != null) && storageOption.equals(STORAGE_OPTION_EXTERNAL) && !currentLocation.startsWith(path))
+            ){
 
                 ArrayList<Object> data = new ArrayList<Object>();
                 data.add(storageOption);
+                if (path != null){ data.add(path); }
                 Payload p = new Payload(data);
                 ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
                 changeStorageTask.setMoveStorageListener(this);
@@ -213,8 +184,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             UIUtils.showAlert(this, R.string.error, p.getResultResponse());
 
             //We set the actual storage option (remove the one set by the user)
-            String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
-            storagePref.setValue(storageOption);
+            String storageOption = prefs.getString(PREF_STORAGE_OPTION, "");
+            mPrefsFragment.updateStoragePref(storageOption);
         }
 
     }
@@ -223,4 +194,5 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public void moveStorageProgressUpdate(String s) {
 
     }
+
 }

@@ -111,8 +111,12 @@
 	<string name="prefLogoutEnabled">Enable logout from homepage</string>
 	<string name="prefDeleteCourseEnabled">Enable deleting of courses</string>
 	<string name="prefDownloadViaCellularEnabled">Download media via cellular network</string>
-	
-	<string name="notification_course_update_title">New course updates</string>
+
+    <string name="prefStorageOptionInternal">Internal</string>
+    <string name="prefStorageOptionExternal">External</string>
+
+
+    <string name="notification_course_update_title">New course updates</string>
 	<string name="notification_course_update_text">Updates are available for your courses.</string>
 	
 	<string name="title_login">Login</string>

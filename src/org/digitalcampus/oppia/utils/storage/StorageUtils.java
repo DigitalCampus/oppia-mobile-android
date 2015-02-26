@@ -54,10 +54,13 @@ public class StorageUtils {
             StringBuilder res = new StringBuilder();
             if (!removable) {
                 res.append("Internal SD card");
-            } else if (number > 1) {
-                res.append("SD card " + number);
             } else {
-                res.append("SD card");
+                res.append("Removable ");
+                if (number > 1) {
+                    res.append("SD card ").append(number);
+                } else {
+                    res.append("SD card");
+                }
             }
             if (readonly) {
                 res.append(" (Read only)");

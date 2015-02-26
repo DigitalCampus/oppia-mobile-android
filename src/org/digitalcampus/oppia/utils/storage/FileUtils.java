@@ -266,7 +266,8 @@ public class FileUtils {
     }
 
     public static long getAvailableStorageSize(Context ctx){
-        StatFs stat = new StatFs(getStorageLocationRoot(ctx));
+        String path = getStorageLocationRoot(ctx);
+        StatFs stat = new StatFs(path);
         long bytesAvailable;
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
             bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
