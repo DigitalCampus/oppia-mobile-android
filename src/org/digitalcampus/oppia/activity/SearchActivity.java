@@ -23,6 +23,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
 
@@ -112,10 +113,11 @@ public class SearchActivity extends AppActivity {
                     currentSearch = newSearch;
 
                     searchButton.setEnabled(false);
-                    setListVisibility(false);
                     loadingSpinner.setVisibility(View.VISIBLE);
                     summary.setText(getString(R.string.search_searching));
                     summary.setVisibility(View.VISIBLE);
+                    setFadeAnimation(resultsList, false);
+                    setFadeAnimation(summary, true);
 
                     new PerformSearchTask().execute("");
                 }
@@ -124,21 +126,21 @@ public class SearchActivity extends AppActivity {
 		});
 	}
 
-    protected void setListVisibility(boolean visible){
+    protected void setFadeAnimation(View view, boolean visible){
         Animation fadeAnimation = new AlphaAnimation(visible?0:1, visible?1:0);
         fadeAnimation.setInterpolator(new DecelerateInterpolator()); //add this
         fadeAnimation.setDuration(700);
         fadeAnimation.setFillAfter(true);
-        resultsList.setAnimation(fadeAnimation);
+        view.setAnimation(fadeAnimation);
     }
 
-    private class PerformSearchTask extends AsyncTask<String, Object, ArrayList<SearchResult>>{
+    private class PerformSearchTask extends AsyncTask<String, Object, ArrayList<SearchResult>> implements DBListener{
 
         @Override
         protected ArrayList<SearchResult> doInBackground(String... urls) {
             Log.d(TAG, "Starting search...");
             DbHelper db = new DbHelper(SearchActivity.this);
-            ArrayList<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this);
+            ArrayList<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this, this);
             DatabaseManager.getInstance().closeDatabase();
 
             return searchResults;
@@ -150,7 +152,7 @@ public class SearchActivity extends AppActivity {
             results.addAll(searchResults);
             srla.notifyDataSetChanged();
             resultsList.setSelectionAfterHeaderView();
-            setListVisibility(true);
+            setFadeAnimation(resultsList, true);
             loadingSpinner.setVisibility(View.GONE);
             searchButton.setEnabled(true);
 
@@ -161,10 +163,14 @@ public class SearchActivity extends AppActivity {
 
         @Override
         public void onProgressUpdate(Object... values){
-            Log.d(TAG, "Progress!" + values.length);
             summary.setText("Fetching results...");
         }
 
+        @Override
+        public void onQueryPerformed() {
+            publishProgress(true);
 
+
+        }
     }
 }

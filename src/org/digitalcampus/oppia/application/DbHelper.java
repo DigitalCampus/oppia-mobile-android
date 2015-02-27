@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
@@ -968,7 +969,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	/*
 	 * Perform a search
 	 */
-	public ArrayList<SearchResult> search(String searchText, int limit, long userId, Context ctx){
+	public ArrayList<SearchResult> search(String searchText, int limit, long userId, Context ctx, DBListener listener){
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		String sqlSeachFullText = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 1 AS ranking FROM %s ft " +
 									" INNER JOIN %s a ON a.%s = ft.docid" +
@@ -1004,12 +1005,16 @@ public class DbHelper extends SQLiteOpenHelper {
 					COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
 					SEARCH_C_COURSETITLE, searchText);
 		
-		String sql = String.format("SELECT * FROM (" +
-				"%s UNION %s UNION %s UNION %s) ORDER BY ranking DESC LIMIT 0,%d", 
+		String sql = String.format("SELECT DISTINCT courseid, activitydigest FROM ( SELECT * FROM (" +
+				"%s UNION %s UNION %s UNION %s) ORDER BY ranking DESC LIMIT 0,%d)",
 				sqlSeachFullText, sqlActivityTitle, sqlSectionTitle, sqlCourseTitle, limit);
 		
 		Cursor c = db.rawQuery(sql,null);
 	    if(c !=null && c.getCount()>0){
+
+            //We inform the AsyncTask that the query has been performed
+            listener.onQueryPerformed();
+
 	    	c.moveToFirst();
 	    	while (c.isAfterLast() == false) {
 	    		SearchResult result = new SearchResult();
@@ -1032,11 +1037,10 @@ public class DbHelper extends SQLiteOpenHelper {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	    		
 	    		c.moveToNext();
 			}
 	    }
-	    c.close();
+        if(c !=null) { c.close(); }
 	    return results;
 
 	}
