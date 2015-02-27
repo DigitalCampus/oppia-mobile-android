@@ -24,14 +24,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.ScorecardPieChart;
 
-import com.androidplot.pie.PieChart;
-import com.androidplot.pie.PieRenderer;
-import com.androidplot.pie.Segment;
-import com.androidplot.pie.SegmentFormatter;
-
-import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
@@ -39,7 +32,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +39,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.androidplot.pie.PieChart;
+import com.androidplot.pie.PieRenderer;
+import com.androidplot.pie.Segment;
+import com.androidplot.pie.SegmentFormatter;
 
 public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
@@ -165,8 +162,8 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         public PieSegmentsAnimator (ScorecardViewHolder holder){
             viewHolder = holder;
         }
-
-        @Override
+        
+        //@Override
         public void onAnimationUpdate(ValueAnimator animator) {
 
             viewHolder.segmentCompleted.setValue((Float)animator.getAnimatedValue("completed"));
