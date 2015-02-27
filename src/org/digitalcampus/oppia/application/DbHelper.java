@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -1015,22 +1016,33 @@ public class DbHelper extends SQLiteOpenHelper {
             //We inform the AsyncTask that the query has been performed
             listener.onQueryPerformed();
 
-	    	c.moveToFirst();
-	    	while (c.isAfterLast() == false) {
-	    		SearchResult result = new SearchResult();
-	    		
-	    		int courseId = c.getColumnIndex("courseid");
-	    		Course course = this.getCourse(c.getLong(courseId),userId);
-	    		result.setCourse(course);
+            long startTime = System.currentTimeMillis();
+            HashMap<Long, Course> fetchedCourses = new HashMap<Long, Course>();
+            HashMap<Long, CourseXMLReader> fetchedXMLCourses = new HashMap<Long, CourseXMLReader>();
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                SearchResult result = new SearchResult();
+
+                long courseId = c.getLong(c.getColumnIndex("courseid"));
+                Course course = fetchedCourses.get(courseId);
+                if (course == null){
+                    course = this.getCourse(courseId, userId);
+                    fetchedCourses.put(courseId, course);
+                }
+                result.setCourse(course);
 	    		
 	    		int digest = c.getColumnIndex("activitydigest");
 	    		Activity activity = this.getActivityByDigest(c.getString(digest));
 	    		result.setActivity(activity);
 				
 	    		int sectionOrderId = activity.getSectionId();
-	    		CourseXMLReader cxr;
+	    		CourseXMLReader cxr = fetchedXMLCourses.get(courseId);
 				try {
-					cxr = new CourseXMLReader(course.getCourseXMLLocation(), ctx);
+                    if (cxr == null){
+                        cxr = new CourseXMLReader(course.getCourseXMLLocation(), ctx);
+                        fetchedXMLCourses.put(courseId, cxr);
+                    }
 					result.setSection(cxr.getSection(sectionOrderId));
 		    		results.add(result);
 				} catch (InvalidXMLException e) {
@@ -1039,6 +1051,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				}
 	    		c.moveToNext();
 			}
+            long elapsedTime = System.currentTimeMillis() - startTime;
+            Log.d("SearchDB", elapsedTime + " ms");
 	    }
         if(c !=null) { c.close(); }
 	    return results;
