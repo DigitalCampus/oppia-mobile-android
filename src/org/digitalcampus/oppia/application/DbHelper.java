@@ -1051,8 +1051,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				}
 	    		c.moveToNext();
 			}
-            long elapsedTime = System.currentTimeMillis() - startTime;
-            Log.d("SearchDB", elapsedTime + " ms");
+            long ellapsedTime = System.currentTimeMillis() - startTime;
+            Log.d(TAG, "Performing search query and fetching. " + ellapsedTime + " ms ellapsed");
 	    }
         if(c !=null) { c.close(); }
 	    return results;

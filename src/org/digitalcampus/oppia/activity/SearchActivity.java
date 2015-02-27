@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.activity;
 
 import java.util.ArrayList;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
@@ -26,7 +25,6 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -98,6 +97,13 @@ public class SearchActivity extends AppActivity {
 		DatabaseManager.getInstance().closeDatabase();
 		
 		searchText = (EditText) findViewById(R.id.search_string);
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                performSearch();
+                return false;
+            }
+        });
 		summary = (TextView) findViewById(R.id.search_results_summary);
         loadingSpinner = (ProgressBar) findViewById(R.id.progressBar);
         searchButton = (ImageView) findViewById(R.id.searchbutton);
@@ -108,23 +114,62 @@ public class SearchActivity extends AppActivity {
                 InputMethodManager imm =  (InputMethodManager) SearchActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                String newSearch = searchText.getText().toString();
-                if (!newSearch.equals(currentSearch)){
-                    currentSearch = newSearch;
-
-                    searchButton.setEnabled(false);
-                    loadingSpinner.setVisibility(View.VISIBLE);
-                    summary.setText(getString(R.string.search_searching));
-                    summary.setVisibility(View.VISIBLE);
-                    setFadeAnimation(resultsList, false);
-                    setFadeAnimation(summary, true);
-
-                    new PerformSearchTask().execute("");
-                }
-
+                performSearch();
 			}
 		});
 	}
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(!summary.getText().toString().equals("")){
+            summary.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("currentSearch", currentSearch);
+        if (summary.getVisibility() == View.VISIBLE){
+            savedInstanceState.putString("summaryMsg", summary.getText().toString());
+        }
+        if (results.size() > 0){
+            savedInstanceState.putSerializable("searchResults", results);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        currentSearch = savedInstanceState.getString("currentSearch");
+        String summaryMsg = savedInstanceState.getString("summaryMsg");
+        if (summaryMsg != null){
+            summary.setText(summaryMsg);
+        }
+        ArrayList<SearchResult> searchResults = (ArrayList<SearchResult>) savedInstanceState.getSerializable("searchResults");
+        if ((searchResults != null) && searchResults.size() > 0){
+            results.clear();
+            results.addAll(searchResults);
+            srla.notifyDataSetChanged();
+        }
+    }
+
+    private void performSearch(){
+        String newSearch = searchText.getText().toString();
+        if (!newSearch.equals(currentSearch)){
+            currentSearch = newSearch;
+
+            searchButton.setEnabled(false);
+            loadingSpinner.setVisibility(View.VISIBLE);
+            summary.setText(getString(R.string.search_searching));
+            summary.setVisibility(View.VISIBLE);
+            setFadeAnimation(resultsList, false);
+            setFadeAnimation(summary, true);
+
+            new SearchTask().execute("");
+        }
+    }
 
     protected void setFadeAnimation(View view, boolean visible){
         Animation fadeAnimation = new AlphaAnimation(visible?0:1, visible?1:0);
@@ -134,7 +179,7 @@ public class SearchActivity extends AppActivity {
         view.setAnimation(fadeAnimation);
     }
 
-    private class PerformSearchTask extends AsyncTask<String, Object, ArrayList<SearchResult>> implements DBListener{
+    private class SearchTask extends AsyncTask<String, Object, ArrayList<SearchResult>> implements DBListener{
 
         @Override
         protected ArrayList<SearchResult> doInBackground(String... urls) {
