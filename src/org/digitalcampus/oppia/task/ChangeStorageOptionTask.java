@@ -53,13 +53,17 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
 
         Payload payload = params[0];
         String storageType = (String)payload.getData().get(0);
+        String location = (payload.getData().size() > 1) ? (String)payload.getData().get(1) : null;
 
+        String previousLocation = PreferenceManager.getDefaultSharedPreferences(ctx).getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
         StorageAccessStrategy previousStrategy = FileUtils.getStorageStrategy();
+        String sourcePath = previousStrategy.getStorageLocation(ctx);
         StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageType);
+
 
         Log.d(TAG, "Checking if storage is available...");
         if (!newStrategy.isStorageAvailable(ctx)){
-            resetStrategy(previousStrategy);
+            resetStrategy(previousStrategy, previousLocation);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_sdcard));
         }
@@ -67,37 +71,47 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             Log.d(TAG, "Getting storage sizes...");
             long currentSize = FileUtils.getTotalStorageUsed(ctx);
 
+            newStrategy.updateStorageLocation(ctx, location);
+            String destPath = newStrategy.getStorageLocation(ctx);
             FileUtils.setStorageStrategy(newStrategy);
-            long availableDestSize = FileUtils.getAvailableStorageSize(ctx);
-            Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
-            if (availableDestSize<currentSize){
-                resetStrategy(previousStrategy);
-                payload.setResult(false);
-                payload.setResultResponse(ctx.getString(R.string.error_insufficient_storage_available));
-            }
-            else{
-                String sourcePath = previousStrategy.getStorageLocation(ctx);
-                String destPath = newStrategy.getStorageLocation(ctx);
 
+            long availableDestSize;
+            try{
                 File destDir = new File(destPath);
                 if (destDir.exists()){
                     FileUtils.cleanDir(destDir);
                 }
                 else{
-                    destDir.mkdir();
+                    boolean makeDirs = destDir.mkdirs();
+                    if (!makeDirs){ throw new Exception("No file created!"); }
                 }
+                availableDestSize = FileUtils.getAvailableStorageSize(ctx);
+                Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
+            }
+            catch (Exception e){
+                resetStrategy(previousStrategy, previousLocation);
+                payload.setResult(false);
+                payload.setResultResponse(ctx.getString(R.string.error));
+                return payload;
+            }
 
+            if (availableDestSize<currentSize){
+                resetStrategy(previousStrategy, previousLocation);
+                payload.setResult(false);
+                payload.setResultResponse(ctx.getString(R.string.error_insufficient_storage_available));
+            }
+            else{
                 if (moveStorageDirs(sourcePath, destPath)){
                     //Delete the files from source
                     FileUtils.deleteDir(new File(sourcePath));
-                    newStrategy.updateStorageLocation(ctx);
                     Log.d(TAG, "Update storage location succeeded!");
                     payload.setResult(true);
                 }
                 else{
                     //Delete the files that were actually copied
+                    File destDir = new File(destPath);
                     FileUtils.deleteDir(destDir);
-                    resetStrategy(previousStrategy);
+                    resetStrategy(previousStrategy, previousLocation);
                     payload.setResult(false);
                     payload.setResultResponse(ctx.getString(R.string.error));
                 }
@@ -120,7 +134,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             org.apache.commons.io.FileUtils.moveDirectoryToDirectory(downloadSource,destination,true);
             Log.d(TAG,"Copying " + downloadPath + " completed");
         } catch (IOException e) {
-            Log.d(TAG,"Copying " + downloadPath + "failed");
+            Log.d(TAG,"Copying " + downloadPath + " to " + destination + " failed");
             e.printStackTrace();
             return false;
         }
@@ -130,7 +144,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             org.apache.commons.io.FileUtils.moveDirectoryToDirectory(mediaSource,destination,true);
             Log.d(TAG,"Copying " + mediaPath + " completed");
         } catch (IOException e) {
-            Log.d(TAG,"Copying " + mediaPath + "failed");
+            Log.d(TAG,"Copying " + mediaPath + " to " + destination + " failed");
             e.printStackTrace();
             return false;
         }
@@ -140,7 +154,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             org.apache.commons.io.FileUtils.moveDirectoryToDirectory(courseSource,destination,true);
             Log.d(TAG,"Copying " + coursePath + " completed");
         } catch (IOException e) {
-            Log.d(TAG,"Copying " + coursePath + "failed");
+            Log.d(TAG,"Copying " + coursePath + " to " + destination + " failed");
             e.printStackTrace();
             return false;
         }
@@ -148,14 +162,16 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         return true;
     }
 
-    private void resetStrategy(StorageAccessStrategy previousStrategy){
+    private void resetStrategy(StorageAccessStrategy previousStrategy, String previousLocation){
         // If it fails, we reset the strategy to the previous one
         FileUtils.setStorageStrategy(previousStrategy);
 
         // And revert the storage option to the previos one
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PrefsActivity.PREF_STORAGE_OPTION, previousStrategy.getStorageType());
+        editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, previousLocation);
         editor.commit();
+
     }
 
     @Override

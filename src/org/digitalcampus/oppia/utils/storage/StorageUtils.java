@@ -36,39 +36,9 @@ public class StorageUtils {
 
     public static final String TAG = StorageUtils.class.getSimpleName();
 
-    public static class StorageInfo {
+    public static List<StorageLocationInfo> getStorageList() {
 
-        public final String path;
-        public final boolean readonly;
-        public final boolean removable;     
-        public final int number;
-
-        StorageInfo(String path, boolean readonly, boolean removable, int number) {
-            this.path = path;
-            this.readonly = readonly;
-            this.removable = removable;         
-            this.number = number;
-        }
-
-        public String getDisplayName() {
-            StringBuilder res = new StringBuilder();
-            if (!removable) {
-                res.append("Internal SD card");
-            } else if (number > 1) {
-                res.append("SD card " + number);
-            } else {
-                res.append("SD card");
-            }
-            if (readonly) {
-                res.append(" (Read only)");
-            }
-            return res.toString();
-        }
-    }
-
-    public static List<StorageInfo> getStorageList() {
-
-        List<StorageInfo> list = new ArrayList<StorageInfo>();
+        List<StorageLocationInfo> list = new ArrayList<StorageLocationInfo>();
         String def_path = Environment.getExternalStorageDirectory().getPath();
         boolean def_path_removable = Environment.isExternalStorageRemovable();
         String def_path_state = Environment.getExternalStorageState();
@@ -81,7 +51,7 @@ public class StorageUtils {
 
         if (def_path_available) {
             paths.add(def_path);
-            list.add(0, new StorageInfo(def_path, def_path_readonly, def_path_removable, def_path_removable ? cur_removable_number++ : -1));
+            list.add(0, new StorageLocationInfo(def_path, def_path_readonly, def_path_removable, def_path_removable ? cur_removable_number++ : -1));
         }
 
         BufferedReader buf_reader = null;
@@ -90,7 +60,7 @@ public class StorageUtils {
             String line;
             Log.d(TAG, "/proc/mounts");
             while ((line = buf_reader.readLine()) != null) {
-                Log.d(TAG, line);
+                //Log.d(TAG, line);
                 if (line.contains("vfat") || line.contains("/mnt")) {
                     StringTokenizer tokens = new StringTokenizer(line, " ");
                     String unused = tokens.nextToken(); //device
@@ -109,7 +79,7 @@ public class StorageUtils {
                             && !line.contains("/dev/mapper")
                             && !line.contains("tmpfs")) {
                             paths.add(mount_point);
-                            list.add(new StorageInfo(mount_point, readonly, true, cur_removable_number++));
+                            list.add(new StorageLocationInfo(mount_point, readonly, true, cur_removable_number++));
                         }
                     }
                 }
@@ -123,7 +93,9 @@ public class StorageUtils {
             if (buf_reader != null) {
                 try {
                     buf_reader.close();
-                } catch (IOException ex) {}
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
         return list;

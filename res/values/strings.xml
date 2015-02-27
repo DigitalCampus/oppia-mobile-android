@@ -104,15 +104,23 @@
 	<string name="prefShowScheduleReminders">Display suggested activities</string>
 	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
 	<string name="prefShowSectionNumbers">Show section numbers</string>
-	<string name="prefStorageLocation">Storage Location</string>
 	<string name="prefTextSize">Text size</string>
 	<string name="prefUser">Username</string>
 	<string name="prefUserHint">(read only)</string>
 	<string name="prefLogoutEnabled">Enable logout from homepage</string>
 	<string name="prefDeleteCourseEnabled">Enable deleting of courses</string>
 	<string name="prefDownloadViaCellularEnabled">Download media via cellular network</string>
-	
-	<string name="notification_course_update_title">New course updates</string>
+
+    <!-- Strings relative to Storage -->
+    <string name="prefStorageLocation">Storage Location</string>
+    <string name="prefStorageOptionInternal">Internal</string>
+    <string name="prefStorageOptionExternal">External</string>
+    <string name="moving_storage_location">Moving files to new storage location...</string>
+    <string name="move_storage_completed">Moving storage completed</string>
+    <string name="storageNonRemovable">Non-removable storage</string>
+    <string name="storageRemovable">Removable SD Card</string>
+
+    <string name="notification_course_update_title">New course updates</string>
 	<string name="notification_course_update_text">Updates are available for your courses.</string>
 	
 	<string name="title_login">Login</string>
@@ -256,6 +264,6 @@
 	<string name="media_player_description">Oppia Media Player</string>
 	
 	<string name="upgradev49_1">Copying files to new location - this may take several minutes, so please be patient</string>
-    <string name="move_storage_completed">Moving storage completed</string>
+
 </resources>
 

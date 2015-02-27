@@ -85,8 +85,16 @@
 	<string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
 	<string name="prefShowScheduleReminders">Display suggested activities</string>
 	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
-	<string name="prefShowSectionNumbers">Show section numbers</string>
-	
+	<string name="prefShowSectionNumbers">Mostrar número de sección</string>
+
+    <string name="prefStorageLocation">Almacenamiento</string>
+    <string name="prefStorageOptionInternal">Interno</string>
+    <string name="prefStorageOptionExternal">Externo</string>
+    <string name="moving_storage_location">Moviendo ficheros al nuevo almacenamiento...</string>
+    <string name="move_storage_completed">Cambio de almacenamiento de ficheros completo</string>
+    <string name="storageNonRemovable">Almacenamiento no extraíble</string>
+    <string name="storageRemovable">Tarjeta SD extraíble</string>
+
 	<string name="notification_course_update_title">New course updates</string>
 	<string name="notification_course_update_text">Updates are available for your courses.</string>
 	

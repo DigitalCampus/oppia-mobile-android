@@ -2,4 +2,7 @@
 <config
         fillPaint.color="#FFFFFF"
         labelPaint.textSize="@dimen/pie_segment_label_font_size"
-        labelPaint.color="@color/text_dark"/>
+        labelPaint.color="@color/text_dark"
+        innerEdgePaint.color="#FFFFFF"
+        outerEdgePaint.color="#FFFFFF"
+        radialEdgePaint.color="#00000000"/>

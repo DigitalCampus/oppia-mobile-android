@@ -44,6 +44,7 @@ public class ScorecardFragment extends Fragment{
 	public static final String TAG = ScorecardFragment.class.getSimpleName();
 	private SharedPreferences prefs;
 	private Course course = null;
+    private boolean firstTimeOpened = true;
     
     private ScorecardListAdapter scorecardListAdapter;
 	
@@ -99,7 +100,8 @@ public class ScorecardFragment extends Fragment{
 		if(this.course != null){
 			PieChart pie = (PieChart) super.getActivity().findViewById(R.id.scorecardPieChart);
 			ScorecardPieChart spc = new ScorecardPieChart(super.getActivity(), pie, this.course);
-			spc.drawChart(50, true);
+			spc.drawChart(50, true, firstTimeOpened);
+            firstTimeOpened = false;
 		} else {
 			DbHelper db = new DbHelper(super.getActivity());
 			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));

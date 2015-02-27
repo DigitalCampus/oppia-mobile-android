@@ -32,44 +32,48 @@ import java.io.File;
 public class ExternalStorageStrategy implements StorageAccessStrategy{
 
     public static final String TAG = FileUtils.class.getSimpleName();
+    private static String internalPath;
 
-    //@Override
-    public void updateStorageLocation(Context ctx) {
-        String location = this.getStorageLocation(ctx);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
-        editor.commit();
-    }
-
-    //@Override
-    public String  getStorageLocation(Context ctx){
+    @Override
+    public void updateStorageLocation(Context ctx){
+        //If no mount argument passed, we set the default external mount
         File[] dirs = ContextCompat.getExternalFilesDirs(ctx, null);
-
         if (dirs.length > 0){
             String location = dirs[dirs.length-1].toString();
-            return location;
+            updateLocationPreference(ctx, location);
         }
-        else{
-            return "";
-        }
-        /*
-        COMMENTED THIS PART ABOUT CUSTOM LOCATIONS
-        //get from prefs
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-        // if location not set - then set it to first of dirs
-        if (location.equals("") && dirs.length > 0){
-            location = dirs[dirs.length-1].toString();
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
-            editor.commit();
-        }
-        */
-
     }
 
-    //@Override
+    @Override
+    public void updateStorageLocation(Context ctx, String mount) {
+
+        if ((mount == null ) || mount.equals("")){
+            updateStorageLocation(ctx);
+            return;
+        }
+        String currentLocation = this.getStorageLocation(ctx);
+        if (currentLocation.startsWith(mount)){ return; }
+
+        String location = mount + getInternalBasePath(ctx);
+        updateLocationPreference(ctx, location);
+    }
+
+    @Override
+    public String getStorageLocation(Context ctx){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+
+        if ((location == null) || location.equals("")){
+            //If location is not set yet, update it and get it again
+            updateStorageLocation(ctx);
+            location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+        }
+
+        return location;
+    }
+
+    @Override
     public boolean isStorageAvailable(Context ctx) {
         String cardStatus = Environment.getExternalStorageState();
         if (cardStatus.equals(Environment.MEDIA_REMOVED)
@@ -83,11 +87,26 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         else{
             return true;
         }
-
     }
 
-    //@Override
+    @Override
     public String getStorageType() {
         return PrefsActivity.STORAGE_OPTION_EXTERNAL;
+    }
+
+    private void updateLocationPreference(Context ctx, String location){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
+        editor.commit();
+    }
+
+    private static String getInternalBasePath(Context ctx){
+        if (internalPath == null){
+            String packageName = ctx.getPackageName();
+            // internalPath: /Android/data/{{packageName}}/files
+            internalPath = File.separator + "Android" + File.separator + "data" + File.separator + packageName + File.separator + "files";
+        }
+        return internalPath;
     }
 }

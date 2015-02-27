@@ -68,7 +68,9 @@ public class MobileLearning extends Application {
 	public static final int URL_READ_TIME = 5;
 	public static final String USER_AGENT = "OppiaMobile Android: ";
     public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_EXTERNAL;
-	
+
+    public static final int SCORECARD_ANIM_DURATION = 800;
+
 	public static final boolean DEFAULT_DISPLAY_COMPLETED = true;
 	public static final boolean DEFAULT_DISPLAY_PROGRESS_BAR = true;
 	
@@ -109,17 +111,23 @@ public class MobileLearning extends Application {
         Context ctx = getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
+        StorageAccessStrategy strategy;
+
         if ( (storageOption == null) || (storageOption.trim().equals("")) ){
             //If there is not storage option set, set the default option
             storageOption = DEFAULT_STORAGE_OPTION;
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption);
             editor.commit();
+
+            strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
+            strategy.updateStorageLocation(ctx);
+        }
+        else{
+            strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
         }
 
         Log.d(TAG, "Storage option: " + storageOption);
-        StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
-        strategy.updateStorageLocation(ctx);
         FileUtils.setStorageStrategy(strategy);
 
     }
