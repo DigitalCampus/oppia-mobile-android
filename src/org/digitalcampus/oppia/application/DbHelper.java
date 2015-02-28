@@ -18,9 +18,11 @@
 package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
@@ -968,7 +970,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	/*
 	 * Perform a search
 	 */
-	public ArrayList<SearchResult> search(String searchText, int limit, long userId, Context ctx){
+	public ArrayList<SearchResult> search(String searchText, int limit, long userId, Context ctx, DBListener listener){
 		ArrayList<SearchResult> results = new ArrayList<SearchResult>();
 		String sqlSeachFullText = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 1 AS ranking FROM %s ft " +
 									" INNER JOIN %s a ON a.%s = ft.docid" +
@@ -1004,39 +1006,55 @@ public class DbHelper extends SQLiteOpenHelper {
 					COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
 					SEARCH_C_COURSETITLE, searchText);
 		
-		String sql = String.format("SELECT * FROM (" +
-				"%s UNION %s UNION %s UNION %s) ORDER BY ranking DESC LIMIT 0,%d", 
+		String sql = String.format("SELECT DISTINCT courseid, activitydigest FROM ( SELECT * FROM (" +
+				"%s UNION %s UNION %s UNION %s) ORDER BY ranking DESC LIMIT 0,%d)",
 				sqlSeachFullText, sqlActivityTitle, sqlSectionTitle, sqlCourseTitle, limit);
 		
 		Cursor c = db.rawQuery(sql,null);
 	    if(c !=null && c.getCount()>0){
-	    	c.moveToFirst();
-	    	while (c.isAfterLast() == false) {
-	    		SearchResult result = new SearchResult();
-	    		
-	    		int courseId = c.getColumnIndex("courseid");
-	    		Course course = this.getCourse(c.getLong(courseId),userId);
-	    		result.setCourse(course);
+
+            //We inform the AsyncTask that the query has been performed
+            listener.onQueryPerformed();
+
+            long startTime = System.currentTimeMillis();
+            HashMap<Long, Course> fetchedCourses = new HashMap<Long, Course>();
+            HashMap<Long, CourseXMLReader> fetchedXMLCourses = new HashMap<Long, CourseXMLReader>();
+
+            c.moveToFirst();
+            while (!c.isAfterLast()) {
+                SearchResult result = new SearchResult();
+
+                long courseId = c.getLong(c.getColumnIndex("courseid"));
+                Course course = fetchedCourses.get(courseId);
+                if (course == null){
+                    course = this.getCourse(courseId, userId);
+                    fetchedCourses.put(courseId, course);
+                }
+                result.setCourse(course);
 	    		
 	    		int digest = c.getColumnIndex("activitydigest");
 	    		Activity activity = this.getActivityByDigest(c.getString(digest));
 	    		result.setActivity(activity);
 				
 	    		int sectionOrderId = activity.getSectionId();
-	    		CourseXMLReader cxr;
+	    		CourseXMLReader cxr = fetchedXMLCourses.get(courseId);
 				try {
-					cxr = new CourseXMLReader(course.getCourseXMLLocation(), ctx);
+                    if (cxr == null){
+                        cxr = new CourseXMLReader(course.getCourseXMLLocation(), ctx);
+                        fetchedXMLCourses.put(courseId, cxr);
+                    }
 					result.setSection(cxr.getSection(sectionOrderId));
 		    		results.add(result);
 				} catch (InvalidXMLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	    		
 	    		c.moveToNext();
 			}
+            long ellapsedTime = System.currentTimeMillis() - startTime;
+            Log.d(TAG, "Performing search query and fetching. " + ellapsedTime + " ms ellapsed");
 	    }
-	    c.close();
+        if(c !=null) { c.close(); }
 	    return results;
 
 	}
