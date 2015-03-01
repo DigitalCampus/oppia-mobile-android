@@ -43,10 +43,9 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener {
 
@@ -63,8 +62,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_index);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -122,7 +121,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		if (course.getImageFile() != null) {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
 					R.drawable.dc_logo);
-			getSupportActionBar().setIcon(bm);
+			getActionBar().setIcon(bm);
 		}
 
 		ListView listView = (ListView) findViewById(R.id.section_list);
@@ -171,7 +170,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		getSupportMenuInflater().inflate(R.menu.activity_course_index, menu);
+		getMenuInflater().inflate(R.menu.activity_course_index, menu);
 		ArrayList<CourseMetaPage> ammp = course.getMetaPages();
 		int order = 104;
 		for (CourseMetaPage mmp : ammp) {

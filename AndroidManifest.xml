@@ -4,7 +4,7 @@
     android:versionName="5.0.1">
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -45,9 +45,7 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseActivity"
             android:label="@string/title_activity_course" 
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/Oppia.Theme.DarkLandscapeDropdown">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadActivity"
             android:label="@string/title_download_activity" />

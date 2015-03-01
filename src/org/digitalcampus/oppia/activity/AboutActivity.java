@@ -17,17 +17,16 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.MenuItem;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
@@ -40,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AboutActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+public class AboutActivity extends FragmentActivity implements ActionBar.TabListener {
 
 	public static final String TAG = AboutActivity.class.getSimpleName();
 	
@@ -61,7 +60,7 @@ public class AboutActivity extends SherlockFragmentActivity implements ActionBar
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_about);
-		actionBar = getSupportActionBar();
+		actionBar = getActionBar();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		viewPager = (ViewPager) findViewById(R.id.activity_about_pager);
 		

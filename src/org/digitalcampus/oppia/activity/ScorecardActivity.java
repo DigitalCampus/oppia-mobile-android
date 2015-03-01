@@ -27,19 +27,19 @@ import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.fragments.ScorecardFragment;
 import org.digitalcampus.oppia.model.Course;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
+import android.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
-public class ScorecardActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+public class ScorecardActivity extends FragmentActivity implements ActionBar.TabListener {
 
 	public static final String TAG = ScorecardActivity.class.getSimpleName();
 	private ActionBar actionBar;
@@ -54,7 +54,7 @@ public class ScorecardActivity extends SherlockFragmentActivity implements Actio
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_scorecard);
-		actionBar = getSupportActionBar();
+		actionBar = getActionBar();
 		viewPager = (ViewPager) findViewById(R.id.activity_scorecard_pager);
 		
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
