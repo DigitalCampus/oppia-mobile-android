@@ -56,7 +56,6 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
-
     static class CourseViewHolder{
         TextView courseTitle;
         TextView courseDescription;
@@ -115,6 +114,9 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFileFromRoot(), ctx.getResources(), MobileLearning.APP_LOGO);
             viewHolder.courseImage.setImageDrawable(bm);
 		}
+        else{
+            viewHolder.courseImage.setImageResource(R.drawable.dc_logo);
+        }
 	    return convertView;
 	}
 

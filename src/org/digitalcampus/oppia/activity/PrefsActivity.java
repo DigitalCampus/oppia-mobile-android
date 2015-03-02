@@ -34,9 +34,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.actionbarsherlock.view.MenuItem;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
 	
@@ -82,8 +81,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 

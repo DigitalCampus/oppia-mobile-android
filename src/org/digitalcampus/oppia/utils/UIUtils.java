@@ -31,12 +31,11 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 public class UIUtils {
 

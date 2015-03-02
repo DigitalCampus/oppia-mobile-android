@@ -39,6 +39,9 @@ import org.digitalcampus.oppia.widgets.ResourceWidget;
 import org.digitalcampus.oppia.widgets.UrlWidget;
 import org.digitalcampus.oppia.widgets.WidgetFactory;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
@@ -48,17 +51,14 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
-public class CourseActivity extends SherlockFragmentActivity implements ActionBar.TabListener, OnInitListener {
+public class CourseActivity extends FragmentActivity implements ActionBar.TabListener, OnInitListener {
 
 	public static final String TAG = CourseActivity.class.getSimpleName();
 	public static final String BASELINE_TAG = "BASELINE";
@@ -82,7 +82,7 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_course);
-		actionBar = getSupportActionBar();
+		actionBar = getActionBar();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		viewPager = (ViewPager) findViewById(R.id.activity_widget_pager);
 
@@ -163,12 +163,12 @@ public class CourseActivity extends SherlockFragmentActivity implements ActionBa
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_course, menu);
+		getMenuInflater().inflate(R.menu.activity_course, menu);
 		return true;
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem item = (MenuItem) menu.findItem(R.id.menu_tts);
 		if (ttsRunning) {
 			item.setTitle(R.string.menu_stop_read_aloud);

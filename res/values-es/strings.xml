@@ -5,13 +5,14 @@
     <string name="menu_download">Gestionar cursos</string>
     <string name="menu_language">Cambiar idioma</string>
     <string name="menu_settings">Ajustes</string>
-    <string name="menu_about">Sobre</string>
+    <string name="menu_about">Acerca de</string>
     <string name="menu_help">Ayuda</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_monitor">Monitor</string>
     <string name="menu_read_aloud">Read aloud</string>
-    <string name="menu_return_to_courses">Return to courses</string>
+    <string name="menu_return_to_courses">Volver a tus cursos</string>
     <string name="menu_scorecard">Scorecard</string>
+    <string name="menu_search">Búsqueda</string>
     <string name="menu_stop_read_aloud">Stop reading</string>
     
     <string name="service_tracker">OppiaMobile buscador de servicio</string>
@@ -21,7 +22,7 @@
     <string name="fragment_welcome_login_info">To get started with OppiaMobile, you will need to register or login.</string>
     <string name="fragment_welcome_privacy">We take your privacy seriously, <a href="http://digital-campus.org/privacy/">find out more about Digital Campus\'s privacy policy</a></string>
     
-    <string name="tab_title_about">About</string>
+    <string name="tab_title_about">Acerca de</string>
     <string name="tab_title_badges">Badges</string>
     <string name="tab_title_login">Login</string>
     <string name="tab_title_points">Points</string>
@@ -30,19 +31,20 @@
     <string name="tab_title_scorecard">Scorecard</string>
     <string name="tab_title_welcome">Welcome</string>
     
-    <string name="title_about">Sobre</string>
+    <string name="title_about">Acerca de</string>
     <string name="title_baseline">Baseline</string>
     <string name="title_help">Ayuda</string>
     <string name="title_download_activity">Gestionar cursos</string>
     <string name="title_monitor">Monitor</string>
     <string name="title_prefs">Ajustes</string>
     <string name="version">Version: %1$s</string>
-    <string name="title_download_media">Download Media</string>
-    <string name="title_tag_select_activity">Select Category</string>
-    <string name="title_activity_course_index">Course Index</string>
+    <string name="title_download_media">Descarga Media</string>
+    <string name="title_tag_select_activity">Selecciona categoría</string>
+    <string name="title_activity_course_index">Índice del curso</string>
     <string name="title_activity_course">Activity</string>
-    <string name="title_course_meta">About</string>
+    <string name="title_course_meta">Acerca de</string>
     <string name="title_scorecard">Scorecard</string>
+    <string name="title_search">Búsqueda</string>
     <string name="title_welcome">OppiaMobile</string>
         
     <string name="widget_feedback_submit">Submit</string>
@@ -80,23 +82,23 @@
 	<string name="prefBackgroudDataConnect">Buscador de actividad previa</string>
 	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando esta aplicación no se esté ejecutando.</string>
 	
-	<string name="prefHighlightCompleted">Highlight completed activities</string>
-	<string name="prefNoScheduleReminders">Number of suggested activities</string>
-	<string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
-	<string name="prefShowScheduleReminders">Display suggested activities</string>
+	<string name="prefHighlightCompleted">Resaltar actividades completadas</string>
+	<string name="prefNoScheduleReminders">Numero de actividades recomendadas</string>
+	<string name="prefNoScheduleReminders_summary">Cuántas actividades recomendadas mostrar</string>
+	<string name="prefShowScheduleReminders">Mostrar actividades recomendadas</string>
 	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
 	<string name="prefShowSectionNumbers">Mostrar número de sección</string>
 
     <string name="prefStorageLocation">Almacenamiento</string>
     <string name="prefStorageOptionInternal">Interno</string>
     <string name="prefStorageOptionExternal">Externo</string>
-    <string name="moving_storage_location">Moviendo ficheros al nuevo almacenamiento...</string>
+    <string name="moving_storage_location">Moviendo ficheros al nuevo almacenamiento…</string>
     <string name="move_storage_completed">Cambio de almacenamiento de ficheros completo</string>
     <string name="storageNonRemovable">Almacenamiento no extraíble</string>
     <string name="storageRemovable">Tarjeta SD extraíble</string>
 
 	<string name="notification_course_update_title">New course updates</string>
-	<string name="notification_course_update_text">Updates are available for your courses.</string>
+	<string name="notification_course_update_text">Hay actualizaciones disponibles para tus cursos.</string>
 	
 	<string name="title_login">Inicio sesión</string>
 	<string name="login_username_title">Usuario</string>
@@ -153,17 +155,17 @@
 	
 	<string name="info_scan_media_start">Scanning for media</string>
 	<string name="info_scan_media_checking">Checking for: %1$s</string>
-	<string name="info_scan_media_missing">Some media files (videos etc) are missing for your courses.</string>
+	<string name="info_scan_media_missing">Faltan algunos archivos multimedia (videos, etc) de tus cursos</string>
 	
-	<string name="loading_courses">Loading courses</string>
-	<string name="loading_points">Loading points&#8230;</string>
-	<string name="loading_badges">Loading badges&#8230;</string>
+	<string name="loading_courses">Cargando cursos</string>
+	<string name="loading_points">Cargando puntos&#8230;</string>
+	<string name="loading_badges">Cargando insignias&#8230;</string>
 	
-	<string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+	<string name="info_no_badges">Todavía no tienes ninguna insignia. Termina un curso completo para ganarte tu primera insignia.</string>
 	
 	<string name="scan_media_download_button">Descarga</string>
 	<string name="scan_media_download_via_pc_button">Descarga vía PC</string>
-	<string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>
+	<string name="success_media_download">Media file: \'%1$s\' descargado correctamente.</string>
 	
 	<string name="media_file_size">%1$.1fMb</string>
 	
@@ -178,16 +180,16 @@
 	<string name="error_media_not_found">Media file: \'%1$s\' not found.</string>
 	<string name="error_media_app_not_found">You don\'t appear to have a media player installed which supports playing this video.</string>
 	<string name="error_media_unsupported">\'%1$s\' does not appear to be a supported media file type.</string>
-	<string name="error_download_failure">Download failed</string>
+	<string name="error_download_failure">Descarga fallida</string>
 	<string name="error_update_failure">Update failed</string>
 	<string name="error_install_failure">Install failed</string>
 	<string name="error_quiz_no_questions">There aren\'t any questions in this quiz.</string>
 	<string name="error_register_no_email">Please enter your email address</string>
 	<string name="error_register_password">Your password must be at least %1$d or more characters</string>
 	<string name="error_register_password_no_match">Your passwords don\'t match</string>
-	<string name="error_register_no_firstname">Please enter your first name</string>
-	<string name="error_register_no_lastname">Please enter your last name</string>
-	<string name="error_register_no_username">Please enter a username</string>
+	<string name="error_register_no_firstname">Introduce tu nombre</string>
+	<string name="error_register_no_lastname">Introduce tu apellido</string>
+	<string name="error_register_no_username">Introduce un nombre de usuario</string>
 	
 	<string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
 	<string name="error_resource_not_found">File: \'%1$s\' not found.</string>
@@ -212,7 +214,11 @@
 	<string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
 	<string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
 	
-	<string name="schedule_reminders">Suggested next activities:</string>
-	
+	<string name="schedule_reminders">Siguientes actividades recomendadas:</string>
+
+    <string name="search_result_summary">%1$d resultados para \"%2$s\"</string>
+    <string name="search_searching">Buscando…</string>
+    <string name="search_no_results">No se encontraron resultados para \"%1$s\"</string>
+
 	<string name="course_draft">(Draft version)</string>
 </resources>

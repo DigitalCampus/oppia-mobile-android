@@ -20,13 +20,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
@@ -44,8 +43,8 @@ public class MonitorActivity extends AppActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
         
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		webView = new WebView(this);
@@ -97,7 +96,7 @@ public class MonitorActivity extends AppActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_monitor, menu);
+		getMenuInflater().inflate(R.menu.activity_monitor, menu);
 		return true;
 	}
 	

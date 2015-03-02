@@ -20,7 +20,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="OM.Light.TabText.Style.Dark" parent="@style/Widget.Sherlock.ActionBar.TabText">
+    <style name="OM.Light.TabText.Style.Dark" parent="android:Widget.ActionBar.TabText">
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>

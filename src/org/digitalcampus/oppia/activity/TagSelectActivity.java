@@ -54,8 +54,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
 
         tags = new ArrayList<Tag>();
         tla = new TagListAdapter(this, tags);

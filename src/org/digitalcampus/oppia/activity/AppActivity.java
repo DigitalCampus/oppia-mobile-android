@@ -17,16 +17,16 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.support.v4.app.FragmentActivity;
+import android.view.MenuItem;
+
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 
-
-public class AppActivity extends SherlockActivity {
+public class AppActivity extends FragmentActivity {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
 	
