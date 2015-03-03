@@ -26,10 +26,12 @@ import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.fragments.ScorecardFragment;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.ImageUtils;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -42,12 +44,18 @@ import android.view.MenuItem;
 public class ScorecardActivity extends FragmentActivity implements ActionBar.TabListener {
 
 	public static final String TAG = ScorecardActivity.class.getSimpleName();
+    public static final String TAB_TARGET = "target";
+    public static final String TAB_TARGET_POINTS = "tab_points";
+    public static final String TAB_TARGET_BADGES = "tab_badges";
+
 	private ActionBar actionBar;
 	private ViewPager viewPager;
 	private ActivityPagerAdapter apAdapter;
 	private int currentTab = 0;
 	private SharedPreferences prefs;
 	private Course course = null;
+
+    private String targetTabOnLoad;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +74,7 @@ public class ScorecardActivity extends FragmentActivity implements ActionBar.Tab
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			this.course = (Course) bundle.getSerializable(Course.TAG);
+            this.targetTabOnLoad = bundle.getString(TAB_TARGET);
 		}
 	}
 	
@@ -79,6 +88,11 @@ public class ScorecardActivity extends FragmentActivity implements ActionBar.Tab
 		Fragment fScorecard;
 		if(this.course != null){
 			fScorecard = ScorecardFragment.newInstance(course);
+            if (course.getImageFile() != null) {
+                BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
+                        R.drawable.dc_logo);
+                actionBar.setIcon(bm);
+            }
 		} else {
 			fScorecard = ScorecardFragment.newInstance();
 		}
@@ -103,22 +117,28 @@ public class ScorecardActivity extends FragmentActivity implements ActionBar.Tab
 		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(apAdapter);
 
+        if ( targetTabOnLoad != null){
+            if (targetTabOnLoad.equals(TAB_TARGET_POINTS) && scoringEnabled) {
+                currentTab = 1;
+            }
+            if (targetTabOnLoad.equals(TAB_TARGET_BADGES) && badgingEnabled) {
+                currentTab = scoringEnabled ? 2 : 1;
+            }
+        }
 		viewPager.setCurrentItem(currentTab);
+        actionBar.setSelectedNavigationItem(currentTab);
 		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int arg0) {
+            }
 
-			public void onPageScrollStateChanged(int arg0) {
-				// do nothing
-			}
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
 
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// do nothing
-			}
+            public void onPageSelected(int arg0) {
+                actionBar.setSelectedNavigationItem(arg0);
+            }
 
-			public void onPageSelected(int arg0) {
-				actionBar.setSelectedNavigationItem(arg0);
-			}
-
-		});
+        });
 	}
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
@@ -127,15 +147,9 @@ public class ScorecardActivity extends FragmentActivity implements ActionBar.Tab
 		
 	}
 
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) { }
 
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onTabReselected(Tab tab, FragmentTransaction ft) { }
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

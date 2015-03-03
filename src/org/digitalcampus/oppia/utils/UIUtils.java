@@ -23,13 +23,17 @@ import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.ScorecardActivity;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,7 +53,7 @@ public class UIUtils {
      * Displays the users points and badges scores in the app header
      * @param act
      */
-	public static void showUserData(Menu menu, Context ctx) {
+	public static void showUserData(Menu menu, final Context ctx, final Course courseInContext) {
 		MenuItem pointsItem = menu.findItem(R.id.points);
 
 		if(pointsItem == null){
@@ -68,6 +72,20 @@ public class UIUtils {
 		if (scoringEnabled) {
 			points.setVisibility(View.VISIBLE);
 			points.setText(String.valueOf(prefs.getInt(PrefsActivity.PREF_POINTS, 0)));
+            points.setClickable(true);
+            points.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ctx, ScorecardActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putString(ScorecardActivity.TAB_TARGET, ScorecardActivity.TAB_TARGET_POINTS);
+                    if (courseInContext != null){
+                        tb.putSerializable(Course.TAG, courseInContext);
+                    }
+                    i.putExtras(tb);
+                    ctx.startActivity(i);
+                }
+            });
 		} else {
 			points.setVisibility(View.GONE);
 		}
@@ -76,6 +94,20 @@ public class UIUtils {
 		if (badgingEnabled) {
 			badges.setVisibility(View.VISIBLE);
 			badges.setText(String.valueOf(prefs.getInt(PrefsActivity.PREF_BADGES, 0)));
+            badges.setClickable(true);
+            badges.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ctx, ScorecardActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putString(ScorecardActivity.TAB_TARGET, ScorecardActivity.TAB_TARGET_BADGES);
+                    if (courseInContext != null){
+                        tb.putSerializable(Course.TAG, courseInContext);
+                    }
+                    i.putExtras(tb);
+                    ctx.startActivity(i);
+                }
+            });
 		} else {
 			badges.setVisibility(View.GONE);
 		}
