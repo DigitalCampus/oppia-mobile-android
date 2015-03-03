@@ -180,7 +180,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 			menu.add(0, mmp.getId(), order, title).setIcon(android.R.drawable.ic_menu_info_details);
 			order++;
 		}
-		UIUtils.showUserData(menu, this);
+		UIUtils.showUserData(menu, this, course);
 		return true;
 	}
 
