@@ -228,39 +228,39 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		Log.d(TAG,"selected:" + item.getItemId());
-		switch (item.getItemId()) {
-			case R.id.menu_about:
-				startActivity(new Intent(this, AboutActivity.class));
-				return true;
-			case R.id.menu_download:
-				startActivity(new Intent(this, TagSelectActivity.class));
-				return true;
-			case R.id.menu_settings:
-				Intent i = new Intent(this, PrefsActivity.class);
-				Bundle tb = new Bundle();
-				ArrayList<Lang> langs = new ArrayList<Lang>();
-				for(Course m: courses){
-					langs.addAll(m.getLangs());
-				}
-				tb.putSerializable("langs", langs);
-				i.putExtras(tb);
-				startActivity(i);
-				return true;
-			case R.id.menu_language:
-				createLanguageDialog();
-				return true;
-			case R.id.menu_monitor:
-				startActivity(new Intent(this, MonitorActivity.class));
-				return true;
-			case R.id.menu_scorecard:
-				startActivity(new Intent(this, ScorecardActivity.class));
-				return true;
-			case R.id.menu_search:
-				startActivity(new Intent(this, SearchActivity.class));
-				return true;
-			case R.id.menu_logout:
-				logout();
-				return true;
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_about) {
+			startActivity(new Intent(this, AboutActivity.class));
+			return true;
+		} else if (itemId == R.id.menu_download) {
+			startActivity(new Intent(this, TagSelectActivity.class));
+			return true;
+		} else if (itemId == R.id.menu_settings) {
+			Intent i = new Intent(this, PrefsActivity.class);
+			Bundle tb = new Bundle();
+			ArrayList<Lang> langs = new ArrayList<Lang>();
+			for(Course m: courses){
+				langs.addAll(m.getLangs());
+			}
+			tb.putSerializable("langs", langs);
+			i.putExtras(tb);
+			startActivity(i);
+			return true;
+		} else if (itemId == R.id.menu_language) {
+			createLanguageDialog();
+			return true;
+		} else if (itemId == R.id.menu_monitor) {
+			startActivity(new Intent(this, MonitorActivity.class));
+			return true;
+		} else if (itemId == R.id.menu_scorecard) {
+			startActivity(new Intent(this, ScorecardActivity.class));
+			return true;
+		} else if (itemId == R.id.menu_search) {
+			startActivity(new Intent(this, SearchActivity.class));
+			return true;
+		} else if (itemId == R.id.menu_logout) {
+			logout();
+			return true;
 		}
 		return true;
 	}
@@ -320,17 +320,17 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         tempCourse = courses.get(info.position);
-		switch (item.getItemId()) {
-			case R.id.course_context_delete:
-				if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
-					confirmCourseDelete();
-				} else {
-					Toast.makeText(this, this.getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
-				}
-				return true;
-			case R.id.course_context_reset:
-				confirmCourseReset();
-				return true;
+		int itemId = item.getItemId();
+		if (itemId == R.id.course_context_delete) {
+			if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
+				confirmCourseDelete();
+			} else {
+				Toast.makeText(this, this.getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
+			}
+			return true;
+		} else if (itemId == R.id.course_context_reset) {
+			confirmCourseReset();
+			return true;
 		}
 		return true;
 	}
