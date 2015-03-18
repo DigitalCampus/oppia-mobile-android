@@ -21,6 +21,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -98,6 +99,39 @@ public class StorageUtils {
                 }
             }
         }
+        
+        /*
+         * START HORRIBLE HACK.... to get around fact that the above is not returning the right paths/mounts for some reason 
+         */
+        list = new ArrayList<StorageLocationInfo>();
+       
+        File sdcard0 = new File("/storage/sdcard0/");
+        if(sdcard0.exists()){
+        	Log.d(TAG,"sdcard0 exists");
+        	list.add(new StorageLocationInfo("/storage/sdcard0/", false, false, cur_removable_number++));
+        } else {
+        	Log.d(TAG,"sdcard0 does NOT exist");
+        }
+        
+        cur_removable_number = 1;
+        File sdcard1 = new File("/storage/sdcard1/");
+        if(sdcard1.exists()){
+        	Log.d(TAG,"sdcard1 exists");
+        	list.add(new StorageLocationInfo("/storage/sdcard1/", false, true, cur_removable_number++));
+        } else {
+        	Log.d(TAG,"sdcard1 does NOT exist");
+        }
+        
+        File extSdCard = new File("/storage/extSdCard/");
+        if(extSdCard.exists()){
+        	Log.d(TAG,"extSdCard exists");
+        	list.add(new StorageLocationInfo("/storage/extSdCard/", false, true, cur_removable_number++));
+        } else {
+        	Log.d(TAG,"extSdCard does NOT exist");
+        }
+        /*
+         * END HORRIBLE HACK
+         */
         return list;
     }
 }
