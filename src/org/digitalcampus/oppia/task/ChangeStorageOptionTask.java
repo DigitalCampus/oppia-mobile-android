@@ -25,7 +25,6 @@ import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -72,14 +71,20 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             long currentSize = FileUtils.getTotalStorageUsed(ctx);
 
             newStrategy.updateStorageLocation(ctx, location);
+            Log.d(TAG,"newStrategy.updateStorageLocation");
             String destPath = newStrategy.getStorageLocation(ctx);
+            Log.d(TAG,destPath);
             FileUtils.setStorageStrategy(newStrategy);
+            Log.d(TAG,"FileUtils.setStorageStrategy");
 
             long availableDestSize;
             try{
                 File destDir = new File(destPath);
+                Log.d(TAG,"destDir created: " + destDir.getAbsolutePath());
                 if (destDir.exists()){
+                	Log.d(TAG,"cleaning dir" );
                     FileUtils.cleanDir(destDir);
+                    Log.d(TAG,"dir cleaned" );
                 }
                 else{
                     boolean makeDirs = destDir.mkdirs();
