@@ -129,7 +129,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		DbHelper db = new DbHelper(this);
 		userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		DatabaseManager.getInstance().closeDatabase();
-		displayCourses(userId);		
+
+
+		displayCourses(userId);
+
 	}
 
 	@Override
@@ -154,19 +157,13 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		llLoading.setVisibility(View.GONE);
 		LinearLayout llNone = (LinearLayout) this.findViewById(R.id.no_courses);
 		
-		if (courses.size() == 0){
+		if (courses.size() < MobileLearning.DOWNLOAD_COURSES_DISPLAY){
 			llNone.setVisibility(View.VISIBLE);
 			Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
-			manageBtn.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
-				}
-			});
-		} else if (courses.size() < MobileLearning.DOWNLOAD_COURSES_DISPLAY) {
-			llNone.setVisibility(View.VISIBLE);
-			TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
-			tv.setText(R.string.more_courses);
-			Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
+            if (courses.size() > 0){
+                TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
+                tv.setText(R.string.more_courses);
+            }
 			manageBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
