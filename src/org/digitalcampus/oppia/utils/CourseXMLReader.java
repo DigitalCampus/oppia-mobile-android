@@ -181,10 +181,10 @@ public class CourseXMLReader {
 				CourseMetaPage mmp = new CourseMetaPage();
 				
 				NamedNodeMap pageAttrs = meta.item(j).getAttributes();
-				NodeList pages = meta.item(j).getChildNodes();
-				String key = pageAttrs.getNamedItem(CourseXMLReader.NODE_ID).getTextContent();
+                String key = pageAttrs.getNamedItem(CourseXMLReader.NODE_ID).getTextContent();
 				mmp.setId(Integer.parseInt(key));
-				
+
+                NodeList pages = meta.item(j).getChildNodes();
 				// get all the langs
 				ArrayList<String> langList = new ArrayList<String>();
 				for(int p=0; p<pages.getLength(); p++){
@@ -443,7 +443,8 @@ public class CourseXMLReader {
 				}
 				s.setTitles(sectTitles);
 				s.setImageFile(image);
-				
+
+                long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				
 				//now get activities
 				NodeList acts = this.getChildNodeByName(sects.item(i),CourseXMLReader.NODE_ACTIVITIES).getChildNodes();
@@ -460,7 +461,7 @@ public class CourseXMLReader {
 							a.setActType(actType);
 							a.setCourseId(modId);
 							a.setSectionId(order);
-							long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+
 							a.setCompleted(db.activityCompleted(modId, digest, userId));				
 							
 							ArrayList<Lang> actTitles = new ArrayList<Lang>();

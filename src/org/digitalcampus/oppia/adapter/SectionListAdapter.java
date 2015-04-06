@@ -24,15 +24,16 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,7 +53,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	private SharedPreferences prefs;
 	private Course course;
 
-	public SectionListAdapter(Activity context, Course course, ArrayList<Section> sectionList) {
+	public SectionListAdapter(Context context, Course course, ArrayList<Section> sectionList) {
 		super(context, R.layout.section_list_row, sectionList);
 		this.ctx = context;
 		this.sectionList = sectionList;
@@ -62,47 +63,51 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
 	    LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    
+
+        long startTime = System.currentTimeMillis();
+
 	    View rowView = inflater.inflate(R.layout.section_list_row, parent, false);
 	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
-	    
-	    Section s = sectionList.get(position);
+
+        final String locale = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+	    final Section section = sectionList.get(position);
 	    String title = "";
 	    if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false)){
-	    	title += String.valueOf(s.getOrder()) + ". ";
+	    	title += String.valueOf(section.getOrder()) + ". ";
 	    }
-	    title += s.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    title += section.getTitle(locale);
 	    sectionTitle.setText(title);
 	    
 	    rowView.setTag(sectionList.get(position));
-	   
-	    
+
 	    // now set up the horizontal activity list
+        ArrayList<Activity> sectionActivities = section.getActivities();
 	    LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);
-	    for(int i=0 ; i<s.getActivities().size(); i++){
-		    View horizRowItem = inflater.inflate(R.layout.section_horizonal_item, parent, false);
+	    for(int i=0 ; i<sectionActivities.size(); i++){
+
+            Activity activity = sectionActivities.get(i);
+            View horizRowItem = inflater.inflate(R.layout.section_horizonal_item, parent, false);
 		    
 		    ll.addView(horizRowItem);
 		    
 		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
-		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+		    tv.setText(activity.getTitle(locale));
 		    
 		    // set image
 		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);
-	    	if(!s.getActivities().get(i).hasCustomImage()){
+	    	if(!activity.hasCustomImage()){
 	    		iv.setScaleType(ImageView.ScaleType.CENTER);
 	    	}
-	    	iv.setImageDrawable(s.getActivities().get(i).getImageFile(course.getLocation(), ctx.getResources()));
-	    	
+
+	    	iv.setImageDrawable(activity.getImageFile(course.getLocation(), ctx.getResources()));
 	    	
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
 	    	
 	    	// highlight if completed
-	    	if(s.getActivities().get(i).getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED)){
+	    	if(activity.getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED)){
 	    		activityObject.setBackgroundResource(R.drawable.activity_background_completed);
 	    	}
-	    	
-	    	activityObject.setTag(R.id.TAG_SECTION_ID, s);
+
 	    	activityObject.setTag(R.id.TAG_PLACEHOLDER_ID, i);
 		    // set clicker
 	    	activityObject.setClickable(true);
@@ -110,18 +115,20 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    	activityObject.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-					Section s = (Section) v.getTag(R.id.TAG_SECTION_ID); 
 					int placeholder = (Integer) v.getTag(R.id.TAG_PLACEHOLDER_ID);
 					Intent i = new Intent(ctx, CourseActivity.class);
 					Bundle tb = new Bundle();
-					tb.putSerializable(Section.TAG, (Section) s);
-					tb.putSerializable(Course.TAG, (Course) course);
+					tb.putSerializable(Section.TAG, section);
+					tb.putSerializable(Course.TAG, course);
 					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) placeholder);
 					i.putExtras(tb);
 	         		ctx.startActivity(i);
 				}
 		    });
 	    }
+
+        long difference = System.currentTimeMillis() - startTime;
+        Log.d("MeasureTime", "SectionList:" + difference + " ms");
 	    
 	    return rowView;
 	}
