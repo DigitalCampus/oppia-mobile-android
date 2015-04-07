@@ -46,7 +46,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 			Course course = (Course) obj;
 			CourseXMLReader cxr;
 			try {
-				cxr = new CourseXMLReader(course.getCourseXMLLocation(),ctx);
+				cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
 				ArrayList<Media> media = cxr.getMedia();
 				for(Media m: media){
 					publishProgress(m.getFilename());

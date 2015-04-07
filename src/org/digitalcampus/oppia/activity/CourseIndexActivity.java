@@ -43,6 +43,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -68,14 +69,14 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 
+        long startTime = System.currentTimeMillis();
+
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			course = (Course) bundle.getSerializable(Course.TAG);
 			try {
-				cxr = new CourseXMLReader(course.getCourseXMLLocation(), CourseIndexActivity.this);
-
+				cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), CourseIndexActivity.this);
 				course.setMetaPages(cxr.getMetaPages());
-
 				boolean baselineCompleted = this.isBaselineCompleted();
 
 				String digest = (String) bundle.getSerializable("JumpTo");
@@ -108,15 +109,18 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 			}
 		}
 
+        long difference = System.currentTimeMillis() - startTime;
+        Log.d("MeasureTime", "CourseIndex:" + difference + " ms");
+
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		sections = cxr.getSections(course.getCourseId());
-		setTitle(course
-				.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 
+
+		sections = cxr.getSections(course.getCourseId());
+		setTitle(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 		// set image
 		if (course.getImageFile() != null) {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),

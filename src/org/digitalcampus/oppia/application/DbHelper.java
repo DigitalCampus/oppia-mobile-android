@@ -1040,7 +1040,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		CourseXMLReader cxr = fetchedXMLCourses.get(courseId);
 				try {
                     if (cxr == null){
-                        cxr = new CourseXMLReader(course.getCourseXMLLocation(), ctx);
+                        cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
                         fetchedXMLCourses.put(courseId, cxr);
                     }
 					result.setSection(cxr.getSection(sectionOrderId));

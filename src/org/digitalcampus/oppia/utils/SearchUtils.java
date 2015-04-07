@@ -46,7 +46,7 @@ public class SearchUtils {
 	public static void indexAddCourse(Context ctx, Course course){
 		
 		try {
-			CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),ctx);
+			CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),course.getCourseId(), ctx);
 			ArrayList<Activity> activities = cxr.getActivities(course.getCourseId());
 			DbHelper db = new DbHelper(ctx);
 			for( Activity a : activities){

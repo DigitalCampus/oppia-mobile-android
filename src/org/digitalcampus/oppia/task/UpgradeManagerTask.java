@@ -144,7 +144,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				CourseScheduleXMLReader csxr;
 				CourseTrackerXMLReader ctxr;
 				try {
-					cxr = new CourseXMLReader(courseXMLPath,ctx);
+					cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
 					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
