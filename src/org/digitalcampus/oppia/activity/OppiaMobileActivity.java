@@ -130,9 +130,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		DatabaseManager.getInstance().closeDatabase();
 
-
 		displayCourses(userId);
-
 	}
 
 	@Override

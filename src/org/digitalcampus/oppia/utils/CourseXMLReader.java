@@ -111,8 +111,6 @@ public class CourseXMLReader {
                 InputStream in = new BufferedInputStream(new FileInputStream(courseXML));
                 reader.parse(new InputSource(in));
 
-                Log.d("AAA", "sect" + handler.sections.size());
-
             } catch (ParserConfigurationException e) {
                 throw new InvalidXMLException(e);
             } catch (SAXException e) {
@@ -144,8 +142,6 @@ public class CourseXMLReader {
         private ArrayList<CourseMetaPage> courseMetaPages = new ArrayList<CourseMetaPage>();
 
         //Vars for traversing the tree
-        private String currentElement;
-        private StringBuilder chars;
         private Stack<String> parentElements = new Stack<String>();
 
         //Temporary vars
@@ -171,13 +167,7 @@ public class CourseXMLReader {
         }
 
         @Override
-        public void startDocument() throws SAXException {
-            chars = new StringBuilder();
-        }
-
-        @Override
         public void startElement(String aUri, String aLocalName,String aQName, Attributes aAttributes) throws SAXException {
-            currentElement = aQName;
             chars.setLength(0);
 
             if (NODE_SECTION.equals(aQName)) {
@@ -254,10 +244,6 @@ public class CourseXMLReader {
                 currentPage.setId(Integer.parseInt(aAttributes.getValue(NODE_ID)));
                 parentElements.push(NODE_PAGE);
             }
-        }
-
-        public void characters(char[] ch, int start, int length) throws SAXException{
-            chars.append(ch, start, length);
         }
 
         @Override
@@ -398,6 +384,17 @@ public class CourseXMLReader {
 	}
 
     static class DefaultLexicalHandler extends DefaultHandler implements LexicalHandler {
+
+        protected StringBuilder chars;
+
+        @Override
+        public void startDocument() throws SAXException {
+            chars = new StringBuilder();
+        }
+        @Override
+        public void characters(char[] ch, int start, int length) throws SAXException{
+            chars.append(ch, start, length);
+        }
         @Override
         public void comment(char[] aArg0, int aArg1, int aArg2) throws SAXException {}
         @Override
