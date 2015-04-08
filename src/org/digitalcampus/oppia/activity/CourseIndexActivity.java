@@ -46,6 +46,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener {
@@ -58,6 +59,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	private SharedPreferences prefs;
 	private Activity baselineActivity;
 	private AlertDialog aDialog;
+    private View loadingCourseView;
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
+        loadingCourseView =  findViewById(R.id.loading_course);
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -242,6 +245,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
     private void initializeCourseIndex(boolean animate){
+        loadingCourseView.setVisibility(View.GONE);
         ListView listView = (ListView) findViewById(R.id.section_list);
         SectionListAdapter sla = new SectionListAdapter(CourseIndexActivity.this, course, sections);
         listView.setAdapter(sla);
