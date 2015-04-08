@@ -24,17 +24,13 @@ import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
-import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
-import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
-import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
@@ -48,10 +44,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener {
@@ -109,6 +103,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                     }
                 }
                 else{
+                    course.setMetaPages(cxr.getMetaPages());
+                    sections = cxr.getSections(course.getCourseId());
                     initializeCourseIndex(false);
                     showBaselineMessage();
                 }
@@ -246,9 +242,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
     private void initializeCourseIndex(boolean animate){
-        course.setMetaPages(cxr.getMetaPages());
-
-        sections = cxr.getSections(course.getCourseId());
         ListView listView = (ListView) findViewById(R.id.section_list);
         SectionListAdapter sla = new SectionListAdapter(CourseIndexActivity.this, course, sections);
         listView.setAdapter(sla);
@@ -307,6 +300,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         protected CourseXMLReader doInBackground(String... courses) {
             try {
                 cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), CourseIndexActivity.this);
+                course.setMetaPages(cxr.getMetaPages());
+                sections = cxr.getSections(course.getCourseId());
             } catch (InvalidXMLException e) {
                 e.printStackTrace();
             }

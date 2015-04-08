@@ -24,11 +24,12 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
@@ -41,6 +42,9 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	}
 	
 	protected Payload doInBackground(Payload... params) {
+
+        long startTime = System.currentTimeMillis();
+
 		Payload payload = params[0];
 		for (Object obj: payload.getData()){
 			Course course = (Course) obj;
@@ -73,6 +77,10 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 			}
 			
 		}
+
+        long difference = System.currentTimeMillis() - startTime;
+        Log.d("MeasureTime", "MediaTask:" + difference + " ms");
+
 		return payload;
 	}
 	
