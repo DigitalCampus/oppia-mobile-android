@@ -47,6 +47,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.ListView;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener {
@@ -96,15 +97,15 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                             if (act.getDigest().equals(digest)) {
                                 Intent intent = new Intent(this, CourseActivity.class);
                                 Bundle tb = new Bundle();
-                                tb.putSerializable(Section.TAG, (Section) section);
-                                tb.putSerializable(Course.TAG, (Course) course);
-                                tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) i);
+                                tb.putSerializable(Section.TAG, section);
+                                tb.putSerializable(Course.TAG, course);
+                                tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, i);
                                 intent.putExtras(tb);
                                 startActivity(intent);
                             }
-
                         }
                     }
+                    initializeCourseIndex(false);
                 }
                 else{
                     sections = cxr.getSections(course.getCourseId());
@@ -245,10 +246,28 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
     private void initializeCourseIndex(boolean animate){
-        loadingCourseView.setVisibility(View.GONE);
+
         ListView listView = (ListView) findViewById(R.id.section_list);
         SectionListAdapter sla = new SectionListAdapter(CourseIndexActivity.this, course, sections);
+
+        if (animate){
+            AlphaAnimation fadeInAnimation = new AlphaAnimation(0f, 1f);
+            AlphaAnimation fadeOutAnimation = new AlphaAnimation(1f, 0f);
+            fadeInAnimation.setDuration(700);
+            fadeInAnimation.setFillAfter(true);
+            fadeOutAnimation.setDuration(700);
+            fadeOutAnimation.setFillAfter(true);
+
+            loadingCourseView.startAnimation(fadeOutAnimation);
+            listView.startAnimation(fadeInAnimation);
+        }
+        else{
+            loadingCourseView.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+        }
+
         listView.setAdapter(sla);
+
     }
 
     private void showBaselineMessage(){
@@ -257,7 +276,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         aDialog.setTitle(R.string.alert_pretest);
         aDialog.setMessage(this.getString(R.string.alert_pretest_summary));
 
-        aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, (CharSequence) this.getString(R.string.open),
+        aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, this.getString(R.string.open),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
@@ -272,7 +291,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                         startActivity(intent);
                     }
                 });
-        aDialog.setButton(DialogInterface.BUTTON_POSITIVE, (CharSequence) this.getString(R.string.cancel),
+        aDialog.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.cancel),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         CourseIndexActivity.this.finish();

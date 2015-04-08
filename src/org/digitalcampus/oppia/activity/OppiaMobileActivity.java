@@ -17,8 +17,6 @@
 
 package org.digitalcampus.oppia.activity;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -35,10 +33,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -299,11 +293,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 			}
 		});
-		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				return; // do nothing
-			}
-		});
+		builder.setNegativeButton(R.string.no, null);
 		builder.show();
 	}
 
@@ -465,8 +455,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			e.commit();
 		} else {
             messageContainer.setVisibility(View.GONE);
-            messageText.setText("");
-            messageButton.setText("");
             messageButton.setOnClickListener(null);
             messageButton.setTag(null);
 			long now = System.currentTimeMillis()/1000;

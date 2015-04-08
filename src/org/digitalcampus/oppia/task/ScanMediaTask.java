@@ -29,7 +29,6 @@ import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
@@ -43,27 +42,25 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	
 	protected Payload doInBackground(Payload... params) {
 
-        long startTime = System.currentTimeMillis();
-
 		Payload payload = params[0];
+        ArrayList<Object> currentMedia = payload.getResponseData();
+
 		for (Object obj: payload.getData()){
 			Course course = (Course) obj;
 			CourseXMLReader cxr;
 			try {
 				cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
 				ArrayList<Media> media = cxr.getMedia();
+
 				for(Media m: media){
 					publishProgress(m.getFilename());
 					String filename = FileUtils.getMediaPath(ctx) + m.getFilename();
 					File mediaFile = new File(filename);
 					if(!mediaFile.exists()){
 						// check media not already in list
-						ArrayList<Object> currentMedia = payload.getResponseData();
 						boolean add = true;
 						for (Object cm: currentMedia){
-							if (((Media) cm).getFilename().equals(m.getFilename())){
-								add = false;
-							}
+							add = ((Media) cm).getFilename().equals(m.getFilename());
 						}
 						if (add){
 							payload.addResponseData(m);
@@ -77,9 +74,6 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 			}
 			
 		}
-
-        long difference = System.currentTimeMillis() - startTime;
-        Log.d("MeasureTime", "MediaTask:" + difference + " ms");
 
 		return payload;
 	}
