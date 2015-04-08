@@ -84,6 +84,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 }
                 boolean baselineCompleted = isBaselineCompleted();
                 if (baselineCompleted) {
+                    course.setMetaPages(cxr.getMetaPages());
                     sections = cxr.getSections(course.getCourseId());
                     for (Section section : sections) {
                         for (int i = 0; i < section.getActivities().size(); i++) {
@@ -103,7 +104,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                     }
                 }
                 else{
-                    course.setMetaPages(cxr.getMetaPages());
                     sections = cxr.getSections(course.getCourseId());
                     initializeCourseIndex(false);
                     showBaselineMessage();
