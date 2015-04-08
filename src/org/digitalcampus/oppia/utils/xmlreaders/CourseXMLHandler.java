@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 import java.util.ArrayList;
 import java.util.Stack;
 
-class CourseXMLHandler extends DefaultLexicalHandler {
+class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler {
 
     private static final String NODE_LANG = "lang";
     private static final String NODE_TITLE = "title";
@@ -175,10 +175,11 @@ class CourseXMLHandler extends DefaultLexicalHandler {
             Media mediaObject = new Media();
             mediaObject.setFilename(aAttributes.getValue(NODE_FILENAME));
             mediaObject.setDownloadUrl(aAttributes.getValue(NODE_DOWNLOAD_URL));
+            mediaObject.setDigest(aAttributes.getValue(NODE_DIGEST));
             String mediaLength = aAttributes.getValue(NODE_LENGTH);
             String mediaFilesize = aAttributes.getValue(NODE_FILESIZE);
             mediaObject.setLength(mediaLength==null?0:Integer.parseInt(mediaLength));
-            mediaObject.setFileSize(mediaFilesize==null?0:Integer.parseInt(mediaFilesize));
+            mediaObject.setFileSize(mediaFilesize == null ? 0 : Double.parseDouble(mediaFilesize));
 
             if (NODE_ACTIVITY.equals(parentElements.peek())){
                 actMedia.add(mediaObject);

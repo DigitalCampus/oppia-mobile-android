@@ -35,7 +35,6 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Section;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.*;
 
@@ -52,7 +51,7 @@ public class CourseXMLReader {
 
     private XMLReader reader;
     private CourseXMLHandler completeParseHandler;
-    private CourseXMLHandler mediaParseHandler;
+    private CourseMediaXMLHandler mediaParseHandler;
     private File courseXML;
     private long courseId;
 
@@ -111,18 +110,39 @@ public class CourseXMLReader {
             return completeParseHandler;
         }
         else{
-            //create metaParseHandler
+            //does it make sense to make a custom meta info handler?
             return getCompleteResponses();
         }
     }
 
-    private CourseXMLHandler getMediaResponses(){
-        if (completeParseHandler != null){
+    private IMediaXMLHandler getMediaResponses(){
+
+        if (mediaParseHandler != null){
+            return mediaParseHandler;
+        }
+        else if (completeParseHandler != null){
             return completeParseHandler;
         }
         else{
-            //create mediaParseHandler
-            return getCompleteResponses();
+            if (courseXML.exists()) {
+                try {
+                    mediaParseHandler = new CourseMediaXMLHandler();
+                    SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
+                    SAXParser parser = parserFactory.newSAXParser();
+                    reader = parser.getXMLReader();
+                    reader.setContentHandler(mediaParseHandler);
+                    reader.setProperty("http://xml.org/sax/properties/lexical-handler", mediaParseHandler);
+                    InputStream in = new BufferedInputStream(new FileInputStream(courseXML));
+                    reader.parse(new InputSource(in));
+
+                } catch (Exception e) {
+                    //TODO: register error
+                    e.printStackTrace();
+                }
+            } else {
+                Log.d(TAG, "course XML not found at: " + courseXML.getPath());
+            }
+            return mediaParseHandler;
         }
     }
 
