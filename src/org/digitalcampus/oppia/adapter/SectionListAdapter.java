@@ -52,6 +52,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	private final ArrayList<Section> sectionList;
 	private SharedPreferences prefs;
 	private Course course;
+    private final String locale;
 
 	public SectionListAdapter(Context context, Course course, ArrayList<Section> sectionList) {
 		super(context, R.layout.section_list_row, sectionList);
@@ -59,36 +60,50 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 		this.sectionList = sectionList;
 		this.course = course;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        locale = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 	}
-	
+
+    static class SectionViewHolder{
+        TextView sectionTitle;
+        LinearLayout sectionActivities;
+    }
+
 	public View getView(int position, View convertView, ViewGroup parent) {
-	    LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         long startTime = System.currentTimeMillis();
 
-	    View rowView = inflater.inflate(R.layout.section_list_row, parent, false);
-	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
+        SectionViewHolder viewHolder;
+        LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        final String locale = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.section_list_row, parent, false);
+            viewHolder = new SectionViewHolder();
+            viewHolder.sectionTitle = (TextView) convertView.findViewById(R.id.section_title);
+            viewHolder.sectionActivities = (LinearLayout) convertView.findViewById(R.id.section_activities);
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (SectionViewHolder) convertView.getTag();
+        }
+
 	    final Section section = sectionList.get(position);
 	    String title = "";
 	    if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false)){
 	    	title += String.valueOf(section.getOrder()) + ". ";
 	    }
 	    title += section.getTitle(locale);
-	    sectionTitle.setText(title);
-	    
-	    rowView.setTag(sectionList.get(position));
+        viewHolder.sectionTitle.setText(title);
 
 	    // now set up the horizontal activity list
         ArrayList<Activity> sectionActivities = section.getActivities();
-	    LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);
+        // we clear the previous children views (if set)
+        viewHolder.sectionActivities.removeAllViews();
 	    for(int i=0 ; i<sectionActivities.size(); i++){
 
             Activity activity = sectionActivities.get(i);
             View horizRowItem = inflater.inflate(R.layout.section_horizonal_item, parent, false);
 		    
-		    ll.addView(horizRowItem);
+		    viewHolder.sectionActivities.addView(horizRowItem);
 		    
 		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
 		    tv.setText(activity.getTitle(locale));
@@ -98,11 +113,8 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    	if(!activity.hasCustomImage()){
 	    		iv.setScaleType(ImageView.ScaleType.CENTER);
 	    	}
-
-	    	iv.setImageDrawable(activity.getImageFile(course.getLocation(), ctx.getResources()));
-	    	
+	    	//iv.setImageDrawable(activity.getImageFile(course.getLocation(), ctx.getResources()));
 	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
-	    	
 	    	// highlight if completed
 	    	if(activity.getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED)){
 	    		activityObject.setBackgroundResource(R.drawable.activity_background_completed);
@@ -130,7 +142,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
         long difference = System.currentTimeMillis() - startTime;
         Log.d("MeasureTime", "SectionList:" + difference + " ms");
 	    
-	    return rowView;
+	    return convertView;
 	}
 	
 }
