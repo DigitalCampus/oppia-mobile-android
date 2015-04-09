@@ -34,6 +34,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -247,19 +248,27 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void initializeCourseIndex(boolean animate){
 
-        ListView listView = (ListView) findViewById(R.id.section_list);
+        final ListView listView = (ListView) findViewById(R.id.section_list);
         SectionListAdapter sla = new SectionListAdapter(CourseIndexActivity.this, course, sections);
 
         if (animate){
-            AlphaAnimation fadeInAnimation = new AlphaAnimation(0f, 1f);
             AlphaAnimation fadeOutAnimation = new AlphaAnimation(1f, 0f);
-            fadeInAnimation.setDuration(700);
-            fadeInAnimation.setFillAfter(true);
             fadeOutAnimation.setDuration(700);
             fadeOutAnimation.setFillAfter(true);
 
+            listView.setAlpha(0f);
+            ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator){
+                    listView.setTranslationX( (Float) valueAnimator.getAnimatedValue() * 80 );
+                    listView.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
+                }
+            });
+            animator.setDuration(700);
+            animator.start();
             loadingCourseView.startAnimation(fadeOutAnimation);
-            listView.startAnimation(fadeInAnimation);
+
         }
         else{
             loadingCourseView.setVisibility(View.GONE);
