@@ -40,13 +40,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class SectionListAdapter extends ArrayAdapter<Section> {
+public class SectionListAdapter extends ArrayAdapter<Section>{
 
 	public static final String TAG = SectionListAdapter.class.getSimpleName();
 	public static final String TAG_PLACEHOLDER = "placeholder";
@@ -73,28 +74,27 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-        long startTime = System.currentTimeMillis();
-
         SectionViewHolder viewHolder;
-        ActivityAdapter innerListAdapter;
-        LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final ActivityAdapter innerListAdapter;
+
+        final Section section = sectionList.get(position);
+        ArrayList<Activity> sectionActivities = section.getActivities();
 
         if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.section_list_row, parent, false);
             viewHolder = new SectionViewHolder();
             viewHolder.sectionTitle = (TextView) convertView.findViewById(R.id.section_title);
             viewHolder.sectionActivities = (TwoWayView) convertView.findViewById(R.id.section_activities);
             innerListAdapter = new ActivityAdapter(locale, course.getLocation());
             viewHolder.sectionActivities.setAdapter(innerListAdapter);
+
             convertView.setTag(viewHolder);
         }
         else{
             viewHolder = (SectionViewHolder) convertView.getTag();
             innerListAdapter = (ActivityAdapter) viewHolder.sectionActivities.getAdapter();
         }
-
-	    final Section section = sectionList.get(position);
-        ArrayList<Activity> sectionActivities = section.getActivities();
 
 	    String title = "";
 	    if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false)){
@@ -103,6 +103,18 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	    title += section.getTitle(locale);
         viewHolder.sectionTitle.setText(title);
         innerListAdapter.setData(sectionActivities);
+        viewHolder.sectionActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(ctx, CourseActivity.class);
+                Bundle tb = new Bundle();
+                tb.putSerializable(Section.TAG, section);
+                tb.putSerializable(Course.TAG, course);
+                tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, position);
+                intent.putExtras(tb);
+                ctx.startActivity(intent);
+            }
+        });
 
         /*
         // we clear the previous children views (if set)
@@ -147,9 +159,6 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 				}
             		    });
 	    }*/
-
-        long difference = System.currentTimeMillis() - startTime;
-        Log.d("MeasureTime", "SectionList:" + difference + " ms");
 	    
 	    return convertView;
 	}
@@ -160,6 +169,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
         class ActivityViewHolder{
             TextView activityTitle;
             ImageView activityImage;
+            View activityContainer;
         }
 
         private ArrayList<Activity> listActivities = new ArrayList<Activity>();
@@ -195,8 +205,9 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
                 viewHolder = new ActivityViewHolder();
                 Context context = parent.getContext();
                 convertView = LayoutInflater.from(context).inflate(R.layout.section_horizonal_item, null);
-                viewHolder.activityTitle = (TextView) convertView.findViewById(R.id.activity_title);
-                viewHolder.activityImage = (ImageView) convertView.findViewById(R.id.activity_image);
+                viewHolder.activityContainer = convertView.findViewById(R.id.activity_object);
+                viewHolder.activityTitle = (TextView)  viewHolder.activityContainer.findViewById(R.id.activity_title);
+                viewHolder.activityImage = (ImageView)  viewHolder.activityContainer.findViewById(R.id.activity_image);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ActivityViewHolder) convertView.getTag();
@@ -204,8 +215,10 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 
             viewHolder.activityTitle.setText(activity.getTitle(locale));
             viewHolder.activityImage.setScaleType(!activity.hasCustomImage()?ImageView.ScaleType.CENTER: ImageView.ScaleType.FIT_CENTER);
+            viewHolder.activityImage.setImageDrawable(activity.getImageFile(courseLocation, ctx.getResources()));
+            boolean highlightActivity = activity.getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED);
+            viewHolder.activityContainer.setBackgroundResource(highlightActivity ? R.drawable.activity_background_completed : 0);
 
-            viewHolder.activityImage.setImageDrawable(activity.getImageFile(course.getLocation(), ctx.getResources()));
             return convertView;
         }
 
