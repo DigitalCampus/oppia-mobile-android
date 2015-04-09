@@ -103,6 +103,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
 	    title += section.getTitle(locale);
         viewHolder.sectionTitle.setText(title);
         innerListAdapter.setData(sectionActivities);
+        viewHolder.sectionActivities.setSelection(0);
         viewHolder.sectionActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
