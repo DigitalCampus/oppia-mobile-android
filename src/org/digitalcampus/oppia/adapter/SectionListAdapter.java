@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
@@ -27,6 +28,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
+import org.lucasr.twowayview.TwoWayView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +41,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -65,7 +68,7 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 
     static class SectionViewHolder{
         TextView sectionTitle;
-        LinearLayout sectionActivities;
+        TwoWayView sectionActivities;
     }
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -73,29 +76,35 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
         long startTime = System.currentTimeMillis();
 
         SectionViewHolder viewHolder;
+        ActivityAdapter innerListAdapter;
         LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.section_list_row, parent, false);
             viewHolder = new SectionViewHolder();
             viewHolder.sectionTitle = (TextView) convertView.findViewById(R.id.section_title);
-            viewHolder.sectionActivities = (LinearLayout) convertView.findViewById(R.id.section_activities);
+            viewHolder.sectionActivities = (TwoWayView) convertView.findViewById(R.id.section_activities);
+            innerListAdapter = new ActivityAdapter(locale, course.getLocation());
+            viewHolder.sectionActivities.setAdapter(innerListAdapter);
             convertView.setTag(viewHolder);
         }
         else{
             viewHolder = (SectionViewHolder) convertView.getTag();
+            innerListAdapter = (ActivityAdapter) viewHolder.sectionActivities.getAdapter();
         }
 
 	    final Section section = sectionList.get(position);
+        ArrayList<Activity> sectionActivities = section.getActivities();
+
 	    String title = "";
 	    if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false)){
 	    	title += String.valueOf(section.getOrder()) + ". ";
 	    }
 	    title += section.getTitle(locale);
         viewHolder.sectionTitle.setText(title);
+        innerListAdapter.setData(sectionActivities);
 
-	    // now set up the horizontal activity list
-        ArrayList<Activity> sectionActivities = section.getActivities();
+        /*
         // we clear the previous children views (if set)
         viewHolder.sectionActivities.removeAllViews();
 	    for(int i=0 ; i<sectionActivities.size(); i++){
@@ -136,14 +145,75 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 					i.putExtras(tb);
 	         		ctx.startActivity(i);
 				}
-		    });
-	    }
+            		    });
+	    }*/
 
         long difference = System.currentTimeMillis() - startTime;
         Log.d("MeasureTime", "SectionList:" + difference + " ms");
 	    
 	    return convertView;
 	}
-	
+
+
+    private class ActivityAdapter extends BaseAdapter{
+
+        class ActivityViewHolder{
+            TextView activityTitle;
+            ImageView activityImage;
+        }
+
+        private ArrayList<Activity> listActivities = new ArrayList<Activity>();
+        private String locale;
+        private String courseLocation;
+
+        public ActivityAdapter(String locale, String courseLocation){
+            this.locale = locale;
+            this.courseLocation = courseLocation;
+        }
+
+        @Override
+        public int getCount() {
+            return listActivities.size();
+        }
+
+        @Override
+        public Activity getItem(int position) {
+            return listActivities.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ActivityViewHolder viewHolder;
+            Activity activity = listActivities.get(position);
+            if (convertView == null) {
+                viewHolder = new ActivityViewHolder();
+                Context context = parent.getContext();
+                convertView = LayoutInflater.from(context).inflate(R.layout.section_horizonal_item, null);
+                viewHolder.activityTitle = (TextView) convertView.findViewById(R.id.activity_title);
+                viewHolder.activityImage = (ImageView) convertView.findViewById(R.id.activity_image);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ActivityViewHolder) convertView.getTag();
+            }
+
+            viewHolder.activityTitle.setText(activity.getTitle(locale));
+            viewHolder.activityImage.setScaleType(!activity.hasCustomImage()?ImageView.ScaleType.CENTER: ImageView.ScaleType.FIT_CENTER);
+
+            viewHolder.activityImage.setImageDrawable(activity.getImageFile(course.getLocation(), ctx.getResources()));
+            return convertView;
+        }
+
+        public void setData(List<Activity> data) {
+            listActivities.clear();
+            listActivities.addAll(data);
+            notifyDataSetChanged();
+        }
+    }
 }
 

@@ -18,7 +18,18 @@
 		android:ellipsize="end"
         android:textColor="@color/text_light"/>
 
-    <HorizontalScrollView
+    <org.lucasr.twowayview.TwoWayView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/section_activities"
+        style="@style/TwoWayView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawSelectorOnTop="false"
+        tools:context=".CourseIndexActivity" />
+
+    <!--<HorizontalScrollView
         android:id="@+id/section_activities_scroll"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -31,5 +42,5 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
         </LinearLayout>
-    </HorizontalScrollView>
+    </HorizontalScrollView>-->
 </LinearLayout>
