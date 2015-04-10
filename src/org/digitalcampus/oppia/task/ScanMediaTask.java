@@ -60,7 +60,8 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 						// check media not already in list
 						boolean add = true;
 						for (Object cm: currentMedia){
-							add = ((Media) cm).getFilename().equals(m.getFilename());
+                            //We have to add it if there is not other object with that filename
+							add = !((Media) cm).getFilename().equals(m.getFilename());
 						}
 						if (add){
 							payload.addResponseData(m);
