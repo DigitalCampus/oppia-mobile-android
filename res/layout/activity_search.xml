@@ -31,10 +31,13 @@
         android:id="@+id/search_results_summary"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:visibility="gone" 
+        android:visibility="gone"
         android:gravity="center"
-        style="@style/NormalTextBoldDark"/>
+        style="@style/NormalTextBoldDark"
+        android:paddingTop="0dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp" />
 
     <FrameLayout
         android:layout_width="fill_parent"

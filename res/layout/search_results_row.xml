@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_margin="4dp"
         android:contentDescription="@string/app_logo_alt"
-        android:src="@drawable/dc_logo" />
+        android:src="@drawable/default_course" />
 
     <TextView
         android:id="@+id/activity_title"
