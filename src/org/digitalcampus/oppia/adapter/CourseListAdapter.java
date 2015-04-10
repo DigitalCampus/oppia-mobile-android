@@ -114,11 +114,11 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 		if(c.getImageFile() != null){
 			String image = c.getImageFileFromRoot();
             Picasso.with(ctx).load(new File(image))
-                    .placeholder(R.drawable.dc_logo)
+                    .placeholder(R.drawable.default_course)
                     .into(viewHolder.courseImage);
 		}
         else{
-            viewHolder.courseImage.setImageResource(R.drawable.dc_logo);
+            viewHolder.courseImage.setImageResource(R.drawable.default_course);
         }
 	    return convertView;
 	}
