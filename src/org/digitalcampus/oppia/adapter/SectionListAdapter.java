@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.adapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -35,17 +36,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class SectionListAdapter extends ArrayAdapter<Section>{
 
@@ -117,53 +117,8 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
             }
         });
 
-        /*
-        // we clear the previous children views (if set)
-        viewHolder.sectionActivities.removeAllViews();
-	    for(int i=0 ; i<sectionActivities.size(); i++){
-
-            Activity activity = sectionActivities.get(i);
-            View horizRowItem = inflater.inflate(R.layout.section_horizonal_item, parent, false);
-		    
-		    viewHolder.sectionActivities.addView(horizRowItem);
-		    
-		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
-		    tv.setText(activity.getTitle(locale));
-		    
-		    // set image
-		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);
-	    	if(!activity.hasCustomImage()){
-	    		iv.setScaleType(ImageView.ScaleType.CENTER);
-	    	}
-	    	//iv.setImageDrawable(activity.getImageFile(course.getLocation(), ctx.getResources()));
-	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
-	    	// highlight if completed
-	    	if(activity.getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED)){
-	    		activityObject.setBackgroundResource(R.drawable.activity_background_completed);
-	    	}
-
-	    	activityObject.setTag(R.id.TAG_PLACEHOLDER_ID, i);
-		    // set clicker
-	    	activityObject.setClickable(true);
-	    	activityObject.setSelected(true);
-	    	activityObject.setOnClickListener(new OnClickListener() {
-
-				public void onClick(View v) {
-					int placeholder = (Integer) v.getTag(R.id.TAG_PLACEHOLDER_ID);
-					Intent i = new Intent(ctx, CourseActivity.class);
-					Bundle tb = new Bundle();
-					tb.putSerializable(Section.TAG, section);
-					tb.putSerializable(Course.TAG, course);
-					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) placeholder);
-					i.putExtras(tb);
-	         		ctx.startActivity(i);
-				}
-            		    });
-	    }*/
-	    
 	    return convertView;
 	}
-
 
     private class ActivityAdapter extends BaseAdapter{
 
@@ -216,7 +171,17 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
 
             viewHolder.activityTitle.setText(activity.getTitle(locale));
             viewHolder.activityImage.setScaleType(!activity.hasCustomImage()?ImageView.ScaleType.CENTER: ImageView.ScaleType.FIT_CENTER);
-            viewHolder.activityImage.setImageDrawable(activity.getImageFile(courseLocation, ctx.getResources()));
+            int defaultActivityDrawable = activity.getDefaultResourceImage();
+            if (activity.hasCustomImage()){
+                String image = activity.getImageFilePath(courseLocation);
+                Picasso.with(ctx).load(new File(image))
+                        .placeholder(defaultActivityDrawable)
+                        .into(viewHolder.activityImage);
+            }
+            else{
+                viewHolder.activityImage.setImageResource(defaultActivityDrawable);
+            }
+
             boolean highlightActivity = activity.getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED);
             viewHolder.activityContainer.setBackgroundResource(highlightActivity ? R.drawable.activity_background_completed : 0);
 
