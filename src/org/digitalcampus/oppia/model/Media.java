@@ -32,6 +32,14 @@ public class Media implements Serializable{
 	private String digest;
 	private int length;
 	private double fileSize;
+
+	private boolean downloading;
+
+	public void setDownloading(boolean downloading) {
+		this.downloading = downloading;
+	}
+
+	private int downloaded;
 	
 	public String getFilename() {
 		return filename;
@@ -72,4 +80,14 @@ public class Media implements Serializable{
 	public void setFileSize(double fileSize) {
 		this.fileSize = fileSize;
 	}
+
+	public boolean isDownloading() {
+		return downloading;
+	}
+
+	public int getDownloaded() {
+		return downloaded;
+	}
+
 }
+
