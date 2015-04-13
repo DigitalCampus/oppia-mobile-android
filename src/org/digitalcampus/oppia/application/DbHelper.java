@@ -30,7 +30,7 @@ import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1040,7 +1040,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		CourseXMLReader cxr = fetchedXMLCourses.get(courseId);
 				try {
                     if (cxr == null){
-                        cxr = new CourseXMLReader(course.getCourseXMLLocation(), ctx);
+                        cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
                         fetchedXMLCourses.put(courseId, cxr);
                     }
 					result.setSection(cxr.getSection(sectionOrderId));

@@ -30,10 +30,11 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
-import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,10 +42,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.ListView;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener {
@@ -57,6 +61,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	private SharedPreferences prefs;
 	private Activity baselineActivity;
 	private AlertDialog aDialog;
+    private View loadingCourseView;
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,56 +72,60 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
+        loadingCourseView =  findViewById(R.id.loading_course);
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			course = (Course) bundle.getSerializable(Course.TAG);
-			try {
-				cxr = new CourseXMLReader(course.getCourseXMLLocation(), CourseIndexActivity.this);
 
-				course.setMetaPages(cxr.getMetaPages());
+            String digest = (String) bundle.getSerializable("JumpTo");
+            if (digest != null){
+                //If there is a digest, we have to parse the course synchronously to avoid showing this activity
+                try {
+                    cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), this);
+                } catch (InvalidXMLException e) {
+                    e.printStackTrace();
+                    showErrorMessage();
+                }
+                boolean baselineCompleted = isBaselineCompleted();
+                if (baselineCompleted) {
+                    course.setMetaPages(cxr.getMetaPages());
+                    sections = cxr.getSections(course.getCourseId());
+                    for (Section section : sections) {
+                        for (int i = 0; i < section.getActivities().size(); i++) {
+                            Activity act = section.getActivities().get(i);
 
-				boolean baselineCompleted = this.isBaselineCompleted();
-
-				String digest = (String) bundle.getSerializable("JumpTo");
-				if (digest != null && baselineCompleted) {
-					// code to directly jump to a specific activity
-					sections = cxr.getSections(course.getCourseId());
-					for (Section s : sections) {
-						for (int i = 0; i < s.getActivities().size(); i++) {
-							Activity a = s.getActivities().get(i);
-							if (a.getDigest().equals(digest)) {
-								Intent intent = new Intent(this, CourseActivity.class);
-								Bundle tb = new Bundle();
-								tb.putSerializable(Section.TAG, (Section) s);
-								tb.putSerializable(Course.TAG, (Course) course);
-								tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) i);
-								intent.putExtras(tb);
-								startActivity(intent);
-							}
-						}
-					}
-
-				}
-			} catch (InvalidXMLException e) {
-				UIUtils.showAlert(this, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
-					public Boolean call() throws Exception {
-						CourseIndexActivity.this.finish();
-						return true;
-					}
-				});
-			}
-		}
+                            if (act.getDigest().equals(digest)) {
+                                Intent intent = new Intent(this, CourseActivity.class);
+                                Bundle tb = new Bundle();
+                                tb.putSerializable(Section.TAG, section);
+                                tb.putSerializable(Course.TAG, course);
+                                tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, i);
+                                intent.putExtras(tb);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                    initializeCourseIndex(false);
+                }
+                else{
+                    sections = cxr.getSections(course.getCourseId());
+                    initializeCourseIndex(false);
+                    showBaselineMessage();
+                }
+            }
+            else{
+                new ParseXMLTask().execute("");
+            }
+        }
 
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		sections = cxr.getSections(course.getCourseId());
-		setTitle(course
-				.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 
+		setTitle(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 		// set image
 		if (course.getImageFile() != null) {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
@@ -124,9 +133,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 			getActionBar().setIcon(bm);
 		}
 
-		ListView listView = (ListView) findViewById(R.id.section_list);
-		SectionListAdapter sla = new SectionListAdapter(this, course, sections);
-		listView.setAdapter(sla);
 
 	}
 
@@ -134,7 +140,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	public void onResume() {
 		super.onResume();
 		if (aDialog == null) {
-			this.isBaselineCompleted();
+			//this.isBaselineCompleted();
 		} else {
 			aDialog.show();
 		}
@@ -233,38 +239,82 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		for (Activity a : baselineActs) {
 			if (!a.isAttempted()) {
 				this.baselineActivity = a;
-				aDialog = new AlertDialog.Builder(this).create();
-				aDialog.setCancelable(false);
-				aDialog.setTitle(R.string.alert_pretest);
-				aDialog.setMessage(this.getString(R.string.alert_pretest_summary));
-
-				aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, (CharSequence) this.getString(R.string.open),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
-								Bundle tb = new Bundle();
-								Section section = new Section();
-								section.addActivity(CourseIndexActivity.this.baselineActivity);
-								tb.putSerializable(Section.TAG, section);
-								tb.putSerializable(CourseActivity.BASELINE_TAG, true);
-								tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, 0);
-								tb.putSerializable(Course.TAG, CourseIndexActivity.this.course);
-								intent.putExtras(tb);
-								startActivity(intent);
-							}
-						});
-				aDialog.setButton(DialogInterface.BUTTON_POSITIVE, (CharSequence) this.getString(R.string.cancel),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								CourseIndexActivity.this.finish();
-							}
-						});
-				aDialog.show();
 				return false;
 			}
 		}
 		return true;
 	}
+
+    private void initializeCourseIndex(boolean animate){
+
+        final ListView listView = (ListView) findViewById(R.id.section_list);
+        SectionListAdapter sla = new SectionListAdapter(CourseIndexActivity.this, course, sections);
+
+        if (animate){
+            AlphaAnimation fadeOutAnimation = new AlphaAnimation(1f, 0f);
+            fadeOutAnimation.setDuration(700);
+            fadeOutAnimation.setFillAfter(true);
+
+            listView.setAlpha(0f);
+            ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                public void onAnimationUpdate(ValueAnimator valueAnimator){
+                    listView.setTranslationX( (Float) valueAnimator.getAnimatedValue() * 80 );
+                    listView.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
+                }
+            });
+            animator.setDuration(700);
+            animator.start();
+            loadingCourseView.startAnimation(fadeOutAnimation);
+
+        }
+        else{
+            loadingCourseView.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+        }
+
+        listView.setAdapter(sla);
+
+    }
+
+    private void showBaselineMessage(){
+        aDialog = new AlertDialog.Builder(this).create();
+        aDialog.setCancelable(false);
+        aDialog.setTitle(R.string.alert_pretest);
+        aDialog.setMessage(this.getString(R.string.alert_pretest_summary));
+
+        aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, this.getString(R.string.open),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
+                        Bundle tb = new Bundle();
+                        Section section = new Section();
+                        section.addActivity(CourseIndexActivity.this.baselineActivity);
+                        tb.putSerializable(Section.TAG, section);
+                        tb.putSerializable(CourseActivity.BASELINE_TAG, true);
+                        tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, 0);
+                        tb.putSerializable(Course.TAG, CourseIndexActivity.this.course);
+                        intent.putExtras(tb);
+                        startActivity(intent);
+                    }
+                });
+        aDialog.setButton(DialogInterface.BUTTON_POSITIVE, this.getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        CourseIndexActivity.this.finish();
+                    }
+                });
+        aDialog.show();
+    }
+
+    private void showErrorMessage(){
+        UIUtils.showAlert(CourseIndexActivity.this, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                CourseIndexActivity.this.finish();
+                return true;
+            }
+        });
+    }
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (key.equalsIgnoreCase(PrefsActivity.PREF_POINTS)
@@ -274,4 +324,35 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
 	}
 
+    private class ParseXMLTask extends AsyncTask<String, Object, CourseXMLReader>{
+
+        @Override
+        protected CourseXMLReader doInBackground(String... courses) {
+            try {
+                cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), CourseIndexActivity.this);
+                course.setMetaPages(cxr.getMetaPages());
+                sections = cxr.getSections(course.getCourseId());
+            } catch (InvalidXMLException e) {
+                e.printStackTrace();
+            }
+            return cxr;
+        }
+
+        @Override
+        protected void onPostExecute(CourseXMLReader parseResults) {
+            if (cxr == null){
+                showErrorMessage();
+            }
+            else{
+                boolean baselineCompleted = isBaselineCompleted();
+                if (!baselineCompleted){
+                    showBaselineMessage();
+                }
+                initializeCourseIndex(true);
+                invalidateOptionsMenu();
+            }
+        }
+
+
+    }
 }

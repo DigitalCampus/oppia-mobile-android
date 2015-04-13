@@ -3,3 +3,4 @@
 .project
 .settings
 /local.properties
+/target/

@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class SearchUtils {
 	public static void indexAddCourse(Context ctx, Course course){
 		
 		try {
-			CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),ctx);
+			CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),course.getCourseId(), ctx);
 			ArrayList<Activity> activities = cxr.getActivities(course.getCourseId());
 			DbHelper db = new DbHelper(ctx);
 			for( Activity a : activities){

@@ -31,9 +31,9 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.utils.CourseScheduleXMLReader;
-import org.digitalcampus.oppia.utils.CourseTrackerXMLReader;
-import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
@@ -104,7 +104,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				CourseScheduleXMLReader csxr;
 				CourseTrackerXMLReader ctxr;
 				try {
-					cxr = new CourseXMLReader(courseXMLPath,ctx);
+					cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
 					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {

@@ -194,6 +194,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadComple
                 data.add(mediaToDownload);
                 Payload p = new Payload(data);
 
+                mediaToDownload.setDownloading(true);
+                dmla.notifyDataSetChanged();
+
                 DownloadMediaTask task = new DownloadMediaTask(DownloadMediaActivity.this);
                 task.setDownloadListener(tasksController);
                 tasksController.setTaskInProgress(true);

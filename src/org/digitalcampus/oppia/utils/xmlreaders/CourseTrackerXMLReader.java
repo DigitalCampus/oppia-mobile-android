@@ -15,7 +15,7 @@
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.digitalcampus.oppia.utils;
+package org.digitalcampus.oppia.utils.xmlreaders;
 
 import java.io.File;
 import java.io.IOException;

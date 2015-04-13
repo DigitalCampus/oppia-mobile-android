@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.adapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -24,14 +25,12 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.ImageUtils;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +39,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class CourseListAdapter extends ArrayAdapter<Course> {
 
@@ -111,11 +112,13 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	    
 		// set image
 		if(c.getImageFile() != null){
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(c.getImageFileFromRoot(), ctx.getResources(), MobileLearning.APP_LOGO);
-            viewHolder.courseImage.setImageDrawable(bm);
+			String image = c.getImageFileFromRoot();
+            Picasso.with(ctx).load(new File(image))
+                    .placeholder(R.drawable.default_course)
+                    .into(viewHolder.courseImage);
 		}
         else{
-            viewHolder.courseImage.setImageResource(R.drawable.dc_logo);
+            viewHolder.courseImage.setImageResource(R.drawable.default_course);
         }
 	    return convertView;
 	}
@@ -135,7 +138,6 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         public void onAnimationUpdate(ValueAnimator animator) {
             viewHolder.courseProgress.setProgress((Integer)animator.getAnimatedValue());
             viewHolder.courseProgress.invalidate();
-
         }
 
         public boolean isAnimated() {

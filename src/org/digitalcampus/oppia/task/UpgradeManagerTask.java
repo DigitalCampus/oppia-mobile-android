@@ -29,9 +29,9 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.CourseScheduleXMLReader;
-import org.digitalcampus.oppia.utils.CourseTrackerXMLReader;
-import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
 
@@ -144,7 +144,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				CourseScheduleXMLReader csxr;
 				CourseTrackerXMLReader ctxr;
 				try {
-					cxr = new CourseXMLReader(courseXMLPath,ctx);
+					cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
 					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {

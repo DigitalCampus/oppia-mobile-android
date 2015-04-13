@@ -24,7 +24,7 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.utils.CourseXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import android.content.Context;
@@ -41,25 +41,27 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	}
 	
 	protected Payload doInBackground(Payload... params) {
+
 		Payload payload = params[0];
+        ArrayList<Object> currentMedia = payload.getResponseData();
+
 		for (Object obj: payload.getData()){
 			Course course = (Course) obj;
 			CourseXMLReader cxr;
 			try {
-				cxr = new CourseXMLReader(course.getCourseXMLLocation(),ctx);
+				cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
 				ArrayList<Media> media = cxr.getMedia();
+
 				for(Media m: media){
 					publishProgress(m.getFilename());
 					String filename = FileUtils.getMediaPath(ctx) + m.getFilename();
 					File mediaFile = new File(filename);
 					if(!mediaFile.exists()){
 						// check media not already in list
-						ArrayList<Object> currentMedia = payload.getResponseData();
 						boolean add = true;
 						for (Object cm: currentMedia){
-							if (((Media) cm).getFilename().equals(m.getFilename())){
-								add = false;
-							}
+                            //We have to add it if there is not other object with that filename
+							add = !((Media) cm).getFilename().equals(m.getFilename());
 						}
 						if (add){
 							payload.addResponseData(m);
@@ -73,6 +75,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 			}
 			
 		}
+
 		return payload;
 	}
 	

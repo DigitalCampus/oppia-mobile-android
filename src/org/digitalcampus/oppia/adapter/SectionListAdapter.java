@@ -17,17 +17,20 @@
 
 package org.digitalcampus.oppia.adapter;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
+import org.lucasr.twowayview.TwoWayView;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,14 +38,16 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class SectionListAdapter extends ArrayAdapter<Section> {
+import com.squareup.picasso.Picasso;
+
+public class SectionListAdapter extends ArrayAdapter<Section>{
 
 	public static final String TAG = SectionListAdapter.class.getSimpleName();
 	public static final String TAG_PLACEHOLDER = "placeholder";
@@ -51,80 +56,139 @@ public class SectionListAdapter extends ArrayAdapter<Section> {
 	private final ArrayList<Section> sectionList;
 	private SharedPreferences prefs;
 	private Course course;
+    private final String locale;
 
-	public SectionListAdapter(Activity context, Course course, ArrayList<Section> sectionList) {
+	public SectionListAdapter(Context context, Course course, ArrayList<Section> sectionList) {
 		super(context, R.layout.section_list_row, sectionList);
 		this.ctx = context;
 		this.sectionList = sectionList;
 		this.course = course;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        locale = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 	}
-	
+
+    static class SectionViewHolder{
+        TextView sectionTitle;
+        TwoWayView sectionActivities;
+    }
+
 	public View getView(int position, View convertView, ViewGroup parent) {
-	    LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    
-	    View rowView = inflater.inflate(R.layout.section_list_row, parent, false);
-	    TextView sectionTitle = (TextView) rowView.findViewById(R.id.section_title);
-	    
-	    Section s = sectionList.get(position);
+
+        SectionViewHolder viewHolder;
+        final ActivityAdapter innerListAdapter;
+
+        final Section section = sectionList.get(position);
+        ArrayList<Activity> sectionActivities = section.getActivities();
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.section_list_row, parent, false);
+            viewHolder = new SectionViewHolder();
+            viewHolder.sectionTitle = (TextView) convertView.findViewById(R.id.section_title);
+            viewHolder.sectionActivities = (TwoWayView) convertView.findViewById(R.id.section_activities);
+            innerListAdapter = new ActivityAdapter(locale, course.getLocation());
+            viewHolder.sectionActivities.setAdapter(innerListAdapter);
+
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder = (SectionViewHolder) convertView.getTag();
+            innerListAdapter = (ActivityAdapter) viewHolder.sectionActivities.getAdapter();
+        }
+
 	    String title = "";
 	    if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false)){
-	    	title += String.valueOf(s.getOrder()) + ". ";
+	    	title += String.valueOf(section.getOrder()) + ". ";
 	    }
-	    title += s.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-	    sectionTitle.setText(title);
-	    
-	    rowView.setTag(sectionList.get(position));
-	   
-	    
-	    // now set up the horizontal activity list
-	    LinearLayout ll = (LinearLayout) rowView.findViewById(R.id.section_activities);
-	    for(int i=0 ; i<s.getActivities().size(); i++){
-		    View horizRowItem = inflater.inflate(R.layout.section_horizonal_item, parent, false);
-		    
-		    ll.addView(horizRowItem);
-		    
-		    TextView tv = (TextView) horizRowItem.findViewById(R.id.activity_title);
-		    tv.setText(s.getActivities().get(i).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-		    
-		    // set image
-		    ImageView iv = (ImageView) horizRowItem.findViewById(R.id.activity_image);
-	    	if(!s.getActivities().get(i).hasCustomImage()){
-	    		iv.setScaleType(ImageView.ScaleType.CENTER);
-	    	}
-	    	iv.setImageDrawable(s.getActivities().get(i).getImageFile(course.getLocation(), ctx.getResources()));
-	    	
-	    	
-	    	LinearLayout activityObject = (LinearLayout) horizRowItem.findViewById(R.id.activity_object);
-	    	
-	    	// highlight if completed
-	    	if(s.getActivities().get(i).getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED)){
-	    		activityObject.setBackgroundResource(R.drawable.activity_background_completed);
-	    	}
-	    	
-	    	activityObject.setTag(R.id.TAG_SECTION_ID, s);
-	    	activityObject.setTag(R.id.TAG_PLACEHOLDER_ID, i);
-		    // set clicker
-	    	activityObject.setClickable(true);
-	    	activityObject.setSelected(true);
-	    	activityObject.setOnClickListener(new OnClickListener() {
+	    title += section.getTitle(locale);
+        viewHolder.sectionTitle.setText(title);
+        innerListAdapter.setData(sectionActivities);
+        viewHolder.sectionActivities.setSelection(0);
+        viewHolder.sectionActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+ 
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(ctx, CourseActivity.class);
+                Bundle tb = new Bundle();
+                tb.putSerializable(Section.TAG, section);
+                tb.putSerializable(Course.TAG, course);
+                tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, position);
+                intent.putExtras(tb);
+                ctx.startActivity(intent);
+            }
+        });
 
-				public void onClick(View v) {
-					Section s = (Section) v.getTag(R.id.TAG_SECTION_ID); 
-					int placeholder = (Integer) v.getTag(R.id.TAG_PLACEHOLDER_ID);
-					Intent i = new Intent(ctx, CourseActivity.class);
-					Bundle tb = new Bundle();
-					tb.putSerializable(Section.TAG, (Section) s);
-					tb.putSerializable(Course.TAG, (Course) course);
-					tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, (Integer) placeholder);
-					i.putExtras(tb);
-	         		ctx.startActivity(i);
-				}
-		    });
-	    }
-	    
-	    return rowView;
+	    return convertView;
 	}
-	
+
+    private class ActivityAdapter extends BaseAdapter{
+
+        class ActivityViewHolder{
+            TextView activityTitle;
+            ImageView activityImage;
+            View activityContainer;
+        }
+
+        private ArrayList<Activity> listActivities = new ArrayList<Activity>();
+        private String locale;
+        private String courseLocation;
+
+        public ActivityAdapter(String locale, String courseLocation){
+            this.locale = locale;
+            this.courseLocation = courseLocation;
+        }
+
+        public int getCount() {
+            return listActivities.size();
+        }
+
+        public Activity getItem(int position) {
+            return listActivities.get(position);
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ActivityViewHolder viewHolder;
+            Activity activity = listActivities.get(position);
+            if (convertView == null) {
+                viewHolder = new ActivityViewHolder();
+                Context context = parent.getContext();
+                convertView = LayoutInflater.from(context).inflate(R.layout.section_horizonal_item, null);
+                viewHolder.activityContainer = convertView.findViewById(R.id.activity_object);
+                viewHolder.activityTitle = (TextView)  viewHolder.activityContainer.findViewById(R.id.activity_title);
+                viewHolder.activityImage = (ImageView)  viewHolder.activityContainer.findViewById(R.id.activity_image);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ActivityViewHolder) convertView.getTag();
+            }
+
+            viewHolder.activityTitle.setText(activity.getTitle(locale));
+            viewHolder.activityImage.setScaleType(!activity.hasCustomImage()?ImageView.ScaleType.CENTER: ImageView.ScaleType.FIT_CENTER);
+            int defaultActivityDrawable = activity.getDefaultResourceImage();
+            if (activity.hasCustomImage()){
+                String image = activity.getImageFilePath(courseLocation);
+                Picasso.with(ctx).load(new File(image))
+                        .placeholder(defaultActivityDrawable)
+                        .into(viewHolder.activityImage);
+            }
+            else{
+                viewHolder.activityImage.setImageResource(defaultActivityDrawable);
+            }
+
+            boolean highlightActivity = activity.getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED);
+            viewHolder.activityContainer.setBackgroundResource(highlightActivity ? R.drawable.activity_background_completed : 0);
+
+            return convertView;
+        }
+
+        public void setData(List<Activity> data) {
+            listActivities.clear();
+            listActivities.addAll(data);
+            notifyDataSetChanged();
+        }
+    }
 }
 

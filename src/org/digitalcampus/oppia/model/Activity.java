@@ -66,18 +66,25 @@ public class Activity implements Serializable{
 	public boolean hasCustomImage(){
 		return this.customImage;
 	}
-	
+
+    public String getImageFilePath(String prefix){
+        if(!prefix.endsWith(File.separator)){
+            prefix += File.separator;
+        }
+        return prefix + this.imageFile;
+    }
+
+    public int getDefaultResourceImage(){
+        if(actType.equals("quiz")){
+            return R.drawable.default_icon_quiz;
+        } else if (actType.equals("page") && this.hasMedia()){
+            return R.drawable.default_icon_video;
+        }
+        return R.drawable.default_icon_activity;
+    }
+
 	public BitmapDrawable getImageFile(String prefix, Resources res) {
-		int defaultImage = R.drawable.default_icon_activity;
-		if(actType.equals("quiz")){
-			defaultImage = R.drawable.default_icon_quiz;
-		} else if (actType.equals("page") && this.hasMedia()){
-			defaultImage = R.drawable.default_icon_video;
-		}
-		if(!prefix.endsWith(File.separator)){
-			prefix += File.separator;
-		}
-		return ImageUtils.LoadBMPsdcard(prefix + this.imageFile, res, defaultImage);
+		return ImageUtils.LoadBMPsdcard(getImageFilePath(prefix), res, getDefaultResourceImage());
 	}
 
 	public void setImageFile(String imageFile) {
