@@ -1637,7 +1637,6 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                             }
 
                             mTouchModeReset = new Runnable() {
-                                @Override
                                 public void run() {
                                     mTouchMode = TOUCH_MODE_REST;
 
@@ -1737,7 +1736,6 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return true;
     }
 
-    @Override
     public void onTouchModeChanged(boolean isInTouchMode) {
         if (isInTouchMode) {
             // Get rid of the selection when we enter touch mode
@@ -6452,12 +6450,12 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         public static final Parcelable.Creator<SavedState> CREATOR
                 = new Parcelable.Creator<SavedState>() {
-            @Override
+            //@Override
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
-            @Override
+            //@Override
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
@@ -6465,7 +6463,6 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     }
 
     private class SelectionNotifier implements Runnable {
-        @Override
         public void run() {
             if (mDataChanged) {
                 // Data has changed between when this SelectionNotifier
@@ -6496,7 +6493,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     private class PerformClick extends WindowRunnnable implements Runnable {
         int mClickMotionPosition;
 
-        @Override
+        //@Override
         public void run() {
             if (mDataChanged) {
                 return;
@@ -6518,7 +6515,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     }
 
     private final class CheckForTap implements Runnable {
-        @Override
+        //@Override
         public void run() {
             if (mTouchMode != TOUCH_MODE_DOWN) {
                 return;
@@ -6569,7 +6566,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     }
 
     private class CheckForLongPress extends WindowRunnnable implements Runnable {
-        @Override
+        //@Override
         public void run() {
             final int motionPosition = mMotionPosition;
             final View child = getChildAt(motionPosition - mFirstPosition);
@@ -6755,7 +6752,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             if (mDataChanged) {
                 // Wait until we're back in a stable state to try this.
                 mPositionScrollAfterLayout = new Runnable() {
-                    @Override public void run() {
+                    //@Override 
+                    public void run() {
                         start(position);
                     }
                 };
@@ -6810,7 +6808,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             if (mDataChanged) {
                 // Wait until we're back in a stable state to try this.
                 mPositionScrollAfterLayout = new Runnable() {
-                    @Override public void run() {
+                    //@Override 
+                    public void run() {
                         start(position, boundPosition);
                     }
                 };
@@ -6891,7 +6890,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 // Wait until we're back in a stable state to try this.
                 final int postOffset = offset;
                 mPositionScrollAfterLayout = new Runnable() {
-                    @Override public void run() {
+                    //@Override 
+                    public void run() {
                         startWithOffset(position, postOffset, duration);
                     }
                 };
@@ -6998,7 +6998,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             removeCallbacks(this);
         }
 
-        @Override
+        //@Override
         public void run() {
             final int size = getAvailableSize();
             final int firstPosition = mFirstPosition;
