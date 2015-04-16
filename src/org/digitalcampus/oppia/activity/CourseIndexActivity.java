@@ -194,27 +194,26 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i;
 		Bundle tb = new Bundle();
-		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.menu_language:
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_language) {
 			createLanguageDialog();
 			return true;
-		case R.id.menu_help:
+		} else if (itemId == R.id.menu_help) {
 			i = new Intent(this, AboutActivity.class);
 			tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
 			i.putExtras(tb);
 			startActivity(i);
 			return true;
-		case android.R.id.home:
+		} else if (itemId == android.R.id.home) {
 			this.finish();
 			return true;
-		case R.id.menu_scorecard:
+		} else if (itemId == R.id.menu_scorecard) {
 			i = new Intent(this, ScorecardActivity.class);
 			tb.putSerializable(Course.TAG, course);
 			i.putExtras(tb);
 			startActivity(i);
 			return true;
-		default:
+		} else {
 			i = new Intent(this, CourseMetaPageActivity.class);
 			tb.putSerializable(Course.TAG, course);
 			tb.putSerializable(CourseMetaPage.TAG, item.getItemId());

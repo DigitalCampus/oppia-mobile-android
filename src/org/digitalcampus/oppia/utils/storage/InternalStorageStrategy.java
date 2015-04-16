@@ -27,7 +27,7 @@ import java.io.File;
 
 public class InternalStorageStrategy implements StorageAccessStrategy{
 
-    @Override
+    //@Override
     public void updateStorageLocation(Context ctx) {
         String location = this.getStorageLocation(ctx);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -36,24 +36,24 @@ public class InternalStorageStrategy implements StorageAccessStrategy{
         editor.commit();
     }
 
-    @Override
+    //@Override
     public void updateStorageLocation(Context ctx, String mount) {
         updateStorageLocation(ctx);
     }
 
-    @Override
+    //@Override
     public String getStorageLocation(Context ctx) {
         File location = ctx.getFilesDir();
         return location.toString();
     }
 
-    @Override
+    //@Override
     public boolean isStorageAvailable(Context ctx) {
         //Internal storage is always available :)
         return true;
     }
 
-    @Override
+    //@Override
     public String getStorageType() {
         return PrefsActivity.STORAGE_OPTION_INTERNAL;
     }

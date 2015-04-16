@@ -103,7 +103,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
                 anim.addUpdateListener(viewHolder.barAnimator);
                 anim.setDuration(1500).start();
             }
-            //Set the value to true so it doesnt get animated again
+            //Set the value to true so it doesn' t get animated again
             viewHolder.barAnimator.setAnimated(true);
 
 	    } else {
@@ -124,7 +124,8 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	}
 
     class ProgressBarAnimator implements ValueAnimator.AnimatorUpdateListener{
-        //reference to the view to which the animation is going to be applied
+
+        //reference to the view to wich the animation is going to be applied
         private CourseViewHolder viewHolder;
 
         private boolean animated = false;
@@ -133,7 +134,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
             viewHolder = holder;
         }
 
-        @Override
+        //@Override
         public void onAnimationUpdate(ValueAnimator animator) {
             viewHolder.courseProgress.setProgress((Integer)animator.getAnimatedValue());
             viewHolder.courseProgress.invalidate();

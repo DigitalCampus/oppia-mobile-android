@@ -74,7 +74,7 @@ public class UIUtils {
 			points.setText(String.valueOf(prefs.getInt(PrefsActivity.PREF_POINTS, 0)));
             points.setClickable(true);
             points.setOnClickListener(new View.OnClickListener() {
-                @Override
+                //@Override
                 public void onClick(View view) {
                     Intent i = new Intent(ctx, ScorecardActivity.class);
                     Bundle tb = new Bundle();
@@ -96,7 +96,7 @@ public class UIUtils {
 			badges.setText(String.valueOf(prefs.getInt(PrefsActivity.PREF_BADGES, 0)));
             badges.setClickable(true);
             badges.setOnClickListener(new View.OnClickListener() {
-                @Override
+                //@Override
                 public void onClick(View view) {
                     Intent i = new Intent(ctx, ScorecardActivity.class);
                     Bundle tb = new Bundle();

@@ -102,13 +102,12 @@ public class MonitorActivity extends AppActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-			case R.id.menu_return:
-				this.finish();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_return) {
+			this.finish();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
 		}
 	}
 	

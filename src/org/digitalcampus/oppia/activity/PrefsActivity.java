@@ -18,8 +18,6 @@
 package org.digitalcampus.oppia.activity;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
@@ -38,7 +36,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
 	

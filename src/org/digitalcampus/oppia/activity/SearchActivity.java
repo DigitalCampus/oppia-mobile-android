@@ -100,7 +100,7 @@ public class SearchActivity extends AppActivity {
 		
 		searchText = (EditText) findViewById(R.id.search_string);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
+            //@Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 hideKeyboard(v);
                 performSearch();
@@ -228,7 +228,7 @@ public class SearchActivity extends AppActivity {
             summary.setText("Fetching results...");
         }
 
-        @Override
+        //@Override
         public void onQueryPerformed() {
             publishProgress(true);
 

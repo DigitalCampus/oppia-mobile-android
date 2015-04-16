@@ -107,7 +107,7 @@ public class ScorecardPieChart {
         //We create and start the animation assigning its listener
         ValueAnimator anim = ObjectAnimator.ofPropertyValuesHolder(completedHolder, startedHolder, notStartedHolder);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
+            //@Override
             public void onAnimationUpdate(ValueAnimator animator) {
                 segmentCompleted.setValue((Float) animator.getAnimatedValue("completed"));
                 segmentStarted.setValue((Float) animator.getAnimatedValue("started"));
