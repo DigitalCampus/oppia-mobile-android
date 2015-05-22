@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -36,6 +37,64 @@ import java.util.StringTokenizer;
 public class StorageUtils {
 
     public static final String TAG = StorageUtils.class.getSimpleName();
+    private static DeviceFile mExternalDrive;
+    private static DeviceFile mInternalDrive;
+
+    public static DeviceFile getInternalMemoryDrive() {
+        DeviceFile ret = null;
+        if (mInternalDrive != null)
+            return mInternalDrive;
+        ret = new DeviceFile(Environment.getExternalStorageDirectory());
+        Log.d(TAG, "Internal Storage: " + ret);
+        if (ret == null || !ret.exists()) {
+            DeviceFile mnt = new DeviceFile("/mnt");
+            if (mnt != null && mnt.exists())
+                for (DeviceFile kid : mnt.listFiles())
+                    if (kid.getName().toLowerCase().indexOf("sd") > -1)
+                        if (kid.canWrite()){
+                            mInternalDrive = kid;
+                            return mInternalDrive;
+                        }
+
+        } else if (ret.getName().endsWith("1")) {
+            DeviceFile sdcard0 = new DeviceFile(ret.getPath().substring(0, ret.getPath().length() - 1) + "0");
+            if (sdcard0 != null && sdcard0.exists()) ret = sdcard0;
+        }
+        mInternalDrive = ret;
+        return mInternalDrive;
+    }
+
+    public static DeviceFile getExternalMemoryDrive()
+    {
+        if (mExternalDrive != null){
+            if (mExternalDrive.exists()){
+                return mExternalDrive;
+            }
+        }
+
+        DeviceFile mDaddy = getInternalMemoryDrive().getParent();
+        while(mDaddy.getDepth() > 2)
+            mDaddy = mDaddy.getParent();
+        for (DeviceFile kid : mDaddy.listFiles())
+            if ((kid.getName().toLowerCase().indexOf("ext") > -1 || kid.getName().toLowerCase()
+                    .indexOf("sdcard1") > -1)
+                    && !kid.getPath().equals(getInternalMemoryDrive())
+                    && kid.canRead()
+                    && kid.canWrite()) {
+                mExternalDrive = kid;
+                return mExternalDrive;
+            }
+        if (new File("/Removable").exists())
+            for (DeviceFile kid : new DeviceFile("/Removable").listFiles())
+                if (kid.getName().toLowerCase().indexOf("ext") > -1 && kid.canRead()
+                        && !kid.getPath().equals(getInternalMemoryDrive().getPath())
+                        && kid.list().length > 0) {
+                    mExternalDrive = kid;
+                    return mExternalDrive;
+                }
+        return null;
+    }
+
 
     public static List<StorageLocationInfo> getStorageList() {
 
@@ -103,7 +162,7 @@ public class StorageUtils {
         /*
          * START HORRIBLE HACK.... to get around fact that the above is not returning the right paths/mounts for some reason 
          */
-        list = new ArrayList<StorageLocationInfo>();
+        //list = new ArrayList<StorageLocationInfo>();
        
         File sdcard0 = new File("/storage/sdcard0/");
         if(sdcard0.exists()){
@@ -134,4 +193,111 @@ public class StorageUtils {
          */
         return list;
     }
+
+    private static class DeviceFile{
+
+        private File mFile;
+        private WeakReference<DeviceFile[]> mChildren = null;
+        private Integer mChildCount = null;
+        private boolean bGrandPeeked = false;
+
+        public DeviceFile(String path) {
+            mFile = new File(path);
+        }
+
+        public DeviceFile(File file) {
+            mFile = file;
+        }
+
+        public DeviceFile getParent() {
+            String parent = mFile.getParent();
+            if (parent == null)
+                return null;
+            return new DeviceFile(parent);
+        }
+
+        public String getPath() {
+            return mFile.getPath();
+        }
+
+        public int getDepth() {
+            if (getParent() == null || getParent().getPath().equals(getPath()))
+                return 1;
+            return 1 + getParent().getDepth();
+        }
+
+        private DeviceFile[] getOpenPaths(File[] files) {
+            if (files == null)
+                return new DeviceFile[0];
+            DeviceFile[] ret = new DeviceFile[files.length];
+            for (int i = 0; i < files.length; i++)
+                ret[i] = new DeviceFile(files[i]);
+            return ret;
+        }
+
+        public boolean exists() {
+            return mFile.exists();
+        }
+
+        public String getName() {
+            return mFile.getName();
+        }
+
+        public Boolean isDirectory() {
+            return mFile.isDirectory();
+        }
+
+        public Boolean canRead() {
+            return mFile.canRead();
+        }
+        public Boolean canWrite() {
+            return mFile.canWrite();
+        }
+
+        public DeviceFile[] list() {
+            if (mChildren != null)
+                return mChildren.get();
+            else
+                return listFiles();
+        }
+
+        public DeviceFile[] listFiles() {
+            return listFiles(false);
+        }
+
+        public DeviceFile[] listFiles(boolean grandPeek) {
+            if(mChildren != null && mChildren.get() != null && mChildren.get().length > 0)
+                return mChildren.get();
+            File[] realFiles = null;
+            try {
+                realFiles = mFile.listFiles();
+            } catch(Throwable e) { }
+            DeviceFile[] mChildren2 = getOpenPaths(realFiles);
+
+            if ((mChildren2 == null || mChildren2.length == 0) && !isDirectory()
+                    && mFile.getParentFile() != null)
+                mChildren2 = getParent().listFiles(grandPeek);
+
+            if (mChildren2 == null)
+                return new DeviceFile[0];
+
+            if (grandPeek && !bGrandPeeked && mChildren2 != null && mChildren2.length > 0) {
+                for (int i = 0; i < mChildren2.length; i++) {
+                    try {
+                        if (!mChildren2[i].isDirectory())
+                            continue;
+                        mChildren2[i].list();
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                    }
+                }
+                bGrandPeeked = true;
+            }
+
+            mChildCount = mChildren2.length;
+            this.mChildren = new WeakReference<DeviceFile[]>(mChildren2);
+
+            return mChildren2;
+        }
+    }
+
 }
