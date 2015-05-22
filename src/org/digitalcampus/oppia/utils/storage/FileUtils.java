@@ -271,7 +271,7 @@ public class FileUtils {
             bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
         }
         else{
-            bytesAvailable = stat.getBlockSize() * stat.getAvailableBlocks();
+            bytesAvailable = (long)stat.getBlockSize() * (long)stat.getAvailableBlocks();
         }
         return bytesAvailable;
     }
