@@ -26,6 +26,8 @@ import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -130,6 +132,12 @@ public class WelcomeActivity extends FragmentActivity implements ActionBar.TabLi
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_settings) {
 			Intent i = new Intent(this, PrefsActivity.class);
+			Bundle tb = new Bundle();
+			ArrayList<Lang> langs = new ArrayList<Lang>();
+			Lang lang = new Lang("en","English");
+			langs.add(lang);
+			tb.putSerializable("langs", langs);
+			i.putExtras(tb);
 			startActivity(i);
 			return true;
 		} else if (itemId == R.id.menu_about) {

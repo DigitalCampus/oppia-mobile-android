@@ -6,6 +6,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Lang;
@@ -38,10 +39,12 @@ public class PreferencesFragment extends PreferenceFragment {
         storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
 
         Bundle bundle = getArguments();
-        @SuppressWarnings("unchecked")
-        ArrayList<Lang> langs = (ArrayList<Lang>) bundle.getSerializable("langs");
-
-        updateLangsList(langs);
+       
+        if (bundle.getSerializable("langs") != null) {
+        	@SuppressWarnings("unchecked")
+	        ArrayList<Lang> langs = (ArrayList<Lang>) bundle.getSerializable("langs");
+	        updateLangsList(langs);
+        }
         updateStorageList();
 
         EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
