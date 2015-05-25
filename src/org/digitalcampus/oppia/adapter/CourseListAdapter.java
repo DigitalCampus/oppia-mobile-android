@@ -124,8 +124,8 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	}
 
     class ProgressBarAnimator implements ValueAnimator.AnimatorUpdateListener{
-
         //reference to the view to which the animation is going to be applied
+
         private CourseViewHolder viewHolder;
 
         private boolean animated = false;
