@@ -91,12 +91,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
                     boolean makeDirs = destDir.mkdirs();
                     if (!makeDirs){ throw new Exception("No file created!"); }
                 }
-
-                File nomedia = new File(destDir, ".nomedia");
-                if (!nomedia.exists()){
-                    boolean fileCreated = nomedia.createNewFile();
-                    Log.d(TAG, (fileCreated ? "File .nomedia created in " : "Failed creating .nomedia file in ") + destDir.getAbsolutePath());
-                }
+                FileUtils.createNoMediaFile(ctx);
 
                 availableDestSize = FileUtils.getAvailableStorageSize(ctx);
                 Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
