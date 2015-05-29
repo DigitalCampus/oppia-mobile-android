@@ -95,9 +95,14 @@ public class DownloadTasksController implements Parcelable, InstallCourseListene
 
     //Method for updating the values in the dialog with the current progress state
     private void updateDialogMessage(){
-        progressDialog.setIndeterminate(false);
-        progressDialog.setProgress(currentProgress.getProgress());
-        progressDialog.setMessage(currentProgress.getMessage());
+        if (currentProgress != null){
+            progressDialog.setIndeterminate(false);
+            progressDialog.setProgress(currentProgress.getProgress());
+            progressDialog.setMessage(currentProgress.getMessage());
+        }
+        else{
+            progressDialog.setIndeterminate(true);
+        }
         showDialog();
     }
 
