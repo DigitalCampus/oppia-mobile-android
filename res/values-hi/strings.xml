@@ -15,7 +15,7 @@
     <string name="menu_search">खोज</string>
     <string name="menu_stop_read_aloud">पढ़ना रोकें</string>
     
-    <string name="service_tracker">Ujjwal Saathi Tracker Service</string>
+    <string name="service_tracker">OppiaMobile Tracker Service</string>
     
     <string name="fragment_welcome_title">उज्जवल साथी प्रोग्राम में आपका स्वागत है</string>
     <string name="fragment_welcome_desc">यह प्रोग्राम के माध्यम से आप अपने मोबाइल के ज़रिये स्वास्थ्य सम्बंधित जानकारी प्राप्त कर सकते हैं एवं स्वस्थ्य सम्बंधित फिल्में देख सकतें हैं और दूसरों को दिखा भी सकते हैं.</string>
@@ -235,14 +235,4 @@
 	<string name="search_searching">Searching...</string>
 	<string name="search_no_results">No results found for \"%1$s\"</string>
 
-	
-	<string name="clientreg_form_name_title">नाम </string>
-	<string name="clientreg_form_mobile_title">मोबाइल नंबर </string>
-	<string name="clientreg_form_age_title">उम्र </string>
-	<string name="clientreg_form_sex_title">लिंग </string>
-	<string name="clientreg_form_married_title">क्या आपकी शादी हो चुकी है</string>
-	<string name="clientreg_form_parity_title">बच्चों की संख्या </string>
-	<string name="clientreg_form_lifestage_title">जीवनशैली</string>
-	
-	<string name="submit_btn_text">आगे बढें &gt;&gt;</string>
 </resources>

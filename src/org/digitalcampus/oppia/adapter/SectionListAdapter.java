@@ -105,7 +105,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
         innerListAdapter.setData(sectionActivities);
         viewHolder.sectionActivities.setSelection(0);
         viewHolder.sectionActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
+ 
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Intent intent = new Intent(ctx, CourseActivity.class);
                 Bundle tb = new Bundle();
@@ -137,22 +137,18 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
             this.courseLocation = courseLocation;
         }
 
-        @Override
         public int getCount() {
             return listActivities.size();
         }
 
-        @Override
         public Activity getItem(int position) {
             return listActivities.get(position);
         }
 
-        @Override
         public long getItemId(int position) {
             return position;
         }
 
-        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ActivityViewHolder viewHolder;

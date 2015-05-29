@@ -258,7 +258,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             listView.setAlpha(0f);
             ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator){
                     listView.setTranslationX( (Float) valueAnimator.getAnimatedValue() * 80 );
                     listView.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());

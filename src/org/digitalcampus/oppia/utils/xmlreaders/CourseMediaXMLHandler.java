@@ -39,7 +39,6 @@ public class CourseMediaXMLHandler extends DefaultLexicalHandler implements IMed
     private boolean insideMediaTag = false;
     private Stack<String> parentElements = new Stack<String>();
 
-    @Override
     public ArrayList<Media> getCourseMedia() {
         return courseMedia;
     }

@@ -186,7 +186,6 @@ public class SearchActivity extends AppActivity {
 
         ValueAnimator animator = ValueAnimator.ofFloat(visible?1f:0f, visible?0f:1f);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator){
                 view.setTranslationY( (Float) valueAnimator.getAnimatedValue() * -80 );
                 view.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
