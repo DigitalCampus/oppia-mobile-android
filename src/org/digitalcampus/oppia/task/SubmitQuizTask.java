@@ -39,13 +39,13 @@ import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.splunk.mint.Mint;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-
-import com.bugsense.trace.BugSenseHandler;
 
 public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 
@@ -127,7 +127,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (JSONException e) {
 				payload.setResult(false);
-				BugSenseHandler.sendException(e);
+				Mint.logException(e);
 				e.printStackTrace();
 			} 
 		}

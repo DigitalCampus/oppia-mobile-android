@@ -35,6 +35,8 @@ import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.splunk.mint.Mint;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -44,8 +46,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.util.Log;
-
-import com.bugsense.trace.BugSenseHandler;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -752,7 +752,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				}
 				content = json.toString();
 			} catch (JSONException e) {
-				BugSenseHandler.sendException(e);
+				Mint.logException(e);
 				e.printStackTrace();
 			}
 			

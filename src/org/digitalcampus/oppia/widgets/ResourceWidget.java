@@ -35,6 +35,8 @@ import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.splunk.mint.Mint;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -56,8 +58,6 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bugsense.trace.BugSenseHandler;
 
 public class ResourceWidget extends WidgetFactory {
 
@@ -203,7 +203,7 @@ public class ResourceWidget extends WidgetFactory {
 						.getLanguage());
 				data.put("lang", lang);
 			} catch (JSONException e) {
-				BugSenseHandler.sendException(e);
+				Mint.logException(e);
 				e.printStackTrace();
 			}
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());

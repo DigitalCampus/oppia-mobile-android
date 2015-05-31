@@ -23,6 +23,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
+import com.splunk.mint.Mint;
+
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -34,8 +36,6 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-
-import com.bugsense.trace.BugSenseHandler;
 
 public class AboutFragment extends Fragment{
 
@@ -85,7 +85,7 @@ public class AboutFragment extends Fragment{
 			String no = super.getActivity().getPackageManager().getPackageInfo(super.getActivity().getPackageName(), 0).versionName;
 			versionNo.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
-			BugSenseHandler.sendException(e);
+			Mint.logException(e);
 			e.printStackTrace();
 		}
 	}

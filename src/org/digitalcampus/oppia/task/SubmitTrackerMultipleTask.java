@@ -42,14 +42,14 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.splunk.mint.Mint;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.bugsense.trace.BugSenseHandler;
 
 public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Payload> {
 
@@ -157,7 +157,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 					} catch (IOException e) {
 						payload.setResult(false);
 					} catch (JSONException e) {
-						BugSenseHandler.sendException(e);
+						Mint.logException(e);
 						e.printStackTrace();
 						payload.setResult(false);
 					} 

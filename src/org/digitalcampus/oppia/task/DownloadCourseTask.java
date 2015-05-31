@@ -24,7 +24,8 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.bugsense.trace.BugSenseHandler;
+
+
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.params.CoreProtocolPNames;
@@ -36,6 +37,8 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+
+import com.splunk.mint.Mint;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -129,17 +132,17 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
             }
 
 		} catch (ClientProtocolException cpe) {
-			BugSenseHandler.sendException(cpe);
+			Mint.logException(cpe);
 			cpe.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (SocketTimeoutException ste){
-			BugSenseHandler.sendException(ste);
+			Mint.logException(ste);
 			ste.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException ioe) { 
-			BugSenseHandler.sendException(ioe);
+			Mint.logException(ioe);
 			ioe.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));

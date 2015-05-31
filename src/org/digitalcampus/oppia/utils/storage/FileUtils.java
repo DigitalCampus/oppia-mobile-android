@@ -24,7 +24,7 @@ import android.os.StatFs;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.bugsense.trace.BugSenseHandler;
+
 
 import org.digitalcampus.oppia.application.MobileLearning;
 

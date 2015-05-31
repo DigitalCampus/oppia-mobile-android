@@ -30,6 +30,8 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.splunk.mint.Mint;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -38,8 +40,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.bugsense.trace.BugSenseHandler;
 
 public class PointsFragment extends Fragment implements APIRequestListener {
 
@@ -113,7 +113,7 @@ public class PointsFragment extends Fragment implements APIRequestListener {
 				json = new JSONObject(response.getResultResponse());
 				refreshPointsList();
 			} catch (JSONException e) {
-				BugSenseHandler.sendException(e);
+				Mint.logException(e);
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
 				e.printStackTrace();
 			}
