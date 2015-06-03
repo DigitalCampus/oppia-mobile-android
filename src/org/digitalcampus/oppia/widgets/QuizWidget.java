@@ -394,9 +394,10 @@ public class QuizWidget extends WidgetFactory {
 
 		// log the activity as complete
 		isOnResultsPage = true;
-
+		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
+		Log.d(TAG,data);
 		DbHelper db = new DbHelper(super.getActivity());
 		db.insertQuizResult(data, course.getCourseId());
 		DatabaseManager.getInstance().closeDatabase();
