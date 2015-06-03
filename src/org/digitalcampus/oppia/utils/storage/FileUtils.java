@@ -89,6 +89,8 @@ public class FileUtils {
 				}
 			}
 		}
+		//After creating the necessary folders, we create the .nomedia file
+		createNoMediaFile(ctx);
 		
 		return true;
 	}
@@ -262,6 +264,21 @@ public class FileUtils {
         }
         return 0;
     }
+
+	public static void createNoMediaFile(Context ctx){
+		String storagePath = storageStrategy.getStorageLocation(ctx);
+		File dir = new File(storagePath);
+		File nomedia = new File(dir, ".nomedia");
+		if (!nomedia.exists()){
+			boolean fileCreated = false;
+			try {
+				fileCreated = nomedia.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			Log.d(TAG, (fileCreated ? "File .nomedia created in " : "Failed creating .nomedia file in ") + dir.getAbsolutePath());
+		}
+	}
 
     public static long getAvailableStorageSize(Context ctx){
         String path = getStorageLocationRoot(ctx);
