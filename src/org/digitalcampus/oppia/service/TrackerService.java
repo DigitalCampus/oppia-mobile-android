@@ -34,6 +34,8 @@ import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.splunk.mint.Mint;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -53,8 +55,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.bugsense.trace.BugSenseHandler;
-
 public class TrackerService extends Service implements APIRequestListener {
 
 	public static final String TAG = TrackerService.class.getSimpleName();
@@ -65,7 +65,7 @@ public class TrackerService extends Service implements APIRequestListener {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		BugSenseHandler.initAndStartSession(this,MobileLearning.BUGSENSE_API_KEY);
+		Mint.initAndStartSession(this,MobileLearning.MINT_API_KEY);
 	}
 
 	@Override

@@ -47,6 +47,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,9 +146,12 @@ public class PageWidget extends WidgetFactory {
 					// check video file exists
 					boolean exists = FileUtils.mediaFileExists(PageWidget.super.getActivity(), mediaFileName);
 					if (!exists) {
+						Log.d(TAG,PageWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName));
 						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName),
 								Toast.LENGTH_LONG).show();
 						return true;
+					} else {
+						Log.d(TAG,"Media found: " + mediaFileName);
 					}
 
 					String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath(PageWidget.super.getActivity()) + mediaFileName);

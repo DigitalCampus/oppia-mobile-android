@@ -41,12 +41,12 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.splunk.mint.Mint;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-
-import com.bugsense.trace.BugSenseHandler;
 
 public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 
@@ -160,7 +160,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (JSONException e) {
-			BugSenseHandler.sendException(e);
+			Mint.logException(e);
 			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));

@@ -24,7 +24,8 @@ import android.os.StatFs;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.bugsense.trace.BugSenseHandler;
+
+
 
 import org.digitalcampus.oppia.application.MobileLearning;
 
@@ -246,6 +247,7 @@ public class FileUtils {
 
 	public static boolean mediaFileExists(Context ctx, String filename) {
 		File media = new File(FileUtils.getMediaPath(ctx) + filename);
+		Log.d(TAG,"Looking for: " + FileUtils.getMediaPath(ctx) + filename);
         return media.exists();
 	}
 
@@ -280,7 +282,8 @@ public class FileUtils {
 		}
 	}
 
-    public static long getAvailableStorageSize(Context ctx){
+    @SuppressWarnings("deprecation")
+	public static long getAvailableStorageSize(Context ctx){
         String path = getStorageLocationRoot(ctx);
         StatFs stat = new StatFs(path);
         long bytesAvailable;

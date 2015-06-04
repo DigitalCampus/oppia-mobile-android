@@ -26,7 +26,6 @@ import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
 import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
-import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 
 import android.app.ActionBar;

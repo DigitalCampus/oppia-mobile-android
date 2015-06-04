@@ -42,6 +42,8 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.splunk.mint.Mint;
+
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -49,7 +51,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ListView;
 
-import com.bugsense.trace.BugSenseHandler;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, DownloadCompleteListener {
 	
@@ -236,7 +237,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 		} catch (Exception e) {
 			db.close();
-			BugSenseHandler.sendException(e);
+			Mint.logException(e);
 			e.printStackTrace();
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
@@ -252,7 +253,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 				json = new JSONObject(response.getResultResponse());
 				refreshCourseList();
 			} catch (JSONException e) {
-				BugSenseHandler.sendException(e);
+				Mint.logException(e);
 				e.printStackTrace();
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);
 				
