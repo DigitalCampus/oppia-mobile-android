@@ -17,28 +17,9 @@
 
 package org.digitalcampus.oppia.activity;
 
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.concurrent.Callable;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.CourseListAdapter;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.listener.ScanMediaListener;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.ScanMediaTask;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -62,7 +43,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener {
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.CourseListAdapter;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.listener.DeleteCourseListener;
+import org.digitalcampus.oppia.listener.ScanMediaListener;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.task.DeleteCourseTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.ScanMediaTask;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.concurrent.Callable;
+
+public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener, DeleteCourseListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
@@ -76,6 +78,8 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
     private CourseListAdapter courseListAdapter;
     private ListView courseList;
+
+    private ProgressDialog progressDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -193,8 +197,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	private void scanMedia() {
 		long now = System.currentTimeMillis()/1000;
 		if (prefs.getLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0)+3600 > now) {
-			LinearLayout ll = (LinearLayout) this.findViewById(R.id.home_messages);
-			ll.setVisibility(View.GONE);
+			messageContainer.setVisibility(View.GONE);
 			return;
 		}
 		ScanMediaTask task = new ScanMediaTask(this);
@@ -331,19 +334,18 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setMessage(R.string.course_context_delete_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				// remove db records
-				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.deleteCourse(tempCourse.getCourseId());
-				DatabaseManager.getInstance().closeDatabase();
+                DeleteCourseTask task = new DeleteCourseTask(OppiaMobileActivity.this);
+                ArrayList<Object> payloadData = new ArrayList<Object>();
+                payloadData.add(tempCourse);
+                Payload p = new Payload(payloadData);
+                task.setOnDeleteCourseListener(OppiaMobileActivity.this);
+                task.execute(p);
 
-				// remove files
-                String courseLocation = tempCourse.getLocation();
-				File f = new File(courseLocation);
-				FileUtils.deleteDir(f);
-				Editor e = prefs.edit();
-				e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-				e.commit();
-				displayCourses(userId);
+                progressDialog = new ProgressDialog(OppiaMobileActivity.this);
+                progressDialog.setMessage("Deleting course...");
+                progressDialog.setCancelable(false);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.show();
 			}
 		});
 		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -463,4 +465,17 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			e.commit();
 		}
 	}
+
+    @Override
+    public void onCourseDeletionComplete(Payload response) {
+        if (response.isResult()){
+            Editor e = prefs.edit();
+            e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
+            e.commit();
+        }
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
+        displayCourses(userId);
+    }
 }
