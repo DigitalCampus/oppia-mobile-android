@@ -53,6 +53,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Mint.disableNetworkMonitoring();
         Mint.initAndStartSession(this, MobileLearning.MINT_API_KEY);
         
         setContentView(R.layout.start_up);
