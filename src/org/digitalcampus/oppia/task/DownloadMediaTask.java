@@ -152,7 +152,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 	protected void onProgressUpdate(DownloadProgress... obj) {
 		synchronized (this) {
             if (mStateListener != null) {
-                mStateListener.downloadProgressUpdate(obj[0]);
+                //mStateListener.downloadProgressUpdate(obj[0]);
             }
         }
 	}
@@ -161,7 +161,7 @@ public class DownloadMediaTask extends AsyncTask<Payload, DownloadProgress, Payl
 	protected void onPostExecute(Payload response) {
 		synchronized (this) {
             if (mStateListener != null) {
-               mStateListener.downloadComplete(response);
+               //mStateListener.downloadComplete(response);
             }
         }
 	}

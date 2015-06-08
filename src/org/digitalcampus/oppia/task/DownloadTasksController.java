@@ -34,7 +34,7 @@ import org.digitalcampus.oppia.model.DownloadProgress;
 
 import java.io.Serializable;
 
-public class DownloadTasksController implements Parcelable, InstallCourseListener, UpdateScheduleListener, DownloadMediaListener {
+public class DownloadTasksController implements Parcelable, InstallCourseListener, UpdateScheduleListener {
 
     private Context ctx;
     private DownloadCompleteListener onDownloadCompleteListener;

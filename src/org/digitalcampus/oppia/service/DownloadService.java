@@ -46,7 +46,7 @@ import java.util.ArrayList;
 public class DownloadService extends IntentService {
 
     public static final String TAG = DownloadService.class.getSimpleName();
-    private static final String BROADCAST_ACTION = "com.digitalcampus.oppia.DOWNLOADSERVICE";
+    public static final String BROADCAST_ACTION = "com.digitalcampus.oppia.DOWNLOADSERVICE";
 
     public static final String SERVICE_ACTION = "action"; //field for providing action
     public static final String SERVICE_URL = "fileurl"; //field for providing file URL
