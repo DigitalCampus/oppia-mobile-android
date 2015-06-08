@@ -30,7 +30,7 @@ import org.digitalcampus.oppia.adapter.DownloadMediaListAdapter;
 import org.digitalcampus.oppia.listener.DownloadCompleteListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.task.DownloadMediaTask;
+import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.task.DownloadTasksController;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
@@ -38,8 +38,10 @@ import org.digitalcampus.oppia.utils.UIUtils;
 
 import com.splunk.mint.Mint;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -101,17 +103,17 @@ public class DownloadMediaActivity extends AppActivity implements DownloadComple
             //We already have loaded media (coming from orientationchange)
             dmla.notifyDataSetChanged();
         }
-        if (tasksController == null){
-            tasksController = new DownloadTasksController(this, prefs);
-        }
-        tasksController.setOnDownloadCompleteListener(this);
-        tasksController.setCtx(this);
+        //if (tasksController == null){
+        //    tasksController = new DownloadTasksController(this, prefs);
+        //}
+        //tasksController.setOnDownloadCompleteListener(this);
+        //tasksController.setCtx(this);
 	}
 
     @Override
     public void onDestroy(){
-        tasksController.setOnDownloadCompleteListener(null);
-        tasksController.setCtx(null);
+        //tasksController.setOnDownloadCompleteListener(null);
+        //tasksController.setCtx(null);
         super.onDestroy();
     }
 
@@ -122,17 +124,17 @@ public class DownloadMediaActivity extends AppActivity implements DownloadComple
         ArrayList<Media> savedMissingMedia = (ArrayList<Media>) savedInstanceState.getSerializable(TAG);
         this.missingMedia.clear();
         this.missingMedia.addAll(savedMissingMedia);
-        tasksController = (DownloadTasksController) savedInstanceState.getParcelable("tasksProgress");
+        //tasksController = (DownloadTasksController) savedInstanceState.getParcelable("tasksProgress");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable(TAG, missingMedia);
-        if (tasksController != null){
-            tasksController.setOnDownloadCompleteListener(null);
-            savedInstanceState.putParcelable("tasksProgress", tasksController);
-        }
+        //if (tasksController != null){
+        //    tasksController.setOnDownloadCompleteListener(null);
+        //    savedInstanceState.putParcelable("tasksProgress", tasksController);
+        //}
     }
 	
 	private void downloadViaPC(){
@@ -189,6 +191,29 @@ public class DownloadMediaActivity extends AppActivity implements DownloadComple
             }
             Log.d("media-download", "Clicked " + position);
             Media mediaToDownload = missingMedia.get(position);
+
+            if (!mediaToDownload.isDownloading()){
+                Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
+                mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_DOWNLOAD);
+                mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
+                mServiceIntent.putExtra(DownloadService.SERVICE_DIGEST, mediaToDownload.getDigest());
+                mServiceIntent.putExtra(DownloadService.SERVICE_FILENAME, mediaToDownload.getFilename());
+                DownloadMediaActivity.this.startService(mServiceIntent);
+
+                mediaToDownload.setDownloading(true);
+                dmla.notifyDataSetChanged();
+            }
+            else{
+                Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
+                mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_CANCEL);
+                mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
+                DownloadMediaActivity.this.startService(mServiceIntent);
+
+                mediaToDownload.setDownloading(false);
+                dmla.notifyDataSetChanged();
+            }
+
+            /*
             if (!tasksController.isTaskInProgress()){
                 ArrayList<Object> data = new ArrayList<Object>();
                 data.add(mediaToDownload);
@@ -202,7 +227,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadComple
                 tasksController.setTaskInProgress(true);
                 tasksController.showDialog();
                 task.execute(p);
-            }
+            }*/
         }
     }
 
