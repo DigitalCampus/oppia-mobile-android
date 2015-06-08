@@ -466,7 +466,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		}
 	}
 
-    @Override
     public void onCourseDeletionComplete(Payload response) {
         if (response.isResult()){
             Editor e = prefs.edit();
