@@ -68,7 +68,11 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				// extract to temp dir and check it's a valid package file
 				File tempdir = new File(FileUtils.getStorageLocationRoot(ctx) + "temp/");
 				tempdir.mkdirs();
-				
+
+                dp.setMessage(ctx.getString(R.string.installing_course, children[i]));
+                dp.setProgress(0);
+                publishProgress(dp);
+
 				File testDir = new File(FileUtils.getDownloadPath(ctx), children[i]);
 				
 				if (testDir.isDirectory()){
@@ -83,9 +87,12 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					break;
 
 				}
-				String[] courseDirs = tempdir.list(); // use this to get the course
-													// name
-				
+				String[] courseDirs = tempdir.list(); // use this to get the course name
+
+                dp.setMessage(ctx.getString(R.string.installing_course, children[i]));
+                dp.setProgress(10);
+                publishProgress(dp);
+
 				String courseXMLPath = "";
 				String courseScheduleXMLPath = "";
 				String courseTrackerXMLPath = "";
@@ -123,6 +130,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 				
 				dp.setMessage(ctx.getString(R.string.installing_course, title));
+                dp.setProgress(20);
 				publishProgress(dp);
 				
 				boolean success = false;
@@ -135,7 +143,13 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					File dest = new File(FileUtils.getCoursesPath(ctx));
 
 					db.insertActivities(cxr.getActivities(added));
-					db.insertTrackers(ctxr.getTrackers(),added);
+                    dp.setProgress(50);
+                    publishProgress(dp);
+
+					db.insertTrackers(ctxr.getTrackers(), added);
+                    dp.setProgress(70);
+                    publishProgress(dp);
+
 					// Delete old course
 					File oldCourse = new File(FileUtils.getCoursesPath(ctx) + courseDirs[0]);
 					FileUtils.deleteDir(oldCourse);
@@ -161,7 +175,10 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				db.insertSchedule(csxr.getSchedule());
 				db.updateScheduleVersion(added, csxr.getScheduleVersion());				
 				DatabaseManager.getInstance().closeDatabase();
-				
+
+                dp.setProgress(80);
+                publishProgress(dp);
+
 				if (success){
 					SearchUtils.indexAddCourse(this.ctx, c);
 				}
@@ -169,9 +186,14 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				// delete temp directory
 				FileUtils.deleteDir(tempdir);
 
+                dp.setProgress(95);
+                publishProgress(dp);
+
 				// delete zip file from download dir
 				File zip = new File(FileUtils.getDownloadPath(ctx) + children[i]);
 				zip.delete();
+
+
 			}
 		}
 		return payload;
