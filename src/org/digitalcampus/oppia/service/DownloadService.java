@@ -59,17 +59,33 @@ public class DownloadService extends IntentService {
     public static final String ACTION_COMPLETE = "complete";
     public static final String ACTION_FAILED = "failed";
 
-    private static ArrayList<String> tasksCancelled;
+    private ArrayList<String> tasksCancelled;
+    private ArrayList<String> tasksDownloading;
     private SharedPreferences prefs;
 
-    public DownloadService() {
-        super(TAG);
+    private static DownloadService currentInstance;
+
+    private static void setInstance(DownloadService instance){
+        currentInstance = instance;
     }
+
+    public static ArrayList<String> getTasksDownloading(){
+        if (currentInstance != null){
+            synchronized (currentInstance){
+                return currentInstance.tasksDownloading;
+            }
+        }
+        return null;
+    }
+
+
+    public DownloadService() { super(TAG); }
 
     @Override
     public void onCreate(){
         super.onCreate();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        DownloadService.setInstance(this);
     }
 
     @Override
@@ -77,10 +93,12 @@ public class DownloadService extends IntentService {
 
         if (intent.hasExtra(SERVICE_ACTION) && intent.hasExtra(SERVICE_URL)) {
             // Set the canceling flag to that file
-            boolean cancelDownload = intent.getStringExtra(SERVICE_ACTION).equals(ACTION_CANCEL);
-            if (cancelDownload){
+            if (intent.getStringExtra(SERVICE_ACTION).equals(ACTION_CANCEL)){
                 Log.d(TAG, "CANCEL commmand received");
                 addCancelledTask(intent.getStringExtra(SERVICE_URL));
+            }
+            else if (intent.getStringExtra(SERVICE_ACTION).equals(ACTION_DOWNLOAD)) {
+                addDownloadingTask(intent.getStringExtra(SERVICE_URL));
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -108,11 +126,18 @@ public class DownloadService extends IntentService {
             //If it was cancelled before starting, we do nothing
             Log.d(TAG, "Media " + fileUrl + " cancelled before started.");
             removeCancelled(fileUrl);
+            removeDownloading(fileUrl);
             return;
         }
 
         downloadFile(fileUrl, filename, fileDigest);
 
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        DownloadService.setInstance(null);
     }
 
     private void downloadFile(String fileUrl, String filename, String fileDigest){
@@ -142,6 +167,7 @@ public class DownloadService extends IntentService {
 
             if (fileLength >= availableStorage){
                 sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_insufficient_storage_available));
+                removeDownloading(fileUrl);
                 return;
             }
 
@@ -161,6 +187,7 @@ public class DownloadService extends IntentService {
                     Log.d(TAG, "Media " + filename + " cancelled while downloading. Deleting temp file...");
                     deleteFile(downloadedFile);
                     removeCancelled(fileUrl);
+                    removeDownloading(fileUrl);
                     return;
                 }
 
@@ -186,37 +213,38 @@ public class DownloadService extends IntentService {
                 if(!resultMD5.contains(fileDigest)){
                     this.deleteFile(downloadedFile);
                     sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
+                    removeDownloading(fileUrl);
                     return;
                 }
             }
 
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-            Log.d(TAG, "Error: " + e.getMessage());
-            sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
+            logAndNotifyError(fileUrl, e);
             return;
         } catch (ProtocolException e) {
             this.deleteFile(downloadedFile);
-            e.printStackTrace();
-            Log.d(TAG, "Error: " + e.getMessage());
-            sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
+            logAndNotifyError(fileUrl, e);
             return;
         } catch (IOException e) {
             this.deleteFile(downloadedFile);
-            e.printStackTrace();
-            Log.d(TAG, "Error: " + e.getMessage());
-            sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
+            logAndNotifyError(fileUrl, e);
             return;
         } catch (NoSuchAlgorithmException e) {
             Mint.logException(e);
-            e.printStackTrace();
-            Log.d(TAG, "Error: " + e.getMessage());
-            sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
+            logAndNotifyError(fileUrl, e);
             return;
         }
 
         Log.d(TAG, fileUrl + " succesfully downloaded");
+        removeDownloading(fileUrl);
         sendBroadcast(fileUrl, ACTION_COMPLETE, null);
+    }
+
+    private void logAndNotifyError(String fileUrl, Exception e){
+        e.printStackTrace();
+        Log.d(TAG, "Error: " + e.getMessage());
+        sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
+        removeDownloading(fileUrl);
     }
 
     /*
@@ -235,7 +263,6 @@ public class DownloadService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
 
-
     private void addCancelledTask(String fileUrl){
         if (tasksCancelled == null){
             tasksCancelled = new ArrayList<String>();
@@ -250,7 +277,30 @@ public class DownloadService extends IntentService {
     }
 
     private boolean removeCancelled(String fileUrl){
-        return (tasksCancelled != null) && (tasksCancelled.remove(fileUrl));
+        if (tasksCancelled != null){
+            return tasksCancelled.remove(fileUrl);
+        }
+        return false;
+    }
+
+    private void addDownloadingTask(String fileUrl){
+        if (tasksDownloading == null){
+            tasksDownloading = new ArrayList<String>();
+        }
+        if (!tasksDownloading.contains(fileUrl)){
+            synchronized (this){
+                tasksDownloading.add(fileUrl);
+            }
+        }
+    }
+
+    private boolean removeDownloading(String fileUrl){
+        if (tasksDownloading != null){
+            synchronized (this){
+                return tasksDownloading.remove(fileUrl);
+            }
+        }
+        return false;
     }
 
     private void deleteFile(File file){
