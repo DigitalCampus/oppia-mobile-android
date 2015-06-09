@@ -24,6 +24,7 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
@@ -44,6 +45,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
 		Payload payload = params[0];
         ArrayList<Object> currentMedia = payload.getResponseData();
+        ArrayList<String> downloadingMedia = DownloadService.getTasksDownloading();
 
 		for (Object obj: payload.getData()){
 			Course course = (Course) obj;
@@ -56,7 +58,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 					publishProgress(m.getFilename());
 					String filename = FileUtils.getMediaPath(ctx) + m.getFilename();
 					File mediaFile = new File(filename);
-					if(!mediaFile.exists()){
+					if((!mediaFile.exists()) || ( (downloadingMedia!=null)&&(downloadingMedia.contains(m.getDownloadUrl())) )) {
 						// check media not already in list
 						boolean add = true;
 						for (Object cm: currentMedia){
@@ -64,6 +66,9 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 							add = !((Media) cm).getFilename().equals(m.getFilename());
 						}
 						if (add){
+                            if (downloadingMedia!=null && downloadingMedia.contains(m.getDownloadUrl())){
+                                m.setDownloading(true);
+                            }
 							payload.addResponseData(m);
 							payload.setResult(true);
 						}
