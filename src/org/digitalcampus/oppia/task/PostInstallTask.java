@@ -49,18 +49,18 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 		// copy over any courses not already installed
 		try {
 			directory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_COURSES_DIR);
-			for (int index = 0; index < directory.length; index++)  {   
-		       if (directory[index].toString().endsWith(".zip")){
-		    	   FileOutputStream f = new FileOutputStream(new File(FileUtils.getDownloadPath(ctx),directory[index].toString()));
-		    	   InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_COURSES_DIR + File.separator + directory[index].toString());
-		    	   byte[] buffer = new byte[1024];
-		            int len = 0;
-		            while ((len = is.read(buffer)) > 0) {
-		                f.write(buffer, 0, len);
-		            }
-		            f.close();
-		       }
-		    }
+            for (String file : directory) {
+                if (file.endsWith(".zip")) {
+                    FileOutputStream f = new FileOutputStream(new File(FileUtils.getDownloadPath(ctx), file));
+                    InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_COURSES_DIR + File.separator + file);
+                    byte[] buffer = new byte[1024];
+                    int len = 0;
+                    while ((len = is.read(buffer)) > 0) {
+                        f.write(buffer, 0, len);
+                    }
+                    f.close();
+                }
+            }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}   
@@ -68,18 +68,18 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 	    // copy over any media not already installed
 		try {
 			directory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_MEDIA_DIR);
-			for (int index = 0; index < directory.length; index++)  {   
-		       if (!directory[index].toString().endsWith(".txt")){
-		    	   FileOutputStream f = new FileOutputStream(new File(FileUtils.getMediaPath(ctx),directory[index].toString()));
-		    	   InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_MEDIA_DIR + File.separator + directory[index].toString());
-		    	   byte[] buffer = new byte[1024];
-		            int len = 0;
-		            while ((len = is.read(buffer)) > 0) {
-		                f.write(buffer, 0, len);
-		            }
-		            f.close();
-		       }
-		    }
+            for (String file : directory) {
+                if (!file.endsWith(".txt")) {
+                    FileOutputStream f = new FileOutputStream(new File(FileUtils.getMediaPath(ctx), file));
+                    InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_MEDIA_DIR + File.separator + file);
+                    byte[] buffer = new byte[1024];
+                    int len = 0;
+                    while ((len = is.read(buffer)) > 0) {
+                        f.write(buffer, 0, len);
+                    }
+                    f.close();
+                }
+            }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

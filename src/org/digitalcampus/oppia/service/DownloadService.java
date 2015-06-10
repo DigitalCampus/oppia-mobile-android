@@ -207,8 +207,8 @@ public class DownloadService extends IntentService {
                 byte[] digest = mDigest.digest();
                 String resultMD5 = "";
 
-                for (int i=0; i < digest.length; i++) {
-                    resultMD5 += Integer.toString( ( digest[i] & 0xff ) + 0x100, 16).substring( 1 );
+                for (byte aDigest : digest) {
+                    resultMD5 += Integer.toString((aDigest & 0xff) + 0x100, 16).substring(1);
                 }
                 if(!resultMD5.contains(fileDigest)){
                     this.deleteFile(downloadedFile);
@@ -276,11 +276,8 @@ public class DownloadService extends IntentService {
         return (tasksCancelled != null) && (tasksCancelled.contains(fileUrl));
     }
 
-    private boolean removeCancelled(String fileUrl){
-        if (tasksCancelled != null){
-            return tasksCancelled.remove(fileUrl);
-        }
-        return false;
+    private boolean removeCancelled(String fileUrl) {
+        return tasksCancelled != null && tasksCancelled.remove(fileUrl);
     }
 
     private void addDownloadingTask(String fileUrl){

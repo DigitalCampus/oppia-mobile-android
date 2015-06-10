@@ -207,31 +207,26 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	protected void upgradeV49(){
 		
 		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		if (location != ""){
-			return;
-		}  
+		if ((location == null) || !location.equals("")){ return; }
 		
 		String source = Environment.getExternalStorageDirectory() + File.separator + FileUtils.APP_ROOT_DIR_NAME  + File.separator;
     	
     	File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
     	if(dirs.length > 0){
-	    	
-		
+
 	    	String destination = dirs[dirs.length-1].getAbsolutePath();
 	    	File downloadSource = new File(source + FileUtils.APP_DOWNLOAD_DIR_NAME);
 			File mediaSource = new File(source +  FileUtils.APP_MEDIA_DIR_NAME);
 			File courseSource = new File(source +  FileUtils.APP_COURSES_DIR_NAME);
-			
-			boolean success = true;
-			publishProgress(this.ctx.getString(R.string.upgradev49_1,""));
+
+            publishProgress(this.ctx.getString(R.string.upgradev49_1,""));
 	    	try {
 				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME ));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME );
 				e.printStackTrace();
-				success = false;
-			}
+            }
 			
 			try {
 				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME ));
@@ -239,8 +234,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				// TODO Auto-generated catch block
 				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME );
 				e.printStackTrace();
-				success = false;
-			}
+            }
 			
 			try {
 				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_COURSES_DIR_NAME ));
@@ -248,10 +242,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				// TODO Auto-generated catch block
 				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_COURSES_DIR_NAME );
 				e.printStackTrace();
-				success = false;
-			}
-			
-			
+            }
+
 			// now copy over 
 			try {
 				
@@ -261,8 +253,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				// TODO Auto-generated catch block
 				Log.d(TAG,"failed");
 				e.printStackTrace();
-				success = false;
-			}
+            }
 
 			try {
 				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(mediaSource,new File(destination),true);
@@ -271,8 +262,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				// TODO Auto-generated catch block
 				Log.d(TAG,"failed");
 				e.printStackTrace();
-				success = false;
-			}
+            }
 			
 			try {
 				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(courseSource,new File(destination),true);
@@ -282,8 +272,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				// TODO Auto-generated catch block
 				Log.d(TAG,"failed");
 				e.printStackTrace();
-				success = false;
-			}
+            }
 			
 			Editor editor = prefs.edit();
 			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, destination);

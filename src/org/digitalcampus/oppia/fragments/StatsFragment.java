@@ -47,8 +47,7 @@ public class StatsFragment extends Fragment implements TrackerServiceListener {
 	private long userId;
 	
 	public static StatsFragment newInstance() {
-		StatsFragment myFragment = new StatsFragment();
-	    return myFragment;
+        return new StatsFragment();
 	}
 
 	public StatsFragment(){

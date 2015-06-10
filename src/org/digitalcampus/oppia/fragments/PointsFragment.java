@@ -47,8 +47,7 @@ public class PointsFragment extends Fragment implements APIRequestListener {
 	private JSONObject json;
 	
 	public static PointsFragment newInstance() {
-		PointsFragment myFragment = new PointsFragment();
-	    return myFragment;
+        return new PointsFragment();
 	}
 
 	public PointsFragment(){

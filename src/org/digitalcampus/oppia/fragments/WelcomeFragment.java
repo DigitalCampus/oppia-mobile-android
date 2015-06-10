@@ -31,12 +31,9 @@ import android.widget.LinearLayout.LayoutParams;
 public class WelcomeFragment extends Fragment {
 
 	public static final String TAG = WelcomeFragment.class.getSimpleName();
-	private Button loginButton;
-	private Button registerButton;
 
-	public static WelcomeFragment newInstance() {
-		WelcomeFragment myFragment = new WelcomeFragment();
-		return myFragment;
+    public static WelcomeFragment newInstance() {
+        return new WelcomeFragment();
 	}
 
 	public WelcomeFragment() {
@@ -59,23 +56,23 @@ public class WelcomeFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		loginButton = (Button) super.getActivity().findViewById(R.id.welcome_login);
-		registerButton = (Button) super.getActivity().findViewById(R.id.welcome_register);
+        Button loginButton = (Button) super.getActivity().findViewById(R.id.welcome_login);
+        Button registerButton = (Button) super.getActivity().findViewById(R.id.welcome_register);
 
 		loginButton.setOnClickListener(new View.OnClickListener() {
 
-			public void onClick(View v) {
-				WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
-				wa.switchTab(1);
-			}
-		});
+            public void onClick(View v) {
+                WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
+                wa.switchTab(1);
+            }
+        });
 		
 		registerButton.setOnClickListener(new View.OnClickListener() {
 
-			public void onClick(View v) {
-				WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
-				wa.switchTab(2);
-			}
-		});
+            public void onClick(View v) {
+                WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
+                wa.switchTab(2);
+            }
+        });
 	}
 }

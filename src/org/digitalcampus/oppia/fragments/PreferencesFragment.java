@@ -6,9 +6,7 @@ import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
@@ -84,7 +82,7 @@ public class PreferencesFragment extends PreferenceFragment {
                     entryValues.add(storageLoc.path);
                     writableLocations++;
 
-                    if (currentLocation.startsWith(storageLoc.path)){
+                    if ((currentLocation != null) && currentLocation.startsWith(storageLoc.path)){
                         currentPath = storageLoc.path;
                     }
                 }

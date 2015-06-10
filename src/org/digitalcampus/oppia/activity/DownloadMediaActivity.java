@@ -27,14 +27,11 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadMediaListAdapter;
-import org.digitalcampus.oppia.listener.DownloadCompleteListener;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadBroadcastReceiver;
 import org.digitalcampus.oppia.service.DownloadService;
-import org.digitalcampus.oppia.task.DownloadTasksController;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
@@ -62,8 +59,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     private SharedPreferences prefs;
     private ArrayList<Media> missingMedia;
 	private DownloadMediaListAdapter dmla;
-
-    private DownloadTasksController tasksController;
     private DownloadBroadcastReceiver receiver;
 	
 	@SuppressWarnings("unchecked")
