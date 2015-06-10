@@ -170,11 +170,9 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
             int defaultActivityDrawable = activity.getDefaultResourceImage();
             if (activity.hasCustomImage()){
                 String image = activity.getImageFilePath(courseLocation);
-                Picasso.with(ctx).load(new File(image))
-                        .placeholder(defaultActivityDrawable)
-                        .into(viewHolder.activityImage);
+                Picasso.with(ctx).load(new File(image)).into(viewHolder.activityImage);
             }
-            else{
+            else {
                 viewHolder.activityImage.setImageResource(defaultActivityDrawable);
             }
 
