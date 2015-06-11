@@ -18,9 +18,21 @@
 package org.digitalcampus.oppia.service;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -28,6 +40,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import java.io.File;
@@ -42,6 +55,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadService extends IntentService {
 
@@ -64,6 +78,8 @@ public class DownloadService extends IntentService {
     private SharedPreferences prefs;
 
     private static DownloadService currentInstance;
+    private BroadcastReceiver alternativeNotifier;
+
 
     private static void setInstance(DownloadService instance){
         currentInstance = instance;
@@ -86,6 +102,44 @@ public class DownloadService extends IntentService {
         super.onCreate();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         DownloadService.setInstance(this);
+
+        alternativeNotifier = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (!intent.hasExtra(DownloadService.SERVICE_URL) || !intent.hasExtra(DownloadService.SERVICE_ACTION)){
+                    //If the file URL and the action are not present, we can't identify it
+                    return;
+                }
+                String fileUrl = intent.getStringExtra(DownloadService.SERVICE_URL);
+                String action = intent.getStringExtra(DownloadService.SERVICE_ACTION);
+                DownloadService.this.notifyDownloads(action, fileUrl);
+            }
+        };
+
+        //We register the alternative notifier for sending notifications when no other BroadcasReceiver is set
+        IntentFilter broadcastFilter = new IntentFilter(DownloadService.BROADCAST_ACTION);
+        broadcastFilter.setPriority(IntentFilter.SYSTEM_LOW_PRIORITY);
+        registerReceiver(alternativeNotifier, broadcastFilter);
+
+    }
+
+    private void notifyDownloads(String action, String fileUrl) {
+        //If there are no more pending downloads after the completion of this one, send a Notification
+        if (action.equals(ACTION_COMPLETE) && (tasksDownloading==null || tasksDownloading.size() == 0)){
+            Log.d(TAG, "Sending notification from Service for the completion of all pending media downloads");
+
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
+            Notification notification  = new NotificationCompat.Builder(this)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText(getString(R.string.notification_media_subject))
+                    .setSmallIcon(R.drawable.dc_logo)
+                    .setContentIntent(contentIntent)
+                    .setAutoCancel(true).build();
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.notify(0, notification);
+        }
+
     }
 
     @Override
@@ -138,6 +192,7 @@ public class DownloadService extends IntentService {
     public void onDestroy(){
         super.onDestroy();
         DownloadService.setInstance(null);
+        unregisterReceiver(alternativeNotifier);
     }
 
     private void downloadFile(String fileUrl, String filename, String fileDigest){
@@ -260,7 +315,8 @@ public class DownloadService extends IntentService {
         }
         // Broadcasts the Intent to receivers in this app.
         Log.d(TAG, fileUrl + "=" + result + ":" + message);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+        sendOrderedBroadcast(localIntent, null);
+
     }
 
     private void addCancelledTask(String fileUrl){

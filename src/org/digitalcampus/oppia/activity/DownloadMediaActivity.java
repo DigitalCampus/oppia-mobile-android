@@ -44,7 +44,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -106,13 +105,14 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         receiver = new DownloadBroadcastReceiver();
         receiver.setMediaListener(this);
         IntentFilter broadcastFilter = new IntentFilter(DownloadService.BROADCAST_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, broadcastFilter);
+        broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        registerReceiver(receiver, broadcastFilter);
 	}
 
     @Override
     public void onPause(){
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        unregisterReceiver(receiver);
     }
 
     @SuppressWarnings("unchecked")

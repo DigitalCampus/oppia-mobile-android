@@ -52,6 +52,8 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
                 mediaListener.onDownloadProgress(fileUrl, progress);
             }
         }
+
+        abortBroadcast();
     }
 
     public void setMediaListener(DownloadMediaListener listener){
