@@ -98,7 +98,7 @@ public class ResetFragment extends Fragment implements SubmitListener{
 
 	public void onResetClick(View view) {
 		// get form fields
-		String username = (String) usernameField.getText().toString();
+		String username = usernameField.getText().toString();
 
 		
 		// do validation

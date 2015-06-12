@@ -9,9 +9,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -92,6 +90,11 @@
             android:icon="@drawable/dc_logo"
             android:label="@string/service_tracker" >
         </service>
+
+        <service
+            android:name="org.digitalcampus.oppia.service.DownloadService"
+            android:icon="@drawable/dc_logo"
+            android:exported="false"/>
         
 		<receiver android:name="org.digitalcampus.oppia.service.TrackerScheduleReceiver" >
             <intent-filter>                

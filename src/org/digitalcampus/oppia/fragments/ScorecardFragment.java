@@ -45,12 +45,9 @@ public class ScorecardFragment extends Fragment{
 	private SharedPreferences prefs;
 	private Course course = null;
     private boolean firstTimeOpened = true;
-    
-    private ScorecardListAdapter scorecardListAdapter;
-	
+
     public static ScorecardFragment newInstance() {
-		ScorecardFragment myFragment = new ScorecardFragment();
-	    return myFragment;
+        return new ScorecardFragment();
 	}
     
 	public static ScorecardFragment newInstance(Course course) {
@@ -68,7 +65,7 @@ public class ScorecardFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = null;
+		View vv;
 		if( getArguments() != null && getArguments().containsKey(Course.TAG)){
 			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecard, null);
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -107,7 +104,7 @@ public class ScorecardFragment extends Fragment{
 			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 			ArrayList<Course> courses = db.getCourses(userId);
 			DatabaseManager.getInstance().closeDatabase();
-			scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
+            ScorecardListAdapter scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
 			ListView listView = (ListView) super.getActivity().findViewById(R.id.scorecards_list);
 			listView.setAdapter(scorecardListAdapter);
 		}

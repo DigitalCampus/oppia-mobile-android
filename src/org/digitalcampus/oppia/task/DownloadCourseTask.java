@@ -112,8 +112,7 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
                 byte[] buffer = new byte[1024];
                 int len1 = 0;
                 long total = 0;
-                int lastProgress = 0;
-                int progress = 0;
+                int progress, lastProgress = 0;
                 while ((len1 = in.read(buffer)) > 0) {
                     total += len1;
                     progress = (int)((total*100)/fileLength);

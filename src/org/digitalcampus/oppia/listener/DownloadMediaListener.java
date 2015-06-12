@@ -21,7 +21,8 @@ import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.Payload;
 
 public interface DownloadMediaListener {
-	
-    void downloadProgressUpdate(DownloadProgress msg);
-    void downloadComplete(Payload response);
+
+    void onDownloadProgress(String fileUrl, int progress);
+    void onDownloadFailed(String fileUrl, String message);
+    void onDownloadComplete(String fileUrl);
 }

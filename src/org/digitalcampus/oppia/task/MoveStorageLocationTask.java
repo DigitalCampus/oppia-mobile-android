@@ -40,9 +40,9 @@ public class MoveStorageLocationTask extends AsyncTask<Payload, Object, Payload>
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
-		File downloadSource = new File((String) payload.getData().get(SOURCE) + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME);
-		File mediaSource = new File((String) payload.getData().get(SOURCE) + File.separator + FileUtils.APP_MEDIA_DIR_NAME);
-		File courseSource = new File((String) payload.getData().get(SOURCE) + File.separator + FileUtils.APP_COURSES_DIR_NAME);
+		File downloadSource = new File(payload.getData().get(SOURCE) + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME);
+		File mediaSource = new File(payload.getData().get(SOURCE) + File.separator + FileUtils.APP_MEDIA_DIR_NAME);
+		File courseSource = new File(payload.getData().get(SOURCE) + File.separator + FileUtils.APP_COURSES_DIR_NAME);
 		File destination = new File((String) payload.getData().get(DESTINATION));
 		
 		Log.d(TAG,"Task source: " + downloadSource);

@@ -29,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -91,9 +90,17 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
                     onClickListener.onClick((Integer) v.getTag());
             }
         });
+
         if (m.isDownloading()){
             viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_cancel);
             viewHolder.downloadProgress.setVisibility(View.VISIBLE);
+            if (m.getProgress()>0){
+                viewHolder.downloadProgress.setIndeterminate(false);
+                viewHolder.downloadProgress.setProgress(m.getProgress());
+            }
+            else {
+                viewHolder.downloadProgress.setIndeterminate(true);
+            }
         }
         else{
             viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_download);

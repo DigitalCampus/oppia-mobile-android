@@ -20,10 +20,7 @@ package org.digitalcampus.oppia.model;
 import java.io.Serializable;
 
 public class Media implements Serializable{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -7381597814535579028L;
 	
 	public static final String TAG = Media.class.getSimpleName();
@@ -32,12 +29,6 @@ public class Media implements Serializable{
 	private String digest;
 	private int length;
 	private double fileSize;
-
-	private boolean downloading;
-
-	public void setDownloading(boolean downloading) {
-		this.downloading = downloading;
-	}
 
 	private int downloaded;
 	
@@ -81,13 +72,23 @@ public class Media implements Serializable{
 		this.fileSize = fileSize;
 	}
 
-	public boolean isDownloading() {
-		return downloading;
-	}
-
 	public int getDownloaded() {
 		return downloaded;
 	}
 
+
+    //ONLY FOR UI PURPOSES
+    private boolean downloading;
+    private int progress;
+
+    public boolean isDownloading() {
+        return downloading;
+    }
+    public void setDownloading(boolean downloading) {
+        this.downloading = downloading;
+    }
+
+    public int getProgress() { return progress; }
+    public void setProgress(int progress) { this.progress = progress; }
 }
 
