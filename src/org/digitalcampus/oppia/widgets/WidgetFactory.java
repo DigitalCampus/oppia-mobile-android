@@ -57,7 +57,7 @@ public abstract class WidgetFactory extends Fragment {
 		this.isBaseline = isBaseline;
 	}
 	
-	public void setStartTime(long startTime){
+	protected void setStartTime(long startTime){
 		this.startTime = (startTime != 0) ? startTime : (System.currentTimeMillis()/1000);
         currentTimeAccounted = false;
 	}
@@ -73,7 +73,17 @@ public abstract class WidgetFactory extends Fragment {
         long spent = now - start;
         spentTime += spent;
         currentTimeAccounted = true;
+    }
 
+    public void resetTimeTracking(){
+        spentTime = 0;
+        startTime = System.currentTimeMillis() / 1000;
+        currentTimeAccounted = false;
+    }
+
+    public void resumeTimeTracking(){
+        startTime = System.currentTimeMillis() / 1000;
+        currentTimeAccounted = false;
     }
 
     public void pauseTimeTracking(){

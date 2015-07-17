@@ -156,7 +156,7 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
     public void onResume(){
         super.onResume();
         WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
-        currentWidget.setStartTime(System.currentTimeMillis()/1000);
+        currentWidget.resumeTimeTracking();
     }
 	
 	@Override
@@ -302,7 +302,8 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 		this.currentActivityNo = tabSelected;
 		this.stopReading();
         //apAdapter.getItem(tabSelected).onResume();
-		((WidgetFactory) apAdapter.getItem(currentActivityNo)).setStartTime(System.currentTimeMillis() / 1000);
+        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+        currentWidget.resetTimeTracking();
 	}
 
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
