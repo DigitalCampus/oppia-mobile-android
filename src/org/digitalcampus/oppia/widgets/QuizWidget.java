@@ -60,9 +60,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -208,7 +205,7 @@ public class QuizWidget extends WidgetFactory {
     }
 
 	public void showQuestion() {
-		QuizQuestion q = null;
+		QuizQuestion q;
 		try {
 			q = this.quiz.getCurrentQuestion();
 		} catch (InvalidQuizException e) {
@@ -291,7 +288,7 @@ public class QuizWidget extends WidgetFactory {
 			public void onClick(View v) {
 				// save answer
 				if (saveAnswer()) {
-					String feedback = "";
+					String feedback;
 					try {
 						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 					
@@ -376,9 +373,9 @@ public class QuizWidget extends WidgetFactory {
 			public void onClick(DialogInterface arg0, int arg1) {
 				if (QuizWidget.this.quiz.hasNext()) {
 					QuizWidget.this.quiz.moveNext();
-					showQuestion();
+					QuizWidget.this.showQuestion();
 				} else {
-					showResults();
+					QuizWidget.this.showResults();
 				}
 			}
 		});
@@ -497,16 +494,12 @@ public class QuizWidget extends WidgetFactory {
 			passThreshold = Quiz.QUIZ_DEFAULT_PASS_THRESHOLD;
 		}
 		Log.d(TAG, "Percent:" + this.getPercent() );
-		if (isOnResultsPage && this.getPercent() >= passThreshold) {
-			return true;
-		} else {
-			return false;
-		}
+        return (isOnResultsPage && this.getPercent() >= passThreshold);
 	}
 
 	@Override
 	public void saveTracker() {
-		long timetaken = System.currentTimeMillis() / 1000 - this.getStartTime();
+		long timetaken = this.getSpentTime();
 		Tracker t = new Tracker(super.getActivity());
 		JSONObject obj = new JSONObject();
 		if(!isOnResultsPage){

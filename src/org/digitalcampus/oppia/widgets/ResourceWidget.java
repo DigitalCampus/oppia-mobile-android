@@ -226,7 +226,7 @@ public class ResourceWidget extends WidgetFactory {
 	
 	@Override
 	public void saveTracker(){
-		long timetaken = System.currentTimeMillis()/1000 - this.getStartTime();
+		long timetaken = this.getSpentTime();
 		if (timetaken < MobileLearning.RESOURCE_READ_TIME) {
 			return;
 		}

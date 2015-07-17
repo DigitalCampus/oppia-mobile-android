@@ -147,9 +147,17 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 		if (myTTS != null) {
 			myTTS.shutdown();
 			myTTS = null;
-		}	
-		((WidgetFactory) apAdapter.getItem(currentActivityNo)).saveTracker();
+		}
+        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+        currentWidget.pauseTimeTracking();
+        currentWidget.saveTracker();
 	}
+
+    public void onResume(){
+        super.onResume();
+        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+        currentWidget.setStartTime(System.currentTimeMillis()/1000);
+    }
 	
 	@Override
 	protected void onDestroy() {
@@ -296,10 +304,6 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
         //apAdapter.getItem(tabSelected).onResume();
 		((WidgetFactory) apAdapter.getItem(currentActivityNo)).setStartTime(System.currentTimeMillis() / 1000);
 	}
-
-    public void onResume(){
-        super.onResume();
-    }
 
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		((WidgetFactory) apAdapter.getItem(currentActivityNo)).saveTracker();

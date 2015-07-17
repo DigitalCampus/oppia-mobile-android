@@ -118,7 +118,7 @@ public class UrlWidget extends WidgetFactory {
 
 	@Override
 	public void saveTracker(){
-		long timetaken = System.currentTimeMillis()/1000 - this.getStartTime();
+		long timetaken = this.getSpentTime();
 		if (timetaken < MobileLearning.URL_READ_TIME) {
 			return;
 		}
