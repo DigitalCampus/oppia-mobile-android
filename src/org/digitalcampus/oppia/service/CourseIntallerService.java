@@ -13,9 +13,17 @@ import com.splunk.mint.Mint;
 import org.apache.http.params.CoreProtocolPNames;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +37,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class CourseIntallerService extends IntentService {
@@ -110,8 +119,118 @@ public class CourseIntallerService extends IntentService {
         }
 
         boolean success = downloadCourseFile(fileUrl, shortname, versionID);
-        if (success){ installPendingDownloaded(); }
+        if (success){ installDownloadedCourse(fileUrl, shortname, versionID); }
 
+    }
+
+    private void installDownloadedCourse(String fileUrl, String shortname, String versionID) {
+        File tempdir = new File(FileUtils.getStorageLocationRoot(this) + "temp/");
+        String filename = getLocalFilename(shortname, versionID);
+        File zipFile = new File(FileUtils.getDownloadPath(this), filename);
+        tempdir.mkdirs();
+
+        sendBroadcast(fileUrl, ACTION_INSTALL, ""+1);
+        boolean unzipResult = FileUtils.unzipFiles(FileUtils.getDownloadPath(this), filename, tempdir.getAbsolutePath());
+
+        if (!unzipResult){
+            //then was invalid zip file and should be removed
+            FileUtils.cleanUp(tempdir, FileUtils.getDownloadPath(this) + filename);
+            sendBroadcast(fileUrl, ACTION_FAILED, "" + this.getString(R.string.error_installing_course, shortname));
+            removeDownloading(fileUrl);
+            return;
+        }
+        String[] courseDirs = tempdir.list(); // use this to get the course name
+
+        sendBroadcast(fileUrl, ACTION_INSTALL, "" + 10);
+
+        String courseXMLPath = "";
+        String courseScheduleXMLPath = "";
+        String courseTrackerXMLPath = "";
+        // check that it's unzipped etc correctly
+        try {
+            courseXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_XML;
+            courseScheduleXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
+            courseTrackerXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_TRACKER_XML;
+        } catch (ArrayIndexOutOfBoundsException aioobe){
+            FileUtils.cleanUp(tempdir, FileUtils.getDownloadPath(this) + filename);
+            logAndNotifyError(fileUrl, aioobe);
+            return;
+        }
+
+        // check a module.xml file exists and is a readable XML file
+        CourseXMLReader cxr;
+        CourseScheduleXMLReader csxr;
+        CourseTrackerXMLReader ctxr;
+        try {
+            cxr = new CourseXMLReader(courseXMLPath, 0, this);
+            csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
+            ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+        } catch (InvalidXMLException e) {
+            logAndNotifyError(fileUrl, e);
+            return;
+        }
+
+        Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+        c.setVersionId(cxr.getVersionId());
+        c.setTitles(cxr.getTitles());
+        c.setShortname(courseDirs[0]);
+        c.setImageFile(cxr.getCourseImage());
+        c.setLangs(cxr.getLangs());
+        c.setDescriptions(cxr.getDescriptions());
+        c.setPriority(cxr.getPriority());
+        String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+
+        sendBroadcast(fileUrl, ACTION_INSTALL, ""+20);
+
+        boolean success = false;
+
+        DbHelper db = new DbHelper(this);
+        long added = db.addOrUpdateCourse(c);
+        if (added != -1) {
+            File src = new File(tempdir + File.separator + courseDirs[0]);
+            File dest = new File(FileUtils.getCoursesPath(this));
+
+            db.insertActivities(cxr.getActivities(added));
+            sendBroadcast(fileUrl, ACTION_INSTALL, "" + 50);
+
+            db.insertTrackers(ctxr.getTrackers(), added);
+            sendBroadcast(fileUrl, ACTION_INSTALL, "" + 70);
+
+            // Delete old course
+            File oldCourse = new File(FileUtils.getCoursesPath(this) + courseDirs[0]);
+            FileUtils.deleteDir(oldCourse);
+
+            // move from temp to courses dir
+            success = src.renameTo(new File(dest, src.getName()));
+
+            if (!success) {
+                sendBroadcast(fileUrl, ACTION_FAILED, "" + this.getString(R.string.error_installing_course, title));
+                removeDownloading(fileUrl);
+                return;
+            }
+        }  else {
+            sendBroadcast(fileUrl, ACTION_FAILED, "" + this.getString(R.string.error_latest_already_installed, title));
+            removeDownloading(fileUrl);
+        }
+        // add schedule
+        // put this here so even if the course content isn't updated the schedule will be
+        db.insertSchedule(csxr.getSchedule());
+        db.updateScheduleVersion(added, csxr.getScheduleVersion());
+        DatabaseManager.getInstance().closeDatabase();
+
+        sendBroadcast(fileUrl, ACTION_INSTALL, "" + 80);
+        if (success){ SearchUtils.indexAddCourse(this, c); }
+
+        // delete temp directory
+        FileUtils.deleteDir(tempdir);
+        sendBroadcast(fileUrl, ACTION_INSTALL, "" + 90);
+
+        // delete zip file from download dir
+        zipFile.delete();
+
+        Log.d(TAG, fileUrl + " succesfully downloaded");
+        removeDownloading(fileUrl);
+        sendBroadcast(fileUrl, ACTION_COMPLETE, null);
     }
 
     @Override
@@ -184,7 +303,6 @@ public class CourseIntallerService extends IntentService {
     private boolean downloadCourseFile(String fileUrl, String shortname, String versionID){
 
         File downloadedFile = null;
-
         try {
 
             HTTPConnectionUtils client = new HTTPConnectionUtils(this);
@@ -217,12 +335,10 @@ public class CourseIntallerService extends IntentService {
                 return false;
             }
 
-            String localFileName = shortname+"-"+String.format("%.0f",versionID)+".zip";
+            String localFileName = getLocalFilename(shortname, versionID);
             downloadedFile = new File(FileUtils.getDownloadPath(this),localFileName);
             FileOutputStream f = new FileOutputStream(downloadedFile);
             InputStream in = connection.getInputStream();
-
-
 
             byte[] buffer = new byte[8192];
             int len1;
@@ -263,8 +379,12 @@ public class CourseIntallerService extends IntentService {
 
         Log.d(TAG, fileUrl + " succesfully downloaded");
         removeDownloading(fileUrl);
-        sendBroadcast(fileUrl, ACTION_COMPLETE, null);
+        sendBroadcast(fileUrl, ACTION_INSTALL, "0");
         return true;
+    }
+
+    private String getLocalFilename(String shortname, String versionID){
+        return shortname+"-"+String.format("%.0f",versionID)+".zip";
     }
 
     private void deleteFile(File file){
