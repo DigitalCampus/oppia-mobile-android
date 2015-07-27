@@ -34,30 +34,45 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class DownloadCourseListAdapter extends ArrayAdapter<Course>{
+public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdapter>{
 
 	public static final String TAG = DownloadCourseListAdapter.class.getSimpleName();
 
 	private final Context ctx;
-	private final ArrayList<Course> courseList;
+	private final ArrayList<CourseIntallViewAdapter> courseList;
 	private SharedPreferences prefs;
+
+    private String updateDescription;
+    private String updateSchedDescription;
+    private String installDescription;
+    private String installedDescription;
+    private String cancelDescription;
 
     private ListInnerBtnOnClickListener onClickListener;
 	
-	public DownloadCourseListAdapter(Activity context, ArrayList<Course> courseList) {
+	public DownloadCourseListAdapter(Activity context, ArrayList<CourseIntallViewAdapter> courseList) {
 		super(context, R.layout.course_download_row, courseList);
 		this.ctx = context;
 		this.courseList = courseList;
 		this.prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+        updateDescription = ctx.getString(R.string.update);
+        installDescription = ctx.getString(R.string.install);
+        installedDescription = ctx.getString(R.string.installed);
+        cancelDescription = ctx.getString(R.string.cancel);
+        updateSchedDescription = ctx.getString(R.string.update_schedule);
 	}
 
     static class DownloadCourseViewHolder{
         TextView courseTitle;
         TextView courseDraft;
         TextView courseDescription;
-        Button actionBtn;
+        ImageButton actionBtn;
+        ProgressBar actionProgress;
     }
 
 	@Override
@@ -72,14 +87,15 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course>{
             viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
             viewHolder.courseDraft = (TextView) convertView.findViewById(R.id.course_draft);
             viewHolder.courseDescription = (TextView) convertView.findViewById(R.id.course_description);
-            viewHolder.actionBtn = (Button) convertView.findViewById(R.id.download_course_btn);
+            viewHolder.actionBtn = (ImageButton) convertView.findViewById(R.id.download_course_btn);
+            viewHolder.actionProgress = (ProgressBar) convertView.findViewById(R.id.download_progress);
             convertView.setTag(viewHolder);
         }
         else{
             viewHolder = (DownloadCourseViewHolder) convertView.getTag();
         }
 
-	    Course c = courseList.get(position);
+        CourseIntallViewAdapter c = courseList.get(position);
 
         viewHolder.courseTitle.setText(c.getTitle(
                 prefs.getString(PrefsActivity.PREF_LANGUAGE,
@@ -98,21 +114,42 @@ public class DownloadCourseListAdapter extends ArrayAdapter<Course>{
             viewHolder.courseDescription.setVisibility(View.GONE);
 	    }
 
-	    if(c.isInstalled()){
-	    	if(c.isToUpdate()){
-                viewHolder.actionBtn.setText(R.string.update);
+        if (c.isDownloading() || c.isInstalling()){
+            viewHolder.actionBtn.setImageResource(R.drawable.ic_action_cancel);
+            viewHolder.actionBtn.setContentDescription(cancelDescription);
+            viewHolder.actionBtn.setEnabled(!c.isInstalling());
+
+            viewHolder.actionProgress.setVisibility(View.VISIBLE);
+            if (c.isDownloading() && (c.getProgress()>0)){
+                viewHolder.actionProgress.setIndeterminate(false);
+                viewHolder.actionProgress.setProgress(c.getProgress());
+            }
+            else {
+                viewHolder.actionProgress.setIndeterminate(true);
+            }
+        }
+	    else{
+            viewHolder.actionProgress.setVisibility(View.GONE);
+            if(c.isInstalled()){
+                if(c.isToUpdate()){
+                    viewHolder.actionBtn.setImageResource(R.drawable.ic_action_refresh);
+                    viewHolder.actionBtn.setContentDescription(updateDescription);
+                    viewHolder.actionBtn.setEnabled(true);
+                } else if (c.isToUpdateSchedule()){
+                    viewHolder.actionBtn.setImageResource(R.drawable.ic_action_refresh);
+                    viewHolder.actionBtn.setContentDescription(updateSchedDescription);
+                    viewHolder.actionBtn.setEnabled(true);
+                } else {
+                    viewHolder.actionBtn.setImageResource(R.drawable.ic_action_accept);
+                    viewHolder.actionBtn.setContentDescription(installedDescription);
+                    viewHolder.actionBtn.setEnabled(false);
+                }
+            } else {
+                viewHolder.actionBtn.setImageResource(R.drawable.ic_action_download);
+                viewHolder.actionBtn.setContentDescription(installDescription);
                 viewHolder.actionBtn.setEnabled(true);
-	    	} else if (c.isToUpdateSchedule()){
-                viewHolder.actionBtn.setText(R.string.update_schedule);
-                viewHolder.actionBtn.setEnabled(true);
-	    	} else {
-                viewHolder.actionBtn.setText(R.string.installed);
-                viewHolder.actionBtn.setEnabled(false);
-	    	}
-	    } else {
-            viewHolder.actionBtn.setText(R.string.install);
-            viewHolder.actionBtn.setEnabled(true);
-	    }
+            }
+        }
 
         viewHolder.actionBtn.setTag(position); //For passing the list item index
         viewHolder.actionBtn.setOnClickListener(new View.OnClickListener() {

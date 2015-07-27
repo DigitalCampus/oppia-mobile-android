@@ -45,7 +45,8 @@
         android:indeterminateOnly="false"
         android:progress="0"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
-        android:layout_toLeftOf="@+id/download_course_btn" />
+        android:layout_toLeftOf="@+id/download_course_btn"
+        android:visibility="gone"/>
 
     <ImageButton
         android:id="@+id/download_course_btn"

@@ -22,6 +22,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="0dp"
             android:contentDescription="@string/alt_activity_icon"
+            android:src="@drawable/default_icon_activity"
             android:background="@color/activity_icon_background"/>
 
         <TextView
