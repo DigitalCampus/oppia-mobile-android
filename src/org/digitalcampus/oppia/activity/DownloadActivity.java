@@ -182,13 +182,14 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		// process the response and display on screen in listview
 		// Create an array of courses, that will be put to our ListActivity
 
+        ArrayList<String> downloadingCourses = CourseIntallerService.getTasksDownloading();
 		DbHelper db = new DbHelper(this);
 		try {
 			this.courses.clear();
 			
 			for (int i = 0; i < (json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
-                CourseIntallViewAdapter dc = new CourseIntallViewAdapter(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+                CourseIntallViewAdapter course = new CourseIntallViewAdapter(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 				
 				ArrayList<Lang> titles = new ArrayList<Lang>();
 				JSONObject jsonTitles = json_obj.getJSONObject("title");
@@ -198,7 +199,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		            Lang l = new Lang(key,jsonTitles.getString(key));
 					titles.add(l);
 		        }
-		        dc.setTitles(titles);
+                course.setTitles(titles);
 		        
 		        ArrayList<Lang> descriptions = new ArrayList<Lang>();
 		        if (json_obj.has("description") && !json_obj.isNull("description")){
@@ -212,29 +213,32 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 					            descriptions.add(l);
 				            }
 				        }
-				        dc.setDescriptions(descriptions);
+                        course.setDescriptions(descriptions);
 		        	} catch (JSONException jsone){
 		        		//do nothing
 		        	}
 		        }
-		        
-		        dc.setShortname(json_obj.getString("shortname"));
-		        dc.setVersionId(json_obj.getDouble("version"));
-		        dc.setDownloadUrl(json_obj.getString("url"));
+
+                course.setShortname(json_obj.getString("shortname"));
+                course.setVersionId(json_obj.getDouble("version"));
+                course.setDownloadUrl(json_obj.getString("url"));
 		        try {
-		        	dc.setDraft(json_obj.getBoolean("is_draft"));
+                    course.setDraft(json_obj.getBoolean("is_draft"));
 		        }catch (JSONException je){
-		        	dc.setDraft(false);
+                    course.setDraft(false);
 		        }
-		        dc.setInstalled(db.isInstalled(dc.getShortname()));
-		        dc.setToUpdate(db.toUpdate(dc.getShortname(), dc.getVersionId()));
+                course.setInstalled(db.isInstalled(course.getShortname()));
+                course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
 				if (json_obj.has("schedule_uri")){
-					dc.setScheduleVersionID(json_obj.getDouble("schedule"));
-					dc.setScheduleURI(json_obj.getString("schedule_uri"));
-					dc.setToUpdateSchedule(db.toUpdateSchedule(dc.getShortname(), dc.getScheduleVersionID()));
+                    course.setScheduleVersionID(json_obj.getDouble("schedule"));
+                    course.setScheduleURI(json_obj.getString("schedule_uri"));
+                    course.setToUpdateSchedule(db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
 				}
-				if (!this.showUpdatesOnly || dc.isToUpdate()){
-					this.courses.add(dc);
+                if (downloadingCourses!=null && downloadingCourses.contains(course.getDownloadUrl())){
+                    course.setDownloading(true);
+                }
+				if (!this.showUpdatesOnly || course.isToUpdate()){
+					this.courses.add(course);
 				} 
 			}
             dla.notifyDataSetChanged();
@@ -367,27 +371,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 dla.notifyDataSetChanged();
             }
 
-            /*
-            if (!tasksController.isTaskInProgress()){
-                ArrayList<Object> data = new ArrayList<Object>();
-                data.add(courseSelected);
-                Payload p = new Payload(data);
-
-                if(!courseSelected.isInstalled() || courseSelected.isToUpdate()){
-                    tasksController.setTaskInProgress(true);
-                    tasksController.showDialog();
-                    DownloadCourseTask downloadTask = new DownloadCourseTask(DownloadActivity.this);
-                    downloadTask.setInstallerListener(tasksController);
-                    downloadTask.execute(p);
-                }
-                else if(courseSelected.isToUpdateSchedule()){
-                    tasksController.setTaskInProgress(true);
-                    tasksController.showDialog();
-                    ScheduleUpdateTask updateTask = new ScheduleUpdateTask(DownloadActivity.this);
-                    updateTask.setUpdateListener(tasksController);
-                    updateTask.execute(p);
-                }
-            }*/
         }
     }
 

@@ -78,6 +78,14 @@ public class CourseIntallerService extends IntentService {
     private static void setInstance(CourseIntallerService instance){
         currentInstance = instance;
     }
+    public static ArrayList<String> getTasksDownloading(){
+        if (currentInstance != null){
+            synchronized (currentInstance){
+                return currentInstance.tasksDownloading;
+            }
+        }
+        return null;
+    }
 
     public CourseIntallerService() { super(TAG); }
 
