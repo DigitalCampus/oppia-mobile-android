@@ -55,7 +55,7 @@ import java.util.Locale;
 
 public class CourseIntallerService extends IntentService {
 
-    public static final String TAG = DownloadService.class.getSimpleName();
+    public static final String TAG = CourseIntallerService.class.getSimpleName();
     public static final String BROADCAST_ACTION = "com.digitalcampus.oppia.COURSEINSTALLERSERVICE";
 
     public static final String SERVICE_ACTION = "action";
@@ -121,7 +121,7 @@ public class CourseIntallerService extends IntentService {
 
         String fileUrl = intent.getStringExtra(SERVICE_URL);
         String shortname = intent.getStringExtra(SERVICE_SHORTNAME);
-        String versionID = intent.getStringExtra(SERVICE_VERSIONID);
+        Double versionID = intent.getDoubleExtra(SERVICE_VERSIONID, 0);
 
         if (isCancelled(fileUrl)) {
             //If it was cancelled before starting, we do nothing
@@ -136,7 +136,7 @@ public class CourseIntallerService extends IntentService {
 
     }
 
-    private void installDownloadedCourse(String fileUrl, String shortname, String versionID) {
+    private void installDownloadedCourse(String fileUrl, String shortname, Double versionID) {
         File tempdir = new File(FileUtils.getStorageLocationRoot(this) + "temp/");
         String filename = getLocalFilename(shortname, versionID);
         File zipFile = new File(FileUtils.getDownloadPath(this), filename);
@@ -314,7 +314,7 @@ public class CourseIntallerService extends IntentService {
         return false;
     }
 
-    private boolean downloadCourseFile(String fileUrl, String shortname, String versionID){
+    private boolean downloadCourseFile(String fileUrl, String shortname, Double versionID){
 
         File downloadedFile = null;
         try {
@@ -397,7 +397,7 @@ public class CourseIntallerService extends IntentService {
         return true;
     }
 
-    private String getLocalFilename(String shortname, String versionID){
+    private String getLocalFilename(String shortname, Double versionID){
         return shortname+"-"+String.format("%.0f",versionID)+".zip";
     }
 
