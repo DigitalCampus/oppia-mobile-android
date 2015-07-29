@@ -32,18 +32,11 @@ import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.CourseIntallerService;
-import org.digitalcampus.oppia.service.DownloadBroadcastReceiver;
-import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.APIRequestTask;
-import org.digitalcampus.oppia.task.DownloadCourseTask;
-import org.digitalcampus.oppia.task.DownloadTasksController;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.ScheduleUpdateTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +53,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
-
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
 	
@@ -142,7 +134,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+	protected void onRestoreInstanceState(Bundle dsavedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 
 	    try {

@@ -183,9 +183,9 @@ public class CourseIntallerService extends IntentService {
 
         sendBroadcast(fileUrl, ACTION_INSTALL, "" + 10);
 
-        String courseXMLPath = "";
-        String courseScheduleXMLPath = "";
-        String courseTrackerXMLPath = "";
+        String courseXMLPath;
+        String courseScheduleXMLPath;
+        String courseTrackerXMLPath;
         // check that it's unzipped etc correctly
         try {
             courseXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_XML;
@@ -267,7 +267,7 @@ public class CourseIntallerService extends IntentService {
         sendBroadcast(fileUrl, ACTION_INSTALL, "" + 90);
 
         // delete zip file from download dir
-        zipFile.delete();
+        deleteFile(zipFile);
 
         Log.d(TAG, fileUrl + " succesfully downloaded");
         removeDownloading(fileUrl);
@@ -384,7 +384,7 @@ public class CourseIntallerService extends IntentService {
             byte[] buffer = new byte[8192];
             int len1;
             long total = 0;
-            int previousProgress = 0, progress = 0;
+            int previousProgress = 0, progress;
             while ((len1 = in.read(buffer)) > 0) {
                 //If received a cancel action while downloading, stop it
                 if (isCancelled(fileUrl)) {
@@ -441,7 +441,7 @@ public class CourseIntallerService extends IntentService {
             // read response
             InputStream content = response.getEntity().getContent();
             BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 1024);
-            String s = "";
+            String s;
             while ((s = buffer.readLine()) != null) {
                 responseStr += s;
             }
@@ -513,7 +513,8 @@ public class CourseIntallerService extends IntentService {
 
     private void deleteFile(File file){
         if ((file != null) && file.exists() && !file.isDirectory()){
-            file.delete();
+            boolean deleted = file.delete();
+            Log.d(TAG, file.getName() + (deleted? " deleted succesfully.": " deletion failed!"));
         }
     }
 }
