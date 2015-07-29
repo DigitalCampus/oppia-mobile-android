@@ -354,7 +354,16 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                     dla.notifyDataSetChanged();
                 }
                 else if(courseSelected.isToUpdateSchedule()){
+                    Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
+                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
+                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_SCHEDULEURL, courseSelected.getScheduleURI());
+                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
 
+                    DownloadActivity.this.startService(mServiceIntent);
+                    courseSelected.setDownloading(false);
+                    courseSelected.setInstalling(true);
+                    courseSelected.setProgress(0);
+                    dla.notifyDataSetChanged();
                 }
             }
             else{

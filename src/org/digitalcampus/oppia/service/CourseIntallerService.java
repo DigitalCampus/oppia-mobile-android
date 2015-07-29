@@ -26,6 +26,9 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.params.CoreProtocolPNames;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -33,6 +36,7 @@ import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
@@ -40,11 +44,17 @@ import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
+import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -63,9 +73,11 @@ public class CourseIntallerService extends IntentService {
     public static final String SERVICE_SHORTNAME = "shortname"; //field for providing Course shortname
     public static final String SERVICE_VERSIONID = "versionid"; //field for providing file URL
     public static final String SERVICE_MESSAGE = "message";
+    public static final String SERVICE_SCHEDULEURL = "scheduleurl";
 
     public static final String ACTION_CANCEL = "cancel";
     public static final String ACTION_DOWNLOAD = "download";
+    public static final String ACTION_UPDATE = "update";
     public static final String ACTION_INSTALL = "install";
     public static final String ACTION_COMPLETE = "complete";
     public static final String ACTION_FAILED = "failed";
@@ -106,7 +118,8 @@ public class CourseIntallerService extends IntentService {
                 Log.d(TAG, "CANCEL commmand received");
                 addCancelledTask(intent.getStringExtra(SERVICE_URL));
             }
-            else if (intent.getStringExtra(SERVICE_ACTION).equals(ACTION_DOWNLOAD)) {
+            else if (intent.getStringExtra(SERVICE_ACTION).equals(ACTION_DOWNLOAD) ||
+                    intent.getStringExtra(SERVICE_ACTION).equals(ACTION_UPDATE)) {
                 addDownloadingTask(intent.getStringExtra(SERVICE_URL));
             }
         }
@@ -127,20 +140,26 @@ public class CourseIntallerService extends IntentService {
             return;
         }
 
-        String fileUrl = intent.getStringExtra(SERVICE_URL);
-        String shortname = intent.getStringExtra(SERVICE_SHORTNAME);
-        Double versionID = intent.getDoubleExtra(SERVICE_VERSIONID, 0);
+        if (intent.getStringExtra(SERVICE_ACTION).equals(ACTION_DOWNLOAD)){
+            String fileUrl = intent.getStringExtra(SERVICE_URL);
+            String shortname = intent.getStringExtra(SERVICE_SHORTNAME);
+            Double versionID = intent.getDoubleExtra(SERVICE_VERSIONID, 0);
 
-        if (isCancelled(fileUrl)) {
-            //If it was cancelled before starting, we do nothing
-            Log.d(TAG, "Course " + fileUrl + " cancelled before started.");
-            removeCancelled(fileUrl);
-            removeDownloading(fileUrl);
-            return;
+            if (isCancelled(fileUrl)) {
+                //If it was cancelled before starting, we do nothing
+                Log.d(TAG, "Course " + fileUrl + " cancelled before started.");
+                removeCancelled(fileUrl);
+                removeDownloading(fileUrl);
+                return;
+            }
+            boolean success = downloadCourseFile(fileUrl, shortname, versionID);
+            if (success){ installDownloadedCourse(fileUrl, shortname, versionID); }
         }
-
-        boolean success = downloadCourseFile(fileUrl, shortname, versionID);
-        if (success){ installDownloadedCourse(fileUrl, shortname, versionID); }
+        else if (intent.getStringExtra(SERVICE_ACTION).equals(ACTION_UPDATE)){
+            String scheduleURL = intent.getStringExtra(SERVICE_SCHEDULEURL);
+            String shortname = intent.getStringExtra(SERVICE_SHORTNAME);
+            updateCourseSchedule(scheduleURL, shortname);
+        }
 
     }
 
@@ -402,6 +421,89 @@ public class CourseIntallerService extends IntentService {
         Log.d(TAG, fileUrl + " succesfully downloaded");
         removeDownloading(fileUrl);
         sendBroadcast(fileUrl, ACTION_INSTALL, "0");
+        return true;
+    }
+
+    private boolean updateCourseSchedule(String scheduleUrl, String shortname){
+        sendBroadcast(scheduleUrl, ACTION_INSTALL, "" + 0);
+
+        HTTPConnectionUtils client = new HTTPConnectionUtils(this);
+        String url = client.getFullURL(scheduleUrl);
+
+        String responseStr = "";
+        HttpGet httpGet = new HttpGet(url);
+        httpGet.addHeader(client.getAuthHeader());
+        try {
+
+            // make request
+            HttpResponse response = client.execute(httpGet);
+
+            // read response
+            InputStream content = response.getEntity().getContent();
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 1024);
+            String s = "";
+            while ((s = buffer.readLine()) != null) {
+                responseStr += s;
+            }
+
+            switch (response.getStatusLine().getStatusCode()){
+                case 400: // unauthorised
+                    sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_login));
+                    removeDownloading(scheduleUrl);
+                    return false;
+                case 200:
+
+                    JSONObject jsonObj = new JSONObject(responseStr);
+                    long scheduleVersion = jsonObj.getLong("version");
+                    DbHelper db = new DbHelper(this);
+                    JSONArray schedule = jsonObj.getJSONArray("activityschedule");
+                    ArrayList<ActivitySchedule> activitySchedule = new ArrayList<ActivitySchedule>();
+                    int lastProgress = 0;
+                    for (int i = 0; i < (schedule.length()); i++) {
+
+                        int progress = (i+1)*100/schedule.length();
+                        if ((progress - (progress%10) > lastProgress)){
+                            sendBroadcast(scheduleUrl, ACTION_INSTALL, ""+progress);
+                            lastProgress = progress;
+                        }
+
+                        JSONObject acts = (JSONObject) schedule.get(i);
+                        ActivitySchedule as = new ActivitySchedule();
+                        as.setDigest(acts.getString("digest"));
+                        DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("start_date"));
+                        DateTime edt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("end_date"));
+                        as.setStartTime(sdt);
+                        as.setEndTime(edt);
+                        activitySchedule.add(as);
+                    }
+                    int modId = db.getCourseID(shortname);
+                    db.resetSchedule(modId);
+                    db.insertSchedule(activitySchedule);
+                    db.updateScheduleVersion(modId, scheduleVersion);
+                    DatabaseManager.getInstance().closeDatabase();
+                    break;
+                default:
+                    sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
+                    removeDownloading(scheduleUrl);
+                    return false;
+            }
+
+        } catch (JSONException e) {
+            Mint.logException(e);
+            e.printStackTrace();
+            sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_processing_response));
+            removeDownloading(scheduleUrl);
+        } catch (ClientProtocolException e) {
+            sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
+            removeDownloading(scheduleUrl);
+        } catch (IOException e) {
+            sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
+            removeDownloading(scheduleUrl);
+        }
+
+        Log.d(TAG, scheduleUrl + " succesfully downloaded");
+        removeDownloading(scheduleUrl);
+        sendBroadcast(scheduleUrl, ACTION_COMPLETE, null);
         return true;
     }
 

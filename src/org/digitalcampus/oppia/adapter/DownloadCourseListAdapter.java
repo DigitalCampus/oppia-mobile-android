@@ -120,7 +120,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             viewHolder.actionBtn.setEnabled(!c.isInstalling());
 
             viewHolder.actionProgress.setVisibility(View.VISIBLE);
-            if (c.isDownloading() && (c.getProgress()>0)){
+            if (c.getProgress()>0){
                 viewHolder.actionProgress.setIndeterminate(false);
                 viewHolder.actionProgress.setProgress(c.getProgress());
             }
