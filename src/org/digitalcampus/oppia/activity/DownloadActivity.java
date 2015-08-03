@@ -134,7 +134,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void onRestoreInstanceState(Bundle dsavedInstanceState) {
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 
 	    try {
