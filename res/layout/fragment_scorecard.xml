@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <com.androidplot.pie.PieChart
             android:id="@+id/scorecardPieChart"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"/>
+            android:layout_height="180dp"
+        />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/card"
+        android:layout_margin="10dp"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:text="@string/quizzes_title"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal"
+            android:capitalize="characters"
+            android:layout_marginBottom="@dimen/padding_medium"/>
+
+        <GridView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scorecard_grid_quizzes"
+            android:numColumns="6"
+            tools:listitem="@layout/scorecard_quiz_item"
+            />
+    </LinearLayout>
 </LinearLayout>
