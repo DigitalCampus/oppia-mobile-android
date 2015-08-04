@@ -21,10 +21,12 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
 import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.utils.ScorecardPieChart;
 
 import android.content.SharedPreferences;
@@ -34,6 +36,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
@@ -45,6 +48,8 @@ public class ScorecardFragment extends Fragment{
 	private SharedPreferences prefs;
 	private Course course = null;
     private boolean firstTimeOpened = true;
+    private GridView quizzesGrid;
+    private PieChart scorecardPieChart;
 
     public static ScorecardFragment newInstance() {
         return new ScorecardFragment();
@@ -75,7 +80,11 @@ public class ScorecardFragment extends Fragment{
 			DbHelper db = new DbHelper(super.getActivity());
 			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 			this.course = db.getCourse(this.course.getCourseId(), userId);
-			DatabaseManager.getInstance().closeDatabase();	
+			DatabaseManager.getInstance().closeDatabase();
+
+            quizzesGrid = (GridView) vv.findViewById(R.id.scorecard_grid_quizzes);
+            scorecardPieChart = (PieChart) vv.findViewById(R.id.scorecardPieChart);
+
 		} else {
 			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecards, null);
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -95,10 +104,17 @@ public class ScorecardFragment extends Fragment{
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 
 		if(this.course != null){
-			PieChart pie = (PieChart) super.getActivity().findViewById(R.id.scorecardPieChart);
-			ScorecardPieChart spc = new ScorecardPieChart(super.getActivity(), pie, this.course);
-			spc.drawChart(50, true, firstTimeOpened);
+
+			ScorecardPieChart spc = new ScorecardPieChart(super.getActivity(), scorecardPieChart, this.course);
+            spc.drawChart(50, true, firstTimeOpened);
             firstTimeOpened = false;
+
+            ArrayList<QuizStats> quizzes = new ArrayList<QuizStats>();
+            CourseQuizzesGridAdapter adapter = new CourseQuizzesGridAdapter(getActivity(), quizzes);
+            quizzesGrid.setAdapter(adapter);
+
+            adapter.notifyDataSetChanged();
+
 		} else {
 			DbHelper db = new DbHelper(super.getActivity());
 			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
@@ -107,6 +123,8 @@ public class ScorecardFragment extends Fragment{
             ScorecardListAdapter scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
 			ListView listView = (ListView) super.getActivity().findViewById(R.id.scorecards_list);
 			listView.setAdapter(scorecardListAdapter);
+
+
 		}
 	}
 
