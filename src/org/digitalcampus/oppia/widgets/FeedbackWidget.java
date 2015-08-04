@@ -299,7 +299,7 @@ public class FeedbackWidget extends WidgetFactory {
 
 	@Override
 	public void saveTracker() {
-		long timetaken = System.currentTimeMillis() / 1000 - this.getStartTime();
+		long timetaken = this.getSpentTime();
 		Tracker t = new Tracker(super.getActivity());
 		JSONObject obj = new JSONObject();
 		if(!isOnResultsPage){

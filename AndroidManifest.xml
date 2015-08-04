@@ -95,6 +95,11 @@
             android:name="org.digitalcampus.oppia.service.DownloadService"
             android:icon="@drawable/dc_logo"
             android:exported="false"/>
+
+        <service
+            android:name="org.digitalcampus.oppia.service.CourseIntallerService"
+            android:icon="@drawable/dc_logo"
+            android:exported="false"/>
         
 		<receiver android:name="org.digitalcampus.oppia.service.TrackerScheduleReceiver" >
             <intent-filter>                

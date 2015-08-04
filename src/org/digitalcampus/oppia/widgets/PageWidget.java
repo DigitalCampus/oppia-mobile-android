@@ -214,7 +214,7 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	public void saveTracker() {
-		long timetaken = System.currentTimeMillis() / 1000 - this.getStartTime();
+		long timetaken = this.getSpentTime();
 		// only save tracker if over the time
 		if (timetaken < MobileLearning.PAGE_READ_TIME) {
 			return;

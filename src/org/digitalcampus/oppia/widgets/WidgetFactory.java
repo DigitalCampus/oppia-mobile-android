@@ -32,8 +32,11 @@ public abstract class WidgetFactory extends Fragment {
 	protected Course course = null;
 	protected SharedPreferences prefs;
 	protected boolean isBaseline = false;
-	protected long startTime = System.currentTimeMillis()/1000;
-	protected boolean readAloud = false;
+    protected boolean readAloud = false;
+
+	protected long startTime = 0;
+    protected long spentTime = 0;
+	protected boolean currentTimeAccounted = false;
 	
 	protected abstract boolean getActivityCompleted();
 	public abstract void saveTracker();
@@ -49,16 +52,48 @@ public abstract class WidgetFactory extends Fragment {
 	protected String getDigest() {
 		return activity.getDigest();
 	}
-	
+
 	public void setIsBaseline(boolean isBaseline) {
 		this.isBaseline = isBaseline;
 	}
 	
-	public void setStartTime(long startTime){
-		this.startTime = System.currentTimeMillis()/1000;
+	protected void setStartTime(long startTime){
+		this.startTime = (startTime != 0) ? startTime : (System.currentTimeMillis()/1000);
+        currentTimeAccounted = false;
 	}
 	
 	public long getStartTime(){
-		return this.startTime;
+		return (startTime != 0) ? startTime : (System.currentTimeMillis()/1000);
 	}
+
+    private void addSpentTime(){
+        long start = getStartTime();
+        long now = System.currentTimeMillis()/1000;
+
+        long spent = now - start;
+        spentTime += spent;
+        currentTimeAccounted = true;
+    }
+
+    public void resetTimeTracking(){
+        spentTime = 0;
+        startTime = System.currentTimeMillis() / 1000;
+        currentTimeAccounted = false;
+    }
+
+    public void resumeTimeTracking(){
+        startTime = System.currentTimeMillis() / 1000;
+        currentTimeAccounted = false;
+    }
+
+    public void pauseTimeTracking(){
+        addSpentTime();
+    }
+
+    public long getSpentTime(){
+        if (!currentTimeAccounted){
+            addSpentTime();
+        }
+        return this.spentTime;
+    }
 }

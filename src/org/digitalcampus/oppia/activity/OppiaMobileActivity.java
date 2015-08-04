@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -48,11 +49,14 @@ import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.service.CourseIntallerService;
+import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
@@ -62,7 +66,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
-public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener, DeleteCourseListener {
+public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener, DeleteCourseListener, CourseInstallerListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
@@ -78,6 +82,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
     private ListView courseList;
 
     private ProgressDialog progressDialog;
+    private InstallerBroadcastReceiver receiver;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -134,11 +139,18 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	public void onResume(){
 		super.onResume();
 		this.updateReminders();
+
+        receiver = new InstallerBroadcastReceiver();
+        receiver.setCourseInstallerListener(this);
+        IntentFilter broadcastFilter = new IntentFilter(CourseIntallerService.BROADCAST_ACTION);
+        broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        registerReceiver(receiver, broadcastFilter);
 	}
 	
 	@Override
 	public void onPause(){
-		super.onPause();
+        super.onPause();
+        unregisterReceiver(receiver);
 	}
 	
 	private void displayCourses(long userId) {
@@ -464,6 +476,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		}
 	}
 
+    @Override
     public void onCourseDeletionComplete(Payload response) {
         if (response.isResult()){
             Editor e = prefs.edit();
@@ -475,4 +488,15 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         }
         displayCourses(userId);
     }
+
+    
+    /* CourseInstallerListener implementation */
+    @Override
+    public void onInstallComplete(String fileUrl) {
+        Toast.makeText(this, this.getString(R.string.install_complete), Toast.LENGTH_LONG).show();
+        displayCourses(userId);
+    }
+    public void onDownloadProgress(String fileUrl, int progress) {}
+    public void onInstallProgress(String fileUrl, int progress) {}
+    public void onInstallFailed(String fileUrl, String message) {}
 }

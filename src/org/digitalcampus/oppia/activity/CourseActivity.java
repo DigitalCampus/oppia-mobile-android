@@ -105,7 +105,7 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 			actionBar.setHomeButtonEnabled(true);
 			
 		}
-		
+        loadActivities();
 	}
 	
 	@Override
@@ -127,7 +127,6 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 			}
 
 		});
-        loadActivities();
 	}
 
 	@Override
@@ -148,9 +147,17 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 		if (myTTS != null) {
 			myTTS.shutdown();
 			myTTS = null;
-		}	
-		((WidgetFactory) apAdapter.getItem(currentActivityNo)).saveTracker();
-	}	
+		}
+        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+        currentWidget.pauseTimeTracking();
+        currentWidget.saveTracker();
+	}
+
+    public void onResume(){
+        super.onResume();
+        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+        currentWidget.resumeTimeTracking();
+    }
 	
 	@Override
 	protected void onDestroy() {
@@ -295,7 +302,8 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 		this.currentActivityNo = tabSelected;
 		this.stopReading();
         //apAdapter.getItem(tabSelected).onResume();
-		((WidgetFactory) apAdapter.getItem(currentActivityNo)).setStartTime(System.currentTimeMillis() / 1000);
+        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+        currentWidget.resetTimeTracking();
 	}
 
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
