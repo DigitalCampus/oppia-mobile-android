@@ -10,7 +10,6 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.model.QuizStats;
 
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ public class CourseQuizzesGridAdapter  extends ArrayAdapter<QuizStats> {
         View baseView;
     }
 
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         QuizStatsViewHolder viewHolder;
@@ -51,7 +51,7 @@ public class CourseQuizzesGridAdapter  extends ArrayAdapter<QuizStats> {
             viewHolder = (QuizStatsViewHolder) convertView.getTag();
         }
 
-        viewHolder.baseView.setLayoutParams(new GridView.LayoutParams(cellSize, cellSize));
+        if (cellSize>0) viewHolder.baseView.setLayoutParams(new GridView.LayoutParams(cellSize, cellSize));
         QuizStats quiz = quizzesList.get(position);
         if (quiz.isAttempted()){
             viewHolder.percent.setText(""+quiz.getPercent());
@@ -69,4 +69,5 @@ public class CourseQuizzesGridAdapter  extends ArrayAdapter<QuizStats> {
         }
 
         return convertView;
+
 }}
