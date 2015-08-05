@@ -58,6 +58,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     private PieChart scorecardPieChart;
     private ArrayList<QuizStats> quizStats = new ArrayList<QuizStats>();
     private CourseQuizzesGridAdapter quizzesAdapter;
+    ParseCourseXMLTask xmlTask;
 
     public static ScorecardFragment newInstance() {
         return new ScorecardFragment();
@@ -79,9 +80,9 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         if ( getArguments() != null && getArguments().containsKey(Course.TAG)) {
             this.course = (Course) getArguments().getSerializable(Course.TAG);
 
-            ParseCourseXMLTask task =  new ParseCourseXMLTask(getActivity(), true);
-            task.setListener(this);
-            task.execute(course);
+            xmlTask = new ParseCourseXMLTask(getActivity(), true);
+            xmlTask.setListener(this);
+            xmlTask.execute(course);
         }
     }
 
@@ -137,7 +138,6 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             ScorecardListAdapter scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
 			ListView listView = (ListView) super.getActivity().findViewById(R.id.scorecards_list);
 			listView.setAdapter(scorecardListAdapter);
-
 		}
 	}
 
@@ -155,10 +155,10 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             if (!act.getActType().equals("quiz")) continue;
             String contents = act.getContents(prefLang);
             matcher.reset(contents);
-            boolean find = matcher.find();
-            if (find){
+
+            if (matcher.find()){
                 QuizStats quiz = new QuizStats();
-                quiz.setQuizId(Integer.parseInt( matcher.group(1)) );
+                quiz.setQuizId(Integer.parseInt(matcher.group(1)));
                 quiz.setPassThreshold(Integer.parseInt(matcher.group(2)));
                 stats.add(quiz);
             }
@@ -170,7 +170,32 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         DbHelper db = new DbHelper(super.getActivity());
         long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
         db.getCourseQuizResults(quizStats, course.getCourseId(), userId);
+
+        ArrayList<Activity> baseline = parsed.getBaselineActivities(course.getCourseId());
+        for (Activity baselineAct : baseline){
+            if (!baselineAct.getActType().equals("quiz")) continue;
+            String contents = baselineAct.getContents(prefLang);
+            matcher.reset(contents);
+            if (!matcher.find()) continue;
+
+            for (QuizStats quiz : quizStats){
+                int quizID = Integer.parseInt(matcher.group(1));
+                //If is a baseline quiz, we remove it from the list
+                if (quiz.getQuizId() == quizID ){
+                    quizStats.remove(quiz);
+                }
+            }
+        }
+
         quizzesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (xmlTask != null){
+            xmlTask.setListener(null);
+        }
     }
 
     @Override

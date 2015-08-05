@@ -49,7 +49,7 @@ public class QuizStats {
     }
 
     public int getPercent(){
-        return (userScore * 100) / maxScore ;
+        return (userScore * 100) / Math.max(1,maxScore) ;
     }
 
     public boolean isPassed(){
