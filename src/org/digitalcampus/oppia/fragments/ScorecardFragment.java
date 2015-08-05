@@ -18,6 +18,9 @@
 package org.digitalcampus.oppia.fragments;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -25,9 +28,12 @@ import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
 import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizStats;
+import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.ScorecardPieChart;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,7 +48,7 @@ import android.widget.ListView;
 
 import com.androidplot.pie.PieChart;
 
-public class ScorecardFragment extends Fragment{
+public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.OnParseXmlListener {
 
 	public static final String TAG = ScorecardFragment.class.getSimpleName();
 	private SharedPreferences prefs;
@@ -50,6 +56,8 @@ public class ScorecardFragment extends Fragment{
     private boolean firstTimeOpened = true;
     private GridView quizzesGrid;
     private PieChart scorecardPieChart;
+    private ArrayList<QuizStats> quizStats = new ArrayList<QuizStats>();
+    private CourseQuizzesGridAdapter quizzesAdapter;
 
     public static ScorecardFragment newInstance() {
         return new ScorecardFragment();
@@ -63,24 +71,33 @@ public class ScorecardFragment extends Fragment{
 	    return myFragment;
 	}
 
-	public ScorecardFragment(){
-		
-	}
+	public ScorecardFragment(){ }
+
+    @Override
+    public void onCreate( Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        if ( getArguments() != null && getArguments().containsKey(Course.TAG)) {
+            this.course = (Course) getArguments().getSerializable(Course.TAG);
+
+            ParseCourseXMLTask task =  new ParseCourseXMLTask(getActivity(), true);
+            task.setListener(this);
+            task.execute(course);
+        }
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv;
-		if( getArguments() != null && getArguments().containsKey(Course.TAG)){
+		if (course != null){
 			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecard, null);
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			vv.setLayoutParams(lp);
 			// refresh course to get most recent info (otherwise gets the info from when course first opened)
-			this.course = (Course) getArguments().getSerializable(Course.TAG);
 			DbHelper db = new DbHelper(super.getActivity());
 			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 			this.course = db.getCourse(this.course.getCourseId(), userId);
-			DatabaseManager.getInstance().closeDatabase();
+            DatabaseManager.getInstance().closeDatabase();
 
             quizzesGrid = (GridView) vv.findViewById(R.id.scorecard_grid_quizzes);
             scorecardPieChart = (PieChart) vv.findViewById(R.id.scorecardPieChart);
@@ -109,11 +126,8 @@ public class ScorecardFragment extends Fragment{
             spc.drawChart(50, true, firstTimeOpened);
             firstTimeOpened = false;
 
-            ArrayList<QuizStats> quizzes = new ArrayList<QuizStats>();
-            CourseQuizzesGridAdapter adapter = new CourseQuizzesGridAdapter(getActivity(), quizzes);
-            quizzesGrid.setAdapter(adapter);
-
-            adapter.notifyDataSetChanged();
+            quizzesAdapter = new CourseQuizzesGridAdapter(getActivity(), quizStats);
+            quizzesGrid.setAdapter(quizzesAdapter);
 
 		} else {
 			DbHelper db = new DbHelper(super.getActivity());
@@ -124,8 +138,43 @@ public class ScorecardFragment extends Fragment{
 			ListView listView = (ListView) super.getActivity().findViewById(R.id.scorecards_list);
 			listView.setAdapter(scorecardListAdapter);
 
-
 		}
 	}
 
+    @Override
+    public void onParseComplete(CourseXMLReader parsed) {
+
+        ArrayList<Activity> activities = parsed.getActivities(course.getCourseId());
+        ArrayList<QuizStats> stats = new ArrayList<QuizStats>();
+
+        String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        Pattern quizDataPattern = Pattern.compile(QuizStats.fromCourseXMLRegex);
+        Matcher matcher = quizDataPattern.matcher("");
+
+        for (Activity act : activities){
+            if (!act.getActType().equals("quiz")) continue;
+            String contents = act.getContents(prefLang);
+            matcher.reset(contents);
+            boolean find = matcher.find();
+            if (find){
+                QuizStats quiz = new QuizStats();
+                quiz.setQuizId(Integer.parseInt( matcher.group(1)) );
+                quiz.setPassThreshold(Integer.parseInt(matcher.group(2)));
+                stats.add(quiz);
+            }
+        }
+
+        quizStats.clear();
+        quizStats.addAll(stats);
+
+        DbHelper db = new DbHelper(super.getActivity());
+        long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        db.getCourseQuizResults(quizStats, course.getCourseId(), userId);
+        quizzesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onParseError() {
+
+    }
 }

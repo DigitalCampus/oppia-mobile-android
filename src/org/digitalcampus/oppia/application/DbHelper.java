@@ -19,6 +19,8 @@ package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -26,6 +28,7 @@ import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
@@ -424,6 +427,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
 			values.put(ACTIVITY_C_TITLE, a.getTitleJSONString());
 			db.insertOrThrow(ACTIVITY_TABLE, null, values);
+
 		}
 	}
 
@@ -843,6 +847,57 @@ public class DbHelper extends SQLiteOpenHelper {
 			return true;
 		}
 	}
+
+    public void getCourseQuizResults(ArrayList<QuizStats> stats, int courseId, long userId){
+
+        String quizResultsWhereClause = QUIZRESULTS_C_COURSEID+" =? AND " + QUIZRESULTS_C_USERID + "=?";
+        String[] quizResultsArgs = new String[] { String.valueOf(courseId), String.valueOf(userId) };
+        String[] quizResultsColumns = new String[]{ QUIZRESULTS_C_DATA};
+
+        //We get the attempts made by the user for this course's quizzes
+        Cursor c = db.query(QUIZRESULTS_TABLE, quizResultsColumns, quizResultsWhereClause, quizResultsArgs, null, null, null);
+        if (c.getCount() <= 0) return; //we return the empty array
+
+        if (stats == null) stats = new ArrayList<QuizStats>();
+        //Instead of parsing each JSON, we extract the data with a RegEx
+        Pattern quizDataPattern = Pattern.compile(QuizStats.fromQuizResultRegex);
+        Matcher matcher = quizDataPattern.matcher("");
+
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            String quizData = c.getString(c.getColumnIndex(QUIZRESULTS_C_DATA));
+
+            matcher.reset(quizData);
+            boolean find = matcher.find();
+            if (find){
+                //We get the captured parts by the RegEx
+                int score = (int)(Float.parseFloat(matcher.group(1)) * 100);
+                int maxScore = Integer.parseInt(matcher.group(2)) * 100;
+                int quizID = Integer.parseInt(matcher.group(3));
+
+                boolean alreadyInserted = false;
+                for (QuizStats quiz : stats){
+                    if (quiz.getQuizId() == quizID){
+                        if (quiz.getUserScore() < score) quiz.setUserScore(score);
+                        if (quiz.getMaxScore() < maxScore) quiz.setMaxScore(maxScore);
+                        quiz.setAttempted(true);
+                        alreadyInserted = true;
+                        break;
+                    }
+                }
+                if (!alreadyInserted){
+                    QuizStats quiz = new QuizStats(quizID);
+                    quiz.setAttempted(true);
+                    quiz.setUserScore(score);
+                    quiz.setMaxScore(maxScore);
+                    stats.add(quiz);
+                }
+            }
+            c.moveToNext();
+        }
+        c.close();
+
+    }
 	
 	public Activity getActivityByDigest(String digest){
 		String sql = "SELECT * FROM  "+ ACTIVITY_TABLE + " a " +
