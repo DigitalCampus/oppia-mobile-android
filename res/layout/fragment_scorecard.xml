@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="40%"
-                    android:id="@+id/textView2"
+                    android:id="@+id/highlight_pretest"
                     android:textSize="36sp"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"
@@ -74,7 +74,7 @@
                     android:id="@+id/textView5"
                     android:textAllCaps="true"
                     android:gravity="center"
-                    android:layout_below="@+id/textView2"
+                    android:layout_below="@+id/highlight_pretest"
                     android:singleLine="true"
                     />
 
@@ -101,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5"
-                    android:id="@+id/textView3"
+                    android:id="@+id/highlight_attempted"
                     android:textSize="36sp"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"
@@ -119,7 +119,7 @@
                     android:textAllCaps="true"
                     android:id="@+id/textView6"
                     android:gravity="center"
-                    android:layout_below="@+id/textView3"
+                    android:layout_below="@+id/highlight_attempted"
                     android:singleLine="true"
                     />
 
@@ -146,7 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3"
-                    android:id="@+id/textView4"
+                    android:id="@+id/highlight_passed"
                     android:textSize="36sp"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"
@@ -164,7 +164,7 @@
                     android:layout_marginTop="-5dp"
                     android:id="@+id/textView7"
                     android:gravity="center"
-                    android:layout_below="@+id/textView4"
+                    android:layout_below="@+id/highlight_passed"
                     android:singleLine="true"/>
 
             </RelativeLayout>

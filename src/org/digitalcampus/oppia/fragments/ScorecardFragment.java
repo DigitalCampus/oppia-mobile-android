@@ -45,6 +45,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
 
@@ -59,6 +60,10 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     private ArrayList<QuizStats> quizStats = new ArrayList<QuizStats>();
     private CourseQuizzesGridAdapter quizzesAdapter;
     ParseCourseXMLTask xmlTask;
+
+    private TextView highlightPretest;
+    private TextView highlightAttempted;
+    private TextView highlightPassed;
 
     public static ScorecardFragment newInstance() {
         return new ScorecardFragment();
@@ -103,6 +108,10 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             quizzesGrid = (GridView) vv.findViewById(R.id.scorecard_grid_quizzes);
             scorecardPieChart = (PieChart) vv.findViewById(R.id.scorecardPieChart);
 
+            highlightPretest = (TextView) vv.findViewById(R.id.highlight_pretest);
+            highlightAttempted = (TextView) vv.findViewById(R.id.highlight_attempted);
+            highlightPassed = (TextView) vv.findViewById(R.id.highlight_passed);
+
 		} else {
 			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecards, null);
 			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -145,7 +154,9 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     public void onParseComplete(CourseXMLReader parsed) {
 
         ArrayList<Activity> activities = parsed.getActivities(course.getCourseId());
+        ArrayList<Activity> baseline = parsed.getBaselineActivities(course.getCourseId());
         ArrayList<QuizStats> stats = new ArrayList<QuizStats>();
+        int pretestScore = -1, quizzesAttempted = 0, quizzesPassed = 0;
 
         String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         Pattern quizDataPattern = Pattern.compile(QuizStats.fromCourseXMLRegex);
@@ -171,7 +182,6 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
         db.getCourseQuizResults(quizStats, course.getCourseId(), userId);
 
-        ArrayList<Activity> baseline = parsed.getBaselineActivities(course.getCourseId());
         for (Activity baselineAct : baseline){
             if (!baselineAct.getActType().equals("quiz")) continue;
             String contents = baselineAct.getContents(prefLang);
@@ -183,9 +193,21 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
                 //If is a baseline quiz, we remove it from the list
                 if (quiz.getQuizId() == quizID ){
                     quizStats.remove(quiz);
+                    pretestScore = quiz.getPercent();
                 }
             }
         }
+
+        for (QuizStats quiz : quizStats){
+            if (quiz.isAttempted()){
+                quizzesAttempted++;
+                if (quiz.isPassed()) quizzesPassed++;
+            }
+        }
+
+        highlightPretest.setText(pretestScore>=0 ? (pretestScore+"%") : "-");
+        highlightAttempted.setText(""+quizzesAttempted);
+        highlightPassed.setText(""+quizzesPassed);
 
         quizzesAdapter.notifyDataSetChanged();
     }

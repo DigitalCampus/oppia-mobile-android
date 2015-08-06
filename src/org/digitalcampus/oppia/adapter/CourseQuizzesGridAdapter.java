@@ -71,7 +71,7 @@ public class CourseQuizzesGridAdapter  extends ArrayAdapter<QuizStats> {
         if (cellSize>0) viewHolder.baseView.setLayoutParams(new GridView.LayoutParams(cellSize, cellSize));
         QuizStats quiz = quizzesList.get(position);
         if (quiz.isAttempted()){
-            viewHolder.percent.setText(""+quiz.getPercent());
+            viewHolder.percent.setText(""+quiz.getPercent()+"%");
             viewHolder.percent.setVisibility(View.VISIBLE);
             if (quiz.isPassed()){
                 viewHolder.percent.setBackgroundResource(R.drawable.scorecard_quiz_item_passed);
