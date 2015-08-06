@@ -2,23 +2,28 @@ package org.digitalcampus.oppia.utils.ui;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 
 public class ProgressBarAnimator implements ValueAnimator.AnimatorUpdateListener{
 
-
+    private static final int ANIMATION_SCALE = 1000;
     private static final int DEFAULT_ANIM_DURATION = 1500;
+
     private ProgressBar bar; //reference to the view to which the animation is going to be applied
     private boolean animated = false;
+    private int startDelay = 0;
     private int duration = DEFAULT_ANIM_DURATION;
 
     public ProgressBarAnimator (ProgressBar progressBar){
         bar = progressBar;
+        bar.setMax(bar.getMax()*ANIMATION_SCALE);
     }
 
     public boolean isAnimated() { return animated; }
     public void setAnimated(boolean animated) { this.animated = animated;  }
 
+    public void setStartDelay(int startDelay) { this.startDelay = startDelay; }
     public int getAnimDuration() { return duration;  }
     public void setAnimDuration(int animDuration) { this.duration = animDuration; }
 
@@ -29,14 +34,46 @@ public class ProgressBarAnimator implements ValueAnimator.AnimatorUpdateListener
     }
 
     public void animate(int progressStart, int progressEnd){
-        if (!isAnimated()){
-            ValueAnimator anim = ObjectAnimator.ofInt(progressStart, progressEnd);
-            anim.addUpdateListener(this);
-            anim.setDuration(duration).start();
-        }
+        bar.setProgress(progressStart*ANIMATION_SCALE);
+        animate(progressEnd);
     }
 
     public void animate(int progress){
-        animate(0, progress);
+        if (isAnimated()) {
+            bar.setProgress(progress * ANIMATION_SCALE);
+        }
+        else{
+            ObjectAnimator animation = ObjectAnimator.ofInt(bar, "progress", progress * ANIMATION_SCALE);
+            animation.setDuration(duration);
+            animation.setInterpolator(new DecelerateInterpolator());
+            animation.setStartDelay(startDelay);
+            animation.start();
+        }
+    }
+
+    public void animateBoth(int fromPrimary, int toPrimary, int fromSecondary, int toSecondary){
+        bar.setProgress(fromPrimary);
+        bar.setSecondaryProgress(fromSecondary);
+        animateBoth(toPrimary, toSecondary);
+    }
+
+    public void animateBoth(int progressPrimary, int progressSecondary){
+        if (isAnimated()) {
+            bar.setProgress(progressPrimary * ANIMATION_SCALE);
+            bar.setSecondaryProgress(progressSecondary * ANIMATION_SCALE);
+        }
+        else{
+            ObjectAnimator animation1 = ObjectAnimator.ofInt(bar, "progress", progressPrimary * ANIMATION_SCALE);
+            animation1.setDuration(duration); // 0.5 second
+            animation1.setInterpolator(new DecelerateInterpolator());
+            animation1.setStartDelay(startDelay);
+            animation1.start();
+
+            ObjectAnimator animation2 = ObjectAnimator.ofInt(bar, "secondaryProgress", progressSecondary * ANIMATION_SCALE);
+            animation2.setDuration(duration); // 0.5 second
+            animation2.setInterpolator(new DecelerateInterpolator());
+            animation2.setStartDelay(startDelay);
+            animation2.start();
+        }
     }
 }

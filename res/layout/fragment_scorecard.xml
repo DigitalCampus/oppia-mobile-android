@@ -25,7 +25,7 @@
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/progressBar3"
+                android:id="@+id/loading_spinner"
                 android:layout_gravity="center"/>
 
             <LinearLayout
@@ -137,10 +137,10 @@
                     android:layout_marginLeft="17dp"
                     android:layout_marginRight="17dp"
                     android:layout_marginTop="8dp"
-                    android:progress="22"
+                    android:progress="0"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:progressDrawable="@drawable/progress_bar_light"
-                    android:secondaryProgress="50"/>
+                    android:secondaryProgress="0"/>
 
                 <org.digitalcampus.oppia.utils.ui.StaticGridView
                 android:layout_width="wrap_content"

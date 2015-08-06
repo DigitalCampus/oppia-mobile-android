@@ -34,6 +34,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.ScorecardPieChart;
+import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import android.content.SharedPreferences;
@@ -236,16 +237,20 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         highlightPassed.setText("" + quizzesPassed);
         quizzesAdapter.notifyDataSetChanged();
 
-        quizzesProgressBar.setMax(quizStats.size());
-        quizzesProgressBar.setProgress(quizzesPassed);
-        quizzesProgressBar.setSecondaryProgress(quizzesAttempted);
-
         AlphaAnimation fadeInAnimation = new AlphaAnimation(0f, 1f);
         fadeInAnimation.setDuration(700);
         fadeInAnimation.setFillAfter(true);
 
+        quizzesProgressBar.setProgress(0);
+        quizzesProgressBar.setSecondaryProgress(0);
+
         quizzesView.setVisibility(View.VISIBLE);
         quizzesView.startAnimation(fadeInAnimation);
+
+        quizzesProgressBar.setMax(quizStats.size());
+        ProgressBarAnimator animator = new ProgressBarAnimator(quizzesProgressBar);
+        animator.setStartDelay(500);
+        animator.animateBoth(quizzesPassed, quizzesAttempted);
     }
 
     @Override
