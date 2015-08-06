@@ -12,5 +12,5 @@
         android:layout_gravity="center"
         android:background="@drawable/scorecard_quiz_item"
         android:gravity="center"
-        />
+        android:textSize="12sp"/>
 </FrameLayout>
