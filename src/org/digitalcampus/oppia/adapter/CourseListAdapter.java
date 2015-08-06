@@ -25,9 +25,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -78,7 +77,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
             viewHolder.courseDescription = (TextView) convertView.findViewById(R.id.course_description);
             viewHolder.courseProgress = (ProgressBar) convertView.findViewById(R.id.course_progress_bar);
             viewHolder.courseImage = (ImageView) convertView.findViewById(R.id.course_image);
-            viewHolder.barAnimator = new ProgressBarAnimator(viewHolder);
+            viewHolder.barAnimator = new ProgressBarAnimator(viewHolder.courseProgress);
             convertView.setTag(viewHolder);
         }
         else{
@@ -95,17 +94,11 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	    }
 
 	    if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)){
-            viewHolder.courseProgress.setProgress((int) c.getProgressPercent());
-
-            if (!viewHolder.barAnimator.isAnimated()){
-                //We only animate it the first time
-                ValueAnimator anim = ObjectAnimator.ofInt(0, (int) c.getProgressPercent());
-                anim.addUpdateListener(viewHolder.barAnimator);
-                anim.setDuration(1500).start();
-            }
+            int courseProgress = (int) c.getProgressPercent();
+            viewHolder.courseProgress.setProgress(courseProgress);
+            viewHolder.barAnimator.animate(courseProgress);
             //Set the value to true so it doesn' t get animated again
             viewHolder.barAnimator.setAnimated(true);
-
 	    } else {
             viewHolder.courseProgress.setVisibility(View.GONE);
 	    }
@@ -122,31 +115,5 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         }
 	    return convertView;
 	}
-
-    class ProgressBarAnimator implements ValueAnimator.AnimatorUpdateListener{
-        //reference to the view to which the animation is going to be applied
-
-        private CourseViewHolder viewHolder;
-
-        private boolean animated = false;
-
-        public ProgressBarAnimator (CourseViewHolder holder){
-            viewHolder = holder;
-        }
-
-        //@Override
-        public void onAnimationUpdate(ValueAnimator animator) {
-            viewHolder.courseProgress.setProgress((Integer)animator.getAnimatedValue());
-            viewHolder.courseProgress.invalidate();
-        }
-
-        public boolean isAnimated() {
-            return animated;
-        }
-
-        public void setAnimated(boolean animated) {
-            this.animated = animated;
-        }
-    }
 
 }
