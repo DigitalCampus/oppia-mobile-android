@@ -267,7 +267,10 @@
 	
 	<string name="upgradev49_1">Copying files to new location - this may take several minutes, so please be patient</string>
     <string name="loading_course">Loading course...</string>
-    <string name="quizzes_title">QUIZZES</string>
+    <string name="scorecard_quizzes_title">Quizzes</string>
+    <string name="scorecard_quizzes_highlight_pretest">Pre-test</string>
+    <string name="scorecard_quizzes_highlight_attempted">Attempted</string>
+    <string name="scorecard_quizzes_highlight_passed">Passed</string>
 
 </resources>
 

@@ -12,11 +12,11 @@
 
         <ImageView
             android:id="@+id/course_image"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/course_icon_size"
+            android:layout_height="@dimen/course_icon_size"
             android:layout_margin="10dp"
             android:contentDescription="@string/app_logo_alt"
-            android:src="@drawable/dc_logo" />
+            android:src="@drawable/default_course" />
 
         <TextView
             android:id="@+id/course_title"
@@ -39,7 +39,7 @@
 
     <ProgressBar
         android:id="@+id/course_progress_bar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+        style="@style/ProgressBar.Om"
         android:layout_width="fill_parent"
         android:layout_height="5dp"
         android:layout_margin="5dp"

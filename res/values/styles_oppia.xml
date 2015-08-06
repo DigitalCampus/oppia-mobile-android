@@ -68,8 +68,9 @@
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
-    <style name="ProgressBar.Om" parent="android:Widget.ProgressBar.Horizontal">
+    <style name="ProgressBar.Om" parent="android:Widget.DeviceDefault.Light.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_om</item>
+        <item name="android:layout_height">6dp</item>
     </style>
 
     <style name="ActionButton.CloseMode.Om" parent="android:Widget.ActionButton.CloseMode">

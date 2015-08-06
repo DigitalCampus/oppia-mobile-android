@@ -7,7 +7,6 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="98%"
         android:id="@+id/percent_label"
         android:layout_gravity="center"
         android:background="@drawable/scorecard_quiz_item"
