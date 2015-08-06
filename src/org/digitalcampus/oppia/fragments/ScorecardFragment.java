@@ -35,6 +35,7 @@ import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.ScorecardPieChart;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
+import android.animation.ValueAnimator;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -42,6 +43,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.GridView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -64,6 +66,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     private TextView highlightPretest;
     private TextView highlightAttempted;
     private TextView highlightPassed;
+    private View quizzesView;
 
     public static ScorecardFragment newInstance() {
         return new ScorecardFragment();
@@ -111,6 +114,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             highlightPretest = (TextView) vv.findViewById(R.id.highlight_pretest);
             highlightAttempted = (TextView) vv.findViewById(R.id.highlight_attempted);
             highlightPassed = (TextView) vv.findViewById(R.id.highlight_passed);
+            quizzesView = vv.findViewById(R.id.quizzes_view);
 
 		} else {
 			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecards, null);
@@ -205,11 +209,19 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             }
         }
 
-        highlightPretest.setText(pretestScore>=0 ? (pretestScore+"%") : "-");
-        highlightAttempted.setText(""+quizzesAttempted);
-        highlightPassed.setText(""+quizzesPassed);
+        highlightPretest.setText(pretestScore >= 0 ? (pretestScore + "%") : "-");
+        highlightAttempted.setText("" + quizzesAttempted);
+        highlightPassed.setText("" + quizzesPassed);
 
         quizzesAdapter.notifyDataSetChanged();
+
+        AlphaAnimation fadeInAnimation = new AlphaAnimation(0f, 1f);
+        fadeInAnimation.setDuration(700);
+        fadeInAnimation.setFillAfter(true);
+
+        //quizzesView.setAlpha(0f);
+        quizzesView.setVisibility(View.VISIBLE);
+        quizzesView.startAnimation(fadeInAnimation);
     }
 
     @Override

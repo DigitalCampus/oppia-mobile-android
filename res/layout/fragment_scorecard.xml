@@ -17,169 +17,184 @@
             android:layout_height="200dp"
         />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/card"
-        android:layout_margin="10dp"
-        >
-
-        <TextView
+        <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:text="@string/quizzes_title"
-            android:id="@+id/quizzesTitle"
-            android:layout_gravity="center_horizontal"
-            android:capitalize="characters"
-            android:layout_marginBottom="@dimen/padding_medium"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/padding_medium"/>
+            android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/quizzesTitle"
-            android:layout_marginBottom="@dimen/padding_medium"
-            android:layout_marginLeft="@dimen/padding_medium">
-
-            <RelativeLayout
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="visible">
+                android:id="@+id/progressBar3"
+                android:layout_gravity="center"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="40%"
-                    android:id="@+id/highlight_pretest"
-                    android:textSize="36sp"
-                    android:textStyle="bold"
-                    android:gravity="center_horizontal"
-                    android:layout_alignParentLeft="false"
-                    android:layout_alignParentRight="false"
-                    android:layout_centerHorizontal="true"/>
+            <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/card"
+            android:layout_margin="10dp"
+            android:visibility="invisible"
+            android:id="@+id/quizzes_view">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Pre-test"
-                    android:textSize="12sp"
-                    android:layout_marginTop="-5dp"
-                    android:id="@+id/textView5"
-                    android:textAllCaps="true"
-                    android:gravity="center"
-                    android:layout_below="@+id/highlight_pretest"
-                    android:singleLine="true"
-                    />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="1dp"
-                android:background="@android:color/darker_gray"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:text="@string/quizzes_title"
+                android:id="@+id/quizzes_title"
+                android:layout_gravity="center_horizontal"
+                android:capitalize="characters"
                 android:layout_marginBottom="@dimen/padding_medium"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
                 android:layout_marginTop="@dimen/padding_medium"/>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_below="@+id/quizzes_title"
+                android:layout_marginBottom="@dimen/padding_medium"
+                android:layout_marginLeft="@dimen/padding_medium">
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5"
-                    android:id="@+id/highlight_attempted"
-                    android:textSize="36sp"
-                    android:textStyle="bold"
-                    android:gravity="center_horizontal"
-                    android:layout_alignParentLeft="false"
-                    android:layout_alignParentRight="false"
+                    android:layout_weight="1"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="40%"
+                        android:id="@+id/highlight_pretest"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:gravity="center_horizontal"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentRight="false"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pre-test"
+                        android:textSize="12sp"
+                        android:layout_marginTop="-5dp"
+                        android:id="@+id/textView5"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:layout_below="@+id/highlight_pretest"
+                        android:singleLine="true"
+                        />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:background="@android:color/darker_gray"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:textColor="@color/highlight_secondary"/>
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/padding_medium"
+                    android:layout_marginTop="@dimen/padding_medium"/>
 
-                <TextView
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Attempted"
-                    android:textSize="12sp"
-                    android:layout_marginTop="-5dp"
-                    android:textAllCaps="true"
-                    android:id="@+id/textView6"
-                    android:gravity="center"
-                    android:layout_below="@+id/highlight_attempted"
-                    android:singleLine="true"
-                    />
+                    android:layout_weight="1">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5"
+                        android:id="@+id/highlight_attempted"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:gravity="center_horizontal"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentRight="false"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/highlight_secondary"/>
 
-            <View
-                android:layout_width="1dp"
-                android:background="@android:color/darker_gray"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Attempted"
+                        android:textSize="12sp"
+                        android:layout_marginTop="-5dp"
+                        android:textAllCaps="true"
+                        android:id="@+id/textView6"
+                        android:gravity="center"
+                        android:layout_below="@+id/highlight_attempted"
+                        android:singleLine="true"
+                        />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:background="@android:color/darker_gray"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/padding_medium"
+                    android:layout_marginBottom="@dimen/padding_medium"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        android:id="@+id/highlight_passed"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:gravity="center_horizontal"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentRight="false"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/highlight_light"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Passed"
+                        android:textAllCaps="true"
+                        android:textSize="12sp"
+                        android:layout_marginTop="-5dp"
+                        android:id="@+id/textView7"
+                        android:gravity="center"
+                        android:layout_below="@+id/highlight_passed"
+                        android:singleLine="true"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <org.digitalcampus.oppia.utils.ui.StaticGridView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/scorecard_grid_quizzes"
+                android:numColumns="6"
+                tools:listitem="@layout/scorecard_quiz_item"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="@dimen/padding_medium"
-                android:layout_marginBottom="@dimen/padding_medium"/>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3"
-                    android:id="@+id/highlight_passed"
-                    android:textSize="36sp"
-                    android:textStyle="bold"
-                    android:gravity="center_horizontal"
-                    android:layout_alignParentLeft="false"
-                    android:layout_alignParentRight="false"
-                    android:layout_centerHorizontal="true"
-                    android:textColor="@color/highlight_light"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Passed"
-                    android:textAllCaps="true"
-                    android:textSize="12sp"
-                    android:layout_marginTop="-5dp"
-                    android:id="@+id/textView7"
-                    android:gravity="center"
-                    android:layout_below="@+id/highlight_passed"
-                    android:singleLine="true"/>
-
-            </RelativeLayout>
+                android:padding="13dp"/>
 
         </LinearLayout>
 
-        <org.digitalcampus.oppia.utils.ui.StaticGridView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/scorecard_grid_quizzes"
-            android:numColumns="6"
-            tools:listitem="@layout/scorecard_quiz_item"
-            android:layout_alignParentBottom="true"
-            android:padding="13dp"/>
+        </FrameLayout>
 
     </LinearLayout>
-</LinearLayout>
 </ScrollView>
