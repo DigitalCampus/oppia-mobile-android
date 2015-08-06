@@ -102,8 +102,8 @@
     </style>
 
     <style name="Highlight.Separator" parent="android:Widget">
-        <item name="android:layout_width">1dp</item>
-        <item name="android:background">@android:color/darker_gray</item>
+        <item name="android:layout_width">0.7dp</item>
+        <item name="android:background">@color/highlight_separator</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_alignParentBottom">true</item>
@@ -115,7 +115,7 @@
     </style>
 
     <style name="Highlight.Text" parent="android:TextAppearance">
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">32sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_alignParentLeft">false</item>
@@ -131,6 +131,7 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_marginTop">@dimen/padding_medium</item>
         <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="Highlight.Label" parent="android:TextAppearance">
@@ -139,6 +140,7 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
         <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/highlight_label</item>
     </style>
 
 </resources>
