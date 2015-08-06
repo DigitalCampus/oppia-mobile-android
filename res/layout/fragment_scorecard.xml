@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/card"
-            android:layout_margin="10dp"
+            android:layout_margin="7dp"
             android:visibility="invisible"
             android:id="@+id/quizzes_view">
 
@@ -129,7 +129,19 @@
 
             </LinearLayout>
 
-            <org.digitalcampus.oppia.utils.ui.StaticGridView
+                <ProgressBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="15dp"
+                    android:id="@+id/progress_quizzes"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="17dp"
+                    android:layout_marginTop="8dp"
+                    android:progress="22"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/progress_bar_light"
+                    android:secondaryProgress="50"/>
+
+                <org.digitalcampus.oppia.utils.ui.StaticGridView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/scorecard_grid_quizzes"

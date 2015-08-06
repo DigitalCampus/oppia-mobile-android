@@ -35,7 +35,6 @@ import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.ScorecardPieChart;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
-import android.animation.ValueAnimator;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -47,6 +46,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.GridView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
@@ -66,6 +66,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     private TextView highlightPretest;
     private TextView highlightAttempted;
     private TextView highlightPassed;
+    private ProgressBar quizzesProgressBar;
     private View quizzesView;
 
     public static ScorecardFragment newInstance() {
@@ -114,6 +115,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             highlightPretest = (TextView) vv.findViewById(R.id.highlight_pretest);
             highlightAttempted = (TextView) vv.findViewById(R.id.highlight_attempted);
             highlightPassed = (TextView) vv.findViewById(R.id.highlight_passed);
+            quizzesProgressBar = (ProgressBar) vv.findViewById(R.id.progress_quizzes);
             quizzesView = vv.findViewById(R.id.quizzes_view);
 
 		} else {
@@ -212,14 +214,16 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         highlightPretest.setText(pretestScore >= 0 ? (pretestScore + "%") : "-");
         highlightAttempted.setText("" + quizzesAttempted);
         highlightPassed.setText("" + quizzesPassed);
-
         quizzesAdapter.notifyDataSetChanged();
+
+        quizzesProgressBar.setMax(quizStats.size());
+        quizzesProgressBar.setProgress(quizzesPassed);
+        quizzesProgressBar.setSecondaryProgress(quizzesAttempted);
 
         AlphaAnimation fadeInAnimation = new AlphaAnimation(0f, 1f);
         fadeInAnimation.setDuration(700);
         fadeInAnimation.setFillAfter(true);
 
-        //quizzesView.setAlpha(0f);
         quizzesView.setVisibility(View.VISIBLE);
         quizzesView.startAnimation(fadeInAnimation);
     }
