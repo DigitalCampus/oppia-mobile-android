@@ -12,13 +12,14 @@
               android:orientation="vertical">
 
     <com.androidplot.pie.PieChart
-            android:id="@+id/scorecardPieChart"
+            android:id="@+id/scorecard_pie_chart"
             android:layout_width="fill_parent"
             android:layout_height="200dp" />
 
         <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/scorecard_quizzes_container">
 
             <ProgressBar
                 style="?android:attr/progressBarStyleLarge"

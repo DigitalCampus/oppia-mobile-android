@@ -68,6 +68,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     private TextView highlightPassed;
     private ProgressBar quizzesProgressBar;
     private View quizzesView;
+    private View quizzesContainer;
 
     public static ScorecardFragment newInstance() {
         return new ScorecardFragment();
@@ -110,13 +111,14 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             DatabaseManager.getInstance().closeDatabase();
 
             quizzesGrid = (GridView) vv.findViewById(R.id.scorecard_grid_quizzes);
-            scorecardPieChart = (PieChart) vv.findViewById(R.id.scorecardPieChart);
+            scorecardPieChart = (PieChart) vv.findViewById(R.id.scorecard_pie_chart);
 
             highlightPretest = (TextView) vv.findViewById(R.id.highlight_pretest);
             highlightAttempted = (TextView) vv.findViewById(R.id.highlight_attempted);
             highlightPassed = (TextView) vv.findViewById(R.id.highlight_passed);
             quizzesProgressBar = (ProgressBar) vv.findViewById(R.id.progress_quizzes);
             quizzesView = vv.findViewById(R.id.quizzes_view);
+            quizzesContainer = vv.findViewById(R.id.scorecard_quizzes_container);
 
 		} else {
 			vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecards, null);
@@ -183,6 +185,11 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
 
         quizStats.clear();
         quizStats.addAll(stats);
+
+        if (quizStats.size() == 0){
+            quizzesContainer.setVisibility(View.GONE);
+            return;
+        }
 
         DbHelper db = new DbHelper(super.getActivity());
         long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
