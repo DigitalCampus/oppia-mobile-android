@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
 import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
@@ -169,6 +170,9 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         Pattern quizDataPattern = Pattern.compile(QuizStats.fromCourseXMLRegex);
         Matcher matcher = quizDataPattern.matcher("");
+        //Fallback for the JSONs where there is not threshold property present
+        Pattern simpleQuizDataPattern = Pattern.compile(QuizStats.fromCourseXMLRegexSimple);
+        Matcher simpleMatcher = simpleQuizDataPattern.matcher("");
 
         for (Activity act : activities){
             if (!act.getActType().equals("quiz")) continue;
@@ -177,9 +181,18 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
 
             if (matcher.find()){
                 QuizStats quiz = new QuizStats();
-                quiz.setQuizId(Integer.parseInt(matcher.group(1)));
-                quiz.setPassThreshold(Integer.parseInt(matcher.group(2)));
+                quiz.setQuizId(Integer.parseInt(matcher.group(QuizStats.COURSEXML_MATCHER_QUIZID)));
+                quiz.setPassThreshold(Integer.parseInt(matcher.group(QuizStats.COURSEXML_MATCHER_THRESHOLD)));
                 stats.add(quiz);
+            }
+            else{
+                simpleMatcher.reset(contents);
+                if (simpleMatcher.find()){
+                    QuizStats quiz = new QuizStats();
+                    quiz.setQuizId(Integer.parseInt(matcher.group(QuizStats.COURSEXML_MATCHER_QUIZID)));
+                    quiz.setPassThreshold(Quiz.QUIZ_DEFAULT_PASS_THRESHOLD);
+                    stats.add(quiz);
+                }
             }
         }
 
@@ -202,7 +215,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             if (!matcher.find()) continue;
 
             for (QuizStats quiz : quizStats){
-                int quizID = Integer.parseInt(matcher.group(1));
+                int quizID = Integer.parseInt(matcher.group(QuizStats.COURSEXML_MATCHER_QUIZID));
                 //If is a baseline quiz, we remove it from the list
                 if (quiz.getQuizId() == quizID ){
                     quizStats.remove(quiz);

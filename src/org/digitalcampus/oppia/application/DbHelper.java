@@ -871,9 +871,9 @@ public class DbHelper extends SQLiteOpenHelper {
             boolean find = matcher.find();
             if (find){
                 //We get the captured parts by the RegEx
-                int score = (int)(Float.parseFloat(matcher.group(1)) * 100);
-                int maxScore = Integer.parseInt(matcher.group(2)) * 100;
-                int quizID = Integer.parseInt(matcher.group(3));
+                int score = (int)(Float.parseFloat(matcher.group(QuizStats.QUIZRESULT_MATCHER_USERSCORE)) * 100);
+                int maxScore = Integer.parseInt(matcher.group(QuizStats.QUIZRESULT_MATCHER_MAXSCORE)) * 100;
+                int quizID = Integer.parseInt(matcher.group(QuizStats.QUIZRESULT_MATCHER_QUIZID));
 
                 boolean alreadyInserted = false;
                 for (QuizStats quiz : stats){

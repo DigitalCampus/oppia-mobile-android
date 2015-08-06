@@ -23,6 +23,14 @@ public class QuizStats {
 
     public static final String fromQuizResultRegex = "\\{\\s*\"score\"\\s*:\\s*(.+?)\\s*,\\s*\"maxscore\":\\s*(.+?)\\s*,\\s*\"quiz_id\"\\s*:\\s*(.+?)\\s*,\\s*(.+?)*\\}";
     public static final String fromCourseXMLRegex = "\\{.+?\\s*\"id\"\\s*:\\s*(.+?)\\s*,[A-z\"{0-9\\\\\\/,:\\_\\-]+?,\"passthreshold\":\"(.+?)\"\\s*.+?\\}";
+    public static final String fromCourseXMLRegexSimple = "\"id\"\\s*:\\s*(.+?)\\s*,\"";
+
+    public static final int COURSEXML_MATCHER_QUIZID = 1;
+    public static final int COURSEXML_MATCHER_THRESHOLD = 2;
+
+    public static final int QUIZRESULT_MATCHER_USERSCORE = 1;
+    public static final int QUIZRESULT_MATCHER_MAXSCORE = 2;
+    public static final int QUIZRESULT_MATCHER_QUIZID = 3;
 
     private int quizId;
     public boolean attempted;
