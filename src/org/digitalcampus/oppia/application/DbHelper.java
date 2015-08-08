@@ -115,7 +115,17 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_LASTNAME = "lastname";
 	private static final String USER_C_PASSWORD = "passwordencrypted";
 	private static final String USER_C_APIKEY = "apikey";
-		
+
+    public void beginTransaction(){
+        db.beginTransaction();
+    }
+    public void endTransaction(boolean success){
+        if (success){
+            db.setTransactionSuccessful();
+        }
+        db.endTransaction();
+    }
+
 	// Constructor
 	public DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
@@ -418,6 +428,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void insertActivities(ArrayList<Activity> acts) {
+
+        beginTransaction();
 		for (Activity a : acts) {
 			ContentValues values = new ContentValues();
 			values.put(ACTIVITY_C_COURSEID, a.getCourseId());
@@ -427,22 +439,25 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
 			values.put(ACTIVITY_C_TITLE, a.getTitleJSONString());
 			db.insertOrThrow(ACTIVITY_TABLE, null, values);
-
 		}
+        endTransaction(true);
 	}
 
 	public void insertSchedule(ArrayList<ActivitySchedule> actsched) {
+
+        beginTransaction();
 		for (ActivitySchedule as : actsched) {
 			ContentValues values = new ContentValues();
 			values.put(ACTIVITY_C_STARTDATE, as.getStartTimeString());
 			values.put(ACTIVITY_C_ENDDATE, as.getEndTimeString());
 			db.update(ACTIVITY_TABLE, values, ACTIVITY_C_ACTIVITYDIGEST + "='" + as.getDigest() + "'", null);
 		}
+        endTransaction(true);
 	}
 	
 	public void insertTrackers(ArrayList<TrackerLog> trackers, long courseId) {
 		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-		
+        beginTransaction();
 		for (TrackerLog t : trackers) {
 			ContentValues values = new ContentValues();
 			values.put(TRACKER_LOG_C_DATETIME, t.getDateTimeString());
@@ -453,6 +468,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(TRACKER_LOG_C_USERID, userId);
 			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 		}
+        endTransaction(true);
 	}
 	
 	public void resetSchedule(int courseId){
@@ -637,8 +653,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		s = COURSE_C_ID + "=?";
 		args = new String[] { String.valueOf(courseId) };
 		db.delete(COURSE_TABLE, s, args);
-		
-		
+
 	}
 	
 	public boolean isInstalled(String shortname){

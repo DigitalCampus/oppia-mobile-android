@@ -43,41 +43,47 @@ public class SearchUtils {
 		Payload p = new Payload();
 		task.execute(p);
 	}
+
+    public static void indexAddCourse(Context ctx, Course course, CourseXMLReader cxr){
+        ArrayList<Activity> activities = cxr.getActivities(course.getCourseId());
+        DbHelper db = new DbHelper(ctx);
+
+        db.beginTransaction();
+        for( Activity a : activities) {
+            ArrayList<Lang> langs = course.getLangs();
+            String fileContent = "";
+            for (Lang l : langs) {
+                if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")) {
+                    String url = course.getLocation() + a.getLocation(l.getLang());
+                    try {
+                        fileContent += " " + FileUtils.readFile(url);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            if (!fileContent.equals("")) {
+                db.insertActivityIntoSearchTable(course.getTitleJSONString(),
+                        cxr.getSection(a.getSectionId()).getTitleJSONString(),
+                        a.getTitleJSONString(),
+                        db.getActivityByDigest(a.getDigest()).getDbId(),
+                        fileContent);
+            }
+        }
+        db.endTransaction(true);
+        DatabaseManager.getInstance().closeDatabase();
+    }
 	
 	public static void indexAddCourse(Context ctx, Course course){
-		
-		try {
-			CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),course.getCourseId(), ctx);
-			ArrayList<Activity> activities = cxr.getActivities(course.getCourseId());
-			DbHelper db = new DbHelper(ctx);
-			for( Activity a : activities){
-				ArrayList<Lang> langs = course.getLangs();
-				String fileContent = "";
-				for (Lang l : langs){
-					if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")){
-						String url = course.getLocation() + a.getLocation(l.getLang());
-						try {
-							fileContent += " " + FileUtils.readFile(url);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-				
-				if (!fileContent.equals("")){
-					db.insertActivityIntoSearchTable(course.getTitleJSONString(),
-							cxr.getSection(a.getSectionId()).getTitleJSONString(),
-							a.getTitleJSONString(),
-							db.getActivityByDigest(a.getDigest()).getDbId(), 
-							fileContent);
-				}
-			
-			}
-		} catch (InvalidXMLException e) {
-			// Ignore course
-		}
-		DatabaseManager.getInstance().closeDatabase();
+        try {
+            CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),course.getCourseId(), ctx);
+            indexAddCourse(ctx, course, cxr);
+        } catch (InvalidXMLException e) {
+            // Ignore course
+            e.printStackTrace();
+        }
+
 	}
 	
 	
