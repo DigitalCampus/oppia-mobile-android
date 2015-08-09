@@ -29,7 +29,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
-import org.digitalcampus.oppia.utils.TwoWayView;
+import org.digitalcampus.oppia.utils.ui.TwoWayView;
 
 import android.content.Context;
 import android.content.Intent;

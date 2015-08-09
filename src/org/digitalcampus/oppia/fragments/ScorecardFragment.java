@@ -33,7 +33,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
-import org.digitalcampus.oppia.utils.ScorecardPieChart;
+import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 

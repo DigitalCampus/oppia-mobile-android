@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-package org.digitalcampus.oppia.utils;
+package org.digitalcampus.oppia.utils.ui;
 
 import java.util.ArrayList;
 import java.util.List;

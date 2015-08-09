@@ -18,7 +18,7 @@
 		android:ellipsize="end"
         android:textColor="@color/text_light"/>
 
-    <org.digitalcampus.oppia.utils.TwoWayView
+    <org.digitalcampus.oppia.utils.ui.TwoWayView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/section_activities"
