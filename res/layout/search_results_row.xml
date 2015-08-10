@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/course_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/course_icon_size"
+        android:layout_height="@dimen/course_icon_size"
         android:layout_alignParentLeft="true"
         android:layout_margin="4dp"
         android:contentDescription="@string/app_logo_alt"

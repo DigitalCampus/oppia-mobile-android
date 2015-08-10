@@ -1,10 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/scrollView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+    <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
               android:orientation="vertical">
 
     <com.androidplot.pie.PieChart
-            android:id="@+id/scorecardPieChart"
+            android:id="@+id/scorecard_pie_chart"
             android:layout_width="fill_parent"
+            android:layout_height="200dp" />
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scorecard_quizzes_container">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/loading_spinner"
+                android:layout_gravity="center"/>
+
+            <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"/>
-</LinearLayout>
+            android:background="@drawable/card"
+            android:layout_margin="7dp"
+            android:visibility="invisible"
+            android:id="@+id/quizzes_view">
+
+            <TextView
+                style="@style/Highlight.Title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/scorecard_quizzes_title"
+                android:id="@+id/quizzes_title" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_medium"
+                android:layout_marginLeft="@dimen/padding_medium">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="visible">
+
+                    <TextView
+                        style="@style/Highlight.Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/highlight_pretest" />
+
+                    <TextView
+                        style="@style/Highlight.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scorecard_quizzes_highlight_pretest"
+                        android:id="@+id/textView5"
+                        android:layout_below="@+id/highlight_pretest"
+                        />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    style="@style/Highlight.Separator"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/Highlight.Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/highlight_attempted"
+                        android:textColor="@color/highlight_secondary" />
+
+                    <TextView
+                        style="@style/Highlight.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scorecard_quizzes_highlight_attempted"
+                        android:id="@+id/textView6"
+                        android:layout_below="@+id/highlight_attempted" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    style="@style/Highlight.Separator"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/Highlight.Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/highlight_passed"
+                        android:textColor="@color/highlight_light"/>
+
+                    <TextView
+                        style="@style/Highlight.Label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scorecard_quizzes_highlight_passed"
+                        android:id="@+id/textView7"
+                        android:layout_below="@+id/highlight_passed" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+                <ProgressBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="15dp"
+                    android:id="@+id/progress_quizzes"
+                    android:layout_marginLeft="17dp"
+                    android:layout_marginRight="17dp"
+                    android:layout_marginTop="8dp"
+                    android:progress="0"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/progress_bar_light"
+                    android:secondaryProgress="0"/>
+
+                <org.digitalcampus.oppia.utils.ui.StaticGridView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/scorecard_grid_quizzes"
+                android:numColumns="6"
+                tools:listitem="@layout/scorecard_quiz_item"
+                android:padding="13dp"/>
+
+        </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</ScrollView>

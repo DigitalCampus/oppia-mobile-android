@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
+import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -51,7 +52,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ListView;
 
-public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener {
+public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
 	public static final String TAG = CourseIndexActivity.class.getSimpleName();
 
@@ -115,7 +116,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 }
             }
             else{
-                new ParseXMLTask().execute("");
+                ParseCourseXMLTask task =  new ParseCourseXMLTask(this, true);
+                task.setListener(this);
+                task.execute(course);
             }
         }
 
@@ -321,38 +324,22 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 				|| key.equalsIgnoreCase(PrefsActivity.PREF_BADGES)) {
 			supportInvalidateOptionsMenu();
 		}
-
 	}
 
-    private class ParseXMLTask extends AsyncTask<String, Object, CourseXMLReader>{
+    @Override
+    public void onParseComplete(CourseXMLReader parsed) {
+        cxr = parsed;
+        course.setMetaPages(cxr.getMetaPages());
+        sections = cxr.getSections(course.getCourseId());
 
-        @Override
-        protected CourseXMLReader doInBackground(String... courses) {
-            try {
-                cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), CourseIndexActivity.this);
-                course.setMetaPages(cxr.getMetaPages());
-                sections = cxr.getSections(course.getCourseId());
-            } catch (InvalidXMLException e) {
-                e.printStackTrace();
-            }
-            return cxr;
+        boolean baselineCompleted = isBaselineCompleted();
+        if (!baselineCompleted){
+            showBaselineMessage();
         }
-
-        @Override
-        protected void onPostExecute(CourseXMLReader parseResults) {
-            if (cxr == null){
-                showErrorMessage();
-            }
-            else{
-                boolean baselineCompleted = isBaselineCompleted();
-                if (!baselineCompleted){
-                    showBaselineMessage();
-                }
-                initializeCourseIndex(true);
-                invalidateOptionsMenu();
-            }
-        }
-
-
+        initializeCourseIndex(true);
+        invalidateOptionsMenu();
     }
+
+    @Override
+    public void onParseError() { showErrorMessage(); }
 }

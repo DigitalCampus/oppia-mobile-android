@@ -19,6 +19,8 @@ package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -26,6 +28,7 @@ import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
@@ -112,7 +115,17 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_LASTNAME = "lastname";
 	private static final String USER_C_PASSWORD = "passwordencrypted";
 	private static final String USER_C_APIKEY = "apikey";
-		
+
+    public void beginTransaction(){
+        db.beginTransaction();
+    }
+    public void endTransaction(boolean success){
+        if (success){
+            db.setTransactionSuccessful();
+        }
+        db.endTransaction();
+    }
+
 	// Constructor
 	public DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
@@ -415,6 +428,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void insertActivities(ArrayList<Activity> acts) {
+
+        beginTransaction();
 		for (Activity a : acts) {
 			ContentValues values = new ContentValues();
 			values.put(ACTIVITY_C_COURSEID, a.getCourseId());
@@ -425,20 +440,24 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(ACTIVITY_C_TITLE, a.getTitleJSONString());
 			db.insertOrThrow(ACTIVITY_TABLE, null, values);
 		}
+        endTransaction(true);
 	}
 
 	public void insertSchedule(ArrayList<ActivitySchedule> actsched) {
+
+        beginTransaction();
 		for (ActivitySchedule as : actsched) {
 			ContentValues values = new ContentValues();
 			values.put(ACTIVITY_C_STARTDATE, as.getStartTimeString());
 			values.put(ACTIVITY_C_ENDDATE, as.getEndTimeString());
 			db.update(ACTIVITY_TABLE, values, ACTIVITY_C_ACTIVITYDIGEST + "='" + as.getDigest() + "'", null);
 		}
+        endTransaction(true);
 	}
 	
 	public void insertTrackers(ArrayList<TrackerLog> trackers, long courseId) {
 		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-		
+        beginTransaction();
 		for (TrackerLog t : trackers) {
 			ContentValues values = new ContentValues();
 			values.put(TRACKER_LOG_C_DATETIME, t.getDateTimeString());
@@ -449,6 +468,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(TRACKER_LOG_C_USERID, userId);
 			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 		}
+        endTransaction(true);
 	}
 	
 	public void resetSchedule(int courseId){
@@ -633,8 +653,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		s = COURSE_C_ID + "=?";
 		args = new String[] { String.valueOf(courseId) };
 		db.delete(COURSE_TABLE, s, args);
-		
-		
+
 	}
 	
 	public boolean isInstalled(String shortname){
@@ -843,6 +862,57 @@ public class DbHelper extends SQLiteOpenHelper {
 			return true;
 		}
 	}
+
+    public void getCourseQuizResults(ArrayList<QuizStats> stats, int courseId, long userId){
+
+        String quizResultsWhereClause = QUIZRESULTS_C_COURSEID+" =? AND " + QUIZRESULTS_C_USERID + "=?";
+        String[] quizResultsArgs = new String[] { String.valueOf(courseId), String.valueOf(userId) };
+        String[] quizResultsColumns = new String[]{ QUIZRESULTS_C_DATA};
+
+        //We get the attempts made by the user for this course's quizzes
+        Cursor c = db.query(QUIZRESULTS_TABLE, quizResultsColumns, quizResultsWhereClause, quizResultsArgs, null, null, null);
+        if (c.getCount() <= 0) return; //we return the empty array
+
+        if (stats == null) stats = new ArrayList<QuizStats>();
+        //Instead of parsing each JSON, we extract the data with a RegEx
+        Pattern quizDataPattern = Pattern.compile(QuizStats.fromQuizResultRegex);
+        Matcher matcher = quizDataPattern.matcher("");
+
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            String quizData = c.getString(c.getColumnIndex(QUIZRESULTS_C_DATA));
+
+            matcher.reset(quizData);
+            boolean find = matcher.find();
+            if (find){
+                //We get the captured parts by the RegEx
+                int score = (int)(Float.parseFloat(matcher.group(QuizStats.QUIZRESULT_MATCHER_USERSCORE)) * 100);
+                int maxScore = Integer.parseInt(matcher.group(QuizStats.QUIZRESULT_MATCHER_MAXSCORE)) * 100;
+                int quizID = Integer.parseInt(matcher.group(QuizStats.QUIZRESULT_MATCHER_QUIZID));
+
+                boolean alreadyInserted = false;
+                for (QuizStats quiz : stats){
+                    if (quiz.getQuizId() == quizID){
+                        if (quiz.getUserScore() < score) quiz.setUserScore(score);
+                        if (quiz.getMaxScore() < maxScore) quiz.setMaxScore(maxScore);
+                        quiz.setAttempted(true);
+                        alreadyInserted = true;
+                        break;
+                    }
+                }
+                if (!alreadyInserted){
+                    QuizStats quiz = new QuizStats(quizID);
+                    quiz.setAttempted(true);
+                    quiz.setUserScore(score);
+                    quiz.setMaxScore(maxScore);
+                    stats.add(quiz);
+                }
+            }
+            c.moveToNext();
+        }
+        c.close();
+
+    }
 	
 	public Activity getActivityByDigest(String digest){
 		String sql = "SELECT * FROM  "+ ACTIVITY_TABLE + " a " +

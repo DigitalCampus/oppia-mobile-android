@@ -13,4 +13,7 @@
     <color name="default_icon_foreground">#666666</color>
     <color name="button_background">#eeeeee</color>
     <color name="activity_icon_background">#ffffff</color>
+    <color name="highlight_secondary">#689e3a</color>
+    <color name="highlight_label">#434343</color>
+    <color name="highlight_separator">#b9b9b9</color>
 </resources>

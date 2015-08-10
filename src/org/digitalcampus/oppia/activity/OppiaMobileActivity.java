@@ -489,7 +489,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         displayCourses(userId);
     }
 
-    
+
     /* CourseInstallerListener implementation */
     @Override
     public void onInstallComplete(String fileUrl) {
