@@ -266,7 +266,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		}
 	}
 
-    @Override
+    //@Override
     public void onDownloadProgress(String fileUrl, int progress) {
         CourseIntallViewAdapter course = findCourse(fileUrl);
         if (course != null){
@@ -277,7 +277,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         }
     }
 
-    @Override
+    //@Override
     public void onInstallProgress(String fileUrl, int progress) {
         CourseIntallViewAdapter course = findCourse(fileUrl);
         if (course != null){
@@ -288,7 +288,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         }
     }
 
-    @Override
+    //@Override
     public void onInstallFailed(String fileUrl, String message) {
         CourseIntallViewAdapter course = findCourse(fileUrl);
         if (course != null){
@@ -299,7 +299,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         }
     }
 
-    @Override
+    //@Override
     public void onInstallComplete(String fileUrl) {
         CourseIntallViewAdapter course = findCourse(fileUrl);
         if (course != null){
