@@ -54,7 +54,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 18;
+	static final int DB_VERSION = 19;
 
 	private static SQLiteDatabase db;
 	private SharedPreferences prefs;
@@ -101,6 +101,9 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZRESULTS_C_SENT = "submitted";
 	private static final String QUIZRESULTS_C_COURSEID = "moduleid";
 	private static final String QUIZRESULTS_C_USERID = "userid";
+	private static final String QUIZRESULTS_C_SCORE = "score";
+	private static final String QUIZRESULTS_C_PASSED = "passed";
+	
 	
 	private static final String SEARCH_TABLE = "search";
 	private static final String SEARCH_C_TEXT = "fulltext";
@@ -115,6 +118,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_LASTNAME = "lastname";
 	private static final String USER_C_PASSWORD = "passwordencrypted";
 	private static final String USER_C_APIKEY = "apikey";
+	private static final String USER_C_LAST_LOGIN_DATE = "lastlogin";
+	private static final String USER_C_NO_LOGINS = "nologins";
 
     public void beginTransaction(){
         db.beginTransaction();
@@ -191,7 +196,9 @@ public class DbHelper extends SQLiteOpenHelper {
 							QUIZRESULTS_C_DATA + " text, " +  
 							QUIZRESULTS_C_SENT + " integer default 0, "+
 							QUIZRESULTS_C_COURSEID + " integer, " +
-							QUIZRESULTS_C_USERID + " integer default 0 )";
+							QUIZRESULTS_C_USERID + " integer default 0, " +
+							QUIZRESULTS_C_SCORE + " real default 0, " +
+							QUIZRESULTS_C_PASSED + " integer default 0)";
 		db.execSQL(sql);
 	}
 	
@@ -208,11 +215,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void createUserTable(SQLiteDatabase db){
 		String sql = "CREATE TABLE ["+USER_TABLE+"] (" +
                 "["+USER_C_ID+"]" + " integer primary key autoincrement, " +
-                "["+USER_C_USERNAME +"]" + " integer default 0, "+
+                "["+USER_C_USERNAME +"]" + " TEXT, "+
                 "["+USER_C_FIRSTNAME +"] TEXT, " +
                 "["+USER_C_LASTNAME+"] TEXT, " +
                 "["+USER_C_PASSWORD +"] TEXT, " +
-                "["+USER_C_APIKEY +"] TEXT " +
+                "["+USER_C_LAST_LOGIN_DATE +"] datetime null, " +
+                "["+USER_C_NO_LOGINS +"] integer default 0 " +
             ");";
 		db.execSQL(sql);
 	}
@@ -321,6 +329,22 @@ public class DbHelper extends SQLiteOpenHelper {
 			
 		}	
 	
+		if(oldVersion <= 18 && newVersion >= 19){
+			
+			// alter quiz results table
+			String sql1 = "ALTER TABLE " + QUIZRESULTS_TABLE + " ADD COLUMN " + QUIZRESULTS_C_SCORE + " real default 0;";
+			db.execSQL(sql1);
+			String sql2 = "ALTER TABLE " + QUIZRESULTS_TABLE + " ADD COLUMN " + QUIZRESULTS_C_PASSED + " integer default 0;";
+			db.execSQL(sql2);
+			
+			// alter user table
+			String sql3 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_LAST_LOGIN_DATE + " datetime null;";
+			db.execSQL(sql3);
+			String sql4 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_NO_LOGINS + " integer default 0;";
+			db.execSQL(sql4);
+			
+			
+		}	
 	}
 
 	public void updateV43(long userId){

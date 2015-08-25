@@ -160,7 +160,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
 		}
 	}
 
-    @Override
+    //@Override
     public void onParseComplete(CourseXMLReader parsed) {
 
         ArrayList<Activity> activities = parsed.getActivities(course.getCourseId());
@@ -261,7 +261,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         }
     }
 
-    @Override
+    //@Override
     public void onParseError() {
 
     }

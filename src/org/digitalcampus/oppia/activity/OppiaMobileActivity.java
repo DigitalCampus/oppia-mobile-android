@@ -476,7 +476,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		}
 	}
 
-    @Override
+    //@Override
     public void onCourseDeletionComplete(Payload response) {
         if (response.isResult()){
             Editor e = prefs.edit();
@@ -491,7 +491,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 
     /* CourseInstallerListener implementation */
-    @Override
+    // @Override
     public void onInstallComplete(String fileUrl) {
         Toast.makeText(this, this.getString(R.string.install_complete), Toast.LENGTH_LONG).show();
         displayCourses(userId);

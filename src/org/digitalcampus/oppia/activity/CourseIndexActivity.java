@@ -326,7 +326,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		}
 	}
 
-    @Override
+    //@Override
     public void onParseComplete(CourseXMLReader parsed) {
         cxr = parsed;
         course.setMetaPages(cxr.getMetaPages());
@@ -340,6 +340,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         invalidateOptionsMenu();
     }
 
-    @Override
+    //@Override
     public void onParseError() { showErrorMessage(); }
 }

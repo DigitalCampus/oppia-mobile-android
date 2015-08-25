@@ -131,7 +131,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 	
 	private void downloadViaPC(){
-		String filename = "mobile-learning-media.html";
+		String filename = "oppia-media.html";
 		String strData = "<html>";
 		strData += "<head><title>"+this.getString(R.string.download_via_pc_title)+"</title></head>";
 		strData += "<body>";
@@ -163,7 +163,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		}
 	}
 
-    @Override
+    // Override
     public void onDownloadProgress(String fileUrl, int progress) {
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
@@ -172,7 +172,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         }
     }
 
-    @Override
+    // Override
     public void onDownloadFailed(String fileUrl, String message) {
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
@@ -183,7 +183,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         }
     }
 
-    @Override
+    // Override
     public void onDownloadComplete(String fileUrl) {
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
@@ -205,14 +205,17 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     private class DownloadMediaListener implements ListInnerBtnOnClickListener {
+    	
+    	public final String TAG = DownloadMediaListener.class.getSimpleName();
+    	
         //@Override
         public void onClick(int position) {
-
-            if(!ConnectionUtils.isOnWifi(DownloadMediaActivity.this)){
+        	
+            if(!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)){
                 UIUtils.showAlert(DownloadMediaActivity.this, R.string.warning, R.string.warning_wifi_required);
                 return;
             }
-            Log.d("media-download", "Clicked " + position);
+            Log.d(TAG, "Clicked " + position);
             Media mediaToDownload = missingMedia.get(position);
 
             if (!mediaToDownload.isDownloading()){
