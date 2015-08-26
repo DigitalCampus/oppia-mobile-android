@@ -18,6 +18,8 @@
 package org.digitalcampus.oppia.model;
 
 import org.digitalcampus.mobile.quiz.Quiz;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class QuizStats {
 
@@ -25,12 +27,12 @@ public class QuizStats {
     public static final String fromCourseXMLRegex = "\\{.+?\\s*\"id\"\\s*:\\s*(.+?)\\s*,[A-z\"{0-9\\\\\\/,:\\_\\-]+?,\"passthreshold\":\"(.+?)\"\\s*.+?\\}";
     public static final String fromCourseXMLRegexSimple = "\"id\"\\s*:\\s*(.+?)\\s*,\"";
 
+    public static final String JSONPROP_QUIZID = "quiz_id";
+    public static final String JSONPROP_SCORE = "score";
+    public static final String JSONPROP_MAXSCORE = "maxscore";
+
     public static final int COURSEXML_MATCHER_QUIZID = 1;
     public static final int COURSEXML_MATCHER_THRESHOLD = 2;
-
-    public static final int QUIZRESULT_MATCHER_USERSCORE = 1;
-    public static final int QUIZRESULT_MATCHER_MAXSCORE = 2;
-    public static final int QUIZRESULT_MATCHER_QUIZID = 3;
 
     private int quizId;
     public boolean attempted;
@@ -79,4 +81,38 @@ public class QuizStats {
     public boolean isPassed(){
         return (attempted && (getPercent() >= passThreshold));
     }
+
+    //Class to parse the QuizResult JSON saved in the database
+    public static class QuizStatsJsonParser {
+
+        private String jsonString;
+        private JSONObject quizJson;
+
+        private double score;
+        private int maxScore;
+        private int quizID;
+
+        public QuizStatsJsonParser(String jsonString) {
+            this.jsonString = jsonString;
+        }
+
+        public double getScore() { return score; }
+        public int getMaxScore() { return maxScore; }
+        public int getQuizID() { return quizID; }
+
+        public boolean parse(){
+            try {
+                quizJson = new JSONObject(jsonString);
+                if (quizJson.has(JSONPROP_QUIZID)) quizID = quizJson.getInt(JSONPROP_QUIZID);
+                if (quizJson.has(JSONPROP_SCORE)) score = quizJson.getDouble(JSONPROP_SCORE);
+                if (quizJson.has(JSONPROP_MAXSCORE)) maxScore = quizJson.getInt(JSONPROP_MAXSCORE);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+    }
+
 }
