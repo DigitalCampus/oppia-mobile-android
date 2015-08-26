@@ -100,14 +100,14 @@ public class TrackerService extends Service implements APIRequestListener {
 			// send activity trackers
 			MobileLearning app = (MobileLearning) this.getApplication();
 			if(app.omSubmitTrackerMultipleTask == null){
-				Log.d(TAG,"Sumitting trackers multiple task");
+				Log.d(TAG,"Submitting trackers multiple task");
 				app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(this);
 				app.omSubmitTrackerMultipleTask.execute();
 			}
 			
 			// send quiz results
 			if(app.omSubmitQuizTask == null){
-				Log.d(TAG,"Sumitting quiz task");
+				Log.d(TAG,"Submitting quiz task");
 				DbHelper db = new DbHelper(this);
 				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 				ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(userId);
