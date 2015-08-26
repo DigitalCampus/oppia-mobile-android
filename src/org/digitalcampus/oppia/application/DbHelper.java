@@ -488,7 +488,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(TRACKER_LOG_C_ACTIVITYDIGEST, t.getDigest());
 			values.put(TRACKER_LOG_C_SUBMITTED, t.isSubmitted());
 			values.put(TRACKER_LOG_C_COURSEID, courseId);
-			values.put(TRACKER_LOG_C_COMPLETED, true);
+			values.put(TRACKER_LOG_C_COMPLETED, t.isCompleted());
 			values.put(TRACKER_LOG_C_USERID, userId);
 			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 		}

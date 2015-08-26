@@ -26,7 +26,9 @@ public class TrackerLog {
 	private long id;
 	private String digest;
 	private String content;
+	private String type;
 	private boolean submitted;
+	private boolean completed;
 	
 	public long getId() {
 		return id;
@@ -62,6 +64,18 @@ public class TrackerLog {
 	
 	public String getDateTimeString() {
 		return MobileLearning.DATETIME_FORMAT.print(datetime);
+	}
+	public boolean isCompleted() {
+		return completed;
+	}
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

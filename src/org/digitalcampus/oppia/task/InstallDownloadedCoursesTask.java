@@ -136,17 +136,17 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				boolean success = false;
 				
 				DbHelper db = new DbHelper(ctx);
-				long added = db.addOrUpdateCourse(c);
-				if (added != -1) {
+				long courseId = db.addOrUpdateCourse(c);
+				if (courseId != -1) {
 					payload.addResponseData(c);
 					File src = new File(tempdir + File.separator + courseDirs[0]);
 					File dest = new File(FileUtils.getCoursesPath(ctx));
 
-					db.insertActivities(cxr.getActivities(added));
+					db.insertActivities(cxr.getActivities(courseId));
                     dp.setProgress(50);
                     publishProgress(dp);
 
-					db.insertTrackers(ctxr.getTrackers(), added);
+					db.insertTrackers(ctxr.getTrackers(), courseId);
                     dp.setProgress(70);
                     publishProgress(dp);
 
@@ -173,7 +173,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				// add schedule
 				// put this here so even if the course content isn't updated the schedule will be
 				db.insertSchedule(csxr.getSchedule());
-				db.updateScheduleVersion(added, csxr.getScheduleVersion());				
+				db.updateScheduleVersion(courseId, csxr.getScheduleVersion());				
 				DatabaseManager.getInstance().closeDatabase();
 
                 dp.setProgress(80);

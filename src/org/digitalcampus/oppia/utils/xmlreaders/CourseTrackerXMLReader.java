@@ -34,6 +34,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import android.util.Log;
+
 public class CourseTrackerXMLReader {
 	public static final String TAG = CourseTrackerXMLReader.class.getSimpleName();
 	private Document document;
@@ -70,13 +72,28 @@ public class CourseTrackerXMLReader {
 			NamedNodeMap attrs = actscheds.item(i).getAttributes();
 			String digest = attrs.getNamedItem("digest").getTextContent();
 			String submittedDateString = attrs.getNamedItem("submitteddate").getTextContent();
-		
 			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
+			
+			boolean completed;
+			try {
+				completed = Boolean.parseBoolean(attrs.getNamedItem("completed").getTextContent());
+			} catch (NullPointerException npe) {
+				completed = true;
+			}
+			
+			String type;
+			try {
+				type = attrs.getNamedItem("type").getTextContent();
+			} catch (NullPointerException npe) {
+				type = null;
+			}
 			
 			TrackerLog t = new TrackerLog();
 			t.setDigest(digest);
 			t.setSubmitted(true);
 			t.setDatetime(sdt);
+			t.setCompleted(completed);
+			t.setType(type);
 			trackers.add(t);
 		}
 		return trackers;
