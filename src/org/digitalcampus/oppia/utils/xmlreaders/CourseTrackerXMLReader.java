@@ -67,9 +67,9 @@ public class CourseTrackerXMLReader {
 		if (this.document == null){
 			return trackers;
 		}
-		NodeList actscheds = document.getFirstChild().getChildNodes();
-		for (int i=0; i<actscheds.getLength(); i++) {
-			NamedNodeMap attrs = actscheds.item(i).getAttributes();
+		NodeList actTrackers = document.getFirstChild().getChildNodes();
+		for (int i=0; i<actTrackers.getLength(); i++) {
+			NamedNodeMap attrs = actTrackers.item(i).getAttributes();
 			String digest = attrs.getNamedItem("digest").getTextContent();
 			String submittedDateString = attrs.getNamedItem("submitteddate").getTextContent();
 			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
@@ -95,6 +95,37 @@ public class CourseTrackerXMLReader {
 			t.setCompleted(completed);
 			t.setType(type);
 			trackers.add(t);
+		}
+		return trackers;
+	}
+	
+	public ArrayList<TrackerLog> getQuizzes(){
+		ArrayList<TrackerLog> trackers = new ArrayList<TrackerLog>();
+		if (this.document == null){
+			return trackers;
+		}
+		NodeList actTrackers = document.getFirstChild().getChildNodes();
+		for (int i=0; i<actTrackers.getLength(); i++) {
+			NamedNodeMap attrs = actTrackers.item(i).getAttributes();
+			
+			String type;
+			try {
+				type = attrs.getNamedItem("type").getTextContent();
+			} catch (NullPointerException npe) {
+				type = null;
+			}
+			
+			// if quiz activity then get the results etc
+			if (type != null && type.equalsIgnoreCase("quiz")){
+				NodeList quizNodes = actTrackers.item(i).getChildNodes();
+				for (int j=0; j<quizNodes.getLength(); j++) {
+					NamedNodeMap quizAttrs = quizNodes.item(j).getAttributes();
+					String maxscore = quizAttrs.getNamedItem("maxscore").getTextContent();
+					String score = quizAttrs.getNamedItem("score").getTextContent();
+					Log.d(TAG,maxscore);
+					Log.d(TAG,score);
+				}
+			}
 		}
 		return trackers;
 	}

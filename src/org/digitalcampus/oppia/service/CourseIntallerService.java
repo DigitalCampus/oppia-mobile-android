@@ -236,6 +236,7 @@ public class CourseIntallerService extends IntentService {
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 50);
 
             db.insertTrackers(ctxr.getTrackers(), added);
+            ctxr.getQuizzes();
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 70);
 
             // Delete old course

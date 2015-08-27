@@ -25,16 +25,20 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
@@ -77,6 +81,18 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     }
 	
 	private void endStartUpScreen() {
+		
+		DbHelper db = new DbHelper(this);
+		ArrayList<User> users = db.getAllUsers();
+		DatabaseManager.getInstance().closeDatabase();
+		
+		for (User u: users){
+			Log.d(TAG,"username: " + u.getUsername());
+			Log.d(TAG,"api key:" + u.getApiKey());
+			Log.d(TAG,"pw encrypt: " + u.getPasswordEncrypted());
+			Log.d(TAG,"--------------");
+		}
+		
         // launch new activity and close splash screen
 		if (!MobileLearning.isLoggedIn(this)) {
 			startActivity(new Intent(StartUpActivity.this, WelcomeActivity.class));

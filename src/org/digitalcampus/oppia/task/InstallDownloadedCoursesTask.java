@@ -147,6 +147,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
                     publishProgress(dp);
 
 					db.insertTrackers(ctxr.getTrackers(), courseId);
+					ctxr.getQuizzes();
                     dp.setProgress(70);
                     publishProgress(dp);
 

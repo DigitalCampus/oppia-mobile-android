@@ -54,7 +54,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 19;
+	static final int DB_VERSION = 20;
 
 	private static SQLiteDatabase db;
 	private SharedPreferences prefs;
@@ -102,6 +102,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZRESULTS_C_COURSEID = "moduleid";
 	private static final String QUIZRESULTS_C_USERID = "userid";
 	private static final String QUIZRESULTS_C_SCORE = "score";
+	private static final String QUIZRESULTS_C_MAXSCORE = "maxscore";
 	private static final String QUIZRESULTS_C_PASSED = "passed";
 	
 	
@@ -198,6 +199,7 @@ public class DbHelper extends SQLiteOpenHelper {
 							QUIZRESULTS_C_COURSEID + " integer, " +
 							QUIZRESULTS_C_USERID + " integer default 0, " +
 							QUIZRESULTS_C_SCORE + " real default 0, " +
+							QUIZRESULTS_C_MAXSCORE + " real default 0, " +
 							QUIZRESULTS_C_PASSED + " integer default 0)";
 		db.execSQL(sql);
 	}
@@ -342,9 +344,13 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(sql3);
 			String sql4 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_NO_LOGINS + " integer default 0;";
 			db.execSQL(sql4);
-			
-			
-		}	
+		}
+
+		if(oldVersion <= 19 && newVersion >= 20){
+			// alter quiz results table
+			String sql1 = "ALTER TABLE " + QUIZRESULTS_TABLE + " ADD COLUMN " + QUIZRESULTS_C_MAXSCORE + " real default 0;";
+			db.execSQL(sql1);
+		}
 	}
 
 	public void updateV43(long userId){
