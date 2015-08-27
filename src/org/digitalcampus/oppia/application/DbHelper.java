@@ -904,21 +904,18 @@ public class DbHelper extends SQLiteOpenHelper {
         if (c.getCount() <= 0) return; //we return the empty array
 
         if (stats == null) stats = new ArrayList<QuizStats>();
-        //Instead of parsing each JSON, we extract the data with a RegEx
-        Pattern quizDataPattern = Pattern.compile(QuizStats.fromQuizResultRegex);
-        Matcher matcher = quizDataPattern.matcher("");
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
             String quizData = c.getString(c.getColumnIndex(QUIZRESULTS_C_DATA));
+            QuizStats.QuizStatsJsonParser parser = new QuizStats.QuizStatsJsonParser(quizData);
 
-            matcher.reset(quizData);
-            boolean find = matcher.find();
-            if (find){
+            boolean parsingSuccess = parser.parse();
+            if (parsingSuccess){
                 //We get the captured parts by the RegEx
-                int score = (int)(Float.parseFloat(matcher.group(QuizStats.QUIZRESULT_MATCHER_USERSCORE)) * 100);
-                int maxScore = Integer.parseInt(matcher.group(QuizStats.QUIZRESULT_MATCHER_MAXSCORE)) * 100;
-                int quizID = Integer.parseInt(matcher.group(QuizStats.QUIZRESULT_MATCHER_QUIZID));
+                int score = (int)(parser.getScore() * 100);
+                int maxScore = parser.getMaxScore() * 100;
+                int quizID = parser.getQuizID();
 
                 boolean alreadyInserted = false;
                 for (QuizStats quiz : stats){
