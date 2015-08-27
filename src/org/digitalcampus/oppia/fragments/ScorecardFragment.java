@@ -221,6 +221,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
                 if (quiz.getQuizId() == quizID ){
                     quizStats.remove(quiz);
                     pretestScore = quiz.getPercent();
+                    break;
                 }
             }
         }
