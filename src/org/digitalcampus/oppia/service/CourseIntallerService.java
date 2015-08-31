@@ -236,6 +236,7 @@ public class CourseIntallerService extends IntentService {
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 50);
             
             long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+            db.resetCourse(courseId, userId);
             db.insertTrackers(ctxr.getTrackers(courseId, userId));
             db.insertQuizAttempts(ctxr.getQuizAttempts(courseId, userId));
             
