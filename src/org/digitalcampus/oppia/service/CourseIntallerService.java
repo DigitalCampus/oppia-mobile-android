@@ -205,7 +205,8 @@ public class CourseIntallerService extends IntentService {
         try {
             cxr = new CourseXMLReader(courseXMLPath, 0, this);
             csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-            ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+            File trackerXML = new File(courseTrackerXMLPath);
+			ctxr = new CourseTrackerXMLReader(trackerXML);
         } catch (InvalidXMLException e) {
             Mint.logException(e);
             logAndNotifyError(fileUrl, e);

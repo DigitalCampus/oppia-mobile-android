@@ -113,7 +113,8 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				try {
 					cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+					File trackerXML = new File(courseTrackerXMLPath);
+					ctxr = new CourseTrackerXMLReader(trackerXML);
 				} catch (InvalidXMLException e) {
 					payload.setResult(false);
 					return payload;

@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.utils.xmlreaders;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,6 +34,7 @@ import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class CourseTrackerXMLReader {
@@ -50,8 +52,7 @@ public class CourseTrackerXMLReader {
     
 	private Document document;
 	
-	public CourseTrackerXMLReader(String filename) throws InvalidXMLException {
-		File courseXML = new File(filename);
+	public CourseTrackerXMLReader(File courseXML) throws InvalidXMLException {
 		if (courseXML.exists()) {
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory
@@ -71,6 +72,24 @@ public class CourseTrackerXMLReader {
 		}
 	}
 	
+	public CourseTrackerXMLReader(String trackerXML) throws InvalidXMLException {
+
+		DocumentBuilderFactory factory = DocumentBuilderFactory
+				.newInstance();
+		DocumentBuilder builder;
+		try {
+			builder = factory.newDocumentBuilder();
+			InputSource is = new InputSource(new StringReader(trackerXML));
+			document = builder.parse(is);
+
+		} catch (ParserConfigurationException e) {
+			throw new InvalidXMLException(e);
+		} catch (SAXException e) {
+			throw new InvalidXMLException(e);
+		} catch (IOException e) {
+			throw new InvalidXMLException(e);
+		}
+	}
 	
 	public ArrayList<TrackerLog> getTrackers(long courseId, long userId){
 		ArrayList<TrackerLog> trackers = new ArrayList<TrackerLog>();

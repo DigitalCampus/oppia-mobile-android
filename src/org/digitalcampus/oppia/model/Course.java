@@ -150,6 +150,10 @@ public class Course implements Serializable {
 	public void setDownloadUrl(String downloadUrl) {
 		this.downloadUrl = downloadUrl;
 	}
+	
+	public String getTrackerLogUrl(){
+		return String.format(MobileLearning.COURSE_ACTIVITY_PATH, this.getShortname());
+	}
 
 	public Double getVersionId() {
 		return versionId;

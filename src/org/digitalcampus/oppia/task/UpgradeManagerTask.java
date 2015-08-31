@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.task;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -33,11 +32,11 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.SearchUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.SearchUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -161,7 +160,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				try {
 					cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+					File trackerXML = new File(courseTrackerXMLPath);
+					ctxr = new CourseTrackerXMLReader(trackerXML);
 				} catch (InvalidXMLException e) {
 					e.printStackTrace();
 					break;
