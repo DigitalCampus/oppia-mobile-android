@@ -35,10 +35,19 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import android.util.Log;
-
 public class CourseTrackerXMLReader {
+	
 	public static final String TAG = CourseTrackerXMLReader.class.getSimpleName();
+	
+	private static final String NODE_TYPE = "type";
+	private static final String NODE_QUIZ = "quiz";
+    private static final String NODE_DIGEST = "digest";
+    private static final String NODE_SUBMITTEDDATE = "submitteddate";
+    private static final String NODE_COMPLETED = "completed";
+    private static final String NODE_SCORE = "score";
+    private static final String NODE_MAXSCORE = "maxscore";
+    private static final String NODE_PASSED = "passed";
+    
 	private Document document;
 	
 	public CourseTrackerXMLReader(String filename) throws InvalidXMLException {
@@ -71,20 +80,20 @@ public class CourseTrackerXMLReader {
 		NodeList actTrackers = document.getFirstChild().getChildNodes();
 		for (int i=0; i<actTrackers.getLength(); i++) {
 			NamedNodeMap attrs = actTrackers.item(i).getAttributes();
-			String digest = attrs.getNamedItem("digest").getTextContent();
-			String submittedDateString = attrs.getNamedItem("submitteddate").getTextContent();
+			String digest = attrs.getNamedItem(NODE_DIGEST).getTextContent();
+			String submittedDateString = attrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
 			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
 			
 			boolean completed;
 			try {
-				completed = Boolean.parseBoolean(attrs.getNamedItem("completed").getTextContent());
+				completed = Boolean.parseBoolean(attrs.getNamedItem(NODE_COMPLETED).getTextContent());
 			} catch (NullPointerException npe) {
 				completed = true;
 			}
 			
 			String type;
 			try {
-				type = attrs.getNamedItem("type").getTextContent();
+				type = attrs.getNamedItem(NODE_TYPE).getTextContent();
 			} catch (NullPointerException npe) {
 				type = null;
 			}
@@ -110,25 +119,27 @@ public class CourseTrackerXMLReader {
 		NodeList actTrackers = document.getFirstChild().getChildNodes();
 		for (int i=0; i<actTrackers.getLength(); i++) {
 			NamedNodeMap attrs = actTrackers.item(i).getAttributes();
-			String digest = attrs.getNamedItem("digest").getTextContent();
+			String digest = attrs.getNamedItem(NODE_DIGEST).getTextContent();
 			String type;
 			try {
-				type = attrs.getNamedItem("type").getTextContent();
+				type = attrs.getNamedItem(NODE_TYPE).getTextContent();
 			} catch (NullPointerException npe) {
 				type = null;
 			}
 			
 			// if quiz activity then get the results etc
-			if (type != null && type.equalsIgnoreCase("quiz")){
+			if (type != null && type.equalsIgnoreCase(NODE_QUIZ)){
 				NodeList quizNodes = actTrackers.item(i).getChildNodes();
 				for (int j=0; j<quizNodes.getLength(); j++) {
 					NamedNodeMap quizAttrs = quizNodes.item(j).getAttributes();
-					float maxscore = Float.parseFloat(quizAttrs.getNamedItem("maxscore").getTextContent());
-					float score = Float.parseFloat(quizAttrs.getNamedItem("score").getTextContent());
+					float maxscore = Float.parseFloat(quizAttrs.getNamedItem(NODE_MAXSCORE).getTextContent());
+					float score = Float.parseFloat(quizAttrs.getNamedItem(NODE_SCORE).getTextContent());
+					String submittedDateString = quizAttrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
+					DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
 					
 					boolean passed;
 					try {
-						passed = Boolean.parseBoolean(quizAttrs.getNamedItem("passed").getTextContent());
+						passed = Boolean.parseBoolean(quizAttrs.getNamedItem(NODE_PASSED).getTextContent());
 					} catch (NullPointerException npe) {
 						passed = true;
 					}
@@ -141,6 +152,7 @@ public class CourseTrackerXMLReader {
 					qa.setMaxscore(maxscore);
 					qa.setPassed(passed);
 					qa.setSent(true);
+					qa.setDatetime(sdt);
 					quizAttempts.add(qa);
 				}
 			}

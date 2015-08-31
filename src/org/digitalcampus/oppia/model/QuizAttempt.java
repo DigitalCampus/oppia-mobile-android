@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.model;
 
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.joda.time.DateTime;
 
 public class QuizAttempt {
@@ -38,6 +39,10 @@ public class QuizAttempt {
 	
 	public void setDatetime(DateTime datetime) {
 		this.datetime = datetime;
+	}
+	
+	public String getDateTimeString() {
+		return MobileLearning.DATETIME_FORMAT.print(datetime);
 	}
 	
 	public long getId() {

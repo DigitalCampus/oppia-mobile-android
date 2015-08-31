@@ -260,7 +260,7 @@ public class FeedbackWidget extends WidgetFactory {
     		qa.setScore(feedback.getUserscore());
     		qa.setMaxscore(feedback.getMaxscore());
     		qa.setPassed(this.getActivityCompleted());
-            
+
             db.insertQuizAttempt(qa);
             DatabaseManager.getInstance().closeDatabase();
         }

@@ -869,8 +869,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(QUIZATTEMPTS_C_SCORE, qa.getScore());
 		values.put(QUIZATTEMPTS_C_PASSED, qa.isPassed());
 		values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
-		Log.d(TAG, "qaId:" + qa.getId());
-		Log.d(TAG, "results: " + db.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + qa.getId(), null));
+		db.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + qa.getId(), null);
 	}
 	
 	public void insertQuizAttempts(ArrayList<QuizAttempt> quizAttempts){
@@ -885,6 +884,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				values.put(QUIZATTEMPTS_C_PASSED, qa.isPassed());
 				values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
 				values.put(QUIZATTEMPTS_C_SENT, qa.isSent());
+	    		values.put(QUIZATTEMPTS_C_DATETIME, qa.getDateTimeString());
 				db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
 			}
 	        endTransaction(true);
