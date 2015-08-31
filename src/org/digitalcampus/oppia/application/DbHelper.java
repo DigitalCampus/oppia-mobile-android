@@ -411,6 +411,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	// returns id of the row
 	public long addOrUpdateUser(User user) {
+		
+		if (user.getUsername().equals("") || user.getUsername() == null){
+			return 0;
+		}
+		
 		ContentValues values = new ContentValues();
 		values.put(USER_C_USERNAME, user.getUsername());
 		values.put(USER_C_FIRSTNAME, user.getFirstname());
