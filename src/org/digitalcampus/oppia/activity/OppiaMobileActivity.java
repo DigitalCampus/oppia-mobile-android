@@ -145,6 +145,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         IntentFilter broadcastFilter = new IntentFilter(CourseIntallerService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         registerReceiver(receiver, broadcastFilter);
+        
+        // scan media
+     	this.scanMedia();
 	}
 	
 	@Override

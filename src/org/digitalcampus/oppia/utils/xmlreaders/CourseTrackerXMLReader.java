@@ -27,6 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.joda.time.DateTime;
 import org.w3c.dom.Document;
@@ -99,15 +100,15 @@ public class CourseTrackerXMLReader {
 		return trackers;
 	}
 	
-	public ArrayList<TrackerLog> getQuizzes(){
-		ArrayList<TrackerLog> trackers = new ArrayList<TrackerLog>();
+	public ArrayList<QuizAttempt> getQuizzes(long courseId, long userId){
+		ArrayList<QuizAttempt> quizAttempts = new ArrayList<QuizAttempt>();
 		if (this.document == null){
-			return trackers;
+			return quizAttempts;
 		}
 		NodeList actTrackers = document.getFirstChild().getChildNodes();
 		for (int i=0; i<actTrackers.getLength(); i++) {
 			NamedNodeMap attrs = actTrackers.item(i).getAttributes();
-			
+			String digest = attrs.getNamedItem("digest").getTextContent();
 			String type;
 			try {
 				type = attrs.getNamedItem("type").getTextContent();
@@ -120,13 +121,32 @@ public class CourseTrackerXMLReader {
 				NodeList quizNodes = actTrackers.item(i).getChildNodes();
 				for (int j=0; j<quizNodes.getLength(); j++) {
 					NamedNodeMap quizAttrs = quizNodes.item(j).getAttributes();
-					String maxscore = quizAttrs.getNamedItem("maxscore").getTextContent();
-					String score = quizAttrs.getNamedItem("score").getTextContent();
-					Log.d(TAG,maxscore);
-					Log.d(TAG,score);
+					float maxscore = Float.parseFloat(quizAttrs.getNamedItem("maxscore").getTextContent());
+					float score = Float.parseFloat(quizAttrs.getNamedItem("score").getTextContent());
+					
+					boolean passed;
+					try {
+						passed = Boolean.parseBoolean(quizAttrs.getNamedItem("passed").getTextContent());
+					} catch (NullPointerException npe) {
+						passed = true;
+					}
+					
+					
+					Log.d(TAG,"maxscore: " + maxscore);
+					Log.d(TAG,"score: " + score);
+					
+					QuizAttempt qa = new QuizAttempt();
+					qa.setCourseId(courseId);
+					qa.setUserId(userId);
+					qa.setActivityDigest(digest);
+					qa.setScore(score);
+					qa.setMaxscore(maxscore);
+					qa.setPassed(passed);
+					qa.setSent(true);
+					quizAttempts.add(qa);
 				}
 			}
 		}
-		return trackers;
+		return quizAttempts;
 	}
 }

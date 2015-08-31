@@ -147,7 +147,8 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
                     publishProgress(dp);
 
 					db.insertTrackers(ctxr.getTrackers(), courseId);
-					ctxr.getQuizzes();
+					long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		            ctxr.getQuizzes(courseId, userId);
                     dp.setProgress(70);
                     publishProgress(dp);
 

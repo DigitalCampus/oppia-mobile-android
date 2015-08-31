@@ -227,16 +227,17 @@ public class CourseIntallerService extends IntentService {
         boolean success = false;
 
         DbHelper db = new DbHelper(this);
-        long added = db.addOrUpdateCourse(c);
-        if (added != -1) {
+        long courseId = db.addOrUpdateCourse(c);
+        if (courseId != -1) {
             File src = new File(tempdir + File.separator + courseDirs[0]);
             File dest = new File(FileUtils.getCoursesPath(this));
 
-            db.insertActivities(cxr.getActivities(added));
+            db.insertActivities(cxr.getActivities(courseId));
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 50);
 
-            db.insertTrackers(ctxr.getTrackers(), added);
-            ctxr.getQuizzes();
+            db.insertTrackers(ctxr.getTrackers(), courseId);
+            long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+            db.insertQuizAttempts(ctxr.getQuizzes(courseId, userId));
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 70);
 
             // Delete old course
@@ -258,7 +259,7 @@ public class CourseIntallerService extends IntentService {
         // add schedule
         // put this here so even if the course content isn't updated the schedule will be
         db.insertSchedule(csxr.getSchedule());
-        db.updateScheduleVersion(added, csxr.getScheduleVersion());
+        db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
         DatabaseManager.getInstance().closeDatabase();
 
         sendBroadcast(fileUrl, ACTION_INSTALL, "" + 80);

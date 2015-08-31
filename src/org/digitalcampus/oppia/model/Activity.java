@@ -214,13 +214,31 @@ public class Activity implements Serializable{
 		if(contents.size() > 0){
 			return contents.get(0).getContent();
 		}
-		return "No content set";
+		return "No content";
 	}
 	
 	public void setContents(ArrayList<Lang> contents) {
 		this.contents = contents;
 	}
 	
+	public void setContentFromJSONString(String json){
+		try {
+			JSONArray contentsArray = new JSONArray(json);
+			for(int i=0; i<contentsArray.length(); i++){
+				JSONObject contentObj = contentsArray.getJSONObject(i);
+				@SuppressWarnings("unchecked")
+				Iterator<String> iter = (Iterator<String>) contentObj.keys();
+				while(iter.hasNext()){
+					String key = iter.next().toString();
+					String content = contentObj.getString(key);
+					Lang l = new Lang(key,content);
+					this.contents.add(l);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 	public boolean hasMedia(){
 		if(media.size() == 0){
 			return false;

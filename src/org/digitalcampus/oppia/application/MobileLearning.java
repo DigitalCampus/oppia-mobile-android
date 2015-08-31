@@ -67,7 +67,7 @@ public class MobileLearning extends Application {
 	public static final int RESOURCE_READ_TIME = 3;
 	public static final int URL_READ_TIME = 5;
 	public static final String USER_AGENT = "OppiaMobile Android: ";
-    public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_EXTERNAL;
+    public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_INTERNAL;
 
     public static final int SCORECARD_ANIM_DURATION = 800;
 

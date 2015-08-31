@@ -91,7 +91,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 boolean baselineCompleted = isBaselineCompleted();
                 if (baselineCompleted) {
                     course.setMetaPages(cxr.getMetaPages());
-                    sections = cxr.getSections(course.getCourseId());
+                    sections = cxr.getSections();
                     for (Section section : sections) {
                         for (int i = 0; i < section.getActivities().size(); i++) {
                             Activity act = section.getActivities().get(i);
@@ -110,7 +110,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                     initializeCourseIndex(false);
                 }
                 else{
-                    sections = cxr.getSections(course.getCourseId());
+                    sections = cxr.getSections();
                     initializeCourseIndex(false);
                     showBaselineMessage();
                 }
@@ -237,7 +237,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	private boolean isBaselineCompleted() {
-		ArrayList<Activity> baselineActs = cxr.getBaselineActivities(course.getCourseId());
+		ArrayList<Activity> baselineActs = cxr.getBaselineActivities();
 		// TODO how to handle if more than one baseline activity
 		for (Activity a : baselineActs) {
 			if (!a.isAttempted()) {
@@ -330,7 +330,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     public void onParseComplete(CourseXMLReader parsed) {
         cxr = parsed;
         course.setMetaPages(cxr.getMetaPages());
-        sections = cxr.getSections(course.getCourseId());
+        sections = cxr.getSections();
 
         boolean baselineCompleted = isBaselineCompleted();
         if (!baselineCompleted){
