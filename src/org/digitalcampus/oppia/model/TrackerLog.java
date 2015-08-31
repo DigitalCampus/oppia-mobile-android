@@ -29,6 +29,8 @@ public class TrackerLog {
 	private String type;
 	private boolean submitted;
 	private boolean completed;
+	private long courseId;
+	private long userId;
 	
 	public long getId() {
 		return id;
@@ -76,6 +78,18 @@ public class TrackerLog {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public long getCourseId() {
+		return courseId;
+	}
+	public void setCourseId(long courseId) {
+		this.courseId = courseId;
+	}
+	public long getUserId() {
+		return userId;
+	}
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 	
 	

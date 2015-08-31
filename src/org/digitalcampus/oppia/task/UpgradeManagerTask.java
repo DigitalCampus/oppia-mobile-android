@@ -180,7 +180,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				
 				if (courseId != -1) {
 					db.insertActivities(cxr.getActivities(courseId));
-					db.insertTrackers(ctxr.getTrackers(),courseId);
+					db.insertTrackers(ctxr.getTrackers(courseId, 0));
 				} 
 				
 				// add schedule

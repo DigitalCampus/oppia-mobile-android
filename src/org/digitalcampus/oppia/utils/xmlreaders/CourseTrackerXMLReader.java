@@ -63,7 +63,7 @@ public class CourseTrackerXMLReader {
 	}
 	
 	
-	public ArrayList<TrackerLog> getTrackers(){
+	public ArrayList<TrackerLog> getTrackers(long courseId, long userId){
 		ArrayList<TrackerLog> trackers = new ArrayList<TrackerLog>();
 		if (this.document == null){
 			return trackers;
@@ -95,12 +95,14 @@ public class CourseTrackerXMLReader {
 			t.setDatetime(sdt);
 			t.setCompleted(completed);
 			t.setType(type);
+			t.setCourseId(courseId);
+			t.setUserId(userId);
 			trackers.add(t);
 		}
 		return trackers;
 	}
 	
-	public ArrayList<QuizAttempt> getQuizzes(long courseId, long userId){
+	public ArrayList<QuizAttempt> getQuizAttempts(long courseId, long userId){
 		ArrayList<QuizAttempt> quizAttempts = new ArrayList<QuizAttempt>();
 		if (this.document == null){
 			return quizAttempts;
@@ -130,10 +132,6 @@ public class CourseTrackerXMLReader {
 					} catch (NullPointerException npe) {
 						passed = true;
 					}
-					
-					
-					Log.d(TAG,"maxscore: " + maxscore);
-					Log.d(TAG,"score: " + score);
 					
 					QuizAttempt qa = new QuizAttempt();
 					qa.setCourseId(courseId);

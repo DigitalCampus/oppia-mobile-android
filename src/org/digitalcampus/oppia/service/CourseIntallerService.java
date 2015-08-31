@@ -234,10 +234,11 @@ public class CourseIntallerService extends IntentService {
 
             db.insertActivities(cxr.getActivities(courseId));
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 50);
-
-            db.insertTrackers(ctxr.getTrackers(), courseId);
+            
             long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-            db.insertQuizAttempts(ctxr.getQuizzes(courseId, userId));
+            db.insertTrackers(ctxr.getTrackers(courseId, userId));
+            db.insertQuizAttempts(ctxr.getQuizAttempts(courseId, userId));
+            
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 70);
 
             // Delete old course
@@ -482,10 +483,10 @@ public class CourseIntallerService extends IntentService {
                         as.setEndTime(edt);
                         activitySchedule.add(as);
                     }
-                    int modId = db.getCourseID(shortname);
-                    db.resetSchedule(modId);
+                    int courseId = db.getCourseID(shortname);
+                    db.resetSchedule(courseId);
                     db.insertSchedule(activitySchedule);
-                    db.updateScheduleVersion(modId, scheduleVersion);
+                    db.updateScheduleVersion(courseId, scheduleVersion);
                     DatabaseManager.getInstance().closeDatabase();
                     break;
                 default:
