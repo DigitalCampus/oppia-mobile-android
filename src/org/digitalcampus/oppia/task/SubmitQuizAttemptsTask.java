@@ -73,7 +73,7 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 				StringEntity se = new StringEntity(qa.getData(), "utf8");
 				se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 				httpPost.setEntity(se);
-				httpPost.addHeader(client.getAuthHeader());
+				httpPost.addHeader(client.getAuthHeader(qa.getUser().getUsername(),qa.getUser().getApiKey()));
 				// make request
 				HttpResponse response = client.execute(httpPost);
 				InputStream content = response.getEntity().getContent();
