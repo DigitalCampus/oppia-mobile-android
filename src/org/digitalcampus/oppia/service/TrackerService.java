@@ -21,20 +21,17 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
-import org.digitalcampus.oppia.model.TrackerLog;
+import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.task.APIRequestTask;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.SubmitQuizTask;
+import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.splunk.mint.Mint;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -54,6 +51,8 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 public class TrackerService extends Service implements APIRequestListener {
 
@@ -106,17 +105,16 @@ public class TrackerService extends Service implements APIRequestListener {
 			}
 			
 			// send quiz results
-			if(app.omSubmitQuizTask == null){
+			if(app.omSubmitQuizAttemptsTask == null){
 				Log.d(TAG,"Submitting quiz task");
 				DbHelper db = new DbHelper(this);
-				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-				ArrayList<TrackerLog> unsent = db.getUnsentQuizResults(userId);
+				ArrayList<QuizAttempt> unsent = db.getUnsentQuizAttempts();
 				DatabaseManager.getInstance().closeDatabase();
 		
 				if (unsent.size() > 0){
 					p = new Payload(unsent);
-					app.omSubmitQuizTask = new SubmitQuizTask(this);
-					app.omSubmitQuizTask.execute(p);
+					app.omSubmitQuizAttemptsTask = new SubmitQuizAttemptsTask(this);
+					app.omSubmitQuizAttemptsTask.execute(p);
 				}
 			}
 

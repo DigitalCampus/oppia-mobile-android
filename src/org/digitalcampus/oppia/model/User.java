@@ -23,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class User {
 
-	private int userid;
+	private long userId;
 	private String username;
 	private String email;
 	private String password;
@@ -129,11 +129,11 @@ public class User {
 			e.printStackTrace();
 		}
 	}
-	public int getUserid() {
-		return userid;
+	public long getUserId() {
+		return userId;
 	}
-	public void setUserid(int userid) {
-		this.userid = userid;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 	public String getJobTitle() {
 		return jobTitle;

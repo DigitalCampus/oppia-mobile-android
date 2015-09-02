@@ -32,6 +32,7 @@ public class QuizAttempt {
 	private float score;
 	private float maxscore;
 	private boolean passed;
+	private User user;
 	
 	public DateTime getDatetime() {
 		return datetime;
@@ -119,6 +120,14 @@ public class QuizAttempt {
 	
 	public void setPassed(boolean passed) {
 		this.passed = passed;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 }

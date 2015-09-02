@@ -18,16 +18,13 @@
 package org.digitalcampus.oppia.fragments;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,11 +37,9 @@ import android.widget.TextView;
 public class StatsFragment extends Fragment implements TrackerServiceListener {
 
 	public static final String TAG = StatsFragment.class.getSimpleName();
-	private SharedPreferences prefs;
 	private TextView sentTV;
 	private TextView unsentTV;
 	private Button sendBtn;
-	private long userId;
 	
 	public static StatsFragment newInstance() {
         return new StatsFragment();
@@ -56,7 +51,6 @@ public class StatsFragment extends Fragment implements TrackerServiceListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_stats, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
@@ -71,11 +65,6 @@ public class StatsFragment extends Fragment implements TrackerServiceListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		
-		DbHelper db = new DbHelper(super.getActivity());
-		userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-		DatabaseManager.getInstance().closeDatabase();
 		
 		sentTV = (TextView) super.getActivity().findViewById(R.id.stats_submitted);
 		this.updateSent();
@@ -106,13 +95,13 @@ public class StatsFragment extends Fragment implements TrackerServiceListener {
 	
 	private void updateSent(){
 		DbHelper db = new DbHelper(super.getActivity());
-		sentTV.setText(String.valueOf(db.getSentTrackersCount(userId)));
+		sentTV.setText(String.valueOf(db.getSentTrackersCount()));
 		DatabaseManager.getInstance().closeDatabase();
 	}
 	
 	private void updateUnsent(){
 		DbHelper db = new DbHelper(super.getActivity());
-		unsentTV.setText(String.valueOf(db.getUnsentTrackersCount(userId)));
+		unsentTV.setText(String.valueOf(db.getUnsentTrackersCount()));
 		DatabaseManager.getInstance().closeDatabase();
 	}
 

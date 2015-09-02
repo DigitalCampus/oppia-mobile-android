@@ -770,6 +770,24 @@ public class DbHelper extends SQLiteOpenHelper {
 		return userId;
 	}
 	
+	public User getUser(long userId){
+		String s = USER_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(userId) };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		c.moveToFirst();
+		User u = new User();
+		while (c.isAfterLast() == false) {
+			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
+			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
+			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
+			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+			c.moveToNext();
+		}
+		c.close();
+		return u;
+	}
+	
 	public ArrayList<User> getAllUsers(){
 		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();
@@ -777,7 +795,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		ArrayList<User> users = new ArrayList<User>();
 		while (c.isAfterLast() == false) {
 			User u = new User();
-			u.setUserid(c.getInt(c.getColumnIndex(USER_C_ID)));
+			u.setUserId(c.getInt(c.getColumnIndex(USER_C_ID)));
 			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
@@ -789,18 +807,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		return users;
 	}
 	
-	public int getSentTrackersCount(long userId){
-		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
-		String[] args = new String[] { "1", String.valueOf(userId) };
+	public int getSentTrackersCount(){
+		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
+		String[] args = new String[] { "1"};
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		int count = c.getCount();
 		c.close();
 		return count;
 	}
 	
-	public int getUnsentTrackersCount(long userId){
-		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
-		String[] args = new String[] { "0", String.valueOf(userId) };
+	public int getUnsentTrackersCount(){
+		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
+		String[] args = new String[] { "0" };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		int count = c.getCount();
 		c.close();
@@ -895,21 +913,24 @@ public class DbHelper extends SQLiteOpenHelper {
 	        endTransaction(true);
 	}
 	
-	public ArrayList<TrackerLog>  getUnsentQuizResults(long userId){
-		String s = QUIZATTEMPTS_C_SENT + "=? AND " + QUIZATTEMPTS_C_USERID + "=? ";
-		String[] args = new String[] { "0", String.valueOf(userId) };
+	public ArrayList<QuizAttempt>  getUnsentQuizAttempts(){
+		String s = QUIZATTEMPTS_C_SENT + "=? ";
+		String[] args = new String[] { "0" };
 		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
-		ArrayList<TrackerLog> sl = new ArrayList<TrackerLog>();
+		ArrayList<QuizAttempt> quizAttempts = new ArrayList<QuizAttempt>();
 		while (c.isAfterLast() == false) {
-			TrackerLog so = new TrackerLog();
-			so.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
-			so.setContent(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
-			sl.add(so);
+			QuizAttempt qa = new QuizAttempt();
+			qa.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
+			qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
+			qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
+			User u = this.getUser(qa.getUserId());
+			qa.setUser(u);
+			quizAttempts.add(qa);
 			c.moveToNext();
 		}	
 		c.close();
-		return sl;
+		return quizAttempts;
 	}
 	
 	public int markQuizSubmitted(long rowId){
