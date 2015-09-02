@@ -37,6 +37,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
@@ -68,18 +69,17 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = new Payload();
 		
-		try {
+		try {	
+			DbHelper db = new DbHelper(ctx);
+			ArrayList<User> users = db.getAllUsers();
+			
+			for (User u: users){
+				payload = db.getUnsentTrackers(u.getUserId());
 				
-				DbHelper db = new DbHelper(ctx);
-				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-				Log.d(TAG,"userId: " + userId);
-				payload = db.getUnsentTrackers(userId);
-				DatabaseManager.getInstance().closeDatabase();
+				
 				@SuppressWarnings("unchecked")
 				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
-				
-				
-				
+
 				for (Collection<TrackerLog> trackerBatch : result) {
 					String dataToSend = createDataString(trackerBatch);
 					
@@ -163,12 +163,15 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 					} 
 					publishProgress(0);
 				}
-			
+				DatabaseManager.getInstance().closeDatabase();
+			}
 	
 		} catch (IllegalStateException ise) {
 			ise.printStackTrace();
 			payload.setResult(false);
-		} 
+		} finally {
+			DatabaseManager.getInstance().closeDatabase();
+		}
 		return payload;
 	}
 
