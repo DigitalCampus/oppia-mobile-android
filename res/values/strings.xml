@@ -83,6 +83,7 @@
  	
  	<string name="course_context_reset">Reset</string>
  	<string name="course_context_delete">Delete</string>
+ 	<string name="course_context_update_activity">Update activity</string>
  	<string name="course_context_reset_confirm">Are you sure you want to reset this course? It will remove all the progress logs for this course.</string>
  	<string name="course_context_delete_confirm">Are you sure you want to delete this course? It will completely remove the course from your phone.</string>
  	

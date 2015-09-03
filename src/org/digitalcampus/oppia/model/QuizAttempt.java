@@ -20,77 +20,105 @@ package org.digitalcampus.oppia.model;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.joda.time.DateTime;
 
-public class TrackerLog {
+public class QuizAttempt {
 
 	private DateTime datetime;
 	private long id;
-	private String digest;
-	private String content;
-	private String type;
-	private boolean submitted;
-	private boolean completed;
+	private String data;
+	private String activityDigest;
+	private boolean sent;
 	private long courseId;
 	private long userId;
-	
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
+	private float score;
+	private float maxscore;
+	private boolean passed;
 	
 	public DateTime getDatetime() {
 		return datetime;
 	}
+	
 	public void setDatetime(DateTime datetime) {
 		this.datetime = datetime;
-	}
-	public String getDigest() {
-		return digest;
-	}
-	public void setDigest(String digest) {
-		this.digest = digest;
-	}
-	public String getContent() {
-		return content;
-	}
-	public void setContent(String content) {
-		this.content = content;
-	}
-	public boolean isSubmitted() {
-		return submitted;
-	}
-	public void setSubmitted(boolean submitted) {
-		this.submitted = submitted;
 	}
 	
 	public String getDateTimeString() {
 		return MobileLearning.DATETIME_FORMAT.print(datetime);
 	}
-	public boolean isCompleted() {
-		return completed;
+	
+	public long getId() {
+		return id;
 	}
-	public void setCompleted(boolean completed) {
-		this.completed = completed;
+	
+	public void setId(long id) {
+		this.id = id;
 	}
-	public String getType() {
-		return type;
+	
+	public String getData() {
+		return data;
 	}
-	public void setType(String type) {
-		this.type = type;
+	
+	public void setData(String data) {
+		this.data = data;
 	}
+	
+	public String getActivityDigest() {
+		return activityDigest;
+	}
+
+	public void setActivityDigest(String activityDigest) {
+		this.activityDigest = activityDigest;
+	}
+
+	public boolean isSent() {
+		return sent;
+	}
+	
+	public void setSent(boolean sent) {
+		this.sent = sent;
+	}
+	
 	public long getCourseId() {
 		return courseId;
 	}
+	
 	public void setCourseId(long courseId) {
 		this.courseId = courseId;
 	}
+	
 	public long getUserId() {
 		return userId;
 	}
+	
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 	
+	public float getScore() {
+		return score;
+	}
+	
+	public float getScoreAsPercent(){
+		return this.score*100/this.maxscore;
+	}
+	
+	public void setScore(float score) {
+		this.score = score;
+	}
+	
+	public float getMaxscore() {
+		return maxscore;
+	}
+	
+	public void setMaxscore(float maxscore) {
+		this.maxscore = maxscore;
+	}
+	
+	public boolean isPassed() {
+		return passed;
+	}
+	
+	public void setPassed(boolean passed) {
+		this.passed = passed;
+	}
 	
 }

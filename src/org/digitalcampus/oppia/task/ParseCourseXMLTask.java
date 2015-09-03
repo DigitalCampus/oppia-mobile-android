@@ -58,7 +58,7 @@ public class ParseCourseXMLTask extends AsyncTask<Course, Object, CourseXMLReade
                     this.ctx);
 
             if (completeParse){
-                cxr.getSections(courseToProcess.getCourseId());
+                cxr.getSections();
             }
             else{
                 cxr.getDescriptions();

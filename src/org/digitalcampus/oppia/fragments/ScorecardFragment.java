@@ -164,7 +164,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     public void onParseComplete(CourseXMLReader parsed) {
 
         ArrayList<Activity> activities = parsed.getActivities(course.getCourseId());
-        ArrayList<Activity> baseline = parsed.getBaselineActivities(course.getCourseId());
+        ArrayList<Activity> baseline = parsed.getBaselineActivities();
         ArrayList<QuizStats> stats = new ArrayList<QuizStats>();
         int pretestScore = -1, quizzesAttempted = 0, quizzesPassed = 0;
 

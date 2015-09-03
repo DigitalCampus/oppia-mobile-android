@@ -33,7 +33,7 @@ public class Tracker {
 		this.ctx = context;
 	}
 	
-	public void saveTracker(int modId, String digest, JSONObject data, boolean completed){
+	public void saveTracker(int courseId, String digest, JSONObject data, boolean completed){
 		// add tracker UUID
 		UUID guid = java.util.UUID.randomUUID();
 		try {
@@ -42,7 +42,7 @@ public class Tracker {
 			e.printStackTrace();
 		}
 		DbHelper db = new DbHelper(this.ctx);
-		db.insertTracker(modId, digest, data.toString(), completed);
+		db.insertTracker(courseId, digest, data.toString(), completed);
 		DatabaseManager.getInstance().closeDatabase();
 		
 	}

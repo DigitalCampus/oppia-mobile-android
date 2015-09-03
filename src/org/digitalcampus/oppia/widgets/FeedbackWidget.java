@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -249,7 +250,18 @@ public class FeedbackWidget extends WidgetFactory {
             // save results ready to send back to the quiz server
             String data = feedback.getResultObject().toString();
             DbHelper db = new DbHelper(super.getActivity());
-            db.insertQuizResult(data, course.getCourseId());
+            long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+    		
+    		QuizAttempt qa = new QuizAttempt();
+    		qa.setCourseId(course.getCourseId());
+    		qa.setUserId(userId);
+    		qa.setData(data);
+    		qa.setActivityDigest(activity.getDigest());
+    		qa.setScore(feedback.getUserscore());
+    		qa.setMaxscore(feedback.getMaxscore());
+    		qa.setPassed(this.getActivityCompleted());
+
+            db.insertQuizAttempt(qa);
             DatabaseManager.getInstance().closeDatabase();
         }
 

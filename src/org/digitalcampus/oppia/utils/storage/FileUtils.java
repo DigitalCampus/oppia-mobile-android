@@ -80,6 +80,7 @@ public class FileUtils {
 			File dir = new File(dirName);
 			if (!dir.exists()) {
 				if (!dir.mkdirs()) {
+					Log.d(TAG, dirName);
 					Log.d(TAG, "can't mkdirs");
 					return false;
 				}

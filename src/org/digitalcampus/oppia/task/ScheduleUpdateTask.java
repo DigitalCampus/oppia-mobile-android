@@ -110,10 +110,10 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 						as.setEndTime(edt);
 						activitySchedule.add(as);
 					}
-					int modId = db.getCourseID(dm.getShortname());
-					db.resetSchedule(modId);
+					int courseId = db.getCourseID(dm.getShortname());
+					db.resetSchedule(courseId);
 					db.insertSchedule(activitySchedule);
-					db.updateScheduleVersion(modId, scheduleVersion);
+					db.updateScheduleVersion(courseId, scheduleVersion);
 					DatabaseManager.getInstance().closeDatabase();
 					break;
 				default:

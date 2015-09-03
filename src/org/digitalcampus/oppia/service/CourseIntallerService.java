@@ -205,7 +205,8 @@ public class CourseIntallerService extends IntentService {
         try {
             cxr = new CourseXMLReader(courseXMLPath, 0, this);
             csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-            ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+            File trackerXML = new File(courseTrackerXMLPath);
+			ctxr = new CourseTrackerXMLReader(trackerXML);
         } catch (InvalidXMLException e) {
             Mint.logException(e);
             logAndNotifyError(fileUrl, e);
@@ -227,15 +228,19 @@ public class CourseIntallerService extends IntentService {
         boolean success = false;
 
         DbHelper db = new DbHelper(this);
-        long added = db.addOrUpdateCourse(c);
-        if (added != -1) {
+        long courseId = db.addOrUpdateCourse(c);
+        if (courseId != -1) {
             File src = new File(tempdir + File.separator + courseDirs[0]);
             File dest = new File(FileUtils.getCoursesPath(this));
 
-            db.insertActivities(cxr.getActivities(added));
+            db.insertActivities(cxr.getActivities(courseId));
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 50);
-
-            db.insertTrackers(ctxr.getTrackers(), added);
+            
+            long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+            db.resetCourse(courseId, userId);
+            db.insertTrackers(ctxr.getTrackers(courseId, userId));
+            db.insertQuizAttempts(ctxr.getQuizAttempts(courseId, userId));
+            
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 70);
 
             // Delete old course
@@ -257,7 +262,7 @@ public class CourseIntallerService extends IntentService {
         // add schedule
         // put this here so even if the course content isn't updated the schedule will be
         db.insertSchedule(csxr.getSchedule());
-        db.updateScheduleVersion(added, csxr.getScheduleVersion());
+        db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
         DatabaseManager.getInstance().closeDatabase();
 
         sendBroadcast(fileUrl, ACTION_INSTALL, "" + 80);
@@ -480,10 +485,10 @@ public class CourseIntallerService extends IntentService {
                         as.setEndTime(edt);
                         activitySchedule.add(as);
                     }
-                    int modId = db.getCourseID(shortname);
-                    db.resetSchedule(modId);
+                    int courseId = db.getCourseID(shortname);
+                    db.resetSchedule(courseId);
                     db.insertSchedule(activitySchedule);
-                    db.updateScheduleVersion(modId, scheduleVersion);
+                    db.updateScheduleVersion(courseId, scheduleVersion);
                     DatabaseManager.getInstance().closeDatabase();
                     break;
                 default:

@@ -152,20 +152,20 @@ public class CourseXMLReader {
 	public ArrayList<Lang> getLangs(){ return getMetaResponses().getCourseLangs();	}
 	public double getVersionId(){  return getMetaResponses().getCourseVersionId();	}
 	public ArrayList<CourseMetaPage> getMetaPages(){ return getMetaResponses().getCourseMetaPages(); }
-	public ArrayList<Activity> getBaselineActivities(long modId){ return getCompleteResponses().getCourseBaseline(); }
+	public ArrayList<Activity> getBaselineActivities(){ return getCompleteResponses().getCourseBaseline(); }
 	public ArrayList<Media> getMedia(){ return getMediaResponses().getCourseMedia(); }
 	public String getCourseImage(){ return getMetaResponses().getCourseImage(); }
-    public ArrayList<Section> getSections(int modId){ return getCompleteResponses().getSections(); }
+    public ArrayList<Section> getSections(){ return getCompleteResponses().getSections(); }
 
 	/*
 	 * This is used when installing a new course
 	 * and so adding all the activities to the db
 	 */
-	public ArrayList<Activity> getActivities(long modId){
+	public ArrayList<Activity> getActivities(long courseId){
 		ArrayList<Activity> activities = new ArrayList<Activity>();
         for (Section section : getCompleteResponses().getSections()){
             for (Activity act : section.getActivities()){
-                act.setCourseId(modId);
+                act.setCourseId(courseId);
                 activities.add(act);
             }
         }

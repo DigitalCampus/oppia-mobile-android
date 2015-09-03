@@ -12,4 +12,10 @@
         android:title="@string/course_context_delete"
         android:visible="true">
     </item>
+    <item
+        android:id="@+id/course_context_update_activity"
+        android:enabled="true"
+        android:title="@string/course_context_update_activity"
+        android:visible="true">
+    </item>
 </menu>

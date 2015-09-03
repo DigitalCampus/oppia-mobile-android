@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.task;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -27,13 +28,17 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.SearchUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.SearchUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -114,6 +119,15 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 		
+		if(!prefs.getBoolean("upgradeV54",false)){
+			upgradeV54();
+			Editor editor = prefs.edit();
+			editor.putBoolean("upgradeV54", true);
+			editor.commit();
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v54"));
+			payload.setResult(true);
+		}
+		
 		return payload;
 	}
 	
@@ -146,7 +160,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				try {
 					cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+					File trackerXML = new File(courseTrackerXMLPath);
+					ctxr = new CourseTrackerXMLReader(trackerXML);
 				} catch (InvalidXMLException e) {
 					e.printStackTrace();
 					break;
@@ -165,7 +180,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				
 				if (courseId != -1) {
 					db.insertActivities(cxr.getActivities(courseId));
-					db.insertTrackers(ctxr.getTrackers(),courseId);
+					db.insertTrackers(ctxr.getTrackers(courseId, 0));
 				} 
 				
 				// add schedule
@@ -289,6 +304,127 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
     	}
 	}
 	
+	// update all the current quiz results for the score/maxscore etc
+	protected void upgradeV54(){
+		DbHelper db = new DbHelper(ctx);
+		ArrayList<QuizAttempt> quizAttempts = db.getAllQuizAttempts();
+		long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		
+		
+		ArrayList<Course> courses = db.getAllCourses();
+		ArrayList<v54UpgradeQuizObj> quizzes = new ArrayList<v54UpgradeQuizObj>();
+		
+		for (Course c: courses){
+			try {
+				CourseXMLReader cxr = new CourseXMLReader(c.getCourseXMLLocation(),c.getCourseId(),ctx);
+				
+				ArrayList<Activity> baseActs = cxr.getBaselineActivities();
+				for (Activity a: baseActs){
+					if (a.getActType().equalsIgnoreCase("quiz")){
+						String quizContent = a.getContents("en");
+						try {
+							JSONObject quizJson = new JSONObject(quizContent);
+							v54UpgradeQuizObj q = new v54UpgradeQuizObj();
+							q.id = quizJson.getInt("id");
+							q.digest = quizJson.getJSONObject("props").getString("digest");
+							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
+							quizzes.add(q);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				// now add the standard activities
+				ArrayList<Activity> acts = cxr.getActivities(c.getCourseId());
+				for (Activity a: acts){
+					if (a.getActType().equalsIgnoreCase("quiz")){
+						String quizContent = a.getContents("en");
+						try {
+							JSONObject quizJson = new JSONObject(quizContent);
+							v54UpgradeQuizObj q = new v54UpgradeQuizObj();
+							q.id = quizJson.getInt("id");
+							q.digest = quizJson.getJSONObject("props").getString("digest");
+							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
+							quizzes.add(q);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			} catch (InvalidXMLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}
+		
+		
+		for (QuizAttempt qa: quizAttempts){
+			// data back to json obj
+			try {
+				JSONObject jsonData = new JSONObject(qa.getData());
+				qa.setMaxscore((float) jsonData.getDouble("maxscore"));
+				qa.setScore((float) jsonData.getDouble("score"));
+				
+				int quizId = jsonData.getInt("quiz_id");
+				
+				v54UpgradeQuizObj currentQuiz = null;
+				
+				// find the relevant quiz in quizzes
+				for (v54UpgradeQuizObj tmpQuiz: quizzes){
+					if (tmpQuiz.id == quizId){
+						currentQuiz = tmpQuiz;
+						break;
+					}
+				}
+				
+				if (currentQuiz == null){
+					Log.d(TAG,"not found");
+				} else {
+					Log.d(TAG,"Found");
+					qa.setActivityDigest(currentQuiz.digest);
+					if(qa.getScoreAsPercent() >= currentQuiz.threshold){
+						qa.setPassed(true);
+					} else {
+						qa.setPassed(false);
+					}
+				}
+				
+				// make the actual updates
+				qa.setUserId(userId);
+				db.updateQuizAttempt(qa);
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}
+		
+		ArrayList<QuizAttempt> checkQuizAttempts = db.getAllQuizAttempts();
+		for (QuizAttempt qa: checkQuizAttempts){
+			// display current data
+			Log.d(TAG, "data: " + qa.getData());
+			Log.d(TAG, "digest: " + qa.getActivityDigest());
+			Log.d(TAG, "userid: " + qa.getUserId());
+			Log.d(TAG, "courseid: " + qa.getCourseId());
+			Log.d(TAG, "score: " + qa.getScore());
+			Log.d(TAG, "maxscore: " + qa.getMaxscore());
+			Log.d(TAG, "passed: " + qa.isPassed());
+		}
+		
+		DatabaseManager.getInstance().closeDatabase();
+		
+	}
+	
+	private class v54UpgradeQuizObj{
+		public int id;
+		public String digest;
+		public int threshold;
+	}
 	
 	@Override
 	protected void onProgressUpdate(String... obj) {

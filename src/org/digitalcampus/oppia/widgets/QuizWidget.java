@@ -41,6 +41,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizFeedback;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -395,8 +396,20 @@ public class QuizWidget extends WidgetFactory {
 		// save results ready to send back to the quiz server
 		String data = quiz.getResultObject().toString();
 		Log.d(TAG,data);
+		
 		DbHelper db = new DbHelper(super.getActivity());
-		db.insertQuizResult(data, course.getCourseId());
+		long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		
+		QuizAttempt qa = new QuizAttempt();
+		qa.setCourseId(course.getCourseId());
+		qa.setUserId(userId);
+		qa.setData(data);
+		qa.setActivityDigest(activity.getDigest());
+		qa.setScore(quiz.getUserscore());
+		qa.setMaxscore(quiz.getMaxscore());
+		qa.setPassed(this.getActivityCompleted());
+		qa.setSent(false);
+		db.insertQuizAttempt(qa);
 		DatabaseManager.getInstance().closeDatabase();
 		
 		//Check if quiz results layout is already loaded

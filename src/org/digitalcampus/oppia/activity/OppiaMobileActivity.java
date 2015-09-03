@@ -52,21 +52,24 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
+import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.service.CourseIntallerService;
 import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
+import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
-public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener, DeleteCourseListener, CourseInstallerListener {
+public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener, DeleteCourseListener, CourseInstallerListener, UpdateActivityListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
@@ -333,6 +336,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		} else if (itemId == R.id.course_context_reset) {
 			confirmCourseReset();
 			return true;
+		} else if (itemId == R.id.course_context_update_activity){
+			confirmCourseUpdateActivity();
+			return true;
 		}
 		return true;
 	}
@@ -374,8 +380,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-				db.resetCourse(tempCourse.getCourseId(),userId);
+				db.resetCourse(tempCourse.getCourseId(),OppiaMobileActivity.this.userId);
 				DatabaseManager.getInstance().closeDatabase();
 				displayCourses(userId);
 			}
@@ -386,6 +391,21 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			}
 		});
 		builder.show();
+	}
+	
+	private void confirmCourseUpdateActivity(){
+		UpdateCourseActivityTask task = new UpdateCourseActivityTask(OppiaMobileActivity.this, this.userId);
+	     ArrayList<Object> payloadData = new ArrayList<Object>();
+	     payloadData.add(tempCourse);
+	     Payload p = new Payload(payloadData);
+	     task.setUpdateActivityListener(OppiaMobileActivity.this);
+	     task.execute(p);
+	
+	     progressDialog = new ProgressDialog(OppiaMobileActivity.this);
+	     progressDialog.setMessage("Updating activity...");
+	     progressDialog.setCancelable(false);
+	     progressDialog.setCanceledOnTouchOutside(false);
+	     progressDialog.show();
 	}
 
     private void animateTopMessage(){
@@ -499,4 +519,17 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
     public void onDownloadProgress(String fileUrl, int progress) {}
     public void onInstallProgress(String fileUrl, int progress) {}
     public void onInstallFailed(String fileUrl, String message) {}
+
+	public void updateActivityComplete(Payload response) {
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
+        displayCourses(userId);
+		
+	}
+
+	public void updateActivityProgressUpdate(DownloadProgress dp) {
+		// TODO Auto-generated method stub
+		
+	}
 }
