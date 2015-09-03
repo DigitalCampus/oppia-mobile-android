@@ -30,33 +30,26 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.splunk.mint.Mint;
-
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
+
+import com.splunk.mint.Mint;
 
 public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> {
 
 	public final static String TAG = SubmitQuizAttemptsTask.class.getSimpleName();
 	private Context ctx;
-	private SharedPreferences prefs;
 	
 	public SubmitQuizAttemptsTask(Context c) {
 		this.ctx = c;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
 	@Override
@@ -87,16 +80,13 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 				
 				switch (response.getStatusLine().getStatusCode()) {
 					case 201: // submitted
+						JSONObject jsonResp = new JSONObject(responseStr);
 						DbHelper db = new DbHelper(ctx);
 						db.markQuizSubmitted(qa.getId());
+						db.updateUserPoints(qa.getUser().getUsername(), jsonResp.getInt("points"));
+						db.updateUserBadges(qa.getUser().getUsername(), jsonResp.getInt("badges"));
 						DatabaseManager.getInstance().closeDatabase();
 						payload.setResult(true);
-						// update points
-						JSONObject jsonResp = new JSONObject(responseStr);
-						Editor editor = prefs.edit();
-						editor.putInt(PrefsActivity.PREF_POINTS, jsonResp.getInt("points"));
-						editor.putInt(PrefsActivity.PREF_BADGES, jsonResp.getInt("badges"));
-						editor.commit();
 						break;
 					case 400: // bad request - so to prevent re-submitting over and
 								// over

@@ -437,16 +437,14 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)){
 			displayCourses(userId);
 		}
-		
-		if(key.equalsIgnoreCase(PrefsActivity.PREF_POINTS)
-				|| key.equalsIgnoreCase(PrefsActivity.PREF_BADGES)){
-			supportInvalidateOptionsMenu();
-		}
 
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED)){
 			boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
 			Log.d(TAG, "PREF_DOWNLOAD_VIA_CELLULAR_ENABLED" + newPref);
 		}
+		
+		// update the points/badges by invalidating the menu
+		supportInvalidateOptionsMenu();
 	}
 
 	public void scanStart() {

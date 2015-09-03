@@ -24,8 +24,12 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.User;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -35,6 +39,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,7 +60,18 @@ public class UIUtils {
      */
 	public static void showUserData(Menu menu, final Context ctx, final Course courseInContext) {
 		MenuItem pointsItem = menu.findItem(R.id.points);
-
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		
+		DbHelper db = new DbHelper(ctx);
+		User u;
+		try {
+			u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			Log.d(TAG,"points: " + u.getPoints());
+		} catch (UserNotFoundException e) {
+			return;
+		}
+		DatabaseManager.getInstance().closeDatabase();
+		
 		if(pointsItem == null){
 			return;
 		}
@@ -67,11 +83,11 @@ public class UIUtils {
 			return;
 		}
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		
 		boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
 		if (scoringEnabled) {
 			points.setVisibility(View.VISIBLE);
-			points.setText(String.valueOf(prefs.getInt(PrefsActivity.PREF_POINTS, 0)));
+			points.setText(String.valueOf(u.getPoints()));
             points.setClickable(true);
             points.setOnClickListener(new View.OnClickListener() {
                 //@Override
@@ -93,7 +109,7 @@ public class UIUtils {
 		boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
 		if (badgingEnabled) {
 			badges.setVisibility(View.VISIBLE);
-			badges.setText(String.valueOf(prefs.getInt(PrefsActivity.PREF_BADGES, 0)));
+			badges.setText(String.valueOf(u.getBadges()));
             badges.setClickable(true);
             badges.setOnClickListener(new View.OnClickListener() {
                 //@Override

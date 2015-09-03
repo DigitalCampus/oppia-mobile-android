@@ -119,10 +119,12 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 								payload.setResult(true);
 								// update points
 								JSONObject jsonResp = new JSONObject(responseStr);
-								Editor editor = prefs.edit();
+								DbHelper dbpb = new DbHelper(ctx);
+								dbpb.updateUserPoints(u.getUserId(), jsonResp.getInt("points"));
+								dbpb.updateUserBadges(u.getUserId(), jsonResp.getInt("badges"));
+								DatabaseManager.getInstance().closeDatabase();
 								
-								editor.putInt(PrefsActivity.PREF_POINTS, jsonResp.getInt("points"));
-								editor.putInt(PrefsActivity.PREF_BADGES, jsonResp.getInt("badges"));
+								Editor editor = prefs.edit();
 								try {
 									editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
 									editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));

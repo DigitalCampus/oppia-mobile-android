@@ -116,8 +116,6 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 			Editor editor = prefs.edit();
 	    	editor.putString(PrefsActivity.PREF_USER_NAME, usernameField.getText().toString());
 	    	editor.putString(PrefsActivity.PREF_PHONE_NO, phoneNoField.getText().toString());
-	    	editor.putInt(PrefsActivity.PREF_POINTS, u.getPoints());
-	    	editor.putInt(PrefsActivity.PREF_BADGES, u.getBadges());
 	    	editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, u.isScoringEnabled());
 	    	editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, u.isBadgingEnabled());
 	    	editor.commit();

@@ -49,9 +49,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	/*
 	 * To be removed from prefs...
 	 */
-	public static final String PREF_API_KEY = "prefApiKey";
-	public static final String PREF_BADGES = "prefBadges";
-	public static final String PREF_POINTS = "prefPoints";
+	//public static final String PREF_API_KEY = "prefApiKey";
+	//public static final String PREF_BADGES = "prefBadges";
+	//public static final String PREF_POINTS = "prefPoints";
 	/*
 	 * end remove
 	 */
