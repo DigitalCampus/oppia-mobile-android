@@ -36,7 +36,7 @@ import java.io.IOException;
 
 public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress, Payload> {
 
-    public static final String TAG = MoveStorageLocationTask.class.getSimpleName();
+    public static final String TAG = ChangeStorageOptionTask.class.getSimpleName();
 
     private Context ctx;
     private SharedPreferences prefs;
@@ -89,7 +89,10 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
                 }
                 else{
                     boolean makeDirs = destDir.mkdirs();
-                    if (!makeDirs){ throw new Exception("No file created!"); }
+                    if (!makeDirs){
+                        boolean canWrite = destDir.canWrite();
+                        Log.d(TAG, "Error creating destination dir " + destPath + ": canWrite=" + canWrite);
+                        throw new Exception("No file created!"); }
                 }
                 FileUtils.createNoMediaFile(ctx);
 
