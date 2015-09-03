@@ -42,16 +42,24 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
 	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
-	public static final String PREF_LANGUAGE = "prefLanguage";
+	
 	public static final String PREF_USER_NAME = "prefUsername";
-	public static final String PREF_API_KEY = "prefApiKey";
-	public static final String PREF_PHONE_NO = "prefPhoneNo";
+	//public static final String PREF_API_KEY = "prefApiKey";
 	public static final String PREF_SERVER = "prefServer";
-	public static final String PREF_BADGES = "prefBadges";
-	public static final String PREF_POINTS = "prefPoints";
-	public static final String PREF_COURSE_POINTS = "prefCoursePoints";
+	//public static final String PREF_BADGES = "prefBadges";
+	//public static final String PREF_POINTS = "prefPoints";
 	public static final String PREF_SCORING_ENABLED = "prefScoringEnabled";
 	public static final String PREF_BADGING_ENABLED = "prefBadgingEnabled";
+	public static final String PREF_SERVER_TIMEOUT_CONN = "prefServerTimeoutConnection";
+	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
+	public static final String PREF_METADATA = "prefMetadata";
+	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
+	
+	/*
+	 * Start personal prefs
+	 */
+	public static final String PREF_PHONE_NO = "prefPhoneNo";
+	public static final String PREF_LANGUAGE = "prefLanguage";
 	public static final String PREF_SHOW_SCHEDULE_REMINDERS = "prefShowScheduleReminders";
 	public static final String PREF_NO_SCHEDULE_REMINDERS = "prefNoScheduleReminders";
 	public static final String PREF_LAST_MEDIA_SCAN = "prefLastMediaScan";
@@ -60,11 +68,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_SHOW_SECTION_NOS = "prefShowSectionNumbers";
 	public static final String PREF_HIGHLIGHT_COMPLETED = "prefHighlightCompleted";
 	public static final String PREF_TEXT_SIZE = "prefTextSize";
-	public static final String PREF_SERVER_TIMEOUT_CONN = "prefServerTimeoutConnection";
-	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
-	public static final String PREF_METADATA = "prefMetadata";
-	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
-
+	/*
+	 * End personal prefs
+	 */
+	
 	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
 	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";

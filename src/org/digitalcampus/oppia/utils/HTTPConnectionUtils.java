@@ -52,13 +52,6 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 		super.getParams().setParameter(CoreProtocolPNames.USER_AGENT, MobileLearning.USER_AGENT + v);
 	}
 	
-	public BasicHeader getAuthHeader(){
-		return new BasicHeader("Authorization","ApiKey " + 
-				prefs.getString(PrefsActivity.PREF_USER_NAME, "") + 
-				":" + 
-				prefs.getString(PrefsActivity.PREF_API_KEY, ""));
-	}
-	
 	public BasicHeader getAuthHeader(String username, String apiKey){
 		return new BasicHeader("Authorization","ApiKey " + username + ":" + apiKey);
 	}
@@ -67,10 +60,10 @@ public class HTTPConnectionUtils extends DefaultHttpClient {
 		return prefs.getString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault)) + apiPath;
 	}
 
-	public String createUrlWithCredentials(String baseUrl){
+	public String createUrlWithCredentials(String baseUrl, String username, String apiKey){
 		List<NameValuePair> pairs = new LinkedList<NameValuePair>();
-		pairs.add(new BasicNameValuePair("username", prefs.getString(PrefsActivity.PREF_USER_NAME, "")));
-		pairs.add(new BasicNameValuePair("api_key", prefs.getString(PrefsActivity.PREF_API_KEY, "")));
+		pairs.add(new BasicNameValuePair("username", username));
+		pairs.add(new BasicNameValuePair("api_key", apiKey));
 		pairs.add(new BasicNameValuePair("format", "json"));
 		String paramString = URLEncodedUtils.format(pairs, "utf-8");
 		if(!baseUrl.endsWith("?"))

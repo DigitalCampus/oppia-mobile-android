@@ -38,6 +38,8 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -354,7 +356,10 @@ public class CourseIntallerService extends IntentService {
 
         File downloadedFile = null;
         try {
-
+        	DbHelper db = new DbHelper(this);
+        	User u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			DatabaseManager.getInstance().closeDatabase();
+        	
             HTTPConnectionUtils client = new HTTPConnectionUtils(this);
             String downloadUrl =  client.createUrlWithCredentials(fileUrl);
             String v = "0";

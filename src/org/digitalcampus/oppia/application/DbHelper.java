@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -53,7 +54,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 21;
+	static final int DB_VERSION = 22;
 
 	private static SQLiteDatabase db;
 	private SharedPreferences prefs;
@@ -121,6 +122,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_APIKEY = "apikey";
 	private static final String USER_C_LAST_LOGIN_DATE = "lastlogin";
 	private static final String USER_C_NO_LOGINS = "nologins";
+	private static final String USER_C_POINTS = "points";
+	private static final String USER_C_BADGES = "badges";
 
     public void beginTransaction(){
         db.beginTransaction();
@@ -224,7 +227,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_PASSWORD +"] TEXT, " +
                 "["+USER_C_APIKEY +"] TEXT, " +
                 "["+USER_C_LAST_LOGIN_DATE +"] datetime null, " +
-                "["+USER_C_NO_LOGINS +"] integer default 0 " +
+                "["+USER_C_NO_LOGINS +"] integer default 0,  " +
+                "["+USER_C_POINTS +"] integer default 0,  " +
+                "["+USER_C_BADGES +"] integer default 0 " +
             ");";
 		db.execSQL(sql);
 	}
@@ -358,6 +363,14 @@ public class DbHelper extends SQLiteOpenHelper {
 			// alter quiz results table
 			String sql1 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_ACTIVITY_DIGEST + " text;";
 			db.execSQL(sql1);
+		}
+		
+		if(oldVersion <= 21 && newVersion >= 22){
+			// add points and badges columns
+			String sql1 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_POINTS + " integer default 0;";
+			db.execSQL(sql1);
+			String sql2 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_BADGES + " integer default 0;";
+			db.execSQL(sql2);
 		}
 	}
 
@@ -770,13 +783,14 @@ public class DbHelper extends SQLiteOpenHelper {
 		return userId;
 	}
 	
-	public User getUser(long userId){
+	public User getUser(long userId) throws UserNotFoundException {
 		String s = USER_C_ID + "=? ";
 		String[] args = new String[] { String.valueOf(userId) };
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
-		User u = new User();
+		User u = null;
 		while (c.isAfterLast() == false) {
+			u = new User();
 			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
 			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
@@ -785,6 +799,9 @@ public class DbHelper extends SQLiteOpenHelper {
 			c.moveToNext();
 		}
 		c.close();
+		if (u == null){
+			throw new UserNotFoundException();
+		}
 		return u;
 	}
 	
@@ -920,13 +937,17 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.moveToFirst();
 		ArrayList<QuizAttempt> quizAttempts = new ArrayList<QuizAttempt>();
 		while (c.isAfterLast() == false) {
-			QuizAttempt qa = new QuizAttempt();
-			qa.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
-			qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
-			qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
-			User u = this.getUser(qa.getUserId());
-			qa.setUser(u);
-			quizAttempts.add(qa);
+			try {
+				QuizAttempt qa = new QuizAttempt();
+				qa.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
+				qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
+				qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
+				User u = this.getUser(qa.getUserId());
+				qa.setUser(u);
+				quizAttempts.add(qa);
+			} catch (UserNotFoundException unfe){
+				// do nothing
+			}
 			c.moveToNext();
 		}	
 		c.close();
