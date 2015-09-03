@@ -72,10 +72,12 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 		try {	
 			DbHelper db = new DbHelper(ctx);
 			ArrayList<User> users = db.getAllUsers();
+			DatabaseManager.getInstance().closeDatabase();
 			
 			for (User u: users){
-				payload = db.getUnsentTrackers(u.getUserId());
-				
+				DbHelper db1 = new DbHelper(ctx);
+				payload = db1.getUnsentTrackers(u.getUserId());
+				DatabaseManager.getInstance().closeDatabase();
 				
 				@SuppressWarnings("unchecked")
 				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
@@ -163,7 +165,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 					} 
 					publishProgress(0);
 				}
-				DatabaseManager.getInstance().closeDatabase();
+				
 			}
 	
 		} catch (IllegalStateException ise) {

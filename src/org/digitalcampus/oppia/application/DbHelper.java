@@ -435,13 +435,17 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(USER_C_LASTNAME, user.getLastname());
 		values.put(USER_C_PASSWORD, user.getPasswordEncrypted());
 		values.put(USER_C_APIKEY, user.getApiKey());
+		values.put(USER_C_POINTS, user.getPoints());
+		values.put(USER_C_BADGES, user.getBadges());
 		
 		long userId = this.isUser(user.getUsername());
 		if (userId == -1) {
 			Log.v(TAG, "Record added");
 			return db.insertOrThrow(USER_TABLE, null, values);
 		} else {
-			db.update(USER_TABLE, values, USER_C_ID + "=" + userId, null);
+			String s = USER_C_ID + "=?";
+			String[] args = new String[] { String.valueOf(userId) };
+			db.update(USER_TABLE, values, s, args);
 			return userId;
 		} 
 	}
@@ -827,6 +831,38 @@ public class DbHelper extends SQLiteOpenHelper {
 		return u;
 	}
 	
+	public void updateUserPoints(String userName, int points){
+		ContentValues values = new ContentValues();
+		values.put(USER_C_POINTS, points);
+		String s = USER_C_USERNAME + "=? ";
+		String[] args = new String[] { userName };
+		db.update(USER_TABLE, values, s ,args);
+	}
+	
+	public void updateUserBadges(String userName, int badges){
+		ContentValues values = new ContentValues();
+		values.put(USER_C_BADGES, badges);
+		String s = USER_C_USERNAME + "=? ";
+		String[] args = new String[] { userName };
+		db.update(USER_TABLE, values, s ,args);
+	}
+	
+	public void updateUserPoints(long userId, int points){
+		ContentValues values = new ContentValues();
+		values.put(USER_C_POINTS, points);
+		String s = USER_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(userId) };
+		db.update(USER_TABLE, values, s ,args);
+	}
+	
+	public void updateUserBadges(long userId, int badges){
+		ContentValues values = new ContentValues();
+		values.put(USER_C_BADGES, badges);
+		String s = USER_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(userId) };
+		db.update(USER_TABLE, values, s ,args);
+	}
+	
 	public ArrayList<User> getAllUsers(){
 		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();
@@ -839,6 +875,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 			users.add(u);
 			c.moveToNext();
 		}
@@ -980,7 +1018,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(QUIZATTEMPTS_C_SENT, 1);
 		
-		return db.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + rowId, null);
+		String s = QUIZATTEMPTS_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(rowId) };
+		return db.update(QUIZATTEMPTS_TABLE, values, s, args);
 	}
 	
 	public void deleteQuizAttempts(long courseId, long userId){

@@ -439,7 +439,14 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	}
 	
 	protected void upgradeV54a(){
-		
+		DbHelper db = new DbHelper(ctx);
+		long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		int points = prefs.getInt(UpgradeManagerTask.PREF_POINTS, 0);
+		int badges = prefs.getInt(UpgradeManagerTask.PREF_BADGES, 0);
+		Log.d(TAG,"points: " + points);
+		db.updateUserPoints(userId, points);
+		db.updateUserBadges(userId, badges);
+		DatabaseManager.getInstance().closeDatabase();
 	}
 	
 	@Override

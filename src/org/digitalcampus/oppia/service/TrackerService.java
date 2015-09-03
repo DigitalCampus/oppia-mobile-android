@@ -153,11 +153,12 @@ public class TrackerService extends Service implements APIRequestListener {
 			
 			JSONObject json = new JSONObject(response.getResultResponse());
 			Log.d(TAG,json.toString(4));
+			DbHelper db = new DbHelper(this);
 			for (int i = 0; i < (json.getJSONArray("courses").length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("courses").get(i);
 				String shortName = json_obj.getString("shortname");
 				Double version = json_obj.getDouble("version");
-				DbHelper db = new DbHelper(this);
+				
 				if(db.toUpdate(shortName,version)){
 					updateAvailable = true;
 				}
@@ -167,8 +168,8 @@ public class TrackerService extends Service implements APIRequestListener {
 						updateAvailable = true;
 					}
 				}
-				DatabaseManager.getInstance().closeDatabase();
 			}
+			DatabaseManager.getInstance().closeDatabase();
 			
 		} catch (JSONException e) {
 			e.printStackTrace();

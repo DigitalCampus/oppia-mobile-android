@@ -28,6 +28,10 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
@@ -72,9 +76,19 @@ public class MonitorActivity extends AppActivity {
 	private void loadMonitor(){ 
 		String url = "";
 		if(ConnectionUtils.isNetworkConnected(this)){
-			url = prefs.getString(PrefsActivity.PREF_SERVER, getString(R.string.prefServer)) + "mobile/monitor/?";
-			url += "username=" + prefs.getString(PrefsActivity.PREF_USER_NAME, "");
-			url += "&api_key=" + prefs.getString(PrefsActivity.PREF_API_KEY, "");
+			DbHelper db = new DbHelper(this);
+			User u;
+			try {
+				u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+				url = prefs.getString(PrefsActivity.PREF_SERVER, getString(R.string.prefServer)) + "mobile/monitor/?";
+				url += "username=" + u.getUsername();
+				url += "&api_key=" + u.getApiKey();
+			} catch (UserNotFoundException e) {
+				String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+	        	url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+			}
+			DatabaseManager.getInstance().closeDatabase();
+			
 		} else {
 			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         	url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");

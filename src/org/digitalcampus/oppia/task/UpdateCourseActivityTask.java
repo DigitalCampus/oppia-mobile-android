@@ -78,9 +78,7 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
 		Course course = (Course) payload.getData().get(0);
 		DownloadProgress dp = new DownloadProgress();
 		String responseStr = "";
-		
-		
-		
+
 		try {
 			DbHelper db = new DbHelper(this.ctx);
 			User u = db.getUser(userId);
