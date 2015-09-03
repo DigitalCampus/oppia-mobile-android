@@ -93,7 +93,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 		                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 		                httpPatch.setEntity(se);
 		                
-		                httpPatch.addHeader(client.getAuthHeader());
+		                httpPatch.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
 						
 		                // make request
 						HttpResponse response = client.execute(httpPatch);	

@@ -805,6 +805,28 @@ public class DbHelper extends SQLiteOpenHelper {
 		return u;
 	}
 	
+	public User getUser(String userName) throws UserNotFoundException {
+		String s = USER_C_USERNAME + "=? ";
+		String[] args = new String[] { userName };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		c.moveToFirst();
+		User u = null;
+		while (c.isAfterLast() == false) {
+			u = new User();
+			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
+			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
+			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
+			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+			c.moveToNext();
+		}
+		c.close();
+		if (u == null){
+			throw new UserNotFoundException();
+		}
+		return u;
+	}
+	
 	public ArrayList<User> getAllUsers(){
 		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();

@@ -44,10 +44,18 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
 	
 	public static final String PREF_USER_NAME = "prefUsername";
-	//public static final String PREF_API_KEY = "prefApiKey";
 	public static final String PREF_SERVER = "prefServer";
-	//public static final String PREF_BADGES = "prefBadges";
-	//public static final String PREF_POINTS = "prefPoints";
+	
+	/*
+	 * To be removed from prefs...
+	 */
+	public static final String PREF_API_KEY = "prefApiKey";
+	public static final String PREF_BADGES = "prefBadges";
+	public static final String PREF_POINTS = "prefPoints";
+	/*
+	 * end remove
+	 */
+	
 	public static final String PREF_SCORING_ENABLED = "prefScoringEnabled";
 	public static final String PREF_BADGING_ENABLED = "prefBadgingEnabled";
 	public static final String PREF_SERVER_TIMEOUT_CONN = "prefServerTimeoutConnection";

@@ -27,13 +27,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.UpdateScheduleListener;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -43,16 +46,20 @@ import org.json.JSONObject;
 import com.splunk.mint.Mint;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 	
 	public final static String TAG = ScheduleUpdateTask.class.getSimpleName();
 	private Context ctx;
 	private UpdateScheduleListener uStateListener;
+	private SharedPreferences prefs;
 	
 	public ScheduleUpdateTask(Context ctx) {
 		this.ctx = ctx;
+		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 	}
 	
 	@Override
@@ -69,10 +76,15 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 		String url = client.getFullURL(dm.getScheduleURI());
 		
-		String responseStr = "";
-		HttpGet httpGet = new HttpGet(url);
-		httpGet.addHeader(client.getAuthHeader());
 		try {
+			
+			DbHelper db = new DbHelper(ctx);
+        	User user = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			DatabaseManager.getInstance().closeDatabase();
+			
+			String responseStr = "";
+			HttpGet httpGet = new HttpGet(url);
+			httpGet.addHeader(client.getAuthHeader(user.getUsername(),user.getApiKey()));
 			
 			// make request
 			HttpResponse response = client.execute(httpGet);
@@ -95,7 +107,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 					payload.setResultResponse("");
 					JSONObject jsonObj = new JSONObject(responseStr);
 					long scheduleVersion = jsonObj.getLong("version");
-					DbHelper db = new DbHelper(this.ctx);
+					DbHelper db1 = new DbHelper(this.ctx);
 					JSONArray schedule = jsonObj.getJSONArray("activityschedule");
 					ArrayList<ActivitySchedule> activitySchedule = new ArrayList<ActivitySchedule>();
 					for (int i = 0; i < (schedule.length()); i++) {
@@ -110,10 +122,10 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 						as.setEndTime(edt);
 						activitySchedule.add(as);
 					}
-					int courseId = db.getCourseID(dm.getShortname());
-					db.resetSchedule(courseId);
-					db.insertSchedule(activitySchedule);
-					db.updateScheduleVersion(courseId, scheduleVersion);
+					int courseId = db1.getCourseID(dm.getShortname());
+					db1.resetSchedule(courseId);
+					db1.insertSchedule(activitySchedule);
+					db1.updateScheduleVersion(courseId, scheduleVersion);
 					DatabaseManager.getInstance().closeDatabase();
 					break;
 				default:
@@ -130,6 +142,9 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch (UserNotFoundException unfe) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}

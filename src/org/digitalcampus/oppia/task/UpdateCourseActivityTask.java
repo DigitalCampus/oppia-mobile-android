@@ -37,10 +37,12 @@ import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
@@ -77,13 +79,17 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
 		DownloadProgress dp = new DownloadProgress();
 		String responseStr = "";
 		
-		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-		String url = client.getFullURL(course.getTrackerLogUrl());
-		HttpGet httpGet = new HttpGet(url);
-		httpGet.addHeader(client.getAuthHeader());
-		Log.d(TAG,url);
+		
 		
 		try {
+			DbHelper db = new DbHelper(this.ctx);
+			User u = db.getUser(userId);
+			
+			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+			String url = client.getFullURL(course.getTrackerLogUrl());
+			HttpGet httpGet = new HttpGet(url);
+			httpGet.addHeader(client.getAuthHeader(u.getUsername(),u.getApiKey()));
+			Log.d(TAG,url);
 			
 			// make request
 			HttpResponse response = client.execute(httpGet);
@@ -97,7 +103,7 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
 				Log.d(TAG,s);
 			}		
 
-			DbHelper db = new DbHelper(this.ctx);
+			
 			CourseTrackerXMLReader ctxr;
 			try {
 				ctxr = new CourseTrackerXMLReader(responseStr);
@@ -131,6 +137,10 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
 		} catch (IOException ioe) { 
 			Mint.logException(ioe);
 			ioe.printStackTrace();
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch (UserNotFoundException unfe) {
+			unfe.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}

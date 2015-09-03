@@ -17,40 +17,6 @@
 
 package org.digitalcampus.oppia.service;
 
-import android.app.IntentService;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
-import android.util.Log;
-
-import com.splunk.mint.Mint;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.params.CoreProtocolPNames;
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.exception.InvalidXMLException;
-import org.digitalcampus.oppia.model.ActivitySchedule;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
-import org.digitalcampus.oppia.utils.SearchUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
-import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,6 +29,40 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.params.CoreProtocolPNames;
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.ActivitySchedule;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.digitalcampus.oppia.utils.SearchUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
+import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.IntentService;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 
 public class CourseIntallerService extends IntentService {
@@ -361,7 +361,7 @@ public class CourseIntallerService extends IntentService {
 			DatabaseManager.getInstance().closeDatabase();
         	
             HTTPConnectionUtils client = new HTTPConnectionUtils(this);
-            String downloadUrl =  client.createUrlWithCredentials(fileUrl);
+            String downloadUrl =  client.createUrlWithCredentials(fileUrl, u.getUsername(), u.getApiKey());
             String v = "0";
             try {
                 v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
@@ -430,7 +430,11 @@ public class CourseIntallerService extends IntentService {
             this.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
             return false;
-        }
+        } catch (UserNotFoundException unfe) {
+        	this.deleteFile(downloadedFile);
+            logAndNotifyError(fileUrl, unfe);
+            return false;
+		}
 
         Log.d(TAG, fileUrl + " succesfully downloaded");
         removeDownloading(fileUrl);
@@ -444,11 +448,15 @@ public class CourseIntallerService extends IntentService {
         HTTPConnectionUtils client = new HTTPConnectionUtils(this);
         String url = client.getFullURL(scheduleUrl);
 
-        String responseStr = "";
-        HttpGet httpGet = new HttpGet(url);
-        httpGet.addHeader(client.getAuthHeader());
         try {
-
+        	
+        	DbHelper db = new DbHelper(this);
+        	User u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			DatabaseManager.getInstance().closeDatabase();
+			
+        	String responseStr = "";
+            HttpGet httpGet = new HttpGet(url);
+            httpGet.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
             // make request
             HttpResponse response = client.execute(httpGet);
 
@@ -469,7 +477,7 @@ public class CourseIntallerService extends IntentService {
 
                     JSONObject jsonObj = new JSONObject(responseStr);
                     long scheduleVersion = jsonObj.getLong("version");
-                    DbHelper db = new DbHelper(this);
+                    DbHelper db1 = new DbHelper(this);
                     JSONArray schedule = jsonObj.getJSONArray("activityschedule");
                     ArrayList<ActivitySchedule> activitySchedule = new ArrayList<ActivitySchedule>();
                     int lastProgress = 0;
@@ -490,10 +498,10 @@ public class CourseIntallerService extends IntentService {
                         as.setEndTime(edt);
                         activitySchedule.add(as);
                     }
-                    int courseId = db.getCourseID(shortname);
-                    db.resetSchedule(courseId);
-                    db.insertSchedule(activitySchedule);
-                    db.updateScheduleVersion(courseId, scheduleVersion);
+                    int courseId = db1.getCourseID(shortname);
+                    db1.resetSchedule(courseId);
+                    db1.insertSchedule(activitySchedule);
+                    db1.updateScheduleVersion(courseId, scheduleVersion);
                     DatabaseManager.getInstance().closeDatabase();
                     break;
                 default:
@@ -513,7 +521,10 @@ public class CourseIntallerService extends IntentService {
         } catch (IOException e) {
             sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
             removeDownloading(scheduleUrl);
-        }
+        } catch (UserNotFoundException unfe) {
+        	sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
+            removeDownloading(scheduleUrl);
+		}
 
         Log.d(TAG, scheduleUrl + " succesfully downloaded");
         removeDownloading(scheduleUrl);
