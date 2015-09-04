@@ -17,9 +17,7 @@
 
 package org.digitalcampus.oppia.model;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.jarjar.apache.commons.codec.digest.DigestUtils;
 
 public class User {
 
@@ -28,13 +26,13 @@ public class User {
 	private String email;
 	private String password;
 	private String passwordAgain;
-	private String passwordEncrypted;
 	private String firstname;
 	private String lastname;
 	private String apiKey;
 	private String jobTitle;
 	private String organisation;
 	private String phoneNo;
+	private String passwordEncypted;
 	private boolean scoringEnabled = true;
 	private boolean badgingEnabled = true;
 	private int points = 0;
@@ -113,22 +111,18 @@ public class User {
 	}
 	
 	public String getPasswordEncrypted() {
-		return this.passwordEncrypted;
+		if (this.passwordEncypted != null){
+			return this.passwordEncypted;
+		}
+		
+		this.passwordEncypted = DigestUtils.sha256Hex(this.password);  
+		return this.passwordEncypted;
 	}
 	
-	public void setPasswordEncrypted() {
-		try {
-			byte[] bytesOfMessage = this.password.getBytes("UTF-8");
-			MessageDigest md = MessageDigest.getInstance("SHA1");
-			this.passwordEncrypted = md.digest(bytesOfMessage).toString();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setPasswordEncrypted(String pwEncrypted){
+		this.passwordEncypted = pwEncrypted;
 	}
+	
 	public long getUserId() {
 		return userId;
 	}

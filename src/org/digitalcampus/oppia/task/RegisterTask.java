@@ -134,8 +134,6 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 					}
 					u.setFirstname(jsonResp.getString("first_name"));
 					u.setLastname(jsonResp.getString("last_name"));
-					u.setPassword(u.getPassword());
-					u.setPasswordEncrypted();
 					
 					// add or update user in db
 					DbHelper db = new DbHelper(ctx);

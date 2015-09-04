@@ -118,13 +118,15 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_USERNAME = "username";
 	private static final String USER_C_FIRSTNAME = "firstname";
 	private static final String USER_C_LASTNAME = "lastname";
-	private static final String USER_C_PASSWORD = "passwordencrypted";
+	private static final String USER_C_PASSWORDENCRYPTED = "passwordencrypted";
 	private static final String USER_C_APIKEY = "apikey";
 	private static final String USER_C_LAST_LOGIN_DATE = "lastlogin";
 	private static final String USER_C_NO_LOGINS = "nologins";
 	private static final String USER_C_POINTS = "points";
 	private static final String USER_C_BADGES = "badges";
 
+	private static final String USER_PROPS_TABLE = "userprops";
+	
     public void beginTransaction(){
         db.beginTransaction();
     }
@@ -224,7 +226,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_USERNAME +"]" + " TEXT, "+
                 "["+USER_C_FIRSTNAME +"] TEXT, " +
                 "["+USER_C_LASTNAME+"] TEXT, " +
-                "["+USER_C_PASSWORD +"] TEXT, " +
+                "["+USER_C_PASSWORDENCRYPTED +"] TEXT, " +
                 "["+USER_C_APIKEY +"] TEXT, " +
                 "["+USER_C_LAST_LOGIN_DATE +"] datetime null, " +
                 "["+USER_C_NO_LOGINS +"] integer default 0,  " +
@@ -433,7 +435,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(USER_C_USERNAME, user.getUsername());
 		values.put(USER_C_FIRSTNAME, user.getFirstname());
 		values.put(USER_C_LASTNAME, user.getLastname());
-		values.put(USER_C_PASSWORD, user.getPasswordEncrypted());
+		values.put(USER_C_PASSWORDENCRYPTED, user.getPasswordEncrypted());
 		values.put(USER_C_APIKEY, user.getApiKey());
 		values.put(USER_C_POINTS, user.getPoints());
 		values.put(USER_C_BADGES, user.getBadges());
@@ -802,6 +804,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
 			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
 			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
+			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			c.moveToNext();
 		}
 		c.close();
@@ -826,6 +829,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
 			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
 			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
+			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			c.moveToNext();
 		}
 		c.close();
@@ -881,6 +885,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
 			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
 			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
+			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			users.add(u);
 			c.moveToNext();
 		}

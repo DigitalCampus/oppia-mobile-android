@@ -104,8 +104,6 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 				case 201: // logged in
 					JSONObject jsonResp = new JSONObject(responseStr);
 					u.setApiKey(jsonResp.getString("api_key"));
-					u.setPassword(u.getPassword());
-					u.setPasswordEncrypted();
 					u.setFirstname(jsonResp.getString("first_name"));
 					u.setLastname(jsonResp.getString("last_name"));
 					try {
