@@ -800,6 +800,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 			c.moveToNext();
 		}
 		c.close();
@@ -822,6 +824,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 			c.moveToNext();
 		}
 		c.close();

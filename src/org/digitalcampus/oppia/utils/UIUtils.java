@@ -66,6 +66,7 @@ public class UIUtils {
 		User u;
 		try {
 			u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			Log.d(TAG,"username: " + u.getUsername());
 			Log.d(TAG,"points: " + u.getPoints());
 		} catch (UserNotFoundException e) {
 			return;

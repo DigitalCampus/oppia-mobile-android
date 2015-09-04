@@ -173,9 +173,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 		} catch (IllegalStateException ise) {
 			ise.printStackTrace();
 			payload.setResult(false);
-		} finally {
-			DatabaseManager.getInstance().closeDatabase();
-		}
+		} 
 		return payload;
 	}
 
