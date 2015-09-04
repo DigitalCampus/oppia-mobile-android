@@ -114,7 +114,6 @@ public class User {
 		if (this.passwordEncypted != null){
 			return this.passwordEncypted;
 		}
-		
 		this.passwordEncypted = DigestUtils.sha256Hex(this.password);  
 		return this.passwordEncypted;
 	}
