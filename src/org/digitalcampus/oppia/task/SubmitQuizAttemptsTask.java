@@ -30,6 +30,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -39,7 +40,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import com.splunk.mint.Mint;
 
@@ -47,9 +51,11 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 
 	public final static String TAG = SubmitQuizAttemptsTask.class.getSimpleName();
 	private Context ctx;
+	private SharedPreferences prefs;
 	
 	public SubmitQuizAttemptsTask(Context c) {
 		this.ctx = c;
+		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
 	@Override
@@ -122,7 +128,10 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 				e.printStackTrace();
 			} 
 		}
-
+		Editor editor = prefs.edit();
+		long now = System.currentTimeMillis()/1000;
+		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now);
+		editor.commit();
 		return payload;
 	}
 

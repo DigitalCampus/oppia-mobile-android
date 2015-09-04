@@ -46,16 +46,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_USER_NAME = "prefUsername";
 	public static final String PREF_SERVER = "prefServer";
 	
-	/*
-	 * To be removed from prefs...
-	 */
-	//public static final String PREF_API_KEY = "prefApiKey";
-	//public static final String PREF_BADGES = "prefBadges";
-	//public static final String PREF_POINTS = "prefPoints";
-	/*
-	 * end remove
-	 */
-	
+	public static final String PREF_TRIGGER_POINTS_REFRESH = "prefScoreRefresh";
 	public static final String PREF_SCORING_ENABLED = "prefScoringEnabled";
 	public static final String PREF_BADGING_ENABLED = "prefBadgingEnabled";
 	public static final String PREF_SERVER_TIMEOUT_CONN = "prefServerTimeoutConnection";
@@ -64,13 +55,12 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
 	
 	/*
-	 * Start personal prefs
+	 * Start personal prefs - move these to UserProps table
 	 */
 	public static final String PREF_PHONE_NO = "prefPhoneNo";
 	public static final String PREF_LANGUAGE = "prefLanguage";
 	public static final String PREF_SHOW_SCHEDULE_REMINDERS = "prefShowScheduleReminders";
 	public static final String PREF_NO_SCHEDULE_REMINDERS = "prefNoScheduleReminders";
-	public static final String PREF_LAST_MEDIA_SCAN = "prefLastMediaScan";
 	public static final String PREF_SHOW_COURSE_DESC = "prefShowCourseDescription";
 	public static final String PREF_SHOW_PROGRESS_BAR = "prefShowProgressBar";
 	public static final String PREF_SHOW_SECTION_NOS = "prefShowSectionNumbers";
@@ -80,6 +70,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	 * End personal prefs
 	 */
 	
+	public static final String PREF_LAST_MEDIA_SCAN = "prefLastMediaScan";
 	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
 	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";

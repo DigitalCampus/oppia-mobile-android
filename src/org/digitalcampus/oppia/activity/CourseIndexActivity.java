@@ -320,7 +320,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		// update the points/badges by invalidating the menu
-		supportInvalidateOptionsMenu();
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
+			supportInvalidateOptionsMenu();
+		}
 	}
 
     //@Override

@@ -444,7 +444,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		}
 		
 		// update the points/badges by invalidating the menu
-		supportInvalidateOptionsMenu();
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
+			supportInvalidateOptionsMenu();
+		}
 	}
 
 	public void scanStart() {

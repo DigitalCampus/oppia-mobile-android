@@ -174,6 +174,12 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 			ise.printStackTrace();
 			payload.setResult(false);
 		} 
+		
+		Editor editor = prefs.edit();
+		long now = System.currentTimeMillis()/1000;
+		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now);
+		editor.commit();
+		
 		return payload;
 	}
 
