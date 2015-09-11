@@ -56,12 +56,10 @@ public class ScorecardPieChart {
         pie.setPlotMargins(margin, margin, margin, margin);
         SegmentFormatter sfNotStarted = new SegmentFormatter();
         sfNotStarted.configure(activity.getApplicationContext(), R.xml.scorecard_pie_segment_not_started);
+        sfNotStarted.getInnerEdgePaint().setStrokeWidth(4);
 
         SegmentFormatter sfCompleted = new SegmentFormatter();
         sfCompleted.configure(activity.getApplicationContext(), R.xml.scorecard_pie_segment_completed);
-
-        SegmentFormatter sfStarted = new SegmentFormatter();
-        sfStarted.configure(activity.getApplicationContext(), R.xml.scorecard_pie_segment_started);
 
         int numCompleted = course.getNoActivitiesCompleted();
         if (numCompleted != 0){
@@ -71,19 +69,12 @@ public class ScorecardPieChart {
         }
 
         int numStarted = course.getNoActivitiesStarted();
-        if (numStarted != 0){
-            segmentStarted.setTitle( showSegementTitles ? "Started (" + numStarted + ")" : "");
-            segmentStarted.setValue(numStarted);
-            pie.addSeries(segmentStarted, sfStarted);
-        }
-
-        int numNotStarted = course.getNoActivitiesNotStarted();
+        int numNotStarted = course.getNoActivitiesNotStarted() + numStarted;
         segmentNotStarted.setTitle( (showSegementTitles && numNotStarted != 0)? "Not Started (" + numNotStarted + ")" : "");
         segmentNotStarted.setValue(numNotStarted);
         pie.addSeries(segmentNotStarted, sfNotStarted);
-        
-        pie.getRenderer(PieRenderer.class).setDonutSize(60/100f, PieRenderer.DonutMode.PERCENT);
 
+        pie.getRenderer(PieRenderer.class).setDonutSize(0.55f, PieRenderer.DonutMode.PERCENT);
         pie.getBorderPaint().setColor(Color.TRANSPARENT);
         pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
 

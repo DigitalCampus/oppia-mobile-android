@@ -3,6 +3,7 @@
         fillPaint.color="@color/highlight_mid"
         labelPaint.textSize="@dimen/pie_segment_label_font_size"
         labelPaint.color="@color/text_dark"
-        innerEdgePaint.color="@color/highlight_mid"
-        outerEdgePaint.color="@color/highlight_mid"
-        radialEdgePaint.color="#00000000"/>
+        innerEdgePaint.color="@color/background_light"
+        outerEdgePaint.color="@color/background_light"
+        radialEdgePaint.color="@color/background_light"
+        radialEdgePaint.strokeWidth="8" />
