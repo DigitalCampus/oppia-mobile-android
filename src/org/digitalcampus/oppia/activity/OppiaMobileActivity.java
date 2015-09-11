@@ -299,9 +299,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 				// wipe user prefs
 				Editor editor = prefs.edit();
 				editor.putString(PrefsActivity.PREF_USER_NAME, "");
-				editor.putString(PrefsActivity.PREF_API_KEY, "");
-				editor.putInt(PrefsActivity.PREF_BADGES, 0);
-				editor.putInt(PrefsActivity.PREF_POINTS, 0);
 				editor.commit();
 
 				// restart the app
@@ -440,15 +437,15 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)){
 			displayCourses(userId);
 		}
-		
-		if(key.equalsIgnoreCase(PrefsActivity.PREF_POINTS)
-				|| key.equalsIgnoreCase(PrefsActivity.PREF_BADGES)){
-			supportInvalidateOptionsMenu();
-		}
 
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED)){
 			boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
 			Log.d(TAG, "PREF_DOWNLOAD_VIA_CELLULAR_ENABLED" + newPref);
+		}
+		
+		// update the points/badges by invalidating the menu
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
+			supportInvalidateOptionsMenu();
 		}
 	}
 

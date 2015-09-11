@@ -31,9 +31,9 @@ import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
@@ -43,7 +43,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -320,8 +319,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (key.equalsIgnoreCase(PrefsActivity.PREF_POINTS)
-				|| key.equalsIgnoreCase(PrefsActivity.PREF_BADGES)) {
+		// update the points/badges by invalidating the menu
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
 			supportInvalidateOptionsMenu();
 		}
 	}

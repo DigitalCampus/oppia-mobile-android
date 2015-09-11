@@ -56,6 +56,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	private SharedPreferences prefs;
 	private UpgradeListener mUpgradeListener;
 	
+	private static final String PREF_API_KEY = "prefApiKey";
+	private static final String PREF_BADGES = "prefBadges";
+	private static final String PREF_POINTS = "prefPoints";
+	
 	public UpgradeManagerTask(Context ctx){
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -125,6 +129,15 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			editor.putBoolean("upgradeV54", true);
 			editor.commit();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v54"));
+			payload.setResult(true);
+		}
+		
+		if(!prefs.getBoolean("upgradeV54a",false)){
+			upgradeV54a();
+			Editor editor = prefs.edit();
+			editor.putBoolean("upgradeV54a", true);
+			editor.commit();
+			publishProgress(this.ctx.getString(R.string.info_upgrading,"v54a"));
 			payload.setResult(true);
 		}
 		
@@ -208,7 +221,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		User user = new User();
 		user.setUsername(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-		user.setApiKey(prefs.getString(PrefsActivity.PREF_API_KEY, "") );
+		user.setApiKey(prefs.getString(UpgradeManagerTask.PREF_API_KEY, "") );
 		DbHelper db = new DbHelper(ctx);
 		long userId = db.addOrUpdateUser(user);
 		db.updateV43(userId);
@@ -309,7 +322,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		DbHelper db = new DbHelper(ctx);
 		ArrayList<QuizAttempt> quizAttempts = db.getAllQuizAttempts();
 		long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-		
 		
 		ArrayList<Course> courses = db.getAllCourses();
 		ArrayList<v54UpgradeQuizObj> quizzes = new ArrayList<v54UpgradeQuizObj>();
@@ -424,6 +436,17 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		public int id;
 		public String digest;
 		public int threshold;
+	}
+	
+	protected void upgradeV54a(){
+		DbHelper db = new DbHelper(ctx);
+		long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		int points = prefs.getInt(UpgradeManagerTask.PREF_POINTS, 0);
+		int badges = prefs.getInt(UpgradeManagerTask.PREF_BADGES, 0);
+		Log.d(TAG,"points: " + points);
+		db.updateUserPoints(userId, points);
+		db.updateUserBadges(userId, badges);
+		DatabaseManager.getInstance().closeDatabase();
 	}
 	
 	@Override

@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -53,7 +54,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 21;
+	static final int DB_VERSION = 22;
 
 	private static SQLiteDatabase db;
 	private SharedPreferences prefs;
@@ -117,11 +118,15 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_USERNAME = "username";
 	private static final String USER_C_FIRSTNAME = "firstname";
 	private static final String USER_C_LASTNAME = "lastname";
-	private static final String USER_C_PASSWORD = "passwordencrypted";
+	private static final String USER_C_PASSWORDENCRYPTED = "passwordencrypted";
 	private static final String USER_C_APIKEY = "apikey";
 	private static final String USER_C_LAST_LOGIN_DATE = "lastlogin";
 	private static final String USER_C_NO_LOGINS = "nologins";
+	private static final String USER_C_POINTS = "points";
+	private static final String USER_C_BADGES = "badges";
 
+	private static final String USER_PROPS_TABLE = "userprops";
+	
     public void beginTransaction(){
         db.beginTransaction();
     }
@@ -221,10 +226,12 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_USERNAME +"]" + " TEXT, "+
                 "["+USER_C_FIRSTNAME +"] TEXT, " +
                 "["+USER_C_LASTNAME+"] TEXT, " +
-                "["+USER_C_PASSWORD +"] TEXT, " +
+                "["+USER_C_PASSWORDENCRYPTED +"] TEXT, " +
                 "["+USER_C_APIKEY +"] TEXT, " +
                 "["+USER_C_LAST_LOGIN_DATE +"] datetime null, " +
-                "["+USER_C_NO_LOGINS +"] integer default 0 " +
+                "["+USER_C_NO_LOGINS +"] integer default 0,  " +
+                "["+USER_C_POINTS +"] integer default 0,  " +
+                "["+USER_C_BADGES +"] integer default 0 " +
             ");";
 		db.execSQL(sql);
 	}
@@ -359,6 +366,14 @@ public class DbHelper extends SQLiteOpenHelper {
 			String sql1 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_ACTIVITY_DIGEST + " text;";
 			db.execSQL(sql1);
 		}
+		
+		if(oldVersion <= 21 && newVersion >= 22){
+			// add points and badges columns
+			String sql1 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_POINTS + " integer default 0;";
+			db.execSQL(sql1);
+			String sql2 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_BADGES + " integer default 0;";
+			db.execSQL(sql2);
+		}
 	}
 
 	public void updateV43(long userId){
@@ -420,15 +435,19 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(USER_C_USERNAME, user.getUsername());
 		values.put(USER_C_FIRSTNAME, user.getFirstname());
 		values.put(USER_C_LASTNAME, user.getLastname());
-		values.put(USER_C_PASSWORD, user.getPasswordEncrypted());
+		values.put(USER_C_PASSWORDENCRYPTED, user.getPasswordEncrypted());
 		values.put(USER_C_APIKEY, user.getApiKey());
+		values.put(USER_C_POINTS, user.getPoints());
+		values.put(USER_C_BADGES, user.getBadges());
 		
 		long userId = this.isUser(user.getUsername());
 		if (userId == -1) {
 			Log.v(TAG, "Record added");
 			return db.insertOrThrow(USER_TABLE, null, values);
 		} else {
-			db.update(USER_TABLE, values, USER_C_ID + "=" + userId, null);
+			String s = USER_C_ID + "=?";
+			String[] args = new String[] { String.valueOf(userId) };
+			db.update(USER_TABLE, values, s, args);
 			return userId;
 		} 
 	}
@@ -770,6 +789,88 @@ public class DbHelper extends SQLiteOpenHelper {
 		return userId;
 	}
 	
+	public User getUser(long userId) throws UserNotFoundException {
+		String s = USER_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(userId) };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		c.moveToFirst();
+		User u = null;
+		while (c.isAfterLast() == false) {
+			u = new User();
+			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
+			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
+			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
+			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
+			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+			c.moveToNext();
+		}
+		c.close();
+		if (u == null){
+			throw new UserNotFoundException();
+		}
+		return u;
+	}
+	
+	public User getUser(String userName) throws UserNotFoundException {
+		String s = USER_C_USERNAME + "=? ";
+		String[] args = new String[] { userName };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		c.moveToFirst();
+		User u = null;
+		while (c.isAfterLast() == false) {
+			u = new User();
+			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
+			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
+			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
+			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
+			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+			c.moveToNext();
+		}
+		c.close();
+		if (u == null){
+			throw new UserNotFoundException();
+		}
+		return u;
+	}
+	
+	public void updateUserPoints(String userName, int points){
+		ContentValues values = new ContentValues();
+		values.put(USER_C_POINTS, points);
+		String s = USER_C_USERNAME + "=? ";
+		String[] args = new String[] { userName };
+		db.update(USER_TABLE, values, s ,args);
+	}
+	
+	public void updateUserBadges(String userName, int badges){
+		ContentValues values = new ContentValues();
+		values.put(USER_C_BADGES, badges);
+		String s = USER_C_USERNAME + "=? ";
+		String[] args = new String[] { userName };
+		db.update(USER_TABLE, values, s ,args);
+	}
+	
+	public void updateUserPoints(long userId, int points){
+		ContentValues values = new ContentValues();
+		values.put(USER_C_POINTS, points);
+		String s = USER_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(userId) };
+		db.update(USER_TABLE, values, s ,args);
+	}
+	
+	public void updateUserBadges(long userId, int badges){
+		ContentValues values = new ContentValues();
+		values.put(USER_C_BADGES, badges);
+		String s = USER_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(userId) };
+		db.update(USER_TABLE, values, s ,args);
+	}
+	
 	public ArrayList<User> getAllUsers(){
 		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();
@@ -777,11 +878,14 @@ public class DbHelper extends SQLiteOpenHelper {
 		ArrayList<User> users = new ArrayList<User>();
 		while (c.isAfterLast() == false) {
 			User u = new User();
-			u.setUserid(c.getInt(c.getColumnIndex(USER_C_ID)));
+			u.setUserId(c.getInt(c.getColumnIndex(USER_C_ID)));
 			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
+			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			users.add(u);
 			c.moveToNext();
 		}
@@ -789,18 +893,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		return users;
 	}
 	
-	public int getSentTrackersCount(long userId){
-		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
-		String[] args = new String[] { "1", String.valueOf(userId) };
+	public int getSentTrackersCount(){
+		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
+		String[] args = new String[] { "1"};
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		int count = c.getCount();
 		c.close();
 		return count;
 	}
 	
-	public int getUnsentTrackersCount(long userId){
-		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
-		String[] args = new String[] { "0", String.valueOf(userId) };
+	public int getUnsentTrackersCount(){
+		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
+		String[] args = new String[] { "0" };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		int count = c.getCount();
 		c.close();
@@ -895,28 +999,37 @@ public class DbHelper extends SQLiteOpenHelper {
 	        endTransaction(true);
 	}
 	
-	public ArrayList<TrackerLog>  getUnsentQuizResults(long userId){
-		String s = QUIZATTEMPTS_C_SENT + "=? AND " + QUIZATTEMPTS_C_USERID + "=? ";
-		String[] args = new String[] { "0", String.valueOf(userId) };
+	public ArrayList<QuizAttempt>  getUnsentQuizAttempts(){
+		String s = QUIZATTEMPTS_C_SENT + "=? ";
+		String[] args = new String[] { "0" };
 		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
-		ArrayList<TrackerLog> sl = new ArrayList<TrackerLog>();
+		ArrayList<QuizAttempt> quizAttempts = new ArrayList<QuizAttempt>();
 		while (c.isAfterLast() == false) {
-			TrackerLog so = new TrackerLog();
-			so.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
-			so.setContent(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
-			sl.add(so);
+			try {
+				QuizAttempt qa = new QuizAttempt();
+				qa.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
+				qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
+				qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
+				User u = this.getUser(qa.getUserId());
+				qa.setUser(u);
+				quizAttempts.add(qa);
+			} catch (UserNotFoundException unfe){
+				// do nothing
+			}
 			c.moveToNext();
 		}	
 		c.close();
-		return sl;
+		return quizAttempts;
 	}
 	
 	public int markQuizSubmitted(long rowId){
 		ContentValues values = new ContentValues();
 		values.put(QUIZATTEMPTS_C_SENT, 1);
 		
-		return db.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + rowId, null);
+		String s = QUIZATTEMPTS_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(rowId) };
+		return db.update(QUIZATTEMPTS_TABLE, values, s, args);
 	}
 	
 	public void deleteQuizAttempts(long courseId, long userId){

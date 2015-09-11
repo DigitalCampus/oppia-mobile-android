@@ -27,14 +27,20 @@ import android.util.Log;
 
 
 
+
+
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.params.CoreProtocolPNames;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
@@ -70,7 +76,11 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 		try { 
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
-			String url =  client.createUrlWithCredentials(dm.getDownloadUrl());
+			DbHelper db = new DbHelper(ctx);
+        	User user = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			DatabaseManager.getInstance().closeDatabase();
+			
+			String url =  client.createUrlWithCredentials(dm.getDownloadUrl(),user.getUsername(),user.getApiKey());
 			
 			String v = "0";
 			try {
@@ -145,6 +155,10 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 		} catch (IOException ioe) { 
 			Mint.logException(ioe);
 			ioe.printStackTrace();
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch (UserNotFoundException unfe) {
+			unfe.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}

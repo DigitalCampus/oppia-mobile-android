@@ -125,9 +125,6 @@ public class LoginFragment extends Fragment implements SubmitListener {
 			// set params
 			Editor editor = prefs.edit();
 	    	editor.putString(PrefsActivity.PREF_USER_NAME, usernameField.getText().toString());
-	    	editor.putString(PrefsActivity.PREF_API_KEY, u.getApiKey());
-	    	editor.putInt(PrefsActivity.PREF_POINTS, u.getPoints());
-	    	editor.putInt(PrefsActivity.PREF_BADGES, u.getBadges());
 	    	editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, u.isScoringEnabled());
 	    	editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, u.isBadgingEnabled());
 	    	editor.commit();

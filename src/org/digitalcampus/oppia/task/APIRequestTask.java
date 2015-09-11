@@ -26,20 +26,29 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 	
 	public static final String TAG = APIRequestTask.class.getSimpleName();
 	protected Context ctx;
 	private APIRequestListener requestListener;
+	private SharedPreferences prefs;
 	
 	public APIRequestTask(Context ctx) {
 		this.ctx = ctx;
+		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 	}
 	
 	@Override
@@ -47,13 +56,17 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 		
 		Payload payload = params[0];
 		String responseStr = "";
-		
-		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-		String url = client.getFullURL(payload.getUrl());
-		HttpGet httpGet = new HttpGet(url);
-		httpGet.addHeader(client.getAuthHeader());
-		
+
 		try {
+			
+			DbHelper db = new DbHelper(ctx);
+        	User u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			DatabaseManager.getInstance().closeDatabase();
+			
+			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
+			String url = client.getFullURL(payload.getUrl());
+			HttpGet httpGet = new HttpGet(url);
+			httpGet.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
 			
 			// make request
 			HttpResponse response = client.execute(httpGet);
@@ -88,6 +101,10 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
 			e.printStackTrace();
+			payload.setResult(false);
+			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch (UserNotFoundException unfe) {
+			unfe.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}

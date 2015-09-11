@@ -34,12 +34,10 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.model.TrackerLog;
+import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.splunk.mint.Mint;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -47,13 +45,15 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
+import com.splunk.mint.Mint;
 
-	public final static String TAG = SubmitQuizTask.class.getSimpleName();
+public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> {
+
+	public final static String TAG = SubmitQuizAttemptsTask.class.getSimpleName();
 	private Context ctx;
 	private SharedPreferences prefs;
 	
-	public SubmitQuizTask(Context c) {
+	public SubmitQuizAttemptsTask(Context c) {
 		this.ctx = c;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
@@ -62,17 +62,17 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		for (Object l : payload.getData()) {
-			TrackerLog tl = (TrackerLog) l;
+			QuizAttempt qa = (QuizAttempt) l;
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 			
 			try {
 
 				String url = client.getFullURL(MobileLearning.QUIZ_SUBMIT_PATH);
 				HttpPost httpPost = new HttpPost(url);
-				StringEntity se = new StringEntity(tl.getContent(), "utf8");
+				StringEntity se = new StringEntity(qa.getData(), "utf8");
 				se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 				httpPost.setEntity(se);
-				httpPost.addHeader(client.getAuthHeader());
+				httpPost.addHeader(client.getAuthHeader(qa.getUser().getUsername(),qa.getUser().getApiKey()));
 				// make request
 				HttpResponse response = client.execute(httpPost);
 				InputStream content = response.getEntity().getContent();
@@ -86,30 +86,27 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				
 				switch (response.getStatusLine().getStatusCode()) {
 					case 201: // submitted
+						JSONObject jsonResp = new JSONObject(responseStr);
 						DbHelper db = new DbHelper(ctx);
-						db.markQuizSubmitted(tl.getId());
+						db.markQuizSubmitted(qa.getId());
+						db.updateUserPoints(qa.getUser().getUsername(), jsonResp.getInt("points"));
+						db.updateUserBadges(qa.getUser().getUsername(), jsonResp.getInt("badges"));
 						DatabaseManager.getInstance().closeDatabase();
 						payload.setResult(true);
-						// update points
-						JSONObject jsonResp = new JSONObject(responseStr);
-						Editor editor = prefs.edit();
-						editor.putInt(PrefsActivity.PREF_POINTS, jsonResp.getInt("points"));
-						editor.putInt(PrefsActivity.PREF_BADGES, jsonResp.getInt("badges"));
-						editor.commit();
 						break;
 					case 400: // bad request - so to prevent re-submitting over and
 								// over
 								// just mark as submitted
 						DbHelper db2 = new DbHelper(ctx);
-						db2.markQuizSubmitted(tl.getId());
+						db2.markQuizSubmitted(qa.getId());
 						DatabaseManager.getInstance().closeDatabase();
 						payload.setResult(false);
 						break;
-					case 500: // bad request - so to prevent re-submitting over and
+					case 500: // server error - so to prevent re-submitting over and
 								// over
 						// just mark as submitted
 						DbHelper db3 = new DbHelper(ctx);
-						db3.markQuizSubmitted(tl.getId());
+						db3.markQuizSubmitted(qa.getId());
 						DatabaseManager.getInstance().closeDatabase();
 						payload.setResult(false);
 						break;
@@ -131,7 +128,10 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 				e.printStackTrace();
 			} 
 		}
-
+		Editor editor = prefs.edit();
+		long now = System.currentTimeMillis()/1000;
+		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now);
+		editor.commit();
 		return payload;
 	}
 
@@ -144,7 +144,7 @@ public class SubmitQuizTask extends AsyncTask<Payload, Object, Payload> {
 		// reset submittask back to null after completion - so next call can run
 		// properly
 		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-		app.omSubmitQuizTask = null;
+		app.omSubmitQuizAttemptsTask = null;
 	}
 
 }

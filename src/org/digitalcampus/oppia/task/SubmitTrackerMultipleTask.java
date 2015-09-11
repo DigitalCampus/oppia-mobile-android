@@ -37,6 +37,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
@@ -68,18 +69,19 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = new Payload();
 		
-		try {
-				
-				DbHelper db = new DbHelper(ctx);
-				long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-				Log.d(TAG,"userId: " + userId);
-				payload = db.getUnsentTrackers(userId);
+		try {	
+			DbHelper db = new DbHelper(ctx);
+			ArrayList<User> users = db.getAllUsers();
+			DatabaseManager.getInstance().closeDatabase();
+			
+			for (User u: users){
+				DbHelper db1 = new DbHelper(ctx);
+				payload = db1.getUnsentTrackers(u.getUserId());
 				DatabaseManager.getInstance().closeDatabase();
+				
 				@SuppressWarnings("unchecked")
 				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
-				
-				
-				
+
 				for (Collection<TrackerLog> trackerBatch : result) {
 					String dataToSend = createDataString(trackerBatch);
 					
@@ -93,7 +95,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 		                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 		                httpPatch.setEntity(se);
 		                
-		                httpPatch.addHeader(client.getAuthHeader());
+		                httpPatch.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
 						
 		                // make request
 						HttpResponse response = client.execute(httpPatch);	
@@ -117,10 +119,12 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 								payload.setResult(true);
 								// update points
 								JSONObject jsonResp = new JSONObject(responseStr);
-								Editor editor = prefs.edit();
+								DbHelper dbpb = new DbHelper(ctx);
+								dbpb.updateUserPoints(u.getUserId(), jsonResp.getInt("points"));
+								dbpb.updateUserBadges(u.getUserId(), jsonResp.getInt("badges"));
+								DatabaseManager.getInstance().closeDatabase();
 								
-								editor.putInt(PrefsActivity.PREF_POINTS, jsonResp.getInt("points"));
-								editor.putInt(PrefsActivity.PREF_BADGES, jsonResp.getInt("badges"));
+								Editor editor = prefs.edit();
 								try {
 									editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
 									editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
@@ -163,12 +167,19 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 					} 
 					publishProgress(0);
 				}
-			
+				
+			}
 	
 		} catch (IllegalStateException ise) {
 			ise.printStackTrace();
 			payload.setResult(false);
 		} 
+		
+		Editor editor = prefs.edit();
+		long now = System.currentTimeMillis()/1000;
+		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now);
+		editor.commit();
+		
 		return payload;
 	}
 

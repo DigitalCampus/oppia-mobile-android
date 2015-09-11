@@ -34,6 +34,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
@@ -47,6 +48,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 
@@ -66,6 +68,26 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 
 		Payload payload = params[0];
 		User u = (User) payload.getData().get(0);
+		
+		// firstly try to login locally
+		DbHelper db0 = new DbHelper(ctx);
+		try {
+			User localUser = db0.getUser(u.getUsername());
+			
+			Log.d(TAG,"logged pw: " + localUser.getPasswordEncrypted());
+			Log.d(TAG,"entered pw: " + u.getPasswordEncrypted());
+			
+			if (localUser.getPasswordEncrypted().equals(u.getPasswordEncrypted())){
+				payload.setResult(true);
+				payload.setResultResponse(ctx.getString(R.string.login_complete));
+				return payload;
+			}
+		} catch (UserNotFoundException unfe) {
+			// Just ignore - means that user isn't already registered on the device
+		}
+		DatabaseManager.getInstance().closeDatabase();
+		
+		
 		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
 		String url = prefs.getString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault)) + MobileLearning.LOGIN_PATH;
@@ -104,8 +126,6 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 				case 201: // logged in
 					JSONObject jsonResp = new JSONObject(responseStr);
 					u.setApiKey(jsonResp.getString("api_key"));
-					u.setPassword(u.getPassword());
-					u.setPasswordEncrypted();
 					u.setFirstname(jsonResp.getString("first_name"));
 					u.setLastname(jsonResp.getString("last_name"));
 					try {
@@ -155,9 +175,8 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
-		} finally {
-
-		}
+		} 
+		
 		return payload;
 	}
 

@@ -208,6 +208,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         DbHelper db = new DbHelper(super.getActivity());
         long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
         db.getCourseQuizResults(quizStats, course.getCourseId(), userId);
+        DatabaseManager.getInstance().closeDatabase();
 
         for (Activity baselineAct : baseline){
             if (!baselineAct.getActType().equals("quiz")) continue;

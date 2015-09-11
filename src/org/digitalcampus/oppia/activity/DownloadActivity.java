@@ -175,7 +175,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		// Create an array of courses, that will be put to our ListActivity
 
         ArrayList<String> downloadingCourses = CourseIntallerService.getTasksDownloading();
-		DbHelper db = new DbHelper(this);
+		
 		try {
 			this.courses.clear();
 			
@@ -219,6 +219,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		        }catch (JSONException je){
                     course.setDraft(false);
 		        }
+		        DbHelper db = new DbHelper(this);
                 course.setInstalled(db.isInstalled(course.getShortname()));
                 course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
 				if (json_obj.has("schedule_uri")){
@@ -226,6 +227,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                     course.setScheduleURI(json_obj.getString("schedule_uri"));
                     course.setToUpdateSchedule(db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
 				}
+				DatabaseManager.getInstance().closeDatabase();
                 if (downloadingCourses!=null && downloadingCourses.contains(course.getDownloadUrl())){
                     course.setDownloading(true);
                 }
@@ -236,12 +238,11 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             dla.notifyDataSetChanged();
 
 		} catch (Exception e) {
-			db.close();
 			Mint.logException(e);
 			e.printStackTrace();
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
-		DatabaseManager.getInstance().closeDatabase();
+		
 	}
 	
 	public void apiRequestComplete(Payload response) {

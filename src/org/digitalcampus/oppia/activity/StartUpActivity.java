@@ -87,9 +87,9 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 		DatabaseManager.getInstance().closeDatabase();
 		
 		for (User u: users){
-			Log.d(TAG,"username: " + u.getUsername());
-			Log.d(TAG,"api key:" + u.getApiKey());
-			Log.d(TAG,"pw encrypt: " + u.getPasswordEncrypted());
+			Log.d(TAG, "username: " + u.getUsername());
+			Log.d(TAG, "points: " + u.getPoints());
+			Log.d(TAG, "badges: " + u.getBadges());
 			Log.d(TAG,"--------------");
 		}
 		
