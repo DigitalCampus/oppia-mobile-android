@@ -272,6 +272,8 @@
     <string name="scorecard_quizzes_highlight_pretest">Pre-test</string>
     <string name="scorecard_quizzes_highlight_attempted">Attempted</string>
     <string name="scorecard_quizzes_highlight_passed">Passed</string>
+    <string name="scorecard_activities_completed">activities completed</string>
+    <string name="scorecard_activities_total">total</string>
 
 </resources>
 

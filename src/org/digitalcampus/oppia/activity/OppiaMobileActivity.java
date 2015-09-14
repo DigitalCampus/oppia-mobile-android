@@ -64,12 +64,13 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.ui.CourseContextMenuCustom;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
-public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener, DeleteCourseListener, CourseInstallerListener, UpdateActivityListener {
+public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener, DeleteCourseListener, CourseInstallerListener, UpdateActivityListener, CourseContextMenuCustom.OnContextMenuListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
@@ -112,7 +113,10 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         courseListAdapter = new CourseListAdapter(this, courses);
         courseList = (ListView) findViewById(R.id.course_list);
         courseList.setAdapter(courseListAdapter);
-        registerForContextMenu(courseList);
+
+        CourseContextMenuCustom courseMenu = new CourseContextMenuCustom(this);
+        courseMenu.registerForContextMenu(courseList, this);
+        //registerForContextMenu(courseList);
 
         courseList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -236,7 +240,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
-		Log.d(TAG,"selected:" + item.getItemId());
+		Log.d(TAG, "selected:" + item.getItemId());
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_about) {
 			startActivity(new Intent(this, AboutActivity.class));
@@ -340,6 +344,22 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		return true;
 	}
 
+    @Override
+    public void onContextMenuItemSelected(int position, int itemId) {
+        tempCourse = courses.get(position);
+        if (itemId == R.id.course_context_delete) {
+            if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
+                confirmCourseDelete();
+            } else {
+                Toast.makeText(this, this.getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
+            }
+        } else if (itemId == R.id.course_context_reset) {
+            confirmCourseReset();
+        } else if (itemId == R.id.course_context_update_activity){
+            confirmCourseUpdateActivity();
+        }
+    }
+
 	private void confirmCourseDelete() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setCancelable(false);
@@ -375,18 +395,18 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setTitle(R.string.course_context_reset);
 		builder.setMessage(R.string.course_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				DbHelper db = new DbHelper(OppiaMobileActivity.this);
-				db.resetCourse(tempCourse.getCourseId(),OppiaMobileActivity.this.userId);
-				DatabaseManager.getInstance().closeDatabase();
-				displayCourses(userId);
-			}
-		});
+            public void onClick(DialogInterface dialog, int which) {
+                DbHelper db = new DbHelper(OppiaMobileActivity.this);
+                db.resetCourse(tempCourse.getCourseId(), OppiaMobileActivity.this.userId);
+                DatabaseManager.getInstance().closeDatabase();
+                displayCourses(userId);
+            }
+        });
 		builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				tempCourse = null;
-			}
-		});
+            public void onClick(DialogInterface dialog, int which) {
+                tempCourse = null;
+            }
+        });
 		builder.show();
 	}
 	
@@ -529,4 +549,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		// TODO Auto-generated method stub
 		
 	}
+
+
 }

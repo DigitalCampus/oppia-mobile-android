@@ -143,4 +143,31 @@
         <item name="android:textColor">@color/highlight_label</item>
     </style>
 
+    <style name="ScorecardPie.Label" parent="android:TextAppearance">
+        <item name="android:textSize">11sp</item>
+        <item name="android:layout_marginTop">-7dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/highlight_label</item>
+    </style>
+
+    <style name="ScorecardPie.Label.Separator" parent="android:Widget">
+        <item name="android:layout_height">0.7dp</item>
+        <item name="android:background">@color/highlight_separator</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="ContextMenuText" parent="android:TextAppearance.Medium">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:paddingLeft">12dp</item>
+    </style>
+
 </resources>

@@ -1081,7 +1081,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String quizResultsWhereClause = QUIZATTEMPTS_C_COURSEID+" =? AND " + QUIZATTEMPTS_C_USERID + "=?";
         String[] quizResultsArgs = new String[] { String.valueOf(courseId), String.valueOf(userId) };
-        String[] quizResultsColumns = new String[]{ QUIZATTEMPTS_C_DATA};
+        String[] quizResultsColumns = new String[]{ QUIZATTEMPTS_C_ACTIVITY_DIGEST, QUIZATTEMPTS_C_PASSED, QUIZATTEMPTS_C_MAXSCORE, QUIZATTEMPTS_C_SCORE};
 
         //We get the attempts made by the user for this course's quizzes
         Cursor c = db.query(QUIZATTEMPTS_TABLE, quizResultsColumns, quizResultsWhereClause, quizResultsArgs, null, null, null);
@@ -1091,34 +1091,32 @@ public class DbHelper extends SQLiteOpenHelper {
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            String quizData = c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA));
-            QuizStats.QuizStatsJsonParser parser = new QuizStats.QuizStatsJsonParser(quizData);
+            String quizDigest = c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST));
+            int score = (int)(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)) * 100);
+            int maxScore = (int)(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)) * 100);
+            boolean passed = c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED))>0;
 
-            boolean parsingSuccess = parser.parse();
-            if (parsingSuccess){
-                //We get the captured parts by the RegEx
-                int score = (int)(parser.getScore() * 100);
-                int maxScore = parser.getMaxScore() * 100;
-                int quizID = parser.getQuizID();
-
-                boolean alreadyInserted = false;
-                for (QuizStats quiz : stats){
-                    if (quiz.getQuizId() == quizID){
-                        if (quiz.getUserScore() < score) quiz.setUserScore(score);
-                        if (quiz.getMaxScore() < maxScore) quiz.setMaxScore(maxScore);
-                        quiz.setAttempted(true);
-                        alreadyInserted = true;
-                        break;
-                    }
-                }
-                if (!alreadyInserted){
-                    QuizStats quiz = new QuizStats(quizID);
+            boolean alreadyInserted = false;
+            for (QuizStats quiz : stats){
+                if (quiz.getDigest().equals(quizDigest)){
+                    if (quiz.getUserScore() < score) quiz.setUserScore(score);
+                    if (quiz.getMaxScore() < maxScore) quiz.setMaxScore(maxScore);
                     quiz.setAttempted(true);
-                    quiz.setUserScore(score);
-                    quiz.setMaxScore(maxScore);
-                    stats.add(quiz);
+                    quiz.setPassed(passed);
+                    alreadyInserted = true;
+                    break;
                 }
             }
+            if (!alreadyInserted){
+                QuizStats quiz = new QuizStats();
+                quiz.setAttempted(true);
+                quiz.setDigest(quizDigest);
+                quiz.setUserScore(score);
+                quiz.setMaxScore(maxScore);
+                quiz.setPassed(true);
+                stats.add(quiz);
+            }
+
             c.moveToNext();
         }
         c.close();
