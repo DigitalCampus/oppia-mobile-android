@@ -61,7 +61,7 @@ public class MobileLearning extends Application {
 	public static final String COURSE_ACTIVITY_PATH = SERVER_COURSES_PATH + "%s/activity/";
 	
 	// general other settings
-	public static final String MINT_API_KEY = "84d61fd0";
+	public static final String MINT_API_KEY = "26c9c657";
 	public static final int DOWNLOAD_COURSES_DISPLAY = 1; //this no of courses must be displayed for the 'download more courses' option to disappear
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
@@ -111,25 +111,35 @@ public class MobileLearning extends Application {
         Context ctx = getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
-        StorageAccessStrategy strategy;
+       ;
 
         if ( (storageOption == null) || (storageOption.trim().equals("")) ){
             //If there is not storage option set, set the default option
-            storageOption = DEFAULT_STORAGE_OPTION;
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption);
-            editor.commit();
 
-            strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
-            strategy.updateStorageLocation(ctx);
+            storageOption = DEFAULT_STORAGE_OPTION;
+            boolean defaultOptionSuccessful = setStorageOption(ctx, prefs, storageOption);
+            if (!defaultOptionSuccessful){
+                //If the default option didn't work (supposing it was external), fallback to internal
+                storageOption = PrefsActivity.STORAGE_OPTION_INTERNAL;
+                setStorageOption(ctx, prefs, storageOption);
+            }
         }
         else{
-            strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
+            StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
+            FileUtils.setStorageStrategy(strategy);
         }
-
         Log.d(TAG, "Storage option: " + storageOption);
-        FileUtils.setStorageStrategy(strategy);
+    }
 
+    private boolean setStorageOption(Context ctx, SharedPreferences prefs, String storageOption){
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption);
+        editor.commit();
+
+        StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
+        boolean success = strategy.updateStorageLocation(ctx);
+        if (success) FileUtils.setStorageStrategy(strategy);
+        return success;
     }
 
 }

@@ -62,6 +62,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	private Activity baselineActivity;
 	private AlertDialog aDialog;
     private View loadingCourseView;
+
+    private String digestJumpTo;
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,27 +93,13 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 if (baselineCompleted) {
                     course.setMetaPages(cxr.getMetaPages());
                     sections = cxr.getSections();
-                    for (Section section : sections) {
-                        for (int i = 0; i < section.getActivities().size(); i++) {
-                            Activity act = section.getActivities().get(i);
-
-                            if (act.getDigest().equals(digest)) {
-                                Intent intent = new Intent(this, CourseActivity.class);
-                                Bundle tb = new Bundle();
-                                tb.putSerializable(Section.TAG, section);
-                                tb.putSerializable(Course.TAG, course);
-                                tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, i);
-                                intent.putExtras(tb);
-                                startActivity(intent);
-                            }
-                        }
-                    }
+                    startCourseActivityByDigest(digest);
                     initializeCourseIndex(false);
                 }
                 else{
                     sections = cxr.getSections();
                     initializeCourseIndex(false);
-                    showBaselineMessage();
+                    showBaselineMessage(digest);
                 }
             }
             else{
@@ -123,7 +111,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
 	}
 
-	@Override
+    @Override
 	public void onStart() {
 		super.onStart();
 
@@ -134,8 +122,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 					R.drawable.dc_logo);
 			getActionBar().setIcon(bm);
 		}
-
-
 	}
 
 	@Override
@@ -146,6 +132,13 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		} else {
 			aDialog.show();
 		}
+
+        if (digestJumpTo != null){
+            startCourseActivityByDigest(digestJumpTo);
+            digestJumpTo = null;
+            return;
+        }
+
 		// start a new tracker service
 		Intent service = new Intent(this, TrackerService.class);
 
@@ -194,35 +187,33 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i;
-		Bundle tb = new Bundle();
+
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_language) {
 			createLanguageDialog();
 			return true;
-		} else if (itemId == R.id.menu_help) {
-			i = new Intent(this, AboutActivity.class);
-			tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
-			i.putExtras(tb);
-			startActivity(i);
-			return true;
 		} else if (itemId == android.R.id.home) {
-			this.finish();
-			return true;
-		} else if (itemId == R.id.menu_scorecard) {
-			i = new Intent(this, ScorecardActivity.class);
-			tb.putSerializable(Course.TAG, course);
-			i.putExtras(tb);
-			startActivity(i);
-			return true;
-		} else {
-			i = new Intent(this, CourseMetaPageActivity.class);
-			tb.putSerializable(Course.TAG, course);
-			tb.putSerializable(CourseMetaPage.TAG, item.getItemId());
-			i.putExtras(tb);
-			startActivity(i);
-			return true;
-		}
+            this.finish();
+            return true;
+        } else {
+            Intent i;
+            Bundle tb = new Bundle();
+
+            if (itemId == R.id.menu_help) {
+                i = new Intent(this, AboutActivity.class);
+                tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
+            } else if (itemId == R.id.menu_scorecard) {
+                i = new Intent(this, ScorecardActivity.class);
+                tb.putSerializable(Course.TAG, course);
+            } else {
+                i = new Intent(this, CourseMetaPageActivity.class);
+                tb.putSerializable(Course.TAG, course);
+                tb.putSerializable(CourseMetaPage.TAG, item.getItemId());
+            }
+            i.putExtras(tb);
+            startActivity(i);
+            return true;
+        }
 	}
 
 	private void createLanguageDialog() {
@@ -233,18 +224,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 				return true;
 			}
 		});
-	}
-
-	private boolean isBaselineCompleted() {
-		ArrayList<Activity> baselineActs = cxr.getBaselineActivities();
-		// TODO how to handle if more than one baseline activity
-		for (Activity a : baselineActs) {
-			if (!a.isAttempted()) {
-				this.baselineActivity = a;
-				return false;
-			}
-		}
-		return true;
 	}
 
     private void initializeCourseIndex(boolean animate){
@@ -276,10 +255,21 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         }
 
         listView.setAdapter(sla);
-
     }
 
-    private void showBaselineMessage(){
+    private boolean isBaselineCompleted() {
+        ArrayList<Activity> baselineActs = cxr.getBaselineActivities();
+        // TODO how to handle if more than one baseline activity
+        for (Activity a : baselineActs) {
+            if (!a.isAttempted()) {
+                this.baselineActivity = a;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void showBaselineMessage(final String digest){
         aDialog = new AlertDialog.Builder(this).create();
         aDialog.setCancelable(false);
         aDialog.setTitle(R.string.alert_pretest);
@@ -288,6 +278,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         aDialog.setButton(DialogInterface.BUTTON_NEGATIVE, this.getString(R.string.open),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        //We set the digest to be able to jump to this activity after passing the baseline
+                        digestJumpTo = digest;
+
                         Intent intent = new Intent(CourseIndexActivity.this, CourseActivity.class);
                         Bundle tb = new Bundle();
                         Section section = new Section();
@@ -307,6 +300,24 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                     }
                 });
         aDialog.show();
+    }
+
+    private void startCourseActivityByDigest(String digest) {
+        for (Section section : sections) {
+            for (int i = 0; i < section.getActivities().size(); i++) {
+                Activity act = section.getActivities().get(i);
+
+                if (act.getDigest().equals(digest)) {
+                    Intent intent = new Intent(this, CourseActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(Section.TAG, section);
+                    tb.putSerializable(Course.TAG, course);
+                    tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, i);
+                    intent.putExtras(tb);
+                    startActivity(intent);
+                }
+            }
+        }
     }
 
     private void showErrorMessage(){
@@ -333,7 +344,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
         boolean baselineCompleted = isBaselineCompleted();
         if (!baselineCompleted){
-            showBaselineMessage();
+            showBaselineMessage(null);
         }
         initializeCourseIndex(true);
         invalidateOptionsMenu();

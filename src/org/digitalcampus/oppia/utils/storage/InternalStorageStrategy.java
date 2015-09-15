@@ -28,17 +28,19 @@ import java.io.File;
 public class InternalStorageStrategy implements StorageAccessStrategy{
 
     //@Override
-    public void updateStorageLocation(Context ctx) {
+    public boolean updateStorageLocation(Context ctx) {
         String location = this.getStorageLocation(ctx);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, location);
         editor.commit();
+        return true;
     }
 
     //@Override
-    public void updateStorageLocation(Context ctx, String mount) {
+    public boolean updateStorageLocation(Context ctx, String mount) {
         updateStorageLocation(ctx);
+        return true;
     }
 
     //@Override
