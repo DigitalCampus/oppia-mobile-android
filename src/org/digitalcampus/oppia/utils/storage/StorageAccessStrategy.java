@@ -21,8 +21,8 @@ package org.digitalcampus.oppia.utils.storage;
 import android.content.Context;
 
 public interface StorageAccessStrategy {
-    public void updateStorageLocation(Context ctx);
-    public void updateStorageLocation(Context ctx, String mount);
+    public boolean updateStorageLocation(Context ctx);
+    public boolean updateStorageLocation(Context ctx, String mount);
     public String  getStorageLocation(Context ctx);
     public boolean isStorageAvailable(Context ctx);
     public String getStorageType();

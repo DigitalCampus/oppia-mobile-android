@@ -37,7 +37,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
     private static String internalPath;
 
     //@Override
-    public void updateStorageLocation(Context ctx){
+    public boolean updateStorageLocation(Context ctx){
 
         String location = null;
         //If no mount argument passed, we set the default external mount
@@ -49,27 +49,28 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
             DeviceFile internal = StorageUtils.getInternalMemoryDrive();
             if (internal != null && internal.canWrite()){
                 location = internal.getPath();
-
             }
         }
         if (location != null){
             location += getInternalBasePath(ctx);
             updateLocationPreference(ctx, location);
         }
+        //It was successfull if we found a writable external location
+        return (location != null);
     }
 
     //@Override
-    public void updateStorageLocation(Context ctx, String mount) {
+    public boolean updateStorageLocation(Context ctx, String mount) {
 
         if ((mount == null ) || mount.equals("")){
-            updateStorageLocation(ctx);
-            return;
+            return updateStorageLocation(ctx);
         }
         String currentLocation = this.getStorageLocation(ctx);
-        if (currentLocation.startsWith(mount)){ return; }
+        if (currentLocation.startsWith(mount)){ return true; }
 
         String location = mount + getInternalBasePath(ctx);
         updateLocationPreference(ctx, location);
+        return true;
     }
 
     //@Override
