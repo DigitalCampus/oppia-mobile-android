@@ -344,7 +344,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		return true;
 	}
 
-    @Override
+    //@Override
     public void onContextMenuItemSelected(int position, int itemId) {
         tempCourse = courses.get(position);
         if (itemId == R.id.course_context_delete) {

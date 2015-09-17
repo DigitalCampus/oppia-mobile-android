@@ -24,6 +24,8 @@ import android.widget.ProgressBar;
 
 public class ProgressBarAnimator implements ValueAnimator.AnimatorUpdateListener{
 
+	public static final String TAG = ProgressBarAnimator.class.getSimpleName();
+	
     private static final int ANIMATION_SCALE = 1000;
     private static final int DEFAULT_ANIM_DURATION = 1500;
 
