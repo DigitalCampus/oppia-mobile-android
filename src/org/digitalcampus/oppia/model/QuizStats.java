@@ -17,12 +17,12 @@
 
 package org.digitalcampus.oppia.model;
 
-import org.digitalcampus.mobile.quiz.Quiz;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.util.Log;
 
 public class QuizStats {
 
+	public static final String TAG = QuizStats.class.getSimpleName();
+	
     public static final String JSONPROP_QUIZID = "quiz_id";
     public static final String JSONPROP_SCORE = "score";
     public static final String JSONPROP_MAXSCORE = "maxscore";
@@ -30,8 +30,8 @@ public class QuizStats {
     private int quizId;
     private String digest;
     public boolean attempted;
-    private int maxScore;
-    private int userScore;
+    private int maxScore = -1;
+    private int userScore = -1;
     private boolean passed;
 
     public QuizStats(int quizId){ this.quizId = quizId; }
@@ -59,8 +59,11 @@ public class QuizStats {
     }
 
     public int getPercent(){
-
-        return (int) Math.ceil( userScore * 100.0f / Math.max(1,maxScore));
+    	Log.d(TAG, "userScore:" + userScore);
+    	Log.d(TAG, "maxScore:" + maxScore);
+    	int percent = (int) Math.ceil( userScore * 100.0f / Math.max(1,maxScore));
+    	Log.d(TAG, "percent:" + percent);
+        return percent;
     }
 
     public boolean isPassed(){

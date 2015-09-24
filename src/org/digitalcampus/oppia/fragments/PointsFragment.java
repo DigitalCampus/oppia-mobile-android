@@ -117,9 +117,13 @@ public class PointsFragment extends Fragment implements APIRequestListener {
 				e.printStackTrace();
 			}
 		} else {
-			TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_points_title);
-			tv.setVisibility(View.VISIBLE);
-			tv.setText(R.string.error_connection_required);
+			try {
+				TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_points_title);
+				tv.setVisibility(View.VISIBLE);
+				tv.setText(R.string.error_connection_required);
+			} catch (NullPointerException npe){
+				//do nothing - just means that the current activity doesn;t display the points
+			}
 		}
 	}
 
