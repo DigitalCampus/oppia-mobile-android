@@ -30,8 +30,8 @@ public class QuizStats {
     private int quizId;
     private String digest;
     public boolean attempted;
-    private int maxScore = -1;
-    private int userScore = -1;
+    private float maxScore = -1;
+    private float userScore = -1;
     private boolean passed;
 
     public QuizStats(int quizId){ this.quizId = quizId; }
@@ -43,15 +43,15 @@ public class QuizStats {
     public String getDigest() { return digest; }
     public void setDigest(String digest) { this.digest = digest; }
 
-    public int getMaxScore() {
+    public float getMaxScore() {
         return maxScore;
     }
-    public void setMaxScore(int maxScore) {
+    public void setMaxScore(float maxScore) {
         this.maxScore = maxScore;
     }
 
-    public int getUserScore() { return userScore; }
-    public void setUserScore(int userScore) { this.userScore = userScore; }
+    public float getUserScore() { return userScore; }
+    public void setUserScore(float userScore) { this.userScore = userScore; }
 
     public boolean isAttempted(){ return attempted; }
     public void setAttempted(boolean a){
@@ -61,7 +61,7 @@ public class QuizStats {
     public int getPercent(){
     	Log.d(TAG, "userScore:" + userScore);
     	Log.d(TAG, "maxScore:" + maxScore);
-    	int percent = (int) Math.ceil( userScore * 100.0f / Math.max(1,maxScore));
+    	int percent =  Math.round(userScore * 100.0f / Math.max(1,maxScore));
     	Log.d(TAG, "percent:" + percent);
         return percent;
     }

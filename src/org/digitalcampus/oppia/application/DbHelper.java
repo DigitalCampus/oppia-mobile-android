@@ -703,7 +703,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		qs.setAttempted(false);
 		qs.setPassed(false);
 		
-		
 		// find if attempted
 		String s1 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=?";
 		String[] args1 = new String[] { String.valueOf(userId), digest };
@@ -713,7 +712,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		c1.moveToFirst();
 		while (c1.isAfterLast() == false) {
-			qs.setMaxScore(c1.getInt(c1.getColumnIndex("maxscore")));
+			float userScore = c1.getFloat(c1.getColumnIndex(QUIZATTEMPTS_C_SCORE));
+			if (userScore > qs.getUserScore()){
+				qs.setUserScore(userScore);
+			}
+			qs.setMaxScore(c1.getFloat(c1.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
 			c1.moveToNext();
 		}
 		c1.close();
@@ -728,22 +731,23 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		c2.close();
 		
-		
-		String s = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=?";
-		String[] args = new String[] { String.valueOf(userId), digest };
-		Cursor c = db.query(QUIZATTEMPTS_TABLE, new String [] {"MAX("+  QUIZATTEMPTS_C_SCORE +") as userscore"}, s, args, null, null, null);
-		c.moveToFirst();
-		while (c.isAfterLast() == false) {
+		/*
+		String s3 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=?";
+		String[] args3 = new String[] { String.valueOf(userId), digest };
+		Cursor c3 = db.query(QUIZATTEMPTS_TABLE, new String [] {"MAX("+  QUIZATTEMPTS_C_SCORE +") as userscore"}, s3, args3, null, null, null);
+		c3.moveToFirst();
+		while (c3.isAfterLast() == false) {
 			
-			int userScore = c.getInt(c.getColumnIndex("userscore"));
+			int userScore = c3.getInt(c3.getColumnIndex("userscore"));
 			if (userScore > qs.getUserScore()){
 				qs.setUserScore(userScore);
 			}
-			Log.d(TAG, "Score: " + c.getInt(c.getColumnIndex("userscore")));
+			Log.d(TAG, "Score: " + c3.getInt(c3.getColumnIndex("userscore")));
 			Log.d(TAG, "passed: " + qs.isPassed());
-			c.moveToNext();
+			c3.moveToNext();
 		}
-		c.close();
+		c3.close();
+		*/
 		return qs;
 	}
 	public void insertTracker(int courseId, String digest, String data, boolean completed){

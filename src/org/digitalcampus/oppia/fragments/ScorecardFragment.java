@@ -167,25 +167,21 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     //@Override
     public void onParseComplete(CourseXMLReader parsed) {
 
-    	/*
-        ArrayList<Activity> activities = parsed.getActivities(course.getCourseId());
-        */
         ArrayList<Activity> baseline = parsed.getBaselineActivities();
         
     	DbHelper db = new DbHelper(super.getActivity());
         long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
         ArrayList<Activity> quizActs = db.getCourseQuizzes(course.getCourseId());
-        Log.d(TAG,"no quizzes:" + quizActs.size());
         ArrayList<QuizStats> quizzes = new ArrayList<QuizStats>();
         for (Activity a: quizActs){
         	// get the max score for the quiz for the user
         	QuizStats qs = db.getQuizAttempt(a.getDigest(), userId);
         	quizzes.add(qs);
         }
-        int quizzesAttempted = 0, quizzesPassed = 0;
         DatabaseManager.getInstance().closeDatabase();
     	
-        
+        int quizzesAttempted = 0, quizzesPassed = 0;
+
         for (QuizStats qs: quizzes){
         	if (qs.isAttempted()){
         		quizzesAttempted++;
