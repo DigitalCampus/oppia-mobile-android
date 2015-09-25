@@ -21,6 +21,8 @@ import java.util.List;
 
 public class QuizFeedback {
 
+	public static final String TAG = QuizFeedback.class.getSimpleName();
+	
 	private float score;
 	private String questionText;
 	private String feedbackText;

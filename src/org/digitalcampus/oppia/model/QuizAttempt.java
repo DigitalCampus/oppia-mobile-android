@@ -22,6 +22,8 @@ import org.joda.time.DateTime;
 
 public class QuizAttempt {
 
+	public static final String TAG = QuizAttempt.class.getSimpleName();
+	
 	private DateTime datetime;
 	private long id;
 	private String data;

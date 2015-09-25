@@ -89,10 +89,11 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         super.onCreate(savedInstanceState);
         if ( getArguments() != null && getArguments().containsKey(Course.TAG)) {
             this.course = (Course) getArguments().getSerializable(Course.TAG);
-
+        
             xmlTask = new ParseCourseXMLTask(getActivity(), true);
             xmlTask.setListener(this);
             xmlTask.execute(course);
+            
         }
     }
 
@@ -165,50 +166,44 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     //@Override
     public void onParseComplete(CourseXMLReader parsed) {
 
-        ArrayList<Activity> activities = parsed.getActivities(course.getCourseId());
         ArrayList<Activity> baseline = parsed.getBaselineActivities();
+        
+    	DbHelper db = new DbHelper(super.getActivity());
+        long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        ArrayList<Activity> quizActs = db.getCourseQuizzes(course.getCourseId());
         ArrayList<QuizStats> quizzes = new ArrayList<QuizStats>();
-        int pretestScore = -1, quizzesAttempted = 0, quizzesPassed = 0;
-
-        for (Activity act : activities){
-            if (!act.getActType().equals("quiz")) continue;
-            QuizStats quiz = new QuizStats();
-            quiz.setDigest(act.getDigest());
-            quiz.setAttempted(false);
-            quizzes.add(quiz);
+        for (Activity a: quizActs){
+        	// get the max score for the quiz for the user
+        	QuizStats qs = db.getQuizAttempt(a.getDigest(), userId);
+        	quizzes.add(qs);
         }
+        DatabaseManager.getInstance().closeDatabase();
+    	
+        int quizzesAttempted = 0, quizzesPassed = 0;
 
+        for (QuizStats qs: quizzes){
+        	if (qs.isAttempted()){
+        		quizzesAttempted++;
+        	}
+        	if (qs.isPassed()){
+        		quizzesPassed++;
+        	}
+        }
+        
+        int pretestScore = -1;
+        for (Activity baselineAct : baseline){
+            if (!baselineAct.getActType().equals("quiz")) continue;
+            QuizStats pretest = db.getQuizAttempt(baselineAct.getDigest(), userId);
+            pretestScore = pretest.getPercent();
+        }
+        
         quizStats.clear();
         quizStats.addAll(quizzes);
         if (quizStats.size() == 0){
             quizzesContainer.setVisibility(View.GONE);
             return;
         }
-
-        DbHelper db = new DbHelper(super.getActivity());
-        long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
-        db.getCourseQuizResults(quizStats, course.getCourseId(), userId);
-        DatabaseManager.getInstance().closeDatabase();
-
-        for (Activity baselineAct : baseline){
-            if (!baselineAct.getActType().equals("quiz")) continue;
-            for (QuizStats quiz : quizStats){
-                //If is a baseline quiz, we remove it from the list
-                if ( quiz.getDigest().equals(baselineAct.getDigest()) ){
-                    quizStats.remove(quiz);
-                    pretestScore = quiz.getPercent();
-                    break;
-                }
-            }
-        }
-
-        for (QuizStats quiz : quizStats){
-            if (quiz.isAttempted()){
-                quizzesAttempted++;
-                if (quiz.isPassed()) quizzesPassed++;
-            }
-        }
-
+        
         highlightPretest.setText(pretestScore >= 0 ? (pretestScore + "%") : "-");
         highlightAttempted.setText("" + quizzesAttempted);
         highlightPassed.setText("" + quizzesPassed);
