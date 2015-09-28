@@ -81,18 +81,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     }
 	
 	private void endStartUpScreen() {
-		
-		DbHelper db = new DbHelper(this);
-		ArrayList<User> users = db.getAllUsers();
-		DatabaseManager.getInstance().closeDatabase();
-		
-		for (User u: users){
-			Log.d(TAG, "username: " + u.getUsername());
-			Log.d(TAG, "points: " + u.getPoints());
-			Log.d(TAG, "badges: " + u.getBadges());
-			Log.d(TAG,"--------------");
-		}
-		
+			
         // launch new activity and close splash screen
 		if (!MobileLearning.isLoggedIn(this)) {
 			startActivity(new Intent(StartUpActivity.this, WelcomeActivity.class));
