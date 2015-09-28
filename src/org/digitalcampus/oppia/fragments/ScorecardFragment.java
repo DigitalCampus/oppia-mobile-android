@@ -177,8 +177,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         	QuizStats qs = db.getQuizAttempt(a.getDigest(), userId);
         	quizzes.add(qs);
         }
-        DatabaseManager.getInstance().closeDatabase();
-    	
+
         int quizzesAttempted = 0, quizzesPassed = 0;
 
         for (QuizStats qs: quizzes){
@@ -196,6 +195,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             QuizStats pretest = db.getQuizAttempt(baselineAct.getDigest(), userId);
             pretestScore = pretest.getPercent();
         }
+        DatabaseManager.getInstance().closeDatabase();
         
         quizStats.clear();
         quizStats.addAll(quizzes);
