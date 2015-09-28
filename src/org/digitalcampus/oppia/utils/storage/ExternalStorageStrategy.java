@@ -33,7 +33,7 @@ import java.util.List;
 
 public class ExternalStorageStrategy implements StorageAccessStrategy{
 
-    public static final String TAG = FileUtils.class.getSimpleName();
+    public static final String TAG = ExternalStorageStrategy.class.getSimpleName();
     private static String internalPath;
 
     //@Override
