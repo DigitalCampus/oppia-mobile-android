@@ -22,6 +22,8 @@ import java.lang.ref.WeakReference;
 
 public class DeviceFile{
 
+	public static final String TAG = DeviceFile.class.getSimpleName();
+	
     private File mFile;
     private WeakReference<DeviceFile[]> mChildren = null;
     private Integer mChildCount = null;
