@@ -84,7 +84,7 @@ public class SearchActivity extends AppActivity {
                 Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();
                 tb.putSerializable(Course.TAG, course);
-                tb.putSerializable("JumpTo", digest);
+                tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, digest);
                 i.putExtras(tb);
                 SearchActivity.this.startActivity(i);
             }

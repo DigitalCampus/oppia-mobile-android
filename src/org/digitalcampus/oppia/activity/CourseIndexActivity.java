@@ -54,6 +54,8 @@ import android.widget.ListView;
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
 	public static final String TAG = CourseIndexActivity.class.getSimpleName();
+    public static final String JUMPTO_TAG = "JumpTo";
+    public static final int RESULT_JUMPTO = 99;
 
 	private Course course;
 	private CourseXMLReader cxr;
@@ -80,7 +82,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		if (bundle != null) {
 			course = (Course) bundle.getSerializable(Course.TAG);
 
-            String digest = (String) bundle.getSerializable("JumpTo");
+            String digest = (String) bundle.getSerializable(JUMPTO_TAG);
             if (digest != null){
                 //If there is a digest, we have to parse the course synchronously to avoid showing this activity
                 try {
@@ -211,7 +213,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 tb.putSerializable(CourseMetaPage.TAG, item.getItemId());
             }
             i.putExtras(tb);
-            startActivity(i);
+            startActivityForResult(i, 1);
             return true;
         }
 	}
@@ -352,4 +354,14 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     //@Override
     public void onParseError() { showErrorMessage(); }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == RESULT_JUMPTO){
+                String digest = data.getStringExtra(JUMPTO_TAG);
+                startCourseActivityByDigest(digest);
+            }
+        }
+    }
 }
