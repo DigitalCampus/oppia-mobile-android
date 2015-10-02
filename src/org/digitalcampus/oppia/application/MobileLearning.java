@@ -75,6 +75,11 @@ public class MobileLearning extends Application {
 	public static final boolean DEFAULT_DISPLAY_COMPLETED = true;
 	public static final boolean DEFAULT_DISPLAY_PROGRESS_BAR = true;
 	
+	public static final boolean MENU_ALLOW_COURSE_DOWNLOAD = true;
+	public static final boolean MENU_ALLOW_SETTINGS = true;
+	public static final boolean MENU_ALLOW_MONITOR = true;
+	public static final boolean MENU_ALLOW_LOGOUT = true;
+	
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
