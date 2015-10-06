@@ -213,8 +213,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	
 	private void scanMedia() {
 		long now = System.currentTimeMillis()/1000;
-		if (prefs.getLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0)+3600 > now) {
-			messageContainer.setVisibility(View.GONE);
+        long lastScan = prefs.getLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
+		if (lastScan + MobileLearning.MEDIA_SCAN_TIME_LIMIT > now) {
+			hideTopMessage();
 			return;
 		}
 		ScanMediaTask task = new ScanMediaTask(this);
@@ -313,35 +314,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		});
 		builder.setNegativeButton(R.string.no, null);
 		builder.show();
-	}
-
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		getMenuInflater().inflate(R.menu.course_context_menu, menu);
-		super.onCreateContextMenu(menu, v, menuInfo);
-	}
-	
-	@Override
-	public boolean onContextItemSelected(android.view.MenuItem item) {
-
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        tempCourse = courses.get(info.position);
-		int itemId = item.getItemId();
-		if (itemId == R.id.course_context_delete) {
-			if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
-				confirmCourseDelete();
-			} else {
-				Toast.makeText(this, this.getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
-			}
-			return true;
-		} else if (itemId == R.id.course_context_reset) {
-			confirmCourseReset();
-			return true;
-		} else if (itemId == R.id.course_context_update_activity){
-			confirmCourseUpdateActivity();
-			return true;
-		}
-		return true;
 	}
 
     //@Override
@@ -443,6 +415,11 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         animator.start();
     }
 
+    private void hideTopMessage(){
+        messageContainer.setVisibility(View.GONE);
+        courseList.setPadding(0, 0, 0, 0);
+    }
+
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SERVER)){
@@ -504,7 +481,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
 			e.commit();
 		} else {
-            messageContainer.setVisibility(View.GONE);
+            hideTopMessage();
             messageButton.setOnClickListener(null);
             messageButton.setTag(null);
 			long now = System.currentTimeMillis()/1000;

@@ -71,6 +71,7 @@ public class MobileLearning extends Application {
     public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_INTERNAL;
 
     public static final int SCORECARD_ANIM_DURATION = 800;
+    public static final long MEDIA_SCAN_TIME_LIMIT = 3600;
 
 	public static final boolean DEFAULT_DISPLAY_COMPLETED = true;
 	public static final boolean DEFAULT_DISPLAY_PROGRESS_BAR = true;
