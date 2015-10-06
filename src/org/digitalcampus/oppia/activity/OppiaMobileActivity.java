@@ -210,19 +210,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 			ll.setVisibility(View.GONE);
 		}		
 	}
-	
-	private void scanMedia() {
-		long now = System.currentTimeMillis()/1000;
-        long lastScan = prefs.getLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-		if (lastScan + MobileLearning.MEDIA_SCAN_TIME_LIMIT > now) {
-			hideTopMessage();
-			return;
-		}
-		ScanMediaTask task = new ScanMediaTask(this);
-		Payload p = new Payload(this.courses);
-		task.setScanMediaListener(this);
-		task.execute(p);
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -232,7 +219,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		UIUtils.showUserData(menu,this, null);
+		UIUtils.showUserData(menu, this, null);
 		MenuItem item = menu.findItem(R.id.menu_logout);
 		item.setVisible(prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, true));
 	    return super.onPrepareOptionsMenu(menu);
@@ -241,7 +228,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
-		Log.d(TAG, "selected:" + item.getItemId());
+		Log.d(TAG, "Menu item selected: " + item.getTitle());
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_about) {
 			startActivity(new Intent(this, AboutActivity.class));
@@ -284,14 +271,13 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		for(Course m: courses){
 			langs.addAll(m.getLangs());
 		}
-		
-		UIUtils ui = new UIUtils();
-    	ui.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {	
-			public Boolean call() throws Exception {
-				OppiaMobileActivity.this.onStart();
-				return true;
-			}
-		});
+
+        UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                OppiaMobileActivity.this.onStart();
+                return true;
+            }
+        });
 	}
 
 	private void logout() {
@@ -397,29 +383,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	     progressDialog.show();
 	}
 
-    private void animateTopMessage(){
-        TranslateAnimation anim = new TranslateAnimation(0, 0, -200, 0);
-        anim.setDuration(900);
-        messageContainer.startAnimation(anim);
-
-        ValueAnimator animator = ValueAnimator.ofInt(courseList.getPaddingTop(), 90);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            //@Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator){
-                courseList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-                courseList.setSelectionAfterHeaderView();
-            }
-        });
-        animator.setStartDelay(200);
-        animator.setDuration(700);
-        animator.start();
-    }
-
-    private void hideTopMessage(){
-        messageContainer.setVisibility(View.GONE);
-        courseList.setPadding(0, 0, 0, 0);
-    }
-
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SERVER)){
@@ -446,6 +409,53 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		}
 	}
 
+    //region ScanMedia
+    ///Everything related to the ScanMediaTask, including UI management
+
+    private void scanMedia() {
+        long now = System.currentTimeMillis()/1000;
+        long lastScan = prefs.getLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
+        if (lastScan + MobileLearning.MEDIA_SCAN_TIME_LIMIT > now) {
+            hideScanMediaMessage();
+            return;
+        }
+        ScanMediaTask task = new ScanMediaTask(this);
+        Payload p = new Payload(this.courses);
+        task.setScanMediaListener(this);
+        task.execute(p);
+    }
+
+    private void updateLastScan(long scanTime){
+        Editor e = prefs.edit();
+        e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, scanTime);
+        e.commit();
+    }
+
+    private void animateScanMediaMessage(){
+        TranslateAnimation anim = new TranslateAnimation(0, 0, -200, 0);
+        anim.setDuration(900);
+        messageContainer.startAnimation(anim);
+
+        ValueAnimator animator = ValueAnimator.ofInt(courseList.getPaddingTop(), 90);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            //@Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                courseList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
+                courseList.setSelectionAfterHeaderView();
+            }
+        });
+        animator.setStartDelay(200);
+        animator.setDuration(700);
+        animator.start();
+    }
+
+    private void hideScanMediaMessage(){
+        messageContainer.setVisibility(View.GONE);
+        courseList.setPadding(0, 0, 0, 0);
+    }
+
+    //Implementation of ScanMediaListener
+
 	public void scanStart() {
         messageText.setText(this.getString(R.string.info_scan_media_start));
 	}
@@ -455,8 +465,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	public void scanComplete(Payload response) {
-		Editor e = prefs.edit();
-
 		if (response.getResponseData().size() > 0) {
             if (messageContainer.getVisibility() != View.VISIBLE){
                 messageContainer.setVisibility(View.VISIBLE);
@@ -472,30 +480,27 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
                         startActivity(i);
                     }
                 });
-                animateTopMessage();
+                animateScanMediaMessage();
             }
 
             messageText.setText(this.getString(R.string.info_scan_media_missing));
             messageButton.setText(this.getString(R.string.scan_media_download_button));
             messageButton.setTag(response.getResponseData());
-			e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-			e.commit();
+            updateLastScan(0);
 		} else {
-            hideTopMessage();
+            hideScanMediaMessage();
             messageButton.setOnClickListener(null);
             messageButton.setTag(null);
 			long now = System.currentTimeMillis()/1000;
-			e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, now);
-			e.commit();
+			updateLastScan(now);
 		}
 	}
+    //endregion
 
     //@Override
     public void onCourseDeletionComplete(Payload response) {
         if (response.isResult()){
-            Editor e = prefs.edit();
-            e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-            e.commit();
+            updateLastScan(0);
         }
         if (progressDialog != null){
             progressDialog.dismiss();

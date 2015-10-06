@@ -49,10 +49,6 @@ import android.widget.TextView;
 public class UIUtils {
 
 	public final static String TAG = UIUtils.class.getSimpleName();
-	private ArrayList<String> langStringList;
-	private ArrayList<Lang> langList;
-	private SharedPreferences prefs;
-
 	
 	 /**
      * Displays the users points and badges scores in the app header
@@ -251,32 +247,32 @@ public class UIUtils {
 	 * @param prefs
 	 * @param funct
 	 */
-	public void createLanguageDialog(Context ctx, ArrayList<Lang> langs, SharedPreferences prefs, final Callable<Boolean> funct) {
-		this.langStringList = new ArrayList<String>();
-		this.langList = new ArrayList<Lang>();
-		this.prefs = prefs;
+	public static void createLanguageDialog(Context ctx, ArrayList<Lang> langs, final SharedPreferences prefs, final Callable<Boolean> funct) {
+        ArrayList<String> langStringList = new ArrayList<String>();
+        final ArrayList<Lang> languagesList = new ArrayList<Lang>();
 		
 		// make sure there aren't any duplicates
-		for(Lang l: langs){
+		for(Lang lang: langs){
 			boolean found = false;
-			for(Lang ln: langList){
-				if(ln.getLang().equals(l.getLang())){
+			for(Lang ln: languagesList){
+				if(ln.getLang().equals(lang.getLang())){
 					found = true;
+                    break;
 				}
 			}
-			if(!found){
-				langList.add(l);
-			}
+			if(!found){ languagesList.add(lang); }
 		}
 		
-		int selected = -1;
+		int prefLangPosition = -1;
 		int i = 0;
-		for(Lang l: langList){
-			Locale loc = new Locale(l.getLang());
-			String langDisp = loc.getDisplayLanguage(loc);
+
+        String prefLanguage = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+		for(Lang lang: languagesList){
+			Locale locale = new Locale(lang.getLang());
+			String langDisp = locale.getDisplayLanguage(locale);
 			langStringList.add(langDisp);
-			if (l.getLang().equals(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))) {
-				selected = i;
+			if (lang.getLang().equals(prefLanguage)) {
+                prefLangPosition = i;
 			}
 			i++;
 		}
@@ -284,12 +280,11 @@ public class UIUtils {
 		// only show if at least one language
 		if (i > 0) {
 			ArrayAdapter<String> arr = new ArrayAdapter<String>(ctx, android.R.layout.select_dialog_singlechoice,langStringList);
-
 			AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
-					.setSingleChoiceItems(arr, selected, new DialogInterface.OnClickListener() {
+					.setSingleChoiceItems(arr, prefLangPosition, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
-							String newLang = langList.get(whichButton).getLang();
-							Editor editor = UIUtils.this.prefs.edit();
+							String newLang = languagesList.get(whichButton).getLang();
+							Editor editor = prefs.edit();
 							editor.putString(PrefsActivity.PREF_LANGUAGE, newLang);
 							editor.commit();
 							dialog.dismiss();
