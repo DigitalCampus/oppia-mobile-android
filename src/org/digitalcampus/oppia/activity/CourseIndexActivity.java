@@ -90,6 +90,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 } catch (InvalidXMLException e) {
                     e.printStackTrace();
                     showErrorMessage();
+                    return;
                 }
                 boolean baselineCompleted = isBaselineCompleted();
                 if (baselineCompleted) {
