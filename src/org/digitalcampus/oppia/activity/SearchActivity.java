@@ -25,8 +25,8 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
+import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,9 +36,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -112,11 +109,11 @@ public class SearchActivity extends AppActivity {
         searchButton = (ImageView) findViewById(R.id.searchbutton);
         searchButton.setClickable(true);
         searchButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
+            public void onClick(View v) {
                 hideKeyboard(v);
                 performSearch();
-			}
-		});
+            }
+        });
 	}
 
     @Override
@@ -170,29 +167,11 @@ public class SearchActivity extends AppActivity {
             loadingSpinner.setVisibility(View.VISIBLE);
             summary.setText(getString(R.string.search_searching));
             summary.setVisibility(View.VISIBLE);
-            setFadeAnimation(resultsList, false);
-            setFadeAnimation(summary, true);
+            SimpleAnimator.fadeFromTop(resultsList, SimpleAnimator.FADE_OUT);
+            SimpleAnimator.fadeFromTop(summary, SimpleAnimator.FADE_IN);
 
             new SearchTask().execute("");
         }
-    }
-
-    protected void setFadeAnimation(final View view, boolean visible){
-        Animation fadeAnimation = new AlphaAnimation(visible?0:1, visible?1:0);
-        fadeAnimation.setInterpolator(new DecelerateInterpolator());
-        fadeAnimation.setDuration(700);
-        fadeAnimation.setFillAfter(true);
-        //view.setAnimation(fadeAnimation);
-
-        ValueAnimator animator = ValueAnimator.ofFloat(visible?1f:0f, visible?0f:1f);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator valueAnimator){
-                view.setTranslationY( (Float) valueAnimator.getAnimatedValue() * -80 );
-                view.setAlpha(1f - (Float) valueAnimator.getAnimatedValue());
-            }
-        });
-        animator.setDuration(700);
-        animator.start();
     }
 
     private class SearchTask extends AsyncTask<String, Object, ArrayList<SearchResult>> implements DBListener{
@@ -213,7 +192,7 @@ public class SearchActivity extends AppActivity {
             results.addAll(searchResults);
             srla.notifyDataSetChanged();
             resultsList.setSelectionAfterHeaderView();
-            setFadeAnimation(resultsList, true);
+            SimpleAnimator.fadeFromTop(resultsList, SimpleAnimator.FADE_IN);
             loadingSpinner.setVisibility(View.GONE);
             searchButton.setEnabled(true);
 
@@ -230,8 +209,6 @@ public class SearchActivity extends AppActivity {
         //@Override
         public void onQueryPerformed() {
             publishProgress(true);
-
-
         }
     }
 }
