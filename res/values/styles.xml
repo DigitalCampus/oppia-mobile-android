@@ -135,12 +135,21 @@
     </style>
 
     <style name="Highlight.Label" parent="android:TextAppearance">
+    <item name="android:textSize">12sp</item>
+    <item name="android:layout_marginTop">-5dp</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:gravity">center</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:textColor">@color/highlight_label</item>
+</style>
+
+    <style name="Oppia.Theme.InputError" parent="android:TextAppearance">
         <item name="android:textSize">12sp</item>
-        <item name="android:layout_marginTop">-5dp</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_marginTop">-15dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginBottom">18dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/highlight_label</item>
+        <item name="android:textColor">@color/text_error</item>
     </style>
 
     <style name="ScorecardPie.Label" parent="android:TextAppearance">
