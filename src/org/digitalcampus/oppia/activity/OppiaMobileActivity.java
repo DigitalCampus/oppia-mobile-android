@@ -49,6 +49,7 @@ import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
@@ -231,41 +232,56 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		Log.d(TAG, "Menu item selected: " + item.getTitle());
-		int itemId = item.getItemId();
-		if (itemId == R.id.menu_about) {
-			startActivity(new Intent(this, AboutActivity.class));
-			return true;
-		} else if (itemId == R.id.menu_download) {
-			startActivity(new Intent(this, TagSelectActivity.class));
-			return true;
-		} else if (itemId == R.id.menu_settings) {
-			Intent i = new Intent(this, PrefsActivity.class);
-			Bundle tb = new Bundle();
-			ArrayList<Lang> langs = new ArrayList<Lang>();
-			for(Course m: courses){
-				langs.addAll(m.getLangs());
-			}
-			tb.putSerializable("langs", langs);
-			i.putExtras(tb);
-			startActivity(i);
-			return true;
-		} else if (itemId == R.id.menu_language) {
-			createLanguageDialog();
-			return true;
-		} else if (itemId == R.id.menu_monitor) {
-			startActivity(new Intent(this, MonitorActivity.class));
-			return true;
-		} else if (itemId == R.id.menu_scorecard) {
-			startActivity(new Intent(this, ScorecardActivity.class));
-			return true;
-		} else if (itemId == R.id.menu_search) {
-			startActivity(new Intent(this, SearchActivity.class));
-			return true;
-		} else if (itemId == R.id.menu_logout) {
-			logout();
-			return true;
-		}
-		return true;
+
+        int groupID = item.getGroupId();
+        final int itemId = item.getItemId();
+
+        if (groupID == R.id.menu_admin_options){
+            PasswordDialogFragment passDialog = new PasswordDialogFragment();
+            passDialog.setListener(new PasswordDialogFragment.PasswordDialogListener() {
+                @Override
+                public void onPasswordSuccess() {
+                    if (itemId == R.id.menu_download) {
+                        startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
+                    } else if (itemId == R.id.menu_settings) {
+                        Intent i = new Intent(OppiaMobileActivity.this, PrefsActivity.class);
+                        Bundle tb = new Bundle();
+                        ArrayList<Lang> langs = new ArrayList<Lang>();
+                        for(Course m: courses){
+                            langs.addAll(m.getLangs());
+                        }
+                        tb.putSerializable("langs", langs);
+                        i.putExtras(tb);
+                        startActivity(i);
+                    }
+                }
+            });
+            passDialog.show(getFragmentManager(), TAG);
+            return true;
+        }
+        else{
+            if (itemId == R.id.menu_about) {
+                startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            } else if (itemId == R.id.menu_language) {
+                createLanguageDialog();
+                return true;
+            } else if (itemId == R.id.menu_monitor) {
+                startActivity(new Intent(this, MonitorActivity.class));
+                return true;
+            } else if (itemId == R.id.menu_scorecard) {
+                startActivity(new Intent(this, ScorecardActivity.class));
+                return true;
+            } else if (itemId == R.id.menu_search) {
+                startActivity(new Intent(this, SearchActivity.class));
+                return true;
+            } else if (itemId == R.id.menu_logout) {
+                logout();
+                return true;
+            }
+            return true;
+        }
+
 	}
 
 	private void createLanguageDialog() {
