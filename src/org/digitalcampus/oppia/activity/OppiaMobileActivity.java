@@ -77,6 +77,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	private ArrayList<Course> courses;
 	private Course tempCourse;
 	private long userId = 0;
+    private int initialCourseListPadding = 0;
 
     private TextView messageText;
     private Button messageButton;
@@ -130,6 +131,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
             }
         });
 
+        initialCourseListPadding = courseList.getPaddingTop();
 	}
 
 	@Override
@@ -436,7 +438,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         anim.setDuration(900);
         messageContainer.startAnimation(anim);
 
-        ValueAnimator animator = ValueAnimator.ofInt(courseList.getPaddingTop(), 90);
+        ValueAnimator animator = ValueAnimator.ofInt(initialCourseListPadding, 90);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -451,7 +453,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
     private void hideScanMediaMessage(){
         messageContainer.setVisibility(View.GONE);
-        courseList.setPadding(0, 0, 0, 0);
+        courseList.setPadding(0, initialCourseListPadding, 0, 0);
     }
 
     //Implementation of ScanMediaListener
