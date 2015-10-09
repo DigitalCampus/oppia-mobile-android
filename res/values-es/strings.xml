@@ -241,4 +241,14 @@
     <string name="register_form_jobtitle_title">Puesto de trabajo</string>
     <string name="register_form_phoneno_title">Número de teléfono</string>
     <string name="submit_stats_btn_text">Enviar ahora</string>
+    <string name="admin_password_required">Esta funcionalidad está protegida para uso de admin únicamente. Por favor, introduce la constraseña de admin para continuar:</string>
+    <string name="admin_password_newpassword_dialog_title">Contraseña admin</string>
+    <string name="admin_password_newpassword_dialog_message">Por favor, introduce tu contraseña de administrador</string>
+    <string name="admin_password_error_incorrect_password">Contraseña de admin incorrecta. Inténtalo de nuevo</string>
+    <string name="info_upgrading">Actualizando a %1$s</string>
+    <string name="prefAdminPassword">Cambiar contraseña</string>
+    <string name="prefAdminProtection">Proteger acciones de administrador con contraseña</string>
+    <string name="prefUserHint">(solo lectura)</string>
+    <string name="tab_title_reset">Restaurar contraseña</string>
+    <string name="title_btn_reset">Restaurar contraseña</string>
 </resources>
