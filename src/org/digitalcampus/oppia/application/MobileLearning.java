@@ -59,7 +59,14 @@ public class MobileLearning extends Application {
 	public static final String SERVER_AWARDS_PATH = OPPIAMOBILE_API + "awards/";
 	public static final String SERVER_COURSES_NAME = "courses";
 	public static final String COURSE_ACTIVITY_PATH = SERVER_COURSES_PATH + "%s/activity/";
-	
+
+    // admin security settings
+    public static final boolean ADMIN_PROTECT_SETTINGS = true;
+    public static final boolean ADMIN_PROTECT_COURSE_DELETE = true;
+    public static final boolean ADMIN_PROTECT_COURSE_RESET = true;
+    public static final boolean ADMIN_PROTECT_COURSE_INSTALL = true;
+    public static final boolean ADMIN_PROTECT_COURSE_UPDATE = true;
+
 	// general other settings
 	public static final String MINT_API_KEY = "26c9c657";
 	public static final int DOWNLOAD_COURSES_DISPLAY = 1; //this no of courses must be displayed for the 'download more courses' option to disappear
