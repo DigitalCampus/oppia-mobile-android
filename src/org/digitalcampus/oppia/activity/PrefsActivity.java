@@ -31,9 +31,10 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
@@ -136,7 +137,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "Preference changed: " + key);
         if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
-            String currentStorage = FileUtils.getStorageStrategy().getStorageType();
             String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
             String storageOption   = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
             String path = null;
@@ -189,13 +189,29 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                     {
                         String password = passwordInput.getText().toString();
                         if (!password.equals("")){
+                            //Update the password preference
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password);
                             editor.commit();
+                            //Update the UI value of the PreferencesFragment
+                            EditTextPreference passwordPref = (EditTextPreference) mPrefsFragment.findPreference(PREF_ADMIN_PASSWORD);
+                            passwordPref.setText(password);
                             passwordDialog.dismiss();
                         }
                                             }
                 });
+            }
+        }
+        else if (key.equalsIgnoreCase(PREF_ADMIN_PASSWORD)){
+            String newPassword = sharedPreferences.getString(PrefsActivity.PREF_ADMIN_PASSWORD, "");
+            if (newPassword.equals("")){
+                //If the user introduced an empty password, disable the password protection
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
+                editor.commit();
+                //Update the UI value of the PreferencesFragment
+                CheckBoxPreference passwordPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_ADMIN_PROTECTION);
+                passwordPref.setChecked(false);
             }
         }
     }
@@ -212,7 +228,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         else{
             Log.d(TAG, "Move storage failed:" + p.getResultResponse());
             UIUtils.showAlert(this, R.string.error, p.getResultResponse());
-
             //We set the actual storage option (remove the one set by the user)
             mPrefsFragment.updateStoragePref(storageOption);
         }
@@ -227,8 +242,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     }
 
     //@Override
-    public void moveStorageProgressUpdate(String s) {
-
-    }
+    public void moveStorageProgressUpdate(String s) { }
 
 }
