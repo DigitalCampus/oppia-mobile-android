@@ -1,28 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:oppiamobile="http://schemas.android.com/apk/res-auto" >
-
-    <group
-        android:id="@+id/menu_admin_options">
-        <item
-            android:id="@+id/menu_settings"
-            android:icon="@android:drawable/ic_menu_preferences"
-            android:title="@string/menu_settings"/>
-        <item
-            android:id="@+id/menu_download"
-            android:icon="@android:drawable/ic_menu_add"
-            android:title="@string/menu_download"/>
-    </group>
-
     <item
         android:id="@+id/points"
         android:actionLayout="@layout/points"
         android:showAsAction="always"/>
-
+    <item
+        android:id="@+id/menu_download"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/menu_download"/>
     <item
         android:id="@+id/menu_search"
         android:icon="@drawable/abs__ic_search"
         android:title="@string/menu_search"/>
-
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/menu_settings"/>
     <item
         android:id="@+id/menu_language"
         android:icon="@drawable/ic_menu_start_conversation"

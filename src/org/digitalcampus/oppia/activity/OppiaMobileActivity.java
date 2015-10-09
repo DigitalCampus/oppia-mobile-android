@@ -226,38 +226,31 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		// Handle item selection
 		Log.d(TAG, "Menu item selected: " + item.getTitle());
 
-        int groupID = item.getGroupId();
         final int itemId = item.getItemId();
-
-        if (groupID == R.id.menu_admin_options){
-            checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
-                @Override
-                public void onPermissionGranted() {
-                    if (itemId == R.id.menu_download) {
-                        startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
-                    } else if (itemId == R.id.menu_settings) {
-                        startPrefsActivity();
-                    }
+        checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
+            @Override
+            public void onPermissionGranted() {
+                if (itemId == R.id.menu_download) {
+                    startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
+                } else if (itemId == R.id.menu_about) {
+                    startActivity(new Intent(OppiaMobileActivity.this, AboutActivity.class));
+                } else if (itemId == R.id.menu_monitor) {
+                    startActivity(new Intent(OppiaMobileActivity.this, MonitorActivity.class));
+                } else if (itemId == R.id.menu_scorecard) {
+                    startActivity(new Intent(OppiaMobileActivity.this, ScorecardActivity.class));
+                } else if (itemId == R.id.menu_search) {
+                    startActivity(new Intent(OppiaMobileActivity.this, SearchActivity.class));
+                } else if (itemId == R.id.menu_settings) {
+                    startPrefsActivity();
+                } else if (itemId == R.id.menu_language) {
+                    createLanguageDialog();
+                } else if (itemId == R.id.menu_logout) {
+                    logout();
                 }
-            });
-        }
-        else{
-            if (itemId == R.id.menu_about) {
-                startActivity(new Intent(this, AboutActivity.class));
-            } else if (itemId == R.id.menu_language) {
-                createLanguageDialog();
-            } else if (itemId == R.id.menu_monitor) {
-                startActivity(new Intent(this, MonitorActivity.class));
-            } else if (itemId == R.id.menu_scorecard) {
-                startActivity(new Intent(this, ScorecardActivity.class));
-            } else if (itemId == R.id.menu_search) {
-                startActivity(new Intent(this, SearchActivity.class));
-            } else if (itemId == R.id.menu_logout) {
-                logout();
             }
-        }
-        return true;
+        });
 
+        return true;
 	}
 
     private void startPrefsActivity(){
