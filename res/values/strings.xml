@@ -116,7 +116,7 @@
     <string name="prefStorageLocation">Storage Location</string>
     <string name="prefStorageOptionInternal">Internal</string>
     <string name="prefStorageOptionExternal">External</string>
-    <string name="moving_storage_location">Moving files to new storage location...</string>
+    <string name="moving_storage_location">Moving files to new storage location…</string>
     <string name="move_storage_completed">Moving storage completed</string>
     <string name="storageNonRemovable">Non-removable storage</string>
     <string name="storageRemovable">Removable SD Card</string>
@@ -241,11 +241,11 @@
 	<string name="logout_confirm">Are you sure you want to logout?\n\nLogging out will remove all your activity logs from this phone. You will need an active internet connection to log in again.</string>
 	
 	<string name="register_alert_title">Register</string>
-	<string name="register_process">Registering ...</string>
+	<string name="register_process">Registering …</string>
 	<string name="register_complete">Successfully registered</string>
 	
 	<string name="reset_alert_title">Reset</string>
-	<string name="reset_process">Resetting password ...</string>
+	<string name="reset_process">Resetting password …</string>
 	<string name="reset_complete">Your password has now been reset.\n\nPlease check your email for your new password.</string>
 	
 	<string name="change_language">Change Language</string>
@@ -260,24 +260,27 @@
 	<string name="course_draft">(Draft version)</string>
 	
 	<string name="search_result_summary">%1$d results for \"%2$s\"</string>
-	<string name="search_searching">Searching...</string>
+	<string name="search_searching">Searching…</string>
 	<string name="search_no_results">No results found for \"%1$s\"</string>
 	<string name="submit_stats_btn_text">Send now</string>
 	
 	<string name="media_player_description">Oppia Media Player</string>
 	
 	<string name="upgradev49_1">Copying files to new location - this may take several minutes, so please be patient</string>
-    <string name="loading_course">Loading course...</string>
+    <string name="loading_course">Loading course…</string>
     <string name="scorecard_quizzes_title">Quizzes</string>
     <string name="scorecard_quizzes_highlight_pretest">Pre-test</string>
     <string name="scorecard_quizzes_highlight_attempted">Attempted</string>
     <string name="scorecard_quizzes_highlight_passed">Passed</string>
     <string name="scorecard_activities_completed">activities completed</string>
     <string name="scorecard_activities_total">total</string>
+
     <string name="admin_password_required">This feature is protected for admin use only. Please, insert below the admin password to continue:</string>
-    <string name="error_incorrect_password">Incorrect admin password. Try again</string>
+    <string name="admin_password_error_incorrect_password">Incorrect admin password. Try again</string>
+    <string name="admin_password_newpassword_dialog_title">Admin password</string>
+    <string name="admin_password_newpassword_dialog_message">Please, introduce your admin password</string>
     <string name="prefAdminProtection">Protect admin actions with password</string>
-    <string name="prefAdminPassword">Change password</string>
+    <string name="prefAdminPassword">Change admin password</string>
 
 </resources>
 

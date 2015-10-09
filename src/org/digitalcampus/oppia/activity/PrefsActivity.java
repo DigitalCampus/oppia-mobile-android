@@ -27,14 +27,18 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
@@ -129,7 +133,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "Preference changed: " + key);
         if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
             String currentStorage = FileUtils.getStorageStrategy().getStorageType();
@@ -171,6 +175,27 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             boolean protectionEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
             if (protectionEnabled){
                 Log.d(TAG, "Admin protection enabled, prompting for new password");
+                final EditText passwordInput = new EditText(this);
+                final AlertDialog passwordDialog = new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.admin_password_newpassword_dialog_title))
+                    .setMessage(getString(R.string.admin_password_newpassword_dialog_message))
+                    .setView(passwordInput)
+                    .setPositiveButton(R.string.ok, null)
+                    .create();
+                passwordDialog.show();
+                passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        String password = passwordInput.getText().toString();
+                        if (!password.equals("")){
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password);
+                            editor.commit();
+                            passwordDialog.dismiss();
+                        }
+                                            }
+                });
             }
         }
     }
