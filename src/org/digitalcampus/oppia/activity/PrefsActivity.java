@@ -79,6 +79,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String STORAGE_OPTION_INTERNAL = "internal";
     public static final String STORAGE_OPTION_EXTERNAL = "external";
 
+    public static final String PREF_ADMIN_PROTECTION = "prefAdminProtection";
+    public static final String PREF_ADMIN_PASSWORD = "prefAdminPassword";
+
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
     private PreferencesFragment mPrefsFragment;
@@ -142,14 +145,12 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 path = storageOption;
                 storageOption = STORAGE_OPTION_EXTERNAL;
             }
-
             if (
                 //The storage option is different from the current one
                 (!storageOption.equals(FileUtils.getStorageStrategy().getStorageType())) ||
                 //The storage is set to external, and is a different path
                 ((path != null) && !currentLocation.startsWith(path))
             ){
-
                 ArrayList<Object> data = new ArrayList<Object>();
                 data.add(storageOption);
                 if (path != null){ data.add(path); }
@@ -164,6 +165,12 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 pDialog.show();
 
                 changeStorageTask.execute(p);
+            }
+        }
+        else if (key.equalsIgnoreCase(PREF_ADMIN_PROTECTION)){
+            boolean protectionEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
+            if (protectionEnabled){
+                Log.d(TAG, "Admin protection enabled, prompting for new password");
             }
         }
     }

@@ -57,6 +57,18 @@
         android:defaultValue="true"
         android:key="prefShowCourseDescription"
         android:title="@string/prefShowCourseDescription" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="prefAdminProtection"
+        android:title="@string/prefAdminProtection" />
+
+    <EditTextPreference
+        android:defaultValue=""
+        android:key="prefAdminPassword"
+        android:title="@string/prefAdminPassword"
+        android:inputType="textPassword"
+        android:dependency="prefAdminProtection" />
     
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
