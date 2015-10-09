@@ -33,41 +33,48 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/no_courses"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/manage_courses_text"
-                android:layout_width="wrap_content"
+            <ListView
+                android:id="@+id/course_list"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="2dip"
-                android:gravity="center"
-                android:text="@string/no_courses"
-                android:textSize="18sp"
-                android:textColor="@color/text_light"/>
+                android:listSelector="@drawable/background_change_pressed"
+                android:divider="@color/list_divider"
+                android:dividerHeight="1dp"
+                android:cacheColorHint="#00000000"
+                android:scrollingCache="false" />
 
-            <Button
-                android:id="@+id/manage_courses_btn"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/no_courses"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:gravity="center"
-                android:text="@string/title_download_activity"/>
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/manage_courses_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dip"
+                    android:gravity="center"
+                    android:text="@string/no_courses"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_light"/>
+
+                <Button
+                    android:id="@+id/manage_courses_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:text="@string/title_download_activity"/>
+            </LinearLayout>
+
         </LinearLayout>
-
-        <ListView
-            android:id="@+id/course_list"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:listSelector="@drawable/background_change_pressed"
-            android:divider="@color/list_divider"
-            android:dividerHeight="1dp"
-            android:cacheColorHint="#00000000"
-            android:scrollingCache="false" />
 
         <LinearLayout
             android:id="@+id/home_messages"
