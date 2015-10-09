@@ -27,15 +27,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
 public class PasswordDialogFragment extends DialogFragment {
 
-        public interface PasswordDialogListener{
-            void onPermissionGranted();
-        }
-
-        private PasswordDialogListener listener;
+        private AdminSecurityManager.AuthListener listener;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -65,10 +62,11 @@ public class PasswordDialogFragment extends DialogFragment {
                     View errorMessage = d.findViewById(R.id.admin_password_error);
                     String password = passwordField.getText().toString();
 
+                    //If the user leave the input blank, we don't perform any action
                     if (password.equals("")) return;
-                    Boolean passwordCorrect = true;
-                    //TODO: check password...
-                    if(passwordCorrect) {
+
+                    boolean passCorrect = AdminSecurityManager.checkAdminPassword(PasswordDialogFragment.this.getActivity(), password);
+                    if(passCorrect) {
                         d.dismiss();
                         if (listener != null) {
                             listener.onPermissionGranted();
@@ -84,7 +82,7 @@ public class PasswordDialogFragment extends DialogFragment {
         }
     }
 
-    public void setListener(PasswordDialogListener listener){
+    public void setListener(AdminSecurityManager.AuthListener listener){
         this.listener = listener;
     }
 }

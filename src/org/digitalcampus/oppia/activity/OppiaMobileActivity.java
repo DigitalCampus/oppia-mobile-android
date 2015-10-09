@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -229,7 +230,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         final int itemId = item.getItemId();
 
         if (groupID == R.id.menu_admin_options){
-            checkAdminPermission(new PasswordDialogFragment.PasswordDialogListener() {
+            checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
                 @Override
                 public void onPermissionGranted() {
                     if (itemId == R.id.menu_download) {
@@ -239,30 +240,23 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
                     }
                 }
             });
-            return true;
         }
         else{
             if (itemId == R.id.menu_about) {
                 startActivity(new Intent(this, AboutActivity.class));
-                return true;
             } else if (itemId == R.id.menu_language) {
                 createLanguageDialog();
-                return true;
             } else if (itemId == R.id.menu_monitor) {
                 startActivity(new Intent(this, MonitorActivity.class));
-                return true;
             } else if (itemId == R.id.menu_scorecard) {
                 startActivity(new Intent(this, ScorecardActivity.class));
-                return true;
             } else if (itemId == R.id.menu_search) {
                 startActivity(new Intent(this, SearchActivity.class));
-                return true;
             } else if (itemId == R.id.menu_logout) {
                 logout();
-                return true;
             }
-            return true;
         }
+        return true;
 
 	}
 
@@ -287,12 +281,12 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
         manageBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                checkAdminPermission(new PasswordDialogFragment.PasswordDialogListener() {
-                    @Override
-                    public void onPermissionGranted() {
-                        startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
-                    }
-                });
+            checkAdminPermission(R.id.menu_download, new AdminSecurityManager.AuthListener() {
+                @Override
+                public void onPermissionGranted() {
+                    startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
+                }
+            });
             }
         });
     }
@@ -332,24 +326,24 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	}
 
     //@Override
-    public void onContextMenuItemSelected(int position, int itemId) {
-        tempCourse = courses.get(position);
-        if (itemId == R.id.course_context_delete) {
-            if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
-                checkAdminPermission(new PasswordDialogFragment.PasswordDialogListener() {
-                    @Override
-                    public void onPermissionGranted() {
+    public void onContextMenuItemSelected(final int position, final int itemId) {
+        checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
+            @Override
+            public void onPermissionGranted() {
+                tempCourse = courses.get(position);
+                if (itemId == R.id.course_context_delete) {
+                    if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
                         confirmCourseDelete();
+                    } else {
+                        Toast.makeText(OppiaMobileActivity.this, getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
                     }
-                });
-            } else {
-                Toast.makeText(this, this.getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
+                } else if (itemId == R.id.course_context_reset) {
+                    confirmCourseReset();
+                } else if (itemId == R.id.course_context_update_activity){
+                    confirmCourseUpdateActivity();
+                }
             }
-        } else if (itemId == R.id.course_context_reset) {
-            confirmCourseReset();
-        } else if (itemId == R.id.course_context_update_activity){
-            confirmCourseUpdateActivity();
-        }
+        });
     }
 
 	private void confirmCourseDelete() {
@@ -562,17 +556,17 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 	}
 
-    private void checkAdminPermission(PasswordDialogFragment.PasswordDialogListener onSuccessListener){
-        boolean adminPasswordRequired = false;
+    private void checkAdminPermission(int actionId, AdminSecurityManager.AuthListener authListener){
 
+        boolean adminPasswordRequired = AdminSecurityManager.isActionProtected(this, actionId);
         if (adminPasswordRequired) {
             PasswordDialogFragment passDialog = new PasswordDialogFragment();
-            passDialog.setListener(onSuccessListener);
+            passDialog.setListener(authListener);
             passDialog.show(getFragmentManager(), TAG);
         }
         else{
             //If the admin password is not needed, we simply call the listener method
-            onSuccessListener.onPermissionGranted();
+            authListener.onPermissionGranted();
         }
 
     }
