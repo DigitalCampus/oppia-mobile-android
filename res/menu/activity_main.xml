@@ -1,6 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:oppiamobile="http://schemas.android.com/apk/res-auto" >
-
     <item
         android:id="@+id/points"
         android:actionLayout="@layout/points"
