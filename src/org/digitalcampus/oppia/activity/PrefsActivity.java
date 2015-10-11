@@ -31,6 +31,7 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -185,20 +186,29 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 passwordDialog.show();
                 passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v)
-                    {
+                    public void onClick(View v) {
                         String password = passwordInput.getText().toString();
-                        if (!password.equals("")){
+                        if (!password.equals("")) { passwordDialog.dismiss(); }
+                    }
+                });
+                passwordDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        String password = passwordInput.getText().toString();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        if (password.equals("")) {
+                            disableAdminProtection(sharedPreferences);
+                        }
+                        else{
                             //Update the password preference
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password);
                             editor.commit();
                             //Update the UI value of the PreferencesFragment
                             EditTextPreference passwordPref = (EditTextPreference) mPrefsFragment.findPreference(PREF_ADMIN_PASSWORD);
                             passwordPref.setText(password);
-                            passwordDialog.dismiss();
                         }
-                                            }
+
+                    }
                 });
             }
         }
@@ -206,14 +216,18 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             String newPassword = sharedPreferences.getString(PrefsActivity.PREF_ADMIN_PASSWORD, "");
             if (newPassword.equals("")){
                 //If the user introduced an empty password, disable the password protection
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
-                editor.commit();
-                //Update the UI value of the PreferencesFragment
-                CheckBoxPreference passwordPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_ADMIN_PROTECTION);
-                passwordPref.setChecked(false);
+                disableAdminProtection(sharedPreferences);
             }
         }
+    }
+
+    private void disableAdminProtection(SharedPreferences prefs){
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
+        editor.commit();
+        //Update the UI value of the PreferencesFragment
+        CheckBoxPreference passwordPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_ADMIN_PROTECTION);
+        passwordPref.setChecked(false);
     }
 
     //@Override
