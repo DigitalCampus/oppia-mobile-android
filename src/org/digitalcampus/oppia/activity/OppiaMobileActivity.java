@@ -239,7 +239,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
         final int itemId = item.getItemId();
         checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
-            @Override
             public void onPermissionGranted() {
                 if (itemId == R.id.menu_download) {
                     startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
@@ -286,7 +285,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         manageBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             checkAdminPermission(R.id.menu_download, new AdminSecurityManager.AuthListener() {
-                @Override
                 public void onPermissionGranted() {
                     startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
                 }
@@ -332,7 +330,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
     //@Override
     public void onContextMenuItemSelected(final int position, final int itemId) {
         checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
-            @Override
             public void onPermissionGranted() {
                 tempCourse = courses.get(position);
                 if (itemId == R.id.course_context_delete) {

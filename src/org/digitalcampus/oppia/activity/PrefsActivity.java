@@ -185,14 +185,12 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                     .create();
                 passwordDialog.show();
                 passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                    @Override
                     public void onClick(View v) {
                         String password = passwordInput.getText().toString();
                         if (!password.equals("")) { passwordDialog.dismiss(); }
                     }
                 });
                 passwordDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
                     public void onDismiss(DialogInterface dialog) {
                         String password = passwordInput.getText().toString();
                         SharedPreferences.Editor editor = sharedPreferences.edit();

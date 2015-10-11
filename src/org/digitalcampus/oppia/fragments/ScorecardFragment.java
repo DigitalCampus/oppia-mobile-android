@@ -243,7 +243,6 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
 
     }
 
-    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         QuizStats quiz = quizzesAdapter.getItem(i);
 
