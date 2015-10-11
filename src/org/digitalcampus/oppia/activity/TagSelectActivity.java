@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.activity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
@@ -103,12 +104,15 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 	    super.onRestoreInstanceState(savedInstanceState);
-	    try {
-			this.json = new JSONObject(savedInstanceState.getString("json"));
-            ArrayList<Tag> savedTags = (ArrayList<Tag>) savedInstanceState.getSerializable("tags");
-            this.tags.addAll(savedTags);
-		} catch (JSONException e) {
-		}
+        try {
+            Serializable savedTags = savedInstanceState.getSerializable("tags");
+            if (savedTags != null){
+                ArrayList<Tag> savedTagsList = (ArrayList<Tag>) savedTags;
+                this.tags.addAll(savedTagsList);
+            }
+
+            this.json = new JSONObject(savedInstanceState.getString("json"));
+        } catch (Exception e) {}
 	}
 
 	@Override

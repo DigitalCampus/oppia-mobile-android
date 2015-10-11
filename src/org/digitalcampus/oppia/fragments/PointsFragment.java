@@ -44,15 +44,16 @@ import android.widget.TextView;
 public class PointsFragment extends Fragment implements APIRequestListener {
 
 	public static final String TAG = PointsFragment.class.getSimpleName();
-	private JSONObject json;
-	
+
+    private JSONObject json;
+    private ArrayList<Points> points;
+	private PointsListAdapter pointsAdapter;
+
 	public static PointsFragment newInstance() {
         return new PointsFragment();
 	}
 
-	public PointsFragment(){
-		
-	}
+	public PointsFragment(){ }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,6 +71,11 @@ public class PointsFragment extends Fragment implements APIRequestListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+        points = new ArrayList<Points>();
+        pointsAdapter = new PointsListAdapter(super.getActivity(), points);
+        ListView listView = (ListView) getView().findViewById(R.id.points_list);
+        listView.setAdapter(pointsAdapter);
 		getPoints();
 	}
 	
@@ -82,8 +88,7 @@ public class PointsFragment extends Fragment implements APIRequestListener {
 
 	private void refreshPointsList() {
 		try {
-			ArrayList<Points> points = new ArrayList<Points>();
-			
+			points.clear();
 			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
 				Points p = new Points();
@@ -95,10 +100,7 @@ public class PointsFragment extends Fragment implements APIRequestListener {
 			}
 			TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_points_title);
 			tv.setVisibility(View.GONE);
-			
-			PointsListAdapter pla = new PointsListAdapter(super.getActivity(), points);
-			ListView listView = (ListView) super.getActivity().findViewById(R.id.points_list);
-			listView.setAdapter(pla);
+			pointsAdapter.notifyDataSetChanged();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,6 +109,11 @@ public class PointsFragment extends Fragment implements APIRequestListener {
 	}
 	
 	public void apiRequestComplete(Payload response) {
+
+        //If the fragment has been detached, we don't process the result, as is not going to be shown
+        // and could cause NullPointerExceptions
+        if (super.getActivity() == null) return;
+
 		if(response.isResult()){
 			try {
 				json = new JSONObject(response.getResultResponse());
@@ -117,15 +124,10 @@ public class PointsFragment extends Fragment implements APIRequestListener {
 				e.printStackTrace();
 			}
 		} else {
-			try {
-				TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_points_title);
-				tv.setVisibility(View.VISIBLE);
-				tv.setText(R.string.error_connection_required);
-			} catch (NullPointerException npe){
-				//do nothing - just means that the current activity doesn;t display the points
-			}
+            TextView tv = (TextView) getView().findViewById(R.id.fragment_points_title);
+            tv.setVisibility(View.VISIBLE);
+            tv.setText(R.string.error_connection_required);
 		}
 	}
-
 
 }

@@ -85,6 +85,13 @@ public class CourseQuizzesGridAdapter  extends ArrayAdapter<QuizStats> {
             viewHolder.percent.setBackgroundResource(R.drawable.scorecard_quiz_item);
         }
 
+
         return convertView;
 
-}}
+    }
+
+    @Override
+    public QuizStats getItem(int position){
+        return quizzesList.get(position);
+    }
+}

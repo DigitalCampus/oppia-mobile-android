@@ -23,10 +23,10 @@
     <string name="fragment_welcome_privacy">We take your privacy seriously, <a href="http://digital-campus.org/privacy/">find out more about Digital Campus\'s privacy policy</a></string>
     
     <string name="tab_title_about">Acerca de</string>
-    <string name="tab_title_badges">Badges</string>
+    <string name="tab_title_badges">Insignias</string>
     <string name="tab_title_login">Login</string>
-    <string name="tab_title_points">Points</string>
-    <string name="tab_title_privacy">Privacy</string>
+    <string name="tab_title_points">Puntos</string>
+    <string name="tab_title_privacy">Privacidad</string>
     <string name="tab_title_register">Register</string>
     <string name="tab_title_scorecard">Scorecard</string>
     <string name="tab_title_welcome">Welcome</string>
@@ -81,14 +81,16 @@
 	
 	<string name="prefBackgroudDataConnect">Buscador de actividad previa</string>
 	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando esta aplicación no se esté ejecutando.</string>
-	
+    <string name="prefTextSize">Tamaño del texto</string>
+    <string name="prefUser">Usuario</string>
 	<string name="prefHighlightCompleted">Resaltar actividades completadas</string>
 	<string name="prefNoScheduleReminders">Numero de actividades recomendadas</string>
 	<string name="prefNoScheduleReminders_summary">Cuántas actividades recomendadas mostrar</string>
 	<string name="prefShowScheduleReminders">Mostrar actividades recomendadas</string>
 	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
 	<string name="prefShowSectionNumbers">Mostrar número de sección</string>
-
+    <string name="prefShowCourseDescription">Mostrar descripción de cursos</string>
+    <string name="prefShowProgressBar">Mostrar barra de progreso</string>
     <string name="prefStorageLocation">Almacenamiento</string>
     <string name="prefStorageOptionInternal">Interno</string>
     <string name="prefStorageOptionExternal">Externo</string>
@@ -96,7 +98,7 @@
     <string name="move_storage_completed">Cambio de almacenamiento de ficheros completo</string>
     <string name="storageNonRemovable">Almacenamiento no extraíble</string>
     <string name="storageRemovable">Tarjeta SD extraíble</string>
-
+    <string name="prefDeleteCourseEnabled">Permitir borrado de cursos</string>
 	<string name="notification_course_update_title">New course updates</string>
 	<string name="notification_course_update_text">Hay actualizaciones disponibles para tus cursos.</string>
 	
@@ -104,7 +106,10 @@
 	<string name="login_username_title">Usuario</string>
 	<string name="login_password_title">Contraseña</string>
 	<string name="title_register">Registrar</string>
-	
+
+    <string name="about_logged_in">Conectado como: %1$s</string>
+    <string name="about_not_logged_in">No conectado</string>
+
 	<string name="register_form_username_title">Usuario (*)</string>
 	<string name="register_form_email_title">Dirección e-mail (*)</string>
 	<string name="register_form_firstname_title">Nombre (*)</string>
@@ -198,7 +203,7 @@
 	<string name="error_media_download">Error trying to download media, please try again later</string>
 	<string name="error_reading_xml">An error occurred trying to load the course. Please reinstall the course.</string>
 	<string name="error_tts_start">Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled</string>
-	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files vía your PC.</string>
+	<string name="warning_wifi_required">Debes estar conectado a una red wifi para descargar ficheros multimedia.\nPor favor, conéctate a una red wifi o descarga los archivos desde tu PC.</string>
 	
 	<string name="login_process">Accediendo</string>
 	<string name="login_complete">Registrado</string>
@@ -221,5 +226,29 @@
     <string name="search_searching">Buscando…</string>
     <string name="search_no_results">No se encontraron resultados para \"%1$s\"</string>
 
-	<string name="course_draft">(Draft version)</string>
+    <string name="scorecard_quizzes_highlight_pretest">Pre-test</string>
+    <string name="scorecard_quizzes_highlight_attempted">Intentos</string>
+    <string name="scorecard_quizzes_highlight_passed">Aprobados</string>
+    <string name="scorecard_activities_completed">act. completadas</string>
+    <string name="scorecard_activities_total">total</string>
+
+    <string name="course_draft">(Draft version)</string>
+    <string name="loading_course">Cargando curso&#8230;</string>
+    <string name="menu_font_decrease">Reducir tamaño de letra</string>
+    <string name="menu_font_increase">Aumentar tamaño de letra</string>
+    <string name="more_courses">Descargar más cursos</string>
+    <string name="register_form_organisation_title">Organización</string>
+    <string name="register_form_jobtitle_title">Puesto de trabajo</string>
+    <string name="register_form_phoneno_title">Número de teléfono</string>
+    <string name="submit_stats_btn_text">Enviar ahora</string>
+    <string name="admin_password_required">Esta funcionalidad está protegida para uso de admin únicamente. Por favor, introduce la constraseña de admin para continuar:</string>
+    <string name="admin_password_newpassword_dialog_title">Contraseña admin</string>
+    <string name="admin_password_newpassword_dialog_message">Por favor, introduce tu contraseña de administrador</string>
+    <string name="admin_password_error_incorrect_password">Contraseña de admin incorrecta. Inténtalo de nuevo</string>
+    <string name="info_upgrading">Actualizando a %1$s</string>
+    <string name="prefAdminPassword">Cambiar contraseña</string>
+    <string name="prefAdminProtection">Proteger acciones de administrador con contraseña</string>
+    <string name="prefUserHint">(solo lectura)</string>
+    <string name="tab_title_reset">Restaurar contraseña</string>
+    <string name="title_btn_reset">Restaurar contraseña</string>
 </resources>

@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.fragments;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
 import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
@@ -33,14 +34,17 @@ import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -49,7 +53,7 @@ import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
 
-public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.OnParseXmlListener {
+public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.OnParseXmlListener, AdapterView.OnItemClickListener {
 
 	public static final String TAG = ScorecardFragment.class.getSimpleName();
 	private SharedPreferences prefs;
@@ -151,6 +155,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
 
             quizzesAdapter = new CourseQuizzesGridAdapter(getActivity(), quizStats);
             quizzesGrid.setAdapter(quizzesAdapter);
+            quizzesGrid.setOnItemClickListener(this);
 
 		} else {
 			DbHelper db = new DbHelper(super.getActivity());
@@ -177,8 +182,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         	QuizStats qs = db.getQuizAttempt(a.getDigest(), userId);
         	quizzes.add(qs);
         }
-        DatabaseManager.getInstance().closeDatabase();
-    	
+
         int quizzesAttempted = 0, quizzesPassed = 0;
 
         for (QuizStats qs: quizzes){
@@ -196,6 +200,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
             QuizStats pretest = db.getQuizAttempt(baselineAct.getDigest(), userId);
             pretestScore = pretest.getPercent();
         }
+        DatabaseManager.getInstance().closeDatabase();
         
         quizStats.clear();
         quizStats.addAll(quizzes);
@@ -236,5 +241,14 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
     //@Override
     public void onParseError() {
 
+    }
+
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        QuizStats quiz = quizzesAdapter.getItem(i);
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(CourseIndexActivity.JUMPTO_TAG, quiz.getDigest());
+        getActivity().setResult(CourseIndexActivity.RESULT_JUMPTO, returnIntent);
+        getActivity().finish();
     }
 }

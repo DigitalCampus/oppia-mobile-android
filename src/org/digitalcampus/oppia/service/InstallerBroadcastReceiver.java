@@ -20,6 +20,10 @@ package org.digitalcampus.oppia.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 
 public class InstallerBroadcastReceiver extends BroadcastReceiver {
@@ -39,6 +43,10 @@ public class InstallerBroadcastReceiver extends BroadcastReceiver {
 
         if(cListener != null){
             if (action.equals(CourseIntallerService.ACTION_COMPLETE)){
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                editor.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
+                editor.commit();
+
                 cListener.onInstallComplete(fileUrl);
             }
             else if(action.equals(CourseIntallerService.ACTION_FAILED)){

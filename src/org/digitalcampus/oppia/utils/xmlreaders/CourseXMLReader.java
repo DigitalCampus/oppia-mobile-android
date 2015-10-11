@@ -43,6 +43,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 public class CourseXMLReader {
 
 	public static final String TAG = CourseXMLReader.class.getSimpleName();
@@ -95,7 +97,7 @@ public class CourseXMLReader {
                     reader.parse(new InputSource(in));
 
                 } catch (Exception e) {
-                    //TODO: register error
+                    Mint.logException(e);
                     e.printStackTrace();
                 }
             } else {
@@ -136,7 +138,7 @@ public class CourseXMLReader {
                     reader.parse(new InputSource(in));
 
                 } catch (Exception e) {
-                    //TODO: register error
+                    Mint.logException(e);
                     e.printStackTrace();
                 }
             } else {

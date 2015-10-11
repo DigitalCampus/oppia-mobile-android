@@ -31,6 +31,8 @@ import org.digitalcampus.oppia.utils.storage.FileUtils;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.splunk.mint.Mint;
+
 public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
 	public final static String TAG = ScanMediaTask.class.getSimpleName();
@@ -49,6 +51,9 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
 		for (Object obj: payload.getData()){
 			Course course = (Course) obj;
+            File courseXML = new File(course.getCourseXMLLocation());
+            if (!courseXML.exists()){ continue; }
+
 			CourseXMLReader cxr;
 			try {
 				cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
@@ -76,6 +81,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 				}
 			} catch (InvalidXMLException e) {
 				e.printStackTrace();
+                Mint.logException(e);
 				payload.setResult(false);
 			}
 			
