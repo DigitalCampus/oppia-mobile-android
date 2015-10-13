@@ -55,7 +55,6 @@ public class PasswordDialogFragment extends DialogFragment {
             Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
             positiveButton.setOnClickListener(new View.OnClickListener()
             {
-                @Override
                 public void onClick(View v)
                 {
                     EditText passwordField = (EditText) d.findViewById(R.id.admin_password_field);
