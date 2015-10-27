@@ -281,6 +281,9 @@
     <string name="admin_password_newpassword_dialog_message">Please, introduce your admin password</string>
     <string name="prefAdminProtection">Protect admin actions with password</string>
     <string name="prefAdminPassword">Change admin password</string>
+    <string name="prefRemoteAdminEnabled">Enable remote administration of the device</string>
 
+    <string name="notification.remote_admin.camera_disabled">The device cameras have been disabled remotely</string>
+    <string name="notification.remote_admin.camera_enabled">The device cameras have been enabled remotely</string>
 </resources>
 

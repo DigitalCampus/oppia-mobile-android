@@ -31,18 +31,17 @@ import android.widget.TextView;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.service.GCMRegistrationService;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
+import org.digitalcampus.oppia.utils.GooglePlayUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import java.io.File;
@@ -59,20 +58,50 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         super.onCreate(savedInstanceState);
         Mint.disableNetworkMonitoring();
         Mint.initAndStartSession(this, MobileLearning.MINT_API_KEY);
-        
         setContentView(R.layout.start_up);
+
+        boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
+                new GooglePlayUtils.DialogListener() {
+            @Override
+            public void onErrorDialogClosed() {
+                //If Google play is not available, we need to close the app
+                StartUpActivity.this.finish();
+            }
+        });
+        if (!isGooglePlayAvailable) return;
+
         tvProgress = (TextView) this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Mint.setUserIdentifier(prefs.getString(PrefsActivity.PREF_USER_NAME, "anon"));
-        
+
         UpgradeManagerTask umt = new UpgradeManagerTask(this);
-		umt.setUpgradeListener(this);
-		ArrayList<Object> data = new ArrayList<Object>();
- 		Payload p = new Payload(data);
-		umt.execute(p);
- 		
+        umt.setUpgradeListener(this);
+        ArrayList<Object> data = new ArrayList<>();
+        Payload p = new Payload(data);
+        umt.execute(p);
 	}
-	
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //We need to check again the Google Play API availability
+        boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
+                new GooglePlayUtils.DialogListener() {
+                    @Override
+                    public void onErrorDialogClosed() {
+                        //If Google play is not available, we need to close the app
+                        StartUpActivity.this.finish();
+                    }
+                });
+        if (!isGooglePlayAvailable){
+            this.finish();
+            return;
+        }
+
+        // Start IntentService to register the phone with GCM.
+        Intent intent = new Intent(this, GCMRegistrationService.class);
+        startService(intent);
+    }
 	
     private void updateProgress(String text){
     	if(tvProgress != null){
@@ -96,7 +125,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 		File dir = new File(FileUtils.getDownloadPath(this));
 		String[] children = dir.list();
 		if (children != null) {
-			ArrayList<Object> data = new ArrayList<Object>();
+			ArrayList<Object> data = new ArrayList<>();
      		Payload payload = new Payload(data);
 			InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(this);
 			imTask.setInstallerListener(this);
