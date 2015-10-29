@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.task.APIRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -176,28 +177,18 @@ public class TrackerService extends Service implements APIRequestListener {
 		} 
 		
 		if(updateAvailable){
-			Bitmap icon = BitmapFactory.decodeResource(getResources(),
-					MobileLearning.APP_LOGO);
-			NotificationCompat.Builder mBuilder =
-				    new NotificationCompat.Builder(this)
-				    .setSmallIcon(R.drawable.ic_stat_notification)
-				    .setLargeIcon(icon)
-				    .setContentTitle(getString(R.string.notification_course_update_title))
-				    .setContentText(getString(R.string.notification_course_update_text));
-			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			Intent resultIntent = new Intent(this, DownloadActivity.class);
-			PendingIntent resultPendingIntent =
-				    PendingIntent.getActivity(
-				    this,
-				    0,
-				    resultIntent,
-				    PendingIntent.FLAG_UPDATE_CURRENT
-				);
-			mBuilder.setContentIntent(resultPendingIntent);
+            Intent resultIntent = new Intent(this, DownloadActivity.class);
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Builder mBuilder = OppiaNotificationBuilder.getBaseBuilder(this, true);
+            mBuilder
+                .setContentTitle(getString(R.string.notification_course_update_title))
+                .setContentText(getString(R.string.notification_course_update_text))
+			    .setContentIntent(resultPendingIntent);
 			int mId = 001;
-			Notification notification = mBuilder.build();
-			notification.flags |= Notification.FLAG_AUTO_CANCEL;
-			notificationManager.notify(mId, notification);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(mId, mBuilder.build());
 		}
 	}
 
