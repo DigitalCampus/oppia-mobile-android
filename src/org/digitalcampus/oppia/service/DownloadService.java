@@ -42,6 +42,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -129,12 +130,11 @@ public class DownloadService extends IntentService {
             Log.d(TAG, "Sending notification from Service for the completion of all pending media downloads");
 
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
-            Notification notification  = new NotificationCompat.Builder(this)
+            Notification notification  = OppiaNotificationBuilder.getBaseBuilder(this, true)
                     .setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(R.string.notification_media_subject))
-                    .setSmallIcon(R.drawable.dc_logo)
                     .setContentIntent(contentIntent)
-                    .setAutoCancel(true).build();
+                    .build();
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(0, notification);
