@@ -21,6 +21,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationBuilder;
 
 public class AdminGCMListener extends GcmListenerService {
 
@@ -87,30 +88,12 @@ public class AdminGCMListener extends GcmListenerService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this);
+        NotificationCompat.Builder notifBuilder = OppiaNotificationBuilder.getBaseBuilder(this, true);
         notifBuilder
-            .setContentTitle("Oppia Remote Administration")
+            .setContentTitle(getString(R.string.notification_remote_admin_title))
             .setContentText(message)
-            .setAutoCancel(true)
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent).setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-            .build();
-
-        notifBuilder.setSmallIcon(R.drawable.ic_notification);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int color = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                color = getResources().getColor(R.color.highlight_light, null);
-            }
-            else{
-                color = getResources().getColor(R.color.highlight_light);
-            }
-            notifBuilder.setColor(color);
-        }
-        else{
-            notifBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), MobileLearning.APP_LOGO));
-        }
+            .setContentIntent(pendingIntent)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
