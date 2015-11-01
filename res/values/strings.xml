@@ -287,7 +287,9 @@
     <string name="prefAdminPassword">Change admin password</string>
     <string name="prefRemoteAdminEnabled">Enable remote administration of the device</string>
 
+    <string name="notification.remote_admin.title">Oppia Remote Administration</string>
     <string name="notification.remote_admin.camera_disabled">The device cameras have been disabled remotely</string>
     <string name="notification.remote_admin.camera_enabled">The device cameras have been enabled remotely</string>
+
 </resources>
 

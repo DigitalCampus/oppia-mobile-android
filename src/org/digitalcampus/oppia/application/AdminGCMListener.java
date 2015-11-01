@@ -22,6 +22,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationBuilder;
 
 @SuppressLint("NewApi")
 public class AdminGCMListener extends GcmListenerService {
@@ -89,10 +90,9 @@ public class AdminGCMListener extends GcmListenerService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this);
+        NotificationCompat.Builder notifBuilder = OppiaNotificationBuilder.getBaseBuilder(this, true);
         notifBuilder
-            .setContentTitle("Oppia Remote Administration")
+            .setContentTitle(getString(R.string.notification_remote_admin_title))
             .setContentText(message)
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
