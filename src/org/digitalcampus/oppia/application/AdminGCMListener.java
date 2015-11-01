@@ -1,5 +1,7 @@
 package org.digitalcampus.oppia.application;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,11 +19,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
 
+@SuppressLint("NewApi")
 public class AdminGCMListener extends GcmListenerService {
 
     private static final String TAG = AdminGCMListener.class.getSimpleName();
@@ -100,12 +102,12 @@ public class AdminGCMListener extends GcmListenerService {
         notifBuilder.setSmallIcon(R.drawable.ic_notification);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int color = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 color = getResources().getColor(R.color.highlight_light, null);
             }
-            else{
+            else{*/
                 color = getResources().getColor(R.color.highlight_light);
-            }
+            //}
             notifBuilder.setColor(color);
         }
         else{
