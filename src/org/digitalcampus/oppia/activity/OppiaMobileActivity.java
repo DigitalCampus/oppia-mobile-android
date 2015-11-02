@@ -313,14 +313,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setMessage(R.string.logout_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				// wipe user prefs
-				Editor editor = prefs.edit();
-				editor.putString(PrefsActivity.PREF_USER_NAME, "");
-				editor.commit();
-
-				// restart the app
-				OppiaMobileActivity.this.startActivity(new Intent(OppiaMobileActivity.this, StartUpActivity.class));
-				OppiaMobileActivity.this.finish();
+				OppiaMobileActivity.super.logoutAndRestartApp();
 			}
 		});
 		builder.setNegativeButton(R.string.no, null);

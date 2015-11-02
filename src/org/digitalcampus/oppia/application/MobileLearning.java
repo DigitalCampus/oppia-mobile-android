@@ -87,6 +87,9 @@ public class MobileLearning extends Application {
 	public static final boolean MENU_ALLOW_SETTINGS = true;
 	public static final boolean MENU_ALLOW_MONITOR = true;
 	public static final boolean MENU_ALLOW_LOGOUT = true;
+
+    public static final boolean SESSION_EXPIRATION_ENABLED = true;
+    public static final int SESSION_EXPIRATION_TIMEOUT = 30;
 	
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");

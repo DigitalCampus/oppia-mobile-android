@@ -39,7 +39,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class WelcomeActivity extends FragmentActivity implements ActionBar.TabListener  {
+public class WelcomeActivity extends AppActivity implements ActionBar.TabListener  {
 
 	public static final String TAG = WelcomeActivity.class.getSimpleName();
 	private ActionBar actionBar;

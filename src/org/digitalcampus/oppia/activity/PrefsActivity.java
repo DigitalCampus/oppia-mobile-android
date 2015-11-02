@@ -88,6 +88,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_ADMIN_PROTECTION = "prefAdminProtection";
     public static final String PREF_ADMIN_PASSWORD = "prefAdminPassword";
 
+    public static final String LAST_ACTIVE_TIME = "prefLastActiveTime";
+
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
     private PreferencesFragment mPrefsFragment;
@@ -124,13 +126,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	}
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         prefs.unregisterOnSharedPreferenceChangeListener(this);
     }

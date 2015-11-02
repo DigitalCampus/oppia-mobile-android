@@ -58,7 +58,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public class CourseActivity extends FragmentActivity implements ActionBar.TabListener, OnInitListener {
+public class CourseActivity extends AppActivity implements ActionBar.TabListener, OnInitListener {
 
 	public static final String TAG = CourseActivity.class.getSimpleName();
 	public static final String BASELINE_TAG = "BASELINE";

@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AboutActivity extends FragmentActivity implements ActionBar.TabListener {
+public class AboutActivity extends AppActivity implements ActionBar.TabListener {
 
 	public static final String TAG = AboutActivity.class.getSimpleName();
 	
