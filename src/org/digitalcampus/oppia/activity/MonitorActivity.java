@@ -16,6 +16,7 @@
  */
 package org.digitalcampus.oppia.activity;
 
+import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -47,8 +48,11 @@ public class MonitorActivity extends AppActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
         
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		webView = new WebView(this);
@@ -66,7 +70,7 @@ public class MonitorActivity extends AppActivity {
 			this.loadMonitor();
 		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -74,7 +78,7 @@ public class MonitorActivity extends AppActivity {
 	} 
 	
 	private void loadMonitor(){ 
-		String url = "";
+		String url;
 		if(ConnectionUtils.isNetworkConnected(this)){
 			DbHelper db = new DbHelper(this);
 			User u;

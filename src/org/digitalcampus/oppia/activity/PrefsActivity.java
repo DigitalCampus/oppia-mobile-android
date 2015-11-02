@@ -27,6 +27,7 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -98,11 +99,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         FragmentManager mFragmentManager = getFragmentManager();
         FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
         mPrefsFragment = PreferencesFragment.newInstance();
@@ -158,7 +161,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 //The storage is set to external, and is a different path
                 ((path != null) && !currentLocation.startsWith(path))
             ){
-                ArrayList<Object> data = new ArrayList<Object>();
+                ArrayList<Object> data = new ArrayList<>();
                 data.add(storageOption);
                 if (path != null){ data.add(path); }
                 Payload p = new Payload(data);
@@ -201,8 +204,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                         }
                         else{
                             //Update the password preference
-                            editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password);
-                            editor.commit();
+                            editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password).apply();
                             //Update the UI value of the PreferencesFragment
                             EditTextPreference passwordPref = (EditTextPreference) mPrefsFragment.findPreference(PREF_ADMIN_PASSWORD);
                             passwordPref.setText(password);
@@ -223,8 +225,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     private void disableAdminProtection(SharedPreferences prefs){
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
-        editor.commit();
+        editor.putBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false).apply();
         //Update the UI value of the PreferencesFragment
         CheckBoxPreference passwordPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_ADMIN_PROTECTION);
         passwordPref.setChecked(false);
@@ -249,8 +250,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         //Finally, to handle the possibility that is in an inconsistent state
         if (!storageOption.equals(STORAGE_OPTION_INTERNAL)){
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL);
-            editor.commit();
+            editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL).apply();
         }
 
     }

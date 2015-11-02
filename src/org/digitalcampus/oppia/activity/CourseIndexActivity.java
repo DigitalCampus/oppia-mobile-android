@@ -217,7 +217,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             } else {
                 i = new Intent(this, CourseMetaPageActivity.class);
                 tb.putSerializable(Course.TAG, course);
-                tb.putSerializable(CourseMetaPage.TAG, item.getItemId());
+                tb.putInt(CourseMetaPage.TAG, item.getItemId());
             }
             i.putExtras(tb);
             startActivityForResult(i, 1);

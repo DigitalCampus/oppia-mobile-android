@@ -24,13 +24,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -105,16 +103,14 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
 		// set preferred lang to the default lang
 		if ("".equals(prefs.getString(PrefsActivity.PREF_LANGUAGE, ""))) {
-			Editor editor = prefs.edit();
-			editor.putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-			editor.commit();
+			prefs.edit().putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()).apply();
 		}
 
         messageContainer = this.findViewById(R.id.home_messages);
         messageText = (TextView) this.findViewById(R.id.home_message);
         messageButton = (Button) this.findViewById(R.id.message_action_button);
 
-        courses = new ArrayList<Course>();
+        courses = new ArrayList<>();
         courseListAdapter = new CourseListAdapter(this, courses);
         courseList = (ListView) findViewById(R.id.course_list);
         courseList.setAdapter(courseListAdapter);
@@ -266,7 +262,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
     private void startPrefsActivity(){
         Intent i = new Intent(OppiaMobileActivity.this, PrefsActivity.class);
         Bundle tb = new Bundle();
-        ArrayList<Lang> langs = new ArrayList<Lang>();
+        ArrayList<Lang> langs = new ArrayList<>();
         for(Course m: courses){
             langs.addAll(m.getLangs());
         }
@@ -293,7 +289,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         });
     }
 	private void createLanguageDialog() {
-		ArrayList<Lang> langs = new ArrayList<Lang>();
+		ArrayList<Lang> langs = new ArrayList<>();
 		for(Course m: courses){
 			langs.addAll(m.getLangs());
 		}
@@ -348,7 +344,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
                 DeleteCourseTask task = new DeleteCourseTask(OppiaMobileActivity.this);
-                ArrayList<Object> payloadData = new ArrayList<Object>();
+                ArrayList<Object> payloadData = new ArrayList<>();
                 payloadData.add(tempCourse);
                 Payload p = new Payload(payloadData);
                 task.setOnDeleteCourseListener(OppiaMobileActivity.this);
@@ -392,7 +388,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	
 	private void confirmCourseUpdateActivity(){
         UpdateCourseActivityTask task = new UpdateCourseActivityTask(OppiaMobileActivity.this, this.userId);
-        ArrayList<Object> payloadData = new ArrayList<Object>();
+        ArrayList<Object> payloadData = new ArrayList<>();
         payloadData.add(tempCourse);
         Payload p = new Payload(payloadData);
         task.setUpdateActivityListener(OppiaMobileActivity.this);
@@ -408,11 +404,9 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SERVER)){
-			Editor editor = sharedPreferences.edit();
 			if(!sharedPreferences.getString(PrefsActivity.PREF_SERVER, "").endsWith("/")){
 				String newServer = sharedPreferences.getString(PrefsActivity.PREF_SERVER, "").trim()+"/";
-				editor.putString(PrefsActivity.PREF_SERVER, newServer);
-		    	editor.commit();
+                sharedPreferences.edit().putString(PrefsActivity.PREF_SERVER, newServer).apply();
 			}
 		}
 		
@@ -448,9 +442,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void updateLastScan(long scanTime){
-        Editor e = prefs.edit();
-        e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, scanTime);
-        e.commit();
+        prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, scanTime).apply();
     }
 
     private void animateScanMediaMessage(){

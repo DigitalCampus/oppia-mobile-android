@@ -44,7 +44,7 @@
     <string name="title_activity_course">Activity</string>
     <string name="title_course_meta">Acerca de</string>
     <string name="title_scorecard">Scorecard</string>
-    <string name="title_search">Búsqueda</string>
+    <string name="search.activity_title">Búsqueda</string>
     <string name="title_welcome">OppiaMobile</string>
         
     <string name="widget_feedback_submit">Submit</string>
@@ -222,9 +222,11 @@
 	
 	<string name="schedule_reminders">Siguientes actividades recomendadas:</string>
 
-    <string name="search_result_summary">%1$d resultados para \"%2$s\"</string>
-    <string name="search_searching">Buscando…</string>
-    <string name="search_no_results">No se encontraron resultados para \"%1$s\"</string>
+
+    <string name="search.result_summary">%1$d resultados para \"%2$s\"</string>
+    <string name="search.message.searching">Buscando…</string>
+    <string name="search.message.no_results">No se encontraron resultados para \"%1$s\"</string>
+    <string name="search.message.fetching">"Obteniendo resultados…"</string>
 
     <string name="scorecard_quizzes_highlight_pretest">Pre-test</string>
     <string name="scorecard_quizzes_highlight_attempted">Intentos</string>

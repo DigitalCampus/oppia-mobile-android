@@ -22,23 +22,18 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
@@ -67,12 +62,11 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         
         UpgradeManagerTask umt = new UpgradeManagerTask(this);
 		umt.setUpgradeListener(this);
-		ArrayList<Object> data = new ArrayList<Object>();
+		ArrayList<Object> data = new ArrayList<>();
  		Payload p = new Payload(data);
 		umt.execute(p);
  		
 	}
-	
 	
     private void updateProgress(String text){
     	if(tvProgress != null){
@@ -96,7 +90,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 		File dir = new File(FileUtils.getDownloadPath(this));
 		String[] children = dir.list();
 		if (children != null) {
-			ArrayList<Object> data = new ArrayList<Object>();
+			ArrayList<Object> data = new ArrayList<>();
      		Payload payload = new Payload(data);
 			InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(this);
 			imTask.setInstallerListener(this);
@@ -145,19 +139,15 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 
 	public void downloadComplete(Payload p) {
 		// do nothing
-		
 	}
 
 	public void downloadProgressUpdate(DownloadProgress dp) {
 		// do nothing
-		
 	}
 
 	public void installComplete(Payload p) {
 		if(p.getResponseData().size()>0){
-			Editor e = prefs.edit();
-			e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-			e.commit();
+            prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0).apply();
 		}
 		endStartUpScreen();	
 	}

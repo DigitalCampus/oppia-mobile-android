@@ -110,11 +110,7 @@ public class MobileLearning extends Application {
 	public static boolean isLoggedIn(Context ctx) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		String username = prefs.getString(PrefsActivity.PREF_USER_NAME, "");
-		if ((username == null) || username.trim().equals("")) {
-			return false;
-		} else {
-			return true;
-		}
+        return !username.trim().equals("");
 	}
 
     @Override
@@ -127,9 +123,8 @@ public class MobileLearning extends Application {
         Context ctx = getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
-       ;
 
-        if ( (storageOption == null) || (storageOption.trim().equals("")) ){
+        if (storageOption.trim().equals("")){
             //If there is not storage option set, set the default option
 
             storageOption = DEFAULT_STORAGE_OPTION;
@@ -149,8 +144,7 @@ public class MobileLearning extends Application {
 
     private boolean setStorageOption(Context ctx, SharedPreferences prefs, String storageOption){
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption);
-        editor.commit();
+        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption).apply();
 
         StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
         boolean success = strategy.updateStorageLocation(ctx);

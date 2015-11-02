@@ -27,6 +27,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -60,14 +61,18 @@ public class SearchActivity extends AppActivity {
 
 	private String currentSearch;
     private SearchResultsListAdapter srla;
-    protected ArrayList<SearchResult> results = new ArrayList<SearchResult>();
+    protected ArrayList<SearchResult> results = new ArrayList<>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         srla = new SearchResultsListAdapter(this, results);
@@ -165,7 +170,7 @@ public class SearchActivity extends AppActivity {
 
             searchButton.setEnabled(false);
             loadingSpinner.setVisibility(View.VISIBLE);
-            summary.setText(getString(R.string.search_searching));
+            summary.setText(getString(R.string.search_message_searching));
             summary.setVisibility(View.VISIBLE);
             SimpleAnimator.fadeFromTop(resultsList, SimpleAnimator.FADE_OUT);
             SimpleAnimator.fadeFromTop(summary, SimpleAnimator.FADE_IN);
@@ -198,12 +203,12 @@ public class SearchActivity extends AppActivity {
 
             summary.setText(results.size() > 0 ?
                     getString(R.string.search_result_summary, results.size(), currentSearch) :
-                    getString(R.string.search_no_results, currentSearch));
+                    getString(R.string.search_message_no_results, currentSearch));
         }
 
         @Override
         public void onProgressUpdate(Object... values){
-            summary.setText("Fetching results...");
+            summary.setText(getString(R.string.search_message_fetching));
         }
 
         //@Override

@@ -44,8 +44,7 @@ public class WelcomeActivity extends AppActivity implements ActionBar.TabListene
 	public static final String TAG = WelcomeActivity.class.getSimpleName();
 	private ActionBar actionBar;
 	private ViewPager viewPager;
-	private ActivityPagerAdapter apAdapter;
-	private int currentTab = 0;
+    private int currentTab = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,6 @@ public class WelcomeActivity extends AppActivity implements ActionBar.TabListene
 		fragments.add(fLogin);
 		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_login)).setTabListener(this), false);
 
-		
 		Fragment fRegister = RegisterFragment.newInstance();
 		fragments.add(fRegister);
 		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_register)).setTabListener(this), false);
@@ -82,8 +80,7 @@ public class WelcomeActivity extends AppActivity implements ActionBar.TabListene
 		fragments.add(fReset);
 		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_reset)).setTabListener(this), false);
 
-		
-		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
+        ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
 		viewPager.setAdapter(apAdapter);
 
 		viewPager.setCurrentItem(currentTab);
