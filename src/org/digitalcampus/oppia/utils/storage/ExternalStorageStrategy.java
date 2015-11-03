@@ -43,9 +43,17 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         //If no mount argument passed, we set the default external mount
         DeviceFile external = StorageUtils.getExternalMemoryDrive();
         if (external != null && external.canWrite()){
-            location = external.getPath();
+            File destPath = new File(external.getPath() + getInternalBasePath(ctx));
+            if (destPath.canWrite()){
+                location = external.getPath();
+            }
+            else{
+                Log.d(TAG, "External SD(" + external.getPath() + ") available, but no write permissions");
+            }
         }
-        else{
+
+        //If there is no external storage available, we try the internal one
+        if (location == null){
             DeviceFile internal = StorageUtils.getInternalMemoryDrive();
             if (internal != null && internal.canWrite()){
                 location = internal.getPath();
