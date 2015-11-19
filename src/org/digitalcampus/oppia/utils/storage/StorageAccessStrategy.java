@@ -18,12 +18,17 @@
 package org.digitalcampus.oppia.utils.storage;
 
 
+import android.app.Activity;
 import android.content.Context;
 
+import org.digitalcampus.oppia.listener.StorageAccessListener;
+
 public interface StorageAccessStrategy {
-    public boolean updateStorageLocation(Context ctx);
-    public boolean updateStorageLocation(Context ctx, String mount);
-    public String  getStorageLocation(Context ctx);
-    public boolean isStorageAvailable(Context ctx);
-    public String getStorageType();
+    boolean updateStorageLocation(Context ctx);
+    boolean updateStorageLocation(Context ctx, String mount);
+    String  getStorageLocation(Context ctx);
+    boolean isStorageAvailable(Context ctx);
+    boolean needsUserPermissions(Context ctx);
+    void askUserPermissions(Activity activity, final StorageAccessListener listener);
+    String getStorageType();
 }

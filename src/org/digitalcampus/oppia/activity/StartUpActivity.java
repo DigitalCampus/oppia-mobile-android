@@ -22,8 +22,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.splunk.mint.Mint;
@@ -32,6 +34,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
+import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
@@ -100,34 +103,49 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 		}
 	}
 	
-	public void upgradeComplete(Payload p) {
-		
-		 // set up local dirs
- 		if(!FileUtils.createDirs(this)){
- 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
- 			builder.setCancelable(false);
- 			builder.setTitle(R.string.error);
- 			builder.setMessage(R.string.error_sdcard);
- 			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
- 				public void onClick(DialogInterface dialog, int which) {
- 					StartUpActivity.this.finish();
- 				}
- 			});
- 			builder.show();
- 			return;
- 		}
- 		
-		if(p.isResult()){
-			Payload payload = new Payload();
-			PostInstallTask piTask = new PostInstallTask(this);
-			piTask.setPostInstallListener(this);
-			piTask.execute(payload);
-		} else {
-			// now install any new courses
-			this.installCourses();
-		}
-		
+	public void upgradeComplete(final Payload p) {
+
+        if (FileUtils.getStorageStrategy().needsUserPermissions(this)){
+            Log.d(TAG, "Asking user for storage permissions");
+            FileUtils.getStorageStrategy().askUserPermissions(this, new StorageAccessListener() {
+                @Override
+                public void onAccessGranted(boolean isGranted) {
+                    Log.d(TAG, "Access granted for storage: " + isGranted);
+                    afterUpgrade(p);
+                }
+            });
+        }
+        else{
+            afterUpgrade(p);
+        }
 	}
+
+    private void afterUpgrade(Payload p){
+        // set up local dirs
+        if(!FileUtils.createDirs(this)){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.error);
+            builder.setMessage(R.string.error_sdcard);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    StartUpActivity.this.finish();
+                }
+            });
+            builder.show();
+            return;
+        }
+
+        if(p.isResult()){
+            Payload payload = new Payload();
+            PostInstallTask piTask = new PostInstallTask(this);
+            piTask.setPostInstallListener(this);
+            piTask.execute(payload);
+        } else {
+            // now install any new courses
+            this.installCourses();
+        }
+    }
 
 	public void upgradeProgressUpdate(String s) {
 		this.updateProgress(s);

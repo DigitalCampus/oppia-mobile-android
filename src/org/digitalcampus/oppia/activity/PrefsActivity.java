@@ -85,6 +85,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_STORAGE_OPTION = "prefStorageOption";
     public static final String STORAGE_OPTION_INTERNAL = "internal";
     public static final String STORAGE_OPTION_EXTERNAL = "external";
+    public static final String STORAGE_NEEDS_PERMISSIONS = "storageNeedsPermissions";
 
     public static final String PREF_ADMIN_PROTECTION = "prefAdminProtection";
     public static final String PREF_ADMIN_PASSWORD = "prefAdminPassword";
