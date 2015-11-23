@@ -117,6 +117,7 @@
     <string name="move_storage_completed">Moving storage completed</string>
     <string name="storageNonRemovable">Non-removable storage</string>
     <string name="storageRemovable">Removable SD Card</string>
+    <string name="storageAccessNotGranted">SD Card access not granted</string>
 
     <string name="notification_course_update_title">New course updates</string>
 	<string name="notification_course_update_text">Updates are available for your courses.</string>

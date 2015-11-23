@@ -17,15 +17,20 @@
 
 package org.digitalcampus.oppia.activity;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
+import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -147,6 +152,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
             String storageOption   = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
             String path = null;
+            boolean needsUserPermission = false;
 
             Log.d(TAG, "Storage option selected: " + storageOption);
 
@@ -155,6 +161,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 //The option selected is a path
                 path = storageOption;
                 storageOption = STORAGE_OPTION_EXTERNAL;
+                needsUserPermission = ExternalStorageStrategy.needsUserPermissions(this, path);
             }
             if (
                 //The storage option is different from the current one
@@ -162,20 +169,33 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 //The storage is set to external, and is a different path
                 ((path != null) && !currentLocation.startsWith(path))
             ){
-                ArrayList<Object> data = new ArrayList<>();
-                data.add(storageOption);
-                if (path != null){ data.add(path); }
-                Payload p = new Payload(data);
-                ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
-                changeStorageTask.setMoveStorageListener(this);
 
-                pDialog = new ProgressDialog(this);
-                pDialog.setTitle(R.string.loading);
-                pDialog.setMessage(getString(R.string.moving_storage_location));
-                pDialog.setCancelable(false);
-                pDialog.show();
+                StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageOption);
+                if (needsUserPermission){
+                    Log.d(TAG, "Asking user for storage permissions");
+                    final String finalStorageOption = storageOption;
+                    final String finalPath = path;
+                    newStrategy.askUserPermissions(this, new StorageAccessListener() {
+                        @Override
+                        public void onAccessGranted(boolean isGranted) {
+                            Log.d(TAG, "Access granted for storage: " + isGranted);
+                            if (isGranted){
+                                executeChangeStorageTask(finalPath, finalStorageOption);
+                            }
+                            else{
+                                Toast.makeText(PrefsActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
+                                //If the user didn't grant access, we revert the preference selection
+                                String currentStorageOpt = FileUtils.getStorageStrategy().getStorageType();
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt).apply();
+                                mPrefsFragment.updateStoragePref(currentStorageOpt);
+                            }
 
-                changeStorageTask.execute(p);
+                        }
+                    });
+                } else {
+                    executeChangeStorageTask(path, storageOption);
+                }
             }
         }
         else if (key.equalsIgnoreCase(PREF_ADMIN_PROTECTION)){
@@ -230,6 +250,23 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         //Update the UI value of the PreferencesFragment
         CheckBoxPreference passwordPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_ADMIN_PROTECTION);
         passwordPref.setChecked(false);
+    }
+
+    private void executeChangeStorageTask(String path, String storageOption){
+        ArrayList<Object> data = new ArrayList<>();
+        data.add(storageOption);
+        if (path != null){ data.add(path); }
+        Payload p = new Payload(data);
+        ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
+        changeStorageTask.setMoveStorageListener(this);
+
+        pDialog = new ProgressDialog(this);
+        pDialog.setTitle(R.string.loading);
+        pDialog.setMessage(getString(R.string.moving_storage_location));
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        changeStorageTask.execute(p);
     }
 
     //@Override

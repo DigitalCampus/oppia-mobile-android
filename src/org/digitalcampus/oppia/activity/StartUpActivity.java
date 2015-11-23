@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.splunk.mint.Mint;
 
@@ -111,6 +112,9 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
                 @Override
                 public void onAccessGranted(boolean isGranted) {
                     Log.d(TAG, "Access granted for storage: " + isGranted);
+                    if (!isGranted) {
+                        Toast.makeText(StartUpActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
+                    }
                     afterUpgrade(p);
                 }
             });

@@ -214,4 +214,24 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         prefs.edit().putBoolean(PrefsActivity.STORAGE_NEEDS_PERMISSIONS, permissionsNeeded).apply();
     }
+
+    public static boolean needsUserPermissions(Context ctx, String location){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            //Only in versions >= Lollipop we need to check write permissions
+            return false;
+        }
+
+        DeviceFile internal = StorageUtils.getInternalMemoryDrive();
+        if (internal.getPath().equals(location)){
+            return false;
+        }
+        else{
+            File destPath = new File(location + getInternalBasePath(ctx));
+            if (!destPath.canWrite()){
+                Log.d(TAG, "External SD(" + location + ") available, but no write permissions");
+                return true;
+            }
+        }
+        return false;
+    }
 }

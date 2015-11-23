@@ -59,75 +59,74 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         String sourcePath = previousStrategy.getStorageLocation(ctx);
         StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageType);
 
-
         Log.d(TAG, "Checking if storage is available...");
         if (!newStrategy.isStorageAvailable(ctx)){
             resetStrategy(previousStrategy, previousLocation);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_sdcard));
+            return payload;
+        }
+
+        Log.d(TAG, "Getting storage sizes...");
+        long currentSize = FileUtils.getTotalStorageUsed(ctx);
+
+        newStrategy.updateStorageLocation(ctx, location);
+        Log.d(TAG,"newStrategy.updateStorageLocation");
+        String destPath = newStrategy.getStorageLocation(ctx);
+        Log.d(TAG,destPath);
+        FileUtils.setStorageStrategy(newStrategy);
+        Log.d(TAG,"FileUtils.setStorageStrategy");
+
+        long availableDestSize;
+        try{
+            File destDir = new File(destPath);
+            Log.d(TAG,"destDir created: " + destDir.getAbsolutePath());
+            if (destDir.exists()){
+                Log.d(TAG,"cleaning courses dir" );
+                File coursesDir = new File(FileUtils.getCoursesPath(ctx));
+                FileUtils.cleanDir(coursesDir);
+                Log.d(TAG,"courses dir cleaned" );
+            }
+            else{
+                boolean makeDirs = destDir.mkdirs();
+                if (!makeDirs){
+                    boolean canWrite = destDir.canWrite();
+                    Log.d(TAG, "Error creating destination dir " + destPath + ": canWrite=" + canWrite);
+                    throw new Exception("No file created!"); }
+            }
+            FileUtils.createNoMediaFile(ctx);
+
+            availableDestSize = FileUtils.getAvailableStorageSize(ctx);
+            Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
+        }
+        catch (Exception e){
+            resetStrategy(previousStrategy, previousLocation);
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error));
+            return payload;
+        }
+
+        if (availableDestSize<currentSize){
+            resetStrategy(previousStrategy, previousLocation);
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error_insufficient_storage_available));
         }
         else{
-            Log.d(TAG, "Getting storage sizes...");
-            long currentSize = FileUtils.getTotalStorageUsed(ctx);
-
-            newStrategy.updateStorageLocation(ctx, location);
-            Log.d(TAG,"newStrategy.updateStorageLocation");
-            String destPath = newStrategy.getStorageLocation(ctx);
-            Log.d(TAG,destPath);
-            FileUtils.setStorageStrategy(newStrategy);
-            Log.d(TAG,"FileUtils.setStorageStrategy");
-
-            long availableDestSize;
-            try{
-                File destDir = new File(destPath);
-                Log.d(TAG,"destDir created: " + destDir.getAbsolutePath());
-                if (destDir.exists()){
-                	Log.d(TAG,"cleaning courses dir" );
-                    File coursesDir = new File(FileUtils.getCoursesPath(ctx));
-                    FileUtils.cleanDir(coursesDir);
-                    Log.d(TAG,"courses dir cleaned" );
-                }
-                else{
-                    boolean makeDirs = destDir.mkdirs();
-                    if (!makeDirs){
-                        boolean canWrite = destDir.canWrite();
-                        Log.d(TAG, "Error creating destination dir " + destPath + ": canWrite=" + canWrite);
-                        throw new Exception("No file created!"); }
-                }
-                FileUtils.createNoMediaFile(ctx);
-
-                availableDestSize = FileUtils.getAvailableStorageSize(ctx);
-                Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
+            if (moveStorageDirs(sourcePath, destPath)){
+                //Delete the files from source
+                FileUtils.deleteDir(new File(sourcePath));
+                Log.d(TAG, "Update storage location succeeded!");
+                payload.setResult(true);
             }
-            catch (Exception e){
+            else{
+                //Delete the files that were actually copied
+                File destDir = new File(destPath);
+                FileUtils.deleteDir(destDir);
                 resetStrategy(previousStrategy, previousLocation);
                 payload.setResult(false);
                 payload.setResultResponse(ctx.getString(R.string.error));
-                return payload;
             }
 
-            if (availableDestSize<currentSize){
-                resetStrategy(previousStrategy, previousLocation);
-                payload.setResult(false);
-                payload.setResultResponse(ctx.getString(R.string.error_insufficient_storage_available));
-            }
-            else{
-                if (moveStorageDirs(sourcePath, destPath)){
-                    //Delete the files from source
-                    FileUtils.deleteDir(new File(sourcePath));
-                    Log.d(TAG, "Update storage location succeeded!");
-                    payload.setResult(true);
-                }
-                else{
-                    //Delete the files that were actually copied
-                    File destDir = new File(destPath);
-                    FileUtils.deleteDir(destDir);
-                    resetStrategy(previousStrategy, previousLocation);
-                    payload.setResult(false);
-                    payload.setResultResponse(ctx.getString(R.string.error));
-                }
-
-            }
         }
 
         return payload;
