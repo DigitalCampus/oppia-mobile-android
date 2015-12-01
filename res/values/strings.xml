@@ -118,6 +118,11 @@
     <string name="storageNonRemovable">Non-removable storage</string>
     <string name="storageRemovable">Removable SD Card</string>
     <string name="storageAccessNotGranted">SD Card access not granted</string>
+    <string name="storageAccess_help1">Since Android 5 (Lollipop) there is a new official way for apps to write to the external SD card. Apps must ask the user to grant write access to a folder on the SD card. A system folder chooser dialog will open, and you will need to select the SD card from there.</string>
+    <string name="storageAccess_help2">If the dialog appears empty and there are no items in the left drawer, you first need to go to the menu and tell the system to show the SD card.</string>
+    <string name="storageAccess_help3">Then, tap on the SD card from the list on the left side to display its folder structure. In this screenshot you see both \"Internal storage\" and the SD card. The SD card can be displayed under a different name then what you see here, for example \"Kingston\". It\'s the so called disk label of the card.</string>
+    <string name="storageAccess_help4">Then select the card. Don\'t navigate down into any subfolder. You must select the top-level root folder of the SD card. This is important.</string>
+    <string name="storageAccess_help5">After tapping the \"Select SD card\" button you should be back in the app. The app double checks if it now indeed can write to the SD card, and if the folder selected is the root one.</string>
 
     <string name="notification_course_update_title">New course updates</string>
 	<string name="notification_course_update_text">Updates are available for your courses.</string>
