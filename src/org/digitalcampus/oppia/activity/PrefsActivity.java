@@ -28,7 +28,7 @@ import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
@@ -165,7 +165,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             }
             if (
                 //The storage option is different from the current one
-                (!storageOption.equals(FileUtils.getStorageStrategy().getStorageType())) ||
+                (!storageOption.equals(Storage.getStorageStrategy().getStorageType())) ||
                 //The storage is set to external, and is a different path
                 ((path != null) && !currentLocation.startsWith(path))
             ){
@@ -185,7 +185,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                             else{
                                 Toast.makeText(PrefsActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
                                 //If the user didn't grant access, we revert the preference selection
-                                String currentStorageOpt = FileUtils.getStorageStrategy().getStorageType();
+                                String currentStorageOpt = Storage.getStorageStrategy().getStorageType();
                                 SharedPreferences.Editor editor = prefs.edit();
                                 editor.putString(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt).apply();
                                 mPrefsFragment.updateStoragePref(currentStorageOpt);

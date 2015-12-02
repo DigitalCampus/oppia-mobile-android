@@ -22,7 +22,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.joda.time.format.DateTimeFormat;
@@ -137,7 +137,7 @@ public class MobileLearning extends Application {
         }
         else{
             StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
-            FileUtils.setStorageStrategy(strategy);
+            Storage.setStorageStrategy(strategy);
         }
         Log.d(TAG, "Storage option: " + storageOption);
     }
@@ -148,7 +148,7 @@ public class MobileLearning extends Application {
 
         StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
         boolean success = strategy.updateStorageLocation(ctx);
-        if (success) FileUtils.setStorageStrategy(strategy);
+        if (success) Storage.setStorageStrategy(strategy);
         return success;
     }
 

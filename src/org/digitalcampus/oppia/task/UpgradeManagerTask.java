@@ -34,6 +34,7 @@ import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
@@ -148,7 +149,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	 * the new titles etc are picked up
 	 */
 	protected void upgradeV17(){
-		File dir = new File(FileUtils.getCoursesPath(ctx));
+		File dir = new File(Storage.getCoursesPath(ctx));
 		String[] children = dir.list();
 		if (children != null) {
 			for (int i = 0; i < children.length; i++) {
@@ -162,7 +163,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					courseScheduleXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
 					courseTrackerXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
-					FileUtils.cleanUp(dir, FileUtils.getDownloadPath(ctx) + children[i]);
+					FileUtils.cleanUp(dir, Storage.getDownloadPath(ctx) + children[i]);
 					break;
 				}
 				
@@ -237,38 +238,38 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 		if ((location == null) || !location.equals("")){ return; }
 		
-		String source = Environment.getExternalStorageDirectory() + File.separator + FileUtils.APP_ROOT_DIR_NAME  + File.separator;
+		String source = Environment.getExternalStorageDirectory() + File.separator + Storage.APP_ROOT_DIR_NAME  + File.separator;
     	
     	File[] dirs = ContextCompat.getExternalFilesDirs(ctx,null);
     	if(dirs.length > 0){
 
 	    	String destination = dirs[dirs.length-1].getAbsolutePath();
-	    	File downloadSource = new File(source + FileUtils.APP_DOWNLOAD_DIR_NAME);
-			File mediaSource = new File(source +  FileUtils.APP_MEDIA_DIR_NAME);
-			File courseSource = new File(source +  FileUtils.APP_COURSES_DIR_NAME);
+	    	File downloadSource = new File(source + Storage.APP_DOWNLOAD_DIR_NAME);
+			File mediaSource = new File(source +  Storage.APP_MEDIA_DIR_NAME);
+			File courseSource = new File(source +  Storage.APP_COURSES_DIR_NAME);
 
             publishProgress(this.ctx.getString(R.string.upgradev49_1,""));
 	    	try {
-				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME ));
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + Storage.APP_DOWNLOAD_DIR_NAME ));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME );
+				Log.d(TAG,"failed to delete: " + destination + File.separator + Storage.APP_DOWNLOAD_DIR_NAME );
 				e.printStackTrace();
             }
 			
 			try {
-				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME ));
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + Storage.APP_MEDIA_DIR_NAME ));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_MEDIA_DIR_NAME );
+				Log.d(TAG,"failed to delete: " + destination + File.separator + Storage.APP_MEDIA_DIR_NAME );
 				e.printStackTrace();
             }
 			
 			try {
-				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + FileUtils.APP_COURSES_DIR_NAME ));
+				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + Storage.APP_COURSES_DIR_NAME ));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				Log.d(TAG,"failed to delete: " + destination + File.separator + FileUtils.APP_COURSES_DIR_NAME );
+				Log.d(TAG,"failed to delete: " + destination + File.separator + Storage.APP_COURSES_DIR_NAME );
 				e.printStackTrace();
             }
 

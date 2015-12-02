@@ -34,7 +34,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.Locale;
 
@@ -89,13 +89,13 @@ public class MonitorActivity extends AppActivity {
 				url += "&api_key=" + u.getApiKey();
 			} catch (UserNotFoundException e) {
 				String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-	        	url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+	        	url = Storage.getLocalizedFilePath(MonitorActivity.this, lang, "monitor_not_available.html");
 			}
 			DatabaseManager.getInstance().closeDatabase();
 			
 		} else {
 			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        	url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+        	url = Storage.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
 		}
 		webView.loadUrl(url);
 	}
@@ -139,7 +139,7 @@ public class MonitorActivity extends AppActivity {
 		@Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         	String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        	String url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+        	String url = Storage.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
         	webView.loadUrl(url);
         }
 	}

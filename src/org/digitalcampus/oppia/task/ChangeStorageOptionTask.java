@@ -28,6 +28,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
@@ -55,7 +56,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         String location = (payload.getData().size() > 1) ? (String)payload.getData().get(1) : null;
 
         String previousLocation = PreferenceManager.getDefaultSharedPreferences(ctx).getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-        StorageAccessStrategy previousStrategy = FileUtils.getStorageStrategy();
+        StorageAccessStrategy previousStrategy = Storage.getStorageStrategy();
         String sourcePath = previousStrategy.getStorageLocation(ctx);
         StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageType);
 
@@ -68,13 +69,13 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         }
 
         Log.d(TAG, "Getting storage sizes...");
-        long currentSize = FileUtils.getTotalStorageUsed(ctx);
+        long currentSize = Storage.getTotalStorageUsed(ctx);
 
         newStrategy.updateStorageLocation(ctx, location);
         Log.d(TAG,"newStrategy.updateStorageLocation");
         String destPath = newStrategy.getStorageLocation(ctx);
         Log.d(TAG,destPath);
-        FileUtils.setStorageStrategy(newStrategy);
+        Storage.setStorageStrategy(newStrategy);
         Log.d(TAG,"FileUtils.setStorageStrategy");
 
         long availableDestSize;
@@ -83,7 +84,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             Log.d(TAG,"destDir created: " + destDir.getAbsolutePath());
             if (destDir.exists()){
                 Log.d(TAG,"cleaning courses dir" );
-                File coursesDir = new File(FileUtils.getCoursesPath(ctx));
+                File coursesDir = new File(Storage.getCoursesPath(ctx));
                 FileUtils.cleanDir(coursesDir);
                 Log.d(TAG,"courses dir cleaned" );
             }
@@ -94,9 +95,9 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
                     Log.d(TAG, "Error creating destination dir " + destPath + ": canWrite=" + canWrite);
                     throw new Exception("No file created!"); }
             }
-            FileUtils.createNoMediaFile(ctx);
+            Storage.createNoMediaFile(ctx);
 
-            availableDestSize = FileUtils.getAvailableStorageSize(ctx);
+            availableDestSize = Storage.getAvailableStorageSize(ctx);
             Log.d(TAG, "Needed (source):" + currentSize + " - Available(destination): " + availableDestSize);
         }
         catch (Exception e){
@@ -150,9 +151,9 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
 
     private boolean moveStorageDirs(String sourcePath, String destinationPath){
 
-        String downloadPath = sourcePath + File.separator + FileUtils.APP_DOWNLOAD_DIR_NAME;
-        String mediaPath = sourcePath + File.separator + FileUtils.APP_MEDIA_DIR_NAME;
-        String coursePath = sourcePath + File.separator + FileUtils.APP_COURSES_DIR_NAME;
+        String downloadPath = sourcePath + File.separator + Storage.APP_DOWNLOAD_DIR_NAME;
+        String mediaPath = sourcePath + File.separator + Storage.APP_MEDIA_DIR_NAME;
+        String coursePath = sourcePath + File.separator + Storage.APP_COURSES_DIR_NAME;
 
         return (copyDirectory(downloadPath, destinationPath) &&
                 copyDirectory(mediaPath, destinationPath) &&
@@ -161,7 +162,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
 
     private void resetStrategy(StorageAccessStrategy previousStrategy, String previousLocation){
         // If it fails, we reset the strategy to the previous one
-        FileUtils.setStorageStrategy(previousStrategy);
+        Storage.setStorageStrategy(previousStrategy);
 
         // And revert the storage option to the previos one
         SharedPreferences.Editor editor = prefs.edit();

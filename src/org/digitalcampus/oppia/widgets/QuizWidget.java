@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -622,13 +623,13 @@ public class QuizWidget extends WidgetFactory {
 
 		public void onClick(View v) {
 			// check video file exists
-			boolean exists = FileUtils.mediaFileExists(QuizWidget.super.getActivity(), mediaFileName);
+			boolean exists = Storage.mediaFileExists(QuizWidget.super.getActivity(), mediaFileName);
 			if (!exists) {
 				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName), Toast.LENGTH_LONG).show();
 			    return;
             }
 
-			String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath(QuizWidget.super.getActivity()) + mediaFileName);
+			String mimeType = FileUtils.getMimeType(Storage.getMediaPath(QuizWidget.super.getActivity()) + mediaFileName);
 			if (!FileUtils.supportedMediafileType(mimeType)) {
 				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
 						Toast.LENGTH_LONG).show();

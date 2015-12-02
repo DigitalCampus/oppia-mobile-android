@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
@@ -58,7 +59,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 		Payload payload = params[0];
 		
 		// get folder
-		File dir = new File(FileUtils.getDownloadPath(ctx));
+		File dir = new File(Storage.getDownloadPath(ctx));
 		DownloadProgress dp = new DownloadProgress();
 		String[] children = dir.list();
 		if (children != null) {
@@ -66,24 +67,24 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 			for (int i = 0; i < children.length; i++) {
 
 				// extract to temp dir and check it's a valid package file
-				File tempdir = new File(FileUtils.getStorageLocationRoot(ctx) + "temp/");
+				File tempdir = new File(Storage.getStorageLocationRoot(ctx) + "temp/");
 				tempdir.mkdirs();
 
                 dp.setMessage(ctx.getString(R.string.installing_course, children[i]));
                 dp.setProgress(0);
                 publishProgress(dp);
 
-				File testDir = new File(FileUtils.getDownloadPath(ctx), children[i]);
+				File testDir = new File(Storage.getDownloadPath(ctx), children[i]);
 				
 				if (testDir.isDirectory()){
 					continue;
 				}
-				boolean unzipResult = FileUtils.unzipFiles(FileUtils.getDownloadPath(ctx), children[i], tempdir.getAbsolutePath());
+				boolean unzipResult = FileUtils.unzipFiles(Storage.getDownloadPath(ctx), children[i], tempdir.getAbsolutePath());
 
 				
 				if (!unzipResult){
 					//then was invalid zip file and should be removed
-					FileUtils.cleanUp(tempdir, FileUtils.getDownloadPath(ctx) + children[i]);
+					FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[i]);
 					break;
 
 				}
@@ -102,7 +103,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					courseScheduleXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
 					courseTrackerXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
-					FileUtils.cleanUp(tempdir, FileUtils.getDownloadPath(ctx) + children[i]);
+					FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[i]);
 					continue;
 				}
 				
@@ -141,7 +142,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				if (courseId != -1) {
 					payload.addResponseData(c);
 					File src = new File(tempdir + File.separator + courseDirs[0]);
-					File dest = new File(FileUtils.getCoursesPath(ctx));
+					File dest = new File(Storage.getCoursesPath(ctx));
 
 					db.insertActivities(cxr.getActivities(courseId));
                     dp.setProgress(50);
@@ -157,7 +158,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
                     publishProgress(dp);
 
 					// Delete old course
-					File oldCourse = new File(FileUtils.getCoursesPath(ctx) + courseDirs[0]);
+					File oldCourse = new File(Storage.getCoursesPath(ctx) + courseDirs[0]);
 					FileUtils.deleteDir(oldCourse);
 
 					// move from temp to courses dir
@@ -196,7 +197,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
                 publishProgress(dp);
 
 				// delete zip file from download dir
-				File zip = new File(FileUtils.getDownloadPath(ctx) + children[i]);
+				File zip = new File(Storage.getDownloadPath(ctx) + children[i]);
 				zip.delete();
 
 

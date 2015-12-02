@@ -22,7 +22,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -42,7 +41,7 @@ import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     }
 
 	private void installCourses(){
-		File dir = new File(FileUtils.getDownloadPath(this));
+		File dir = new File(Storage.getDownloadPath(this));
 		String[] children = dir.list();
 		if (children != null) {
 			ArrayList<Object> data = new ArrayList<>();
@@ -106,9 +105,9 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	
 	public void upgradeComplete(final Payload p) {
 
-        if (FileUtils.getStorageStrategy().needsUserPermissions(this)){
+        if (Storage.getStorageStrategy().needsUserPermissions(this)){
             Log.d(TAG, "Asking user for storage permissions");
-            FileUtils.getStorageStrategy().askUserPermissions(this, new StorageAccessListener() {
+            Storage.getStorageStrategy().askUserPermissions(this, new StorageAccessListener() {
                 @Override
                 public void onAccessGranted(boolean isGranted) {
                     Log.d(TAG, "Access granted for storage: " + isGranted);
@@ -126,7 +125,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 
     private void afterUpgrade(Payload p){
         // set up local dirs
-        if(!FileUtils.createDirs(this)){
+        if(!Storage.createFolderStructure(this)){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(false);
             builder.setTitle(R.string.error);
