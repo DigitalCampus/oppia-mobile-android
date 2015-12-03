@@ -48,6 +48,7 @@ import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
@@ -147,7 +148,7 @@ public class OppiaMobileActivity
 	public void onStart() {
 		super.onStart();
 		DbHelper db = new DbHelper(this);
-		userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		userId = db.getUserId(SessionManager.getUsername(this));
 		DatabaseManager.getInstance().closeDatabase();
 		displayCourses(userId);
 	}
@@ -197,7 +198,7 @@ public class OppiaMobileActivity
 		if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS, false)){
 			DbHelper db = new DbHelper(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS, "2"));
-			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			long userId = db.getUserId(SessionManager.getUsername(this));
 			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
 			DatabaseManager.getInstance().closeDatabase();
 

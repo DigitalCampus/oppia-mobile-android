@@ -39,6 +39,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -239,7 +240,7 @@ public class CourseIntallerService extends IntentService {
             db.insertActivities(cxr.getActivities(courseId));
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 50);
             
-            long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+            long userId = db.getUserId(SessionManager.getUsername(this));
             db.resetCourse(courseId, userId);
             db.insertTrackers(ctxr.getTrackers(courseId, userId));
             db.insertQuizAttempts(ctxr.getQuizAttempts(courseId, userId));
@@ -358,7 +359,7 @@ public class CourseIntallerService extends IntentService {
         File downloadedFile = null;
         try {
         	DbHelper db = new DbHelper(this);
-        	User u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        	User u = db.getUser(SessionManager.getUsername(this));
 			DatabaseManager.getInstance().closeDatabase();
         	
             HTTPConnectionUtils client = new HTTPConnectionUtils(this);
@@ -452,7 +453,7 @@ public class CourseIntallerService extends IntentService {
         try {
         	
         	DbHelper db = new DbHelper(this);
-        	User u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        	User u = db.getUser(SessionManager.getUsername(this));
 			DatabaseManager.getInstance().closeDatabase();
 			
         	String responseStr = "";

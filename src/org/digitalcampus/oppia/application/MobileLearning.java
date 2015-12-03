@@ -105,13 +105,6 @@ public class MobileLearning extends Application {
 	
 	// for tracking if SubmitQuizAttemptsTask is already running
 	public SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = null;
-	
-	
-	public static boolean isLoggedIn(Context ctx) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String username = prefs.getString(PrefsActivity.PREF_USER_NAME, "");
-        return !username.trim().equals("");
-	}
 
     @Override
     public void onCreate() {

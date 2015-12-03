@@ -27,6 +27,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
@@ -148,7 +149,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
                     dp.setProgress(50);
                     publishProgress(dp);
 
-                    long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+                    long userId = db.getUserId(SessionManager.getUsername(ctx));
                     
                     db.resetCourse(courseId, userId);
 					db.insertTrackers(ctxr.getTrackers(courseId, userId));

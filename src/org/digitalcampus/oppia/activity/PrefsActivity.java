@@ -78,10 +78,21 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_SHOW_SECTION_NOS = "prefShowSectionNumbers";
 	public static final String PREF_HIGHLIGHT_COMPLETED = "prefHighlightCompleted";
 	public static final String PREF_TEXT_SIZE = "prefTextSize";
+
+    public static final String[] USER_PREFERENCES = {
+            PREF_PHONE_NO,
+            PREF_LANGUAGE,
+            PREF_SHOW_SCHEDULE_REMINDERS,
+            PREF_NO_SCHEDULE_REMINDERS,
+            PREF_SHOW_COURSE_DESC,
+            PREF_SHOW_PROGRESS_BAR,
+            PREF_SHOW_SECTION_NOS,
+            PREF_HIGHLIGHT_COMPLETED,
+            PREF_TEXT_SIZE
+    };
 	/*
 	 * End personal prefs
 	 */
-	
 	public static final String PREF_LAST_MEDIA_SCAN = "prefLastMediaScan";
 	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
 	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";

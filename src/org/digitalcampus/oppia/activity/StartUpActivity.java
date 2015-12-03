@@ -32,6 +32,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
@@ -61,15 +62,21 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         setContentView(R.layout.start_up);
         tvProgress = (TextView) this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        Mint.setUserIdentifier(prefs.getString(PrefsActivity.PREF_USER_NAME, "anon"));
-        
-        UpgradeManagerTask umt = new UpgradeManagerTask(this);
-		umt.setUpgradeListener(this);
-		ArrayList<Object> data = new ArrayList<>();
- 		Payload p = new Payload(data);
-		umt.execute(p);
- 		
+        String username = SessionManager.getUsername(this);
+        Mint.setUserIdentifier( username.equals("") ? "anon" : username);
+
 	}
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        UpgradeManagerTask umt = new UpgradeManagerTask(this);
+        umt.setUpgradeListener(this);
+        ArrayList<Object> data = new ArrayList<>();
+        Payload p = new Payload(data);
+        umt.execute(p);
+    }
 	
     private void updateProgress(String text){
     	if(tvProgress != null){
@@ -80,7 +87,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	private void endStartUpScreen() {
 			
         // launch new activity and close splash screen
-		if (!MobileLearning.isLoggedIn(this)) {
+		if (!SessionManager.isLoggedIn(this)) {
 			startActivity(new Intent(StartUpActivity.this, WelcomeActivity.class));
 			finish();
 		} else {
@@ -150,21 +157,13 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         }
     }
 
-	public void upgradeProgressUpdate(String s) {
-		this.updateProgress(s);
-	}
-
+	public void upgradeProgressUpdate(String s) { this.updateProgress(s); }
 	public void postInstallComplete(Payload response) {
 		this.installCourses();
 	}
 
-	public void downloadComplete(Payload p) {
-		// do nothing
-	}
-
-	public void downloadProgressUpdate(DownloadProgress dp) {
-		// do nothing
-	}
+	public void downloadComplete(Payload p) { }
+	public void downloadProgressUpdate(DownloadProgress dp) { }
 
 	public void installComplete(Payload p) {
 		if(p.getResponseData().size()>0){

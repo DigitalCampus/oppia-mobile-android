@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
@@ -72,7 +73,7 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
 			DbHelper db = new DbHelper(ctx);
-        	User user = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        	User user = db.getUser(SessionManager.getUsername(ctx));
 			DatabaseManager.getInstance().closeDatabase();
 			
 			String url =  client.createUrlWithCredentials(dm.getDownloadUrl(),user.getUsername(),user.getApiKey());

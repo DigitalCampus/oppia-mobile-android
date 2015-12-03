@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
@@ -83,7 +84,7 @@ public class MonitorActivity extends AppActivity {
 			DbHelper db = new DbHelper(this);
 			User u;
 			try {
-				u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+				u = db.getUser(SessionManager.getUsername(this));
 				url = prefs.getString(PrefsActivity.PREF_SERVER, getString(R.string.prefServer)) + "mobile/monitor/?";
 				url += "username=" + u.getUsername();
 				url += "&api_key=" + u.getApiKey();

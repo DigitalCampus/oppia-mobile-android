@@ -26,6 +26,7 @@ import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
 import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizStats;
@@ -111,7 +112,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
 			vv.setLayoutParams(lp);
 			// refresh course to get most recent info (otherwise gets the info from when course first opened)
 			DbHelper db = new DbHelper(super.getActivity());
-			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 			this.course = db.getCourse(this.course.getCourseId(), userId);
             DatabaseManager.getInstance().closeDatabase();
 
@@ -159,7 +160,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
 
 		} else {
 			DbHelper db = new DbHelper(super.getActivity());
-			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 			ArrayList<Course> courses = db.getCourses(userId);
 			DatabaseManager.getInstance().closeDatabase();
             ScorecardListAdapter scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
@@ -174,7 +175,7 @@ public class ScorecardFragment extends Fragment implements ParseCourseXMLTask.On
         ArrayList<Activity> baseline = parsed.getBaselineActivities();
         
     	DbHelper db = new DbHelper(super.getActivity());
-        long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        long userId = db.getUserId(SessionManager.getUsername(getActivity()));
         ArrayList<Activity> quizActs = db.getCourseQuizzes(course.getCourseId());
         ArrayList<QuizStats> quizzes = new ArrayList<QuizStats>();
         for (Activity a: quizActs){

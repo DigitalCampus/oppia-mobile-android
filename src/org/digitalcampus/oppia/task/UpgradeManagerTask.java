@@ -26,6 +26,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
@@ -221,7 +222,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		SearchUtils.reindexAll(ctx);
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		User user = new User();
-		user.setUsername(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		user.setUsername(SessionManager.getUsername(ctx));
 		user.setApiKey(prefs.getString(UpgradeManagerTask.PREF_API_KEY, "") );
 		DbHelper db = new DbHelper(ctx);
 		long userId = db.addOrUpdateUser(user);
@@ -322,7 +323,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	protected void upgradeV54(){
 		DbHelper db = new DbHelper(ctx);
 		ArrayList<QuizAttempt> quizAttempts = db.getAllQuizAttempts();
-		long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		long userId = db.getUserId(SessionManager.getUsername(ctx));
 		
 		ArrayList<Course> courses = db.getAllCourses();
 		ArrayList<v54UpgradeQuizObj> quizzes = new ArrayList<v54UpgradeQuizObj>();
@@ -441,7 +442,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
 	protected void upgradeV54a(){
 		DbHelper db = new DbHelper(ctx);
-		long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		long userId = db.getUserId(SessionManager.getUsername(ctx));
 		int points = prefs.getInt(UpgradeManagerTask.PREF_POINTS, 0);
 		int badges = prefs.getInt(UpgradeManagerTask.PREF_BADGES, 0);
 		Log.d(TAG,"points: " + points);

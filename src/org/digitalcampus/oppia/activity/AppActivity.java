@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.ScheduleReminders;
+import org.digitalcampus.oppia.application.SessionManager;
 
 public class AppActivity extends FragmentActivity {
 	
@@ -86,8 +87,7 @@ public class AppActivity extends FragmentActivity {
 
     public void logoutAndRestartApp(){
 
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putString(PrefsActivity.PREF_USER_NAME, "").apply();
+        SessionManager.logoutCurrentUser(this);
 
         Intent restartIntent = new Intent(this, StartUpActivity.class);
         restartIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
