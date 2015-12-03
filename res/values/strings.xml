@@ -190,6 +190,12 @@
 	<string name="info_scan_media_missing">Some media files are missing for your courses.</string>
 	
 	<string name="info_upgrading">Upgrading to %1$s</string>
+    <string name="course_updating">Updating course activity…</string>
+    <string name="course_updating_success">\'%1$s\': Course activity updated successfully</string>
+    <string name="course_updating_error">\'%1$s\': Error updating course</string>
+    <string name="course_deleting">Deleting course…</string>
+    <string name="course_deleting_success">Course deleted successfully</string>
+    <string name="course_deleting_error">Error deleting course</string>
 	
 	<string name="loading_courses">Loading courses</string>
 	<string name="loading_points">Loading points &#8230;</string>

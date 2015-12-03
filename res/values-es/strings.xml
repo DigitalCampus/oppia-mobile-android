@@ -67,7 +67,8 @@
  	
  	<string name="course_context_reset">Reajustar</string>
  	<string name="course_context_delete">Borrar</string>
- 	<string name="course_context_reset_confirm">¿Está seguro de que desea restablecer este curso? Se eliminarán todos los registros de progreso para este curso.</string>
+    <string name="course_context_update_activity">Actualizar actividad</string>
+    <string name="course_context_reset_confirm">¿Está seguro de que desea restablecer este curso? Se eliminarán todos los registros de progreso para este curso.</string>
  	<string name="course_context_delete_confirm">¿Está seguro que desea eliminar este curso? Se eliminará completamente el curso de la aplicación.</string>
  	
  	<string name="no_courses">No hay cursos instalados</string>
@@ -204,7 +205,14 @@
 	<string name="error_reading_xml">An error occurred trying to load the course. Please reinstall the course.</string>
 	<string name="error_tts_start">Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled</string>
 	<string name="warning_wifi_required">Debes estar conectado a una red wifi para descargar ficheros multimedia.\nPor favor, conéctate a una red wifi o descarga los archivos desde tu PC.</string>
-	
+
+    <string name="course_updating">Actualizando actividad del curso…</string>
+    <string name="course_updating_success">\'%1$s\': Actividad del curso actualizada satisfactoriamente</string>
+    <string name="course_updating_error">\'%1$s\': Error actualizando curso</string>
+    <string name="course_deleting">Eliminando curso…</string>
+    <string name="course_deleting_success">Curso eliminado satisfactoriamente</string>
+    <string name="course_deleting_error">Error eliminando curso</string>
+
 	<string name="login_process">Accediendo</string>
 	<string name="login_complete">Registrado</string>
 	

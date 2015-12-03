@@ -70,7 +70,15 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
-public class OppiaMobileActivity extends AppActivity implements OnSharedPreferenceChangeListener, ScanMediaListener, DeleteCourseListener, CourseInstallerListener, UpdateActivityListener, CourseContextMenuCustom.OnContextMenuListener {
+public class OppiaMobileActivity
+        extends AppActivity
+        implements
+            OnSharedPreferenceChangeListener,
+            ScanMediaListener,
+            DeleteCourseListener,
+            CourseInstallerListener,
+            UpdateActivityListener,
+            CourseContextMenuCustom.OnContextMenuListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private SharedPreferences prefs;
@@ -117,7 +125,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
         CourseContextMenuCustom courseMenu = new CourseContextMenuCustom(this);
         courseMenu.registerForContextMenu(courseList, this);
-        //registerForContextMenu(courseList);
+        //the alternative of registerForContextMenu(courseList);
 
         courseList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -141,7 +149,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		DbHelper db = new DbHelper(this);
 		userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		DatabaseManager.getInstance().closeDatabase();
-
 		displayCourses(userId);
 	}
 
@@ -183,8 +190,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 
         courseListAdapter.notifyDataSetChanged();
 		this.updateReminders();
-		
-		// scan media
 		this.scanMedia();
 	}
 
@@ -214,15 +219,13 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
 		UIUtils.showUserData(menu, this, null);
 		
 		MenuItem itemLogout = menu.findItem(R.id.menu_logout);
+        MenuItem itemSettings = menu.findItem(R.id.menu_settings);
+        MenuItem itemMonitor = menu.findItem(R.id.menu_monitor);
+        MenuItem itemCourseDownload = menu.findItem(R.id.menu_download);
+
 		itemLogout.setVisible(prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT));
-		
-		MenuItem itemSettings = menu.findItem(R.id.menu_settings);
 		itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS);
-		
-		MenuItem itemMonitor = menu.findItem(R.id.menu_monitor);
 		itemMonitor.setVisible(MobileLearning.MENU_ALLOW_MONITOR);
-		
-		MenuItem itemCourseDownload = menu.findItem(R.id.menu_download);
 		itemCourseDownload.setVisible(MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD);
 		
 	    return super.onPrepareOptionsMenu(menu);
@@ -263,9 +266,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         Intent i = new Intent(OppiaMobileActivity.this, PrefsActivity.class);
         Bundle tb = new Bundle();
         ArrayList<Lang> langs = new ArrayList<>();
-        for(Course m: courses){
-            langs.addAll(m.getLangs());
-        }
+        for(Course m: courses){ langs.addAll(m.getLangs()); }
         tb.putSerializable("langs", langs);
         i.putExtras(tb);
         startActivity(i);
@@ -290,9 +291,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
     }
 	private void createLanguageDialog() {
 		ArrayList<Lang> langs = new ArrayList<>();
-		for(Course m: courses){
-			langs.addAll(m.getLangs());
-		}
+		for(Course m: courses){ langs.addAll(m.getLangs()); }
 
         UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
             public Boolean call() throws Exception {
@@ -351,7 +350,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
                 task.execute(p);
 
                 progressDialog = new ProgressDialog(OppiaMobileActivity.this);
-                progressDialog.setMessage("Deleting course...");
+                progressDialog.setMessage(getString(R.string.course_deleting));
                 progressDialog.setCancelable(false);
                 progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
@@ -395,7 +394,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         task.execute(p);
 
         progressDialog = new ProgressDialog(OppiaMobileActivity.this);
-        progressDialog.setMessage("Updating activity...");
+        progressDialog.setMessage(getString(R.string.course_updating));
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
@@ -468,7 +467,7 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         courseList.setPadding(0, initialCourseListPadding, 0, 0);
     }
 
-    //Implementation of ScanMediaListener
+    /* ScanMediaListener implementation */
 	public void scanStart() {
         messageText.setText(this.getString(R.string.info_scan_media_start));
 	}
@@ -518,11 +517,13 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
         if (progressDialog != null){
             progressDialog.dismiss();
         }
+        Toast.makeText(OppiaMobileActivity.this,
+                getString(response.isResult()? R.string.course_deleting_success : R.string.course_deleting_error),
+                Toast.LENGTH_LONG).show();
         displayCourses(userId);
     }
 
     /* CourseInstallerListener implementation */
-    // @Override
     public void onInstallComplete(String fileUrl) {
         Toast.makeText(this, this.getString(R.string.install_complete), Toast.LENGTH_LONG).show();
         displayCourses(userId);
@@ -531,16 +532,21 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
     public void onInstallProgress(String fileUrl, int progress) {}
     public void onInstallFailed(String fileUrl, String message) {}
 
+    /* UpdateActivityListener implementation */
+    public void updateActivityProgressUpdate(DownloadProgress dp) { }
 	public void updateActivityComplete(Payload response) {
+        Course course = (Course) response.getData().get(0);
         if (progressDialog != null){
             progressDialog.dismiss();
         }
+        Toast.makeText(OppiaMobileActivity.this,
+                getString(
+                    response.isResult() ? R.string.course_updating_success : R.string.course_updating_error,
+                    (course!=null) ? course.getShortname() : ""),
+                Toast.LENGTH_LONG).show();
         displayCourses(userId);
 	}
 
-	public void updateActivityProgressUpdate(DownloadProgress dp) {
-
-	}
 
     private void checkAdminPermission(int actionId, AdminSecurityManager.AuthListener authListener){
 
@@ -554,7 +560,6 @@ public class OppiaMobileActivity extends AppActivity implements OnSharedPreferen
             //If the admin password is not needed, we simply call the listener method
             authListener.onPermissionGranted();
         }
-
     }
 
 }
