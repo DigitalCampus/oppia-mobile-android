@@ -1531,7 +1531,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String whereClause = USER_PREFS_C_USERNAME + "=? ";
         String[] args = new String[] { username };
 
-        Cursor c = db.query(USER_TABLE, null, whereClause, args, null, null, null);
+        Cursor c = db.query(USER_PREFS_TABLE, null, whereClause, args, null, null, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
 
