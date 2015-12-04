@@ -20,11 +20,16 @@ package org.digitalcampus.oppia.application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Pair;
 
 import com.splunk.mint.Mint;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SessionManager {
 
@@ -55,7 +60,7 @@ public class SessionManager {
         editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, user.isScoringEnabled());
         editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, user.isBadgingEnabled());
 
-        loadUserPrefs(username, prefs);
+        loadUserPrefs(ctx, username, editor);
         Mint.setUserIdentifier(username);
         editor.apply();
     }
@@ -67,7 +72,7 @@ public class SessionManager {
 
         //If there was a logged in user, we save her Preferences in the DB
         if (!username.equals("")){
-            saveUserPrefs(username, prefs);
+            saveUserPrefs(ctx, username, prefs);
         }
 
         //Logout the user (unregister from Preferences)
@@ -76,19 +81,50 @@ public class SessionManager {
         editor.apply();
     }
 
-    //Warning: this method doesn't call prefs.apply()
-    private static void saveUserPrefs(String user, SharedPreferences prefs){
-        for (String prefID : PrefsActivity.USER_PREFERENCES){
+    private static void saveUserPrefs(Context ctx, String username, SharedPreferences prefs){
 
+        ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
+
+        for (String prefID : PrefsActivity.USER_STRING_PREFS){
+            String prefValue =  prefs.getString(prefID, "");
+            if (!prefValue.equals("")){
+                Pair<String, String> userPref = new Pair<>(prefID, prefValue);
+                userPrefs.add(userPref);
+            }
         }
+
+        for (String prefID : PrefsActivity.USER_BOOLEAN_PREFS){
+            if (prefs.contains(prefID)){
+                boolean prefValue =  prefs.getBoolean(prefID, false);
+                Pair<String, String> userPref = new Pair<>(prefID, prefValue?"true":"false");
+                userPrefs.add(userPref);
+            }
+        }
+
+        DbHelper db = new DbHelper(ctx);
+        db.insertUserPreferences(username, userPrefs);
+        DatabaseManager.getInstance().closeDatabase();
 
     }
 
     //Warning: this method doesn't call prefs.apply()
-    private static void loadUserPrefs(String user, SharedPreferences prefs){
-        for (String prefID : PrefsActivity.USER_PREFERENCES){
+    private static void loadUserPrefs(Context ctx, String username, SharedPreferences.Editor prefsEditor){
 
+        DbHelper db = new DbHelper(ctx);
+        List<Pair<String, String>> userPrefs = db.getUserPreferences(username);
+        DatabaseManager.getInstance().closeDatabase();
+
+        for (Pair<String, String> pref : userPrefs){
+            String prefKey = pref.first;
+            String prefValue = pref.second;
+            if (PrefsActivity.USER_STRING_PREFS.contains(prefKey)){
+                prefsEditor.putString(prefKey, prefValue);
+            }
+            else if (PrefsActivity.USER_BOOLEAN_PREFS.contains(prefKey)){
+                prefsEditor.putBoolean(prefKey, "true".equals(prefValue));
+            }
         }
+
     }
 
 

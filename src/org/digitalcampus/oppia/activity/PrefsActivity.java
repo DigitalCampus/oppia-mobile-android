@@ -19,6 +19,8 @@ package org.digitalcampus.oppia.activity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
@@ -79,17 +81,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_HIGHLIGHT_COMPLETED = "prefHighlightCompleted";
 	public static final String PREF_TEXT_SIZE = "prefTextSize";
 
-    public static final String[] USER_PREFERENCES = {
-            PREF_PHONE_NO,
-            PREF_LANGUAGE,
-            PREF_SHOW_SCHEDULE_REMINDERS,
-            PREF_NO_SCHEDULE_REMINDERS,
-            PREF_SHOW_COURSE_DESC,
-            PREF_SHOW_PROGRESS_BAR,
-            PREF_SHOW_SECTION_NOS,
-            PREF_HIGHLIGHT_COMPLETED,
-            PREF_TEXT_SIZE
-    };
+    public static final List<String> USER_STRING_PREFS =  Arrays.asList(
+        PREF_PHONE_NO, PREF_LANGUAGE, PREF_NO_SCHEDULE_REMINDERS, PREF_TEXT_SIZE);
+    public static final List<String> USER_BOOLEAN_PREFS = Arrays.asList(
+        PREF_SHOW_SCHEDULE_REMINDERS,  PREF_SHOW_COURSE_DESC, PREF_SHOW_PROGRESS_BAR, PREF_SHOW_SECTION_NOS, PREF_HIGHLIGHT_COMPLETED );
 	/*
 	 * End personal prefs
 	 */
@@ -111,7 +106,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
     private PreferencesFragment mPrefsFragment;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
