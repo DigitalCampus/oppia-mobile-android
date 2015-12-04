@@ -54,7 +54,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 22;
+	static final int DB_VERSION = 23;
 
 	private static SQLiteDatabase db;
 	private SharedPreferences prefs;
@@ -73,8 +73,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	private static final String ACTIVITY_TABLE = "Activity";
 	private static final String ACTIVITY_C_ID = BaseColumns._ID;
-	private static final String ACTIVITY_C_COURSEID = "modid"; // reference to
-															// COURSE_C_ID
+	private static final String ACTIVITY_C_COURSEID = "modid"; // reference to COURSE_C_ID
 	private static final String ACTIVITY_C_SECTIONID = "sectionid";
 	private static final String ACTIVITY_C_ACTID = "activityid";
 	private static final String ACTIVITY_C_ACTTYPE = "activitytype";
@@ -125,7 +124,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_POINTS = "points";
 	private static final String USER_C_BADGES = "badges";
 
-	private static final String USER_PROPS_TABLE = "userprops";
+	private static final String USER_PREFS_TABLE = "userprefs";
+    private static final String USER_PREFS_C_USERNAME = "username";
+    private static final String USER_PREFS_C_PREFKEY = "preference";
+    private static final String USER_PREFS_C_PREFVALUE = "value";
 	
     public void beginTransaction(){
         db.beginTransaction();
@@ -153,6 +155,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		createQuizAttemptsTable(db);
 		createSearchTable(db);
 		createUserTable(db);
+        createUserPrefsTable(db);
 	}
 
 	public void createCourseTable(SQLiteDatabase db){
@@ -235,6 +238,16 @@ public class DbHelper extends SQLiteOpenHelper {
             ");";
 		db.execSQL(sql);
 	}
+
+    public void createUserPrefsTable(SQLiteDatabase db){
+        String m_sql = "create table " + USER_PREFS_TABLE + " ("
+                + USER_PREFS_C_USERNAME + " text not null, "
+                + USER_PREFS_C_PREFKEY + " text not null, "
+                + USER_PREFS_C_PREFVALUE + " text, "
+                + "primary key (" + USER_PREFS_C_USERNAME + ", " + USER_PREFS_C_PREFKEY + ") "
+                +  ")";
+        db.execSQL(m_sql);
+    }
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -374,6 +387,12 @@ public class DbHelper extends SQLiteOpenHelper {
 			String sql2 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_BADGES + " integer default 0;";
 			db.execSQL(sql2);
 		}
+
+        if(oldVersion <= 22 && newVersion >= 23){
+            // add user preferences table
+            db.execSQL("drop table if exists " + USER_PREFS_TABLE);
+            createUserPrefsTable(db);
+        }
 	}
 
 	public void updateV43(long userId){
@@ -1031,21 +1050,21 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public void insertQuizAttempts(ArrayList<QuizAttempt> quizAttempts){
-		 beginTransaction();
-			for (QuizAttempt qa : quizAttempts) {
-				ContentValues values = new ContentValues();
-				values.put(QUIZATTEMPTS_C_DATA, qa.getData());
-				values.put(QUIZATTEMPTS_C_COURSEID, qa.getCourseId());
-				values.put(QUIZATTEMPTS_C_USERID, qa.getUserId());
-				values.put(QUIZATTEMPTS_C_MAXSCORE, qa.getMaxscore());
-				values.put(QUIZATTEMPTS_C_SCORE, qa.getScore());
-				values.put(QUIZATTEMPTS_C_PASSED, qa.isPassed());
-				values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
-				values.put(QUIZATTEMPTS_C_SENT, qa.isSent());
-	    		values.put(QUIZATTEMPTS_C_DATETIME, qa.getDateTimeString());
-				db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
-			}
-	        endTransaction(true);
+        beginTransaction();
+        for (QuizAttempt qa : quizAttempts) {
+            ContentValues values = new ContentValues();
+            values.put(QUIZATTEMPTS_C_DATA, qa.getData());
+            values.put(QUIZATTEMPTS_C_COURSEID, qa.getCourseId());
+            values.put(QUIZATTEMPTS_C_USERID, qa.getUserId());
+            values.put(QUIZATTEMPTS_C_MAXSCORE, qa.getMaxscore());
+            values.put(QUIZATTEMPTS_C_SCORE, qa.getScore());
+            values.put(QUIZATTEMPTS_C_PASSED, qa.isPassed());
+            values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
+            values.put(QUIZATTEMPTS_C_SENT, qa.isSent());
+            values.put(QUIZATTEMPTS_C_DATETIME, qa.getDateTimeString());
+            db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
+        }
+        endTransaction(true);
 	}
 	
 	public ArrayList<QuizAttempt>  getUnsentQuizAttempts(){
@@ -1320,13 +1339,13 @@ public class DbHelper extends SQLiteOpenHelper {
 					SEARCH_C_ACTIVITYTITLE, searchText);
 		
 		String sqlSectionTitle = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 10 AS ranking FROM %s ft " +
-				" INNER JOIN %s a ON a.%s = ft.docid" +
-				" INNER JOIN %s c ON a.%s = c.%s " +
-				" WHERE %s MATCH '%s' ",
-					COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE, 
-					ACTIVITY_TABLE, ACTIVITY_C_ID, 
-					COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
-					SEARCH_C_SECTIONTITLE, searchText);
+                        " INNER JOIN %s a ON a.%s = ft.docid" +
+                        " INNER JOIN %s c ON a.%s = c.%s " +
+                        " WHERE %s MATCH '%s' ",
+                COURSE_C_ID, ACTIVITY_C_ACTIVITYDIGEST, ACTIVITY_C_SECTIONID, SEARCH_TABLE,
+                ACTIVITY_TABLE, ACTIVITY_C_ID,
+                COURSE_TABLE, ACTIVITY_C_COURSEID, COURSE_C_ID,
+                SEARCH_C_SECTIONTITLE, searchText);
 		String sqlCourseTitle = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 15 AS ranking FROM %s ft " +
 				" INNER JOIN %s a ON a.%s = ft.docid" +
 				" INNER JOIN %s c ON a.%s = c.%s " +

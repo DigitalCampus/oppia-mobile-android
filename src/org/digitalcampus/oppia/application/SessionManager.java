@@ -78,12 +78,17 @@ public class SessionManager {
 
     //Warning: this method doesn't call prefs.apply()
     private static void saveUserPrefs(String user, SharedPreferences prefs){
+        for (String prefID : PrefsActivity.USER_PREFERENCES){
+
+        }
 
     }
 
     //Warning: this method doesn't call prefs.apply()
     private static void loadUserPrefs(String user, SharedPreferences prefs){
+        for (String prefID : PrefsActivity.USER_PREFERENCES){
 
+        }
     }
 
 

@@ -64,7 +64,6 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String username = SessionManager.getUsername(this);
         Mint.setUserIdentifier( username.equals("") ? "anon" : username);
-
 	}
 
     @Override
