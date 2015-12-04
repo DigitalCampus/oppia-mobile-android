@@ -112,6 +112,11 @@ public class SessionManager {
 
         DbHelper db = new DbHelper(ctx);
         List<Pair<String, String>> userPrefs = db.getUserPreferences(username);
+
+        ArrayList<String> prefsToSave = new ArrayList<>();
+        prefsToSave.addAll(PrefsActivity.USER_BOOLEAN_PREFS);
+        prefsToSave.addAll(PrefsActivity.USER_STRING_PREFS);
+
         DatabaseManager.getInstance().closeDatabase();
 
         for (Pair<String, String> pref : userPrefs){
@@ -123,8 +128,15 @@ public class SessionManager {
             else if (PrefsActivity.USER_BOOLEAN_PREFS.contains(prefKey)){
                 prefsEditor.putBoolean(prefKey, "true".equals(prefValue));
             }
+            prefsToSave.remove(prefKey);
         }
 
+        //If there were prefKeys not previously saved, we clear them from the SharedPreferences
+        if (prefsToSave.size()>0){
+            for (String pref : prefsToSave) prefsEditor.remove(pref);
+            //Then we set the default values again (only empty values, will not overwrite the others)
+            PreferenceManager.setDefaultValues(ctx, R.xml.prefs, true);
+        }
     }
 
 
