@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -47,6 +48,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.util.Pair;
 
 import com.splunk.mint.Mint;
 
@@ -554,7 +556,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void resetSchedule(int courseId){
 		ContentValues values = new ContentValues();
 		values.put(ACTIVITY_C_STARTDATE,"");
-		values.put(ACTIVITY_C_ENDDATE,"");
+		values.put(ACTIVITY_C_ENDDATE, "");
 		db.update(ACTIVITY_TABLE, values, ACTIVITY_C_COURSEID + "=" + courseId, null);
 	}
 	
@@ -1297,7 +1299,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	
 	public void searchIndexRemoveCourse(long courseId){
 		ArrayList<Activity> activities = this.getCourseActivities(courseId);
-		Log.d(TAG,"deleting course from index: "+ courseId);
+		Log.d(TAG, "deleting course from index: " + courseId);
 		for(Activity a: activities){
 			this.deleteSearchRow(a.getDbId());
 		}
@@ -1412,8 +1414,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	 * Delete the entire search index
 	 */
 	public void deleteSearchIndex(){
-		db.execSQL("DELETE FROM "+ SEARCH_TABLE);
-		Log.d(TAG,"Deleted search index...");
+		db.execSQL("DELETE FROM " + SEARCH_TABLE);
+		Log.d(TAG, "Deleted search index...");
 	}
 	
 	/*
@@ -1441,7 +1443,7 @@ public class DbHelper extends SQLiteOpenHelper {
 						" AND " + ACTIVITY_C_COURSEID + " = %d " +
 						" AND " + ACTIVITY_C_SECTIONID + " = %d", activity.getActId(), activity.getCourseId(), activity.getSectionId());
 		
-		Log.d(TAG,"sql: " + sql);
+		Log.d(TAG, "sql: " + sql);
 		Cursor c = db.rawQuery(sql,null);
 	    if(c !=null && c.getCount()>0){
 	    	c.moveToFirst();
@@ -1511,4 +1513,37 @@ public class DbHelper extends SQLiteOpenHelper {
 	    	return true;
 	    }
 	}
+
+    public void insertUserPreferences(String username, List<Pair<String, String>> preferences){
+        beginTransaction();
+        for (Pair<String, String> prefence : preferences) {
+            ContentValues values = new ContentValues();
+            values.put(USER_PREFS_C_USERNAME, username);
+            values.put(USER_PREFS_C_PREFKEY, prefence.first);
+            values.put(USER_PREFS_C_PREFVALUE, prefence.second);
+            db.insertWithOnConflict(USER_PREFS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+        endTransaction(true);
+    }
+
+    public List<Pair<String, String>> getUserPreferences(String username){
+        ArrayList<Pair<String, String>> prefs = new ArrayList<>();
+        String whereClause = USER_PREFS_C_USERNAME + "=? ";
+        String[] args = new String[] { username };
+
+        Cursor c = db.query(USER_TABLE, null, whereClause, args, null, null, null);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+
+            String prefKey = c.getString(c.getColumnIndex(USER_PREFS_C_PREFKEY));
+            String prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
+            Pair<String, String> pref = new Pair<>(prefKey, prefValue);
+            prefs.add(pref);
+
+            c.moveToNext();
+        }
+        c.close();
+
+        return prefs;
+    }
 }
