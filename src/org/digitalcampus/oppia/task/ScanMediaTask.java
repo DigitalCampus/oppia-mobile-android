@@ -25,8 +25,8 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadService;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -61,7 +61,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
 				for(Media m: media){
 					publishProgress(m.getFilename());
-					String filename = FileUtils.getMediaPath(ctx) + m.getFilename();
+					String filename = Storage.getMediaPath(ctx) + m.getFilename();
 					File mediaFile = new File(filename);
 					if((!mediaFile.exists()) || ( (downloadingMedia!=null)&&(downloadingMedia.contains(m.getDownloadUrl())) )) {
 						// check media not already in list

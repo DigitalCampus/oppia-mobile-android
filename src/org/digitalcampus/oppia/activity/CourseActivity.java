@@ -45,20 +45,19 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-
-public class CourseActivity extends FragmentActivity implements ActionBar.TabListener, OnInitListener {
+public class CourseActivity extends AppActivity implements ActionBar.TabListener, OnInitListener {
 
 	public static final String TAG = CourseActivity.class.getSimpleName();
 	public static final String BASELINE_TAG = "BASELINE";
@@ -91,9 +90,9 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 			section = (Section) bundle.getSerializable(Section.TAG);
 			course = (Course) bundle.getSerializable(Course.TAG);
 			activities = section.getActivities();
-			currentActivityNo = (Integer) bundle.getSerializable(SectionListAdapter.TAG_PLACEHOLDER);
+			currentActivityNo = bundle.getInt(SectionListAdapter.TAG_PLACEHOLDER);
 			if (bundle.getSerializable(CourseActivity.BASELINE_TAG) != null) {
-				this.isBaseline = (Boolean) bundle.getBoolean(CourseActivity.BASELINE_TAG);
+				this.isBaseline = bundle.getBoolean(CourseActivity.BASELINE_TAG);
 			}
 			// set image
 			BitmapDrawable bm = ImageUtils
@@ -176,7 +175,7 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem item = (MenuItem) menu.findItem(R.id.menu_tts);
+		MenuItem item = menu.findItem(R.id.menu_tts);
 		if (ttsRunning) {
 			item.setTitle(R.string.menu_stop_read_aloud);
 		} else {
@@ -319,23 +318,18 @@ public class CourseActivity extends FragmentActivity implements ActionBar.TabLis
 			HashMap<String,String> params = new HashMap<String,String>();
 			params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,TAG);
 			myTTS.speak(((WidgetFactory) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, params);
-			myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-				
-                @Override
-                public void onDone(String utteranceId){
-            		CourseActivity.this.ttsRunning = false;
-            		myTTS = null;
-                }
-
-                @Override
-                public void onError(String utteranceId){
-                }
-
-                @Override
-                public void onStart(String utteranceId){
-                }
-            	});
-		} else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onDone(String utteranceId){
+                        CourseActivity.this.ttsRunning = false;
+                        myTTS = null;
+                    }
+                    @Override public void onError(String utteranceId){ }
+                    @Override public void onStart(String utteranceId){ }
+                });
+            }
+        } else {
 			// TTS not installed so show message
 			Toast.makeText(this, this.getString(R.string.error_tts_start), Toast.LENGTH_LONG).show();
 		}

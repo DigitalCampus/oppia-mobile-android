@@ -88,7 +88,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         	this.showUpdatesOnly = true;
         }
 
-        courses = new ArrayList<CourseIntallViewAdapter>();
+        courses = new ArrayList<>();
         dla = new DownloadCourseListAdapter(this, courses);
         dla.setOnClickListener(new CourseListListener());
         ListView listView = (ListView) findViewById(R.id.tag_list);
@@ -140,7 +140,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	    try {
 			this.json = new JSONObject(savedInstanceState.getString("json"));
             ArrayList<CourseIntallViewAdapter> savedCourses = (ArrayList<CourseIntallViewAdapter>) savedInstanceState.getSerializable("courses");
-            this.courses.addAll(savedCourses);
+            if (savedCourses!=null) this.courses.addAll(savedCourses);
 		} catch (Exception e) {
             // error in the json so just get the list again
         }
@@ -183,7 +183,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
                 CourseIntallViewAdapter course = new CourseIntallViewAdapter(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 				
-				ArrayList<Lang> titles = new ArrayList<Lang>();
+				ArrayList<Lang> titles = new ArrayList<>();
 				JSONObject jsonTitles = json_obj.getJSONObject("title");
 				Iterator<?> keys = jsonTitles.keys();
 		        while( keys.hasNext() ){
@@ -193,7 +193,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		        }
                 course.setTitles(titles);
 		        
-		        ArrayList<Lang> descriptions = new ArrayList<Lang>();
+		        ArrayList<Lang> descriptions = new ArrayList<>();
 		        if (json_obj.has("description") && !json_obj.isNull("description")){
 		        	try {
 						JSONObject jsonDescriptions = json_obj.getJSONObject("description");

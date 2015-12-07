@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -38,24 +39,26 @@ public class CourseMetaPageActivity extends AppActivity {
 	public static final String TAG = CourseMetaPageActivity.class.getSimpleName();
 	private Course course;
 	private SharedPreferences prefs;
-	private int pageid;
-	private CourseMetaPage cmp;
+    private CourseMetaPage cmp;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_metapage);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			course = (Course) bundle.getSerializable(Course.TAG);
 			setTitle(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-			pageid = (Integer) bundle.getSerializable(CourseMetaPage.TAG);
-			cmp = course.getMetaPage(pageid);
+            int pageID = bundle.getInt(CourseMetaPage.TAG);
+			cmp = course.getMetaPage(pageID);
 		}
 		
 		TextView titleTV = (TextView) findViewById(R.id.course_title);

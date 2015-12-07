@@ -22,28 +22,27 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
+import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,16 +62,20 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         setContentView(R.layout.start_up);
         tvProgress = (TextView) this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        Mint.setUserIdentifier(prefs.getString(PrefsActivity.PREF_USER_NAME, "anon"));
-        
-        UpgradeManagerTask umt = new UpgradeManagerTask(this);
-		umt.setUpgradeListener(this);
-		ArrayList<Object> data = new ArrayList<Object>();
- 		Payload p = new Payload(data);
-		umt.execute(p);
- 		
+        String username = SessionManager.getUsername(this);
+        Mint.setUserIdentifier( username.equals("") ? "anon" : username);
 	}
-	
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        UpgradeManagerTask umt = new UpgradeManagerTask(this);
+        umt.setUpgradeListener(this);
+        ArrayList<Object> data = new ArrayList<>();
+        Payload p = new Payload(data);
+        umt.execute(p);
+    }
 	
     private void updateProgress(String text){
     	if(tvProgress != null){
@@ -83,7 +86,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	private void endStartUpScreen() {
 			
         // launch new activity and close splash screen
-		if (!MobileLearning.isLoggedIn(this)) {
+		if (!SessionManager.isLoggedIn(this)) {
 			startActivity(new Intent(StartUpActivity.this, WelcomeActivity.class));
 			finish();
 		} else {
@@ -93,10 +96,10 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     }
 
 	private void installCourses(){
-		File dir = new File(FileUtils.getDownloadPath(this));
+		File dir = new File(Storage.getDownloadPath(this));
 		String[] children = dir.list();
 		if (children != null) {
-			ArrayList<Object> data = new ArrayList<Object>();
+			ArrayList<Object> data = new ArrayList<>();
      		Payload payload = new Payload(data);
 			InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(this);
 			imTask.setInstallerListener(this);
@@ -106,58 +109,64 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 		}
 	}
 	
-	public void upgradeComplete(Payload p) {
-		
-		 // set up local dirs
- 		if(!FileUtils.createDirs(this)){
- 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
- 			builder.setCancelable(false);
- 			builder.setTitle(R.string.error);
- 			builder.setMessage(R.string.error_sdcard);
- 			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
- 				public void onClick(DialogInterface dialog, int which) {
- 					StartUpActivity.this.finish();
- 				}
- 			});
- 			builder.show();
- 			return;
- 		}
- 		
-		if(p.isResult()){
-			Payload payload = new Payload();
-			PostInstallTask piTask = new PostInstallTask(this);
-			piTask.setPostInstallListener(this);
-			piTask.execute(payload);
-		} else {
-			// now install any new courses
-			this.installCourses();
-		}
-		
+	public void upgradeComplete(final Payload p) {
+
+        if (Storage.getStorageStrategy().needsUserPermissions(this)){
+            Log.d(TAG, "Asking user for storage permissions");
+            Storage.getStorageStrategy().askUserPermissions(this, new StorageAccessListener() {
+                @Override
+                public void onAccessGranted(boolean isGranted) {
+                    Log.d(TAG, "Access granted for storage: " + isGranted);
+                    if (!isGranted) {
+                        Toast.makeText(StartUpActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
+                    }
+                    afterUpgrade(p);
+                }
+            });
+        }
+        else{
+            afterUpgrade(p);
+        }
 	}
 
-	public void upgradeProgressUpdate(String s) {
-		this.updateProgress(s);
-	}
+    private void afterUpgrade(Payload p){
+        // set up local dirs
+        if(!Storage.createFolderStructure(this)){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.error);
+            builder.setMessage(R.string.error_sdcard);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    StartUpActivity.this.finish();
+                }
+            });
+            builder.show();
+            return;
+        }
 
+        if(p.isResult()){
+            Payload payload = new Payload();
+            PostInstallTask piTask = new PostInstallTask(this);
+            piTask.setPostInstallListener(this);
+            piTask.execute(payload);
+        } else {
+            // now install any new courses
+            this.installCourses();
+        }
+    }
+
+	public void upgradeProgressUpdate(String s) { this.updateProgress(s); }
 	public void postInstallComplete(Payload response) {
 		this.installCourses();
 	}
 
-	public void downloadComplete(Payload p) {
-		// do nothing
-		
-	}
-
-	public void downloadProgressUpdate(DownloadProgress dp) {
-		// do nothing
-		
-	}
+	public void downloadComplete(Payload p) { }
+	public void downloadProgressUpdate(DownloadProgress dp) { }
 
 	public void installComplete(Payload p) {
 		if(p.getResponseData().size()>0){
-			Editor e = prefs.edit();
-			e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
-			e.commit();
+            prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0).apply();
 		}
 		endStartUpScreen();	
 	}

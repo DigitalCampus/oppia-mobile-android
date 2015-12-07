@@ -17,30 +17,17 @@
 
 package org.digitalcampus.oppia.utils.storage;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Build;
-import android.os.StatFs;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
-
-
-
-
-import org.digitalcampus.oppia.application.MobileLearning;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -48,71 +35,7 @@ public class FileUtils {
 
 	public static final String TAG = FileUtils.class.getSimpleName();
 	public static final int BUFFER_SIZE = 1024;
-	
-	public static final String APP_ROOT_DIR_NAME = "digitalcampus";
-	
-	public static final String APP_COURSES_DIR_NAME = "modules";
-	public static final String APP_DOWNLOAD_DIR_NAME = "download";
-	public static final String APP_MEDIA_DIR_NAME = "media";
 
-    public static int BUFFER_SIZE_CONFIG = 1024;
-
-    private static StorageAccessStrategy storageStrategy;
-    public static void setStorageStrategy(StorageAccessStrategy strategy){
-        storageStrategy = strategy;
-    }
-    public static StorageAccessStrategy getStorageStrategy() {
-        return storageStrategy;
-    }
-
-	public static boolean createDirs(Context ctx) {
-
-        if (!storageStrategy.isStorageAvailable(ctx)){
-            Log.d(TAG, "Storage not available");
-            return false;
-        }
-
-        //BUFFER_SIZE_CONFIG = 21;
-
-		String[] dirs = { FileUtils.getCoursesPath(ctx), FileUtils.getMediaPath(ctx), FileUtils.getDownloadPath(ctx) };
-
-		for (String dirName : dirs) {
-			File dir = new File(dirName);
-			if (!dir.exists()) {
-				if (!dir.mkdirs()) {
-					Log.d(TAG, dirName);
-					Log.d(TAG, "can't mkdirs");
-					return false;
-				}
-			} else {
-				if (!dir.isDirectory()) {
-					Log.d(TAG, "not a directory");
-					return false;
-				}
-			}
-		}
-		//After creating the necessary folders, we create the .nomedia file
-		createNoMediaFile(ctx);
-		
-		return true;
-	}
-	
-	public static String getStorageLocationRoot(Context ctx){
-		return storageStrategy.getStorageLocation(ctx);
-	}
-	
-	public static String getCoursesPath(Context ctx){
-		return getStorageLocationRoot(ctx) + File.separator + "modules" + File.separator;
-	}
-	
-	public static String getDownloadPath(Context ctx){
-		return getStorageLocationRoot(ctx) + File.separator + "download" + File.separator;
-	}
-	
-	public static String getMediaPath(Context ctx){
-		return getStorageLocationRoot(ctx) + File.separator + "media" + File.separator;
-	}
-	
 	// This function converts the zip file into uncompressed files which are
 	// placed in the destination directory
 	// destination directory should be created first
@@ -246,13 +169,7 @@ public class FileUtils {
         }
 	}
 
-	public static boolean mediaFileExists(Context ctx, String filename) {
-		File media = new File(FileUtils.getMediaPath(ctx) + filename);
-		Log.d(TAG,"Looking for: " + FileUtils.getMediaPath(ctx) + filename);
-        return media.exists();
-	}
-
-    private static long dirSize(File dir){
+    public static long dirSize(File dir){
         if (dir.exists() && dir.isDirectory()) {
             long result = 0;
             File[] fileList = dir.listFiles();
@@ -266,40 +183,6 @@ public class FileUtils {
             return result;
         }
         return 0;
-    }
-
-	public static void createNoMediaFile(Context ctx){
-		String storagePath = storageStrategy.getStorageLocation(ctx);
-		File dir = new File(storagePath);
-		File nomedia = new File(dir, ".nomedia");
-		if (!nomedia.exists()){
-			boolean fileCreated = false;
-			try {
-				fileCreated = nomedia.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			Log.d(TAG, (fileCreated ? "File .nomedia created in " : "Failed creating .nomedia file in ") + dir.getAbsolutePath());
-		}
-	}
-
-    @SuppressWarnings("deprecation")
-	public static long getAvailableStorageSize(Context ctx){
-        String path = getStorageLocationRoot(ctx);
-        StatFs stat = new StatFs(path);
-        long bytesAvailable;
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
-        }
-        else{
-            bytesAvailable = (long)stat.getBlockSize() * (long)stat.getAvailableBlocks();
-        }
-        return bytesAvailable;
-    }
-
-    public static long getTotalStorageUsed(Context ctx){
-        File dir = new File(getStorageLocationRoot(ctx));
-        return dirSize(dir);
     }
 
 	public static void cleanUp(File tempDir, String path) {
@@ -349,34 +232,4 @@ public class FileUtils {
 		}
 	}
 
-	public static String getLocalizedFilePath(Activity act, String currentLang, String fileName) {
-		String filePath = "www" + File.separator + currentLang + File.separator + fileName;
-		try {
-			InputStream stream = act.getAssets().open(filePath);
-			stream.close();
-			return "file:///android_asset/" + filePath;
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		}
-
-		String localeFilePath = "www" + File.separator + Locale.getDefault().getLanguage() + File.separator + fileName;
-		try {
-			InputStream stream = act.getAssets().open(localeFilePath);
-			stream.close();
-			return "file:///android_asset/" + localeFilePath;
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		}
-
-		String defaultFilePath = "www" + File.separator + MobileLearning.DEFAULT_LANG + File.separator + fileName;
-		try {
-			InputStream stream = act.getAssets().open(defaultFilePath);
-			stream.close();
-			return "file:///android_asset/" + defaultFilePath;
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		}
-		return "";
-
-	}
 }

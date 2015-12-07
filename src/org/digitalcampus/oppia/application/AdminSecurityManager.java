@@ -31,7 +31,6 @@ public class AdminSecurityManager {
         void onPermissionGranted();
     }
 
-
     public static boolean isAdminProtectionEnabled(Context ctx){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         return prefs.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);

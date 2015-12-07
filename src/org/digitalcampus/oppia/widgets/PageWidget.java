@@ -31,6 +31,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -39,6 +40,7 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -144,7 +146,7 @@ public class PageWidget extends WidgetFactory {
 					String mediaFileName = url.substring(startPos, url.length());
 
 					// check video file exists
-					boolean exists = FileUtils.mediaFileExists(PageWidget.super.getActivity(), mediaFileName);
+					boolean exists = Storage.mediaFileExists(PageWidget.super.getActivity(), mediaFileName);
 					if (!exists) {
 						Log.d(TAG,PageWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName));
 						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName),
@@ -154,7 +156,7 @@ public class PageWidget extends WidgetFactory {
 						Log.d(TAG,"Media found: " + mediaFileName);
 					}
 
-					String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath(PageWidget.super.getActivity()) + mediaFileName);
+					String mimeType = FileUtils.getMimeType(Storage.getMediaPath(PageWidget.super.getActivity()) + mediaFileName);
 
 					if (!FileUtils.supportedMediafileType(mimeType)) {
 						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
@@ -200,7 +202,7 @@ public class PageWidget extends WidgetFactory {
 			ArrayList<Media> mediaList = this.activity.getMedia();
 			boolean completed = true;
 			DbHelper db = new DbHelper(super.getActivity());
-			long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 			for (Media m : mediaList) {
 				if (!db.activityCompleted(this.course.getCourseId(), m.getDigest(), userId)) {
 					completed = false;

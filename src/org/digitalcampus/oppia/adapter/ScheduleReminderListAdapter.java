@@ -24,6 +24,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
 
 import android.content.Context;
@@ -57,7 +58,7 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 	    View rowView = inflater.inflate(R.layout.schedule_reminder_list_row, parent, false);
 	    org.digitalcampus.oppia.model.Activity a = activityList.get(position);
 	    DbHelper db = new DbHelper(ctx);
-		long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		long userId = db.getUserId(SessionManager.getUsername(ctx));
 		Course course = db.getCourse(a.getCourseId(), userId);
 		DatabaseManager.getInstance().closeDatabase();
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());

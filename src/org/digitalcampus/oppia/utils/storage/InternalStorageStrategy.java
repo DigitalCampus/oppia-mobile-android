@@ -17,11 +17,13 @@
 
 package org.digitalcampus.oppia.utils.storage;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.listener.StorageAccessListener;
 
 import java.io.File;
 
@@ -53,6 +55,13 @@ public class InternalStorageStrategy implements StorageAccessStrategy{
     public boolean isStorageAvailable(Context ctx) {
         //Internal storage is always available :)
         return true;
+    }
+
+    @Override
+    public boolean needsUserPermissions(Context ctx) { return false; }
+    @Override
+    public void askUserPermissions(Activity activity, StorageAccessListener listener) {
+        listener.onAccessGranted(true);
     }
 
     //@Override

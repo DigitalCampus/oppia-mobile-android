@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import com.splunk.mint.Mint;
 
@@ -73,7 +73,7 @@ public class AboutFragment extends Fragment{
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		webView = (WebView) super.getActivity().findViewById(R.id.about_webview);
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-		String url = FileUtils.getLocalizedFilePath(super.getActivity(),lang, "about.html");
+		String url = Storage.getLocalizedFilePath(super.getActivity(), lang, "about.html");
 
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		webView.getSettings().setDefaultFontSize(defaultFontSize);

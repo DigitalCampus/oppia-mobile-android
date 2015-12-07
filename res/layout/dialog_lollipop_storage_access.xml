@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView4"
+            android:src="@drawable/storage_title"
+            android:adjustViewBounds="true"
+            android:background="@color/highlight_light"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/storageAccess_help1"
+            android:id="@+id/textView1"
+
+            android:padding="@dimen/padding_medium"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/storageAccess_help2"
+            android:id="@+id/textView2"
+            android:padding="@dimen/padding_medium"/>
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView5"
+            android:src="@drawable/storage_step1"
+            android:background="@color/highlight_light"
+            android:adjustViewBounds="true"
+            android:padding="0dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/storageAccess_help3"
+            android:id="@+id/textView3"
+            android:padding="@dimen/padding_medium"/>
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView6"
+            android:src="@drawable/storage_step2"
+            android:background="@color/highlight_light"
+            android:adjustViewBounds="true"
+            android:padding="0dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/storageAccess_help4"
+            android:id="@+id/textView4"
+            android:padding="@dimen/padding_medium"/>
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView7"
+            android:src="@drawable/storage_step3"
+            android:background="@color/highlight_light"
+            android:adjustViewBounds="true"
+            android:padding="0dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/storageAccess_help5"
+            android:id="@+id/textView5"
+            android:padding="@dimen/padding_medium"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select SD Card"
+            android:id="@+id/acceptBtn"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/padding_large"
+            android:layout_marginBottom="@dimen/padding_large"/>
+    </LinearLayout>
+</ScrollView>

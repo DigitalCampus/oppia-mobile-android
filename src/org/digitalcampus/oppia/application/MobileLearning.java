@@ -22,7 +22,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.joda.time.format.DateTimeFormat;
@@ -75,7 +75,7 @@ public class MobileLearning extends Application {
 	public static final int RESOURCE_READ_TIME = 3;
 	public static final int URL_READ_TIME = 5;
 	public static final String USER_AGENT = "OppiaMobile Android: ";
-    public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_INTERNAL;
+    public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_EXTERNAL;
 
     public static final int SCORECARD_ANIM_DURATION = 800;
     public static final long MEDIA_SCAN_TIME_LIMIT = 3600;
@@ -87,6 +87,9 @@ public class MobileLearning extends Application {
 	public static final boolean MENU_ALLOW_SETTINGS = true;
 	public static final boolean MENU_ALLOW_MONITOR = true;
 	public static final boolean MENU_ALLOW_LOGOUT = true;
+
+    public static final boolean SESSION_EXPIRATION_ENABLED = true;
+    public static final int SESSION_EXPIRATION_TIMEOUT = 1500;
 	
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -102,17 +105,6 @@ public class MobileLearning extends Application {
 	
 	// for tracking if SubmitQuizAttemptsTask is already running
 	public SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = null;
-	
-	
-	public static boolean isLoggedIn(Context ctx) {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		String username = prefs.getString(PrefsActivity.PREF_USER_NAME, "");
-		if ((username == null) || username.trim().equals("")) {
-			return false;
-		} else {
-			return true;
-		}
-	}
 
     @Override
     public void onCreate() {
@@ -124,9 +116,8 @@ public class MobileLearning extends Application {
         Context ctx = getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
-       ;
 
-        if ( (storageOption == null) || (storageOption.trim().equals("")) ){
+        if (storageOption.trim().equals("")){
             //If there is not storage option set, set the default option
 
             storageOption = DEFAULT_STORAGE_OPTION;
@@ -139,19 +130,18 @@ public class MobileLearning extends Application {
         }
         else{
             StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
-            FileUtils.setStorageStrategy(strategy);
+            Storage.setStorageStrategy(strategy);
         }
         Log.d(TAG, "Storage option: " + storageOption);
     }
 
     private boolean setStorageOption(Context ctx, SharedPreferences prefs, String storageOption){
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption);
-        editor.commit();
+        editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption).apply();
 
         StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
         boolean success = strategy.updateStorageLocation(ctx);
-        if (success) FileUtils.setStorageStrategy(strategy);
+        if (success) Storage.setStorageStrategy(strategy);
         return success;
     }
 

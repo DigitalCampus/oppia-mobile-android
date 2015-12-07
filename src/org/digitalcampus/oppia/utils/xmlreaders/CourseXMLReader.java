@@ -29,6 +29,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Lang;
@@ -88,7 +89,7 @@ public class CourseXMLReader {
                     SAXParser parser = parserFactory.newSAXParser();
                     reader = parser.getXMLReader();
                     DbHelper db = new DbHelper(ctx);
-                    long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+                    long userId = db.getUserId(SessionManager.getUsername(ctx));
                     completeParseHandler = new CourseXMLHandler(courseId, userId, db);
 
                     reader.setContentHandler(completeParseHandler);

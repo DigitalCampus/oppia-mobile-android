@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -47,6 +48,7 @@ import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -169,8 +171,9 @@ public class QuizWidget extends WidgetFactory {
             } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_SECTION){
 
                 // check to see if all previous section activities have been completed
-                DbHelper db = new DbHelper(getView().getContext());
-                long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+
+                DbHelper db = new DbHelper(getActivity());
+                long userId = db.getUserId(SessionManager.getUsername(getActivity()));
                 boolean completed = db.isPreviousSectionActivitiesCompleted(course, activity, userId);
                 DatabaseManager.getInstance().closeDatabase();
 
@@ -186,8 +189,8 @@ public class QuizWidget extends WidgetFactory {
                 }
             } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
                 // check to see if all previous course activities have been completed
-                DbHelper db = new DbHelper(getView().getContext());
-                long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+                DbHelper db = new DbHelper(getActivity());
+                long userId = db.getUserId(SessionManager.getUsername(getActivity()));
                 boolean completed = db.isPreviousCourseActivitiesCompleted(course, activity, userId);
                 DatabaseManager.getInstance().closeDatabase();
 
@@ -398,12 +401,13 @@ public class QuizWidget extends WidgetFactory {
 		Log.d(TAG,data);
 		
 		DbHelper db = new DbHelper(super.getActivity());
-		long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+		long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 		
 		QuizAttempt qa = new QuizAttempt();
 		qa.setCourseId(course.getCourseId());
 		qa.setUserId(userId);
 		qa.setData(data);
+
 		qa.setActivityDigest(activity.getDigest());
 		qa.setScore(quiz.getUserscore());
 		qa.setMaxscore(quiz.getMaxscore());
@@ -622,13 +626,13 @@ public class QuizWidget extends WidgetFactory {
 
 		public void onClick(View v) {
 			// check video file exists
-			boolean exists = FileUtils.mediaFileExists(QuizWidget.super.getActivity(), mediaFileName);
+			boolean exists = Storage.mediaFileExists(QuizWidget.super.getActivity(), mediaFileName);
 			if (!exists) {
 				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName), Toast.LENGTH_LONG).show();
 			    return;
             }
 
-			String mimeType = FileUtils.getMimeType(FileUtils.getMediaPath(QuizWidget.super.getActivity()) + mediaFileName);
+			String mimeType = FileUtils.getMimeType(Storage.getMediaPath(QuizWidget.super.getActivity()) + mediaFileName);
 			if (!FileUtils.supportedMediafileType(mimeType)) {
 				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
 						Toast.LENGTH_LONG).show();

@@ -39,7 +39,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -84,7 +84,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         
         try {
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            player.setDataSource(this, Uri.parse(FileUtils.getMediaPath(this) + mediaFileName));
+            player.setDataSource(this, Uri.parse(Storage.getMediaPath(this) + mediaFileName));
             player.setOnPreparedListener(this);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

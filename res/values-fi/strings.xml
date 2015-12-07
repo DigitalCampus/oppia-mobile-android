@@ -52,7 +52,7 @@
     <string name="title_stats_unsubmitted">No activities waiting to submit</string>
     <string name="title_prefs">Settings</string>
     <string name="title_scorecard">Scorecard</string>
-    <string name="title_search">Search</string>
+    <string name="search.activity_title">Search</string>
     <string name="title_tag_select_activity">Select Category</string>
     <string name="title_welcome">OppiaMobile</string>
     <string name="version">Version: %1$s</string>
@@ -245,9 +245,9 @@
 	
 	<string name="course_draft">(Draft version)</string>
 	
-	<string name="search_result_summary">%1$d results for \"%2$s\"</string>
-	<string name="search_searching">Searching...</string>
-	<string name="search_no_results">No results found for \"%1$s\"</string>
+	<string name="search.result_summary">%1$d results for \"%2$s\"</string>
+	<string name="search.message.searching">Searching...</string>
+	<string name="search.message.no_results">No results found for \"%1$s\"</string>
 	<string name="submit_stats_btn_text">Send now</string>
 	
 	<string name="media_player_description">Oppia Media Player</string>
