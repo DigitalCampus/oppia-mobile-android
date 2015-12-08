@@ -111,7 +111,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
                 Bundle tb = new Bundle();
                 tb.putSerializable(Section.TAG, section);
                 tb.putSerializable(Course.TAG, course);
-                tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, position);
+                tb.putInt(SectionListAdapter.TAG_PLACEHOLDER, position);
                 intent.putExtras(tb);
                 ctx.startActivity(intent);
             }
@@ -128,7 +128,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
             View activityContainer;
         }
 
-        private ArrayList<Activity> listActivities = new ArrayList<Activity>();
+        private ArrayList<Activity> listActivities = new ArrayList<>();
         private String locale;
         private String courseLocation;
 

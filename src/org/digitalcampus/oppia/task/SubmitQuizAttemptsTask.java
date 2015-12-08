@@ -95,16 +95,14 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 						payload.setResult(true);
 						break;
 					case 400: // bad request - so to prevent re-submitting over and
-								// over
-								// just mark as submitted
+								// over just mark as submitted
 						DbHelper db2 = new DbHelper(ctx);
 						db2.markQuizSubmitted(qa.getId());
 						DatabaseManager.getInstance().closeDatabase();
 						payload.setResult(false);
 						break;
 					case 500: // server error - so to prevent re-submitting over and
-								// over
-						// just mark as submitted
+								// over just mark as submitted
 						DbHelper db3 = new DbHelper(ctx);
 						db3.markQuizSubmitted(qa.getId());
 						DatabaseManager.getInstance().closeDatabase();

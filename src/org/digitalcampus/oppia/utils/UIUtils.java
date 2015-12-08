@@ -26,6 +26,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
@@ -61,7 +62,7 @@ public class UIUtils {
 		DbHelper db = new DbHelper(ctx);
 		User u;
 		try {
-			u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+			u = db.getUser(SessionManager.getUsername(ctx));
 			Log.d(TAG,"username: " + u.getUsername());
 			Log.d(TAG,"points: " + u.getPoints());
 		} catch (UserNotFoundException e) {

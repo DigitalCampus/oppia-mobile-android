@@ -34,12 +34,13 @@ import org.digitalcampus.oppia.fragments.AboutFragment;
 import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
 import org.digitalcampus.oppia.fragments.StatsFragment;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AboutActivity extends FragmentActivity implements ActionBar.TabListener {
+public class AboutActivity extends AppActivity implements ActionBar.TabListener {
 
 	public static final String TAG = AboutActivity.class.getSimpleName();
 	
@@ -86,11 +87,11 @@ public class AboutActivity extends FragmentActivity implements ActionBar.TabList
 		Fragment fAbout = AboutFragment.newInstance();
 		fragments.add(fAbout);
 		
-		String urlHelp = FileUtils.getLocalizedFilePath(this,lang, "help.html");
+		String urlHelp = Storage.getLocalizedFilePath(this, lang, "help.html");
 		Fragment fHelp = OppiaWebViewFragment.newInstance(TAB_HELP, urlHelp);
 		fragments.add(fHelp);
 		
-		String url = FileUtils.getLocalizedFilePath(this,lang, "privacy.html");
+		String url = Storage.getLocalizedFilePath(this,lang, "privacy.html");
 		Fragment fPrivacy = OppiaWebViewFragment.newInstance(TAB_PRIVACY, url);
 		fragments.add(fPrivacy);
 		

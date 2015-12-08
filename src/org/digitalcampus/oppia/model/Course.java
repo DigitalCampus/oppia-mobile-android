@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.model;
 
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,7 +95,7 @@ public class Course implements Serializable {
 	}
 
 	public String getImageFileFromRoot() {
-		return this.root + File.separator + FileUtils.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + imageFile;
+		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + imageFile;
 	}
 	
 	public void setImageFile(String imageFile) {
@@ -205,13 +205,13 @@ public class Course implements Serializable {
 	}
 
 	public String getLocation() {
-		return this.root + File.separator + FileUtils.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator;
+		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator;
 		
 	}
 
 	public String getCourseXMLLocation(){
 		//String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		return this.root + File.separator + FileUtils.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
+		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
 	}
 	
 

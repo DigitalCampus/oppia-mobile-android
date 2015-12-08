@@ -130,36 +130,42 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (aDialog == null) {
-			//this.isBaselineCompleted();
-		} else {
-			aDialog.show();
-		}
+        if (aDialog != null) {
+            aDialog.show();
+        }
 
-        if (digestJumpTo != null){
+        if (digestJumpTo != null && isBaselineCompleted()){
             startCourseActivityByDigest(digestJumpTo);
             digestJumpTo = null;
             return;
         }
 
-		// start a new tracker service
-		Intent service = new Intent(this, TrackerService.class);
+        // start a new tracker service
+        Intent service = new Intent(this, TrackerService.class);
 
-		Bundle tb = new Bundle();
-		tb.putBoolean("backgroundData", true);
-		service.putExtras(tb);
-		this.startService(service);
-		
-		// remove any saved state info from shared prefs in case they interfere with subsequent page views
-		Editor editor = prefs.edit();
-		Map<String,?> keys = prefs.getAll();
+        Bundle tb = new Bundle();
+        tb.putBoolean("backgroundData", true);
+        service.putExtras(tb);
+        this.startService(service);
 
-		for(Map.Entry<String,?> entry : keys.entrySet()){
-			if (entry.getKey().startsWith("widget_")){
-				editor.remove(entry.getKey());
-			}            
-		 }
-		editor.commit();
+        // remove any saved state info from shared prefs in case they interfere with subsequent page views
+        Editor editor = prefs.edit();
+        Map<String,?> keys = prefs.getAll();
+
+        for(Map.Entry<String,?> entry : keys.entrySet()){
+            if (entry.getKey().startsWith("widget_")){
+                editor.remove(entry.getKey());
+            }
+        }
+        editor.commit();
+
+        if ((sections != null) && (sections.size()>0)){
+            if (!isBaselineCompleted()){
+                showBaselineMessage(null);
+            }
+        }
+
+
 	}
 
 	@Override
@@ -167,11 +173,11 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		if (aDialog != null) {
 			aDialog.dismiss();
 			aDialog = null;
-		}
-		super.onPause();
-	}
+        }
+        super.onPause();
+    }
 
-	@Override
+    @Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
 		getMenuInflater().inflate(R.menu.activity_course_index, menu);
@@ -211,7 +217,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             } else {
                 i = new Intent(this, CourseMetaPageActivity.class);
                 tb.putSerializable(Course.TAG, course);
-                tb.putSerializable(CourseMetaPage.TAG, item.getItemId());
+                tb.putInt(CourseMetaPage.TAG, item.getItemId());
             }
             i.putExtras(tb);
             startActivityForResult(i, 1);

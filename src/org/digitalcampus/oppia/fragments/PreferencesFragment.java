@@ -56,7 +56,13 @@ public class PreferencesFragment extends PreferenceFragment {
     }
 
     public void updateStoragePref(String storageOption){
-        storagePref.setValue(storageOption);
+
+        if (PrefsActivity.STORAGE_OPTION_EXTERNAL.equals(storageOption)){
+            storagePref.setValue(storagePref.getEntryValues()[1].toString());
+        }
+        else{
+            storagePref.setValue(storageOption);
+        }
     }
 
     public void updateStorageList(){

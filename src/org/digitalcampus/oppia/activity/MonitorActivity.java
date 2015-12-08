@@ -16,6 +16,7 @@
  */
 package org.digitalcampus.oppia.activity;
 
+import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -30,10 +31,11 @@ import android.widget.LinearLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.Locale;
 
@@ -47,8 +49,11 @@ public class MonitorActivity extends AppActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
         
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		webView = new WebView(this);
@@ -66,7 +71,7 @@ public class MonitorActivity extends AppActivity {
 			this.loadMonitor();
 		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -74,24 +79,24 @@ public class MonitorActivity extends AppActivity {
 	} 
 	
 	private void loadMonitor(){ 
-		String url = "";
+		String url;
 		if(ConnectionUtils.isNetworkConnected(this)){
 			DbHelper db = new DbHelper(this);
 			User u;
 			try {
-				u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+				u = db.getUser(SessionManager.getUsername(this));
 				url = prefs.getString(PrefsActivity.PREF_SERVER, getString(R.string.prefServer)) + "mobile/monitor/?";
 				url += "username=" + u.getUsername();
 				url += "&api_key=" + u.getApiKey();
 			} catch (UserNotFoundException e) {
 				String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-	        	url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+	        	url = Storage.getLocalizedFilePath(MonitorActivity.this, lang, "monitor_not_available.html");
 			}
 			DatabaseManager.getInstance().closeDatabase();
 			
 		} else {
 			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        	url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+        	url = Storage.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
 		}
 		webView.loadUrl(url);
 	}
@@ -135,7 +140,7 @@ public class MonitorActivity extends AppActivity {
 		@Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         	String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        	String url = FileUtils.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
+        	String url = Storage.getLocalizedFilePath(MonitorActivity.this,lang,"monitor_not_available.html");
         	webView.loadUrl(url);
         }
 	}
