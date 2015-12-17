@@ -128,6 +128,7 @@ public class VideoControllerView extends FrameLayout {
     public void onFinishInflate() {
         if (mRoot != null)
             initControllerView(mRoot);
+        super.onFinishInflate();
     }
     
     public void setMediaPlayer(MediaPlayerControl player) {
@@ -208,7 +209,7 @@ public class VideoControllerView extends FrameLayout {
             mPrevButton.setVisibility(View.GONE);
         }
 
-        mProgress = (ProgressBar) v.findViewById(R.id.mediacontroller_progress);
+        mProgress = (SeekBar) v.findViewById(R.id.mediacontroller_progress);
         if (mProgress != null) {
             if (mProgress instanceof SeekBar) {
                 SeekBar seeker = (SeekBar) mProgress;
