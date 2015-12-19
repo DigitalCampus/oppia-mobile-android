@@ -28,6 +28,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -96,6 +97,8 @@ public class CourseXMLReader {
                     reader.setProperty("http://xml.org/sax/properties/lexical-handler", completeParseHandler);
                     InputStream in = new BufferedInputStream(new FileInputStream(courseXML));
                     reader.parse(new InputSource(in));
+
+                    DatabaseManager.getInstance().closeDatabase();
 
                 } catch (Exception e) {
                     Mint.logException(e);
