@@ -737,38 +737,15 @@ public class DbHelper extends SQLiteOpenHelper {
 			if (userScore > qs.getUserScore()){
 				qs.setUserScore(userScore);
 			}
+			if (c1.getInt(c1.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0){
+				qs.setPassed(true);
+			}
 			qs.setMaxScore(c1.getFloat(c1.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
 			c1.moveToNext();
 		}
 		c1.close();
 		qs.setAttempted(true);
 		
-		// find if passed
-		String s2 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=? AND "+ QUIZATTEMPTS_C_PASSED +"=1";
-		String[] args2 = new String[] { String.valueOf(userId), digest };
-		Cursor c2 = db.query(QUIZATTEMPTS_TABLE, null, s2, args2, null, null, null);
-		if (c2.getCount() > 0){
-			qs.setPassed(true);
-		}
-		c2.close();
-		
-		/*
-		String s3 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=?";
-		String[] args3 = new String[] { String.valueOf(userId), digest };
-		Cursor c3 = db.query(QUIZATTEMPTS_TABLE, new String [] {"MAX("+  QUIZATTEMPTS_C_SCORE +") as userscore"}, s3, args3, null, null, null);
-		c3.moveToFirst();
-		while (c3.isAfterLast() == false) {
-			
-			int userScore = c3.getInt(c3.getColumnIndex("userscore"));
-			if (userScore > qs.getUserScore()){
-				qs.setUserScore(userScore);
-			}
-			Log.d(TAG, "Score: " + c3.getInt(c3.getColumnIndex("userscore")));
-			Log.d(TAG, "passed: " + qs.isPassed());
-			c3.moveToNext();
-		}
-		c3.close();
-		*/
 		return qs;
 	}
 	public void insertTracker(int courseId, String digest, String data, boolean completed){
