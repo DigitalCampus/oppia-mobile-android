@@ -23,8 +23,9 @@ import java.util.List;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
+import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
-import org.digitalcampus.oppia.fragments.ScorecardFragment;
+import org.digitalcampus.oppia.fragments.CourseScorecardFragment;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.ImageUtils;
 
@@ -35,7 +36,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
@@ -87,14 +87,13 @@ public class ScorecardActivity extends AppActivity implements ActionBar.TabListe
 
 		Fragment fScorecard;
 		if(this.course != null){
-			fScorecard = ScorecardFragment.newInstance(course);
+			fScorecard = CourseScorecardFragment.newInstance(course);
             if (course.getImageFile() != null) {
-                BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
-                        R.drawable.dc_logo);
+                BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.dc_logo);
                 actionBar.setIcon(bm);
             }
 		} else {
-			fScorecard = ScorecardFragment.newInstance();
+			fScorecard = GlobalScorecardFragment.newInstance();
 		}
 
 		fragments.add(fScorecard);
