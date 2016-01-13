@@ -325,6 +325,7 @@ public class CourseActivity extends AppActivity implements ActionBar.TabListener
             Runnable setPreviousTab = new Runnable(){
                 @Override
                 public void run() {
+                    UIUtils.showAlert(CourseActivity.this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
                     actionBar.setSelectedNavigationItem(currentActivityNo);
                     viewPager.setCurrentItem(currentActivityNo);
                 }
