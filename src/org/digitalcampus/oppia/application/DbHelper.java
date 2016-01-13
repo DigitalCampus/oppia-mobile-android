@@ -56,7 +56,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	static final String TAG = DbHelper.class.getSimpleName();
 	static final String DB_NAME = "mobilelearning.db";
-	static final int DB_VERSION = 23;
+	static final int DB_VERSION = 24;
 
 	private static SQLiteDatabase db;
 	private SharedPreferences prefs;
@@ -72,6 +72,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String COURSE_C_IMAGE = "imagelink";
 	private static final String COURSE_C_LANGS = "langs";
 	private static final String COURSE_C_ORDER_PRIORITY = "orderpriority";
+    private static final String COURSE_C_SEQUENCING = "sequencing";
 	
 	private static final String ACTIVITY_TABLE = "Activity";
 	private static final String ACTIVITY_C_ID = BaseColumns._ID;
@@ -106,8 +107,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZATTEMPTS_C_MAXSCORE = "maxscore";
 	private static final String QUIZATTEMPTS_C_PASSED = "passed";
 	private static final String QUIZATTEMPTS_C_ACTIVITY_DIGEST = "actdigest";
-	
-	
+
 	private static final String SEARCH_TABLE = "search";
 	private static final String SEARCH_C_TEXT = "fulltext";
 	private static final String SEARCH_C_COURSETITLE = "coursetitle";
@@ -167,7 +167,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				+ COURSE_C_IMAGE + " text,"
 				+ COURSE_C_DESC + " text,"
 				+ COURSE_C_ORDER_PRIORITY + " integer default 0, " 
-				+ COURSE_C_LANGS + " text)";
+				+ COURSE_C_LANGS + " text, "
+                + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "' )";
 		db.execSQL(m_sql);
 	}
 	
@@ -394,6 +395,12 @@ public class DbHelper extends SQLiteOpenHelper {
             // add user preferences table
             db.execSQL("drop table if exists " + USER_PREFS_TABLE);
             createUserPrefsTable(db);
+        }
+
+        if(oldVersion <= 23 && newVersion >= 24){
+            // add field "sequencingMode" to Course table
+            String sql1 = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SEQUENCING + " text default '"+Course.SEQUENCING_MODE_NONE+"';";
+            db.execSQL(sql1);
         }
 	}
 
