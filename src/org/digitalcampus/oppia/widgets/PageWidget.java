@@ -196,7 +196,7 @@ public class PageWidget extends WidgetFactory {
 		this.isBaseline = isBaseline;
 	}
 	
-	protected boolean getActivityCompleted() {
+	public boolean getActivityCompleted() {
 		// only show as being complete if all the videos on this page have been played
 		if (this.activity.hasMedia()) {
 			ArrayList<Media> mediaList = this.activity.getMedia();

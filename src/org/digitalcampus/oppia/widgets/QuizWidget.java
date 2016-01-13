@@ -502,7 +502,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	@Override
-	protected boolean getActivityCompleted() {
+	public boolean getActivityCompleted() {
 		int passThreshold;
 		Log.d(TAG, "Threshold:" + quiz.getPassThreshold() );
 		if (quiz.getPassThreshold() != 0){

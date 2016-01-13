@@ -302,7 +302,7 @@ public class FeedbackWidget extends WidgetFactory {
 	}
 	
 	@Override
-	protected boolean getActivityCompleted() {
+	public boolean getActivityCompleted() {
 		if (isOnResultsPage) {
 			return true;
 		} else {
