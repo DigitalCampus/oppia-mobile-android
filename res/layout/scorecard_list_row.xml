@@ -1,24 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/course_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="5dp" >
 
-        <TextView
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <com.androidplot.pie.PieChart
+            android:id="@+id/scorecard_pie_chart"
+            android:layout_width="fill_parent"
+            android:layout_height="170dp"
+            />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <TextView
+                style="@style/Highlight.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/scorecard_activities_completed"
+                android:text="15"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                style="@style/ScorecardPie.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scorecard_activities_completed"
+                android:id="@+id/textView8"
+                android:layout_gravity="center_horizontal"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"
+                style="@style/ScorecardPie.Label.Separator"></View>
+            <TextView
+                style="@style/Highlight.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/scorecard_activities_total"
+                android:text="240"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-5dp"/>
+
+            <TextView
+                style="@style/ScorecardPie.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scorecard_activities_total"
+                android:id="@+id/textView9"
+                android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <TextView
             android:id="@+id/course_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_dark"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textStyle="normal" 
-            android:gravity="center"/>
-
-        <com.androidplot.pie.PieChart
-            android:id="@+id/scorecardPieChart"
-            android:layout_width="fill_parent"
-            android:layout_height="150dp"
-            android:layout_weight="1"/>
-
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"/>
 
 </LinearLayout>
