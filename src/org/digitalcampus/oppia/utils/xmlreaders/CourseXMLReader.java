@@ -161,6 +161,7 @@ public class CourseXMLReader {
 	public ArrayList<Activity> getBaselineActivities(){ return getCompleteResponses().getCourseBaseline(); }
 	public ArrayList<Media> getMedia(){ return getMediaResponses().getCourseMedia(); }
 	public String getCourseImage(){ return getMetaResponses().getCourseImage(); }
+    public String getCourseSequencingMode(){ return getMetaResponses().getCourseSequencingMode(); }
     public ArrayList<Section> getSections(){ return getCompleteResponses().getSections(); }
 
 	/*
