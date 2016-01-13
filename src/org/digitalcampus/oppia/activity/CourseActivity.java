@@ -340,6 +340,8 @@ public class CourseActivity extends AppActivity implements ActionBar.TabListener
 	}
 
     private boolean canNavigateTo(int newTab){
+        //If the course does not have a sequencing mode, we can navigate freely
+        if (course.getSequencingMode().equals(Course.SEQUENCING_MODE_NONE)) return true;
         // if it is a previous activity (or the first), no need for further checks
         if ((newTab == 0) || (newTab <= currentActivityNo)) return true;
         Activity previousActivity = activities.get(newTab - 1);
