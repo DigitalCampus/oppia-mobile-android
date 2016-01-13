@@ -64,6 +64,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	private Activity baselineActivity;
 	private AlertDialog aDialog;
     private View loadingCourseView;
+    private SectionListAdapter sla;
 
     private String digestJumpTo;
 		
@@ -160,6 +161,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         editor.commit();
 
         if ((sections != null) && (sections.size()>0)){
+            cxr.updateCourseActivity();
+            sla.notifyDataSetChanged();
             if (!isBaselineCompleted()){
                 showBaselineMessage(null);
             }
@@ -226,8 +229,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	private void createLanguageDialog() {
-		UIUtils ui = new UIUtils();
-		ui.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
 			public Boolean call() throws Exception {
 				CourseIndexActivity.this.onStart();
 				return true;
@@ -238,7 +240,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private void initializeCourseIndex(boolean animate){
 
         final ListView listView = (ListView) findViewById(R.id.section_list);
-        SectionListAdapter sla = new SectionListAdapter(CourseIndexActivity.this, course, sections);
+        sla = new SectionListAdapter(CourseIndexActivity.this, course, sections);
 
         if (animate){
             AlphaAnimation fadeOutAnimation = new AlphaAnimation(1f, 0f);

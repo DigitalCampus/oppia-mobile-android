@@ -186,4 +186,20 @@ public class CourseXMLReader {
         return null;
 	}
 
+    public void updateCourseActivity(){
+
+        DbHelper db = new DbHelper(ctx);
+        long userId = db.getUserId(SessionManager.getUsername(ctx));
+
+        for (Section section : getCompleteResponses().getSections()){
+            for (Activity activity : section.getActivities()){
+                activity.setCompleted(db.activityCompleted((int)courseId, activity.getDigest(), userId));
+            }
+        }
+        for (Activity activity : getCompleteResponses().getCourseBaseline()){
+            activity.setAttempted(db.activityAttempted((int)courseId, activity.getDigest(), userId));
+        }
+        DatabaseManager.getInstance().closeDatabase();
+    }
+
 }
