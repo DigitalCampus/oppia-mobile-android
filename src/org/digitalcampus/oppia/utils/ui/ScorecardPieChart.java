@@ -51,8 +51,7 @@ public class ScorecardPieChart {
 		this.course = course;
 	}
 
-	public void drawChart(int margin, boolean showSegementTitles, boolean delayedStart){
-		
+    public void configureChart(int margin, float donutSize, boolean showSegementTitles){
         pie.setPlotMargins(margin, margin, margin, margin);
         SegmentFormatter sfNotStarted = new SegmentFormatter();
         sfNotStarted.configure(activity.getApplicationContext(), R.xml.scorecard_pie_segment_not_started);
@@ -74,16 +73,21 @@ public class ScorecardPieChart {
         segmentNotStarted.setValue(numNotStarted);
         pie.addSeries(segmentNotStarted, sfNotStarted);
 
-        pie.getRenderer(PieRenderer.class).setDonutSize(0.55f, PieRenderer.DonutMode.PERCENT);
+        pie.getRenderer(PieRenderer.class).setDonutSize(donutSize, PieRenderer.DonutMode.PERCENT);
         pie.getBorderPaint().setColor(Color.TRANSPARENT);
         pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
 
-        createAnimator(numCompleted, numStarted, numNotStarted, delayedStart);
-		
+    }
+
+	public void drawChart(int margin, float donutSize, boolean showSegementTitles, boolean delayedStart){
+        int numCompleted = course.getNoActivitiesCompleted();
+        int numStarted = course.getNoActivitiesStarted();
+        int numNotStarted = course.getNoActivitiesNotStarted() + numStarted;
+        configureChart(margin, donutSize, showSegementTitles);
+        animate(numCompleted, numStarted, numNotStarted, delayedStart);
 	}
 
-    private void createAnimator(int numCompleted, int numStarted, int numNotStarted, boolean delayedStart){
-
+    public void animate(int numCompleted, int numStarted, int numNotStarted, boolean delayedStart){
         int total = numCompleted + numStarted + numNotStarted;
         //We create the thre valueHolders for the animation
         PropertyValuesHolder completedHolder = PropertyValuesHolder.ofFloat("completed", 0, numCompleted);
