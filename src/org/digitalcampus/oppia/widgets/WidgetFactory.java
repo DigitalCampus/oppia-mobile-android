@@ -38,7 +38,7 @@ public abstract class WidgetFactory extends Fragment {
     protected long spentTime = 0;
 	protected boolean currentTimeAccounted = false;
 	
-	protected abstract boolean getActivityCompleted();
+	public abstract boolean getActivityCompleted();
 	public abstract void saveTracker();
 	
 	public abstract String getContentToRead();

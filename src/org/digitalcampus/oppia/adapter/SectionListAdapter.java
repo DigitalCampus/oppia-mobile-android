@@ -54,9 +54,14 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
 	
 	private final Context ctx;
 	private final ArrayList<Section> sectionList;
+    private CourseClickListener listener;
 	private SharedPreferences prefs;
 	private Course course;
     private final String locale;
+
+    public interface CourseClickListener{
+        void onActivityClicked(String activityDigest);
+    }
 
 	public SectionListAdapter(Context context, Course course, ArrayList<Section> sectionList) {
 		super(context, R.layout.section_list_row, sectionList);
@@ -66,6 +71,11 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         locale = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 	}
+
+    public SectionListAdapter(Context context, Course course, ArrayList<Section> sectionList, CourseClickListener listener) {
+        this(context, course, sectionList);
+        this.listener = listener;
+    }
 
     static class SectionViewHolder{
         TextView sectionTitle;
@@ -107,13 +117,20 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
         viewHolder.sectionActivities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
  
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(ctx, CourseActivity.class);
-                Bundle tb = new Bundle();
-                tb.putSerializable(Section.TAG, section);
-                tb.putSerializable(Course.TAG, course);
-                tb.putInt(SectionListAdapter.TAG_PLACEHOLDER, position);
-                intent.putExtras(tb);
-                ctx.startActivity(intent);
+                if (listener != null){
+                    Activity act = section.getActivities().get(position);
+                    listener.onActivityClicked(act.getDigest());
+                }
+                else{
+                    //If there is no listener, we launch the activity from here
+                    Intent intent = new Intent(ctx, CourseActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(Section.TAG, section);
+                    tb.putSerializable(Course.TAG, course);
+                    tb.putInt(SectionListAdapter.TAG_PLACEHOLDER, position);
+                    intent.putExtras(tb);
+                    ctx.startActivity(intent);
+                }
             }
         });
 

@@ -54,6 +54,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     private static final String NODE_FILESIZE = "filesize";
     private static final String NODE_SECTION = "section";
     private static final String NODE_META = "meta";
+    private static final String NODE_SEQUENCING = "sequencing";
 
     private long courseId;
     private long userId;
@@ -61,6 +62,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
 
     private double courseVersionId;
     private String courseIcon;
+    private String courseSequencingMode;
     private int coursePriority;
     private ArrayList<Lang> courseDescriptions = new ArrayList<Lang>();
     private ArrayList<Lang> courseTitles = new ArrayList<Lang>();
@@ -114,6 +116,10 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
 
     public ArrayList<CourseMetaPage> getCourseMetaPages() {
         return courseMetaPages;
+    }
+
+    public String getCourseSequencingMode() {
+        return courseSequencingMode;
     }
 
     //Vars for traversing the tree
@@ -278,6 +284,13 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
                 coursePriority = Integer.parseInt(chars.toString());
             }
         }
+        else if (NODE_SEQUENCING.equals(aQName)){
+            if (chars.length() <= 0) return;
+
+            if (NODE_META.equals(parentElements.peek())) {
+                courseSequencingMode = chars.toString();
+            }
+        }
         else if (NODE_ACTIVITY.equals(aQName)){
 
             currentActivity.setTitles(actTitles);
@@ -303,7 +316,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         }
         else if (NODE_LANG.equals(aQName)){
             if (chars.length() <= 0) return;
-            courseLangs.add(new Lang(chars.toString(),""));
+            courseLangs.add(new Lang(chars.toString(), ""));
         }
         else if (NODE_PAGE.equals(aQName)){
             for (Lang title : pageTitles){
