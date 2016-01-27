@@ -35,6 +35,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
+import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -42,12 +43,13 @@ import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
+import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener{
+public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener, PreloadAccountsListener {
 
 	public final static String TAG = StartUpActivity.class.getSimpleName();
 	private TextView tvProgress;
@@ -84,15 +86,12 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     }
 	
 	private void endStartUpScreen() {
-			
         // launch new activity and close splash screen
-		if (!SessionManager.isLoggedIn(this)) {
-			startActivity(new Intent(StartUpActivity.this, WelcomeActivity.class));
-			finish();
-		} else {
-			startActivity(new Intent(StartUpActivity.this, OppiaMobileActivity.class));
-			finish();
-		}
+        startActivity(new Intent(StartUpActivity.this,
+                SessionManager.isLoggedIn(this)
+                        ? OppiaMobileActivity.class
+                        : WelcomeActivity.class));
+        this.finish();
     }
 
 	private void installCourses(){
@@ -105,9 +104,14 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 			imTask.setInstallerListener(this);
 			imTask.execute(payload);
 		} else {
-			endStartUpScreen();
+            preloadAccounts();
+
 		}
 	}
+
+    private void preloadAccounts(){
+        SessionManager.preloadUserAccounts(this, this);
+    }
 	
 	public void upgradeComplete(final Payload p) {
 
@@ -168,10 +172,18 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 		if(p.getResponseData().size()>0){
             prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0).apply();
 		}
-		endStartUpScreen();	
+		preloadAccounts();
 	}
 
 	public void installProgressUpdate(DownloadProgress dp) {
 		this.updateProgress(dp.getMessage());
 	}
+
+    @Override
+    public void onPreloadAccountsComplete(Payload payload) {
+        if ((payload!=null) && payload.isResult()){
+            Toast.makeText(this, payload.getResultResponse(), Toast.LENGTH_LONG).show();
+        }
+        endStartUpScreen();
+    }
 }
