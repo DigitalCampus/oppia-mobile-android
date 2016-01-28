@@ -271,4 +271,11 @@
     <string name="storageAccess_help3">Después, pulsa en la tarjeta SD en la lista del panel lateral izquierdo para mostrar su estructura de carpetas. En esta pantalla verás el "Almacenamiento interno" y la tarjeta SD. La tarjeta SD puede mostrarse con un nombre diferente del que aparece aquí, por ejemplo "Kingston". Es la denominada etiqueta de volumen de la tarjeta.</string>
     <string name="storageAccess_help4">Una vez seleccionada la tarjeta, no pulses sobre ninguna subcarpeta de la misma. Debes elegir la carpeta raíz de más alto nivel de la SD. Esto es importante.</string>
     <string name="storageAccess_help5">Después de seleccionar el botón de "Seleccionar SD" deberías volver a la app. La propia app comprueba por si acaso si de verdad puede escribir en la tarjeta SD seleccionada, y si el directorio seleccionado es la carpeta raíz.</string>
+    <string name="sequencing.course.message">Debes completar todas las actividades anteriores del curso antes de que ésta esté disponible.</string>
+    <string name="sequencing.dialog_title">Actividad bloqueada</string>
+    <string name="sequencing.section.message">Debes completar todas las actividades anteriores de esta sección antes de que ésta esté disponible.</string>
+    <string name="title_stats_unsubmitted">Actividades pendientes de enviar</string>
+    <string name="title_stats_submitted">Actividades enviadas al servidor</string>
+    <string name="error_preloading_accounts">Error precargando cuentas de usuario desde fichero CSV</string>
+    <string name="info.startup.preloaded_accounts">Precargadas %1$d nueva(s) cuenta(s) de usuario.</string>
 </resources>

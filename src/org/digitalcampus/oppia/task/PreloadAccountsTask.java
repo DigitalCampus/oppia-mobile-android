@@ -23,6 +23,7 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -84,7 +85,7 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
 
                 if (usersAdded>0){
                     payload.setResult(true);
-                    payload.setResultResponse("Preloaded " + usersAdded + " new user(s).");
+                    payload.setResultResponse(ctx.getString(R.string.info_startup_preloaded_accounts, usersAdded));
                 }
                 Log.d(TAG, usersAdded + " users added");
             }
@@ -92,7 +93,7 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 Mint.logException(ex);
                 ex.printStackTrace();
                 payload.setResult(true);
-                payload.setResultResponse("Error preloading users");
+                payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
             }
             finally {
                 DatabaseManager.getInstance().closeDatabase();
