@@ -161,6 +161,7 @@ public class CourseXMLReader {
 	public ArrayList<Activity> getBaselineActivities(){ return getCompleteResponses().getCourseBaseline(); }
 	public ArrayList<Media> getMedia(){ return getMediaResponses().getCourseMedia(); }
 	public String getCourseImage(){ return getMetaResponses().getCourseImage(); }
+    public String getCourseSequencingMode(){ return getMetaResponses().getCourseSequencingMode(); }
     public ArrayList<Section> getSections(){ return getCompleteResponses().getSections(); }
 
 	/*
@@ -185,5 +186,21 @@ public class CourseXMLReader {
         }
         return null;
 	}
+
+    public void updateCourseActivity(){
+
+        DbHelper db = new DbHelper(ctx);
+        long userId = db.getUserId(SessionManager.getUsername(ctx));
+
+        for (Section section : getCompleteResponses().getSections()){
+            for (Activity activity : section.getActivities()){
+                activity.setCompleted(db.activityCompleted((int)courseId, activity.getDigest(), userId));
+            }
+        }
+        for (Activity activity : getCompleteResponses().getCourseBaseline()){
+            activity.setAttempted(db.activityAttempted((int)courseId, activity.getDigest(), userId));
+        }
+        DatabaseManager.getInstance().closeDatabase();
+    }
 
 }

@@ -36,7 +36,10 @@ public class Course implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4412987572522420704L;
-	
+	public static final String SEQUENCING_MODE_NONE = "none";
+    public static final String SEQUENCING_MODE_SECTION = "section";
+    public static final String SEQUENCING_MODE_COURSE = "course";
+
 	public static final String TAG = Course.class.getSimpleName();
 	private int courseId;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
@@ -58,7 +61,8 @@ public class Course implements Serializable {
 	private int noActivities = 0;
 	private int noActivitiesCompleted = 0;
 	private int noActivitiesStarted = 0;
-	
+    private String sequencingMode = SEQUENCING_MODE_NONE;
+
 	private String root;
 	
 	public Course(String root) {
@@ -398,6 +402,12 @@ public class Course implements Serializable {
 	public int getNoActivitiesNotStarted(){
 		return this.getNoActivities() - this.getNoActivitiesCompleted() - this.getNoActivitiesStarted();
 	}
-	
-	
+
+    public String getSequencingMode() {
+        return sequencingMode;
+    }
+
+    public void setSequencingMode(String sequencingMode) {
+        this.sequencingMode = sequencingMode;
+    }
 }
