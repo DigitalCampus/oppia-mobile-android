@@ -1,33 +1,27 @@
 package org.digitalcampus.oppia.task;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
-import org.digitalcampus.mobile.learning.R;
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
-import android.content.Context;
-import android.os.AsyncTask;
-
-import com.splunk.mint.Mint;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
-    public final static String TAG = PostInstallTask.class.getSimpleName();
+    public final static String TAG = PreloadAccountsTask.class.getSimpleName();
     private Context ctx;
     private PreloadAccountsListener mListener;
 
@@ -58,7 +52,10 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 while ((line = reader.readLine()) != null) {
                     String[] rowData = line.split(CSV_SEPARATOR);
 
-                    if (rowData.length < CSV_COLUMNS) continue;
+                    if (rowData.length < CSV_COLUMNS){
+                        Log.d(TAG, "Bad csv line, ignoring: " + line);
+                        continue;
+                    }
                     User csvUser = new User();
                     csvUser.setUsername(rowData[CSV_USERNAME_COLUMN]);
                     csvUser.setPasswordEncrypted(rowData[CSV_PASSWORD_COLUMN]);
@@ -72,9 +69,11 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                     payload.setResult(true);
                     payload.setResultResponse("Preloaded " + usersAdded + " new user(s).");
                 }
+                Log.d(TAG, usersAdded + " users added");
             }
             catch (IOException ex) {
                 Mint.logException(ex);
+                ex.printStackTrace();
                 payload.setResult(true);
                 payload.setResultResponse("Error preloading users");
             }
@@ -82,6 +81,8 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 DatabaseManager.getInstance().closeDatabase();
                 try {
                     if (reader!=null) reader.close();
+                    boolean deleted = csvAccounts.delete();
+                    Log.d(TAG, "CSV file " + (deleted?"":"not ") + "deleted");
                 }
                 catch (IOException e) {
                     Mint.logException(e);
