@@ -26,12 +26,20 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.PostInstallTask;
+import org.digitalcampus.oppia.task.PreloadAccountsTask;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SessionManager {
+
+    public static final String ACCOUNTS_CSV_FILENAME = "oppia_accounts.csv";
 
     public static boolean isLoggedIn(Context ctx) {
         String username = getUsername(ctx);
@@ -139,5 +147,17 @@ public class SessionManager {
         }
     }
 
+    public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener){
+        File csvAccounts = new File(Storage.getStorageLocationRoot(ctx) + File.separator + ACCOUNTS_CSV_FILENAME);
+        if (csvAccounts.exists()){
+            Payload payload = new Payload();
+            PreloadAccountsTask task = new PreloadAccountsTask(ctx);
+            task.setPreloadAccountsListener(listener);
+            task.execute(payload);
+        }
+        else{
+            listener.onPreloadAccountsComplete(null);
+        }
+    }
 
 }

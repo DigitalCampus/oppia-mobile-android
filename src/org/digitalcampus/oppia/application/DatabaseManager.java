@@ -57,9 +57,11 @@ public class DatabaseManager {
         mOpenCounter--;
         Log.d("Database", "conns:" + mOpenCounter);
         if(mOpenCounter == 0) {
-            Log.d("Database", "Nulling dbHelper");
             // Closing database
-            mDatabase.close();
+            if (mDatabase.isOpen()){
+                mDatabase.close();
+            }
+            Log.d("Database", "Nulling dbHelper");
             mDatabaseHelper = null;
         }
     }
