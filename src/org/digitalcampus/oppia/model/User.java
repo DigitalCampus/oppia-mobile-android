@@ -111,10 +111,9 @@ public class User {
 	}
 	
 	public String getPasswordEncrypted() {
-		if (this.passwordEncypted != null){
-			return this.passwordEncypted;
-		}
-		this.passwordEncypted = DigestUtils.sha256Hex(this.password);  
+		if (this.passwordEncypted == null){
+            this.passwordEncypted = DigestUtils.sha256Hex(this.password);
+        }
 		return this.passwordEncypted;
 	}
 	
