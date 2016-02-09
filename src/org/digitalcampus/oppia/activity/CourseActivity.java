@@ -161,9 +161,6 @@ public class CourseActivity extends AppActivity implements ActionBar.TabListener
         WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
         currentWidget.pauseTimeTracking();
         currentWidget.saveTracker();
-
-        DatabaseManager.getInstance().closeDatabase();
-        db = null;
 	}
 
     public void onResume(){
@@ -171,8 +168,9 @@ public class CourseActivity extends AppActivity implements ActionBar.TabListener
         WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
         currentWidget.resumeTimeTracking();
 
-        db = new DbHelper(this);
+        DbHelper db = new DbHelper(this);
         userID = db.getUserId(SessionManager.getUsername(this));
+        DatabaseManager.getInstance().closeDatabase();
     }
 	
 	@Override
@@ -346,7 +344,10 @@ public class CourseActivity extends AppActivity implements ActionBar.TabListener
         if ((newTab == 0) || (newTab <= currentActivityNo)) return true;
         Activity previousActivity = activities.get(newTab - 1);
         //the user can navigate to the activity if its directly preceding one is completed
-        return db.activityCompleted(course.getCourseId(), previousActivity.getDigest(), userID);
+        DbHelper db = new DbHelper(this);
+        boolean actCompleted = db.activityCompleted(course.getCourseId(), previousActivity.getDigest(), userID);
+        DatabaseManager.getInstance().closeDatabase();
+        return actCompleted;
     }
 
 	public void onInit(int status) {
