@@ -155,7 +155,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
                     return;
                 }
                 String[] treePath = pathAccessGranted.getPath().split(":");
-                if ((treePath.length > 1) || treePath[0].endsWith("primary")){
+                if ((treePath.length > 1)){
                     //The user didn't select the root directory or selected the internal storage
                     listener.onAccessGranted(false);
                 }

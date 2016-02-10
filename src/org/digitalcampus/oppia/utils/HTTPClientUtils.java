@@ -14,7 +14,9 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -23,6 +25,7 @@ public class HTTPClientUtils{
 
     public static final String HEADER_AUTH = "Authorization";
     public static final String HEADER_USER_AGENT = "User-Agent";
+    public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
 
     private static OkHttpClient client;
 
@@ -76,4 +79,5 @@ public class HTTPClientUtils{
             return chain.proceed(requestWithUserAgent);
         }
     }
+
 }

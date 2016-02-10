@@ -34,6 +34,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,17 +50,20 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 
 	public static final String TAG = ResetTask.class.getSimpleName();
 
 	private Context ctx;
-	private SharedPreferences prefs;
 	private SubmitListener mStateListener;
 
 	public ResetTask(Context ctx) {
 		this.ctx = ctx;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 	}
 
 	@Override
@@ -67,53 +71,36 @@ public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 
 		Payload payload = params[0];
 		User u = (User) payload.getData().get(0);
-		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
-		String url = prefs.getString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault))
-				+ MobileLearning.RESET_PATH;
-		Log.d(TAG,url);
-		HttpPost httpPost = new HttpPost(url);
 		try {
 			// update progress dialog
 			publishProgress(ctx.getString(R.string.reset_process));
-			// add post params
+
 			JSONObject json = new JSONObject();
 			json.put("username", u.getUsername());
-            StringEntity se = new StringEntity(json.toString(),"utf8");
-            se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            httpPost.setEntity(se);
 
-			// make request
-			HttpResponse response = client.execute(httpPost);
+            OkHttpClient client = HTTPClientUtils.getClient(ctx);
+            Request request = new Request.Builder()
+                    .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.RESET_PATH))
+                    .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
+                    .build();
 
-			// read response
-			InputStream content = response.getEntity().getContent();
-			BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
-			String responseStr = "";
-			String s = "";
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()){
+                payload.setResult(true);
+                payload.setResultResponse(ctx.getString(R.string.reset_complete));
+            }
+            else{
+                payload.setResult(false);
+                if (response.code() == 400){
+                    payload.setResultResponse(response.toString());
+                }
+                else{
+                    payload.setResultResponse(ctx.getString(R.string.error_connection));
+                }
+            }
 
-			while ((s = buffer.readLine()) != null) {
-				responseStr += s;
-			}
-
-			switch (response.getStatusLine().getStatusCode()){
-				case 400: // unauthorised
-					payload.setResult(false);
-					payload.setResultResponse(responseStr);
-					break;
-				case 201: // reset complete
-					payload.setResult(true);
-					payload.setResultResponse(ctx.getString(R.string.reset_complete));
-					break;
-				default:
-					payload.setResult(false);
-					payload.setResultResponse(ctx.getString(R.string.error_connection));
-			}
-
-		} catch (UnsupportedEncodingException e) {
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
-		} catch (ClientProtocolException e) {
+		} catch (UnsupportedEncodingException | ClientProtocolException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
