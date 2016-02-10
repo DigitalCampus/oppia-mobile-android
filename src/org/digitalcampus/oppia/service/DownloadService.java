@@ -33,6 +33,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationBuilder;
 
@@ -48,6 +49,10 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class DownloadService extends IntentService {
 
@@ -196,19 +201,10 @@ public class DownloadService extends IntentService {
             if (filename == null){ filename = url.getPath().substring(url.getPath().lastIndexOf("/")+1); }
             downloadedFile = new File(Storage.getMediaPath(this), filename);
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setDoOutput(true);
-            connection.connect();
-
-            connection.setConnectTimeout(Integer.parseInt(
-                    prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_CONN,
-                            this.getString(R.string.prefServerTimeoutConnection))));
-            connection.setReadTimeout(Integer.parseInt(
-                    prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_RESP,
-                            this.getString(R.string.prefServerTimeoutResponse))));
-
-            long fileLength = connection.getContentLength();
+            OkHttpClient client = HTTPClientUtils.getClient(this);
+            Request request = new Request.Builder().url(fileUrl).build();
+            Response response = client.newCall(request).execute();
+            long fileLength = response.body().contentLength();
             long availableStorage = Storage.getAvailableStorageSize(this);
 
             if (fileLength >= availableStorage){
@@ -218,7 +214,7 @@ public class DownloadService extends IntentService {
             }
 
             FileOutputStream f = new FileOutputStream(downloadedFile);
-            InputStream in = connection.getInputStream();
+            InputStream in = response.body().byteStream();
 
             MessageDigest mDigest = MessageDigest.getInstance("MD5");
             in = new DigestInputStream(in, mDigest);
@@ -231,6 +227,8 @@ public class DownloadService extends IntentService {
                 //If received a cancel action while downloading, stop it
                 if (isCancelled(fileUrl)) {
                     Log.d(TAG, "Media " + filename + " cancelled while downloading. Deleting temp file...");
+                    f.close();
+                    in.close();
                     deleteFile(downloadedFile);
                     removeCancelled(fileUrl);
                     removeDownloading(fileUrl);
@@ -246,7 +244,7 @@ public class DownloadService extends IntentService {
                 f.write(buffer, 0, len1);
             }
             f.close();
-
+            in.close();
             if (fileDigest != null){
                 // check the file digest matches, otherwise delete the file
                 // (it's either been a corrupted download or it's the wrong file)
@@ -265,10 +263,6 @@ public class DownloadService extends IntentService {
             }
 
         } catch (MalformedURLException e) {
-            logAndNotifyError(fileUrl, e);
-            return;
-        } catch (ProtocolException e) {
-            this.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
             return;
         } catch (IOException e) {

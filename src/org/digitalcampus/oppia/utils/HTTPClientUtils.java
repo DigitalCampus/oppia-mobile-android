@@ -54,6 +54,14 @@ public class HTTPClientUtils{
         return prefs.getString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault)) + apiPath;
     }
 
+    public static HttpUrl getUrlWithCredentials(String url, String username, String apiKey){
+        return HttpUrl.parse(url).newBuilder()
+                .addQueryParameter("username", username)
+                .addQueryParameter("api_key", apiKey)
+                .addQueryParameter("format", "json")
+                .build();
+    }
+
     public static class UserAgentInterceptor implements Interceptor {
 
         private Context ctx;
