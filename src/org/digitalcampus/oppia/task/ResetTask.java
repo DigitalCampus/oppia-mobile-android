@@ -17,38 +17,22 @@
 
 package org.digitalcampus.oppia.task;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import android.content.Context;
+import android.os.AsyncTask;
 
-import org.apache.http.HttpResponse;
+import com.splunk.mint.Mint;
+
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
-import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
-
-import com.splunk.mint.Mint;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.util.Log;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
