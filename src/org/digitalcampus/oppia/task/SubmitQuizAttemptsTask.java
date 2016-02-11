@@ -17,28 +17,6 @@
 
 package org.digitalcampus.oppia.task;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -46,6 +24,25 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import com.splunk.mint.Mint;
+
+import org.apache.http.client.ClientProtocolException;
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DatabaseManager;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> {
 
@@ -63,54 +60,47 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 		Payload payload = params[0];
 		for (Object l : payload.getData()) {
 			QuizAttempt qa = (QuizAttempt) l;
-			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-			
 			try {
+                OkHttpClient client = HTTPClientUtils.getClient(ctx);
+                Request request = new Request.Builder()
+                        .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.QUIZ_SUBMIT_PATH))
+                        .addHeader(HTTPClientUtils.HEADER_AUTH,
+                                HTTPClientUtils.getAuthHeaderValue(qa.getUser().getUsername(), qa.getUser().getApiKey()))
+                        .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, qa.getData()))
+                        .build();
 
-				String url = client.getFullURL(MobileLearning.QUIZ_SUBMIT_PATH);
-				HttpPost httpPost = new HttpPost(url);
-				StringEntity se = new StringEntity(qa.getData(), "utf8");
-				se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-				httpPost.setEntity(se);
-				httpPost.addHeader(client.getAuthHeader(qa.getUser().getUsername(),qa.getUser().getApiKey()));
-				// make request
-				HttpResponse response = client.execute(httpPost);
-				InputStream content = response.getEntity().getContent();
-				BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
-				String responseStr = "";
-				String s = "";
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()){
+                    JSONObject jsonResp = new JSONObject(response.body().string());
+                    DbHelper db = new DbHelper(ctx);
+                    db.markQuizSubmitted(qa.getId());
+                    db.updateUserPoints(qa.getUser().getUsername(), jsonResp.getInt("points"));
+                    db.updateUserBadges(qa.getUser().getUsername(), jsonResp.getInt("badges"));
+                    DatabaseManager.getInstance().closeDatabase();
+                    payload.setResult(true);
+                }
+                else {
+                    switch (response.code()) {
+                        case 400: // bad request - so to prevent re-submitting over and
+                        case 401: // over just mark as submitted
+                            DbHelper db2 = new DbHelper(ctx);
+                            db2.markQuizSubmitted(qa.getId());
+                            DatabaseManager.getInstance().closeDatabase();
+                            payload.setResult(false);
+                            break;
 
-				while ((s = buffer.readLine()) != null) {
-					responseStr += s;
-				}
-				
-				switch (response.getStatusLine().getStatusCode()) {
-					case 201: // submitted
-						JSONObject jsonResp = new JSONObject(responseStr);
-						DbHelper db = new DbHelper(ctx);
-						db.markQuizSubmitted(qa.getId());
-						db.updateUserPoints(qa.getUser().getUsername(), jsonResp.getInt("points"));
-						db.updateUserBadges(qa.getUser().getUsername(), jsonResp.getInt("badges"));
-						DatabaseManager.getInstance().closeDatabase();
-						payload.setResult(true);
-						break;
-					case 400: // bad request - so to prevent re-submitting over and
-								// over just mark as submitted
-						DbHelper db2 = new DbHelper(ctx);
-						db2.markQuizSubmitted(qa.getId());
-						DatabaseManager.getInstance().closeDatabase();
-						payload.setResult(false);
-						break;
-					case 500: // server error - so to prevent re-submitting over and
-								// over just mark as submitted
-						DbHelper db3 = new DbHelper(ctx);
-						db3.markQuizSubmitted(qa.getId());
-						DatabaseManager.getInstance().closeDatabase();
-						payload.setResult(false);
-						break;
-					default:
-						payload.setResult(false);
-				}
+                        case 500: // server error - so to prevent re-submitting over and
+                            // over just mark as submitted
+                            DbHelper db3 = new DbHelper(ctx);
+                            db3.markQuizSubmitted(qa.getId());
+                            DatabaseManager.getInstance().closeDatabase();
+                            payload.setResult(false);
+                            break;
+                        default:
+                            payload.setResult(false);
+                    }
+                }
+
 			} catch (UnsupportedEncodingException e) {
 				payload.setResult(false);
 				publishProgress(ctx.getString(R.string.error_connection));
