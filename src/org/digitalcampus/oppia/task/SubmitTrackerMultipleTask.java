@@ -84,7 +84,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 
                         OkHttpClient client = HTTPClientUtils.getClient(ctx);
                         Request request = new Request.Builder()
-                                .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.RESET_PATH))
+                                .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.TRACKER_PATH))
                                 .addHeader(HTTPClientUtils.HEADER_AUTH,
                                         HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
                                 .patch(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, dataToSend))
