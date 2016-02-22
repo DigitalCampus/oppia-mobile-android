@@ -88,7 +88,7 @@ public class MobileLearning extends Application {
 	public static final boolean MENU_ALLOW_MONITOR = true;
 	public static final boolean MENU_ALLOW_LOGOUT = true;
 
-    public static final boolean SESSION_EXPIRATION_ENABLED = true; // whether to force users to be logged out after inactivity
+    public static final boolean SESSION_EXPIRATION_ENABLED = false; // whether to force users to be logged out after inactivity
     public static final int SESSION_EXPIRATION_TIMEOUT = 15; // no seconds before user is logged out for inactivity
 	
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
