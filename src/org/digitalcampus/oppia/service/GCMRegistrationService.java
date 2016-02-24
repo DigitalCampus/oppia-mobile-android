@@ -51,6 +51,8 @@ public class GCMRegistrationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        if (!MobileLearning.DEVICEADMIN_ENABLED) return;
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         try {
             // Initially this call goes out to the network to retrieve the token, subsequent calls are local.
@@ -65,8 +67,7 @@ public class GCMRegistrationService extends IntentService {
                 Log.i(TAG, "New GCM Registration Token: " + token);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean(PrefsActivity.GCM_TOKEN_SENT, false);
-                editor.putString(PrefsActivity.GCM_TOKEN_ID, token);
-                editor.commit();
+                editor.putString(PrefsActivity.GCM_TOKEN_ID, token).apply();
                 tokenSent = false;
             }
 

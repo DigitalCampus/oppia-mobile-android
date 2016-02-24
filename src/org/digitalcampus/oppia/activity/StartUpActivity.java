@@ -64,15 +64,17 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         Mint.initAndStartSession(this, MobileLearning.MINT_API_KEY);
         setContentView(R.layout.start_up);
 
-        boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
-                new GooglePlayUtils.DialogListener() {
-            @Override
-            public void onErrorDialogClosed() {
-                //If Google play is not available, we need to close the app
-                StartUpActivity.this.finish();
-            }
-        });
-        if (!isGooglePlayAvailable) return;
+        if (MobileLearning.DEVICEADMIN_ENABLED){
+            boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
+                    new GooglePlayUtils.DialogListener() {
+                        @Override
+                        public void onErrorDialogClosed() {
+                            //If Google play is not available, we need to close the app
+                            StartUpActivity.this.finish();
+                        }
+                    });
+            if (!isGooglePlayAvailable) return;
+        }
 
         tvProgress = (TextView) this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -84,22 +86,24 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     public void onResume(){
         super.onResume();
 
-        //We need to check again the Google Play API availability
-        boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
-                new GooglePlayUtils.DialogListener() {
-                    @Override
-                    public void onErrorDialogClosed() {
-                        //If Google play is not available, we need to close the app
-                        StartUpActivity.this.finish();
-                    }
-                });
-        if (!isGooglePlayAvailable){
-            this.finish();
-            return;
+        if (MobileLearning.DEVICEADMIN_ENABLED) {
+            //We need to check again the Google Play API availability
+            boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
+                    new GooglePlayUtils.DialogListener() {
+                        @Override
+                        public void onErrorDialogClosed() {
+                            //If Google play is not available, we need to close the app
+                            StartUpActivity.this.finish();
+                        }
+                    });
+            if (!isGooglePlayAvailable) {
+                this.finish();
+                return;
+            }
+            // Start IntentService to register the phone with GCM.
+            Intent intent = new Intent(this, GCMRegistrationService.class);
+            startService(intent);
         }
-        // Start IntentService to register the phone with GCM.
-        Intent intent = new Intent(this, GCMRegistrationService.class);
-        startService(intent);
 
         UpgradeManagerTask umt = new UpgradeManagerTask(this);
         umt.setUpgradeListener(this);
