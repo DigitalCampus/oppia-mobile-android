@@ -1,8 +1,6 @@
 package org.digitalcampus.oppia.application;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
@@ -10,15 +8,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
 import com.google.android.gms.gcm.GcmListenerService;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
@@ -94,25 +90,9 @@ public class AdminGCMListener extends GcmListenerService {
         notifBuilder
             .setContentTitle(getString(R.string.notification_remote_admin_title))
             .setContentText(message)
-            .setAutoCancel(true)
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent).setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+            .setContentIntent(pendingIntent)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
             .build();
-
-        notifBuilder.setSmallIcon(R.drawable.ic_notification);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int color = 0;
-            /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                color = getResources().getColor(R.color.highlight_light, null);
-            }
-            else{*/
-                color = getResources().getColor(R.color.highlight_light);
-            //}
-            notifBuilder.setColor(color);
-        }
-        else{
-            notifBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), MobileLearning.APP_LOGO));
-        }
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

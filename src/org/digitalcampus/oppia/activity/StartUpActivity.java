@@ -97,16 +97,15 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
             this.finish();
             return;
         }
-
         // Start IntentService to register the phone with GCM.
         Intent intent = new Intent(this, GCMRegistrationService.class);
         startService(intent);
 
-	UpgradeManagerTask umt = new UpgradeManagerTask(this);
-	umt.setUpgradeListener(this);
-	ArrayList<Object> data = new ArrayList<>();
-	Payload p = new Payload(data);
-	umt.execute(p);
+        UpgradeManagerTask umt = new UpgradeManagerTask(this);
+        umt.setUpgradeListener(this);
+        ArrayList<Object> data = new ArrayList<>();
+        Payload p = new Payload(data);
+        umt.execute(p);
  		
 	}
 	
