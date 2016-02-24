@@ -17,9 +17,7 @@
 
 package org.digitalcampus.oppia.widgets.quiz;
 
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,21 +49,19 @@ public class MultiChoiceWidget extends QuestionWidget{
     	responsesLL.removeAllViews();
     	RadioGroup responsesRG = new RadioGroup(ctx);
     	// TODO change to use getchild views (like the MultiSelect)
-    	responsesRG.setId(234523465);
+    	responsesRG.setId(R.id.multichoiceRadioGroup);
     	responsesLL.addView(responsesRG);
-    	int id = 1000;
+    	int id = 1000+1;
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);
     		rb.setId(id);
 			rb.setText(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 			responsesRG.addView(rb);
-			Iterator<String> itr = currentAnswer.iterator();
-			while(itr.hasNext()) {
-				String answer = itr.next(); 
-				if (r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())) == answer){
-					rb.setChecked(true);
-				}
-			}
+            for (String answer : currentAnswer) {
+                if (r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())) == answer) {
+                    rb.setChecked(true);
+                }
+            }
 			id++;
     	}
 		
@@ -73,7 +69,7 @@ public class MultiChoiceWidget extends QuestionWidget{
 	
 	public List<String> getQuestionResponses(List<Response> responses){
 		// TODO change to use getchild views (like the MultiSelect)
-		RadioGroup responsesRG = (RadioGroup) view.findViewById(234523465);
+		RadioGroup responsesRG = (RadioGroup) view.findViewById(R.id.multichoiceRadioGroup);
 		int resp = responsesRG.getCheckedRadioButtonId();
     	View rb = responsesRG.findViewById(resp);
     	int idx = responsesRG.indexOfChild(rb);

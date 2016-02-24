@@ -23,6 +23,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
@@ -63,8 +64,7 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 	private ProgressDialog pDialog;
 	
 	public static RegisterFragment newInstance() {
-		RegisterFragment myFragment = new RegisterFragment();
-	    return myFragment;
+	    return new RegisterFragment();
 	}
 
 	public RegisterFragment(){
@@ -111,38 +111,32 @@ public class RegisterFragment extends Fragment implements SubmitListener {
 	public void submitComplete(Payload response) {
 		pDialog.dismiss();
 		if (response.isResult()) {
-			User u = (User) response.getData().get(0);
-			// set params
-			Editor editor = prefs.edit();
-	    	editor.putString(PrefsActivity.PREF_USER_NAME, usernameField.getText().toString());
-	    	editor.putString(PrefsActivity.PREF_PHONE_NO, phoneNoField.getText().toString());
-	    	editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, u.isScoringEnabled());
-	    	editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, u.isBadgingEnabled());
-	    	editor.commit();
-	    	
-	    	startActivity(new Intent(super.getActivity(), OppiaMobileActivity.class));
+			User user = (User) response.getData().get(0);
+            SessionManager.loginUser(getActivity(), user);
+
+	    	startActivity(new Intent(getActivity(), OppiaMobileActivity.class));
 	    	super.getActivity().finish();
 		} else {
 			try {
 				JSONObject jo = new JSONObject(response.getResultResponse());
-				UIUtils.showAlert(super.getActivity(),R.string.error,jo.getString("error"));
+				UIUtils.showAlert(getActivity(),R.string.error,jo.getString("error"));
 			} catch (JSONException je) {
-				UIUtils.showAlert(super.getActivity(),R.string.error,response.getResultResponse());
+				UIUtils.showAlert(getActivity(),R.string.error,response.getResultResponse());
 			}
 		}
 	}
 
 	public void onRegisterClick(View view) {
 		// get form fields
-		String username = (String) usernameField.getText().toString().trim();
-		String email = (String) emailField.getText().toString();
-		String password = (String) passwordField.getText().toString();
-		String passwordAgain = (String) passwordAgainField.getText().toString();
-		String firstname = (String) firstnameField.getText().toString();
-		String lastname = (String) lastnameField.getText().toString();
-		String phoneNo = (String) phoneNoField.getText().toString();
-		String jobTitle = (String) jobTitleField.getText().toString();
-		String organisation = (String) organisationField.getText().toString();
+		String username = usernameField.getText().toString().trim();
+		String email = emailField.getText().toString();
+		String password = passwordField.getText().toString();
+		String passwordAgain = passwordAgainField.getText().toString();
+		String firstname = firstnameField.getText().toString();
+		String lastname = lastnameField.getText().toString();
+		String phoneNo = phoneNoField.getText().toString();
+		String jobTitle = jobTitleField.getText().toString();
+		String organisation = organisationField.getText().toString();
 		
 		// do validation
 		// check username

@@ -26,22 +26,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ProviderInfo;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationBuilder;
 
 import java.io.File;
@@ -56,7 +48,6 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DownloadService extends IntentService {
 
@@ -203,7 +194,7 @@ public class DownloadService extends IntentService {
             URL url = new URL(fileUrl);
             //If no filename was passed, we set the filename based on the URL
             if (filename == null){ filename = url.getPath().substring(url.getPath().lastIndexOf("/")+1); }
-            downloadedFile = new File(FileUtils.getMediaPath(this), filename);
+            downloadedFile = new File(Storage.getMediaPath(this), filename);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -218,7 +209,7 @@ public class DownloadService extends IntentService {
                             this.getString(R.string.prefServerTimeoutResponse))));
 
             long fileLength = connection.getContentLength();
-            long availableStorage = FileUtils.getAvailableStorageSize(this);
+            long availableStorage = Storage.getAvailableStorageSize(this);
 
             if (fileLength >= availableStorage){
                 sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_insufficient_storage_available));

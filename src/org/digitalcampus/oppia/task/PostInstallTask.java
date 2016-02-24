@@ -25,7 +25,7 @@ import java.io.InputStream;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -51,7 +51,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 			directory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_COURSES_DIR);
             for (String file : directory) {
                 if (file.endsWith(".zip")) {
-                    FileOutputStream f = new FileOutputStream(new File(FileUtils.getDownloadPath(ctx), file));
+                    FileOutputStream f = new FileOutputStream(new File(Storage.getDownloadPath(ctx), file));
                     InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_COURSES_DIR + File.separator + file);
                     byte[] buffer = new byte[1024];
                     int len = 0;
@@ -70,7 +70,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 			directory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_MEDIA_DIR);
             for (String file : directory) {
                 if (!file.endsWith(".txt")) {
-                    FileOutputStream f = new FileOutputStream(new File(FileUtils.getMediaPath(ctx), file));
+                    FileOutputStream f = new FileOutputStream(new File(Storage.getMediaPath(ctx), file));
                     InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_MEDIA_DIR + File.separator + file);
                     byte[] buffer = new byte[1024];
                     int len = 0;

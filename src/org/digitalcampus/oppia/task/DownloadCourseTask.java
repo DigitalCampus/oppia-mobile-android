@@ -24,11 +24,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-
-
-
-
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.params.CoreProtocolPNames;
 import org.digitalcampus.mobile.learning.R;
@@ -36,13 +31,14 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import com.splunk.mint.Mint;
 
@@ -77,7 +73,7 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
 			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
 
 			DbHelper db = new DbHelper(ctx);
-        	User user = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        	User user = db.getUser(SessionManager.getUsername(ctx));
 			DatabaseManager.getInstance().closeDatabase();
 			
 			String url =  client.createUrlWithCredentials(dm.getDownloadUrl(),user.getUsername(),user.getApiKey());
@@ -104,7 +100,7 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
             
 			
 			long fileLength = c.getContentLength();
-            long availableStorage = FileUtils.getAvailableStorageSize(ctx);
+            long availableStorage = Storage.getAvailableStorageSize(ctx);
 
             if (fileLength >= availableStorage){
                 payload.setResult(false);
@@ -116,7 +112,7 @@ public class DownloadCourseTask extends AsyncTask<Payload, DownloadProgress, Pay
                 dp.setProgress(0);
                 publishProgress(dp);
 
-                FileOutputStream f = new FileOutputStream(new File(FileUtils.getDownloadPath(ctx),localFileName));
+                FileOutputStream f = new FileOutputStream(new File(Storage.getDownloadPath(ctx),localFileName));
                 InputStream in = c.getInputStream();
 
                 byte[] buffer = new byte[1024];

@@ -111,7 +111,7 @@ public class UrlWidget extends WidgetFactory {
 	
 	
 	@Override
-	protected boolean getActivityCompleted() {
+	public boolean getActivityCompleted() {
 		// TODO Auto-generated method stub
 		return false;
 	}

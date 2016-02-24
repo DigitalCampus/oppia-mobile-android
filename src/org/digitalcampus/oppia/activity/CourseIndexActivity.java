@@ -64,6 +64,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	private Activity baselineActivity;
 	private AlertDialog aDialog;
     private View loadingCourseView;
+    private SectionListAdapter sla;
 
     private String digestJumpTo;
 		
@@ -130,36 +131,42 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (aDialog == null) {
-			//this.isBaselineCompleted();
-		} else {
-			aDialog.show();
-		}
+        if (aDialog != null) {
+            aDialog.show();
+        }
 
-        if (digestJumpTo != null){
+        if (digestJumpTo != null && isBaselineCompleted()){
             startCourseActivityByDigest(digestJumpTo);
             digestJumpTo = null;
             return;
         }
 
-		// start a new tracker service
-		Intent service = new Intent(this, TrackerService.class);
+        // start a new tracker service
+        Intent service = new Intent(this, TrackerService.class);
 
-		Bundle tb = new Bundle();
-		tb.putBoolean("backgroundData", true);
-		service.putExtras(tb);
-		this.startService(service);
-		
-		// remove any saved state info from shared prefs in case they interfere with subsequent page views
-		Editor editor = prefs.edit();
-		Map<String,?> keys = prefs.getAll();
+        Bundle tb = new Bundle();
+        tb.putBoolean("backgroundData", true);
+        service.putExtras(tb);
+        this.startService(service);
 
-		for(Map.Entry<String,?> entry : keys.entrySet()){
-			if (entry.getKey().startsWith("widget_")){
-				editor.remove(entry.getKey());
-			}            
-		 }
-		editor.commit();
+        // remove any saved state info from shared prefs in case they interfere with subsequent page views
+        Editor editor = prefs.edit();
+        Map<String,?> keys = prefs.getAll();
+
+        for(Map.Entry<String,?> entry : keys.entrySet()){
+            if (entry.getKey().startsWith("widget_")){
+                editor.remove(entry.getKey());
+            }
+        }
+        editor.commit();
+
+        if ((sections != null) && (sections.size()>0)){
+            cxr.updateCourseActivity();
+            sla.notifyDataSetChanged();
+            if (!isBaselineCompleted()){
+                showBaselineMessage(null);
+            }
+        }
 	}
 
 	@Override
@@ -167,11 +174,11 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		if (aDialog != null) {
 			aDialog.dismiss();
 			aDialog = null;
-		}
-		super.onPause();
-	}
+        }
+        super.onPause();
+    }
 
-	@Override
+    @Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
 		getMenuInflater().inflate(R.menu.activity_course_index, menu);
@@ -211,7 +218,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             } else {
                 i = new Intent(this, CourseMetaPageActivity.class);
                 tb.putSerializable(Course.TAG, course);
-                tb.putSerializable(CourseMetaPage.TAG, item.getItemId());
+                tb.putInt(CourseMetaPage.TAG, item.getItemId());
             }
             i.putExtras(tb);
             startActivityForResult(i, 1);
@@ -220,19 +227,23 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	private void createLanguageDialog() {
-		UIUtils ui = new UIUtils();
-		ui.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
-			public Boolean call() throws Exception {
-				CourseIndexActivity.this.onStart();
-				return true;
-			}
-		});
+        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                CourseIndexActivity.this.onStart();
+                return true;
+            }
+        });
 	}
 
     private void initializeCourseIndex(boolean animate){
 
         final ListView listView = (ListView) findViewById(R.id.section_list);
-        SectionListAdapter sla = new SectionListAdapter(CourseIndexActivity.this, course, sections);
+        sla = new SectionListAdapter(CourseIndexActivity.this, course, sections, new SectionListAdapter.CourseClickListener() {
+            @Override
+            public void onActivityClicked(String activityDigest) {
+                startCourseActivityByDigest(activityDigest);
+            }
+        });
 
         if (animate){
             AlphaAnimation fadeOutAnimation = new AlphaAnimation(1f, 0f);
@@ -306,20 +317,39 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void startCourseActivityByDigest(String digest) {
+
+        boolean allSectionsCompleted = true;
         for (Section section : sections) {
+            boolean allActivitiesCompleted = true;
             for (int i = 0; i < section.getActivities().size(); i++) {
                 Activity act = section.getActivities().get(i);
 
                 if (act.getDigest().equals(digest)) {
-                    Intent intent = new Intent(this, CourseActivity.class);
-                    Bundle tb = new Bundle();
-                    tb.putSerializable(Section.TAG, section);
-                    tb.putSerializable(Course.TAG, course);
-                    tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, i);
-                    intent.putExtras(tb);
-                    startActivity(intent);
+                    if ((course.getSequencingMode().equals(Course.SEQUENCING_MODE_COURSE)) &&
+                            (!allSectionsCompleted || !allActivitiesCompleted)){
+                        UIUtils.showAlert(this, R.string.sequencing_dialog_title, R.string.sequencing_course_message);
+                    }else if ((course.getSequencingMode().equals(Course.SEQUENCING_MODE_SECTION))
+                            && (!allActivitiesCompleted)){
+                        UIUtils.showAlert(this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
+                    }else{
+                        Intent intent = new Intent(this, CourseActivity.class);
+                        Bundle tb = new Bundle();
+                        tb.putSerializable(Section.TAG, section);
+                        tb.putSerializable(Course.TAG, course);
+                        tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, i);
+                        intent.putExtras(tb);
+                        startActivity(intent);
+                    }
+                    //When we find the activity we are looking for, we can stop the search
+                    return;
+                }
+                else{
+                    //If is not the activity we are searching for, we check if it's completed
+                    //(for sequencing purposes)
+                    allActivitiesCompleted = allActivitiesCompleted && act.getCompleted();
                 }
             }
+            allSectionsCompleted = allSectionsCompleted && allActivitiesCompleted;
         }
     }
 

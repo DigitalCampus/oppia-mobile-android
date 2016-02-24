@@ -39,6 +39,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -47,6 +48,7 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
@@ -166,18 +168,18 @@ public class CourseIntallerService extends IntentService {
     }
 
     private void installDownloadedCourse(String fileUrl, String shortname, Double versionID) {
-        File tempdir = new File(FileUtils.getStorageLocationRoot(this) + "temp/");
+        File tempdir = new File(Storage.getStorageLocationRoot(this) + "temp/");
         String filename = getLocalFilename(shortname, versionID);
-        File zipFile = new File(FileUtils.getDownloadPath(this), filename);
+        File zipFile = new File(Storage.getDownloadPath(this), filename);
         tempdir.mkdirs();
 
         long startTime = System.currentTimeMillis();
         sendBroadcast(fileUrl, ACTION_INSTALL, ""+1);
-        boolean unzipResult = FileUtils.unzipFiles(FileUtils.getDownloadPath(this), filename, tempdir.getAbsolutePath());
+        boolean unzipResult = FileUtils.unzipFiles(Storage.getDownloadPath(this), filename, tempdir.getAbsolutePath());
 
         if (!unzipResult){
             //then was invalid zip file and should be removed
-            FileUtils.cleanUp(tempdir, FileUtils.getDownloadPath(this) + filename);
+            FileUtils.cleanUp(tempdir, Storage.getDownloadPath(this) + filename);
             sendBroadcast(fileUrl, ACTION_FAILED, "" + this.getString(R.string.error_installing_course, shortname));
             removeDownloading(fileUrl);
             return;
@@ -195,7 +197,7 @@ public class CourseIntallerService extends IntentService {
             courseScheduleXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
             courseTrackerXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_TRACKER_XML;
         } catch (ArrayIndexOutOfBoundsException aioobe){
-            FileUtils.cleanUp(tempdir, FileUtils.getDownloadPath(this) + filename);
+            FileUtils.cleanUp(tempdir, Storage.getDownloadPath(this) + filename);
             logAndNotifyError(fileUrl, aioobe);
             return;
         }
@@ -223,6 +225,12 @@ public class CourseIntallerService extends IntentService {
         c.setLangs(cxr.getLangs());
         c.setDescriptions(cxr.getDescriptions());
         c.setPriority(cxr.getPriority());
+        String sequencingMode = cxr.getCourseSequencingMode();
+        if ((sequencingMode!=null) && (sequencingMode.equals(Course.SEQUENCING_MODE_COURSE) ||
+                sequencingMode.equals(Course.SEQUENCING_MODE_SECTION) || sequencingMode.equals(Course.SEQUENCING_MODE_NONE))){
+            c.setSequencingMode(sequencingMode);
+        }
+
         String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
         sendBroadcast(fileUrl, ACTION_INSTALL, ""+20);
@@ -233,12 +241,12 @@ public class CourseIntallerService extends IntentService {
         long courseId = db.addOrUpdateCourse(c);
         if (courseId != -1) {
             File src = new File(tempdir + File.separator + courseDirs[0]);
-            File dest = new File(FileUtils.getCoursesPath(this));
+            File dest = new File(Storage.getCoursesPath(this));
 
             db.insertActivities(cxr.getActivities(courseId));
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 50);
             
-            long userId = db.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+            long userId = db.getUserId(SessionManager.getUsername(this));
             db.resetCourse(courseId, userId);
             db.insertTrackers(ctxr.getTrackers(courseId, userId));
             db.insertQuizAttempts(ctxr.getQuizAttempts(courseId, userId));
@@ -246,7 +254,7 @@ public class CourseIntallerService extends IntentService {
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 70);
 
             // Delete old course
-            File oldCourse = new File(FileUtils.getCoursesPath(this) + courseDirs[0]);
+            File oldCourse = new File(Storage.getCoursesPath(this) + courseDirs[0]);
             FileUtils.deleteDir(oldCourse);
 
             // move from temp to courses dir
@@ -357,7 +365,7 @@ public class CourseIntallerService extends IntentService {
         File downloadedFile = null;
         try {
         	DbHelper db = new DbHelper(this);
-        	User u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        	User u = db.getUser(SessionManager.getUsername(this));
 			DatabaseManager.getInstance().closeDatabase();
         	
             HTTPConnectionUtils client = new HTTPConnectionUtils(this);
@@ -382,7 +390,7 @@ public class CourseIntallerService extends IntentService {
                     this.getString(R.string.prefServerTimeoutResponse))));
 
             long fileLength = connection.getContentLength();
-            long availableStorage = FileUtils.getAvailableStorageSize(this);
+            long availableStorage = Storage.getAvailableStorageSize(this);
 
             if (fileLength >= availableStorage){
                 sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_insufficient_storage_available));
@@ -391,7 +399,7 @@ public class CourseIntallerService extends IntentService {
             }
 
             String localFileName = getLocalFilename(shortname, versionID);
-            downloadedFile = new File(FileUtils.getDownloadPath(this),localFileName);
+            downloadedFile = new File(Storage.getDownloadPath(this),localFileName);
             FileOutputStream f = new FileOutputStream(downloadedFile);
             InputStream in = connection.getInputStream();
 
@@ -451,7 +459,7 @@ public class CourseIntallerService extends IntentService {
         try {
         	
         	DbHelper db = new DbHelper(this);
-        	User u = db.getUser(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+        	User u = db.getUser(SessionManager.getUsername(this));
 			DatabaseManager.getInstance().closeDatabase();
 			
         	String responseStr = "";

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.GCMRegistrationService;
@@ -122,13 +123,8 @@ public class LoginFragment extends Fragment implements SubmitListener {
 			//
 		}
 		if(response.isResult()){
-			User u = (User) response.getData().get(0);
-			// set params
-			Editor editor = prefs.edit();
-	    	editor.putString(PrefsActivity.PREF_USER_NAME, usernameField.getText().toString());
-	    	editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, u.isScoringEnabled());
-	    	editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, u.isBadgingEnabled());
-	    	editor.commit();
+			User user = (User) response.getData().get(0);
+            SessionManager.loginUser(getActivity(), user);
 
             // Start IntentService to re-register the phone with GCM.
             Intent intent = new Intent(this.getActivity(), GCMRegistrationService.class);

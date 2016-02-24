@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Tag;
-import org.digitalcampus.oppia.utils.lazylist.ImageLoader;
 
 import android.app.Activity;
 import android.content.Context;
@@ -33,19 +32,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 public class TagListAdapter extends ArrayAdapter<Tag> {
 
 	public static final String TAG = TagListAdapter.class.getSimpleName();
 	
 	private final Context ctx;
 	private final ArrayList<Tag> tagList;
-	public ImageLoader imageLoader; 
 	
 	public TagListAdapter(Activity context, ArrayList<Tag> tagList) {
 		super(context, R.layout.tag_row, tagList);
 		this.ctx = context;
 		this.tagList = tagList;
-		imageLoader=new ImageLoader(ctx);
 	}
 
     static class TagViewHolder{
@@ -86,7 +85,7 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 	    	viewHolder.tagDescription.setVisibility(View.GONE);
 	    }
 	    if(t.getIcon() != null){
-	    	imageLoader.DisplayImage(t.getIcon(), viewHolder.tagIcon);
+            Picasso.with(ctx).load(t.getIcon()).into(viewHolder.tagIcon);
             viewHolder.tagIcon.setVisibility(View.VISIBLE);
 	    } else {
 	    	viewHolder.tagIcon.setVisibility(View.GONE);

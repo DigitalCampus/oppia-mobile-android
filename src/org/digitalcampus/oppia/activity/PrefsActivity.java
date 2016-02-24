@@ -17,18 +17,26 @@
 
 package org.digitalcampus.oppia.activity;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.AdminReceiver;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
+import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
+import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
 import android.app.Activity;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -78,10 +86,14 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_SHOW_SECTION_NOS = "prefShowSectionNumbers";
 	public static final String PREF_HIGHLIGHT_COMPLETED = "prefHighlightCompleted";
 	public static final String PREF_TEXT_SIZE = "prefTextSize";
+
+    public static final List<String> USER_STRING_PREFS =  Arrays.asList(
+        PREF_PHONE_NO, PREF_LANGUAGE, PREF_NO_SCHEDULE_REMINDERS, PREF_TEXT_SIZE);
+    public static final List<String> USER_BOOLEAN_PREFS = Arrays.asList(
+        PREF_SHOW_SCHEDULE_REMINDERS,  PREF_SHOW_COURSE_DESC, PREF_SHOW_PROGRESS_BAR, PREF_SHOW_SECTION_NOS, PREF_HIGHLIGHT_COMPLETED );
 	/*
 	 * End personal prefs
 	 */
-	
 	public static final String PREF_LAST_MEDIA_SCAN = "prefLastMediaScan";
 	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
 	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
@@ -90,9 +102,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_STORAGE_OPTION = "prefStorageOption";
     public static final String STORAGE_OPTION_INTERNAL = "internal";
     public static final String STORAGE_OPTION_EXTERNAL = "external";
+    public static final String STORAGE_NEEDS_PERMISSIONS = "storageNeedsPermissions";
 
     public static final String PREF_ADMIN_PROTECTION = "prefAdminProtection";
     public static final String PREF_ADMIN_PASSWORD = "prefAdminPassword";
+    public static final String LAST_ACTIVE_TIME = "prefLastActiveTime";
 
     //Google Cloud Messaging preferences
     public static final String GCM_TOKEN_SENT = "prefGCMTokenSent";
@@ -107,11 +121,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         FragmentManager mFragmentManager = getFragmentManager();
         FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
         mPrefsFragment = PreferencesFragment.newInstance();
@@ -134,13 +150,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	}
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
@@ -151,6 +167,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
             String storageOption   = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
             String path = null;
+            boolean needsUserPermission = false;
 
             Log.d(TAG, "Storage option selected: " + storageOption);
 
@@ -159,27 +176,41 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 //The option selected is a path
                 path = storageOption;
                 storageOption = STORAGE_OPTION_EXTERNAL;
+                needsUserPermission = ExternalStorageStrategy.needsUserPermissions(this, path);
             }
             if (
                 //The storage option is different from the current one
-                (!storageOption.equals(FileUtils.getStorageStrategy().getStorageType())) ||
+                (!storageOption.equals(Storage.getStorageStrategy().getStorageType())) ||
                 //The storage is set to external, and is a different path
                 ((path != null) && !currentLocation.startsWith(path))
             ){
-                ArrayList<Object> data = new ArrayList<Object>();
-                data.add(storageOption);
-                if (path != null){ data.add(path); }
-                Payload p = new Payload(data);
-                ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
-                changeStorageTask.setMoveStorageListener(this);
 
-                pDialog = new ProgressDialog(this);
-                pDialog.setTitle(R.string.loading);
-                pDialog.setMessage(getString(R.string.moving_storage_location));
-                pDialog.setCancelable(false);
-                pDialog.show();
+                StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageOption);
+                if (needsUserPermission){
+                    Log.d(TAG, "Asking user for storage permissions");
+                    final String finalStorageOption = storageOption;
+                    final String finalPath = path;
+                    newStrategy.askUserPermissions(this, new StorageAccessListener() {
+                        @Override
+                        public void onAccessGranted(boolean isGranted) {
+                            Log.d(TAG, "Access granted for storage: " + isGranted);
+                            if (isGranted){
+                                executeChangeStorageTask(finalPath, finalStorageOption);
+                            }
+                            else{
+                                Toast.makeText(PrefsActivity.this, getString(R.string.storageAccessNotGranted), Toast.LENGTH_LONG).show();
+                                //If the user didn't grant access, we revert the preference selection
+                                String currentStorageOpt = Storage.getStorageStrategy().getStorageType();
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt).apply();
+                                mPrefsFragment.updateStoragePref(currentStorageOpt);
+                            }
 
-                changeStorageTask.execute(p);
+                        }
+                    });
+                } else {
+                    executeChangeStorageTask(path, storageOption);
+                }
             }
         }
         else if (key.equalsIgnoreCase(PREF_ADMIN_PROTECTION)){
@@ -209,8 +240,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                         }
                         else{
                             //Update the password preference
-                            editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password);
-                            editor.commit();
+                            editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password).apply();
                             //Update the UI value of the PreferencesFragment
                             EditTextPreference passwordPref = (EditTextPreference) mPrefsFragment.findPreference(PREF_ADMIN_PASSWORD);
                             passwordPref.setText(password);
@@ -245,11 +275,27 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     private void disableAdminProtection(SharedPreferences prefs){
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
-        editor.commit();
+        editor.putBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false).apply();
         //Update the UI value of the PreferencesFragment
         CheckBoxPreference passwordPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_ADMIN_PROTECTION);
         passwordPref.setChecked(false);
+    }
+
+    private void executeChangeStorageTask(String path, String storageOption){
+        ArrayList<Object> data = new ArrayList<>();
+        data.add(storageOption);
+        if (path != null){ data.add(path); }
+        Payload p = new Payload(data);
+        ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
+        changeStorageTask.setMoveStorageListener(this);
+
+        pDialog = new ProgressDialog(this);
+        pDialog.setTitle(R.string.loading);
+        pDialog.setMessage(getString(R.string.moving_storage_location));
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        changeStorageTask.execute(p);
     }
 
     //@Override
@@ -271,8 +317,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         //Finally, to handle the possibility that is in an inconsistent state
         if (!storageOption.equals(STORAGE_OPTION_INTERNAL)){
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL);
-            editor.commit();
+            editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL).apply();
         }
     }
 

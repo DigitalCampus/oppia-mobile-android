@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import com.splunk.mint.Mint;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -55,10 +56,13 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
-        tags = new ArrayList<Tag>();
+        tags = new ArrayList<>();
         tla = new TagListAdapter(this, tags);
 
         ListView listView = (ListView) findViewById(R.id.tag_list);
@@ -112,7 +116,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
             }
 
             this.json = new JSONObject(savedInstanceState.getString("json"));
-        } catch (Exception e) {}
+        } catch (Exception e) { e.printStackTrace(); }
 	}
 
 	@Override

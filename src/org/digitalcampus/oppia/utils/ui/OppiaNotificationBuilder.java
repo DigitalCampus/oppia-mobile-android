@@ -25,7 +25,7 @@ public class OppiaNotificationBuilder {
             int color;
             //We have to check the M version for the deprecation of the method getColor()
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                color = ctx.getResources().getColor(R.color.highlight_light, null);
+                color = ctx.getResources().getColor(R.color.highlight_light);
             }
             else{
                 color = ctx.getResources().getColor(R.color.highlight_light);

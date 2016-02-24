@@ -44,7 +44,7 @@
     <string name="title_activity_course">Activity</string>
     <string name="title_course_meta">Acerca de</string>
     <string name="title_scorecard">Scorecard</string>
-    <string name="title_search">Búsqueda</string>
+    <string name="search.activity_title">Búsqueda</string>
     <string name="title_welcome">OppiaMobile</string>
         
     <string name="widget_feedback_submit">Submit</string>
@@ -67,7 +67,8 @@
  	
  	<string name="course_context_reset">Reajustar</string>
  	<string name="course_context_delete">Borrar</string>
- 	<string name="course_context_reset_confirm">¿Está seguro de que desea restablecer este curso? Se eliminarán todos los registros de progreso para este curso.</string>
+    <string name="course_context_update_activity">Actualizar actividad</string>
+    <string name="course_context_reset_confirm">¿Está seguro de que desea restablecer este curso? Se eliminarán todos los registros de progreso para este curso.</string>
  	<string name="course_context_delete_confirm">¿Está seguro que desea eliminar este curso? Se eliminará completamente el curso de la aplicación.</string>
  	
  	<string name="no_courses">No hay cursos instalados</string>
@@ -204,7 +205,14 @@
 	<string name="error_reading_xml">An error occurred trying to load the course. Please reinstall the course.</string>
 	<string name="error_tts_start">Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled</string>
 	<string name="warning_wifi_required">Debes estar conectado a una red wifi para descargar ficheros multimedia.\nPor favor, conéctate a una red wifi o descarga los archivos desde tu PC.</string>
-	
+
+    <string name="course_updating">Actualizando actividad del curso…</string>
+    <string name="course_updating_success">\'%1$s\': Actividad del curso actualizada satisfactoriamente</string>
+    <string name="course_updating_error">\'%1$s\': Error actualizando curso</string>
+    <string name="course_deleting">Eliminando curso…</string>
+    <string name="course_deleting_success">Curso eliminado satisfactoriamente</string>
+    <string name="course_deleting_error">Error eliminando curso</string>
+
 	<string name="login_process">Accediendo</string>
 	<string name="login_complete">Registrado</string>
 	
@@ -222,9 +230,11 @@
 	
 	<string name="schedule_reminders">Siguientes actividades recomendadas:</string>
 
-    <string name="search_result_summary">%1$d resultados para \"%2$s\"</string>
-    <string name="search_searching">Buscando…</string>
-    <string name="search_no_results">No se encontraron resultados para \"%1$s\"</string>
+
+    <string name="search.result_summary">%1$d resultados para \"%2$s\"</string>
+    <string name="search.message.searching">Buscando…</string>
+    <string name="search.message.no_results">No se encontraron resultados para \"%1$s\"</string>
+    <string name="search.message.fetching">"Obteniendo resultados…"</string>
 
     <string name="scorecard_quizzes_highlight_pretest">Pre-test</string>
     <string name="scorecard_quizzes_highlight_attempted">Intentos</string>
@@ -251,4 +261,21 @@
     <string name="prefUserHint">(solo lectura)</string>
     <string name="tab_title_reset">Restaurar contraseña</string>
     <string name="title_btn_reset">Restaurar contraseña</string>
+    <string name="error_insufficient_storage_available">Espacio de almacenamiento libre insuficiente</string>
+    <string name="error_register_no_phoneno">Introduce tu número de teléfono</string>
+    <string name="error_register_username_spaces">El nombre de usuario no puede contener espacios</string>
+    <string name="tab_title_help">Ayuda</string>
+    <string name="storageAccessNotGranted">Acceso a la tarjeta SD no concedido</string>
+    <string name="storageAccess_help1">Desde la versión 5 de Android (Lollipop) las aplicaciones tienen disponible de forma oficial una manera para escribir en la tarjeta SD externa. Las apps tienen que pedir permiso de escritura al usuario en una carpeta de la SD: se abrirá un diálogo del sistema y tendrás que seleccionar la tarjeta SD desde allí.</string>
+    <string name="storageAccess_help2">Si el diálogo aparece vacío y no hay ningún elemento en el panel lateral izquierdo, deberás seleccionar primero en el menú la opción para mostrar la tarjeta SD.</string>
+    <string name="storageAccess_help3">Después, pulsa en la tarjeta SD en la lista del panel lateral izquierdo para mostrar su estructura de carpetas. En esta pantalla verás el "Almacenamiento interno" y la tarjeta SD. La tarjeta SD puede mostrarse con un nombre diferente del que aparece aquí, por ejemplo "Kingston". Es la denominada etiqueta de volumen de la tarjeta.</string>
+    <string name="storageAccess_help4">Una vez seleccionada la tarjeta, no pulses sobre ninguna subcarpeta de la misma. Debes elegir la carpeta raíz de más alto nivel de la SD. Esto es importante.</string>
+    <string name="storageAccess_help5">Después de seleccionar el botón de "Seleccionar SD" deberías volver a la app. La propia app comprueba por si acaso si de verdad puede escribir en la tarjeta SD seleccionada, y si el directorio seleccionado es la carpeta raíz.</string>
+    <string name="sequencing.course.message">Debes completar todas las actividades anteriores del curso antes de que ésta esté disponible.</string>
+    <string name="sequencing.dialog_title">Actividad bloqueada</string>
+    <string name="sequencing.section.message">Debes completar todas las actividades anteriores de esta sección antes de que ésta esté disponible.</string>
+    <string name="title_stats_unsubmitted">Actividades pendientes de enviar</string>
+    <string name="title_stats_submitted">Actividades enviadas al servidor</string>
+    <string name="error_preloading_accounts">Error precargando cuentas de usuario desde fichero CSV</string>
+    <string name="info.startup.preloaded_accounts">Precargadas %1$d nueva(s) cuenta(s) de usuario.</string>
 </resources>

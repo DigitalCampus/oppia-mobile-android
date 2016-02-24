@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.model;
 
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +36,10 @@ public class Course implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4412987572522420704L;
-	
+	public static final String SEQUENCING_MODE_NONE = "none";
+    public static final String SEQUENCING_MODE_SECTION = "section";
+    public static final String SEQUENCING_MODE_COURSE = "course";
+
 	public static final String TAG = Course.class.getSimpleName();
 	private int courseId;
 	private ArrayList<Lang> titles = new ArrayList<Lang>();
@@ -58,7 +61,8 @@ public class Course implements Serializable {
 	private int noActivities = 0;
 	private int noActivitiesCompleted = 0;
 	private int noActivitiesStarted = 0;
-	
+    private String sequencingMode = SEQUENCING_MODE_NONE;
+
 	private String root;
 	
 	public Course(String root) {
@@ -95,7 +99,7 @@ public class Course implements Serializable {
 	}
 
 	public String getImageFileFromRoot() {
-		return this.root + File.separator + FileUtils.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + imageFile;
+		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + imageFile;
 	}
 	
 	public void setImageFile(String imageFile) {
@@ -205,13 +209,13 @@ public class Course implements Serializable {
 	}
 
 	public String getLocation() {
-		return this.root + File.separator + FileUtils.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator;
+		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator;
 		
 	}
 
 	public String getCourseXMLLocation(){
 		//String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		return this.root + File.separator + FileUtils.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
+		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
 	}
 	
 
@@ -398,6 +402,12 @@ public class Course implements Serializable {
 	public int getNoActivitiesNotStarted(){
 		return this.getNoActivities() - this.getNoActivitiesCompleted() - this.getNoActivitiesStarted();
 	}
-	
-	
+
+    public String getSequencingMode() {
+        return sequencingMode;
+    }
+
+    public void setSequencingMode(String sequencingMode) {
+        this.sequencingMode = sequencingMode;
+    }
 }
