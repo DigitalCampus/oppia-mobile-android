@@ -96,7 +96,11 @@ public class MobileLearning extends Application {
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
 	public static final int MAX_TRACKER_SUBMIT = 10;
 	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
-	
+
+    public static final String DEVICEADMIN_API_URL = "http://www.chaotic-kingdoms.com/oppia/";
+    public static final String DEVICEADMIN_ADD_PATH = "new.php";
+    public static final boolean DEVICEADMIN_ENABLED = true;
+
 	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
 	
