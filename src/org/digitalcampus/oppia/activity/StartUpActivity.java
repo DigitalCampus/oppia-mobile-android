@@ -39,10 +39,12 @@ import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.service.GCMRegistrationService;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
+import org.digitalcampus.oppia.utils.GooglePlayUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
@@ -60,8 +62,20 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         super.onCreate(savedInstanceState);
         Mint.disableNetworkMonitoring();
         Mint.initAndStartSession(this, MobileLearning.MINT_API_KEY);
-        
         setContentView(R.layout.start_up);
+
+        if (MobileLearning.DEVICEADMIN_ENABLED){
+            boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
+                    new GooglePlayUtils.DialogListener() {
+                        @Override
+                        public void onErrorDialogClosed() {
+                            //If Google play is not available, we need to close the app
+                            StartUpActivity.this.finish();
+                        }
+                    });
+            if (!isGooglePlayAvailable) return;
+        }
+
         tvProgress = (TextView) this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String username = SessionManager.getUsername(this);
@@ -72,12 +86,33 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     public void onResume(){
         super.onResume();
 
+        if (MobileLearning.DEVICEADMIN_ENABLED) {
+            //We need to check again the Google Play API availability
+            boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
+                    new GooglePlayUtils.DialogListener() {
+                        @Override
+                        public void onErrorDialogClosed() {
+                            //If Google play is not available, we need to close the app
+                            StartUpActivity.this.finish();
+                        }
+                    });
+            if (!isGooglePlayAvailable) {
+                this.finish();
+                return;
+            }
+            // Start IntentService to register the phone with GCM.
+            Intent intent = new Intent(this, GCMRegistrationService.class);
+            startService(intent);
+        }
+
         UpgradeManagerTask umt = new UpgradeManagerTask(this);
         umt.setUpgradeListener(this);
         ArrayList<Object> data = new ArrayList<>();
         Payload p = new Payload(data);
         umt.execute(p);
-    }
+ 		
+	}
+	
 	
     private void updateProgress(String text){
     	if(tvProgress != null){

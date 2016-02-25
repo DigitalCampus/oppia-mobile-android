@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.AdminReceiver;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
@@ -34,12 +35,17 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
+import android.app.Activity;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -100,8 +106,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     public static final String PREF_ADMIN_PROTECTION = "prefAdminProtection";
     public static final String PREF_ADMIN_PASSWORD = "prefAdminPassword";
-
     public static final String LAST_ACTIVE_TIME = "prefLastActiveTime";
+
+    //Google Cloud Messaging preferences
+    public static final String GCM_TOKEN_SENT = "prefGCMTokenSent";
+    public static final String GCM_TOKEN_ID = "prefGCMRegistration_id";
+    public static final String PREF_REMOTE_ADMIN = "prefRemoteAdminEnabled";
+    public static final int ADMIN_ACTIVATION_REQUEST = 45;
 
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
@@ -125,7 +136,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
         Bundle bundle = this.getIntent().getExtras();
         if(bundle != null) { mPrefsFragment.setArguments(bundle); }
-
 	}
 
 	@Override
@@ -247,6 +257,20 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 disableAdminProtection(sharedPreferences);
             }
         }
+        else if (key.equalsIgnoreCase(PREF_REMOTE_ADMIN)){
+            boolean adminEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
+            ComponentName adminReceiver = new ComponentName(this, AdminReceiver.class);
+            if (adminEnabled){
+                // Activate device administration
+                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminReceiver);
+                startActivityForResult(intent, ADMIN_ACTIVATION_REQUEST);
+            }
+            else{
+                DevicePolicyManager dpm = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
+                dpm.removeActiveAdmin(adminReceiver);
+            }
+        }
     }
 
     private void disableAdminProtection(SharedPreferences prefs){
@@ -295,10 +319,26 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL).apply();
         }
-
     }
 
     //@Override
     public void moveStorageProgressUpdate(String s) { }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode) {
+            case ADMIN_ACTIVATION_REQUEST:
+
+                boolean adminEnabled = (resultCode == Activity.RESULT_OK);
+                Log.i(TAG, "Remote admin " + (adminEnabled?"allowed":"denied") + " by the user.");
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean(PrefsActivity.PREF_REMOTE_ADMIN, adminEnabled);
+                CheckBoxPreference adminPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_REMOTE_ADMIN);
+                adminPref.setChecked(adminEnabled);
+                return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
 }
