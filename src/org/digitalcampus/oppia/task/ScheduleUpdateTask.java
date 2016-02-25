@@ -17,17 +17,13 @@
 
 package org.digitalcampus.oppia.task;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import android.content.Context;
+import android.os.AsyncTask;
 
-import org.apache.http.HttpResponse;
+import com.splunk.mint.Mint;
+
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -38,29 +34,27 @@ import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.splunk.mint.Mint;
+import java.io.IOException;
+import java.util.ArrayList;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 	
 	public final static String TAG = ScheduleUpdateTask.class.getSimpleName();
 	private Context ctx;
 	private UpdateScheduleListener uStateListener;
-	private SharedPreferences prefs;
 	
 	public ScheduleUpdateTask(Context ctx) {
 		this.ctx = ctx;
-		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 	}
 	
 	@Override
@@ -73,84 +67,70 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 		dp.setProgress(0);
 		dp.setMessage(ctx.getString(R.string.updating));
 		publishProgress(dp);
-		
-		HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-		String url = client.getFullURL(dm.getScheduleURI());
-		
+
 		try {
-			
 			DbHelper db = new DbHelper(ctx);
         	User user = db.getUser(SessionManager.getUsername(ctx));
 			DatabaseManager.getInstance().closeDatabase();
-			
-			String responseStr = "";
-			HttpGet httpGet = new HttpGet(url);
-			httpGet.addHeader(client.getAuthHeader(user.getUsername(),user.getApiKey()));
+
+            OkHttpClient client = HTTPClientUtils.getClient(ctx);
+            Request request = new Request.Builder()
+                    .url(HTTPClientUtils.getFullURL(ctx, dm.getScheduleURI()))
+                    .addHeader(HTTPClientUtils.HEADER_AUTH,
+                            HTTPClientUtils.getAuthHeaderValue(user.getUsername(), user.getApiKey()))
+                    .build();
 			
 			// make request
-			HttpResponse response = client.execute(httpGet);
-		
-			// read response
-			InputStream content = response.getEntity().getContent();
-			BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 1024);
-			String s = "";
-			while ((s = buffer.readLine()) != null) {
-				responseStr += s;
-			}
-			
-			switch (response.getStatusLine().getStatusCode()){
-				case 400: // unauthorised
-					payload.setResult(false);
-					payload.setResultResponse(ctx.getString(R.string.error_login));
-					break;
-				case 200: 
-					payload.setResult(true);
-					payload.setResultResponse("");
-					JSONObject jsonObj = new JSONObject(responseStr);
-					long scheduleVersion = jsonObj.getLong("version");
-					DbHelper db1 = new DbHelper(this.ctx);
-					JSONArray schedule = jsonObj.getJSONArray("activityschedule");
-					ArrayList<ActivitySchedule> activitySchedule = new ArrayList<ActivitySchedule>();
-					for (int i = 0; i < (schedule.length()); i++) {
-						dp.setProgress((i+1)*100/schedule.length());
-						publishProgress(dp);
-						JSONObject acts = (JSONObject) schedule.get(i);
-						ActivitySchedule as = new ActivitySchedule();
-						as.setDigest(acts.getString("digest"));
-						DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("start_date"));
-						DateTime edt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("end_date"));
-						as.setStartTime(sdt);
-						as.setEndTime(edt);
-						activitySchedule.add(as);
-					}
-					int courseId = db1.getCourseID(dm.getShortname());
-					db1.resetSchedule(courseId);
-					db1.insertSchedule(activitySchedule);
-					db1.updateScheduleVersion(courseId, scheduleVersion);
-					DatabaseManager.getInstance().closeDatabase();
-					break;
-				default:
-					payload.setResult(false);
-					payload.setResultResponse(ctx.getString(R.string.error_connection));
-			}
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()){
+                payload.setResult(true);
+                payload.setResultResponse("");
+                JSONObject jsonObj = new JSONObject(response.body().string());
+                long scheduleVersion = jsonObj.getLong("version");
+                db = new DbHelper(this.ctx);
+                JSONArray schedule = jsonObj.getJSONArray("activityschedule");
+                ArrayList<ActivitySchedule> activitySchedule = new ArrayList<>();
+                for (int i = 0; i < (schedule.length()); i++) {
+                    dp.setProgress((i+1)*100/schedule.length());
+                    publishProgress(dp);
+                    JSONObject acts = (JSONObject) schedule.get(i);
+                    ActivitySchedule as = new ActivitySchedule();
+                    as.setDigest(acts.getString("digest"));
+                    DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("start_date"));
+                    DateTime edt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("end_date"));
+                    as.setStartTime(sdt);
+                    as.setEndTime(edt);
+                    activitySchedule.add(as);
+                }
+                int courseId = db.getCourseID(dm.getShortname());
+                db.resetSchedule(courseId);
+                db.insertSchedule(activitySchedule);
+                db.updateScheduleVersion(courseId, scheduleVersion);
+                DatabaseManager.getInstance().closeDatabase();
+            }
+            else if (response.code() == 400){
+                payload.setResult(false);
+                payload.setResultResponse(ctx.getString(R.string.error_login));
+            }
+            else{
+                payload.setResult(false);
+                payload.setResultResponse(ctx.getString(R.string.error_connection));
+            }
 		
 		} catch (JSONException e) {
 			Mint.logException(e);
 			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
-		} catch (ClientProtocolException e) {
+		} catch (ClientProtocolException | UserNotFoundException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
-		} catch (UserNotFoundException unfe) {
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}
-		
-		dp.setProgress(100);
+
+        dp.setProgress(100);
 		dp.setMessage(ctx.getString(R.string.update_complete));
 		publishProgress(dp);
 		payload.setResult(true);
