@@ -99,7 +99,7 @@ public class MobileLearning extends Application {
 
     public static final String DEVICEADMIN_API_URL = "http://www.chaotic-kingdoms.com/oppia/";
     public static final String DEVICEADMIN_ADD_PATH = "new.php";
-    public static final boolean DEVICEADMIN_ENABLED = true;
+    public static final boolean DEVICEADMIN_ENABLED = false;
 
 	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
