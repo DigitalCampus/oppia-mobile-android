@@ -36,7 +36,6 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +44,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -281,7 +281,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void showBaselineMessage(final String digest){
-        aDialog = new AlertDialog.Builder(this).create();
+        aDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle).create();
         aDialog.setCancelable(false);
         aDialog.setTitle(R.string.alert_pretest);
         aDialog.setMessage(this.getString(R.string.alert_pretest_summary));

@@ -153,7 +153,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	
 	private void getCourseList() {
 		// show progress dialog
-		progressDialog = new ProgressDialog(this);
+		progressDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
 		progressDialog.setTitle(R.string.loading);
 		progressDialog.setMessage(getString(R.string.loading));
 		progressDialog.setCancelable(false);

@@ -34,7 +34,6 @@ import org.json.JSONObject;
 
 import com.splunk.mint.Mint;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;

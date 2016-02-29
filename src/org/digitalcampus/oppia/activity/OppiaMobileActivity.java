@@ -18,7 +18,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
+
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +30,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
@@ -391,7 +392,7 @@ public class OppiaMobileActivity
                 task.setOnDeleteCourseListener(OppiaMobileActivity.this);
                 task.execute(p);
 
-                progressDialog = new ProgressDialog(OppiaMobileActivity.this);
+                progressDialog = new ProgressDialog(OppiaMobileActivity.this, R.style.Oppia_AlertDialogStyle);
                 progressDialog.setMessage(getString(R.string.course_deleting));
                 progressDialog.setCancelable(false);
                 progressDialog.setCanceledOnTouchOutside(false);
