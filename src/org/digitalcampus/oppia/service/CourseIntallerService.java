@@ -17,23 +17,14 @@
 
 package org.digitalcampus.oppia.service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Locale;
+import android.app.IntentService;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.params.CoreProtocolPNames;
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
@@ -45,7 +36,7 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -57,14 +48,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.IntentService;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
-import android.util.Log;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.util.ArrayList;
+import java.util.Locale;
 
-import com.splunk.mint.Mint;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class CourseIntallerService extends IntentService {
@@ -325,7 +320,7 @@ public class CourseIntallerService extends IntentService {
 
     private void addCancelledTask(String fileUrl){
         if (tasksCancelled == null){
-            tasksCancelled = new ArrayList<String>();
+            tasksCancelled = new ArrayList<>();
         }
         if (!tasksCancelled.contains(fileUrl)){
             tasksCancelled.add(fileUrl);
@@ -342,7 +337,7 @@ public class CourseIntallerService extends IntentService {
 
     private void addDownloadingTask(String fileUrl){
         if (tasksDownloading == null){
-            tasksDownloading = new ArrayList<String>();
+            tasksDownloading = new ArrayList<>();
         }
         if (!tasksDownloading.contains(fileUrl)){
             synchronized (this){
@@ -362,34 +357,22 @@ public class CourseIntallerService extends IntentService {
 
     private boolean downloadCourseFile(String fileUrl, String shortname, Double versionID){
 
+        long startTime = System.currentTimeMillis();
         File downloadedFile = null;
         try {
         	DbHelper db = new DbHelper(this);
         	User u = db.getUser(SessionManager.getUsername(this));
 			DatabaseManager.getInstance().closeDatabase();
-        	
-            HTTPConnectionUtils client = new HTTPConnectionUtils(this);
-            String downloadUrl =  client.createUrlWithCredentials(fileUrl, u.getUsername(), u.getApiKey());
-            String v = "0";
-            try {
-                v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
 
-            URL url = new URL(downloadUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty(CoreProtocolPNames.USER_AGENT, MobileLearning.USER_AGENT + v);
-            Log.d(TAG, CoreProtocolPNames.USER_AGENT + ":" + MobileLearning.USER_AGENT + v);
-            connection.setDoOutput(true);
-            connection.connect();
-            connection.setConnectTimeout(Integer.parseInt(prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_CONN,
-                    this.getString(R.string.prefServerTimeoutConnection))));
-            connection.setReadTimeout(Integer.parseInt(prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_RESP,
-                    this.getString(R.string.prefServerTimeoutResponse))));
+            OkHttpClient client = HTTPClientUtils.getClient(this);
+            Request request = new Request.Builder()
+                    .url(HTTPClientUtils.getUrlWithCredentials(fileUrl, u.getUsername(), u.getApiKey()))
+                    .build();
 
-            long fileLength = connection.getContentLength();
+            Response response = client.newCall(request).execute();
+
+            long fileLength = response.body().contentLength();
+            Log.d(TAG, "Content-lenght: " + fileLength);
             long availableStorage = Storage.getAvailableStorageSize(this);
 
             if (fileLength >= availableStorage){
@@ -401,7 +384,7 @@ public class CourseIntallerService extends IntentService {
             String localFileName = getLocalFilename(shortname, versionID);
             downloadedFile = new File(Storage.getDownloadPath(this),localFileName);
             FileOutputStream f = new FileOutputStream(downloadedFile);
-            InputStream in = connection.getInputStream();
+            InputStream in = response.body().byteStream();
 
             byte[] buffer = new byte[8192];
             int len1;
@@ -425,6 +408,8 @@ public class CourseIntallerService extends IntentService {
                 }
                 f.write(buffer, 0, len1);
             }
+            in.close();
+            f.flush();
             f.close();
 
         } catch (MalformedURLException e) {
@@ -439,7 +424,6 @@ public class CourseIntallerService extends IntentService {
             logAndNotifyError(fileUrl, e);
             return false;
         } catch (UserNotFoundException unfe) {
-        	this.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, unfe);
             return false;
 		}
@@ -447,75 +431,71 @@ public class CourseIntallerService extends IntentService {
         Log.d(TAG, fileUrl + " succesfully downloaded");
         removeDownloading(fileUrl);
         sendBroadcast(fileUrl, ACTION_INSTALL, "0");
+
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        Log.d(TAG, "MeasureTime - " + ": " + estimatedTime + "ms");
         return true;
     }
 
     private boolean updateCourseSchedule(String scheduleUrl, String shortname){
         sendBroadcast(scheduleUrl, ACTION_INSTALL, "" + 0);
-
-        HTTPConnectionUtils client = new HTTPConnectionUtils(this);
-        String url = client.getFullURL(scheduleUrl);
-
         try {
         	
         	DbHelper db = new DbHelper(this);
         	User u = db.getUser(SessionManager.getUsername(this));
 			DatabaseManager.getInstance().closeDatabase();
-			
-        	String responseStr = "";
-            HttpGet httpGet = new HttpGet(url);
-            httpGet.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
-            // make request
-            HttpResponse response = client.execute(httpGet);
 
-            // read response
-            InputStream content = response.getEntity().getContent();
-            BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 1024);
-            String s;
-            while ((s = buffer.readLine()) != null) {
-                responseStr += s;
-            }
+            OkHttpClient client = HTTPClientUtils.getClient(this);
+            Request request = new Request.Builder()
+                    .url(HTTPClientUtils.getFullURL(this, scheduleUrl))
+                    .addHeader(HTTPClientUtils.HEADER_AUTH,
+                            HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
+                    .build();
 
-            switch (response.getStatusLine().getStatusCode()){
-                case 400: // unauthorised
-                    sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_login));
-                    removeDownloading(scheduleUrl);
-                    return false;
-                case 200:
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()){
+                JSONObject jsonObj = new JSONObject(response.body().string());
+                long scheduleVersion = jsonObj.getLong("version");
+                DbHelper db1 = new DbHelper(this);
+                JSONArray schedule = jsonObj.getJSONArray("activityschedule");
+                ArrayList<ActivitySchedule> activitySchedule = new ArrayList<>();
+                int lastProgress = 0;
+                for (int i = 0; i < (schedule.length()); i++) {
 
-                    JSONObject jsonObj = new JSONObject(responseStr);
-                    long scheduleVersion = jsonObj.getLong("version");
-                    DbHelper db1 = new DbHelper(this);
-                    JSONArray schedule = jsonObj.getJSONArray("activityschedule");
-                    ArrayList<ActivitySchedule> activitySchedule = new ArrayList<ActivitySchedule>();
-                    int lastProgress = 0;
-                    for (int i = 0; i < (schedule.length()); i++) {
-
-                        int progress = (i+1)*100/schedule.length();
-                        if ((progress - (progress%10) > lastProgress)){
-                            sendBroadcast(scheduleUrl, ACTION_INSTALL, ""+progress);
-                            lastProgress = progress;
-                        }
-
-                        JSONObject acts = (JSONObject) schedule.get(i);
-                        ActivitySchedule as = new ActivitySchedule();
-                        as.setDigest(acts.getString("digest"));
-                        DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("start_date"));
-                        DateTime edt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("end_date"));
-                        as.setStartTime(sdt);
-                        as.setEndTime(edt);
-                        activitySchedule.add(as);
+                    int progress = (i+1)*100/schedule.length();
+                    if ((progress - (progress%10) > lastProgress)){
+                        sendBroadcast(scheduleUrl, ACTION_INSTALL, ""+progress);
+                        lastProgress = progress;
                     }
-                    int courseId = db1.getCourseID(shortname);
-                    db1.resetSchedule(courseId);
-                    db1.insertSchedule(activitySchedule);
-                    db1.updateScheduleVersion(courseId, scheduleVersion);
-                    DatabaseManager.getInstance().closeDatabase();
-                    break;
-                default:
-                    sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
-                    removeDownloading(scheduleUrl);
-                    return false;
+
+                    JSONObject acts = (JSONObject) schedule.get(i);
+                    ActivitySchedule as = new ActivitySchedule();
+                    as.setDigest(acts.getString("digest"));
+                    DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("start_date"));
+                    DateTime edt = MobileLearning.DATETIME_FORMAT.parseDateTime(acts.getString("end_date"));
+                    as.setStartTime(sdt);
+                    as.setEndTime(edt);
+                    activitySchedule.add(as);
+                }
+                int courseId = db1.getCourseID(shortname);
+                db1.resetSchedule(courseId);
+                db1.insertSchedule(activitySchedule);
+                db1.updateScheduleVersion(courseId, scheduleVersion);
+                DatabaseManager.getInstance().closeDatabase();
+            }
+            else{
+                switch (response.code()) {
+                    case 400:
+                    case 401: // unauthorised
+                        sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_login));
+                        removeDownloading(scheduleUrl);
+                        return false;
+
+                    default:
+                        sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
+                        removeDownloading(scheduleUrl);
+                        return false;
+                }
             }
 
         } catch (JSONException e) {
@@ -523,16 +503,10 @@ public class CourseIntallerService extends IntentService {
             e.printStackTrace();
             sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_processing_response));
             removeDownloading(scheduleUrl);
-        } catch (ClientProtocolException e) {
+        } catch (UserNotFoundException | IOException e) {
             sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
             removeDownloading(scheduleUrl);
-        } catch (IOException e) {
-            sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
-            removeDownloading(scheduleUrl);
-        } catch (UserNotFoundException unfe) {
-        	sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
-            removeDownloading(scheduleUrl);
-		}
+        }
 
         Log.d(TAG, scheduleUrl + " succesfully downloaded");
         removeDownloading(scheduleUrl);

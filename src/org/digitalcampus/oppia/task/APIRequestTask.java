@@ -17,86 +17,74 @@
 
 package org.digitalcampus.oppia.task;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
+import android.util.Log;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
-	
+
 	public static final String TAG = APIRequestTask.class.getSimpleName();
 	protected Context ctx;
 	private APIRequestListener requestListener;
-	private SharedPreferences prefs;
-	
+
 	public APIRequestTask(Context ctx) {
 		this.ctx = ctx;
-		prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
 	}
-	
+
 	@Override
 	protected Payload doInBackground(Payload... params){
-		
-		Payload payload = params[0];
-		String responseStr = "";
 
+        long now = System.currentTimeMillis();
+		Payload payload = params[0];
 		try {
-			
+
 			DbHelper db = new DbHelper(ctx);
         	User u = db.getUser(SessionManager.getUsername(ctx));
 			DatabaseManager.getInstance().closeDatabase();
-			
-			HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-			String url = client.getFullURL(payload.getUrl());
-			HttpGet httpGet = new HttpGet(url);
-			httpGet.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
-			
-			// make request
-			HttpResponse response = client.execute(httpGet);
-		
-			// read response
-			InputStream content = response.getEntity().getContent();
-			BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 1024);
-			String s = "";
-			while ((s = buffer.readLine()) != null) {
-				responseStr += s;
-			}
-			
-			
-			switch (response.getStatusLine().getStatusCode()){
-				// TODO check the unauthorised response code...
-				case 400: // unauthorised
-					payload.setResult(false);
-					payload.setResultResponse(ctx.getString(R.string.error_login));
-					break;
-				case 200: 
-					payload.setResult(true);
-					payload.setResultResponse(responseStr);
-					break;
-				default:
-					payload.setResult(false);
-					payload.setResultResponse(ctx.getString(R.string.error_connection));
-			}
-			
-		} catch (ClientProtocolException e) {
+
+            OkHttpClient client = HTTPClientUtils.getClient(ctx);
+            Request request = new Request.Builder()
+                    .url(HTTPClientUtils.getFullURL(ctx, payload.getUrl()))
+                    .addHeader(HTTPClientUtils.HEADER_AUTH,
+                            HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()){
+                payload.setResult(true);
+                payload.setResultResponse(response.body().string());
+            }
+            else{
+                switch (response.code()) {
+                    case 401:
+                    case 403: // unauthorised
+                        payload.setResult(false);
+                        payload.setResultResponse(ctx.getString(R.string.error_login));
+                        break;
+
+                    default:
+                        payload.setResult(false);
+                        payload.setResultResponse(ctx.getString(R.string.error_connection));
+                }
+            }
+
+		} catch (ClientProtocolException | UserNotFoundException e) {
 			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
@@ -104,12 +92,11 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
-		} catch (UserNotFoundException unfe) {
-			unfe.printStackTrace();
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}
-		return payload;
+
+        long spent = System.currentTimeMillis() - now;
+        Log.d(TAG, "Spent " + spent + " ms");
+        return payload;
 	}
 	
 	@Override

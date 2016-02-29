@@ -17,20 +17,15 @@
 
 package org.digitalcampus.oppia.task;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collection;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
-import org.apache.http.HttpResponse;
+import com.splunk.mint.Mint;
+
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -38,19 +33,20 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.splunk.mint.Mint;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.util.Log;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Payload> {
 
@@ -68,7 +64,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 	@Override
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = new Payload();
-		
+
 		try {	
 			DbHelper db = new DbHelper(ctx);
 			ArrayList<User> users = db.getAllUsers();
@@ -80,83 +76,68 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 				DatabaseManager.getInstance().closeDatabase();
 				
 				@SuppressWarnings("unchecked")
-				Collection<Collection<TrackerLog>> result = (Collection<Collection<TrackerLog>>) split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
+				Collection<Collection<TrackerLog>> result = split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
 
 				for (Collection<TrackerLog> trackerBatch : result) {
 					String dataToSend = createDataString(trackerBatch);
-					
 					try {
-		
-						HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-						String url = client.getFullURL(MobileLearning.TRACKER_PATH);
-						HttpPatch httpPatch = new HttpPatch(url);
-						
-						StringEntity se = new StringEntity(dataToSend,"utf8");
-		                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-		                httpPatch.setEntity(se);
-		                
-		                httpPatch.addHeader(client.getAuthHeader(u.getUsername(), u.getApiKey()));
-						
-		                // make request
-						HttpResponse response = client.execute(httpPatch);	
-						
-						InputStream content = response.getEntity().getContent();
-						BufferedReader buffer = new BufferedReader(new InputStreamReader(content), 4096);
-						String responseStr = "";
-						String s = "";
-		
-						while ((s = buffer.readLine()) != null) {
-							responseStr += s;
-						}
-						Log.d(TAG,responseStr);
-						switch (response.getStatusLine().getStatusCode()){
-							case 200: // submitted
-								for(TrackerLog tl: trackerBatch){
-									DbHelper db2 = new DbHelper(ctx);
-									db2.markLogSubmitted(tl.getId());
-									DatabaseManager.getInstance().closeDatabase();
-								}
-								payload.setResult(true);
-								// update points
-								JSONObject jsonResp = new JSONObject(responseStr);
-								DbHelper dbpb = new DbHelper(ctx);
-								dbpb.updateUserPoints(u.getUserId(), jsonResp.getInt("points"));
-								dbpb.updateUserBadges(u.getUserId(), jsonResp.getInt("badges"));
-								DatabaseManager.getInstance().closeDatabase();
-								
-								Editor editor = prefs.edit();
-								try {
-									editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
-									editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-								editor.commit();
-								
-								try {
-									JSONObject metadata = jsonResp.getJSONObject("metadata");
-							        MetaDataUtils mu = new MetaDataUtils(ctx);
-							        mu.saveMetaData(metadata, prefs);
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-						    	
-								break;
-							case 400: // submitted but invalid digest - returned 400 Bad Request - so record as submitted so doesn't keep trying
-								for(TrackerLog tl: trackerBatch){
-									DbHelper db3 = new DbHelper(ctx);
-									db3.markLogSubmitted(tl.getId());
-									DatabaseManager.getInstance().closeDatabase();
-								};
-								payload.setResult(true);
-								break;
-							default:
-								payload.setResult(false);
-						}
-		
-					} catch (UnsupportedEncodingException e) {
-						payload.setResult(false);
-					} catch (ClientProtocolException e) {
+
+                        OkHttpClient client = HTTPClientUtils.getClient(ctx);
+                        Request request = new Request.Builder()
+                                .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.TRACKER_PATH))
+                                .addHeader(HTTPClientUtils.HEADER_AUTH,
+                                        HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
+                                .patch(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, dataToSend))
+                                .build();
+
+                        Response response = client.newCall(request).execute();
+                        if (response.isSuccessful()){
+                            for(TrackerLog tl: trackerBatch){
+                                DbHelper db2 = new DbHelper(ctx);
+                                db2.markLogSubmitted(tl.getId());
+                                DatabaseManager.getInstance().closeDatabase();
+                            }
+                            payload.setResult(true);
+                            // update points
+                            JSONObject jsonResp = new JSONObject(response.body().string());
+                            DbHelper dbpb = new DbHelper(ctx);
+                            dbpb.updateUserPoints(u.getUserId(), jsonResp.getInt("points"));
+                            dbpb.updateUserBadges(u.getUserId(), jsonResp.getInt("badges"));
+                            DatabaseManager.getInstance().closeDatabase();
+
+                            Editor editor = prefs.edit();
+                            try {
+                                editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
+                                editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            editor.apply();
+
+                            try {
+                                JSONObject metadata = jsonResp.getJSONObject("metadata");
+                                MetaDataUtils mu = new MetaDataUtils(ctx);
+                                mu.saveMetaData(metadata, prefs);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else{
+                            if (response.code() == 400) {
+                                // submitted but invalid digest - returned 400 Bad Request -
+                                // so record as submitted so doesn't keep trying
+                                for(TrackerLog tl: trackerBatch){
+                                    DbHelper db3 = new DbHelper(ctx);
+                                    db3.markLogSubmitted(tl.getId());
+                                    DatabaseManager.getInstance().closeDatabase();
+                                }
+                                payload.setResult(true);
+                            }
+                            else{
+                                payload.setResult(false);
+                            }
+                        }
+					} catch (UnsupportedEncodingException | ClientProtocolException e) {
 						payload.setResult(false);
 					} catch (IOException e) {
 						payload.setResult(false);
@@ -177,9 +158,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 		
 		Editor editor = prefs.edit();
 		long now = System.currentTimeMillis()/1000;
-		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now);
-		editor.commit();
-		
+		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
 		return payload;
 	}
 
@@ -210,16 +189,16 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
     }
 	
 	private static Collection<Collection<TrackerLog>> split(Collection<Object> bigCollection, int maxBatchSize) {
-		Collection<Collection<TrackerLog>> result = new ArrayList<Collection<TrackerLog>>();
+		Collection<Collection<TrackerLog>> result = new ArrayList<>();
 
 		ArrayList<TrackerLog> currentBatch = null;
 		for (Object obj : bigCollection) {
 			TrackerLog tl = (TrackerLog) obj;
 			if (currentBatch == null) {
-				currentBatch = new ArrayList<TrackerLog>();
+				currentBatch = new ArrayList<>();
 			} else if (currentBatch.size() >= maxBatchSize) {
 				result.add(currentBatch);
-				currentBatch = new ArrayList<TrackerLog>();
+				currentBatch = new ArrayList<>();
 			}
 
 			currentBatch.add(tl);
@@ -233,17 +212,18 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 	}
 	
 	private String createDataString(Collection<TrackerLog> collection){
-		String s = "{\"objects\":[";
+		String jsonString = "{\"objects\":[";
 		int counter = 0;
+        int collectionSize = collection.size();
 		for(TrackerLog tl: collection){
 			counter++;
-			s += tl.getContent();
-			if(counter != collection.size()){
-				s += ",";
+            jsonString += tl.getContent();
+			if(counter != collectionSize){
+                jsonString += ",";
 			}
 		}
-		s += "]}";
-		return s;
+        jsonString += "]}";
+		return jsonString;
 	}
 
 }

@@ -6,20 +6,22 @@ import android.os.AsyncTask;
 import android.provider.Settings;
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import com.splunk.mint.Mint;
+
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.utils.HTTPConnectionUtils;
+import org.digitalcampus.oppia.utils.HTTPClientUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class RegisterDeviceRemoteAdminTask extends AsyncTask<Payload, Void, Payload> {
 
@@ -57,40 +59,36 @@ public class RegisterDeviceRemoteAdminTask extends AsyncTask<Payload, Void, Payl
         String deviceID = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         Log.d(TAG, "Registering device in remote admin list");
-        HTTPConnectionUtils client = new HTTPConnectionUtils(ctx);
-        String url = MobileLearning.DEVICEADMIN_API_URL + MobileLearning.DEVICEADMIN_ADD_PATH;
-
-        HttpPost httpPost = new HttpPost(url);
         try {
-            // Request parameters and other properties.
-            List<NameValuePair> params = new ArrayList<>(2);
-            params.add(new BasicNameValuePair("model_name", deviceModel));
-            params.add(new BasicNameValuePair("device_id", deviceID));
-            params.add(new BasicNameValuePair("sender_id", token));
-            params.add(new BasicNameValuePair("username", username));
-            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            JSONObject json = new JSONObject();
+            json.put("dev_id", deviceID);
+            json.put("reg_id", token);
+            json.put("user", username);
+            json.put("model_name", deviceModel);
 
-            // make request
-            HttpResponse response = client.execute(httpPost);
+            OkHttpClient client = HTTPClientUtils.getClient(ctx);
+            Request request = new Request.Builder()
+                    .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.DEVICEADMIN_ADD_PATH))
+                    .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
+                    .build();
 
-            // check status code
-            switch (response.getStatusLine().getStatusCode()){
-                case 400: // unauthorised
-                    Log.d(TAG, "Bad request");
-                    return false;
-                case 200: // logged in
-                    Log.d(TAG, "Successful registration!");
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean(PrefsActivity.GCM_TOKEN_SENT, true);
-                    editor.commit();
-                    break;
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()){
+                Log.d(TAG, "Successful registration!");
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean(PrefsActivity.GCM_TOKEN_SENT, true).apply();
+            }
+            else{
+                Log.d(TAG, "Bad request");
+                return false;
             }
 
         } catch (UnsupportedEncodingException | ClientProtocolException e) {
             e.printStackTrace();
             Log.d(TAG, e.toString());
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
+            Mint.logException(e);
         }
 
         return true;

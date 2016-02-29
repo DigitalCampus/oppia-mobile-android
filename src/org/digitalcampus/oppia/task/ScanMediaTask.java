@@ -49,8 +49,9 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
         ArrayList<Object> currentMedia = payload.getResponseData();
         ArrayList<String> downloadingMedia = DownloadService.getTasksDownloading();
 
-		for (Object obj: payload.getData()){
-			Course course = (Course) obj;
+        ArrayList<?> courseObjs = payload.getData();
+		for (int i=0; i<courseObjs.size(); i++){
+			Course course = (Course) courseObjs.get(i);
             File courseXML = new File(course.getCourseXMLLocation());
             if (!courseXML.exists()){ continue; }
 

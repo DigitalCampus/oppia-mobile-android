@@ -32,7 +32,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
 
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,9 +40,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -56,7 +57,8 @@ public class UIUtils {
      * @param act
      */
 	public static void showUserData(Menu menu, final Context ctx, final Course courseInContext) {
-		MenuItem pointsItem = menu.findItem(R.id.points);
+		//MenuItem pointsItem = menu.findItem(R.id.points);
+        View pointsItem = MenuItemCompat.getActionView(menu.findItem(R.id.points));
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		
 		DbHelper db = new DbHelper(ctx);
@@ -74,8 +76,8 @@ public class UIUtils {
 			return;
 		}
 		
-		TextView points = (TextView) pointsItem.getActionView().findViewById(R.id.userpoints);
-		TextView badges = (TextView) pointsItem.getActionView().findViewById(R.id.userbadges);
+		TextView points = (TextView) pointsItem.findViewById(R.id.userpoints);
+		TextView badges = (TextView) pointsItem.findViewById(R.id.userbadges);
 
 		if(points == null || badges == null){
 			return;
@@ -167,7 +169,7 @@ public class UIUtils {
 	 * @return
 	 */
 	public static AlertDialog showAlert(Context ctx, String title, String msg, String btnText) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+		AlertDialog.Builder builder = new AlertDialog.Builder(ctx, R.style.Oppia_AlertDialogStyle);
 		builder.setTitle(title);
 		builder.setMessage(msg);
 		builder.setNeutralButton(btnText, new DialogInterface.OnClickListener() {
@@ -187,12 +189,12 @@ public class UIUtils {
 	 * @param funct
 	 * @return
 	 */
-	public static AlertDialog showAlert(Context ctx, int title, int msg, Callable<Boolean> funct) {
-		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg), funct);
+	public static void showAlert(Context ctx, int title, int msg, Callable<Boolean> funct) {
+        UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg), funct);
 	}
 
-	public static AlertDialog showAlert(Context ctx, int title, int msg, int btnText, Callable<Boolean> funct) {
-		return UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg),ctx.getString(btnText), funct);
+	public static void showAlert(Context ctx, int title, int msg, int btnText, Callable<Boolean> funct) {
+		UIUtils.showAlert(ctx, ctx.getString(title), ctx.getString(msg),ctx.getString(btnText), funct);
 	}
 	/**
 	 * @param ctx
@@ -201,12 +203,12 @@ public class UIUtils {
 	 * @param funct
 	 * @return
 	 */
-	public static AlertDialog showAlert(Context ctx, int R, CharSequence msg, Callable<Boolean> funct) {
-		return UIUtils.showAlert(ctx, ctx.getString(R), msg, funct);
+	public static void showAlert(Context ctx, int R, CharSequence msg, Callable<Boolean> funct) {
+		UIUtils.showAlert(ctx, ctx.getString(R), msg, funct);
 	}
 
-	public static AlertDialog showAlert(Context ctx, String title, CharSequence msg, final Callable<Boolean> funct) {
-		return UIUtils.showAlert(ctx, title, msg, ctx.getString(R.string.close),funct);
+	public static void showAlert(Context ctx, String title, CharSequence msg, final Callable<Boolean> funct) {
+		UIUtils.showAlert(ctx, title, msg, ctx.getString(R.string.close),funct);
 	}
 	/**
 	 * @param ctx
@@ -215,8 +217,13 @@ public class UIUtils {
 	 * @param funct
 	 * @return
 	 */
-	public static AlertDialog showAlert(Context ctx, String title, CharSequence msg, String btnText, final Callable<Boolean> funct) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+	public static void showAlert(Context ctx, String title, CharSequence msg, String btnText, final Callable<Boolean> funct) {
+        if ( ctx instanceof Activity) {
+            Activity activity = (Activity) ctx;
+            if ( activity.isFinishing() ) { return; }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx, R.style.Oppia_AlertDialogStyle);
 		builder.setTitle(title);
 		builder.setMessage(msg);
 		builder.setCancelable(true);
@@ -237,7 +244,6 @@ public class UIUtils {
 		});
 		AlertDialog alert = builder.create();
         alert.show();
-		return alert;
 	}
 	
 	
@@ -281,7 +287,7 @@ public class UIUtils {
 		// only show if at least one language
 		if (i > 0) {
 			ArrayAdapter<String> arr = new ArrayAdapter<String>(ctx, android.R.layout.select_dialog_singlechoice,langStringList);
-			AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
+			AlertDialog mAlertDialog = new AlertDialog.Builder(ctx, R.style.Oppia_AlertDialogStyle)
 					.setSingleChoiceItems(arr, prefLangPosition, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							String newLang = languagesList.get(whichButton).getLang();
