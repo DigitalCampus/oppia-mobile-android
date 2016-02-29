@@ -20,7 +20,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Oppia.Theme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="Oppia.Theme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarTheme">@style/Oppia.Theme.ActionBarTheme</item>
         <item name="android:windowBackground">@color/background_light</item>
         <item name="actionBarTabTextStyle">@style/OM.Light.TabText.Style</item>
@@ -40,6 +40,17 @@
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 
+    <style name="Oppia.ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/highlight_light</item>
+        <item name="colorPrimaryDark">@color/highlight_shadow</item>
+        <item name="colorAccent">@color/highlight_secondary</item>
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="Oppia.ToolbarTheme.Dark" parent="@style/Oppia.ToolbarTheme">
+        <item name="android:windowBackground">@color/background_dark</item>
+    </style>
+
     <style name="ActionBar.Solid.Om" parent="android:Widget.Holo.ActionBar.Solid">
         <item name="android:background">@drawable/actionbar_background_gradient</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_om</item>
@@ -54,7 +65,7 @@
         <item name="elevation">4dp</item>
     </style>
 
-    <style name="Oppia.ActionBar.TitleTextStyle" parent="android:Widget.Holo.ActionBar.Solid">
+    <style name="Oppia.ActionBar.TitleTextStyle" parent="Base.ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColor">@color/text_dark</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20sp</item>
@@ -116,12 +127,13 @@
         <item name="colorControlNormal">@color/text_dark</item>
     </style>
 
-    <style name="Oppia.AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="Oppia.AlertDialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/highlight_secondary</item> <!-- Used for the buttons -->
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:windowTitleStyle">@style/Oppia.AlertDialogStyle.TitleTextStyle</item>
     </style>
 
-    <style name="Oppia.AlertDialogStyle.TitleTextStyle">
+    <style name="Oppia.AlertDialogStyle.TitleTextStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:textColor">@color/highlight_dark</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
