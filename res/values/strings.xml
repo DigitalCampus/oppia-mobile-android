@@ -306,6 +306,7 @@
     <string name="sequencing.dialog_title">Activity locked</string>
     <string name="sequencing.section.message">You must complete the previous activities in this section before this one becomes available to you.</string>
     <string name="sequencing.course.message">You must complete all the previous activities in the course before this one becomes available to you.</string>
+    <string name="version_name">5.5.0</string>
 
 </resources>
 

@@ -72,8 +72,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_index);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -118,17 +116,16 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     @Override
 	public void onStart() {
 		super.onStart();
-
-		setTitle(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 		// set image
 		if (course.getImageFile() != null) {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
 					R.drawable.dc_logo);
-			getActionBar().setIcon(bm);
-		}
-	}
+			//getSupportActionBar().setIcon(bm);
+            getSupportActionBar().setHomeAsUpIndicator(bm);
+        }
+    }
 
-	@Override
+    @Override
 	public void onResume() {
 		super.onResume();
         if (aDialog != null) {

@@ -121,11 +121,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentManager mFragmentManager = getFragmentManager();
@@ -218,7 +213,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             if (protectionEnabled){
                 Log.d(TAG, "Admin protection enabled, prompting for new password");
                 final EditText passwordInput = new EditText(this);
-                final AlertDialog passwordDialog = new AlertDialog.Builder(this)
+                final AlertDialog passwordDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle)
                     .setTitle(getString(R.string.admin_password_newpassword_dialog_title))
                     .setMessage(getString(R.string.admin_password_newpassword_dialog_message))
                     .setView(passwordInput)
@@ -289,7 +284,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
         changeStorageTask.setMoveStorageListener(this);
 
-        pDialog = new ProgressDialog(this);
+        pDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
         pDialog.setTitle(R.string.loading);
         pDialog.setMessage(getString(R.string.moving_storage_location));
         pDialog.setCancelable(false);

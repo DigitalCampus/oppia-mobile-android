@@ -36,7 +36,7 @@ public class PasswordDialogFragment extends DialogFragment {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
             LayoutInflater inflater = getActivity().getLayoutInflater();
 
             builder.setView(inflater.inflate(R.layout.dialog_password, null))
