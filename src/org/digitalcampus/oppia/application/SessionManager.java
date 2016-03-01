@@ -26,6 +26,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
@@ -48,6 +49,24 @@ public class SessionManager {
 
     private static String getUsernameFromPrefs(SharedPreferences prefs){
         return prefs.getString(PrefsActivity.PREF_USER_NAME, "");
+    }
+
+    public static String getUserDisplayName(Context ctx){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String username = getUsernameFromPrefs(prefs);
+
+        DbHelper db = new DbHelper(ctx);
+        try {
+            User u = db.getUser(username);
+            return u.getDisplayName();
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            DatabaseManager.getInstance().closeDatabase();
+        }
+
     }
 
     public static String getUsername(Context ctx){

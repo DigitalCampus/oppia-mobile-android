@@ -17,10 +17,10 @@
 
 package org.digitalcampus.oppia.activity;
 
-import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -42,24 +42,17 @@ public class CourseMetaPageActivity extends AppActivity {
     private CourseMetaPage cmp;
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_course_metapage);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_course_metapage);
 
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		Bundle bundle = this.getIntent().getExtras();
-		if (bundle != null) {
-			course = (Course) bundle.getSerializable(Course.TAG);
-			setTitle(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null) {
+            course = (Course) bundle.getSerializable(Course.TAG);
             int pageID = bundle.getInt(CourseMetaPage.TAG);
-			cmp = course.getMetaPage(pageID);
-		}
+            cmp = course.getMetaPage(pageID);
+        }
 		
 		TextView titleTV = (TextView) findViewById(R.id.course_title);
 		String title = cmp.getLang(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).getContent();

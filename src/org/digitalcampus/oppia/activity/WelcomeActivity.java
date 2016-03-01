@@ -28,22 +28,23 @@ import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
 import org.digitalcampus.oppia.model.Lang;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class WelcomeActivity extends AppActivity implements ActionBar.TabListener  {
+public class WelcomeActivity extends AppActivity {
 
 	public static final String TAG = WelcomeActivity.class.getSimpleName();
 	private ActionBar actionBar;
 	private ViewPager viewPager;
+    private TabLayout tabs;
     private int currentTab = 0;
 	
 	@Override
@@ -51,70 +52,48 @@ public class WelcomeActivity extends AppActivity implements ActionBar.TabListene
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_about);
-		actionBar = getActionBar();
+
+        tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
 		viewPager = (ViewPager) findViewById(R.id.activity_about_pager);
-		
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
 	}
 	
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		actionBar.removeAllTabs();
 		List<Fragment> fragments = new ArrayList<Fragment>();
+        List<String> tabTitles = new ArrayList<>();
 		
 		Fragment fWelcome = WelcomeFragment.newInstance();
 		fragments.add(fWelcome);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_welcome)).setTabListener(this), true);
+        tabTitles.add(this.getString(R.string.tab_title_welcome));
 
 		Fragment fLogin = LoginFragment.newInstance();
 		fragments.add(fLogin);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_login)).setTabListener(this), false);
+        tabTitles.add(this.getString(R.string.tab_title_login));
 
 		Fragment fRegister = RegisterFragment.newInstance();
 		fragments.add(fRegister);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_register)).setTabListener(this), false);
+        tabTitles.add(this.getString(R.string.tab_title_register));
 
 		Fragment fReset = ResetFragment.newInstance();
 		fragments.add(fReset);
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_reset)).setTabListener(this), false);
+        tabTitles.add(this.getString(R.string.tab_title_reset));
 
-        ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
+        ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
 		viewPager.setAdapter(apAdapter);
+        tabs.setupWithViewPager(viewPager);
+        tabs.setTabMode(TabLayout.MODE_FIXED);
+        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
 		viewPager.setCurrentItem(currentTab);
-		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-			public void onPageScrollStateChanged(int arg0) {
-				// do nothing
-			}
-
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// do nothing
-			}
-
-			public void onPageSelected(int arg0) {
-				actionBar.setSelectedNavigationItem(arg0);
-			}
-
-		});
-	}
-
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		viewPager.setCurrentItem(tab.getPosition());
-		this.currentTab = tab.getPosition();
-		
-	}
-
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-		
+        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 	}
 	
 	@Override

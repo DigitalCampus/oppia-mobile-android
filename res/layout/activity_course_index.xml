@@ -34,6 +34,7 @@
         android:dividerHeight="1dp"
         android:listSelector="@drawable/background_change_pressed"
         android:cacheColorHint="#00000000"
+        android:foreground="?android:windowContentOverlay"
         />
 
 </merge>

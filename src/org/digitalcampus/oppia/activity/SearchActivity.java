@@ -67,11 +67,6 @@ public class SearchActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 

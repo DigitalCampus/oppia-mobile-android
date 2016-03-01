@@ -19,19 +19,25 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CourseMetaPage;
 
-public class AppActivity extends FragmentActivity {
+public class AppActivity extends AppCompatActivity {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
 
@@ -55,6 +61,30 @@ public class AppActivity extends FragmentActivity {
 		}
 		return true;
 	}
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            //actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true);
+
+            //If we are in a course-related activity, we show its title
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            Bundle bundle = this.getIntent().getExtras();
+            if (bundle != null) {
+                Course course = (Course) bundle.getSerializable(Course.TAG);
+                if (course == null ) return;
+                String title = course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+                setTitle(title);
+                actionBar.setTitle(title);
+            }
+        }
+    }
 
     @Override
     public void onResume(){

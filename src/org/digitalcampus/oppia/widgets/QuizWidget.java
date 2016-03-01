@@ -59,7 +59,6 @@ import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -68,6 +67,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -360,7 +360,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void showFeedback(String msg) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(super.getActivity());
+		AlertDialog.Builder builder = new AlertDialog.Builder(super.getActivity(), R.style.Oppia_AlertDialogStyle);
 		builder.setTitle(super.getActivity().getString(R.string.feedback));
 		builder.setMessage(msg);
 		try {

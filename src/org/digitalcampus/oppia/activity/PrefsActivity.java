@@ -17,7 +17,6 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +35,6 @@ import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -51,6 +48,7 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -121,11 +119,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentManager mFragmentManager = getFragmentManager();
@@ -218,7 +211,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             if (protectionEnabled){
                 Log.d(TAG, "Admin protection enabled, prompting for new password");
                 final EditText passwordInput = new EditText(this);
-                final AlertDialog passwordDialog = new AlertDialog.Builder(this)
+                final AlertDialog passwordDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle)
                     .setTitle(getString(R.string.admin_password_newpassword_dialog_title))
                     .setMessage(getString(R.string.admin_password_newpassword_dialog_message))
                     .setView(passwordInput)
@@ -289,7 +282,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         ChangeStorageOptionTask changeStorageTask = new ChangeStorageOptionTask(PrefsActivity.this.getApplicationContext());
         changeStorageTask.setMoveStorageListener(this);
 
-        pDialog = new ProgressDialog(this);
+        pDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
         pDialog.setTitle(R.string.loading);
         pDialog.setMessage(getString(R.string.moving_storage_location));
         pDialog.setCancelable(false);
