@@ -58,7 +58,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	static final String DB_NAME = "mobilelearning.db";
 	static final int DB_VERSION = 24;
 
-	private static SQLiteDatabase db;
+    private static DbHelper instance;
+	private SQLiteDatabase db;
 	private SharedPreferences prefs;
 	
 	private static final String COURSE_TABLE = "Module";
@@ -130,24 +131,20 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String USER_PREFS_C_USERNAME = "username";
     private static final String USER_PREFS_C_PREFKEY = "preference";
     private static final String USER_PREFS_C_PREFVALUE = "value";
-	
-    public void beginTransaction(){
-        db.beginTransaction();
-    }
-    public void endTransaction(boolean success){
-        if (success){
-            db.setTransactionSuccessful();
-        }
-        db.endTransaction();
-    }
 
 	// Constructor
-	public DbHelper(Context ctx) { //
+	private DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		DatabaseManager.initializeInstance(this);
-		db = DatabaseManager.getInstance().openDatabase();
+        db = this.getWritableDatabase();
 	}
+
+    public static synchronized DbHelper getInstance(Context ctx){
+        if (instance == null){
+            instance = new DbHelper(ctx.getApplicationContext());
+        }
+        return instance;
+    }
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -159,6 +156,16 @@ public class DbHelper extends SQLiteOpenHelper {
 		createUserTable(db);
         createUserPrefsTable(db);
 	}
+
+    public void beginTransaction(){
+        db.beginTransaction();
+    }
+    public void endTransaction(boolean success){
+        if (success){
+            db.setTransactionSuccessful();
+        }
+        db.endTransaction();
+    }
 
 	public void createCourseTable(SQLiteDatabase db){
 		String m_sql = "create table " + COURSE_TABLE + " (" + COURSE_C_ID + " integer primary key autoincrement, "

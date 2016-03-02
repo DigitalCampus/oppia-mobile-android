@@ -36,7 +36,6 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +44,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,8 +72,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_index);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -118,17 +116,16 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     @Override
 	public void onStart() {
 		super.onStart();
-
-		setTitle(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 		// set image
 		if (course.getImageFile() != null) {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
 					R.drawable.dc_logo);
-			getActionBar().setIcon(bm);
-		}
-	}
+			//getSupportActionBar().setIcon(bm);
+            getSupportActionBar().setHomeAsUpIndicator(bm);
+        }
+    }
 
-	@Override
+    @Override
 	public void onResume() {
 		super.onResume();
         if (aDialog != null) {
@@ -284,7 +281,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void showBaselineMessage(final String digest){
-        aDialog = new AlertDialog.Builder(this).create();
+        aDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle).create();
         aDialog.setCancelable(false);
         aDialog.setTitle(R.string.alert_pretest);
         aDialog.setMessage(this.getString(R.string.alert_pretest_summary));

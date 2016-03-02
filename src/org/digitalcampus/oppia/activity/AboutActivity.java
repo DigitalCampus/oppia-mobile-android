@@ -17,15 +17,16 @@
 
 package org.digitalcampus.oppia.activity;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.digitalcampus.mobile.learning.R;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AboutActivity extends AppActivity implements ActionBar.TabListener {
+public class AboutActivity extends AppActivity {
 
 	public static final String TAG = AboutActivity.class.getSimpleName();
 	
@@ -52,6 +53,7 @@ public class AboutActivity extends AppActivity implements ActionBar.TabListener 
 
 	private ActionBar actionBar;
 	private ViewPager viewPager;
+    private TabLayout tabs;
 	private ActivityPagerAdapter apAdapter;
 	private int currentTab = 0;
 	private SharedPreferences prefs;
@@ -61,13 +63,17 @@ public class AboutActivity extends AppActivity implements ActionBar.TabListener 
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_about);
-		actionBar = getActionBar();
+		actionBar = getSupportActionBar();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		viewPager = (ViewPager) findViewById(R.id.activity_about_pager);
-		
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setHomeButtonEnabled(true);
+
+        tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
 		
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -80,86 +86,35 @@ public class AboutActivity extends AppActivity implements ActionBar.TabListener 
 		super.onStart();
 
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-		
-		actionBar.removeAllTabs();
 		List<Fragment> fragments = new ArrayList<Fragment>();
+        List<String> titles = new ArrayList<>();
 		
 		Fragment fAbout = AboutFragment.newInstance();
 		fragments.add(fAbout);
+        titles.add(this.getString(R.string.tab_title_about));
 		
 		String urlHelp = Storage.getLocalizedFilePath(this, lang, "help.html");
 		Fragment fHelp = OppiaWebViewFragment.newInstance(TAB_HELP, urlHelp);
 		fragments.add(fHelp);
+        titles.add(this.getString(R.string.tab_title_help));
 		
 		String url = Storage.getLocalizedFilePath(this,lang, "privacy.html");
 		Fragment fPrivacy = OppiaWebViewFragment.newInstance(TAB_PRIVACY, url);
 		fragments.add(fPrivacy);
+        titles.add(this.getString(R.string.tab_title_privacy));
 		
 		Fragment fStats = StatsFragment.newInstance();
 		fragments.add(fStats);
+        titles.add(this.getString(R.string.tab_title_activity));
 		
-		
-		apAdapter = new ActivityPagerAdapter(getSupportFragmentManager(), fragments);
+		apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
 		viewPager.setAdapter(apAdapter);
+        tabs.setupWithViewPager(viewPager);
+        tabs.setTabMode(TabLayout.MODE_FIXED);
+        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
-		boolean setSelected = false;
-		if (currentTab == AboutActivity.TAB_ABOUT){
-			setSelected = true;
-		} else {
-			setSelected = false;
-		}
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_about)).setTabListener(this), TAB_ABOUT, setSelected);
-		if (currentTab == AboutActivity.TAB_HELP){
-			setSelected = true;
-		}else {
-			setSelected = false;
-		}
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_help)).setTabListener(this), TAB_HELP, setSelected);
-		if (currentTab == AboutActivity.TAB_PRIVACY){
-			setSelected = true;
-		}else {
-			setSelected = false;
-		}
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_privacy)).setTabListener(this), TAB_PRIVACY, setSelected);
-
-		if (currentTab == AboutActivity.TAB_STATS){
-			setSelected = true;
-		}else {
-			setSelected = false;
-		}
-		actionBar.addTab(actionBar.newTab().setText(this.getString(R.string.tab_title_activity)).setTabListener(this), TAB_STATS, setSelected);
 		viewPager.setCurrentItem(currentTab);
-		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-			public void onPageScrollStateChanged(int arg0) {
-				// do nothing
-			}
-
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// do nothing
-			}
-
-			public void onPageSelected(int arg0) {
-				actionBar.setSelectedNavigationItem(arg0);
-			}
-
-		});
-	}
-
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		viewPager.setCurrentItem(tab.getPosition());
-		this.currentTab = tab.getPosition();
-		
-	}
-
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
-		
+        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 	}
 	
 	@Override

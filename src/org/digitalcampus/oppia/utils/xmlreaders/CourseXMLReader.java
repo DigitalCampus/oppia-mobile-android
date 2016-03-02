@@ -27,8 +27,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -89,7 +87,7 @@ public class CourseXMLReader {
                     SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
                     SAXParser parser = parserFactory.newSAXParser();
                     reader = parser.getXMLReader();
-                    DbHelper db = new DbHelper(ctx);
+                    DbHelper db = DbHelper.getInstance(ctx);
                     long userId = db.getUserId(SessionManager.getUsername(ctx));
                     completeParseHandler = new CourseXMLHandler(courseId, userId, db);
 
@@ -98,7 +96,6 @@ public class CourseXMLReader {
                     InputStream in = new BufferedInputStream(new FileInputStream(courseXML));
                     reader.parse(new InputSource(in));
 
-                    DatabaseManager.getInstance().closeDatabase();
 
                 } catch (Exception e) {
                     Mint.logException(e);
@@ -189,7 +186,7 @@ public class CourseXMLReader {
 
     public void updateCourseActivity(){
 
-        DbHelper db = new DbHelper(ctx);
+        DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
 
         for (Section section : getCompleteResponses().getSections()){
@@ -200,7 +197,6 @@ public class CourseXMLReader {
         for (Activity activity : getCompleteResponses().getCourseBaseline()){
             activity.setAttempted(db.activityAttempted((int)courseId, activity.getDigest(), userId));
         }
-        DatabaseManager.getInstance().closeDatabase();
     }
 
 }

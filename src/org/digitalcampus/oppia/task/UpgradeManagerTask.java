@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -76,7 +75,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			upgradeV17();
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV17", true);
-			editor.commit();
+			editor.apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v17"));
 			payload.setResult(true);
 		}
@@ -85,7 +84,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			upgradeV20();
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV20", true);
-			editor.commit();
+			editor.apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v20"));
 			payload.setResult(true);
 		}
@@ -93,7 +92,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		if(!prefs.getBoolean("upgradeV29",false)){
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV29", true);
-			editor.commit();
+			editor.apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v29"));
 			payload.setResult(true);
 		}
@@ -101,8 +100,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		if(!prefs.getBoolean("upgradeV43",false)){
 			upgradeV43();
 			Editor editor = prefs.edit();
-			editor.putBoolean("upgradeV43", true);
-			editor.commit();
+			editor.putBoolean("upgradeV43", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v43"));
 			payload.setResult(true);
 		}
@@ -111,7 +109,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			Editor editor = prefs.edit();
 			editor.putBoolean("upgradeV46", true);
 			editor.putString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault));
-			editor.commit();
+			editor.apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v46"));
 			payload.setResult(true);
 		}
@@ -153,58 +151,57 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		File dir = new File(Storage.getCoursesPath(ctx));
 		String[] children = dir.list();
 		if (children != null) {
-			for (int i = 0; i < children.length; i++) {
-				publishProgress("checking: " + children[i]);
-				String courseXMLPath = "";
-				String courseScheduleXMLPath = "";
-				String courseTrackerXMLPath = "";
-				// check that it's unzipped etc correctly
-				try {
-					courseXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_XML;
-					courseScheduleXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
-					courseTrackerXMLPath = dir + File.separator + children[i] + File.separator + MobileLearning.COURSE_TRACKER_XML;
-				} catch (ArrayIndexOutOfBoundsException aioobe){
-					FileUtils.cleanUp(dir, Storage.getDownloadPath(ctx) + children[i]);
-					break;
-				}
-				
-				// check a module.xml file exists and is a readable XML file
-				CourseXMLReader cxr;
-				CourseScheduleXMLReader csxr;
-				CourseTrackerXMLReader ctxr;
-				try {
-					cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
-					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-					File trackerXML = new File(courseTrackerXMLPath);
-					ctxr = new CourseTrackerXMLReader(trackerXML);
-				} catch (InvalidXMLException e) {
-					e.printStackTrace();
-					break;
-				}
+            for (String course : children) {
+                publishProgress("checking: " + course);
+                String courseXMLPath = "";
+                String courseScheduleXMLPath = "";
+                String courseTrackerXMLPath = "";
+                // check that it's unzipped etc correctly
+                try {
+                    courseXMLPath = dir + File.separator + course + File.separator + MobileLearning.COURSE_XML;
+                    courseScheduleXMLPath = dir + File.separator + course + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
+                    courseTrackerXMLPath = dir + File.separator + course + File.separator + MobileLearning.COURSE_TRACKER_XML;
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
+                    FileUtils.cleanUp(dir, Storage.getDownloadPath(ctx) + course);
+                    break;
+                }
 
-				Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-				c.setVersionId(cxr.getVersionId());
-				c.setTitles(cxr.getTitles());
-				c.setShortname(children[i]);
-				c.setImageFile(children[i] + File.separator + cxr.getCourseImage());
-				c.setLangs(cxr.getLangs());
-				c.setPriority(cxr.getPriority());
-				
-				DbHelper db = new DbHelper(ctx);
-				long courseId = db.addOrUpdateCourse(c);
-				
-				if (courseId != -1) {
-					db.insertActivities(cxr.getActivities(courseId));
-					db.insertTrackers(ctxr.getTrackers(courseId, 0));
-				} 
-				
-				// add schedule
-				// put this here so even if the course content isn't updated the schedule will be
-				db.insertSchedule(csxr.getSchedule());
-				db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
-				
-				DatabaseManager.getInstance().closeDatabase();
-			}
+                // check a module.xml file exists and is a readable XML file
+                CourseXMLReader cxr;
+                CourseScheduleXMLReader csxr;
+                CourseTrackerXMLReader ctxr;
+                try {
+                    cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
+                    csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
+                    File trackerXML = new File(courseTrackerXMLPath);
+                    ctxr = new CourseTrackerXMLReader(trackerXML);
+                } catch (InvalidXMLException e) {
+                    e.printStackTrace();
+                    break;
+                }
+
+                Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+                c.setVersionId(cxr.getVersionId());
+                c.setTitles(cxr.getTitles());
+                c.setShortname(course);
+                c.setImageFile(course + File.separator + cxr.getCourseImage());
+                c.setLangs(cxr.getLangs());
+                c.setPriority(cxr.getPriority());
+
+                DbHelper db = DbHelper.getInstance(ctx);
+                long courseId = db.addOrUpdateCourse(c);
+
+                if (courseId != -1) {
+                    db.insertActivities(cxr.getActivities(courseId));
+                    db.insertTrackers(ctxr.getTrackers(courseId, 0));
+                }
+
+                // add schedule
+                // put this here so even if the course content isn't updated the schedule will be
+                db.insertSchedule(csxr.getSchedule());
+                db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
+
+            }
 		}
 	}
 	
@@ -224,11 +221,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		User user = new User();
 		user.setUsername(SessionManager.getUsername(ctx));
 		user.setApiKey(prefs.getString(UpgradeManagerTask.PREF_API_KEY, "") );
-		DbHelper db = new DbHelper(ctx);
+		DbHelper db = DbHelper.getInstance(ctx);
 		long userId = db.addOrUpdateUser(user);
 		db.updateV43(userId);
-		DatabaseManager.getInstance().closeDatabase();
-		
 	}
 	
 	/*
@@ -237,7 +232,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	protected void upgradeV49(){
 		
 		String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
-		if ((location == null) || !location.equals("")){ return; }
+		if (!location.equals("")){ return; }
 		
 		String source = Environment.getExternalStorageDirectory() + File.separator + Storage.APP_ROOT_DIR_NAME  + File.separator;
     	
@@ -306,7 +301,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			
 			Editor editor = prefs.edit();
 			editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, destination);
-			editor.commit();
+			editor.apply();
 			
 			// delete original dir
 			try {
@@ -321,12 +316,12 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
 	// update all the current quiz results for the score/maxscore etc
 	protected void upgradeV54(){
-		DbHelper db = new DbHelper(ctx);
+		DbHelper db = DbHelper.getInstance(ctx);
 		ArrayList<QuizAttempt> quizAttempts = db.getAllQuizAttempts();
 		long userId = db.getUserId(SessionManager.getUsername(ctx));
 		
 		ArrayList<Course> courses = db.getAllCourses();
-		ArrayList<v54UpgradeQuizObj> quizzes = new ArrayList<v54UpgradeQuizObj>();
+		ArrayList<v54UpgradeQuizObj> quizzes = new ArrayList<>();
 		
 		for (Course c: courses){
 			try {
@@ -430,8 +425,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			Log.d(TAG, "passed: " + qa.isPassed());
 		}
 		
-		DatabaseManager.getInstance().closeDatabase();
-		
 	}
 	
 	private class v54UpgradeQuizObj{
@@ -441,14 +434,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	}
 	
 	protected void upgradeV54a(){
-		DbHelper db = new DbHelper(ctx);
+		DbHelper db = DbHelper.getInstance(ctx);
 		long userId = db.getUserId(SessionManager.getUsername(ctx));
 		int points = prefs.getInt(UpgradeManagerTask.PREF_POINTS, 0);
 		int badges = prefs.getInt(UpgradeManagerTask.PREF_BADGES, 0);
-		Log.d(TAG,"points: " + points);
+		Log.d(TAG, "points: " + points);
 		db.updateUserPoints(userId, points);
 		db.updateUserBadges(userId, badges);
-		DatabaseManager.getInstance().closeDatabase();
 	}
 	
 	@Override

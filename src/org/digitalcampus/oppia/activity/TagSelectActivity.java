@@ -34,7 +34,6 @@ import org.json.JSONObject;
 
 import com.splunk.mint.Mint;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -56,11 +55,6 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
 
         tags = new ArrayList<>();
         tla = new TagListAdapter(this, tags);
@@ -131,7 +125,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	
 	private void getTagList() {
 		// show progress dialog
-		pDialog = new ProgressDialog(this);
+		pDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
 		pDialog.setTitle(R.string.loading);
 		pDialog.setMessage(getString(R.string.loading));
 		pDialog.setCancelable(true);

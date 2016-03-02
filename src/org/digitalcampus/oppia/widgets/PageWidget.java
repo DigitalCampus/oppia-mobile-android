@@ -28,7 +28,6 @@ import java.util.Locale;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -201,14 +200,13 @@ public class PageWidget extends WidgetFactory {
 		if (this.activity.hasMedia()) {
 			ArrayList<Media> mediaList = this.activity.getMedia();
 			boolean completed = true;
-			DbHelper db = new DbHelper(super.getActivity());
+			DbHelper db = DbHelper.getInstance(super.getActivity());
 			long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 			for (Media m : mediaList) {
 				if (!db.activityCompleted(this.course.getCourseId(), m.getDigest(), userId)) {
 					completed = false;
 				}
 			}
-			DatabaseManager.getInstance().closeDatabase();
 			return completed;
 		} else {
 			return true;

@@ -18,12 +18,12 @@
 package org.digitalcampus.oppia.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -171,7 +171,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     private void afterUpgrade(Payload p){
         // set up local dirs
         if(!Storage.createFolderStructure(this)){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle);
             builder.setCancelable(false);
             builder.setTitle(R.string.error);
             builder.setMessage(R.string.error_sdcard);

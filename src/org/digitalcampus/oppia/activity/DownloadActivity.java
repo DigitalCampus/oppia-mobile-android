@@ -25,7 +25,6 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCourseListAdapter;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -43,13 +42,13 @@ import org.json.JSONObject;
 
 import com.splunk.mint.Mint;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -72,11 +71,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
 		Bundle bundle = this.getIntent().getExtras(); 
@@ -158,7 +152,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	
 	private void getCourseList() {
 		// show progress dialog
-		progressDialog = new ProgressDialog(this);
+		progressDialog = new ProgressDialog(this, R.style.Oppia_AlertDialogStyle);
 		progressDialog.setTitle(R.string.loading);
 		progressDialog.setMessage(getString(R.string.loading));
 		progressDialog.setCancelable(false);
@@ -219,7 +213,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		        }catch (JSONException je){
                     course.setDraft(false);
 		        }
-		        DbHelper db = new DbHelper(this);
+		        DbHelper db = DbHelper.getInstance(this);
                 course.setInstalled(db.isInstalled(course.getShortname()));
                 course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
 				if (json_obj.has("schedule_uri")){
@@ -227,7 +221,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                     course.setScheduleURI(json_obj.getString("schedule_uri"));
                     course.setToUpdateSchedule(db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
 				}
-				DatabaseManager.getInstance().closeDatabase();
+
                 if (downloadingCourses!=null && downloadingCourses.contains(course.getDownloadUrl())){
                     course.setDownloading(true);
                 }

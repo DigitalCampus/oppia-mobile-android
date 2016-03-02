@@ -24,7 +24,6 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
@@ -65,7 +64,7 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
             try {
                 String line;
                 reader = new BufferedReader(new FileReader(csvAccounts));
-                DbHelper db = new DbHelper(ctx);
+                DbHelper db = DbHelper.getInstance(ctx);
                 int usersAdded = 0;
                 while ((line = reader.readLine()) != null) {
                     String[] rowData = line.split(CSV_SEPARATOR);
@@ -96,7 +95,6 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
             }
             finally {
-                DatabaseManager.getInstance().closeDatabase();
                 try {
                     if (reader!=null) reader.close();
                     boolean deleted = csvAccounts.delete();

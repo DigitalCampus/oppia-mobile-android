@@ -29,7 +29,6 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -49,12 +48,6 @@ public class MonitorActivity extends AppActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_monitor);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
-        
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		webView = new WebView(this);
 		
@@ -81,7 +74,7 @@ public class MonitorActivity extends AppActivity {
 	private void loadMonitor(){ 
 		String url;
 		if(ConnectionUtils.isNetworkConnected(this)){
-			DbHelper db = new DbHelper(this);
+			DbHelper db = DbHelper.getInstance(this);
 			User u;
 			try {
 				u = db.getUser(SessionManager.getUsername(this));
@@ -92,7 +85,6 @@ public class MonitorActivity extends AppActivity {
 				String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 	        	url = Storage.getLocalizedFilePath(MonitorActivity.this, lang, "monitor_not_available.html");
 			}
-			DatabaseManager.getInstance().closeDatabase();
 			
 		} else {
 			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());

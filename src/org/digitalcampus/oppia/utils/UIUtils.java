@@ -24,7 +24,6 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -61,7 +60,7 @@ public class UIUtils {
         View pointsItem = MenuItemCompat.getActionView(menu.findItem(R.id.points));
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		
-		DbHelper db = new DbHelper(ctx);
+		DbHelper db = DbHelper.getInstance(ctx);
 		User u;
 		try {
 			u = db.getUser(SessionManager.getUsername(ctx));
@@ -70,7 +69,6 @@ public class UIUtils {
 		} catch (UserNotFoundException e) {
 			return;
 		}
-		DatabaseManager.getInstance().closeDatabase();
 		
 		if(pointsItem == null){
 			return;

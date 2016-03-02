@@ -28,7 +28,6 @@ import com.splunk.mint.Mint;
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.QuizAttempt;
@@ -72,28 +71,25 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
                 Response response = client.newCall(request).execute();
                 if (response.isSuccessful()){
                     JSONObject jsonResp = new JSONObject(response.body().string());
-                    DbHelper db = new DbHelper(ctx);
+                    DbHelper db = DbHelper.getInstance(ctx);
                     db.markQuizSubmitted(qa.getId());
                     db.updateUserPoints(qa.getUser().getUsername(), jsonResp.getInt("points"));
                     db.updateUserBadges(qa.getUser().getUsername(), jsonResp.getInt("badges"));
-                    DatabaseManager.getInstance().closeDatabase();
                     payload.setResult(true);
                 }
                 else {
                     switch (response.code()) {
                         case 400: // bad request - so to prevent re-submitting over and
                         case 401: // over just mark as submitted
-                            DbHelper db2 = new DbHelper(ctx);
+                            DbHelper db2 = DbHelper.getInstance(ctx);
                             db2.markQuizSubmitted(qa.getId());
-                            DatabaseManager.getInstance().closeDatabase();
                             payload.setResult(false);
                             break;
 
                         case 500: // server error - so to prevent re-submitting over and
                             // over just mark as submitted
-                            DbHelper db3 = new DbHelper(ctx);
+                            DbHelper db3 = DbHelper.getInstance(ctx);
                             db3.markQuizSubmitted(qa.getId());
-                            DatabaseManager.getInstance().closeDatabase();
                             payload.setResult(false);
                             break;
                         default:
