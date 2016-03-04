@@ -21,7 +21,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
@@ -46,7 +45,7 @@ public class SearchUtils {
 
     public static void indexAddCourse(Context ctx, Course course, CourseXMLReader cxr){
         ArrayList<Activity> activities = cxr.getActivities(course.getCourseId());
-        DbHelper db = new DbHelper(ctx);
+        DbHelper db = DbHelper.getInstance(ctx);
 
         db.beginTransaction();
         for( Activity a : activities) {
@@ -72,7 +71,6 @@ public class SearchUtils {
             }
         }
         db.endTransaction(true);
-        DatabaseManager.getInstance().closeDatabase();
     }
 	
 	public static void indexAddCourse(Context ctx, Course course){
@@ -99,15 +97,13 @@ public class SearchUtils {
 		@Override
 		protected Payload doInBackground(Payload... params) {
 			Payload payload = params[0];
-			DbHelper db = new DbHelper(ctx);
+			DbHelper db = DbHelper.getInstance(ctx);
 			db.deleteSearchIndex();
 			ArrayList<Course> courses  = db.getAllCourses();
-			DatabaseManager.getInstance().closeDatabase();
 			for (Course c : courses){
 				Log.d(TAG,"indexing: "+ c.getTitle("en"));
 				SearchUtils.indexAddCourse(ctx,c);
 			}
-
 			
 			return payload;
 		}

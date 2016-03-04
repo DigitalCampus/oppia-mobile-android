@@ -24,7 +24,6 @@ import com.splunk.mint.Mint;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -63,7 +62,7 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
 		DownloadProgress dp = new DownloadProgress();
 
 		try {
-			DbHelper db = new DbHelper(this.ctx);
+			DbHelper db = DbHelper.getInstance(this.ctx);
 			User u = db.getUser(userId);
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
@@ -90,8 +89,6 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
                     e.printStackTrace();
                 }
             }
-
-			DatabaseManager.getInstance().closeDatabase();
 			
             dp.setProgress(100);
             publishProgress(dp);

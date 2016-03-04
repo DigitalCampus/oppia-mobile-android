@@ -30,7 +30,6 @@ import android.widget.LinearLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
@@ -64,10 +63,9 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        DbHelper db = new DbHelper(super.getActivity());
+        DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
         ArrayList<Course> courses = db.getCourses(userId);
-        DatabaseManager.getInstance().closeDatabase();
         scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
         GridView scorecardList = (GridView) super.getActivity().findViewById(R.id.scorecards_list);
         scorecardList.setAdapter(scorecardListAdapter);

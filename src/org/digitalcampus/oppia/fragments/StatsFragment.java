@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.fragments;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
@@ -94,15 +93,13 @@ public class StatsFragment extends Fragment implements TrackerServiceListener {
 	}
 	
 	private void updateSent(){
-		DbHelper db = new DbHelper(super.getActivity());
+		DbHelper db = DbHelper.getInstance(super.getActivity());
 		sentTV.setText(String.valueOf(db.getSentTrackersCount()));
-		DatabaseManager.getInstance().closeDatabase();
 	}
 	
 	private void updateUnsent(){
-		DbHelper db = new DbHelper(super.getActivity());
+		DbHelper db = DbHelper.getInstance(super.getActivity());
 		unsentTV.setText(String.valueOf(db.getUnsentTrackersCount()));
-		DatabaseManager.getInstance().closeDatabase();
 	}
 
 	public void trackerComplete() {

@@ -24,7 +24,6 @@ import android.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -144,7 +143,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				
 				boolean success = false;
 				
-				DbHelper db = new DbHelper(ctx);
+				DbHelper db = DbHelper.getInstance(ctx);
 				long courseId = db.addOrUpdateCourse(c);
 				if (courseId != -1) {
 					payload.addResponseData(c);
@@ -187,8 +186,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				// add schedule
 				// put this here so even if the course content isn't updated the schedule will be
 				db.insertSchedule(csxr.getSchedule());
-				db.updateScheduleVersion(courseId, csxr.getScheduleVersion());				
-				DatabaseManager.getInstance().closeDatabase();
+				db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
 
                 dp.setProgress(80);
                 publishProgress(dp);
