@@ -24,7 +24,6 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
@@ -45,9 +44,9 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
 
     private static final int CSV_COLUMNS = 3;
     private static final String CSV_SEPARATOR = ",";
-    private static final int CSV_USERNAME_COLUMN = 0;
-    private static final int CSV_PASSWORD_COLUMN = 1;
-    private static final int CSV_APIKEY_COLUMN = 2;
+    private static final String CSV_USERNAME_COLUMN = "username";
+    private static final String CSV_PASSWORD_COLUMN = "password";
+    private static final String CSV_APIKEY_COLUMN = "apikey";
 
     public PreloadAccountsTask(Context ctx) {
         this.ctx = ctx;
@@ -66,7 +65,27 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 String line;
                 reader = new BufferedReader(new FileReader(csvAccounts));
                 DbHelper db = new DbHelper(ctx);
+                int usernameColumn = -1, apikeyColumn = -1, passwordColumn = -1;
                 int usersAdded = 0;
+
+                line = reader.readLine(); //We read first line to get headers
+                if (line != null){
+                    String[] headerData = line.split(CSV_SEPARATOR);
+                    for (int i=0; i<headerData.length; i++){
+                        if (CSV_USERNAME_COLUMN.equals(headerData[i]))
+                            usernameColumn = i;
+                        else if (CSV_APIKEY_COLUMN.equals(headerData[i]))
+                            apikeyColumn = i;
+                        else if (CSV_PASSWORD_COLUMN.equals(headerData[i]))
+                            passwordColumn = i;
+                    }
+                }
+
+                if (usernameColumn == -1 | apikeyColumn == -1 | passwordColumn == -1){
+                    payload.setResult(true);
+                    payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
+                }
+
                 while ((line = reader.readLine()) != null) {
                     String[] rowData = line.split(CSV_SEPARATOR);
 
@@ -75,9 +94,9 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                         continue;
                     }
                     User csvUser = new User();
-                    csvUser.setUsername(rowData[CSV_USERNAME_COLUMN]);
-                    csvUser.setPasswordEncrypted(rowData[CSV_PASSWORD_COLUMN]);
-                    csvUser.setApiKey(rowData[CSV_APIKEY_COLUMN]);
+                    csvUser.setUsername(rowData[usernameColumn]);
+                    csvUser.setPasswordEncrypted(rowData[passwordColumn]);
+                    csvUser.setApiKey(rowData[apikeyColumn]);
 
                     db.addOrUpdateUser(csvUser);
                     usersAdded++;
