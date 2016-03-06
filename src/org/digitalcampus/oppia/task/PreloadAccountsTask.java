@@ -64,7 +64,7 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
             try {
                 String line;
                 reader = new BufferedReader(new FileReader(csvAccounts));
-                DbHelper db = new DbHelper(ctx);
+                DbHelper db = DbHelper.getInstance(ctx);
                 int usernameColumn = -1, apikeyColumn = -1, passwordColumn = -1;
                 int usersAdded = 0;
 
@@ -97,7 +97,6 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                     csvUser.setUsername(rowData[usernameColumn]);
                     csvUser.setPassword(rowData[passwordColumn]);
                     csvUser.setApiKey(rowData[apikeyColumn]);
-
                     db.addOrUpdateUser(csvUser);
                     usersAdded++;
                 }
@@ -115,7 +114,6 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
             }
             finally {
-                DatabaseManager.getInstance().closeDatabase();
                 try {
                     if (reader!=null) reader.close();
                     boolean deleted = csvAccounts.delete();
