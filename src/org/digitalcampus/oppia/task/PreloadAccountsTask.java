@@ -42,11 +42,13 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
     private Context ctx;
     private PreloadAccountsListener mListener;
 
-    private static final int CSV_COLUMNS = 3;
     private static final String CSV_SEPARATOR = ",";
     private static final String CSV_USERNAME_COLUMN = "username";
     private static final String CSV_PASSWORD_COLUMN = "password";
     private static final String CSV_APIKEY_COLUMN = "apikey";
+    private static final String CSV_EMAIL_COLUMN = "email";
+    private static final String CSV_FIRSTNAME_COLUMN = "first_name";
+    private static final String CSV_LASTNAME_COLUMN = "last_name";
 
     public PreloadAccountsTask(Context ctx) {
         this.ctx = ctx;
@@ -66,6 +68,7 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 reader = new BufferedReader(new FileReader(csvAccounts));
                 DbHelper db = DbHelper.getInstance(ctx);
                 int usernameColumn = -1, apikeyColumn = -1, passwordColumn = -1;
+                int emailColumn = -1, firstNameColumn = -1, lastNameColumn = -1;
                 int usersAdded = 0;
 
                 line = reader.readLine(); //We read first line to get headers
@@ -78,6 +81,12 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                             apikeyColumn = i;
                         else if (CSV_PASSWORD_COLUMN.equals(headerData[i]))
                             passwordColumn = i;
+                        else if (CSV_EMAIL_COLUMN.equals(headerData[i]))
+                            emailColumn = i;
+                        else if (CSV_FIRSTNAME_COLUMN.equals(headerData[i]))
+                            firstNameColumn = i;
+                        else if (CSV_LASTNAME_COLUMN.equals(headerData[i]))
+                            lastNameColumn = i;
                     }
                 }
 
@@ -86,10 +95,13 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                     payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
                 }
 
+                //Each line has to be at least the max column of any of the mandatory fields
+                int minCSVColumns = Math.max(Math.max(usernameColumn, apikeyColumn), passwordColumn) + 1;
+                Log.d(TAG, "Min columns:" + minCSVColumns);
                 while ((line = reader.readLine()) != null) {
                     String[] rowData = line.split(CSV_SEPARATOR);
 
-                    if (rowData.length < CSV_COLUMNS){
+                    if (rowData.length < minCSVColumns){
                         Log.d(TAG, "Bad csv line, ignoring: " + line);
                         continue;
                     }
@@ -97,6 +109,15 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                     csvUser.setUsername(rowData[usernameColumn]);
                     csvUser.setPassword(rowData[passwordColumn]);
                     csvUser.setApiKey(rowData[apikeyColumn]);
+
+                    //Then we set each optional field
+                    if ((emailColumn != -1) && (rowData.length > emailColumn))
+                        csvUser.setEmail(rowData[emailColumn]);
+                    if ((firstNameColumn != -1) && (rowData.length > firstNameColumn))
+                        csvUser.setFirstname(rowData[firstNameColumn]);
+                    if ((lastNameColumn != -1) && (rowData.length > lastNameColumn))
+                        csvUser.setLastname(rowData[lastNameColumn]);
+
                     db.addOrUpdateUser(csvUser);
                     usersAdded++;
                 }
