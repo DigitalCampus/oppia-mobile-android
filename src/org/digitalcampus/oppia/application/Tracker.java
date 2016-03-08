@@ -46,5 +46,9 @@ public class Tracker {
 		DatabaseManager.getInstance().closeDatabase();
 		
 	}
+	
+	public void saveTracker(JSONObject data){
+        saveTracker(0, "", data, true);
+    }
 
 }

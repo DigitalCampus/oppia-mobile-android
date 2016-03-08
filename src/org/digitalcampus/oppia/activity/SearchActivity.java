@@ -18,16 +18,20 @@
 package org.digitalcampus.oppia.activity;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -67,11 +71,6 @@ public class SearchActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-        }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -96,9 +95,8 @@ public class SearchActivity extends AppActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		DbHelper db = new DbHelper(this);
+		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("preUsername", ""));
-		DatabaseManager.getInstance().closeDatabase();
 		
 		searchText = (EditText) findViewById(R.id.search_string);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -186,6 +184,22 @@ public class SearchActivity extends AppActivity {
             Log.d(TAG, "Starting search...");
             DbHelper db = new DbHelper(SearchActivity.this);
             ArrayList<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this, this);
+
+            //Save the search tracker
+            Tracker t = new Tracker(SearchActivity.this);
+            JSONObject obj = new JSONObject();
+
+            try {
+                MetaDataUtils mdu = new MetaDataUtils(SearchActivity.this);
+                obj = mdu.getMetaData(obj);
+                String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+                obj.put("lang", lang);
+                obj.put("search_term", currentSearch);
+                obj.put("num_results", searchResults.size());
+                t.saveTracker(obj);
+            } catch (JSONException | NullPointerException e) {
+                // Do nothing (sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly)
+            }
             DatabaseManager.getInstance().closeDatabase();
 
             return searchResults;
