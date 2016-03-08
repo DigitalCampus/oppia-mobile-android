@@ -46,10 +46,8 @@ public class Tracker {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		DbHelper db = new DbHelper(this.ctx);
-		db.insertTracker(courseId, digest, data.toString(), completed);
-		DatabaseManager.getInstance().closeDatabase();
-		
+		DbHelper db = DbHelper.getInstance(this.ctx);
+		db.insertTracker(courseId, digest, data.toString(), type, completed);
 	}
 
 	public void saveTracker(int courseId, String digest, JSONObject data, boolean completed){

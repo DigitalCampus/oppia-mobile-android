@@ -182,14 +182,12 @@ public class SearchActivity extends AppActivity {
         @Override
         protected ArrayList<SearchResult> doInBackground(String... urls) {
             Log.d(TAG, "Starting search...");
-            DbHelper db = new DbHelper(SearchActivity.this);
+            DbHelper db = DbHelper.getInstance(SearchActivity.this);
             ArrayList<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this, this);
 
             //Save the search tracker
             new Tracker(SearchActivity.this)
-                    .saveSearchTracker(currentSearch, searchResults.size());	
-
-            DatabaseManager.getInstance().closeDatabase();
+                    .saveSearchTracker(currentSearch, searchResults.size());
 
             return searchResults;
         }
