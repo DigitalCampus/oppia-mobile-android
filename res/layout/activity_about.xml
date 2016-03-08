@@ -24,6 +24,7 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs_toolbar"
             android:layout_width="match_parent"
+            app:tabMaxWidth="0dp"
             android:background="@color/highlight_label"
             android:layout_height="wrap_content"
             style="@style/Oppia.ToolbarTheme.AppTabLayout"

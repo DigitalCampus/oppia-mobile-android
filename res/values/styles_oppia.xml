@@ -144,8 +144,7 @@
     </style>
 
     <style name="Oppia.ToolbarTheme.AppTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabMaxWidth">100dp</item>
-        <item name="tabMinWidth">60dp</item>
+        <item name="tabMinWidth">@dimen/toolbar_tab_width</item>
         <item name="tabIndicatorColor">@color/highlight_mid</item>
         <item name="tabIndicatorHeight">5dp</item>
         <item name="tabPaddingStart">6dp</item>

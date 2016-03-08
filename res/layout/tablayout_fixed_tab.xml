@@ -4,7 +4,7 @@
               android:layout_width="wrap_content"
               android:layout_height="match_parent">
     <TextView
-        android:layout_width="130dp"
+        android:layout_width="@dimen/toolbar_tab_width"
         android:layout_height="match_parent"
         style="@style/Oppia.ToolbarTheme.AppTabTextAppearance"
         android:id="@+id/tabTitle"
