@@ -186,20 +186,9 @@ public class SearchActivity extends AppActivity {
             ArrayList<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this, this);
 
             //Save the search tracker
-            Tracker t = new Tracker(SearchActivity.this);
-            JSONObject obj = new JSONObject();
+            new Tracker(SearchActivity.this)
+                    .saveSearchTracker(currentSearch, searchResults.size());	
 
-            try {
-                MetaDataUtils mdu = new MetaDataUtils(SearchActivity.this);
-                obj = mdu.getMetaData(obj);
-                String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-                obj.put("lang", lang);
-                obj.put("search_term", currentSearch);
-                obj.put("num_results", searchResults.size());
-                t.saveTracker(obj);
-            } catch (JSONException | NullPointerException e) {
-                // Do nothing (sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly)
-            }
             DatabaseManager.getInstance().closeDatabase();
 
             return searchResults;
