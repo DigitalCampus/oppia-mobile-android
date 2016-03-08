@@ -27,7 +27,6 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -232,7 +231,7 @@ public class CourseIntallerService extends IntentService {
 
         boolean success = false;
 
-        DbHelper db = new DbHelper(this);
+        DbHelper db = DbHelper.getInstance(this);
         long courseId = db.addOrUpdateCourse(c);
         if (courseId != -1) {
             File src = new File(tempdir + File.separator + courseDirs[0]);
@@ -268,7 +267,6 @@ public class CourseIntallerService extends IntentService {
         // put this here so even if the course content isn't updated the schedule will be
         db.insertSchedule(csxr.getSchedule());
         db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
-        DatabaseManager.getInstance().closeDatabase();
 
         sendBroadcast(fileUrl, ACTION_INSTALL, "" + 80);
         if (success){ SearchUtils.indexAddCourse(this, c); }
@@ -360,9 +358,8 @@ public class CourseIntallerService extends IntentService {
         long startTime = System.currentTimeMillis();
         File downloadedFile = null;
         try {
-        	DbHelper db = new DbHelper(this);
+        	DbHelper db = DbHelper.getInstance(this);
         	User u = db.getUser(SessionManager.getUsername(this));
-			DatabaseManager.getInstance().closeDatabase();
 
             OkHttpClient client = HTTPClientUtils.getClient(this);
             Request request = new Request.Builder()
@@ -441,9 +438,8 @@ public class CourseIntallerService extends IntentService {
         sendBroadcast(scheduleUrl, ACTION_INSTALL, "" + 0);
         try {
         	
-        	DbHelper db = new DbHelper(this);
+        	DbHelper db = DbHelper.getInstance(this);
         	User u = db.getUser(SessionManager.getUsername(this));
-			DatabaseManager.getInstance().closeDatabase();
 
             OkHttpClient client = HTTPClientUtils.getClient(this);
             Request request = new Request.Builder()
@@ -456,7 +452,6 @@ public class CourseIntallerService extends IntentService {
             if (response.isSuccessful()){
                 JSONObject jsonObj = new JSONObject(response.body().string());
                 long scheduleVersion = jsonObj.getLong("version");
-                DbHelper db1 = new DbHelper(this);
                 JSONArray schedule = jsonObj.getJSONArray("activityschedule");
                 ArrayList<ActivitySchedule> activitySchedule = new ArrayList<>();
                 int lastProgress = 0;
@@ -477,11 +472,10 @@ public class CourseIntallerService extends IntentService {
                     as.setEndTime(edt);
                     activitySchedule.add(as);
                 }
-                int courseId = db1.getCourseID(shortname);
-                db1.resetSchedule(courseId);
-                db1.insertSchedule(activitySchedule);
-                db1.updateScheduleVersion(courseId, scheduleVersion);
-                DatabaseManager.getInstance().closeDatabase();
+                int courseId = db.getCourseID(shortname);
+                db.resetSchedule(courseId);
+                db.insertSchedule(activitySchedule);
+                db.updateScheduleVersion(courseId, scheduleVersion);
             }
             else{
                 switch (response.code()) {

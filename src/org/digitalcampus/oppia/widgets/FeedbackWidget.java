@@ -33,7 +33,6 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
@@ -250,7 +249,7 @@ public class FeedbackWidget extends WidgetFactory {
 
             // save results ready to send back to the quiz server
             String data = feedback.getResultObject().toString();
-            DbHelper db = new DbHelper(super.getActivity());
+            DbHelper db = DbHelper.getInstance(super.getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
     		
     		QuizAttempt qa = new QuizAttempt();
@@ -263,7 +262,6 @@ public class FeedbackWidget extends WidgetFactory {
     		qa.setPassed(this.getActivityCompleted());
 
             db.insertQuizAttempt(qa);
-            DatabaseManager.getInstance().closeDatabase();
         }
 
         //Check if feedback results layout is already loaded

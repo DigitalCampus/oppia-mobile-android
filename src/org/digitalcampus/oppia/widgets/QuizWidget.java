@@ -36,7 +36,6 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
@@ -172,10 +171,9 @@ public class QuizWidget extends WidgetFactory {
 
                 // check to see if all previous section activities have been completed
 
-                DbHelper db = new DbHelper(getActivity());
+                DbHelper db = DbHelper.getInstance(getActivity());
                 long userId = db.getUserId(SessionManager.getUsername(getActivity()));
                 boolean completed = db.isPreviousSectionActivitiesCompleted(course, activity, userId);
-                DatabaseManager.getInstance().closeDatabase();
 
                 if (completed){
                     this.showQuestion();
@@ -189,10 +187,9 @@ public class QuizWidget extends WidgetFactory {
                 }
             } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
                 // check to see if all previous course activities have been completed
-                DbHelper db = new DbHelper(getActivity());
+                DbHelper db = DbHelper.getInstance(getActivity());
                 long userId = db.getUserId(SessionManager.getUsername(getActivity()));
                 boolean completed = db.isPreviousCourseActivitiesCompleted(course, activity, userId);
-                DatabaseManager.getInstance().closeDatabase();
 
                 if (completed){
                     this.showQuestion();
@@ -400,7 +397,7 @@ public class QuizWidget extends WidgetFactory {
 		String data = quiz.getResultObject().toString();
 		Log.d(TAG,data);
 		
-		DbHelper db = new DbHelper(super.getActivity());
+		DbHelper db = DbHelper.getInstance(super.getActivity());
 		long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 		
 		QuizAttempt qa = new QuizAttempt();
@@ -414,7 +411,6 @@ public class QuizWidget extends WidgetFactory {
 		qa.setPassed(this.getActivityCompleted());
 		qa.setSent(false);
 		db.insertQuizAttempt(qa);
-		DatabaseManager.getInstance().closeDatabase();
 		
 		//Check if quiz results layout is already loaded
         View quizResultsLayout = getView().findViewById(R.id.widget_quiz_results);

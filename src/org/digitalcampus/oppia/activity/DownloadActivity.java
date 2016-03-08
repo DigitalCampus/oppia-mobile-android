@@ -25,7 +25,6 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCourseListAdapter;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -219,7 +218,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		        }catch (JSONException je){
                     course.setDraft(false);
 		        }
-		        DbHelper db = new DbHelper(this);
+		        DbHelper db = DbHelper.getInstance(this);
                 course.setInstalled(db.isInstalled(course.getShortname()));
                 course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
 				if (json_obj.has("schedule_uri")){
@@ -227,7 +226,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                     course.setScheduleURI(json_obj.getString("schedule_uri"));
                     course.setToUpdateSchedule(db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
 				}
-				DatabaseManager.getInstance().closeDatabase();
+
                 if (downloadingCourses!=null && downloadingCourses.contains(course.getDownloadUrl())){
                     course.setDownloading(true);
                 }
