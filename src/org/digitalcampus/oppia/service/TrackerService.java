@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -108,9 +107,8 @@ public class TrackerService extends Service implements APIRequestListener {
 			// send quiz results
 			if(app.omSubmitQuizAttemptsTask == null){
 				Log.d(TAG,"Submitting quiz task");
-				DbHelper db = new DbHelper(this);
+				DbHelper db = DbHelper.getInstance(this);
 				ArrayList<QuizAttempt> unsent = db.getUnsentQuizAttempts();
-				DatabaseManager.getInstance().closeDatabase();
 		
 				if (unsent.size() > 0){
 					p = new Payload(unsent);
@@ -154,7 +152,7 @@ public class TrackerService extends Service implements APIRequestListener {
 			
 			JSONObject json = new JSONObject(response.getResultResponse());
 			Log.d(TAG,json.toString(4));
-			DbHelper db = new DbHelper(this);
+			DbHelper db = DbHelper.getInstance(this);
 			for (int i = 0; i < (json.getJSONArray("courses").length()); i++) {
 				JSONObject json_obj = (JSONObject) json.getJSONArray("courses").get(i);
 				String shortName = json_obj.getString("shortname");
@@ -170,7 +168,6 @@ public class TrackerService extends Service implements APIRequestListener {
 					}
 				}
 			}
-			DatabaseManager.getInstance().closeDatabase();
 			
 		} catch (JSONException e) {
 			e.printStackTrace();

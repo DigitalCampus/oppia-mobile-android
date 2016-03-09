@@ -27,7 +27,6 @@ import com.splunk.mint.Mint;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -66,7 +65,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 		User u = (User) payload.getData().get(0);
 		
 		// firstly try to login locally
-		DbHelper db0 = new DbHelper(ctx);
+		DbHelper db0 = DbHelper.getInstance(ctx);
 		try {
 			User localUser = db0.getUser(u.getUsername());
 			
@@ -81,7 +80,6 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 		} catch (UserNotFoundException unfe) {
 			// Just ignore - means that user isn't already registered on the device
 		}
-		DatabaseManager.getInstance().closeDatabase();
 
         try {
 			// update progress dialog
@@ -124,9 +122,8 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                DbHelper db = new DbHelper(ctx);
+                DbHelper db = DbHelper.getInstance(ctx);
                 db.addOrUpdateUser(u);
-                DatabaseManager.getInstance().closeDatabase();
                 payload.setResult(true);
                 payload.setResultResponse(ctx.getString(R.string.login_complete));
             }

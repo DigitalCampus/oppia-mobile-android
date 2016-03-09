@@ -24,7 +24,6 @@ import java.util.concurrent.Callable;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -33,6 +32,7 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,10 +40,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -57,11 +56,10 @@ public class UIUtils {
      * @param act
      */
 	public static void showUserData(Menu menu, final Context ctx, final Course courseInContext) {
-		//MenuItem pointsItem = menu.findItem(R.id.points);
-        View pointsItem = MenuItemCompat.getActionView(menu.findItem(R.id.points));
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		MenuItem pointsItem = menu.findItem(R.id.points);
+      	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 		
-		DbHelper db = new DbHelper(ctx);
+		DbHelper db = DbHelper.getInstance(ctx);
 		User u;
 		try {
 			u = db.getUser(SessionManager.getUsername(ctx));
@@ -70,14 +68,13 @@ public class UIUtils {
 		} catch (UserNotFoundException e) {
 			return;
 		}
-		DatabaseManager.getInstance().closeDatabase();
 		
 		if(pointsItem == null){
 			return;
 		}
 		
-		TextView points = (TextView) pointsItem.findViewById(R.id.userpoints);
-		TextView badges = (TextView) pointsItem.findViewById(R.id.userbadges);
+		TextView points = (TextView) pointsItem.getActionView().findViewById(R.id.userpoints);
+		TextView badges = (TextView) pointsItem.getActionView().findViewById(R.id.userbadges);
 
 		if(points == null || badges == null){
 			return;
@@ -169,7 +166,7 @@ public class UIUtils {
 	 * @return
 	 */
 	public static AlertDialog showAlert(Context ctx, String title, String msg, String btnText) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(ctx, R.style.Oppia_AlertDialogStyle);
+		AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
 		builder.setTitle(title);
 		builder.setMessage(msg);
 		builder.setNeutralButton(btnText, new DialogInterface.OnClickListener() {
@@ -223,7 +220,7 @@ public class UIUtils {
             if ( activity.isFinishing() ) { return; }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(ctx, R.style.Oppia_AlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
 		builder.setTitle(title);
 		builder.setMessage(msg);
 		builder.setCancelable(true);
@@ -287,7 +284,7 @@ public class UIUtils {
 		// only show if at least one language
 		if (i > 0) {
 			ArrayAdapter<String> arr = new ArrayAdapter<String>(ctx, android.R.layout.select_dialog_singlechoice,langStringList);
-			AlertDialog mAlertDialog = new AlertDialog.Builder(ctx, R.style.Oppia_AlertDialogStyle)
+			AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
 					.setSingleChoiceItems(arr, prefLangPosition, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							String newLang = languagesList.get(whichButton).getLang();

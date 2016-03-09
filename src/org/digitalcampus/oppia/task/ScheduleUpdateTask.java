@@ -24,7 +24,6 @@ import com.splunk.mint.Mint;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -69,9 +68,8 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
 		publishProgress(dp);
 
 		try {
-			DbHelper db = new DbHelper(ctx);
+			DbHelper db = DbHelper.getInstance(ctx);
         	User user = db.getUser(SessionManager.getUsername(ctx));
-			DatabaseManager.getInstance().closeDatabase();
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
@@ -87,7 +85,7 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
                 payload.setResultResponse("");
                 JSONObject jsonObj = new JSONObject(response.body().string());
                 long scheduleVersion = jsonObj.getLong("version");
-                db = new DbHelper(this.ctx);
+                db = DbHelper.getInstance(this.ctx);
                 JSONArray schedule = jsonObj.getJSONArray("activityschedule");
                 ArrayList<ActivitySchedule> activitySchedule = new ArrayList<>();
                 for (int i = 0; i < (schedule.length()); i++) {
@@ -106,7 +104,6 @@ public class ScheduleUpdateTask extends AsyncTask<Payload, DownloadProgress, Pay
                 db.resetSchedule(courseId);
                 db.insertSchedule(activitySchedule);
                 db.updateScheduleVersion(courseId, scheduleVersion);
-                DatabaseManager.getInstance().closeDatabase();
             }
             else if (response.code() == 400){
                 payload.setResult(false);

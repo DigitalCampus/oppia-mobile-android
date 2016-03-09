@@ -26,6 +26,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
@@ -48,6 +49,21 @@ public class SessionManager {
 
     private static String getUsernameFromPrefs(SharedPreferences prefs){
         return prefs.getString(PrefsActivity.PREF_USER_NAME, "");
+    }
+
+    public static String getUserDisplayName(Context ctx){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String username = getUsernameFromPrefs(prefs);
+
+        DbHelper db = DbHelper.getInstance(ctx);
+        try {
+            User u = db.getUser(username);
+            return u.getDisplayName();
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     public static String getUsername(Context ctx){
@@ -109,23 +125,20 @@ public class SessionManager {
             }
         }
 
-        DbHelper db = new DbHelper(ctx);
+        DbHelper db = DbHelper.getInstance(ctx);
         db.insertUserPreferences(username, userPrefs);
-        DatabaseManager.getInstance().closeDatabase();
 
     }
 
     //Warning: this method doesn't call prefs.apply()
     private static void loadUserPrefs(Context ctx, String username, SharedPreferences.Editor prefsEditor){
 
-        DbHelper db = new DbHelper(ctx);
+        DbHelper db = DbHelper.getInstance(ctx);
         List<Pair<String, String>> userPrefs = db.getUserPreferences(username);
 
         ArrayList<String> prefsToSave = new ArrayList<>();
         prefsToSave.addAll(PrefsActivity.USER_BOOLEAN_PREFS);
         prefsToSave.addAll(PrefsActivity.USER_STRING_PREFS);
-
-        DatabaseManager.getInstance().closeDatabase();
 
         for (Pair<String, String> pref : userPrefs){
             String prefKey = pref.first;

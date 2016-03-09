@@ -27,7 +27,6 @@ import com.splunk.mint.Mint;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
@@ -66,14 +65,11 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 		Payload payload = new Payload();
 
 		try {	
-			DbHelper db = new DbHelper(ctx);
+			DbHelper db = DbHelper.getInstance(ctx);
 			ArrayList<User> users = db.getAllUsers();
-			DatabaseManager.getInstance().closeDatabase();
 			
 			for (User u: users){
-				DbHelper db1 = new DbHelper(ctx);
-				payload = db1.getUnsentTrackers(u.getUserId());
-				DatabaseManager.getInstance().closeDatabase();
+				payload = db.getUnsentTrackers(u.getUserId());
 				
 				@SuppressWarnings("unchecked")
 				Collection<Collection<TrackerLog>> result = split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
@@ -93,17 +89,13 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
                         Response response = client.newCall(request).execute();
                         if (response.isSuccessful()){
                             for(TrackerLog tl: trackerBatch){
-                                DbHelper db2 = new DbHelper(ctx);
-                                db2.markLogSubmitted(tl.getId());
-                                DatabaseManager.getInstance().closeDatabase();
+                                db.markLogSubmitted(tl.getId());
                             }
                             payload.setResult(true);
                             // update points
                             JSONObject jsonResp = new JSONObject(response.body().string());
-                            DbHelper dbpb = new DbHelper(ctx);
-                            dbpb.updateUserPoints(u.getUserId(), jsonResp.getInt("points"));
-                            dbpb.updateUserBadges(u.getUserId(), jsonResp.getInt("badges"));
-                            DatabaseManager.getInstance().closeDatabase();
+                            db.updateUserPoints(u.getUserId(), jsonResp.getInt("points"));
+                            db.updateUserBadges(u.getUserId(), jsonResp.getInt("badges"));
 
                             Editor editor = prefs.edit();
                             try {
@@ -127,9 +119,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
                                 // submitted but invalid digest - returned 400 Bad Request -
                                 // so record as submitted so doesn't keep trying
                                 for(TrackerLog tl: trackerBatch){
-                                    DbHelper db3 = new DbHelper(ctx);
-                                    db3.markLogSubmitted(tl.getId());
-                                    DatabaseManager.getInstance().closeDatabase();
+                                    db.markLogSubmitted(tl.getId());
                                 }
                                 payload.setResult(true);
                             }

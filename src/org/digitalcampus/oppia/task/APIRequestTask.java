@@ -21,7 +21,6 @@ import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -54,9 +53,8 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 		Payload payload = params[0];
 		try {
 
-			DbHelper db = new DbHelper(ctx);
+			DbHelper db = DbHelper.getInstance(ctx);
         	User u = db.getUser(SessionManager.getUsername(ctx));
-			DatabaseManager.getInstance().closeDatabase();
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()

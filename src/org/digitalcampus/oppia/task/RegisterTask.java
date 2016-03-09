@@ -26,7 +26,6 @@ import com.splunk.mint.Mint;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
@@ -115,9 +114,8 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
                 u.setLastname(jsonResp.getString("last_name"));
 
                 // add or update user in db
-                DbHelper db = new DbHelper(ctx);
+                DbHelper db = DbHelper.getInstance(ctx);
                 db.addOrUpdateUser(u);
-                DatabaseManager.getInstance().closeDatabase();
 
                 payload.setResult(true);
                 payload.setResultResponse(ctx.getString(R.string.register_complete));
