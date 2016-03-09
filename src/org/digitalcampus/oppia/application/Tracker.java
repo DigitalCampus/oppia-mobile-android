@@ -17,8 +17,11 @@
 
 package org.digitalcampus.oppia.application;
 
+import java.util.Locale;
 import java.util.UUID;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,14 +29,16 @@ import android.content.Context;
 
 public class Tracker {
 
-	public static final String TAG = Tracker.class.getSimpleName(); 
+	public static final String TAG = Tracker.class.getSimpleName();
+	public static final String SEARCH_TYPE = "search";
+
 	private final Context ctx;
 	
 	public Tracker(Context context){
 		this.ctx = context;
 	}
-	
-	public void saveTracker(int courseId, String digest, JSONObject data, boolean completed){
+
+	private void saveTracker(int courseId, String digest, JSONObject data, String type, boolean completed){
 		// add tracker UUID
 		UUID guid = java.util.UUID.randomUUID();
 		try {
@@ -42,8 +47,27 @@ public class Tracker {
 			e.printStackTrace();
 		}
 		DbHelper db = DbHelper.getInstance(this.ctx);
-		db.insertTracker(courseId, digest, data.toString(), completed);
-
+		db.insertTracker(courseId, digest, data.toString(), type, completed);
 	}
+
+	public void saveTracker(int courseId, String digest, JSONObject data, boolean completed){
+		saveTracker(courseId, digest, data, "", completed);
+	}
+
+    public void saveSearchTracker(String searchTerm, int count){
+
+		try {
+			JSONObject searchData = new JSONObject();
+			searchData = new MetaDataUtils(ctx).getMetaData(searchData);
+			searchData.put("query", searchTerm);
+			searchData.put("results_count", count);
+
+			saveTracker(0, "", searchData, SEARCH_TYPE, true);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+    }
 
 }
