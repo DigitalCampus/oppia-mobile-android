@@ -45,7 +45,6 @@ import android.widget.Toast;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -147,9 +146,8 @@ public class OppiaMobileActivity
 	@Override
 	public void onStart() {
 		super.onStart();
-		DbHelper db = new DbHelper(this);
+		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(SessionManager.getUsername(this));
-		DatabaseManager.getInstance().closeDatabase();
 		displayCourses(userId);
 	}
 
@@ -173,10 +171,9 @@ public class OppiaMobileActivity
 	
 	private void displayCourses(long userId) {
 
-		DbHelper db = new DbHelper(this);
+		DbHelper db = DbHelper.getInstance(this);
         courses.clear();
 		courses.addAll(db.getCourses(userId));
-		DatabaseManager.getInstance().closeDatabase();
 		
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
@@ -196,11 +193,10 @@ public class OppiaMobileActivity
 
 	private void updateReminders(){
 		if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS, false)){
-			DbHelper db = new DbHelper(OppiaMobileActivity.this);
+			DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS, "2"));
 			long userId = db.getUserId(SessionManager.getUsername(this));
 			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
-			DatabaseManager.getInstance().closeDatabase();
 
 			this.drawReminders(activities);
 		} else {
@@ -372,9 +368,8 @@ public class OppiaMobileActivity
 		builder.setMessage(R.string.course_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                DbHelper db = new DbHelper(OppiaMobileActivity.this);
+                DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
                 db.resetCourse(tempCourse.getCourseId(), OppiaMobileActivity.this.userId);
-                DatabaseManager.getInstance().closeDatabase();
                 displayCourses(userId);
             }
         });

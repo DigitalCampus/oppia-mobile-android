@@ -3,7 +3,6 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import org.digitalcampus.oppia.application.DatabaseManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.model.Course;
@@ -27,9 +26,8 @@ public class DeleteCourseTask extends AsyncTask<Payload, String, Payload> {
         Payload payload = params[0];
         Course course = (Course) payload.getData().get(0);
 
-        DbHelper db = new DbHelper(ctx);
+        DbHelper db = DbHelper.getInstance(ctx);
         db.deleteCourse(course.getCourseId());
-        DatabaseManager.getInstance().closeDatabase();
 
         // remove files
         String courseLocation = course.getLocation();
