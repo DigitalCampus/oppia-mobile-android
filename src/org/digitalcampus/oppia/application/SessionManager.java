@@ -66,24 +66,6 @@ public class SessionManager {
 
     }
 
-    public static String getUserDisplayName(Context ctx){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String username = getUsernameFromPrefs(prefs);
-
-        DbHelper db = new DbHelper(ctx);
-        try {
-            User u = db.getUser(username);
-            return u.getDisplayName();
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-        finally {
-            DatabaseManager.getInstance().closeDatabase();
-        }
-
-    }
-
     public static String getUsername(Context ctx){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         return getUsernameFromPrefs(prefs);
