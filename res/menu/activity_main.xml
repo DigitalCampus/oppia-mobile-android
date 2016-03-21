@@ -1,10 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:oppiamobile="http://schemas.android.com/apk/res-auto" >
+      xmlns:oppiamobile="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/points"
-        android:actionLayout="@layout/points"
-        android:showAsAction="always"/>
-    <item
+        oppiamobile:actionLayout="@layout/points"
+        oppiamobile:showAsAction="always"
+        android:title=""/>
+    <!--<item
         android:id="@+id/menu_download"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/menu_download"/>
@@ -34,5 +35,5 @@
     <item
         android:id="@+id/menu_logout"
         android:icon="@drawable/ic_action_logout"
-        android:title="@string/menu_logout"/>
+        android:title="@string/menu_logout"/>-->
 </menu>

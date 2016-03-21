@@ -18,7 +18,7 @@
 package org.digitalcampus.oppia.activity;
 
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
+
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +27,11 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import android.view.Menu;
@@ -90,6 +95,7 @@ public class OppiaMobileActivity
     private TextView messageText;
     private Button messageButton;
     private View messageContainer;
+    private NavigationView navigationView;
 
     LinearLayout llNone;
 
@@ -123,9 +129,9 @@ public class OppiaMobileActivity
         courseList = (ListView) findViewById(R.id.course_list);
         courseList.setAdapter(courseListAdapter);
 
+        //the alternative of registerForContextMenu(courseList);
         CourseContextMenuCustom courseMenu = new CourseContextMenuCustom(this);
         courseMenu.registerForContextMenu(courseList, this);
-        //the alternative of registerForContextMenu(courseList);
 
         courseList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -141,6 +147,41 @@ public class OppiaMobileActivity
 
         llNone = (LinearLayout) this.findViewById(R.id.no_courses);
         initialCourseListPadding = courseList.getPaddingTop();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Initializing Drawer Layout and ActionBarToggle
+        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_user_fullname)).setText(SessionManager.getUserDisplayName(this));
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_username)).setText(SessionManager.getUsername(this));
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                boolean result = onOptionsItemSelected(menuItem);
+                menuItem.setChecked(false);
+                drawerLayout.closeDrawers();
+                return result;
+            }
+        });
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open, R.string.close){
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+            }
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        //Setting the actionbarToggle to drawer layout
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
 	}
 
 	@Override
@@ -208,17 +249,18 @@ public class OppiaMobileActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		UIUtils.showUserData(menu, this, null);
-		
-		MenuItem itemLogout = menu.findItem(R.id.menu_logout);
-        MenuItem itemSettings = menu.findItem(R.id.menu_settings);
-        MenuItem itemMonitor = menu.findItem(R.id.menu_monitor);
-        MenuItem itemCourseDownload = menu.findItem(R.id.menu_download);
+
+        Menu drawerMenu = navigationView.getMenu();
+		MenuItem itemLogout = drawerMenu.findItem(R.id.menu_logout);
+        MenuItem itemSettings = drawerMenu.findItem(R.id.menu_settings);
+        MenuItem itemMonitor = drawerMenu.findItem(R.id.menu_monitor);
+        MenuItem itemCourseDownload = drawerMenu.findItem(R.id.menu_download);
 
 		itemLogout.setVisible(prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT));
 		itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS);
@@ -299,7 +341,7 @@ public class OppiaMobileActivity
 	}
 
 	private void logout() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle);
 		builder.setCancelable(false);
 		builder.setTitle(R.string.logout);
 		builder.setMessage(R.string.logout_confirm);
@@ -333,7 +375,7 @@ public class OppiaMobileActivity
     }
 
 	private void confirmCourseDelete() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle);
 		builder.setCancelable(false);
 		builder.setTitle(R.string.course_context_delete);
 		builder.setMessage(R.string.course_context_delete_confirm);
@@ -346,7 +388,7 @@ public class OppiaMobileActivity
                 task.setOnDeleteCourseListener(OppiaMobileActivity.this);
                 task.execute(p);
 
-                progressDialog = new ProgressDialog(OppiaMobileActivity.this);
+                progressDialog = new ProgressDialog(OppiaMobileActivity.this, R.style.Oppia_AlertDialogStyle);
                 progressDialog.setMessage(getString(R.string.course_deleting));
                 progressDialog.setCancelable(false);
                 progressDialog.setCanceledOnTouchOutside(false);
@@ -362,7 +404,7 @@ public class OppiaMobileActivity
 	}
 
 	private void confirmCourseReset() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle);
 		builder.setCancelable(false);
 		builder.setTitle(R.string.course_context_reset);
 		builder.setMessage(R.string.course_context_reset_confirm);
@@ -389,7 +431,7 @@ public class OppiaMobileActivity
         task.setUpdateActivityListener(OppiaMobileActivity.this);
         task.execute(p);
 
-        progressDialog = new ProgressDialog(OppiaMobileActivity.this);
+        progressDialog = new ProgressDialog(OppiaMobileActivity.this, R.style.Oppia_AlertDialogStyle);
         progressDialog.setMessage(getString(R.string.course_updating));
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
