@@ -17,10 +17,8 @@
 
 package org.digitalcampus.oppia.application;
 
-import java.util.Locale;
 import java.util.UUID;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +45,9 @@ public class Tracker {
 			e.printStackTrace();
 		}
 		DbHelper db = DbHelper.getInstance(this.ctx);
+
 		db.insertTracker(courseId, digest, data.toString(), type, completed);
+
 	}
 
 	public void saveTracker(int courseId, String digest, JSONObject data, boolean completed){
