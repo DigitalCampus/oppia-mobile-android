@@ -5,9 +5,9 @@
 /local.properties
 /target/
 
-
 /.idea/
 /build
+/app/build
 /gradle
 *.iml
 .gradle
