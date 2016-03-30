@@ -1,0 +1,238 @@
+<resources>
+    <string name="app_name">OppiaMobile</string>
+    <string name="app_logo_alt">Digital Campus Logo</string>
+    
+    <string name="menu_download">कोर्स डाउनलोड करें</string>
+    <string name="menu_language">भाषा बदलें</string>
+    <string name="menu_settings">सेटिंग</string>
+    <string name="menu_about">प्रोग्राम के बारे में जाने</string>
+    <string name="menu_help">मदद</string>
+    <string name="menu_logout">लॉग आउट</string>
+    <string name="menu_monitor">निगरानी करें</string>
+    <string name="menu_read_aloud">ज़ोर से पढ़े</string>
+    <string name="menu_return_to_courses">कोर्स लिस्ट पर वापस जायें</string>
+    <string name="menu_scorecard">स्कोरकार्ड</string>
+    <string name="menu_search">खोज</string>
+    <string name="menu_stop_read_aloud">पढ़ना रोकें</string>
+    
+    <string name="service_tracker">OppiaMobile Tracker Service</string>
+    
+    <string name="fragment_welcome_title">उज्जवल साथी प्रोग्राम में आपका स्वागत है</string>
+    <string name="fragment_welcome_desc">यह प्रोग्राम के माध्यम से आप अपने मोबाइल के ज़रिये स्वास्थ्य सम्बंधित जानकारी प्राप्त कर सकते हैं एवं स्वस्थ्य सम्बंधित फिल्में देख सकतें हैं और दूसरों को दिखा भी सकते हैं.</string>
+    <string name="fragment_welcome_login_info">इस प्रोग्राम को शुरू करने से पहले आपको अपना रजिस्ट्रेशन करना होगा.</string>
+    <string name="fragment_welcome_privacy">हम आपकी निजिता का ख़याल रखतें हैं, </string>
+    
+    <string name="routing_activity_title">किसी एक विकल्प का चयन करें:</string>
+    <string name="routing_button_mlearning">मोबाइल द्वारा शिक्षा</string>
+    <string name="routing_button_client">लाभारती के लिए परामर्श</string>
+    
+    
+    <string name="tab_title_about">प्रोग्राम के बारे में जाने</string>
+    <string name="tab_title_badges">बिल्ला</string>
+    <string name="tab_title_help">मदद</string>
+    <string name="tab_title_login">लॉग इन</string>
+    <string name="tab_title_points">पॉइंट्स</string>
+    <string name="tab_title_privacy">गोपनीयता</string>
+    <string name="tab_title_register">पंजीकरण</string>
+    <string name="tab_title_reset">पासवर्ड रिसेट करें</string>
+    <string name="tab_title_scorecard">स्कोरकार्ड</string>
+    <string name="tab_title_welcome">नमस्कार</string>
+    
+    <string name="title_about">प्रोग्राम के बारे में जाने</string>
+    <string name="title_baseline">Baseline</string>
+    <string name="title_btn_reset">पासवर्ड रिसेट करें</string>
+	<string name="title_download_activity">Manage courses</string>
+    <string name="title_activity_course_index">Course Index</string>
+    <string name="title_activity_course">Activity</string>
+    <string name="title_course_meta">प्रोग्राम के बारे में जाने</string>
+    <string name="title_monitor">निगरानी करें</string>
+    <string name="title_prefs">सेटिंग</string>
+    <string name="title_scorecard">स्कोरकार्ड</string>
+    <string name="search.activity_title">खोज</string>
+    <string name="title_tag_select_activity">Select Category</string>
+    <string name="title_welcome">उज्जवल साथी </string>
+    <string name="version">Version: %1$s</string>
+    <string name="title_download_media">फिल्में डाउनलोड करें</string>
+    
+    
+    
+    <string name="widget_feedback_submit">प्रस्तुत</string>
+    <string name="widget_feedback_submit_title">धन्यवाद!</string>
+    <string name="widget_feedback_continue">जारी रखें &gt;&gt;</string>
+    
+    <string name="widget_quiz_next">आगे बढें &gt;&gt;</string>
+    <string name="widget_quiz_prev">&lt;&lt; पीछे जायें </string>
+    <string name="widget_quiz_getresults">नतीजा जाने </string>
+    <string name="widget_quiz_noanswergiven">आगे बदने से पहले इस प्रशन का उत्तर दें</string>
+    <string name="widget_quiz_progress">प्रशन %1$d / %2$d</string>
+ 	<string name="widget_quiz_results_score">आपका स्कोर: %1$.0f%%</string>
+ 	<string name="widget_quiz_results_restart">क्विज़ को फ़िर से खेलें </string>
+ 	<string name="widget_quiz_baseline_completed">पूर्व्परिक्षण पूरा करने के लिए आपका धन्यवाद. अब आप कोर्स जारी कर सकते हैं.</string>
+ 	<string name="widget_quiz_baseline_goto_course">Continue to course &gt;&gt;</string>
+ 	<string name="widget_quiz_image_caption">Press the image to view larger version</string>
+ 	<string name="widget_quiz_feedback_response_title">आपका जवाब: </string>
+ 	<string name="widget_quiz_feedback_feedback_title">Feedback: </string>
+ 	<string name="widget_quiz_unavailable_section">You must complete all the previous activities in this section before this quiz becomes available to you.</string>
+ 	<string name="widget_quiz_unavailable_course">You must complete all the previous activities in this course before this quiz becomes available to you.</string>
+ 	
+ 	<string name="widget_resource_open_file">Open \'%1$s\'</string>
+ 	
+ 	<string name="course_context_reset">रिसेट</string>
+ 	<string name="course_context_delete">मिटायें</string>
+ 	<string name="course_context_reset_confirm">Are you sure you want to reset this course? It will remove all the progress logs for this course.</string>
+ 	<string name="course_context_delete_confirm">Are you sure you want to delete this course? It will completely remove the course from your phone.</string>
+ 	
+ 	<string name="no_courses">There are no courses currently installed</string>
+ 	<string name="more_courses">अन्य कोर्से डाउनलोड करें</string>
+ 
+	<string name="prefAdvanced">उन्नत सेटिंग </string>
+	<string name="prefBackgroudDataConnect">Background activity tracker</string>
+	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
+	<string name="prefLanguage">पसंदीदा भाषा </string>
+	<string name="prefHighlightCompleted">Highlight completed activities</string>
+	<string name="prefNoScheduleReminders">Number of suggested activities</string>
+	<string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
+	<string name="prefServer">सर्वर </string>
+	<string name="prefServerTimeoutConnection">Connection timeout</string>
+	<string name="prefServerTimeoutResponse">Response timeout</string>
+	<string name="prefShowProgressBar">Show progress bar</string>
+	<string name="prefShowScheduleReminders">Display suggested activities</string>
+	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
+	<string name="prefShowSectionNumbers">Show section numbers</string>
+	
+	<string name="notification_course_update_title">New course updates</string>
+	<string name="notification_course_update_text">Updates are available for your courses.</string>
+	
+	<string name="title_login">लॉग इन</string>
+	<string name="login_username_title">उपभोगता का नाम </string>
+	<string name="login_password_title">पासवर्ड</string>
+	<string name="title_register">पंजीकरण</string>
+	
+	<string name="register_form_username_title">उपयोगकर्ता का नाम  (*)</string>
+	<string name="register_form_email_title">ईमेल पता  (*)</string>
+	<string name="register_form_firstname_title"> पहला नाम  (*)</string>
+	<string name="register_form_jobtitle_title">व्यवसाय </string>
+	<string name="register_form_lastname_title"> अंतिम नाम (*)</string>
+	<string name="register_form_organisation_title">संस्था </string>
+	<string name="register_form_password_title">पासवर्ड  (*)</string>
+	<string name="register_form_password_again_title">पासवर्ड दोबारा लिखें (*)</string>
+	<string name="register_btn_text">पंजीकरण </string>
+	
+	<string name="reset_username_title">उपयोगकर्ता का नाम </string>
+	
+	<string name="yes">हाँ </string>
+	<string name="no">नहीं</string>
+	<string name="close">बंद करें </string>
+	<string name="error">त्रुटी</string>
+	<string name="info">जानकारी</string>
+	<string name="warning">चेतावनी </string>
+	<string name="loading">लोड हो रहा है</string>
+	<string name="ok">ओ के </string>
+	<string name="cancel">रद्द </string>
+	<string name="logout">लॉग आउट</string>
+	<string name="feedback">प्रतिक्रिया</string>
+	<string name="download">डाउनलोड</string>
+	<string name="downloaded">डाउनलोड आम्पूर्ण</string>
+	<string name="open">खोलें</string>
+	
+	<string name="alert_pretest">पूर्व परिक्षण </string>
+	<string name="alert_pretest_summary">This course contains a pre-test which you need to complete before you can view the full course.</string>
+	
+	<string name="tag_label">%1$s (%2$d)</string>
+	<string name="alt_activity_icon">Activity icon</string>
+	
+	<string name="update">Update</string>
+	<string name="update_schedule">Update Schedule</string>
+	<string name="installed">स्थापित</string>
+	<string name="install">स्थापित करें</string>
+	
+	<string name="download_starting">डाउनलोड शुरू हो रहा है</string>
+	<string name="downloading">Downloading &#8230;</string>
+	<string name="download_complete">डाउनलोड सम्पूर्ण</string>
+	
+	<string name="update_starting">Getting schedule updates</string>
+	<string name="updating">Updating &#8230;</string>
+	<string name="update_complete">Schedule update complete</string>
+	
+	<string name="installing_course">स्थापित हो रहा है: %1$s</string>
+	<string name="install_complete">स्थापना सम्पूर्ण</string>
+	
+	<string name="install_course_complete">%1$s: installed</string>
+	
+	<string name="info_scan_media_start">Scanning for media</string>
+	<string name="info_scan_media_checking">Checking for: %1$s</string>
+	<string name="info_scan_media_missing">आपके कोर्स से जुड़ी कुछ फिल्में लापता हैं.</string>
+	
+	<string name="info_upgrading">Upgrading to %1$s</string>
+	
+	<string name="loading_courses">कोर्स लोड हो रहे हैंs</string>
+	<string name="loading_points">पॉइंट्स लोड हो रहे हैं &#8230;</string>
+	<string name="loading_badges">बिल्ले लोड हो रहे हैं &#8230;</string>
+	
+	<string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+	
+	<string name="scan_media_download_button">डाउनलोड</string>
+	<string name="scan_media_download_via_pc_button">कंप्यूटर द्वारा डाउनलोड करें</string>
+	<string name="success_media_download">Media file: \'%1$s\' डाउनलोड सफल</string>
+	<string name="media_file_size">%1$.1fMb</string>
+	
+	<string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
+	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
+	<string name="error_installing_course">%1$s: failed to install</string>
+	<string name="error_latest_already_installed">%1$s: latest version already installed</string>
+	<string name="error_login">Invalid username/password\nPlease try again</string>
+	<string name="error_media_app_not_found">You don\'t appear to have a media player installed which supports playing this video.</string>
+	<string name="error_no_username">Please enter your username</string>
+	<string name="error_processing_response">Error processing response</string>
+	<string name="error_quiz_no_questions">There aren\'t any questions in this quiz.</string>
+	<string name="error_register_no_email">Please enter your email address</string>
+	<string name="error_register_password">Your password must be at least %1$d or more characters</string>
+	<string name="error_register_password_no_match">Your passwords don\'t match</string>
+	<string name="error_register_no_firstname">Please enter your first name</string>
+	<string name="error_register_no_lastname">Please enter your last name</string>
+	<string name="error_register_no_username">Please enter a username</string>
+	<string name="error_register_username_spaces">Your username cannot contain spaces</string>
+	<string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
+	<string name="error_resource_not_found">File: \'%1$s\' not found.</string>
+	
+	
+	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
+	<string name="error_media_not_found">\'%1$s\' फ़िल्म उपलब्ध नहीं है. कृपया दोबारा डाउनलोड करें.</string>
+	<string name="error_media_unsupported">\'%1$s\' does not appear to be a supported media file type.</string>
+	<string name="error_download_failure">Download failed</string>
+	<string name="error_update_failure">Update failed</string>
+	<string name="error_install_failure">Install failed</string>
+	<string name="error_media_download">Error trying to download media, please try again later</string>
+	<string name="error_reading_xml">An error occurred trying to load the course. Please reinstall the course.</string>
+	<string name="error_tts_start">Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled</string>
+	<string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
+	
+	<string name="login_process">लॉग इन हो रहा है </string>
+	<string name="login_complete">लॉग इन सम्पूर्ण</string>
+	
+	<string name="logout_confirm">आप सुनिश्चित हैं की आपको लॉग आउट करना है \n\n अगर आप लॉग आउट करेंगे तो आपका सारा कार्य स्थगित हो जायेगा और आपको फिर से लॉग इन करने के लिए इंटरनेट की ज़रुरत पड़ेगी.</string>
+	
+	<string name="register_alert_title">Register</string>
+	<string name="register_process">Registering ...</string>
+	<string name="register_complete">Successfully registered</string>
+	
+	<string name="reset_alert_title">रिसेट </string>
+	<string name="reset_process">पासवर्ड रिसेट हो रहा है  ...</string>
+	<string name="reset_complete">आपका पासवर्ड रिसेट हो गया है.\n\nPlease check your email for your new password.</string>
+	
+	<string name="change_language">भाषा बदलें</string>
+	
+	<string name="download_via_pc_message">A small file \'%1$s\' has been placed on your phone SD card, open this on your computer and follow the instructions to download the media files and copy them onto your phone SD card.</string>
+	<string name="download_via_pc_title">फिमें डाउनलोड करें</string>
+	<string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
+	<string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
+	
+	<string name="schedule_reminders">Suggested next activities:</string>
+	
+	<string name="course_draft">(Draft version)</string>
+	
+	<string name="search.result_summary">%1$d results for \"%2$s\"</string>
+	<string name="search.message.searching">Searching...</string>
+	<string name="search.message.no_results">No results found for \"%1$s\"</string>
+
+</resources>
