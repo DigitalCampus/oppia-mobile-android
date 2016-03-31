@@ -1,3 +1,1 @@
-include ':design'
-include ':recyclerview'
-include ':oppiamobileandroid'
+include ':app'
