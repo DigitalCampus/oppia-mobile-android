@@ -51,6 +51,11 @@
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 
+    <style name="Oppia.Fullscreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
     <style name="ActionBar.Solid.Om" parent="android:Widget.Holo.ActionBar.Solid">
         <item name="android:background">@drawable/actionbar_background_gradient</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_om</item>
