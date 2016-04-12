@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.splunk.mint.Mint;
 
@@ -60,6 +61,7 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 		for (Object l : payload.getData()) {
 			QuizAttempt qa = (QuizAttempt) l;
 			try {
+				Log.d(TAG, qa.getData());
                 OkHttpClient client = HTTPClientUtils.getClient(ctx);
                 Request request = new Request.Builder()
                         .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.QUIZ_SUBMIT_PATH))

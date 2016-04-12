@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.splunk.mint.Mint;
 
@@ -76,6 +77,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 
 				for (Collection<TrackerLog> trackerBatch : result) {
 					String dataToSend = createDataString(trackerBatch);
+					Log.d(TAG, dataToSend);
 					try {
 
                         OkHttpClient client = HTTPClientUtils.getClient(ctx);
