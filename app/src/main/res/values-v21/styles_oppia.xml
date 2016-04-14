@@ -18,4 +18,10 @@
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 
+    <style name="Oppia.Fullscreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
 </resources>
