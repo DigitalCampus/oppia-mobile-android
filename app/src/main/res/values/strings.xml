@@ -3,8 +3,9 @@
     <string name="app_logo_alt">Digital Campus Logo</string>
     
     
+    <!-- Dont need to define gcm values here anymore, as they are defined in google-services.json
     <string name="gcm_defaultSenderId">1:1075863350964:android:e457f5046c8376a5</string>
-    <!-- string name="gcm_defaultSenderId">admin-api-cc4ba</string -->
+    string name="gcm_defaultSenderId">admin-api-cc4ba</string -->
     
     <string name="about_logged_in">Logged in as: %1$s</string>
     <string name="about_not_logged_in">Not logged in</string>
