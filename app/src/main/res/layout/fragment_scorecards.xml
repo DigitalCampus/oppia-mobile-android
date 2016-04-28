@@ -11,7 +11,8 @@
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/padding_large"
         android:layout_marginRight="@dimen/padding_large"
-        android:layout_marginBottom="@dimen/padding_large">
+        android:layout_marginBottom="@dimen/padding_large"
+        android:id="@+id/empty_state">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -25,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You don&apos;t have any courses installed yet, once you install a course, you will see your progress here."
+            android:text="@string/empty_state_scorecard"
             android:id="@+id/textView11"
             android:layout_gravity="center"
             android:gravity="center"
@@ -35,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/menu_download"
-            android:id="@+id/button"
+            android:id="@+id/btn_download_courses"
             android:layout_gravity="center"/>
     </LinearLayout>
     <GridView
