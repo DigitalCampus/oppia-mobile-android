@@ -165,6 +165,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				tags.add(t);
 			}
             tla.notifyDataSetChanged();
+            findViewById(R.id.empty_state).setVisibility((tags.size()==0) ? View.VISIBLE : View.GONE);
 
 		} catch (JSONException e) {
 			e.printStackTrace();
