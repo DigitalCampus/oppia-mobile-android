@@ -17,10 +17,18 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.concurrent.Callable;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
@@ -40,18 +48,10 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.splunk.mint.Mint;
-
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBar;
-import android.util.Log;
-import android.widget.ListView;
-import android.widget.Toast;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.Callable;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
 	
@@ -76,7 +76,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		Bundle bundle = this.getIntent().getExtras(); 
         if(bundle != null) {
         	Tag t = (Tag) bundle.getSerializable(Tag.TAG);
-        	this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
+            if (t!=null) this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
         } else {
         	this.url = MobileLearning.SERVER_COURSES_PATH;
         	this.showUpdatesOnly = true;
@@ -230,6 +230,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 				} 
 			}
             dla.notifyDataSetChanged();
+            findViewById(R.id.empty_state).setVisibility((courses.size()==0) ? View.VISIBLE : View.GONE);
 
 		} catch (Exception e) {
 			Mint.logException(e);
