@@ -17,15 +17,20 @@
 
 package org.digitalcampus.oppia.application;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.fragments.CourseScorecardFragment;
+import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
 
 
 public class AdminSecurityManager {
+
+    public static final String TAG = CourseScorecardFragment.class.getSimpleName();
 
     public interface AuthListener{
         void onPermissionGranted();
@@ -34,6 +39,20 @@ public class AdminSecurityManager {
     public static boolean isAdminProtectionEnabled(Context ctx){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         return prefs.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
+    }
+
+    public static void checkAdminPermission(Activity ctx, int actionId, AdminSecurityManager.AuthListener authListener){
+
+        boolean adminPasswordRequired = AdminSecurityManager.isActionProtected(ctx, actionId);
+        if (adminPasswordRequired) {
+            PasswordDialogFragment passDialog = new PasswordDialogFragment();
+            passDialog.setListener(authListener);
+            passDialog.show(ctx.getFragmentManager(), TAG);
+        }
+        else{
+            //If the admin password is not needed, we simply call the listener method
+            authListener.onPermissionGranted();
+        }
     }
 
     public static boolean isActionProtected(Context ctx, int actionId) {
