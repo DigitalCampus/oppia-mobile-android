@@ -83,10 +83,10 @@ public class MultiSelect implements Serializable, QuizQuestion {
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
             return title.get(lang);
-        } else {
-            for (String key : title.keySet()) {
-                return title.get(key);
-            }
+        } else if (!title.isEmpty()){
+            return title.entrySet().iterator().next().getValue();
+        }
+        else{
             return "";
         }
     }
@@ -167,8 +167,7 @@ public class MultiSelect implements Serializable, QuizQuestion {
     @Override
     public int getScoreAsPercent() {
         if (this.getMaxScore() > 0){
-            int pc = Integer.valueOf((int) (100* this.getUserscore()))/this.getMaxScore();
-            return pc;
+            return (int) (100 * this.getUserscore()) / this.getMaxScore();
         } else {
             return 0;
         }

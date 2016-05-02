@@ -44,12 +44,10 @@ public class MultiChoice implements Serializable, QuizQuestion {
         // find whichever are set as selected and add up the responses
         float total = 0;
         for (Response r : responseOptions){
-            Iterator<String> itr = this.userResponses.iterator();
-            while(itr.hasNext()) {
-                String a = itr.next();
-                if (r.getTitle(lang).equals(a)){
+            for (String a : this.userResponses) {
+                if (r.getTitle(lang).equals(a)) {
                     total += r.getScore();
-                    if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
+                    if (r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))) {
                         this.feedback = r.getFeedback(lang);
                     }
                 }
@@ -175,8 +173,7 @@ public class MultiChoice implements Serializable, QuizQuestion {
     @Override
     public int getScoreAsPercent() {
         if (this.getMaxScore() > 0){
-            int pc = Integer.valueOf((int) (100* this.getUserscore()))/this.getMaxScore();
-            return pc;
+            return (int) (100 * this.getUserscore()) / this.getMaxScore();
         } else {
             return 0;
         }

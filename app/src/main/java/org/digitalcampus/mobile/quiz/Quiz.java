@@ -260,17 +260,11 @@ public class Quiz implements Serializable {
     }
 
     public boolean hasNext() {
-        if (this.currentq + 1 < questions.size()) {
-            return true;
-        }
-        return false;
+        return this.currentq + 1 < questions.size();
     }
 
     public boolean hasPrevious() {
-        if (this.currentq > 0) {
-            return true;
-        }
-        return false;
+        return this.currentq > 0;
     }
 
     public void moveNext() {

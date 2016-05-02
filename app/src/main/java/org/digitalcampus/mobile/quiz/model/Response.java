@@ -9,15 +9,12 @@ import org.json.JSONObject;
 
 public class Response implements Serializable{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 5970350772982572264L;
     public static final String TAG = "Response";
-    private HashMap<String,String> title = new HashMap<String,String>();
+    private HashMap<String,String> title = new HashMap<>();
     private float score;
-    private HashMap<String,String> props = new HashMap<String,String>();
-    private HashMap<String,String> feedback = new HashMap<String,String>();
+    private HashMap<String,String> props = new HashMap<>();
+    private HashMap<String,String> feedback = new HashMap<>();
 
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
@@ -51,18 +48,16 @@ public class Response implements Serializable{
     }
 
     public void setFeedback(String defaultLang){
-        if (this.props.containsKey("feedback")){
-            try {
-                JSONObject feedbackLangs = new JSONObject(this.getProp("feedback"));
-                Iterator<?> keys = feedbackLangs.keys();
+        if (this.props.containsKey("feedback")) try {
+            JSONObject feedbackLangs = new JSONObject(this.getProp("feedback"));
+            Iterator<?> keys = feedbackLangs.keys();
 
-                while( keys.hasNext() ){
-                    String key = (String) keys.next();
-                    this.setFeedbackForLang(key, feedbackLangs.getString(key));
-                }
-            } catch (JSONException e) {
-                this.setFeedbackForLang(defaultLang, (String) this.getProp("feedback"));
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                this.setFeedbackForLang(key, feedbackLangs.getString(key));
             }
+        } catch (JSONException e) {
+            this.setFeedbackForLang(defaultLang, this.getProp("feedback"));
         }
     }
 

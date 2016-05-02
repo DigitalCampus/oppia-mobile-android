@@ -70,10 +70,10 @@ public class Description implements QuizQuestion {
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
             return title.get(lang);
-        } else {
-            for (String key : title.keySet()) {
-                return title.get(key);
-            }
+        } else if (!title.isEmpty()){
+            return title.entrySet().iterator().next().getValue();
+        }
+        else{
             return "";
         }
     }

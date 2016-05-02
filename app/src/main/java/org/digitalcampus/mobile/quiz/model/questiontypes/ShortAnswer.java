@@ -181,8 +181,7 @@ public class ShortAnswer implements Serializable, QuizQuestion {
     @Override
     public int getScoreAsPercent() {
         if (this.getMaxScore() > 0){
-            int pc = Integer.valueOf((int) (100* this.getUserscore()))/this.getMaxScore();
-            return pc;
+            return (int) (100 * this.getUserscore()) / this.getMaxScore();
         } else {
             return 0;
         }

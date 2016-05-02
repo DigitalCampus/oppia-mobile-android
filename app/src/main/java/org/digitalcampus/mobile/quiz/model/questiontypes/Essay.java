@@ -18,10 +18,10 @@ public class Essay implements Serializable, QuizQuestion {
     private static final long serialVersionUID = 1531985882092686497L;
     public static final String TAG = "Essay";
     private int id;
-    private HashMap<String,String> title = new HashMap<String,String>();
+    private HashMap<String,String> title = new HashMap<>();
     private float userscore = 0;
-    private List<String> userResponses = new ArrayList<String>();
-    private HashMap<String,String> props = new HashMap<String,String>();
+    private List<String> userResponses = new ArrayList<>();
+    private HashMap<String,String> props = new HashMap<>();
     private boolean feedbackDisplayed = false;
 
     @Override
@@ -58,10 +58,10 @@ public class Essay implements Serializable, QuizQuestion {
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
             return title.get(lang);
-        } else {
-            for (String key : title.keySet()) {
-                return title.get(key);
-            }
+        } else if (!title.isEmpty()){
+            return title.entrySet().iterator().next().getValue();
+        }
+        else{
             return "";
         }
     }
@@ -147,8 +147,7 @@ public class Essay implements Serializable, QuizQuestion {
     @Override
     public int getScoreAsPercent() {
         if (this.getMaxScore() > 0){
-            int pc = Integer.valueOf((int) (100* this.getUserscore()))/this.getMaxScore();
-            return pc;
+            return (int) (100 * this.getUserscore()) / this.getMaxScore();
         } else {
             return 0;
         }

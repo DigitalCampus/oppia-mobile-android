@@ -1,15 +1,14 @@
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Numerical implements Serializable, QuizQuestion {
 
@@ -43,9 +42,7 @@ public class Numerical implements Serializable, QuizQuestion {
     public void mark(String lang) {
         Float userAnswer = null;
         this.userscore = 0;
-        Iterator<String> itr = this.userResponses.iterator();
-        while (itr.hasNext()) {
-            String a = itr.next();
+        for (String a : this.userResponses) {
             try {
                 userAnswer = Float.parseFloat(a);
             } catch (NumberFormatException nfe) {
@@ -110,10 +107,10 @@ public class Numerical implements Serializable, QuizQuestion {
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
             return title.get(lang);
-        } else {
-            for (String key : title.keySet()) {
-                return title.get(key);
-            }
+        } else if (!title.isEmpty()){
+            return title.entrySet().iterator().next().getValue();
+        }
+        else{
             return "";
         }
     }
@@ -187,8 +184,7 @@ public class Numerical implements Serializable, QuizQuestion {
     @Override
     public int getScoreAsPercent() {
         if (this.getMaxScore() > 0){
-            int pc = Integer.valueOf((int) (100* this.getUserscore()))/this.getMaxScore();
-            return pc;
+            return (int) (100 * this.getUserscore()) / this.getMaxScore();
         } else {
             return 0;
         }

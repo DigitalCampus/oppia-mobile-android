@@ -17,11 +17,11 @@ public class Matching implements Serializable, QuizQuestion {
     private static final long serialVersionUID = -7500128521011492086L;
     public static final String TAG = "Matching";
     private int id;
-    private HashMap<String,String> title = new HashMap<String,String>();
-    private List<Response> responseOptions = new ArrayList<Response>();
+    private HashMap<String,String> title = new HashMap<>();
+    private List<Response> responseOptions = new ArrayList<>();
     private float userscore = 0;
-    private List<String> userResponses = new ArrayList<String>();
-    private HashMap<String, String> props = new HashMap<String, String>();
+    private List<String> userResponses = new ArrayList<>();
+    private HashMap<String, String> props = new HashMap<>();
     private String feedback = "";
     private boolean feedbackDisplayed = false;
 
@@ -179,8 +179,7 @@ public class Matching implements Serializable, QuizQuestion {
     @Override
     public int getScoreAsPercent() {
         if (this.getMaxScore() > 0){
-            int pc = Integer.valueOf((int) (100* this.getUserscore()))/this.getMaxScore();
-            return pc;
+            return (int) (100 * this.getUserscore()) / this.getMaxScore();
         } else {
             return 0;
         }
