@@ -242,7 +242,15 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	
 	public void apiRequestComplete(Payload response) {
 		progressDialog.dismiss();
-	
+
+        Callable<Boolean> finishActivity = new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                DownloadActivity.this.finish();
+                return true;
+            }
+        };
+
 		if(response.isResult()){
 			try {
 				json = new JSONObject(response.getResultResponse());
@@ -250,15 +258,10 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 			} catch (JSONException e) {
 				Mint.logException(e);
 				e.printStackTrace();
-				UIUtils.showAlert(this, R.string.loading, R.string.error_connection);
+				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
 		} else {
-			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, new Callable<Boolean>() {
-				public Boolean call() throws Exception {
-                DownloadActivity.this.finish();
-                return true;
-				}
-			});
+			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, finishActivity);
 		}
 	}
 
