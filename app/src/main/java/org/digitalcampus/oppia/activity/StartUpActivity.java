@@ -17,10 +17,13 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -50,6 +53,7 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener, PreloadAccountsListener {
 
@@ -86,6 +90,31 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     public void onResume(){
         super.onResume();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            boolean hasPermissions = true;
+            int hasLocationPermission = checkSelfPermission( Manifest.permission.READ_PHONE_STATE );
+            int hasSMSPermission = checkSelfPermission( Manifest.permission.WRITE_EXTERNAL_STORAGE );
+            List<String> permissions = new ArrayList<String>();
+            if( hasLocationPermission != PackageManager.PERMISSION_GRANTED ) {
+                hasPermissions = false;
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)){
+                    permissions.add( Manifest.permission.READ_PHONE_STATE );
+                }
+            }
+
+            if( hasSMSPermission != PackageManager.PERMISSION_GRANTED ) {
+                hasPermissions = false;
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
+                    permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+            }
+
+            if( !permissions.isEmpty() ) {
+                    requestPermissions( permissions.toArray( new String[permissions.size()] ), 100 );
+            }
+            if (!hasPermissions) return;
+        }
+
         if (MobileLearning.DEVICEADMIN_ENABLED) {
             //We need to check again the Google Play API availability
             boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
@@ -112,6 +141,20 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         umt.execute(p);
  		
 	}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if ( requestCode == 100) {
+            for( int i = 0; i < permissions.length; i++ ) {
+                if( grantResults[i] == PackageManager.PERMISSION_GRANTED ) {
+                    Log.d( "Permissions", "Permission Granted: " + permissions[i] );
+                } else if( grantResults[i] == PackageManager.PERMISSION_DENIED ) {
+                    Log.d( "Permissions", "Permission Denied: " + permissions[i] );
+                }
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 	
 	
     private void updateProgress(String text){
