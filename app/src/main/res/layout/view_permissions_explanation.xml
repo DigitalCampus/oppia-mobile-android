@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:padding="@dimen/padding_large">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Permissions needed"
+        android:id="@+id/textView11"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OppiaMobile needs the following permissions to function properly:"
+        android:id="@+id/textView12"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="read phone status and identity"
+        android:id="@+id/textView13"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Explanation of why OppiaMobile needs the phone identity"
+        android:id="@+id/textView14"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="read and modify contents of the SD card"
+        android:id="@+id/textView15"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OppiaMobile needs access to the SD card to be able to store the downloaded media contents for the courses"
+        android:id="@+id/textView16"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Allow permissions"
+        android:id="@+id/btn_permissions"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/notification_subtext_size"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/not_askable_description"
+        android:layout_marginTop="@dimen/notification_subtext_size">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The app does not have this permissions needed to run. Please, go to Settings > Apps > OppiaMobile > Permissions to grant access to these permissions"
+            android:id="@+id/textView17"
+            android:textAppearance="@style/ButtonTextSmall"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You see this message because permissions were prompted before and you denied them and checked &quot;Don&apos;t ask again&quot;"
+            android:id="@+id/textView18"
+            android:textSize="13sp"
+            android:layout_marginTop="@dimen/padding_medium"/>
+    </LinearLayout>
+
+</LinearLayout>

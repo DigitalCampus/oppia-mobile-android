@@ -8,7 +8,13 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
+
+import org.digitalcampus.mobile.learning.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +38,7 @@ public class PermissionsManager {
          prefs.edit().putBoolean(permission + "_asked", true).apply();
     }
 
-    public static boolean CheckPermissionsAndInform(Activity act){
+    public static boolean CheckPermissionsAndInform(final Activity act){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             //If sdk version prior to 23 (Android M), the permissions are granted by manifest
             return true;
@@ -40,7 +46,7 @@ public class PermissionsManager {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getApplicationContext());
         int permissionsAskable = 0;
-        List<String> permissionsToAsk = new ArrayList<>();
+        final List<String> permissionsToAsk = new ArrayList<>();
 
         for (String permission : PERMISSIONS_REQUIRED){
             int permitted = act.checkSelfPermission( permission );
@@ -59,18 +65,36 @@ public class PermissionsManager {
             }
         }
 
+        ViewGroup container = (ViewGroup) act.findViewById(R.id.permissions_explanation);
         if (permissionsToAsk.size() > 0){
+            //Show the permissions informative view
+            LayoutInflater layoutInflater = (LayoutInflater)act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            container.removeAllViews();
+            View explanation = layoutInflater.inflate(R.layout.view_permissions_explanation, container);
+            container.setVisibility(View.VISIBLE);
+
             //The user has not selected the "Don't ask again" option for any permission yet
             if (permissionsToAsk.size() == permissionsAskable){
                 //First, set the permissions as asked
 
-                //Open the dialog to ask for permissions
-                act.requestPermissions( permissionsToAsk.toArray( new String[permissionsToAsk.size()] ), PERMISSIONS_REQUEST );
+                Button reqPermsBtn = (Button) explanation.findViewById(R.id.btn_permissions);
+                reqPermsBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Open the dialog to ask for permissions
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            act.requestPermissions( permissionsToAsk.toArray( new String[permissionsToAsk.size()] ), PERMISSIONS_REQUEST );
+                        }
+                    }
+                });
             }
             else{
                 //Just show an informative option
                 Toast.makeText(act, "Ouch!", Toast.LENGTH_LONG).show();
             }
+        }
+        else{
+            container.setVisibility(View.GONE);
         }
 
         return (permissionsToAsk.size() == 0);
