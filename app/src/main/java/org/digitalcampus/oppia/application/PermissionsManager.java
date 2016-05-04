@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 
@@ -73,11 +72,13 @@ public class PermissionsManager {
             View explanation = layoutInflater.inflate(R.layout.view_permissions_explanation, container);
             container.setVisibility(View.VISIBLE);
 
+            Button reqPermsBtn = (Button) explanation.findViewById(R.id.btn_permissions);
+            View permsNotAskable = explanation.findViewById(R.id.not_askable_description);
             //The user has not selected the "Don't ask again" option for any permission yet
             if (permissionsToAsk.size() == permissionsAskable){
                 //First, set the permissions as asked
-
-                Button reqPermsBtn = (Button) explanation.findViewById(R.id.btn_permissions);
+                reqPermsBtn.setVisibility(View.VISIBLE);
+                permsNotAskable.setVisibility(View.GONE);
                 reqPermsBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -89,8 +90,9 @@ public class PermissionsManager {
                 });
             }
             else{
-                //Just show an informative option
-                Toast.makeText(act, "Ouch!", Toast.LENGTH_LONG).show();
+                //Just show the informative option
+                reqPermsBtn.setVisibility(View.GONE);
+                permsNotAskable.setVisibility(View.VISIBLE);
             }
         }
         else{
