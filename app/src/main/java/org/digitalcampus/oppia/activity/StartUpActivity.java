@@ -17,13 +17,10 @@
 
 package org.digitalcampus.oppia.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -53,7 +50,6 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener, PreloadAccountsListener {
 
@@ -122,7 +118,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        PermissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 	

@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.application;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -24,8 +25,11 @@ public class PermissionsManager {
     );
 
     private static boolean isFirstTimeAsked(SharedPreferences prefs, String permission){
-        boolean asked = prefs.getBoolean(permission + "_asked", false);
-        return !asked;
+        return !prefs.getBoolean(permission + "_asked", false);
+    }
+
+    private static void setAsked(SharedPreferences prefs, String permission){
+         prefs.edit().putBoolean(permission + "_asked", true).apply();
     }
 
     public static boolean CheckPermissionsAndInform(Activity act){
@@ -56,8 +60,11 @@ public class PermissionsManager {
         }
 
         if (permissionsToAsk.size() > 0){
+            //The user has not selected the "Don't ask again" option for any permission yet
             if (permissionsToAsk.size() == permissionsAskable){
-                //The user has not selected the "Don't ask again" option for any permission yet
+                //First, set the permissions as asked
+
+                //Open the dialog to ask for permissions
                 act.requestPermissions( permissionsToAsk.toArray( new String[permissionsToAsk.size()] ), PERMISSIONS_REQUEST );
             }
             else{
@@ -70,9 +77,13 @@ public class PermissionsManager {
 
     }
 
-    public static void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+    public static void onRequestPermissionsResult(Context ctx, int requestCode, String[] permissions, int[] grantResults){
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx.getApplicationContext());
         if ( requestCode == PERMISSIONS_REQUEST) {
             for( int i = 0; i < permissions.length; i++ ) {
+                setAsked(prefs, permissions[i]);
+
                 if( grantResults[i] == PackageManager.PERMISSION_GRANTED ) {
                     Log.d( "Permissions", "Permission Granted: " + permissions[i] );
                 } else if( grantResults[i] == PackageManager.PERMISSION_DENIED ) {
