@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:padding="@dimen/padding_large"
+              android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView11"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/dc_logo"
+        android:layout_marginBottom="@dimen/padding_large"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/permissions.title"
+        android:id="@+id/textView12"
+        android:layout_gravity="center_horizontal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/notification_subtext_size"
+        android:layout_marginTop="@dimen/notification_subtext_size"
+        android:layout_marginRight="@dimen/notification_subtext_size">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView9"
+            android:src="@android:drawable/sym_action_call"
+            android:layout_alignParentStart="false"
+            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_alignParentLeft="true"
+            android:tint="@android:color/tab_indicator_text"
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permissions.phone_state.title"
+            android:id="@+id/textView13"
+            android:layout_toRightOf="@+id/imageView9"
+            android:textStyle="bold"
+            android:textColor="@color/highlight_label"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permissions.phone_state.description"
+            android:id="@+id/textView14"
+            android:layout_below="@+id/textView13"
+            android:layout_toRightOf="@+id/imageView9"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/notification_subtext_size">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView10"
+            android:src="@android:drawable/stat_notify_sdcard"
+            android:layout_alignParentStart="false"
+            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_alignParentLeft="true"
+            android:tint="@android:color/tab_indicator_text"
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permissions.storage.title"
+            android:id="@+id/textView15"
+            android:layout_toRightOf="@+id/imageView10"
+            android:textStyle="bold"
+            android:textColor="@color/highlight_label"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permissions.storage.description"
+            android:id="@+id/textView16"
+            android:layout_below="@+id/textView15"
+            android:layout_toRightOf="@+id/imageView10"/>
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/permissions.allow_btn_text"
+        android:id="@+id/btn_permissions"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/notification_subtext_size"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/not_askable_description"
+        android:layout_marginTop="@dimen/notification_subtext_size"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permissions.not_askable.message"
+            android:id="@+id/textView17"
+            android:textAppearance="@style/ButtonTextSmall"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permissions.not_askable.info"
+            android:id="@+id/textView18"
+            android:textSize="13sp"
+            android:layout_marginTop="@dimen/padding_medium"/>
+    </LinearLayout>
+
+</LinearLayout>
