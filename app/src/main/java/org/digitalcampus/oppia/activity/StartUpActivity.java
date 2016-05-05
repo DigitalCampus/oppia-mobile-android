@@ -32,6 +32,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.PostInstallListener;
@@ -45,7 +46,6 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
 import org.digitalcampus.oppia.utils.GooglePlayUtils;
-import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
@@ -86,6 +86,9 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     public void onResume(){
         super.onResume();
 
+        boolean shouldContinue = PermissionsManager.CheckPermissionsAndInform(this);
+        if (!shouldContinue) return;
+
         if (MobileLearning.DEVICEADMIN_ENABLED) {
             //We need to check again the Google Play API availability
             boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
@@ -112,6 +115,12 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         umt.execute(p);
  		
 	}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 	
 	
     private void updateProgress(String text){
