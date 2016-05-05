@@ -69,25 +69,31 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:background="@color/common_action_bar_splitter"
+        style="?android:buttonBarStyle">
 
         <Button
             android:id="@+id/mquiz_prev_btn"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight=".5"
             android:text="@string/widget_quiz_prev"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:drawableLeft="@drawable/ic_arrow_left"
+            android:drawableTint="@color/button_material_dark"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/mquiz_next_btn"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight=".5"
             android:text="@string/widget_quiz_next"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:drawableRight="@drawable/ic_arrow_right"
+            android:drawableTint="@color/button_material_dark"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>

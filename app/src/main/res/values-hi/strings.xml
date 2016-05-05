@@ -60,8 +60,8 @@
     <string name="widget_feedback_submit_title">धन्यवाद!</string>
     <string name="widget_feedback_continue">जारी रखें &gt;&gt;</string>
     
-    <string name="widget_quiz_next">आगे बढें &gt;&gt;</string>
-    <string name="widget_quiz_prev">&lt;&lt; पीछे जायें </string>
+    <string name="widget_quiz_next">आगे बढें </string>
+    <string name="widget_quiz_prev">पीछे जायें</string>
     <string name="widget_quiz_getresults">नतीजा जाने </string>
     <string name="widget_quiz_noanswergiven">आगे बदने से पहले इस प्रशन का उत्तर दें</string>
     <string name="widget_quiz_progress">प्रशन %1$d / %2$d</string>
