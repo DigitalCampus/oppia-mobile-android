@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/transparent"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical"
+        android:padding="10dip" >
+
+        <ImageView
+            android:id="@+id/splash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/app_name"
+            android:gravity="center"
+            android:padding="0dip"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/splash_default"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="5dip" >
+
+            <TextView
+                android:id="@+id/userbadges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/dc_logo"
+                android:drawablePadding="5dp"
+                android:text="@string/app_name"
+                android:textColor="@color/highlight_dark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/start_up_progress"
+                style="@style/SmallTextDark"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center_horizontal"
+                android:paddingTop="10dip"
+                android:text="@string/loading"
+                android:textColor="@color/highlight_dark" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/permissions_explanation"
+        android:background="@android:color/white"
+        android:visibility="gone">
+
+    </FrameLayout>
+</FrameLayout>

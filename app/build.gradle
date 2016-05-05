@@ -1,0 +1,51 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    maven {
+        url "https://mint.splunk.com/gradle/"
+    }
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "org.digitalcampus.mobile.learning"
+        minSdkVersion 14
+        targetSdkVersion 23
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'README.md'
+    }
+
+    lintOptions {
+        checkReleaseBuilds true
+        // Disable checks for String translations
+        disable 'MissingTranslation', 'ExtraTranslation'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    apply plugin: 'com.google.gms.google-services'
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'joda-time:joda-time:2.3'
+    compile 'com.android.support:design:23.1.1'
+    compile "com.androidplot:androidplot-core:0.6.1"
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp3:okhttp:3.1.1'
+    compile "com.splunk.mint:mint:5.0.0"
+    compile "com.google.android.gms:play-services-gcm:8.1.0"
+}
