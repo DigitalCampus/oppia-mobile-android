@@ -413,7 +413,7 @@ public class QuizWidget extends WidgetFactory {
 		db.insertQuizAttempt(qa);
 		
 		//Check if quiz results layout is already loaded
-        View quizResultsLayout = getView().findViewById(R.id.widget_quiz_results);
+        View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
         if (quizResultsLayout == null){
             // load new layout
             View C = getView().findViewById(R.id.quiz_progress);
@@ -457,14 +457,14 @@ public class QuizWidget extends WidgetFactory {
 		// Show restart or continue button
 		Button restartBtn = (Button) getView().findViewById(R.id.quiz_results_button);
 		
-		if (this.isBaseline) {
+		if (this.isBaseline || this.getActivityCompleted()) {
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_baseline_goto_course));
 			restartBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					QuizWidget.this.getActivity().finish();
 				}
 			});
-		} else {
+		} else{
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_results_restart));
 			restartBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {

@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -43,7 +44,7 @@ public class PreferencesFragment extends PreferenceFragment {
 	        ArrayList<Lang> langs = (ArrayList<Lang>) bundle.getSerializable("langs");
 	        updateLangsList(langs);
         }
-        updateStorageList();
+        updateStorageList(this.getActivity());
 
         EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
         username.setSummary( username.getText().equals("") ?
@@ -65,9 +66,9 @@ public class PreferencesFragment extends PreferenceFragment {
         }
     }
 
-    public void updateStorageList(){
+    public void updateStorageList(Context ctx){
 
-        List<StorageLocationInfo> storageLocations = StorageUtils.getStorageList();
+        List<StorageLocationInfo> storageLocations = StorageUtils.getStorageList(ctx);
         if (storageLocations.size() > 1){
             //If there is more than one storage option, we create a preferences list
 

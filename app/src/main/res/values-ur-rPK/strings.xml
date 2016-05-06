@@ -68,8 +68,8 @@
     <string name="widget_feedback_submit_title">شکریہ!</string>
     <string name="widget_feedback_continue">آگے بڑہیں&gt;&gt;</string>
     
-    <string name="widget_quiz_next">آگے بڑہیں &gt;&gt;</string>
-    <string name="widget_quiz_prev">&lt;&lt; پیچھے جاۓ</string>
+    <string name="widget_quiz_next">آگے بڑہیں </string>
+    <string name="widget_quiz_prev"> پیچھے جاۓ</string>
     <string name="widget_quiz_getresults">نتیجہ جانے</string>
     <string name="widget_quiz_noanswergiven">آگے بڑھنے سے پہلے اس سوال کا جواب دیں</string>
     <string name="widget_quiz_progress">سوال %1$d of %2$d</string>

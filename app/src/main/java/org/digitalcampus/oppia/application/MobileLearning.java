@@ -127,6 +127,7 @@ public class MobileLearning extends Application {
             boolean defaultOptionSuccessful = setStorageOption(ctx, prefs, storageOption);
             if (!defaultOptionSuccessful){
                 //If the default option didn't work (supposing it was external), fallback to internal
+                Log.d(TAG, storageOption + " didn't work, trying internall fallback");
                 storageOption = PrefsActivity.STORAGE_OPTION_INTERNAL;
                 setStorageOption(ctx, prefs, storageOption);
             }
@@ -135,7 +136,7 @@ public class MobileLearning extends Application {
             StorageAccessStrategy strategy = StorageAccessStrategyFactory.createStrategy(storageOption);
             Storage.setStorageStrategy(strategy);
         }
-        Log.d(TAG, "Storage option: " + storageOption);
+        Log.d(TAG, "Storage option set: " + storageOption);
     }
 
     private boolean setStorageOption(Context ctx, SharedPreferences prefs, String storageOption){
