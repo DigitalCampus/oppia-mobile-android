@@ -68,6 +68,7 @@ public class Quiz implements Serializable {
     private float maxscore;
     private boolean checked;
     private int currentq = 0;
+    private int maxattempts;
     private float userscore;
     private List<QuizQuestion> questions = new ArrayList<QuizQuestion>();
     private String instanceID;
@@ -109,8 +110,8 @@ public class Quiz implements Serializable {
             }
             this.propsSerialized = json.get("props").toString();
             this.maxscore = propsSerializedGetInt("maxscore",0);
+            this.maxattempts = propsSerializedGetInt("maxattempts", -1);
             int randomSelect = propsSerializedGetInt("randomselect",0);
-
 
             // add questions
             JSONArray questions = (JSONArray) json.get("questions");
@@ -434,4 +435,8 @@ public class Quiz implements Serializable {
         }
         return defaultValue;
     }
+
+    public  int getMaxAttempts() { return maxattempts; }
+    public boolean limitAttempts(){ return maxattempts > 0; }
+    public void setMaxAttempts(int maxAttempts) { this.maxattempts = maxAttempts; }
 }
