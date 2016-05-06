@@ -60,27 +60,30 @@ public class StorageUtils {
 
     public static DeviceFile getExternalMemoryDrive(Context ctx)
     {
+        if (mExternalDrive != null){
+            if (mExternalDrive.exists()){
+                return mExternalDrive;
+            }
+        }
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             File[] dirs = ctx.getExternalFilesDirs(null);
             if (dirs.length > 1){
 
-                for (File dir : dirs){
-                    Log.d(TAG, "Filedirs: " + dir.getPath() + ": " + (dir.canWrite()?"writable":"not writable!"));
+                DeviceFile externalDrive = null;
+                for (int i=1; i<dirs.length; i++){
+                    if (dirs[i] != null){
+                        Log.d(TAG, "Filedirs: " + dirs[i].getPath() + ": " + (dirs[i].canWrite()?"writable":"not writable!"));
+                        if (dirs[i].canWrite() && externalDrive == null) externalDrive = new DeviceFile(dirs[i]);
+                    }
                 }
 
-                DeviceFile externalDrive = new DeviceFile(dirs[1]);
-                if (externalDrive.canRead() && externalDrive.canWrite()){
+                if ((externalDrive!=null) && externalDrive.canRead() && externalDrive.canWrite()){
                     mExternalDrive = externalDrive;
                     return externalDrive;
                 }
             }
 
-        }
-
-        if (mExternalDrive != null){
-            if (mExternalDrive.exists()){
-                return mExternalDrive;
-            }
         }
 
         DeviceFile mDaddy = getInternalMemoryDrive().getParent();
