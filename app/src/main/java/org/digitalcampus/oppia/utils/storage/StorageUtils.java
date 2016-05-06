@@ -17,20 +17,14 @@
 
 package org.digitalcampus.oppia.utils.storage;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.StringTokenizer;
 
 // Code from StackOverflow: http://stackoverflow.com/questions/9340332/how-can-i-get-the-list-of-mounted-external-storage-of-android-device/19982338#19982338
 
@@ -45,12 +39,12 @@ public class StorageUtils {
         if (mInternalDrive != null)
             return mInternalDrive;
         ret = new DeviceFile(Environment.getExternalStorageDirectory());
-        Log.d(TAG, "Internal Storage: " + ret);
+        Log.d(TAG, "Storage: " + ret.getPath());
         if (ret == null || !ret.exists()) {
             DeviceFile mnt = new DeviceFile("/mnt");
             if (mnt != null && mnt.exists())
                 for (DeviceFile kid : mnt.listFiles())
-                    if (kid.getName().toLowerCase().indexOf("sd") > -1)
+                    if (kid.getName().toLowerCase().contains("sd"))
                         if (kid.canWrite()){
                             mInternalDrive = kid;
                             return mInternalDrive;
@@ -64,8 +58,25 @@ public class StorageUtils {
         return mInternalDrive;
     }
 
-    public static DeviceFile getExternalMemoryDrive()
+    public static DeviceFile getExternalMemoryDrive(Context ctx)
     {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            File[] dirs = ctx.getExternalFilesDirs(null);
+            if (dirs.length > 1){
+
+                for (File dir : dirs){
+                    Log.d(TAG, "Filedirs: " + dir.getPath() + ": " + (dir.canWrite()?"writable":"not writable!"));
+                }
+
+                DeviceFile externalDrive = new DeviceFile(dirs[1]);
+                if (externalDrive.canRead() && externalDrive.canWrite()){
+                    mExternalDrive = externalDrive;
+                    return externalDrive;
+                }
+            }
+
+        }
+
         if (mExternalDrive != null){
             if (mExternalDrive.exists()){
                 return mExternalDrive;
@@ -75,18 +86,20 @@ public class StorageUtils {
         DeviceFile mDaddy = getInternalMemoryDrive().getParent();
         while(mDaddy.getDepth() > 2)
             mDaddy = mDaddy.getParent();
-        for (DeviceFile kid : mDaddy.listFiles())
-            if ((kid.getName().toLowerCase().indexOf("ext") > -1 || kid.getName().toLowerCase()
-                    .indexOf("sdcard1") > -1)
-                    && !kid.getPath().equals(getInternalMemoryDrive())
+        Log.d(TAG, "traversing root path " + mDaddy.getPath());
+        for (DeviceFile kid : mDaddy.listFiles()) {
+            Log.d(TAG, "  > " + kid.getPath() + " : " + (kid.canWrite()?"writable":"not writable!"));
+            if ((kid.getName().toLowerCase().contains("ext") || kid.getName().toLowerCase().contains("sdcard1"))
+                    && !kid.getPath().equals(getInternalMemoryDrive().getPath())
                     && kid.canRead()
                     && kid.canWrite()) {
                 mExternalDrive = kid;
                 return mExternalDrive;
             }
+        }
         if (new File("/Removable").exists())
             for (DeviceFile kid : new DeviceFile("/Removable").listFiles())
-                if (kid.getName().toLowerCase().indexOf("ext") > -1 && kid.canRead()
+                if (kid.getName().toLowerCase().contains("ext") && kid.canRead()
                         && !kid.getPath().equals(getInternalMemoryDrive().getPath())
                         && kid.list().length > 0) {
                     mExternalDrive = kid;
@@ -96,11 +109,11 @@ public class StorageUtils {
     }
 
 
-    public static List<StorageLocationInfo> getStorageList() {
+    public static List<StorageLocationInfo> getStorageList(Context ctx) {
 
         List<StorageLocationInfo> list = new ArrayList<StorageLocationInfo>();
         DeviceFile internalStorage = getInternalMemoryDrive();
-        DeviceFile externalStorage = getExternalMemoryDrive();
+        DeviceFile externalStorage = getExternalMemoryDrive(ctx);
 
         if ((internalStorage != null) && internalStorage.canWrite()){
             StorageLocationInfo internal = new StorageLocationInfo(internalStorage.getPath(), false, false, 1);
