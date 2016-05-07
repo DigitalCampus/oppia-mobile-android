@@ -85,6 +85,7 @@ import android.widget.Toast;
 public class QuizWidget extends WidgetFactory {
 
 	public static final String TAG = QuizWidget.class.getSimpleName();
+    private static final int QUIZ_AVAILABLE = -1;
 	private Quiz quiz;
 	private QuestionWidget qw;
 	public Button prevBtn;
@@ -159,50 +160,67 @@ public class QuizWidget extends WidgetFactory {
     public void loadQuiz(){
         if (this.quiz == null) {
             this.quiz = new Quiz();
-            this.quiz.load(quizContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            this.quiz.load(quizContent,prefs.getString(
+                    PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
         }
+
         if (this.isOnResultsPage) {
-            this.showResults();
-        } else {
-            // determine availability
-            if (this.quiz.getAvailability() == Quiz.AVAILABILITY_ALWAYS){
-                this.showQuestion();
-            } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_SECTION){
+            showResults();
+            return;
+        }
 
-                // check to see if all previous section activities have been completed
-
-                DbHelper db = DbHelper.getInstance(getActivity());
-                long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-                boolean completed = db.isPreviousSectionActivitiesCompleted(course, activity, userId);
-
-                if (completed){
-                    this.showQuestion();
-                } else {
-                    ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
+        int result = checkQuizAvailability();
+        if (result == QUIZ_AVAILABLE){
+            this.showQuestion();
+        }
+        else{
+            View container = getView();
+            if (container != null){
+                ViewGroup vg = (ViewGroup) container.findViewById(activity.getActId());
+                if (vg!=null){
                     vg.removeAllViews();
                     vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
 
                     TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
-                    tv.setText(R.string.widget_quiz_unavailable_section);
-                }
-            } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
-                // check to see if all previous course activities have been completed
-                DbHelper db = DbHelper.getInstance(getActivity());
-                long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-                boolean completed = db.isPreviousCourseActivitiesCompleted(course, activity, userId);
-
-                if (completed){
-                    this.showQuestion();
-                } else {
-                    ViewGroup vg = (ViewGroup) getView().findViewById(activity.getActId());
-                    vg.removeAllViews();
-                    vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
-
-                    TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
-                    tv.setText(R.string.widget_quiz_unavailable_course);
+                    tv.setText(result);
                 }
             }
         }
+    }
+
+    private int checkQuizAvailability(){
+
+        DbHelper db = null;
+        if (this.quiz.limitAttempts()){
+            //Check if the user has attempted the quiz the max allowed
+            db = DbHelper.getInstance(getActivity());
+        }
+
+        // determine availability
+        if (this.quiz.getAvailability() == Quiz.AVAILABILITY_ALWAYS){
+            return QUIZ_AVAILABLE;
+
+        } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_SECTION){
+            // check to see if all previous section activities have been completed
+            if (db == null) db = DbHelper.getInstance(getActivity());
+            long userId = db.getUserId(SessionManager.getUsername(getActivity()));
+
+            if( db.isPreviousSectionActivitiesCompleted(course, activity, userId) )
+                return QUIZ_AVAILABLE;
+            else
+                return R.string.widget_quiz_unavailable_section;
+
+        } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
+            // check to see if all previous course activities have been completed
+            if (db == null) db = DbHelper.getInstance(getActivity());
+            long userId = db.getUserId(SessionManager.getUsername(getActivity()));
+            if (db.isPreviousCourseActivitiesCompleted(course, activity, userId))
+                return QUIZ_AVAILABLE;
+            else
+                return R.string.widget_quiz_unavailable_course;
+        }
+        //If none of the conditions apply, set it as available
+        return QUIZ_AVAILABLE;
     }
 
 	public void showQuestion() {
