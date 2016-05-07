@@ -43,6 +43,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizFeedback;
+import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
@@ -194,6 +195,11 @@ public class QuizWidget extends WidgetFactory {
         if (this.quiz.limitAttempts()){
             //Check if the user has attempted the quiz the max allowed
             db = DbHelper.getInstance(getActivity());
+            long userId = db.getUserId(SessionManager.getUsername(getActivity()));
+            QuizStats qs = db.getQuizAttempt(this.activity.getDigest(), userId);
+            if (qs.getNumAttempts() > quiz.getMaxAttempts()){
+                return R.string.widget_quiz_unavailable_attempts;
+            }
         }
 
         // determine availability
