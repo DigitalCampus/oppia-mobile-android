@@ -41,6 +41,7 @@ import java.util.List;
 public class SessionManager {
 
     public static final String ACCOUNTS_CSV_FILENAME = "oppia_accounts.csv";
+    public static final String APIKEY_INVALID = "prefApiKeyInvalid";
 
     public static boolean isLoggedIn(Context ctx) {
         String username = getUsername(ctx);
@@ -165,6 +166,24 @@ public class SessionManager {
             //Then we set the default values again (only empty values, will not overwrite the others)
             PreferenceManager.setDefaultValues(ctx, R.xml.prefs, true);
         }
+    }
+
+    public static void invalidateUserApiKey(Context ctx, User user){
+        ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
+        Pair<String, String> userPref = new Pair<>(APIKEY_INVALID, "true");
+        userPrefs.add(userPref);
+
+        DbHelper.getInstance(ctx).insertUserPreferences(user.getUsername(), userPrefs);
+    }
+
+    public static boolean isUserApiKeyValid(Context ctx){
+        DbHelper db = DbHelper.getInstance(ctx);
+        String user = getUsername(ctx);
+        if (user!=null){
+            String prefValue = db.getUserPreference(user, APIKEY_INVALID);
+            return "true".equals(prefValue);
+        }
+        return false;
     }
 
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener){
