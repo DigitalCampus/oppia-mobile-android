@@ -71,11 +71,13 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
             else{
                 switch (response.code()) {
                     case 401:
+                        payload.setResult(false);
+                        payload.setResultResponse(ctx.getString(R.string.error_apikey_expired));
+                        break;
                     case 403: // unauthorised
                         payload.setResult(false);
                         payload.setResultResponse(ctx.getString(R.string.error_login));
                         break;
-
                     default:
                         payload.setResult(false);
                         payload.setResultResponse(ctx.getString(R.string.error_connection));

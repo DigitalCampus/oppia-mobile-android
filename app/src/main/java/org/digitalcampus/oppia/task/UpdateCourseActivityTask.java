@@ -75,7 +75,8 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
             Response response = client.newCall(request).execute();
             if (!response.isSuccessful()){
                 payload.setResult(false);
-                payload.setResultResponse(ctx.getString(R.string.error_connection));
+                payload.setResultResponse(ctx.getString(
+                        (response.code()==401) ? R.string.error_apikey_expired : R.string.error_connection));
             }
             else{
                 CourseTrackerXMLReader ctxr;
@@ -95,7 +96,10 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
             dp.setMessage(ctx.getString(R.string.download_complete));
             publishProgress(dp);
             payload.setResult(true);
-
+        } catch(javax.net.ssl.SSLHandshakeException e) {
+            e.printStackTrace();
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
 		} catch (ClientProtocolException | SocketTimeoutException cpe) {
 			Mint.logException(cpe);
 			cpe.printStackTrace();
