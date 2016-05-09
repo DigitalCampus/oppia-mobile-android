@@ -217,6 +217,7 @@
 	
 	<string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
 	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
+    <string name="error_connection_ssl">Error connecting to server due to SSL problems. Please, ensure that the host in your OppiaMobile server setting is correct, and that your device has the right time/date</string>
 	<string name="error_installing_course">%1$s: failed to install</string>
 	<string name="error_latest_already_installed">%1$s: latest version already installed</string>
 	<string name="error_login">Invalid username/password\nPlease try again</string>
@@ -316,6 +317,7 @@
     <string name="permissions.allow_btn_text">Allow permissions</string>
     <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> OppiaMobile > Permissions to grant access to these permissions</string>
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
+
 
 
 </resources>

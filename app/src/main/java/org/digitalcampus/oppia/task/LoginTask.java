@@ -138,7 +138,11 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
                 }
             }
 
-		} catch (UnsupportedEncodingException | ClientProtocolException e) {
+		} catch(javax.net.ssl.SSLHandshakeException e) {
+            e.printStackTrace();
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
+        }catch (UnsupportedEncodingException | ClientProtocolException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {

@@ -81,11 +81,18 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
                         payload.setResultResponse(ctx.getString(R.string.error_connection));
                 }
             }
-
-		} catch (ClientProtocolException | UserNotFoundException e) {
-			e.printStackTrace();
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch(javax.net.ssl.SSLHandshakeException e) {
+            e.printStackTrace();
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
+        }catch (ClientProtocolException | UserNotFoundException e) {
+            e.printStackTrace();
+            payload.setResult(false);
+            if (e.getCause() != null && e.getCause() instanceof javax.security.cert.CertificateException){
+                payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
+            }
+            else
+			    payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
 			e.printStackTrace();
 			payload.setResult(false);
