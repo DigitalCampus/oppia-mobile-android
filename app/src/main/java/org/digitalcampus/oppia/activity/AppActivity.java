@@ -29,6 +29,7 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -37,6 +38,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
+import org.digitalcampus.oppia.utils.UIUtils;
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener {
 	
@@ -90,8 +92,17 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Override
     public void onResume(){
         super.onResume();
-        //Check if the apiKey of the user is invalidated
-        //....
+        //Check if the apiKey of the current user is valid
+        boolean apiKeyValid = SessionManager.isUserApiKeyValid(this);
+        if (!apiKeyValid){
+            UIUtils.showAlert(this, R.string.error, R.string.error_apikey_expired, new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    logoutAndRestartApp();
+                    return true;
+                }
+            });
+        }
 
         //We check if the user session time has expired to log him out
         if (MobileLearning.SESSION_EXPIRATION_ENABLED){

@@ -41,7 +41,7 @@ import java.util.List;
 public class SessionManager {
 
     public static final String ACCOUNTS_CSV_FILENAME = "oppia_accounts.csv";
-    public static final String APIKEY_INVALID = "prefApiKeyInvalid";
+    public static final String APIKEY_VALID = "prefApiKeyInvalid";
 
     public static boolean isLoggedIn(Context ctx) {
         String username = getUsername(ctx);
@@ -93,6 +93,7 @@ public class SessionManager {
         editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, user.isBadgingEnabled());
 
         loadUserPrefs(ctx, username, editor);
+        setUserApiKeyValid(ctx, user, true);
         Mint.setUserIdentifier(username);
         editor.apply();
     }
@@ -135,7 +136,6 @@ public class SessionManager {
 
         DbHelper db = DbHelper.getInstance(ctx);
         db.insertUserPreferences(username, userPrefs);
-
     }
 
     //Warning: this method doesn't call prefs.apply()
@@ -168,9 +168,9 @@ public class SessionManager {
         }
     }
 
-    public static void invalidateUserApiKey(Context ctx, User user){
+    public static void setUserApiKeyValid(Context ctx, User user, boolean valid){
         ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
-        Pair<String, String> userPref = new Pair<>(APIKEY_INVALID, "true");
+        Pair<String, String> userPref = new Pair<>(APIKEY_VALID, valid?"true":"false");
         userPrefs.add(userPref);
 
         DbHelper.getInstance(ctx).insertUserPreferences(user.getUsername(), userPrefs);
@@ -178,12 +178,14 @@ public class SessionManager {
 
     public static boolean isUserApiKeyValid(Context ctx){
         DbHelper db = DbHelper.getInstance(ctx);
-        String user = getUsername(ctx);
-        if (user!=null){
-            String prefValue = db.getUserPreference(user, APIKEY_INVALID);
-            return "true".equals(prefValue);
+
+        if (isLoggedIn(ctx)){
+            String user = getUsername(ctx);
+            String prefValue = db.getUserPreference(user, APIKEY_VALID);
+
+            return (prefValue == null || "true".equals(prefValue));
         }
-        return false;
+        return true;
     }
 
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener){
