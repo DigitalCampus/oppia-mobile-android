@@ -58,8 +58,12 @@ public class SessionManager {
         DbHelper db = DbHelper.getInstance(ctx);
         try {
             User u = db.getUser(username);
-            u.setApiKey("aaaa"); //to invalidate apiKey
+            /*
+            //To test fast the apiKey expired case, uncomment this lines
+            ////////////////////////
+            u.setApiKey("xxxxxxx"); //to invalidate apiKey
             db.addOrUpdateUser(u);
+             */
             return u.getDisplayName();
 
         } catch (UserNotFoundException e) {
