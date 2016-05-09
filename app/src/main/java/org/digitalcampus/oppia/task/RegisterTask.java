@@ -141,7 +141,7 @@ public class RegisterTask extends AsyncTask<Payload, Object, Payload> {
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
 			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+			payload.setResultResponse(ctx.getString(R.string.error_connection_required));
 		} catch (JSONException e) {
 			Mint.logException(e);
 			e.printStackTrace();

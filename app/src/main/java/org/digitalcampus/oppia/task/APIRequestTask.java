@@ -96,7 +96,7 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 		} catch (IOException e) {
 			e.printStackTrace();
 			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+			payload.setResultResponse(ctx.getString(R.string.error_connection_required));
 		}
 
         long spent = System.currentTimeMillis() - now;
