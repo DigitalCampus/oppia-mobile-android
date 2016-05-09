@@ -34,10 +34,11 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 
-public class AppActivity extends AppCompatActivity {
+public class AppActivity extends AppCompatActivity implements APIKeyRequestListener {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
 
@@ -89,6 +90,9 @@ public class AppActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+        //Check if the apiKey of the user is invalidated
+        //....
+
         //We check if the user session time has expired to log him out
         if (MobileLearning.SESSION_EXPIRATION_ENABLED){
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -116,7 +120,6 @@ public class AppActivity extends AppCompatActivity {
     }
 
     public void logoutAndRestartApp(){
-
         SessionManager.logoutCurrentUser(this);
 
         Intent restartIntent = new Intent(this, StartUpActivity.class);
@@ -126,4 +129,8 @@ public class AppActivity extends AppCompatActivity {
         this.finish();
     }
 
+    @Override
+    public void apiKeyInvalidated() {
+        logoutAndRestartApp();
+    }
 }

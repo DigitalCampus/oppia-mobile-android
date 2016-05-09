@@ -46,7 +46,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout.LayoutParams;
 
-public class RegisterFragment extends Fragment implements SubmitListener {
+public class RegisterFragment extends AppFragment implements SubmitListener {
 
 
 	public static final String TAG = RegisterFragment.class.getSimpleName();

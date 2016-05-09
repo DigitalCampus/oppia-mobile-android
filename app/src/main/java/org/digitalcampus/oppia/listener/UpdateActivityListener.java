@@ -21,7 +21,7 @@ package org.digitalcampus.oppia.listener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.Payload;
 
-public interface UpdateActivityListener {
+public interface UpdateActivityListener extends APIKeyRequestListener {
 
 	void updateActivityComplete(Payload p);
     void updateActivityProgressUpdate(DownloadProgress dp);
