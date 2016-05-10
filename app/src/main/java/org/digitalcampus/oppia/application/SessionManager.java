@@ -177,15 +177,17 @@ public class SessionManager {
     }
 
     public static boolean isUserApiKeyValid(Context ctx){
-        DbHelper db = DbHelper.getInstance(ctx);
-
         if (isLoggedIn(ctx)){
             String user = getUsername(ctx);
-            String prefValue = db.getUserPreference(user, APIKEY_VALID);
-
-            return (prefValue == null || "true".equals(prefValue));
+            return isUserApiKeyValid(ctx, user);
         }
         return true;
+    }
+
+    public static boolean isUserApiKeyValid(Context ctx, String username){
+        DbHelper db = DbHelper.getInstance(ctx);
+        String prefValue = db.getUserPreference(username, APIKEY_VALID);
+        return (prefValue == null || "true".equals(prefValue));
     }
 
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener){

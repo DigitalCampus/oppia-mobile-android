@@ -29,6 +29,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
@@ -68,11 +69,12 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 		DbHelper db0 = DbHelper.getInstance(ctx);
 		try {
 			User localUser = db0.getUser(u.getUsername());
-			
+
 			Log.d(TAG,"logged pw: " + localUser.getPasswordEncrypted());
 			Log.d(TAG,"entered pw: " + u.getPasswordEncrypted());
 			
-			if (localUser.getPasswordEncrypted().equals(u.getPasswordEncrypted())){
+			if (SessionManager.isUserApiKeyValid(ctx, u.getUsername()) &&
+                    localUser.getPasswordEncrypted().equals(u.getPasswordEncrypted())){
 				payload.setResult(true);
 				payload.setResultResponse(ctx.getString(R.string.login_complete));
 				return payload;
