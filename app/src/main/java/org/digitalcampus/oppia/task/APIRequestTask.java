@@ -41,6 +41,7 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 	public static final String TAG = APIRequestTask.class.getSimpleName();
 	protected Context ctx;
 	private APIRequestListener requestListener;
+    private boolean APIKeyInvalidated = false;
 
 	public APIRequestTask(Context ctx) {
 		this.ctx = ctx;
@@ -73,6 +74,8 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
                     case 401:
                         payload.setResult(false);
                         payload.setResultResponse(ctx.getString(R.string.error_apikey_expired));
+                        SessionManager.setUserApiKeyValid(ctx, u, false);
+                        APIKeyInvalidated = true;
                         break;
                     case 403: // unauthorised
                         payload.setResult(false);
@@ -110,7 +113,10 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 	protected void onPostExecute(Payload response) {
 		synchronized (this) {
             if (requestListener != null) {
-               requestListener.apiRequestComplete(response);
+                if (APIKeyInvalidated)
+                    requestListener.apiKeyInvalidated();
+                else
+                    requestListener.apiRequestComplete(response);
             }
         }
 	}

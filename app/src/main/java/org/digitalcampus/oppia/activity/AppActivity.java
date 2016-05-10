@@ -95,13 +95,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         //Check if the apiKey of the current user is valid
         boolean apiKeyValid = SessionManager.isUserApiKeyValid(this);
         if (!apiKeyValid){
-            UIUtils.showAlert(this, R.string.error, R.string.error_apikey_expired, new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    logoutAndRestartApp();
-                    return true;
-                }
-            });
+            apiKeyInvalidated();
         }
 
         //We check if the user session time has expired to log him out
@@ -142,6 +136,12 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     public void apiKeyInvalidated() {
-        logoutAndRestartApp();
+        UIUtils.showAlert(this, R.string.error, R.string.error_apikey_expired, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                logoutAndRestartApp();
+                return true;
+            }
+        });
     }
 }
