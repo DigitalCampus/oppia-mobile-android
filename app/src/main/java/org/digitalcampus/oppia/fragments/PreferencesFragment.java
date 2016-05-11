@@ -41,7 +41,6 @@ public class PreferencesFragment extends PreferenceFragment {
 
         ArrayList<Lang> langs = new ArrayList<>();
         if (bundle.getSerializable("langs") != null) {
-        	@SuppressWarnings("unchecked")
 	        langs = (ArrayList<Lang>) bundle.getSerializable("langs");
         }
         updateLangsList(langs);
