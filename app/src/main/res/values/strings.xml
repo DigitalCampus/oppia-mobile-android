@@ -64,8 +64,8 @@
     <string name="widget_feedback_submit">Submit</string>
     <string name="widget_feedback_submit_title">Thank you for submitting your feedback.</string>
     
-    <string name="widget_quiz_next">Next &gt;&gt;</string>
-    <string name="widget_quiz_prev">&lt;&lt; Prev</string>
+    <string name="widget_quiz_next">Next</string>
+    <string name="widget_quiz_prev">Prev</string>
     <string name="widget_quiz_getresults">Get Results</string>
     <string name="widget_quiz_noanswergiven">Please give an answer before moving to the next question</string>
     <string name="widget_quiz_progress">Question %1$d of %2$d</string>

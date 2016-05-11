@@ -50,8 +50,8 @@
     <string name="widget_feedback_submit">Submit</string>
     <string name="widget_feedback_submit_title">Thank you for submitting your feedback.</string>
     
-    <string name="widget_quiz_next">Próximo &gt;&gt;</string>
-    <string name="widget_quiz_prev">&lt;&lt; Anterior</string>
+    <string name="widget_quiz_next">Próximo</string>
+    <string name="widget_quiz_prev"> Anterior</string>
     <string name="widget_quiz_getresults">Obterner resultados</string>
     <string name="widget_quiz_noanswergiven">Por favor dé una respuesta antes de pasar a la siguiente pregunta</string>
     <string name="widget_quiz_progress">Pregunta %1$d de %2$d</string>
