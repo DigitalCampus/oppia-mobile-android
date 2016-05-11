@@ -41,7 +41,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class PointsFragment extends Fragment implements APIRequestListener {
+public class PointsFragment extends AppFragment implements APIRequestListener {
 
 	public static final String TAG = PointsFragment.class.getSimpleName();
 

@@ -244,7 +244,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			File mediaSource = new File(source +  Storage.APP_MEDIA_DIR_NAME);
 			File courseSource = new File(source +  Storage.APP_COURSES_DIR_NAME);
 
-            publishProgress(this.ctx.getString(R.string.upgradev49_1,""));
+            publishProgress(this.ctx.getString(R.string.upgradev49_1));
 	    	try {
 				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + Storage.APP_DOWNLOAD_DIR_NAME ));
 			} catch (IOException e) {

@@ -1555,4 +1555,19 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return prefs;
     }
+
+    public String getUserPreference(String username, String preferenceKey){
+        String whereClause = USER_PREFS_C_USERNAME + "=? AND " + USER_PREFS_C_PREFKEY + "=? ";
+        String[] args = new String[] { username, preferenceKey };
+
+        String prefValue = null;
+        Cursor c = db.query(USER_PREFS_TABLE, null, whereClause, args, null, null, null);
+        if (c.getCount() > 0){
+            c.moveToFirst();
+            prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
+        }
+
+        c.close();
+        return prefValue;
+    }
 }

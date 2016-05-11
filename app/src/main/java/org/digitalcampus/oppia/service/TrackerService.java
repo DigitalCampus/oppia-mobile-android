@@ -23,6 +23,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.task.APIRequestTask;
@@ -128,7 +129,12 @@ public class TrackerService extends Service implements APIRequestListener {
 		return mBinder;
 	}
 
-	public class MyBinder extends Binder {
+    @Override
+    public void apiKeyInvalidated() {
+        SessionManager.logoutCurrentUser(this);
+    }
+
+    public class MyBinder extends Binder {
 		public TrackerService getService() {
 			return TrackerService.this;
 		}

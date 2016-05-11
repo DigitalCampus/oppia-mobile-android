@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.fragments;
 import java.util.ArrayList;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -44,7 +45,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout.LayoutParams;
 
-public class LoginFragment extends Fragment implements SubmitListener {
+public class LoginFragment extends AppFragment implements SubmitListener {
 
 
 	public static final String TAG = LoginFragment.class.getSimpleName();
@@ -142,5 +143,6 @@ public class LoginFragment extends Fragment implements SubmitListener {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 	}
-	
+
+
 }

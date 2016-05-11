@@ -30,6 +30,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
@@ -69,79 +70,14 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 			DbHelper db = DbHelper.getInstance(ctx);
 			ArrayList<User> users = db.getAllUsers();
 			
-			for (User u: users){
-				payload = db.getUnsentTrackers(u.getUserId());
-				
-				@SuppressWarnings("unchecked")
-				Collection<Collection<TrackerLog>> result = split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
+			for (User u: users) {
+                payload = db.getUnsentTrackers(u.getUserId());
 
-				for (Collection<TrackerLog> trackerBatch : result) {
-					String dataToSend = createDataString(trackerBatch);
-					Log.d(TAG, dataToSend);
-					try {
+                @SuppressWarnings("unchecked")
+                Collection<Collection<TrackerLog>> userTrackers = split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
+                sendTrackerBatch(userTrackers, u, db, payload);
+            }
 
-                        OkHttpClient client = HTTPClientUtils.getClient(ctx);
-                        Request request = new Request.Builder()
-                                .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.TRACKER_PATH))
-                                .addHeader(HTTPClientUtils.HEADER_AUTH,
-                                        HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
-                                .patch(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, dataToSend))
-                                .build();
-
-                        Response response = client.newCall(request).execute();
-                        if (response.isSuccessful()){
-                            for(TrackerLog tl: trackerBatch){
-                                db.markLogSubmitted(tl.getId());
-                            }
-                            payload.setResult(true);
-                            // update points
-                            JSONObject jsonResp = new JSONObject(response.body().string());
-                            db.updateUserPoints(u.getUserId(), jsonResp.getInt("points"));
-                            db.updateUserBadges(u.getUserId(), jsonResp.getInt("badges"));
-
-                            Editor editor = prefs.edit();
-                            try {
-                                editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
-                                editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            editor.apply();
-
-                            try {
-                                JSONObject metadata = jsonResp.getJSONObject("metadata");
-                                MetaDataUtils mu = new MetaDataUtils(ctx);
-                                mu.saveMetaData(metadata, prefs);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        else{
-                            if (response.code() == 400) {
-                                // submitted but invalid digest - returned 400 Bad Request -
-                                // so record as submitted so doesn't keep trying
-                                for(TrackerLog tl: trackerBatch){
-                                    db.markLogSubmitted(tl.getId());
-                                }
-                                payload.setResult(true);
-                            }
-                            else{
-                                payload.setResult(false);
-                            }
-                        }
-					} catch (UnsupportedEncodingException | ClientProtocolException e) {
-						payload.setResult(false);
-					} catch (IOException e) {
-						payload.setResult(false);
-					} catch (JSONException e) {
-						Mint.logException(e);
-						e.printStackTrace();
-						payload.setResult(false);
-					} 
-					publishProgress(0);
-				}
-				
-			}
 	
 		} catch (IllegalStateException ise) {
 			ise.printStackTrace();
@@ -153,6 +89,78 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
 		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
 		return payload;
 	}
+
+    private void sendTrackerBatch(Collection<Collection<TrackerLog>> trackers, User user, DbHelper db, Payload p) {
+            for (Collection<TrackerLog> trackerBatch : trackers) {
+                String dataToSend = createDataString(trackerBatch);
+                Log.d(TAG, dataToSend);
+                try {
+
+                    OkHttpClient client = HTTPClientUtils.getClient(ctx);
+                    Request request = new Request.Builder()
+                            .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.TRACKER_PATH))
+                            .addHeader(HTTPClientUtils.HEADER_AUTH,
+                                    HTTPClientUtils.getAuthHeaderValue(user.getUsername(), user.getApiKey()))
+                            .patch(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, dataToSend))
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        for (TrackerLog tl : trackerBatch) {
+                            db.markLogSubmitted(tl.getId());
+                        }
+                        p.setResult(true);
+                        // update points
+                        JSONObject jsonResp = new JSONObject(response.body().string());
+                        db.updateUserPoints(user.getUserId(), jsonResp.getInt("points"));
+                        db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
+
+                        Editor editor = prefs.edit();
+                        try {
+                            editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
+                            editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        editor.apply();
+
+                        try {
+                            JSONObject metadata = jsonResp.getJSONObject("metadata");
+                            MetaDataUtils mu = new MetaDataUtils(ctx);
+                            mu.saveMetaData(metadata, prefs);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        if (response.code() == 400) {
+                            // submitted but invalid digest - returned 400 Bad Request -
+                            // so record as submitted so doesn't keep trying
+                            for (TrackerLog tl : trackerBatch) {
+                                db.markLogSubmitted(tl.getId());
+                            }
+                            p.setResult(true);
+                        } else{
+                            p.setResult(false);
+                            if (response.code() == 401) {
+                                //The apiKey of this user is invalid
+                                SessionManager.setUserApiKeyValid(ctx, user, false);
+                                //We don't process more of this user trackers
+                                return;
+                            }
+                        }
+                    }
+                } catch (UnsupportedEncodingException | ClientProtocolException e) {
+                    p.setResult(false);
+                } catch (IOException e) {
+                    p.setResult(false);
+                } catch (JSONException e) {
+                    Mint.logException(e);
+                    e.printStackTrace();
+                    p.setResult(false);
+                }
+                publishProgress(0);
+            }
+    }
 
 	@Override
 	protected void onProgressUpdate(Integer... obj) {

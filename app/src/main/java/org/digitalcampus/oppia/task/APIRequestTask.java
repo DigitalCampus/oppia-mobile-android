@@ -41,6 +41,7 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 	public static final String TAG = APIRequestTask.class.getSimpleName();
 	protected Context ctx;
 	private APIRequestListener requestListener;
+    private boolean APIKeyInvalidated = false;
 
 	public APIRequestTask(Context ctx) {
 		this.ctx = ctx;
@@ -71,25 +72,36 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
             else{
                 switch (response.code()) {
                     case 401:
+                        payload.setResult(false);
+                        payload.setResultResponse(ctx.getString(R.string.error_apikey_expired));
+                        SessionManager.setUserApiKeyValid(ctx, u, false);
+                        APIKeyInvalidated = true;
+                        break;
                     case 403: // unauthorised
                         payload.setResult(false);
                         payload.setResultResponse(ctx.getString(R.string.error_login));
                         break;
-
                     default:
                         payload.setResult(false);
                         payload.setResultResponse(ctx.getString(R.string.error_connection));
                 }
             }
-
-		} catch (ClientProtocolException | UserNotFoundException e) {
-			e.printStackTrace();
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+		} catch(javax.net.ssl.SSLHandshakeException e) {
+            e.printStackTrace();
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
+        }catch (ClientProtocolException | UserNotFoundException e) {
+            e.printStackTrace();
+            payload.setResult(false);
+            if (e.getCause() != null && e.getCause() instanceof javax.security.cert.CertificateException){
+                payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
+            }
+            else
+			    payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
 			e.printStackTrace();
 			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+			payload.setResultResponse(ctx.getString(R.string.error_connection_required));
 		}
 
         long spent = System.currentTimeMillis() - now;
@@ -101,7 +113,10 @@ public class APIRequestTask extends AsyncTask<Payload, Object, Payload>{
 	protected void onPostExecute(Payload response) {
 		synchronized (this) {
             if (requestListener != null) {
-               requestListener.apiRequestComplete(response);
+                if (APIKeyInvalidated)
+                    requestListener.apiKeyInvalidated();
+                else
+                    requestListener.apiRequestComplete(response);
             }
         }
 	}
