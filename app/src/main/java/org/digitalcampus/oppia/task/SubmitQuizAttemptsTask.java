@@ -31,6 +31,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -58,6 +59,8 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 	@Override
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
+        DbHelper db = DbHelper.getInstance(ctx);
+
 		for (Object l : payload.getData()) {
 			QuizAttempt qa = (QuizAttempt) l;
 			try {
@@ -73,29 +76,26 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
                 Response response = client.newCall(request).execute();
                 if (response.isSuccessful()){
                     JSONObject jsonResp = new JSONObject(response.body().string());
-                    DbHelper db = DbHelper.getInstance(ctx);
+
                     db.markQuizSubmitted(qa.getId());
                     db.updateUserPoints(qa.getUser().getUsername(), jsonResp.getInt("points"));
                     db.updateUserBadges(qa.getUser().getUsername(), jsonResp.getInt("badges"));
                     payload.setResult(true);
                 }
                 else {
+                    payload.setResult(false);
                     switch (response.code()) {
                         case 400: // bad request - so to prevent re-submitting over and
-                        case 401: // over just mark as submitted
-                            DbHelper db2 = DbHelper.getInstance(ctx);
-                            db2.markQuizSubmitted(qa.getId());
-                            payload.setResult(false);
+                            // over just mark as submitted
+                            db.markQuizSubmitted(qa.getId());
                             break;
-
+                        case 401:
+                            SessionManager.setUserApiKeyValid(ctx, qa.getUser(), false);
+                            break;
                         case 500: // server error - so to prevent re-submitting over and
                             // over just mark as submitted
-                            DbHelper db3 = DbHelper.getInstance(ctx);
-                            db3.markQuizSubmitted(qa.getId());
-                            payload.setResult(false);
+                            db.markQuizSubmitted(qa.getId());
                             break;
-                        default:
-                            payload.setResult(false);
                     }
                 }
 
@@ -116,8 +116,7 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 		}
 		Editor editor = prefs.edit();
 		long now = System.currentTimeMillis()/1000;
-		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now);
-		editor.commit();
+		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
 		return payload;
 	}
 

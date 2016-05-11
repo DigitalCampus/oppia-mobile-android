@@ -42,7 +42,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class BadgesFragment extends Fragment implements APIRequestListener {
+public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	public static final String TAG = BadgesFragment.class.getSimpleName();
 	private JSONObject json;

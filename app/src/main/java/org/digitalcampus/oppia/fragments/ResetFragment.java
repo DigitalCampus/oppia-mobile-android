@@ -38,16 +38,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout.LayoutParams;
 
-public class ResetFragment extends Fragment implements SubmitListener{
+public class ResetFragment extends AppFragment implements SubmitListener{
 
 	public static final String TAG = RegisterFragment.class.getSimpleName();
 	private EditText usernameField;
-	private Button resetButton;
-	private ProgressDialog pDialog;
+    private ProgressDialog pDialog;
 	
 	public static ResetFragment newInstance() {
-		ResetFragment myFragment = new ResetFragment();
-	    return myFragment;
+        return new ResetFragment();
 	}
 
 	public ResetFragment(){
@@ -72,8 +70,8 @@ public class ResetFragment extends Fragment implements SubmitListener{
 		super.onActivityCreated(savedInstanceState);
 
 		usernameField = (EditText) super.getActivity().findViewById(R.id.reset_username_field);
-		
-		resetButton = (Button) super.getActivity().findViewById(R.id.reset_btn);
+
+        Button resetButton = (Button) super.getActivity().findViewById(R.id.reset_btn);
 		resetButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -100,7 +98,6 @@ public class ResetFragment extends Fragment implements SubmitListener{
 		// get form fields
 		String username = usernameField.getText().toString();
 
-		
 		// do validation
 		// check firstname
 		if (username.length() == 0) {

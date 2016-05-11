@@ -25,6 +25,7 @@ import com.splunk.mint.Mint;
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
@@ -45,6 +46,7 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
 
 	public final static String TAG = UpdateCourseActivityTask.class.getSimpleName();
 	private UpdateActivityListener mStateListener;
+    private boolean APIKeyInvalidated = false;
 	
 	private Context ctx;
 	private long userId;
@@ -75,6 +77,10 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
             Response response = client.newCall(request).execute();
             if (!response.isSuccessful()){
                 payload.setResult(false);
+                if (response.code() == 401){
+                    SessionManager.setUserApiKeyValid(ctx, u, false);
+                    APIKeyInvalidated = true;
+                }
                 payload.setResultResponse(ctx.getString(
                         (response.code()==401) ? R.string.error_apikey_expired : R.string.error_connection));
             }
@@ -85,17 +91,17 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
                     db.resetCourse(course.getCourseId(), userId);
                     db.insertTrackers(ctxr.getTrackers(course.getCourseId(), userId));
                     db.insertQuizAttempts(ctxr.getQuizAttempts(course.getCourseId(), userId));
+                    dp.setProgress(100);
+                    dp.setMessage(ctx.getString(R.string.download_complete));
+                    publishProgress(dp);
+                    payload.setResult(true);
+
                 } catch (InvalidXMLException e) {
                     Mint.logException(e);
                     e.printStackTrace();
                 }
             }
-			
-            dp.setProgress(100);
-            publishProgress(dp);
-            dp.setMessage(ctx.getString(R.string.download_complete));
-            publishProgress(dp);
-            payload.setResult(true);
+
         } catch(javax.net.ssl.SSLHandshakeException e) {
             e.printStackTrace();
             payload.setResult(false);
@@ -132,7 +138,10 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
 	protected void onPostExecute(Payload results) {
 		synchronized (this) {
             if (mStateListener != null) {
-               mStateListener.updateActivityComplete(results);
+                if (APIKeyInvalidated)
+                    mStateListener.apiKeyInvalidated();
+                else
+                    mStateListener.updateActivityComplete(results);
             }
         }
 	}

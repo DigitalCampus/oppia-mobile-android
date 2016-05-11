@@ -483,6 +483,7 @@ public class CourseIntallerService extends IntentService {
                     case 401: // unauthorised
                         sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_login));
                         removeDownloading(scheduleUrl);
+                        SessionManager.setUserApiKeyValid(this, u, false);
                         return false;
 
                     default:
