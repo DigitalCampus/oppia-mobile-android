@@ -85,6 +85,7 @@ public class LoginFragment extends Fragment implements SubmitListener {
 
     @Override
     public void onPause(){
+        super.onPause();
         if (pDialog != null && pDialog.isShowing()){
             pDialog.dismiss();
         }
