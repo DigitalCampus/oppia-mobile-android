@@ -453,6 +453,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(COURSE_C_DESC, course.getDescriptionJSONString());
 		values.put(COURSE_C_ORDER_PRIORITY, course.getPriority());
         values.put(COURSE_C_SEQUENCING, course.getSequencingMode());
+        values.put(COURSE_C_TAGS, course.getTags());
 		
 		if (!this.isInstalled(course.getShortname())) {
 			Log.v(TAG, "Record added");
@@ -639,7 +640,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
-		while (c.isAfterLast() == false) {
+		while (!c.isAfterLast()) {
 			
 			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
@@ -651,8 +652,10 @@ public class DbHelper extends SQLiteOpenHelper {
 			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
 			course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
             course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
+            course.setTags(c.getString(c.getColumnIndex(COURSE_C_TAGS)));
             course = this.courseSetProgress(course, userId);
 			courses.add(course);
+            Log.d("TAGS", "" + course.getTags());
 			c.moveToNext();
 		}
 		c.close();

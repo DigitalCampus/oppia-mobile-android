@@ -62,6 +62,7 @@ public class Course implements Serializable {
 	private int noActivitiesCompleted = 0;
 	private int noActivitiesStarted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
+    private String tags;
 
 	private String root;
 	
@@ -409,5 +410,13 @@ public class Course implements Serializable {
 
     public void setSequencingMode(String sequencingMode) {
         this.sequencingMode = sequencingMode;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

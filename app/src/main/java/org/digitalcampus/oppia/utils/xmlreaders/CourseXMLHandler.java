@@ -55,6 +55,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     private static final String NODE_SECTION = "section";
     private static final String NODE_META = "meta";
     private static final String NODE_SEQUENCING = "sequencing";
+    private static final String NODE_TAGS = "tags";
 
     private long courseId;
     private long userId;
@@ -63,6 +64,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     private double courseVersionId;
     private String courseIcon;
     private String courseSequencingMode;
+    private String courseTags;
     private int coursePriority;
     private ArrayList<Lang> courseDescriptions = new ArrayList<Lang>();
     private ArrayList<Lang> courseTitles = new ArrayList<Lang>();
@@ -120,6 +122,9 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
 
     public String getCourseSequencingMode() {
         return courseSequencingMode;
+    }
+    public String getCourseTags() {
+        return courseTags;
     }
 
     //Vars for traversing the tree
@@ -289,6 +294,13 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
 
             if (NODE_META.equals(parentElements.peek())) {
                 courseSequencingMode = chars.toString();
+            }
+        }
+        else if (NODE_TAGS.equals(aQName)){
+            if (chars.length() <= 0) return;
+
+            if (NODE_META.equals(parentElements.peek())) {
+                courseTags = chars.toString();
             }
         }
         else if (NODE_ACTIVITY.equals(aQName)){

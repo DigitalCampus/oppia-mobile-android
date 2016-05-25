@@ -129,6 +129,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				c.setLangs(cxr.getLangs());
 				c.setDescriptions(cxr.getDescriptions());
 				c.setPriority(cxr.getPriority());
+                c.setTags(cxr.getCourseTags());
                 String sequencingMode = cxr.getCourseSequencingMode();
                 if ((sequencingMode!=null) && (sequencingMode.equals(Course.SEQUENCING_MODE_COURSE) ||
                         sequencingMode.equals(Course.SEQUENCING_MODE_SECTION) || sequencingMode.equals(Course.SEQUENCING_MODE_NONE))){
