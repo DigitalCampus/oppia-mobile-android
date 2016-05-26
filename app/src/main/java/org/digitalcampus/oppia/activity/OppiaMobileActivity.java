@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.activity;
 
 import android.animation.ValueAnimator;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,13 +26,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,9 +46,9 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.DrawerDelegate;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
@@ -61,7 +56,6 @@ import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.service.CourseIntallerService;
 import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
@@ -73,7 +67,6 @@ import org.digitalcampus.oppia.utils.ui.CourseContextMenuCustom;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 
 public class OppiaMobileActivity
         extends AppActivity
@@ -95,7 +88,6 @@ public class OppiaMobileActivity
     private TextView messageText;
     private Button messageButton;
     private View messageContainer;
-    private NavigationView navigationView;
 
     LinearLayout llNone;
 
@@ -104,6 +96,7 @@ public class OppiaMobileActivity
 
     private ProgressDialog progressDialog;
     private InstallerBroadcastReceiver receiver;
+    private DrawerDelegate drawerDelegate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -150,38 +143,8 @@ public class OppiaMobileActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        // Initializing Drawer Layout and ActionBarToggle
-        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_user_fullname)).setText(SessionManager.getUserDisplayName(this));
-        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_username)).setText(SessionManager.getUsername(this));
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                boolean result = onOptionsItemSelected(menuItem);
-                menuItem.setChecked(false);
-                drawerLayout.closeDrawers();
-                return result;
-            }
-        });
-
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open, R.string.close){
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
-                super.onDrawerClosed(drawerView);
-            }
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-                super.onDrawerOpened(drawerView);
-            }
-        };
-
-        //Setting the actionbarToggle to drawer layout
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
+        drawerDelegate = new DrawerDelegate(this, courses);
+        drawerDelegate.initializeDrawer(toolbar);
 	}
 
 	@Override
@@ -248,25 +211,14 @@ public class OppiaMobileActivity
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_main, menu);
+		drawerDelegate.createOptionsMenu(menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		UIUtils.showUserData(menu, this, null);
-
-        Menu drawerMenu = navigationView.getMenu();
-		MenuItem itemLogout = drawerMenu.findItem(R.id.menu_logout);
-        MenuItem itemSettings = drawerMenu.findItem(R.id.menu_settings);
-        MenuItem itemMonitor = drawerMenu.findItem(R.id.menu_monitor);
-        MenuItem itemCourseDownload = drawerMenu.findItem(R.id.menu_download);
-
-		itemLogout.setVisible(prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT));
-		itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS);
-		itemMonitor.setVisible(MobileLearning.MENU_ALLOW_MONITOR);
-		itemCourseDownload.setVisible(MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD);
-		
+        drawerDelegate.prepareOptionsMenu(menu);
 	    return super.onPrepareOptionsMenu(menu);
 	}
 	
@@ -274,42 +226,8 @@ public class OppiaMobileActivity
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		Log.d(TAG, "Menu item selected: " + item.getTitle());
-
-        final int itemId = item.getItemId();
-        checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
-            public void onPermissionGranted() {
-                if (itemId == R.id.menu_download) {
-                    startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
-                } else if (itemId == R.id.menu_about) {
-                    startActivity(new Intent(OppiaMobileActivity.this, AboutActivity.class));
-                } else if (itemId == R.id.menu_monitor) {
-                    startActivity(new Intent(OppiaMobileActivity.this, MonitorActivity.class));
-                } else if (itemId == R.id.menu_scorecard) {
-                    startActivity(new Intent(OppiaMobileActivity.this, ScorecardActivity.class));
-                } else if (itemId == R.id.menu_search) {
-                    startActivity(new Intent(OppiaMobileActivity.this, SearchActivity.class));
-                } else if (itemId == R.id.menu_settings) {
-                    startPrefsActivity();
-                } else if (itemId == R.id.menu_language) {
-                    createLanguageDialog();
-                } else if (itemId == R.id.menu_logout) {
-                    logout();
-                }
-            }
-        });
-
-        return true;
+        return drawerDelegate.onOptionsItemSelected(item.getItemId());
 	}
-
-    private void startPrefsActivity(){
-        Intent i = new Intent(OppiaMobileActivity.this, PrefsActivity.class);
-        Bundle tb = new Bundle();
-        ArrayList<Lang> langs = new ArrayList<>();
-        for(Course m: courses){ langs.addAll(m.getLangs()); }
-        tb.putSerializable("langs", langs);
-        i.putExtras(tb);
-        startActivity(i);
-    }
 
     private void displayDownloadSection(){
         llNone.setVisibility(View.VISIBLE);
@@ -320,39 +238,11 @@ public class OppiaMobileActivity
         Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
         manageBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            checkAdminPermission(R.id.menu_download, new AdminSecurityManager.AuthListener() {
-                public void onPermissionGranted() {
-                    startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
-                }
-            });
+                drawerDelegate.onOptionsItemSelected(R.id.menu_download);
             }
         });
     }
-	private void createLanguageDialog() {
-		ArrayList<Lang> langs = new ArrayList<>();
-		for(Course m: courses){ langs.addAll(m.getLangs()); }
 
-        UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
-            public Boolean call() throws Exception {
-                OppiaMobileActivity.this.onStart();
-                return true;
-            }
-        });
-	}
-
-	private void logout() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle);
-		builder.setCancelable(false);
-		builder.setTitle(R.string.logout);
-		builder.setMessage(R.string.logout_confirm);
-		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				OppiaMobileActivity.super.logoutAndRestartApp();
-			}
-		});
-		builder.setNegativeButton(R.string.no, null);
-		builder.show();
-	}
 
     //@Override
     public void onContextMenuItemSelected(final int position, final int itemId) {
@@ -584,20 +474,5 @@ public class OppiaMobileActivity
                 Toast.LENGTH_LONG).show();
         displayCourses(userId);
 	}
-
-
-    private void checkAdminPermission(int actionId, AdminSecurityManager.AuthListener authListener){
-
-        boolean adminPasswordRequired = AdminSecurityManager.isActionProtected(this, actionId);
-        if (adminPasswordRequired) {
-            PasswordDialogFragment passDialog = new PasswordDialogFragment();
-            passDialog.setListener(authListener);
-            passDialog.show(getFragmentManager(), TAG);
-        }
-        else{
-            //If the admin password is not needed, we simply call the listener method
-            authListener.onPermissionGranted();
-        }
-    }
 
 }

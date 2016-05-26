@@ -31,9 +31,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 
@@ -124,6 +126,20 @@ public class AppActivity extends AppCompatActivity {
         restartIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         this.startActivity(restartIntent);
         this.finish();
+    }
+
+    public void checkAdminPermission(int actionId, AdminSecurityManager.AuthListener authListener){
+
+        boolean adminPasswordRequired = AdminSecurityManager.isActionProtected(this, actionId);
+        if (adminPasswordRequired) {
+            PasswordDialogFragment passDialog = new PasswordDialogFragment();
+            passDialog.setListener(authListener);
+            passDialog.show(this.getFragmentManager(), TAG);
+        }
+        else{
+            //If the admin password is not needed, we simply call the listener method
+            authListener.onPermissionGranted();
+        }
     }
 
 }
