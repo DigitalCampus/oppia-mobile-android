@@ -48,8 +48,7 @@ public class LoginFragment extends Fragment implements SubmitListener {
 
 
 	public static final String TAG = LoginFragment.class.getSimpleName();
-	private SharedPreferences prefs;
-	private EditText usernameField;
+    private EditText usernameField;
 	private EditText passwordField;
 	private ProgressDialog pDialog;
 	
@@ -63,7 +62,6 @@ public class LoginFragment extends Fragment implements SubmitListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_login, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
@@ -74,7 +72,6 @@ public class LoginFragment extends Fragment implements SubmitListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		usernameField = (EditText) super.getActivity().findViewById(R.id.login_username_field);
         passwordField = (EditText) super.getActivity().findViewById(R.id.login_password_field);
         Button loginButton = (Button) super.getActivity().findViewById(R.id.login_btn);
@@ -85,6 +82,14 @@ public class LoginFragment extends Fragment implements SubmitListener {
 			}
 		});
 	}
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if (pDialog != null && pDialog.isShowing()){
+            pDialog.dismiss();
+        }
+    }
 	
 	protected void onLoginClick(){
 		String username = usernameField.getText().toString();
@@ -103,7 +108,7 @@ public class LoginFragment extends Fragment implements SubmitListener {
         pDialog.setCancelable(true);
         pDialog.show();
         
-    	ArrayList<Object> users = new ArrayList<Object>();
+    	ArrayList<Object> users = new ArrayList<>();
     	User u = new User();
     	u.setUsername(username);
     	u.setPassword(password);
