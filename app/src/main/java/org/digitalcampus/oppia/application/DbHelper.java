@@ -655,7 +655,6 @@ public class DbHelper extends SQLiteOpenHelper {
             course.setTags(c.getString(c.getColumnIndex(COURSE_C_TAGS)));
             course = this.courseSetProgress(course, userId);
 			courses.add(course);
-            Log.d("TAGS", "" + course.getTags());
 			c.moveToNext();
 		}
 		c.close();

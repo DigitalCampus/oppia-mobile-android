@@ -87,6 +87,7 @@ public class MobileLearning extends Application {
 	public static final boolean MENU_ALLOW_SETTINGS = true;
 	public static final boolean MENU_ALLOW_MONITOR = true;
 	public static final boolean MENU_ALLOW_LOGOUT = true;
+    public static final boolean SHOW_CATEGORIES_ACTIVITY = true;
 
     public static final boolean SESSION_EXPIRATION_ENABLED = false; // whether to force users to be logged out after inactivity
     public static final int SESSION_EXPIRATION_TIMEOUT = 15; // no seconds before user is logged out for inactivity
