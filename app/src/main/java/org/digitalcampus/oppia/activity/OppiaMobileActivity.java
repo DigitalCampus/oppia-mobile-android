@@ -83,6 +83,7 @@ public class OppiaMobileActivity
 	private ArrayList<Course> courses;
 	private Course tempCourse;
 	private long userId = 0;
+    private String tag = "";
     private int initialCourseListPadding = 0;
 
     private TextView messageText;
@@ -145,6 +146,11 @@ public class OppiaMobileActivity
         setSupportActionBar(toolbar);
         drawerDelegate = new DrawerDelegate(this, courses);
         drawerDelegate.initializeDrawer(toolbar);
+
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null) {
+            tag = bundle.getString(Course.TAG);
+        }
 	}
 
 	@Override
@@ -177,7 +183,7 @@ public class OppiaMobileActivity
 
 		DbHelper db = DbHelper.getInstance(this);
         courses.clear();
-		courses.addAll(db.getCourses(userId));
+		courses.addAll(db.getCourses(userId, tag));
 		
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);

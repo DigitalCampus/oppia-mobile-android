@@ -65,7 +65,7 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
 
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-        ArrayList<Course> courses = db.getCourses(userId);
+        ArrayList<Course> courses = db.getCourses(userId, "");
         scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
         GridView scorecardList = (GridView) super.getActivity().findViewById(R.id.scorecards_list);
         scorecardList.setAdapter(scorecardListAdapter);

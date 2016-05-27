@@ -32,6 +32,12 @@
                     android:text="@string/loading_courses"
                     android:textSize="18sp"
                     android:textColor="@color/text_light"/>
+
+                <ListView
+                    android:id="@+id/categories_list"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent">
+                </ListView>
             </LinearLayout>
 
 

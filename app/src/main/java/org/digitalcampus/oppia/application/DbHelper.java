@@ -635,10 +635,19 @@ public class DbHelper extends SQLiteOpenHelper {
 		return quizAttempts;
 	}
 	
-	public ArrayList<Course> getCourses(long userId) {
+	public ArrayList<Course> getCourses(long userId, String filterByTag) {
 		ArrayList<Course> courses = new ArrayList<Course>();
+
+        String where = null;
+        String[] args = null;
 		String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
-		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
+
+        if (filterByTag != null && !filterByTag.trim().equals("")){
+            where = COURSE_C_TAGS + " LIKE ?";
+            args = new String[] { "%"+filterByTag.trim()+"%" };
+        }
+
+		Cursor c = db.query(COURSE_TABLE, null, where, args, null, null, order);
 		c.moveToFirst();
 		while (!c.isAfterLast()) {
 			
