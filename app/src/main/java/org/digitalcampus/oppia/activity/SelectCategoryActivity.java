@@ -122,11 +122,18 @@ public class SelectCategoryActivity extends AppActivity implements CourseInstall
                 }
             }
         }
+
+        if (tagCount.isEmpty()){
+            //If none of the courses has tags (or there are no courses), go to the main activity
+            this.finish();
+            this.startActivity(new Intent(this, OppiaMobileActivity.class));
+            return;
+        }
+
         for (String key : tagCount.keySet()){
             tags.add(new CourseTag(key, tagCount.get(key)));
         }
         tags.add(new CourseTag("all", courses.size()));
-
         tagsAdapter.notifyDataSetChanged();
 
     }
