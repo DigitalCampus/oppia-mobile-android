@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -13,32 +14,36 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.CourseCategoriesAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.DrawerDelegate;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CourseTag;
 import org.digitalcampus.oppia.service.CourseIntallerService;
 import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class SelectCategoryActivity extends AppActivity implements CourseInstallerListener {
 
-    private SharedPreferences prefs;
     private ArrayList<Course> courses;
 
-    private ArrayList<String> tags = new ArrayList<>();
-    private ArrayAdapter<String> tagsAdapter;
+    private ArrayList<CourseTag> tags = new ArrayList<>();
+    private ArrayAdapter<CourseTag> tagsAdapter;
     private InstallerBroadcastReceiver receiver;
     private DrawerDelegate drawerDelegate;
 
@@ -47,7 +52,6 @@ public class SelectCategoryActivity extends AppActivity implements CourseInstall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_category);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
         courses = new ArrayList<>();
 
@@ -57,16 +61,16 @@ public class SelectCategoryActivity extends AppActivity implements CourseInstall
         drawerDelegate.initializeDrawer(toolbar);
 
         ListView tagsList = (ListView) findViewById(R.id.categories_list);
-        tagsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, tags);
+        tagsAdapter = new CourseCategoriesAdapter(this, tags);
         tagsList.setAdapter(tagsAdapter);
         tagsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent i = new Intent(SelectCategoryActivity.this, OppiaMobileActivity.class);
-                String selectedTag = tags.get(position);
-                if (selectedTag!= null && !selectedTag.equals("all")){
+                CourseTag selectedTag = tags.get(position);
+                if (selectedTag.getTag()!= null && !selectedTag.getTag().equals("all")){
                     Bundle tb = new Bundle();
-                    tb.putString(Course.TAG, selectedTag);
+                    tb.putString(Course.TAG, selectedTag.getTag());
                     i.putExtras(tb);
                 }
                 startActivity(i);
@@ -104,15 +108,25 @@ public class SelectCategoryActivity extends AppActivity implements CourseInstall
         courses.addAll(db.getCourses(userId, ""));
 
         tags.clear();
+        HashMap<String, Integer> tagCount = new HashMap<>();
         for (Course course : courses){
             if (course.getTags() == null) continue;
             String[] tagsList = course.getTags().split(",");
-            for (String aTagsList : tagsList) {
-                if ((aTagsList != null) && (!tags.contains(aTagsList.trim())))
-                    tags.add(aTagsList);
+            for (String tag : tagsList) {
+                if (tagCount.containsKey(tag)){
+                    int prevCount = tagCount.get(tag);
+                    tagCount.put(tag, prevCount+1);
+                }
+                else{
+                    tagCount.put(tag, 1);
+                }
             }
         }
-        tags.add("all");
+        for (String key : tagCount.keySet()){
+            tags.add(new CourseTag(key, tagCount.get(key)));
+        }
+        tags.add(new CourseTag("all", courses.size()));
+
         tagsAdapter.notifyDataSetChanged();
 
     }
@@ -146,4 +160,6 @@ public class SelectCategoryActivity extends AppActivity implements CourseInstall
     public void onInstallComplete(String fileUrl) {
         //Refresh list
     }
+
+
 }
