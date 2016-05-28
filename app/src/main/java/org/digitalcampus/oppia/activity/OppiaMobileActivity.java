@@ -150,6 +150,12 @@ public class OppiaMobileActivity
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             tag = bundle.getString(Course.TAG);
+            if (tag!=null && !tag.equals("all")){
+                View categoryTitle = findViewById(R.id.category_title_bar);
+                TextView label = (TextView) categoryTitle.findViewById(R.id.category_title_label);
+                label.setText(tag);
+                categoryTitle.setVisibility(View.VISIBLE);
+            }
         }
 	}
 

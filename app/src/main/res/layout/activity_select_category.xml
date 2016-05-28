@@ -16,31 +16,11 @@
             android:orientation="vertical"
             android:paddingTop="@dimen/tool_bar_top_padding"
             android:layout_marginTop="?attr/actionBarSize">
-
-            <LinearLayout
-                android:id="@+id/loading_courses"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2dip"
-                    android:gravity="center"
-                    android:text="@string/loading_courses"
-                    android:textSize="18sp"
-                    android:textColor="@color/text_light"/>
-
                 <ListView
                     android:id="@+id/categories_list"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent">
                 </ListView>
-            </LinearLayout>
-
-
         </LinearLayout>
 
         <include android:id="@+id/toolbar" layout="@layout/toolbar" />
