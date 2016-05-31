@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -37,13 +38,13 @@ public class PreferencesFragment extends PreferenceFragment {
         storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
 
         Bundle bundle = getArguments();
-       
+
+        ArrayList<Lang> langs = new ArrayList<>();
         if (bundle.getSerializable("langs") != null) {
-        	@SuppressWarnings("unchecked")
-	        ArrayList<Lang> langs = (ArrayList<Lang>) bundle.getSerializable("langs");
-	        updateLangsList(langs);
+	        langs = (ArrayList<Lang>) bundle.getSerializable("langs");
         }
-        updateStorageList();
+        updateLangsList(langs);
+        updateStorageList(this.getActivity());
 
         EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
         username.setSummary( username.getText().equals("") ?
@@ -65,9 +66,9 @@ public class PreferencesFragment extends PreferenceFragment {
         }
     }
 
-    public void updateStorageList(){
+    public void updateStorageList(Context ctx){
 
-        List<StorageLocationInfo> storageLocations = StorageUtils.getStorageList();
+        List<StorageLocationInfo> storageLocations = StorageUtils.getStorageList(ctx);
         if (storageLocations.size() > 1){
             //If there is more than one storage option, we create a preferences list
 
@@ -115,10 +116,14 @@ public class PreferencesFragment extends PreferenceFragment {
                 entries.add(loc.getDisplayLanguage(loc));
             }
         }
+
+        ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE);
         if (entryValues.size() > 0){
-            ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE);
             langsList.setEntries( entries.toArray(new CharSequence[entries.size()]) );
             langsList.setEntryValues( entryValues.toArray(new CharSequence[entryValues.size()]) );
+        }
+        else{
+            getPreferenceScreen().removePreference(langsList);
         }
 
     }

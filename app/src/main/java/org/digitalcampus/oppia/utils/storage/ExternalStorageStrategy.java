@@ -45,25 +45,31 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
 
         String location = null;
         //If no mount argument passed, we set the default external mount
-        DeviceFile external = StorageUtils.getExternalMemoryDrive();
+        DeviceFile external = StorageUtils.getExternalMemoryDrive(ctx);
+        Log.d(TAG, "External drive: " + (external==null?"null!":external.getPath()));
         if (external != null && external.canWrite()){
             location = external.getPath();
-            File destPath = new File(external.getPath() + getInternalBasePath(ctx));
-            if (!destPath.canWrite()){
-                Log.d(TAG, "External SD(" + external.getPath() + ") available, but no write permissions");
-                setPermissionsNeeded(ctx, true);
+            if (!location.contains(getInternalBasePath(ctx))){
+                File destPath = new File(external.getPath() + getInternalBasePath(ctx));
+                if (!destPath.canWrite()){
+                    Log.d(TAG, "External SD(" + external.getPath() + ") available, but no write permissions");
+                    setPermissionsNeeded(ctx, true);
+                }
             }
         }
+
 
         //If there is no external storage available, we try the internal one
         if (location == null){
             DeviceFile internal = StorageUtils.getInternalMemoryDrive();
+            Log.d(TAG, "External non-removable: " + (internal==null?"null!":internal.getPath()));
             if (internal != null && internal.canWrite()){
                 location = internal.getPath();
             }
         }
         if (location != null){
-            location += getInternalBasePath(ctx);
+            if (!location.contains(getInternalBasePath(ctx)))
+                location += getInternalBasePath(ctx);
             updateLocationPreference(ctx, location);
         }
         //It was successfull if we found a writable external location

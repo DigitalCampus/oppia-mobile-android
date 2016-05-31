@@ -28,6 +28,7 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
@@ -182,11 +183,15 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		ArrayList<CourseMetaPage> ammp = course.getMetaPages();
 		int order = 104;
 		for (CourseMetaPage mmp : ammp) {
-			String title = mmp.getLang(
-					prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))
-					.getContent();
-			menu.add(0, mmp.getId(), order, title).setIcon(android.R.drawable.ic_menu_info_details);
-			order++;
+            Lang titleLang = mmp.getLang(
+                    prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+
+            if (titleLang != null){
+                String title = titleLang.getContent();
+                menu.add(0, mmp.getId(), order, title).setIcon(android.R.drawable.ic_menu_info_details);
+                order++;
+            }
+
 		}
 		UIUtils.showUserData(menu, this, course);
 		return true;
