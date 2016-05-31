@@ -40,7 +40,7 @@ import java.util.List;
 
 public class SessionManager {
 
-    public static final String ACCOUNTS_CSV_FILENAME = "oppia_accounts.csv";
+    public static final String ACCOUNTS_CSV_FILENAME = "oppia_users.csv";
 
     public static boolean isLoggedIn(Context ctx) {
         String username = getUsername(ctx);
