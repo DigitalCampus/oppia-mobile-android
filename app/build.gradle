@@ -8,7 +8,7 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "org.digitalcampus.mobile.learning"
@@ -28,7 +28,27 @@ android {
         disable 'MissingTranslation', 'ExtraTranslation'
     }
 
+    def Properties runtimeProps = new Properties()
+    def oppiaPropsFile = rootProject.file('oppia-debug.properties')
+    if (oppiaPropsFile.canRead()){
+        logger.info('Fetching properties from external file')
+        runtimeProps.load(new FileInputStream(oppiaPropsFile))
+    }
+    else{
+        logger.error('No properties file found. Using default values.')
+        //runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))
+    }
+
     buildTypes {
+
+        all{
+            buildConfigField "String", "MINT_API_KEY", "\"BBBBBBBBB\""
+            buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", "false"
+            buildConfigField "boolean", "ADMIN_PROTECT_COURSE_DELETE", "false"
+            buildConfigField "boolean", "MENU_ALLOW_LOGOUT", "false"
+            resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", "false"
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
