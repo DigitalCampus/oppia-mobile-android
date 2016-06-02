@@ -36,17 +36,17 @@ android {
     }
     else{
         logger.error('No properties file found. Using default values.')
-        //runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))
+        runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))
     }
 
     buildTypes {
 
         all{
-            buildConfigField "String", "MINT_API_KEY", "\"BBBBBBBBB\""
-            buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", "false"
-            buildConfigField "boolean", "ADMIN_PROTECT_COURSE_DELETE", "false"
-            buildConfigField "boolean", "MENU_ALLOW_LOGOUT", "false"
-            resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", "false"
+            buildConfigField "String", "MINT_API_KEY", "\"" + runtimeProps['MINT_API_KEY'] +"\""
+            buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", runtimeProps['ADMIN_PROTECT_SETTINGS']
+            buildConfigField "boolean", "ADMIN_PROTECT_COURSE_DELETE", runtimeProps['ADMIN_PROTECT_COURSE_DELETE']
+            buildConfigField "boolean", "MENU_ALLOW_LOGOUT", runtimeProps['MENU_ALLOW_LOGOUT']
+            resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
         }
 
         release {
