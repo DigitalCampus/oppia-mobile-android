@@ -26,6 +26,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.listener.TaskCompleteListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -45,6 +46,7 @@ public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 
 	private Context ctx;
 	private SubmitListener mStateListener;
+	private TaskCompleteListener _taskCompleteListener = null;
 
 	public ResetTask(Context ctx) {
 		this.ctx = ctx;
@@ -106,11 +108,20 @@ public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 				mStateListener.submitComplete(response);
 			}
 		}
+
+		if (this._taskCompleteListener != null) {
+			this._taskCompleteListener.onComplete(response);
+		}
 	}
 
 	public void setResetListener(SubmitListener srl) {
 		synchronized (this) {
 			mStateListener = srl;
 		}
+	}
+
+	public ResetTask setTaskCompleteListener(TaskCompleteListener listener){
+		this._taskCompleteListener = listener;
+		return this;
 	}
 }

@@ -30,6 +30,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.listener.TaskCompleteListener;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
@@ -52,7 +53,8 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 	private Context ctx;
 	private SharedPreferences prefs;
 	private SubmitListener mStateListener;
-	
+	private TaskCompleteListener _taskCompleteListener = null;
+
 	public LoginTask(Context c) {
 		this.ctx = c;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -60,8 +62,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 
 	@Override
 	protected Payload doInBackground(Payload... params) {
-
-		Payload payload = params[0];
+        Payload payload = params[0];
 		User u = (User) payload.getData().get(0);
 		
 		// firstly try to login locally
@@ -161,6 +162,10 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
                mStateListener.submitComplete(response);
             }
         }
+
+        if (this._taskCompleteListener != null) {
+            this._taskCompleteListener.onComplete(response);
+        }
 	}
 	
 	public void setLoginListener(SubmitListener srl) {
@@ -168,4 +173,10 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
             mStateListener = srl;
         }
     }
+
+    public LoginTask setTaskCompleteListener(TaskCompleteListener listener){
+        this._taskCompleteListener = listener;
+        return this;
+    }
+
 }
