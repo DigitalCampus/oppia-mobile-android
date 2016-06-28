@@ -49,15 +49,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 	public static final String TAG = LoginTask.class.getSimpleName();
 
 	private SubmitListener mStateListener;
-<<<<<<< HEAD
-	private TaskCompleteListener _taskCompleteListener = null;
 
-	public LoginTask(Context c) {
-		this.ctx = c;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-	}
-=======
->>>>>>> upstream/test
 
     public LoginTask(Context ctx) { super(ctx); }
     public LoginTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
@@ -164,21 +156,12 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
                mStateListener.submitComplete(response);
             }
         }
-
-        if (this._taskCompleteListener != null) {
-            this._taskCompleteListener.onComplete(response);
-        }
 	}
 	
 	public void setLoginListener(SubmitListener srl) {
         synchronized (this) {
             mStateListener = srl;
         }
-    }
-
-    public LoginTask setTaskCompleteListener(TaskCompleteListener listener){
-        this._taskCompleteListener = listener;
-        return this;
     }
 
 }

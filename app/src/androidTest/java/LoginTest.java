@@ -10,6 +10,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.api.MockApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.listener.TaskCompleteListener;
 import org.digitalcampus.oppia.model.User;
@@ -64,6 +65,7 @@ public class LoginTest extends InstrumentationTestCase {
             mockServer.enqueue(new MockResponse().setResponseCode(200));
 
             mockServer.start();
+
         }catch(IOException ioe) {
             ioe.printStackTrace();
         }
@@ -76,7 +78,7 @@ public class LoginTest extends InstrumentationTestCase {
 
         Payload p = new Payload(users);
         try {
-            LoginTask task = new LoginTask(context);
+            LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
             task.setLoginListener(new SubmitListener() {
                 @Override
                 public void submitComplete(Payload r) {
