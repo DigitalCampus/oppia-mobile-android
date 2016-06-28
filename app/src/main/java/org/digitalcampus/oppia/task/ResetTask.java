@@ -24,6 +24,7 @@ import com.splunk.mint.Mint;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
@@ -39,18 +40,16 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class ResetTask extends AsyncTask<Payload, Object, Payload> {
+public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
 
 	public static final String TAG = ResetTask.class.getSimpleName();
 
-	private Context ctx;
 	private SubmitListener mStateListener;
 
-	public ResetTask(Context ctx) {
-		this.ctx = ctx;
-	}
+    public ResetTask(Context ctx) { super(ctx); }
+    public ResetTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
-	@Override
+    @Override
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
@@ -65,7 +64,7 @@ public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
-                    .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.RESET_PATH))
+                    .url(apiEndpoint.getFullURL(ctx, MobileLearning.RESET_PATH))
                     .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
                     .build();
 

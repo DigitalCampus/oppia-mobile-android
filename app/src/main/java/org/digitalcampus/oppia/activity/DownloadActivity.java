@@ -42,7 +42,7 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.CourseIntallerService;
 import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
-import org.digitalcampus.oppia.task.APIRequestTask;
+import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
@@ -158,7 +158,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		progressDialog.setCancelable(false);
 		progressDialog.show();
 
-		APIRequestTask task = new APIRequestTask(this);
+		APIUserRequestTask task = new APIUserRequestTask(this);
 		Payload p = new Payload(url);
 		task.setAPIRequestListener(this);
 		task.execute(p);

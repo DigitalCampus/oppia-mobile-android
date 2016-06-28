@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.task;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -10,6 +9,8 @@ import com.splunk.mint.Mint;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -23,28 +24,27 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class RegisterDeviceRemoteAdminTask extends AsyncTask<Payload, Void, Payload> {
+public class RegisterDeviceRemoteAdminTask extends APIRequestTask<Payload, Void, Payload> {
 
     public static final String TAG = RegisterDeviceRemoteAdminTask.class.getSimpleName();
 
-    private Context ctx;
-    private SharedPreferences prefs;
-
-    public RegisterDeviceRemoteAdminTask(Context appContext, SharedPreferences sharedPrefs){
-        this.ctx = appContext;
-        prefs = sharedPrefs;
-    }
+    public RegisterDeviceRemoteAdminTask(Context ctx) { super(ctx); }
+    public RegisterDeviceRemoteAdminTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
     @Override
     protected Payload doInBackground(Payload... args) {
 
         Payload payload = new Payload();
-        boolean success = registerDevice(ctx, prefs);
+        boolean success = registerDevice(ctx, prefs, apiEndpoint);
         payload.setResult(success);
         return payload;
     }
 
     public static boolean registerDevice(Context ctx, SharedPreferences prefs){
+        return registerDevice(ctx, prefs, new RemoteApiEndpoint());
+    }
+
+    private static boolean registerDevice(Context ctx, SharedPreferences prefs, ApiEndpoint api){
 
         Log.d(TAG, "Checking if is needed to send the token");
         String username = prefs.getString(PrefsActivity.PREF_USER_NAME, "");
@@ -68,7 +68,7 @@ public class RegisterDeviceRemoteAdminTask extends AsyncTask<Payload, Void, Payl
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
-                    .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.DEVICEADMIN_ADD_PATH))
+                    .url(api.getFullURL(ctx, MobileLearning.DEVICEADMIN_ADD_PATH))
                     .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
                     .build();
 
