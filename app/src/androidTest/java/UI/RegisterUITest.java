@@ -1,3 +1,4 @@
+package UI;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
