@@ -26,7 +26,7 @@ import org.digitalcampus.oppia.adapter.TagListAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Tag;
-import org.digitalcampus.oppia.task.APIRequestTask;
+import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
@@ -131,7 +131,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		pDialog.setCancelable(true);
 		pDialog.show();
 
-		APIRequestTask task = new APIRequestTask(this);
+		APIUserRequestTask task = new APIUserRequestTask(this);
 		Payload p = new Payload(MobileLearning.SERVER_TAG_PATH);
 		task.setAPIRequestListener(this);
 		task.execute(p);

@@ -24,7 +24,7 @@ import org.digitalcampus.oppia.adapter.BadgesListAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badges;
-import org.digitalcampus.oppia.task.APIRequestTask;
+import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
@@ -84,7 +84,7 @@ public class BadgesFragment extends Fragment implements APIRequestListener {
 	}
 	
 	private void getBadges(){		
-		APIRequestTask task = new APIRequestTask(super.getActivity());
+		APIUserRequestTask task = new APIUserRequestTask(super.getActivity());
 		Payload p = new Payload(MobileLearning.SERVER_AWARDS_PATH);
 		task.setAPIRequestListener(this);
 		task.execute(p);

@@ -74,8 +74,8 @@ public class LoginUITest {
                    .perform(pressBack());
        } finally {
 
-           onView(withId(R.id.activity_about_pager))
-                   .perform(swipeLeft());
+           onView(withText(R.string.tab_title_login))
+                   .perform(click());
 
            onView(withId(R.id.login_username_field))
                    .perform(typeText("Username"), closeSoftKeyboard());
