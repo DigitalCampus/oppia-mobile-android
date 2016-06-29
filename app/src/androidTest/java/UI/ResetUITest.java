@@ -1,5 +1,6 @@
 package UI;
 
+import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -31,10 +32,13 @@ public class ResetUITest {
         onView(withText(R.string.tab_title_reset))
                 .perform(click());
 
-        onView(withId(R.id.reset_btn))
-                .perform(click());
+        onView(withId(R.id.reset_username_field))
+                .perform(click(), typeText(""));
 
-        onView(withText(R.string.error_no_username))
+        onView(withId(R.id.reset_btn))
+                .perform(scrollTo(), click());
+
+        onView(withText(R.string.error_register_no_username))
                 .check(matches(isDisplayed()));
     }
 
@@ -44,7 +48,7 @@ public class ResetUITest {
                 .perform(click());
 
         onView(withId(R.id.reset_username_field))
-                .perform(typeText("WrongUsername"), closeSoftKeyboard());
+                .perform(click(), typeText("WrongUsername"), closeSoftKeyboard());
 
         onView(withId(R.id.reset_btn))
                 .perform(scrollTo(), click());
