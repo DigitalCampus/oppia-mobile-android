@@ -1,0 +1,22 @@
+{
+  "api_key": "a1s2d3f4",
+  "badges": 5,
+  "badging": true,
+  "course_points": [],
+  "first_name": "user1",
+  "last_login": "2016-06-23T15:25:34.399297",
+  "last_name": "demo",
+  "metadata": {
+    "BATTERY_LEVEL": true,
+    "DEVICE_ID": true,
+    "GPS": false,
+    "NETWORK": true,
+    "NETWORK_CONNECTED": true,
+    "SIM_SERIAL": true,
+    "WIFI_ON": true
+  },
+  "points": 0,
+  "resource_uri": "/api/v1/user/1/",
+  "scoring": true,
+  "username": "admin"
+}
