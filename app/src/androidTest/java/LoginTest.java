@@ -3,6 +3,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
+
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
@@ -33,34 +35,37 @@ public class LoginTest extends InstrumentationTestCase {
     public void setUp() throws Exception {
         super.setUp();
         context = InstrumentationRegistry.getTargetContext();
+        //DbHelper.getInstance(context).resetDatabase();
         signal = new CountDownLatch(1);
     }
 
     @After
     public void tearDown() throws Exception {
-        if (signal != null){
-            signal.countDown();
-        }
-        //mockServer.shutdown();
+
+        mockServer.shutdown();
     }
 
     @Test
-    public void userLogin_emptyResponseTest() {
+    public void userLogin_EmptyResponse() {
         try {
             mockServer = new MockWebServer();
 
-            mockServer.enqueue(new MockResponse().setResponseCode(200));
+
+            mockServer.enqueue(new MockResponse()
+                    .setBody(""));
 
             mockServer.start();
 
         }catch(IOException ioe) {
             ioe.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
         }
 
         ArrayList<Object> users = new ArrayList<>();
         User u = new User();
-        u.setUsername("asdas");
-        u.setPassword("asdasd");
+        u.setUsername("");
+        u.setPassword("");
         users.add(u);
 
         Payload p = new Payload(users);
@@ -71,19 +76,114 @@ public class LoginTest extends InstrumentationTestCase {
                 public void submitComplete(Payload r) {
                     response = r;
                     signal.countDown();
-
                 }
             });
             task.execute(p);
 
-            try {
-                signal.await();
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
+            signal.await();
 
+            assertFalse(response.isResult());
+            assertEquals(context.getString(R.string.error_processing_response), response.getResultResponse());
+
+        }catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }catch(Exception e){}
+
+    }
+
+    @Test
+    public void userLogin_OKResponse() {
+        try {
+            mockServer = new MockWebServer();
+
+            String filename = "responses/response_201.json";
+
+            mockServer.enqueue(new MockResponse()
+                    .setResponseCode(201)
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+
+            mockServer.start();
+
+
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        ArrayList<Object> users = new ArrayList<>();
+        User u = new User();
+        u.setUsername("");
+        u.setPassword("");
+        users.add(u);
+
+        Payload p = new Payload(users);
+        try {
+            LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
+            task.setLoginListener(new SubmitListener() {
+                @Override
+                public void submitComplete(Payload r) {
+                    response = r;
+                    signal.countDown();
+                }
+            });
+            task.execute(p);
+
+            signal.await();
 
             assertTrue(response.isResult());
+            assertEquals(context.getString(R.string.login_complete), response.getResultResponse());
+
+        }catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }catch(Exception e){}
+
+    }
+
+    @Test
+    public void userLogin_WrongPassword() {
+        try {
+            mockServer = new MockWebServer();
+
+            String filename = "responses/response_400.json";
+
+            mockServer.enqueue(new MockResponse()
+                    .setResponseCode(400)
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+
+            mockServer.start();
+
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        ArrayList<Object> users = new ArrayList<>();
+        User u = new User();
+        u.setUsername("");
+        u.setPassword("");
+        users.add(u);
+
+        Payload p = new Payload(users);
+        try {
+            LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
+            task.setLoginListener(new SubmitListener() {
+                @Override
+                public void submitComplete(Payload r) {
+                    response = r;
+                    signal.countDown();
+                }
+            });
+            task.execute(p);
+
+            signal.await();
+
+            assertFalse(response.isResult());
+            assertEquals(context.getString(R.string.error_login), response.getResultResponse());
+
+        }catch (InterruptedException ie) {
+            ie.printStackTrace();
         }catch(Exception e){}
 
     }
