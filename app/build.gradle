@@ -34,6 +34,7 @@ android {
     buildTypes {
         debug{
             testCoverageEnabled = true
+
         }
         release {
             minifyEnabled true
@@ -64,20 +65,20 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 }
 
-android.applicationVariants.all {variant ->
-    def applicationId = variant.applicationId
-    def adb = android.adbExe as String
-    def variantName = variant.name.capitalize()
+task grantPermissions(dependsOn: 'installDebug') {
+    def adb = android.getAdbExe().toString()
 
-    def grantPermissionsTask = tasks.create("grant${variantName}Permissions") << {
-        "${adb} devices".execute().text.eachLine {
-            if(it.endsWith("device")) {
-                def device = it.split()[0]
-                println "Granting permissions on device ${device}"
-                "${adb} -s ${device} shell pm grant ${applicationId} android.permission.READ_PHONE_STATE".execute()
-            }
+    println "Granting permissions on device"
+    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.READ_PHONE_STATE".execute()
+
+}
+
+afterEvaluate {
+    tasks.each { task ->
+        if (task.name.startsWith('assembleDebugAndroidTest')) {
+            task.dependsOn grantPermissions
         }
     }
-    grantPermissionsTask.description = "Grants permissions on Marshmallow"
-    grantPermissionsTask.group = "extras"
 }
+
+
