@@ -22,18 +22,21 @@ import java.util.concurrent.CountDownLatch;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class LoginTest extends InstrumentationTestCase {
+public class LoginTest {
     private CountDownLatch signal;
     private MockWebServer mockServer;
     private Context context;
-    Payload response;
+    private Payload response;
 
 
     @Before
-    public void setUp() throws Exception {
-        super.setUp();
+    public void setUp() throws Exception { 
         context = InstrumentationRegistry.getTargetContext();
         //DbHelper.getInstance(context).resetDatabase();
         signal = new CountDownLatch(1);
@@ -41,7 +44,7 @@ public class LoginTest extends InstrumentationTestCase {
 
     @After
     public void tearDown() throws Exception {
-
+        signal.countDown();
         mockServer.shutdown();
     }
 
@@ -49,7 +52,6 @@ public class LoginTest extends InstrumentationTestCase {
     public void userLogin_EmptyResponse() {
         try {
             mockServer = new MockWebServer();
-
 
             mockServer.enqueue(new MockResponse()
                     .setBody(""));

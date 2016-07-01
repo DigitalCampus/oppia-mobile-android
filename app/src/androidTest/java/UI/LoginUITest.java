@@ -62,27 +62,18 @@ public class LoginUITest {
     @Test
     public void clickLoginButton_CorrectUser() throws Exception{
 
-       try {
-           new RegisterUITest().clickRegisterButton_RegisterSuccessful();
-       }catch(Exception e) {
-           onView(withText("Error"))
-                   .check(matches(isDisplayed()))
-                   .perform(pressBack());
-       } finally {
+       onView(withId(R.id.welcome_login))
+               .perform(click());
 
-           onView(withText(R.string.tab_title_login))
-                   .perform(click());
+       onView(withId(R.id.login_username_field))
+               .perform(typeText("unittester"), closeSoftKeyboard());
 
-           onView(withId(R.id.login_username_field))
-                   .perform(typeText("Username"), closeSoftKeyboard());
+       onView(withId(R.id.login_password_field))
+               .perform(typeText("12345678"), closeSoftKeyboard());
 
-           onView(withId(R.id.login_password_field))
-                   .perform(typeText("password1"), closeSoftKeyboard());
+       onView(withId(R.id.login_btn))
+               .perform(click());
 
-           onView(withId(R.id.login_btn))
-                   .perform(click());
-
-           assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), OppiaMobileActivity.class);
-       }
+       assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), OppiaMobileActivity.class);
     }
 }

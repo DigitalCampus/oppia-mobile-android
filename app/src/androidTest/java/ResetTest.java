@@ -1,13 +1,22 @@
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+import android.test.InstrumentationTestCase;
 import android.test.mock.MockContext;
+import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.api.MockApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ResetTask;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,13 +27,18 @@ import okhttp3.mockwebserver.MockWebServer;
 
 import static org.junit.Assert.assertTrue;
 
-public class ResetTest {
+
+@RunWith(AndroidJUnit4.class)
+@SmallTest
+public class ResetTest extends InstrumentationTestCase {
     private CountDownLatch signal;
     private MockWebServer mockServer;
-    private MockContext mockContext;
+    private Context context;
+    private Payload response;
 
     @Before
     public void setUp() throws Exception {
+        context = InstrumentationRegistry.getTargetContext();
         signal = new CountDownLatch(1);
     }
 
@@ -35,17 +49,19 @@ public class ResetTest {
     }
 
     @Test
-    public void passwordReset_emptyResponse() throws Exception {
+    public void passwordReset_ResetSuccessful() {
         try {
             mockServer = new MockWebServer();
-            mockContext = new MockContext();
 
-            mockServer.enqueue(new MockResponse().setBody(""));
-            mockServer.enqueue(new MockResponse().setBody(""));
+            mockServer.enqueue(new MockResponse()
+                    .setBody(""));
 
             mockServer.start();
+
         }catch(IOException ioe) {
             ioe.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
         }
 
         ArrayList<Object> users = new ArrayList<>();
@@ -55,27 +71,29 @@ public class ResetTest {
         users.add(u);
 
         Payload p = new Payload(users);
-        ResetTask task = new ResetTask(mockContext);
-        Log.v("Response ", "response");
-        task.setResetListener(new SubmitListener() {
-            @Override
-            public void submitComplete(Payload response) {
-                Log.d("Response ", response.toString());
-                //assertTrue(response.isResult());
-                signal.countDown();
-            }
-        });
-        task.execute(p);
-
         try {
+            ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
+            task.setResetListener(new SubmitListener() {
+                @Override
+                public void submitComplete(Payload r) {
+                    response = r;
+                    signal.countDown();
+                }
+            });
+            task.execute(p);
+
             signal.await();
+
+            assertTrue(response.isResult());
+            assertEquals(context.getString(R.string.reset_complete), response.getResultResponse());
+
         }catch (InterruptedException ie) {
             ie.printStackTrace();
-        }
+        }catch(Exception e){}
 
-        assertTrue(true);
 
 
     }
+
 
 }
