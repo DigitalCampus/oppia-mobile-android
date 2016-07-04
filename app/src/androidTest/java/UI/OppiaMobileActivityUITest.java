@@ -2,7 +2,6 @@ package UI;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -14,7 +13,6 @@ import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.MonitorActivity;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
@@ -28,14 +26,19 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.longClick;
+import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
 public class OppiaMobileActivityUITest {
@@ -44,6 +47,13 @@ public class OppiaMobileActivityUITest {
     public ActivityTestRule<OppiaMobileActivity> welcomeActivityTestRule =
             new ActivityTestRule<OppiaMobileActivity>(OppiaMobileActivity.class);
 
+
+    private int getCoursesCount(){
+        Context context = InstrumentationRegistry.getTargetContext();
+        DbHelper db = DbHelper.getInstance(context);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+        return db.getCourses(userId).size();
+    }
 
     @Test
     public void drawer_clickDownloadCourses() throws Exception{
@@ -54,7 +64,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.menu_download))
                 .perform(click());
 
-        assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), TagSelectActivity.class);
+        assertEquals(TagSelectActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
     @Test
@@ -66,7 +76,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.menu_search))
                 .perform(click());
 
-        assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), SearchActivity.class);
+        assertEquals(SearchActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
     @Test
@@ -78,12 +88,9 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.menu_language))
                 .perform(click());
 
-        Context context = InstrumentationRegistry.getTargetContext();
-        DbHelper db = DbHelper.getInstance(context);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        int coursesCount = db.getCourses(userId).size();
-
         ViewInteraction dialog = onView(withText(R.string.change_language));
+
+        int coursesCount = getCoursesCount();
 
         if(coursesCount > 0) {
             dialog.check(matches(isDisplayed()));
@@ -112,7 +119,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.menu_monitor))
                 .perform(click());
 
-        assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), MonitorActivity.class);
+        assertEquals(MonitorActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
     @Test
@@ -124,7 +131,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.menu_settings))
                 .perform(click());
 
-        assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), PrefsActivity.class);
+        assertEquals(PrefsActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
     @Test
@@ -136,7 +143,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.menu_about))
                 .perform(click());
 
-        assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), AboutActivity.class);
+        assertEquals(AboutActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
     @Test
@@ -164,7 +171,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.no))
                 .perform(click());
 
-        assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), OppiaMobileActivity.class);
+        assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
 
     }
 
@@ -180,7 +187,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.yes))
                 .perform(click());
 
-        assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), WelcomeActivity.class);
+        assertEquals(WelcomeActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
 
     }
 
@@ -235,5 +242,133 @@ public class OppiaMobileActivityUITest {
         }
 
     }
+
+    @Test
+    public void clickManageCourses_emptyCoursesList() throws Exception{
+        int coursesCount = getCoursesCount();
+
+        if(coursesCount == 0) {
+            onView(withId(R.id.manage_courses_btn))
+                    .perform(click());
+
+            assertEquals(TagSelectActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+        }
+
+    }
+
+
+    @Test
+    public void clickCourseItem_ShowCourse() throws Exception{
+
+        int coursesCount = getCoursesCount();
+
+        if(coursesCount > 0) {
+            onData(anything())
+                    .inAdapterView(withId(R.id.course_list))
+                    .atPosition(0)
+                    .perform(click());
+
+            //assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+
+
+        }else{
+            clickManageCourses_emptyCoursesList();
+        }
+
+    }
+
+    @Test
+    public void longClickCourseItem_DisplayContextMenu() throws Exception{
+        int coursesCount = getCoursesCount();
+
+        if(coursesCount > 0) {
+            onData(anything())
+                    .inAdapterView(withId(R.id.course_list))
+                    .atPosition(0)
+                    .perform(longClick());
+
+            onView(withChild(withId(R.id.course_context_reset)))
+                    .check(matches(isDisplayed()));
+
+
+            //assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+
+
+        }else{
+            clickManageCourses_emptyCoursesList();
+        }
+    }
+
+    @Test
+    public void contextMenu_UpdateCourseActivity() throws Exception{
+        int coursesCount = getCoursesCount();
+
+        if(coursesCount > 0) {
+            longClickCourseItem_DisplayContextMenu();
+
+            onView(withChild(withId(R.id.course_context_update_activity)))
+                    .perform(click());
+
+           onView(withText(containsString(InstrumentationRegistry.getTargetContext().getString(R.string.course_updating_success))));
+
+
+        }
+
+    }
+
+    @Test
+    public void contextMenu_DeleteCourse_clickNo() throws Exception{
+        int coursesCount = getCoursesCount();
+
+        if(coursesCount > 0) {
+            longClickCourseItem_DisplayContextMenu();
+
+            onView(withChild(withId(R.id.course_context_delete)))
+                    .perform(click());
+
+            onView(withText(R.string.no))
+                    .perform(click());
+
+
+            assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+
+        }
+
+    }
+
+
+
+    @Test
+    public void downloadCourse(){
+        onView(withId(R.id.drawer))
+                .perform(DrawerActions.open());
+
+        onView(withText(R.string.menu_download))
+                .perform(click());
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .perform(click());
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .perform(click(), pressBack());
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .perform(pressBack());
+
+        int coursesCount = getCoursesCount();
+
+        assertTrue(coursesCount > 0);
+
+
+    }
+
+
 
 }
