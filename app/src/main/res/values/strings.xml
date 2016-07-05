@@ -79,7 +79,7 @@
  	<string name="widget_quiz_feedback_feedback_title">Feedback: </string>
  	<string name="widget_quiz_unavailable_section">You must complete all the previous activities in this section before this quiz becomes available to you.</string>
  	<string name="widget_quiz_unavailable_course">You must complete all the previous activities in this course before this quiz becomes available to you.</string>
- 	
+    <string name="widget_quiz_unavailable_attempts">You have already attempted this quiz the max number of times allowed</string>
  	<string name="widget_resource_open_file">Open \'%1$s\'</string>
  	
  	<string name="course_context_reset">Reset</string>
@@ -318,7 +318,6 @@
     <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> OppiaMobile > Permissions to grant access to these permissions</string>
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
     <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
-
 
 </resources>
 

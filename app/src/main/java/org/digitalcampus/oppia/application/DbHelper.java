@@ -754,9 +754,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s1 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=?";
 		String[] args1 = new String[] { String.valueOf(userId), digest };
 		Cursor c1 = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
-		if (c1.getCount() == 0){
-			return qs;
-		}
+        qs.setNumAttempts(c1.getCount());
+		if (c1.getCount() == 0){ return qs; }
 		c1.moveToFirst();
 		while (c1.isAfterLast() == false) {
 			float userScore = c1.getFloat(c1.getColumnIndex(QUIZATTEMPTS_C_SCORE));
@@ -1203,6 +1202,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.close();
 
     }
+
 	
 	public Activity getActivityByDigest(String digest){
 		String sql = "SELECT * FROM  "+ ACTIVITY_TABLE + " a " +
