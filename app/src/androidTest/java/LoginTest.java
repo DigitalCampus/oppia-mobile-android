@@ -1,10 +1,14 @@
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import junit.framework.TestCase;
+
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
@@ -12,6 +16,7 @@ import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,13 +32,15 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-@SmallTest
-public class LoginTest {
+public class LoginTest{
     private CountDownLatch signal;
     private MockWebServer mockServer;
     private Context context;
     private Payload response;
 
+   /* @Rule
+    public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
+            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);*/
 
     @Before
     public void setUp() throws Exception { 
@@ -49,7 +56,7 @@ public class LoginTest {
     }
 
     @Test
-    public void userLogin_EmptyResponse() {
+    public void userLogin_EmptyResponse()throws Exception {
         try {
             mockServer = new MockWebServer();
 
@@ -94,11 +101,11 @@ public class LoginTest {
     }
 
     @Test
-    public void userLogin_OKResponse() {
+    public void userLogin_OKResponse()throws Exception {
         try {
             mockServer = new MockWebServer();
 
-            String filename = "responses/response_201.json";
+            String filename = "responses/response_201_login.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(201)
@@ -143,11 +150,11 @@ public class LoginTest {
     }
 
     @Test
-    public void userLogin_WrongPassword() {
+    public void userLogin_WrongPassword()throws Exception {
         try {
             mockServer = new MockWebServer();
 
-            String filename = "responses/response_400.json";
+            String filename = "responses/response_400_login.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(400)
