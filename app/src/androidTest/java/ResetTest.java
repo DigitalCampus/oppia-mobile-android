@@ -2,15 +2,12 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.InstrumentationTestCase;
-import android.test.mock.MockContext;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ResetTask;
 import org.junit.After;
@@ -25,7 +22,6 @@ import java.util.concurrent.CountDownLatch;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-import static org.junit.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -49,7 +45,107 @@ public class ResetTest extends InstrumentationTestCase {
     }
 
     @Test
-    public void passwordReset_ResetSuccessful() {
+    public void passwordReset_ResetSuccessful() throws Exception {
+        try {
+            mockServer = new MockWebServer();
+
+            String filename = "responses/response_201_reset.json";
+
+            mockServer.enqueue(new MockResponse()
+                    .setResponseCode(201)
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+
+            mockServer.start();
+
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        ArrayList<Object> users = new ArrayList<>();
+        User u = new User();
+        u.setUsername("");
+        u.setPassword("");
+        users.add(u);
+
+        Payload p = new Payload(users);
+        try {
+            ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
+            task.setResetListener(new SubmitListener() {
+                @Override
+                public void submitComplete(Payload r) {
+                    response = r;
+                    signal.countDown();
+                }
+            });
+            task.execute(p);
+
+            signal.await();
+            System.out.println(response.getResultResponse());
+            assertTrue(response.isResult());
+            assertEquals(context.getString(R.string.reset_complete), response.getResultResponse());
+
+        }catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }catch(Exception e){}
+
+
+
+    }
+
+    @Test
+    public void passwordReset_WrongUsername() throws Exception {
+        try {
+            mockServer = new MockWebServer();
+
+            String filename = "responses/response_400_reset.json";
+
+            mockServer.enqueue(new MockResponse()
+                    .setResponseCode(400)
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+
+            mockServer.start();
+
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        ArrayList<Object> users = new ArrayList<>();
+        User u = new User();
+        u.setUsername("");
+        u.setPassword("");
+        users.add(u);
+
+        Payload p = new Payload(users);
+        try {
+            ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
+            task.setResetListener(new SubmitListener() {
+                @Override
+                public void submitComplete(Payload r) {
+                    response = r;
+                    signal.countDown();
+                }
+            });
+            task.execute(p);
+
+            signal.await();
+            System.out.println(response.getResultResponse());
+            assertFalse(response.isResult());
+            assertEquals(context.getString(R.string.error_processing_response), response.getResultResponse());
+
+        }catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }catch(Exception e){}
+
+
+
+    }
+
+    @Test
+    public void passwordReset_EmptyResponse()throws Exception {
         try {
             mockServer = new MockWebServer();
 
@@ -83,9 +179,56 @@ public class ResetTest extends InstrumentationTestCase {
             task.execute(p);
 
             signal.await();
+            System.out.println(response.getResultResponse());
+            assertFalse(response.isResult());
+            assertEquals(context.getString(R.string.error_processing_response), response.getResultResponse());
 
-            assertTrue(response.isResult());
-            assertEquals(context.getString(R.string.reset_complete), response.getResultResponse());
+        }catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }catch(Exception e){}
+
+
+
+    }
+
+    @Test
+    public void passwordReset_BadResponse()throws Exception {
+        try {
+            mockServer = new MockWebServer();
+
+            mockServer.enqueue(new MockResponse()
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), "")));
+
+            mockServer.start();
+
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        ArrayList<Object> users = new ArrayList<>();
+        User u = new User();
+        u.setUsername("");
+        u.setPassword("");
+        users.add(u);
+
+        Payload p = new Payload(users);
+        try {
+            ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
+            task.setResetListener(new SubmitListener() {
+                @Override
+                public void submitComplete(Payload r) {
+                    response = r;
+                    signal.countDown();
+                }
+            });
+            task.execute(p);
+
+            signal.await();
+            System.out.println(response.getResultResponse());
+            assertFalse(response.isResult());
+            assertEquals(context.getString(R.string.error_processing_response), response.getResultResponse());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();

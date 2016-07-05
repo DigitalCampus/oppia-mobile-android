@@ -44,7 +44,7 @@ import static org.hamcrest.Matchers.anything;
 public class OppiaMobileActivityUITest {
 
     @Rule
-    public ActivityTestRule<OppiaMobileActivity> welcomeActivityTestRule =
+    public ActivityTestRule<OppiaMobileActivity> oppiaMobileActivityTestRule =
             new ActivityTestRule<OppiaMobileActivity>(OppiaMobileActivity.class);
 
 
@@ -144,6 +144,9 @@ public class OppiaMobileActivityUITest {
                 .perform(click());
 
         assertEquals(AboutActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+
+        onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                withId(R.id.about_versionno))).check(matches(isDisplayed()));
     }
 
     @Test
@@ -256,7 +259,6 @@ public class OppiaMobileActivityUITest {
 
     }
 
-
     @Test
     public void clickCourseItem_ShowCourse() throws Exception{
 
@@ -316,7 +318,7 @@ public class OppiaMobileActivityUITest {
 
     }
 
-    @Test
+    /*@Test
     public void contextMenu_DeleteCourse_clickNo() throws Exception{
         int coursesCount = getCoursesCount();
 
@@ -334,11 +336,11 @@ public class OppiaMobileActivityUITest {
 
         }
 
-    }
+    }*/
 
 
 
-    @Test
+   /* @Test
     public void downloadCourse(){
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
@@ -367,7 +369,7 @@ public class OppiaMobileActivityUITest {
         assertTrue(coursesCount > 0);
 
 
-    }
+    }*/
 
 
 
