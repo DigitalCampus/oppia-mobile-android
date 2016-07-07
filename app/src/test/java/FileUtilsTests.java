@@ -11,18 +11,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 
 public class FileUtilsTests {
 
     @Rule
-    private TemporaryFolder folder = new TemporaryFolder();
+    public TemporaryFolder folder = new TemporaryFolder();
     private static final int FILES_COUNT = 5;
 
     @Test
@@ -50,7 +52,6 @@ public class FileUtilsTests {
 
     @Test
     public void FileUtils_cleanDir_emptyFolder(){
-
 
         try {
             File tempFolder = folder.newFolder("tempFolder");
@@ -82,21 +83,83 @@ public class FileUtilsTests {
 
     @Test
     public void FileUtils_dirSize(){
-        File f = new File("non_exists_file.txt");
+        //Case when the directory does not exists
+        File f = new File("non_exists_dir");
         assertEquals(0, FileUtils.dirSize(f));
 
         try {
+            //Case when the file is not a directory
+            f = folder.newFile("not_directory.txt");
+            assertEquals(0, FileUtils.dirSize(f));
+
+            //Case when the file exists and is a directory
             File tempFolder = folder.newFolder("tempFolder");
+            String text = "The quick brown fox jumps over the lazy dog";
 
             for (int i = 0; i < FILES_COUNT; i++) {
                 String filename = "test_file" + i + ".txt";
-                new File(tempFolder + File.separator + filename).createNewFile();
+                File file = new File(tempFolder + File.separator + filename);
+
+                FileWriter fileWriter = new FileWriter(file);
+                fileWriter.write(text);
+                fileWriter.close();
             }
+
+            assertEquals(text.length() * FILES_COUNT, FileUtils.dirSize(tempFolder));
         }catch(IOException ioe){
             ioe.printStackTrace();
         }
 
     }
+
+    @Test
+    public void FileUtils_cleanUp(){
+        try {
+            File dir = folder.newFolder("testFolder");
+            File zipFile = folder.newFile("zipFile.zip");
+
+            FileUtils.cleanUp(dir, zipFile.getAbsolutePath());
+
+            assertFalse(dir.exists());
+            assertFalse(zipFile.exists());
+
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+    }
+
+    @Test
+    public void FileUtils_readFile(){
+        String text = "The quick brown fox jumps over the lazy dog";
+        String filename = "test_file.txt";
+
+        try {
+            File file = folder.newFile(filename);
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(text);
+            fileWriter.close();
+
+            FileInputStream fis = new FileInputStream(file);
+            assertEquals(text, FileUtils.readFile(fis));
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+    }
+
+   /* @Test
+    public void FileUtils_supportedMediafileType(){
+        assertFalse(FileUtils.supportedMediafileType(null));
+
+        assertTrue(FileUtils.supportedMediafileType("video/m4v"));
+
+        assertTrue(FileUtils.supportedMediafileType("video/mp4"));
+
+        assertTrue(FileUtils.supportedMediafileType("audio/mpeg"));
+
+        assertFalse(FileUtils.supportedMediafileType("application/json"));
+
+    }
+*/
 
     private File createTestZipFile() throws IOException {
 
@@ -136,7 +199,7 @@ public class FileUtilsTests {
                     ioe.printStackTrace();
                 }finally{
                     is.close();
-                    System.out.println(files[i].delete());
+                    files[i].delete();
                 }
             }
         } catch (FileNotFoundException e) {
