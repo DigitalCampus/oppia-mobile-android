@@ -28,8 +28,7 @@ public class FileUtilsTests {
     private static final int FILES_COUNT = 5;
 
     @Test
-    public void FileUtils_unzipFiles_getCorrectFiles(){
-
+    public void UnzipFiles_correctPaths(){
         File zipFile;
         boolean result = false;
         try {
@@ -51,7 +50,47 @@ public class FileUtilsTests {
     }
 
     @Test
-    public void FileUtils_cleanDir_emptyFolder(){
+    public void UnzipFiles_wrongPaths(){
+        File zipFile;
+        boolean result;
+        try {
+            zipFile = createTestZipFile();
+
+
+            if (zipFile != null) {
+                //Source directory equals null
+                result = FileUtils.unzipFiles("Non_Existing_path",
+                        zipFile.getName(),
+                        zipFile.getParentFile().getAbsolutePath());
+
+
+                assertFalse(result);
+
+                //Source file equals null
+                result = FileUtils.unzipFiles(zipFile.getParentFile().getAbsolutePath(),
+                        "Non_Existing_path",
+                        zipFile.getParentFile().getAbsolutePath());
+
+
+                assertFalse(result);
+
+                //Destination directory equals null
+                result = FileUtils.unzipFiles(zipFile.getParentFile().getAbsolutePath(),
+                        zipFile.getName(),
+                        "Non_Existing_path");
+
+
+                assertFalse(result);
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void CleanDir_correctPath(){
 
         try {
             File tempFolder = folder.newFolder("tempFolder");
@@ -71,7 +110,26 @@ public class FileUtilsTests {
     }
 
     @Test
-    public void FileUtils_deleteDir(){
+    public void CleanDir_wrongPath(){
+        File tempFile = new File("tempFile");
+        assertTrue(FileUtils.cleanDir(tempFile));
+    }
+
+    @Test
+    public void CleanDir_fileAsArgument(){
+
+        try {
+            File tempFile = folder.newFile("tempFile.txt");
+
+            assertTrue(FileUtils.cleanDir(tempFile));
+
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+    }
+
+    @Test
+    public void DeleteDir(){
         try{
             File tempFolder = folder.newFolder("tempFolder");
 
@@ -82,7 +140,7 @@ public class FileUtilsTests {
     }
 
     @Test
-    public void FileUtils_dirSize(){
+    public void DirSize(){
         //Case when the directory does not exists
         File f = new File("non_exists_dir");
         assertEquals(0, FileUtils.dirSize(f));
@@ -113,7 +171,7 @@ public class FileUtilsTests {
     }
 
     @Test
-    public void FileUtils_cleanUp(){
+    public void CleanUp(){
         try {
             File dir = folder.newFolder("testFolder");
             File zipFile = folder.newFile("zipFile.zip");
@@ -129,7 +187,7 @@ public class FileUtilsTests {
     }
 
     @Test
-    public void FileUtils_readFile(){
+    public void ReadFile(){
         String text = "The quick brown fox jumps over the lazy dog";
         String filename = "test_file.txt";
 
