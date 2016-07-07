@@ -22,11 +22,14 @@ import java.util.concurrent.CountDownLatch;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class ResetTest extends InstrumentationTestCase {
+public class ResetTest {
     private CountDownLatch signal;
     private MockWebServer mockServer;
     private Context context;
