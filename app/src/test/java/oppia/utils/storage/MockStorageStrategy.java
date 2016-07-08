@@ -1,11 +1,15 @@
-package org.digitalcampus.oppia.utils.storage;
+package oppia.utils.storage;
 
 import android.app.Activity;
 import android.content.Context;
 
 import org.digitalcampus.oppia.listener.StorageAccessListener;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+
+import UnitTests.StorageTest;
 
 public class MockStorageStrategy implements StorageAccessStrategy {
+
     @Override
     public boolean updateStorageLocation(Context ctx) {
         return true;
@@ -18,7 +22,7 @@ public class MockStorageStrategy implements StorageAccessStrategy {
 
     @Override
     public String getStorageLocation(Context ctx) {
-        return ctx.getFilesDir().toString();
+        return StorageTest.tempFolder.getRoot().getAbsolutePath();
     }
 
     @Override

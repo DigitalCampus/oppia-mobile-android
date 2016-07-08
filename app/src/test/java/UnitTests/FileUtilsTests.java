@@ -1,3 +1,5 @@
+package UnitTests;
+
 import android.provider.MediaStore;
 
 import org.digitalcampus.oppia.utils.storage.FileUtils;
