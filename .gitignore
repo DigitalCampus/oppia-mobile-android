@@ -15,3 +15,4 @@ gradle.properties
 gradlew
 gradlew.bat
 app/app-release.apk
+custom.properties

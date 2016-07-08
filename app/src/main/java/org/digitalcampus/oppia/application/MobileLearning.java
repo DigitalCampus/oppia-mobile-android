@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.application;
 
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
@@ -61,15 +62,15 @@ public class MobileLearning extends Application {
 	public static final String COURSE_ACTIVITY_PATH = SERVER_COURSES_PATH + "%s/activity/";
 
     // admin security settings
-    public static final boolean ADMIN_PROTECT_SETTINGS = true;
-    public static final boolean ADMIN_PROTECT_COURSE_DELETE = true;
-    public static final boolean ADMIN_PROTECT_COURSE_RESET = true;
-    public static final boolean ADMIN_PROTECT_COURSE_INSTALL = true;
-    public static final boolean ADMIN_PROTECT_COURSE_UPDATE = true;
+    public static final boolean ADMIN_PROTECT_SETTINGS = BuildConfig.ADMIN_PROTECT_SETTINGS;
+    public static final boolean ADMIN_PROTECT_COURSE_DELETE = BuildConfig.ADMIN_PROTECT_COURSE_DELETE;
+    public static final boolean ADMIN_PROTECT_COURSE_RESET = BuildConfig.ADMIN_PROTECT_COURSE_RESET;
+    public static final boolean ADMIN_PROTECT_COURSE_INSTALL = BuildConfig.ADMIN_PROTECT_COURSE_INSTALL;
+    public static final boolean ADMIN_PROTECT_COURSE_UPDATE = BuildConfig.ADMIN_PROTECT_COURSE_UPDATE;
 
 	// general other settings
-	public static final String MINT_API_KEY = "26c9c657";
-	public static final int DOWNLOAD_COURSES_DISPLAY = 1; //this no of courses must be displayed for the 'download more courses' option to disappear
+	public static final String MINT_API_KEY = BuildConfig.MINT_API_KEY;
+	public static final int DOWNLOAD_COURSES_DISPLAY = BuildConfig.DOWNLOAD_COURSES_DISPLAY; //this no of courses must be displayed for the 'download more courses' option to disappear
 	public static final int PASSWORD_MIN_LENGTH = 6;
 	public static final int PAGE_READ_TIME = 3;
 	public static final int RESOURCE_READ_TIME = 3;
@@ -83,13 +84,13 @@ public class MobileLearning extends Application {
 	public static final boolean DEFAULT_DISPLAY_COMPLETED = true;
 	public static final boolean DEFAULT_DISPLAY_PROGRESS_BAR = true;
 	
-	public static final boolean MENU_ALLOW_COURSE_DOWNLOAD = true;
-	public static final boolean MENU_ALLOW_SETTINGS = true;
-	public static final boolean MENU_ALLOW_MONITOR = true;
-	public static final boolean MENU_ALLOW_LOGOUT = true;
+	public static final boolean MENU_ALLOW_COURSE_DOWNLOAD = BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD;
+	public static final boolean MENU_ALLOW_SETTINGS = BuildConfig.MENU_ALLOW_SETTINGS;
+	public static final boolean MENU_ALLOW_MONITOR = BuildConfig.MENU_ALLOW_MONITOR;
+	public static final boolean MENU_ALLOW_LOGOUT = BuildConfig.MENU_ALLOW_LOGOUT;
 
-    public static final boolean SESSION_EXPIRATION_ENABLED = false; // whether to force users to be logged out after inactivity
-    public static final int SESSION_EXPIRATION_TIMEOUT = 15; // no seconds before user is logged out for inactivity
+    public static final boolean SESSION_EXPIRATION_ENABLED = BuildConfig.SESSION_EXPIRATION_ENABLED; // whether to force users to be logged out after inactivity
+    public static final int SESSION_EXPIRATION_TIMEOUT = BuildConfig.SESSION_EXPIRATION_TIMEOUT; // no seconds before user is logged out for inactivity
 	
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -98,7 +99,7 @@ public class MobileLearning extends Application {
 	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
 
     public static final String DEVICEADMIN_ADD_PATH = OPPIAMOBILE_API + "device/register/";
-    public static final boolean DEVICEADMIN_ENABLED = false;
+    public static final boolean DEVICEADMIN_ENABLED = BuildConfig.DEVICEADMIN_ENABLED;
 
 	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
