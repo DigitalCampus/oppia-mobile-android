@@ -8,7 +8,7 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "org.digitalcampus.mobile.learning"
@@ -28,7 +28,41 @@ android {
         disable 'MissingTranslation', 'ExtraTranslation'
     }
 
+    def Properties runtimeProps = new Properties()
+    runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))
+
+    def oppiaPropsFile = rootProject.file('custom.properties')
+    if (oppiaPropsFile.canRead()){
+        logger.info('Fetching properties from external file')
+        runtimeProps.load(new FileInputStream(oppiaPropsFile))
+    }
+    else{
+        logger.error('No properties file found. Using default values.')
+    }
+
     buildTypes {
+
+        all{
+            //Define all the constant values that depend on the config properties
+            buildConfigField "String", "MINT_API_KEY", "\"" + runtimeProps['MINT_API_KEY'] +"\""
+            buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", runtimeProps['ADMIN_PROTECT_SETTINGS']
+            buildConfigField "boolean", "ADMIN_PROTECT_COURSE_DELETE", runtimeProps['ADMIN_PROTECT_COURSE_DELETE']
+            buildConfigField "boolean", "ADMIN_PROTECT_COURSE_RESET", runtimeProps['ADMIN_PROTECT_COURSE_RESET']
+            buildConfigField "boolean", "ADMIN_PROTECT_COURSE_INSTALL", runtimeProps['ADMIN_PROTECT_COURSE_INSTALL']
+            buildConfigField "boolean", "ADMIN_PROTECT_COURSE_UPDATE", runtimeProps['ADMIN_PROTECT_COURSE_UPDATE']
+            buildConfigField "boolean", "MENU_ALLOW_LOGOUT", runtimeProps['MENU_ALLOW_LOGOUT']
+            buildConfigField "boolean", "MENU_ALLOW_MONITOR", runtimeProps['MENU_ALLOW_MONITOR']
+            buildConfigField "boolean", "MENU_ALLOW_SETTINGS", runtimeProps['MENU_ALLOW_SETTINGS']
+            buildConfigField "boolean", "MENU_ALLOW_COURSE_DOWNLOAD", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
+            buildConfigField "boolean", "DEVICEADMIN_ENABLED", runtimeProps['DEVICEADMIN_ENABLED']
+            buildConfigField "boolean", "SESSION_EXPIRATION_ENABLED", runtimeProps['SESSION_EXPIRATION_ENABLED']
+            buildConfigField "int", "SESSION_EXPIRATION_TIMEOUT", runtimeProps['SESSION_EXPIRATION_TIMEOUT']
+            buildConfigField "int", "DOWNLOAD_COURSES_DISPLAY", runtimeProps['DOWNLOAD_COURSES_DISPLAY']
+
+            resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
+            resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
