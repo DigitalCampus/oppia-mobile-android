@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OppiaMobile</string>
+    <string name="version_name">6.0.2</string>
+    <string name="prefServerDefault" translatable="false">https://demo.oppia-mobile.org/</string>
+    <string name="prefServerTimeoutConnectionDefault" translatable="false">60000</string>
+    <string name="prefServerTimeoutResponseDefault" translatable="false">60000</string>
+</resources>
