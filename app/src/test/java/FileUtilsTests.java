@@ -89,6 +89,33 @@ public class FileUtilsTests {
         }
     }
 
+   /* @Test
+    public void UnzipFiles_createDir(){
+        File zipFile;
+        boolean result = false;
+        try {
+            zipFile = createTestZipFile();
+
+            String srcDirectory = zipFile.getParentFile().getParentFile().getAbsolutePath();
+            String srcFile = zipFile.getParentFile().getName() + File.separator + zipFile.getName();
+            String destDirectory = zipFile.getParentFile().getParentFile().getAbsolutePath();
+
+            if (zipFile != null) {
+                result = FileUtils.unzipFiles(srcDirectory,
+                        srcFile,
+                        destDirectory);
+            }
+
+            assertTrue(result);
+            assertEquals(FILES_COUNT + 1, zipFile.getParentFile().listFiles().length);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }*/
+
+
     @Test
     public void CleanDir_correctPath(){
 
@@ -129,7 +156,7 @@ public class FileUtilsTests {
     }
 
     @Test
-    public void DeleteDir(){
+    public void DeleteDir_correctPath(){
         try{
             File tempFolder = folder.newFolder("tempFolder");
 
@@ -137,10 +164,17 @@ public class FileUtilsTests {
         }catch(IOException ioe){
             ioe.printStackTrace();
         }
+
     }
 
     @Test
-    public void DirSize(){
+    public void DeleteDir_wrongPath(){
+        File tempFile = new File("tempFile");
+        assertFalse(FileUtils.deleteDir(tempFile));
+    }
+
+    @Test
+    public void DirSize_correctSize(){
         //Case when the directory does not exists
         File f = new File("non_exists_dir");
         assertEquals(0, FileUtils.dirSize(f));
@@ -178,6 +212,7 @@ public class FileUtilsTests {
 
             FileUtils.cleanUp(dir, zipFile.getAbsolutePath());
 
+            //Check that the files does not exist
             assertFalse(dir.exists());
             assertFalse(zipFile.exists());
 
@@ -187,7 +222,7 @@ public class FileUtilsTests {
     }
 
     @Test
-    public void ReadFile(){
+    public void ReadFile_FileInputStream(){
         String text = "The quick brown fox jumps over the lazy dog";
         String filename = "test_file.txt";
 
@@ -204,7 +239,24 @@ public class FileUtilsTests {
         }
     }
 
-   /* @Test
+    @Test
+    public void ReadFile_String(){
+        String text = "The quick brown fox jumps over the lazy dog";
+        String filename = "test_file.txt";
+
+        try {
+            File file = folder.newFile(filename);
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(text);
+            fileWriter.close();
+
+            assertEquals(text, FileUtils.readFile(file.getAbsolutePath()));
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
+    }
+
+    /* @Test
     public void FileUtils_supportedMediafileType(){
         assertFalse(FileUtils.supportedMediafileType(null));
 
@@ -234,6 +286,7 @@ public class FileUtilsTests {
             e.printStackTrace();
         }
 
+        //Create the test zip file and add the previous files to it
         BufferedInputStream is;
         ZipOutputStream out = null;
         try {
