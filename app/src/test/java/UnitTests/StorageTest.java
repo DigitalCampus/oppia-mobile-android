@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import oppia.utils.storage.MockStorageStrategy;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 
@@ -37,7 +38,7 @@ public class StorageTest {
     @Test
     public void Storage_getCoursesPath(){
         String path = Storage.getCoursesPath(mockContext);
-        assertEquals(tempFolder
+        assertEquals(tempFolder.getRoot()
                 + File.separator
                 + Storage.APP_COURSES_DIR_NAME
                 + File.separator, path);
@@ -46,7 +47,7 @@ public class StorageTest {
     @Test
     public void Storage_getDownloadPath(){
         String path = Storage.getDownloadPath(mockContext);
-        assertEquals(tempFolder
+        assertEquals(tempFolder.getRoot()
                 + File.separator
                 + Storage.APP_DOWNLOAD_DIR_NAME
                 + File.separator, path);
@@ -56,7 +57,7 @@ public class StorageTest {
     public void Storage_getMediaPath(){
         System.out.println(Storage.getMediaPath(mockContext));
         String path = Storage.getMediaPath(mockContext);
-        assertEquals(tempFolder
+        assertEquals(tempFolder.getRoot()
                 + File.separator
                 + Storage.APP_MEDIA_DIR_NAME
                 + File.separator, path);
@@ -71,6 +72,32 @@ public class StorageTest {
         assertTrue(new File(tempFolder.getRoot() + File.separator + "media").exists());
         assertTrue(new File(tempFolder.getRoot() + File.separator + ".nomedia").exists());
     }
-    
+
+    @Test
+    public void Storage_mediaFileExists(){
+        try {
+            //Existing file
+            Storage.createFolderStructure(mockContext);
+            File existingFile = new File(tempFolder.getRoot() + File.separator + "media" + File.separator + "ExistingFile.txt");
+            existingFile.createNewFile();
+
+            System.out.println(existingFile.getAbsolutePath());
+            assertTrue(Storage.mediaFileExists(mockContext, existingFile.getName()));
+
+            //Non existing file
+            assertFalse(Storage.mediaFileExists(mockContext, "NonExistingFile.txt"));
+
+        }catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+    }
+
+    @Test
+    public void Storage_createNoMediaFile(){
+        Storage.createNoMediaFile(mockContext);
+
+        assertTrue(new File(tempFolder.getRoot() + File.separator + ".nomedia").exists());
+    }
+
 
 }
