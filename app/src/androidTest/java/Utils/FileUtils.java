@@ -39,11 +39,11 @@ public class FileUtils {
         return ret;
     }
 
-    public static void copyZipFromAssets(Context context, String filename){
+    public static void copyZipFromAssets(String filename){
 
         try {
-            InputStream is = context.getResources().getAssets().open("courses/" + filename);
-            File outputFile = new File(Storage.getDownloadPath(context), filename);
+            InputStream is = InstrumentationRegistry.getContext().getResources().getAssets().open("courses/" + filename);
+            File outputFile = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
             OutputStream os = new FileOutputStream(outputFile);
 
             //Copy File
