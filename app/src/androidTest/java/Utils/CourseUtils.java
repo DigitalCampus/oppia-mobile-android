@@ -53,4 +53,30 @@ public class CourseUtils {
 
         return c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
     }
+
+    public static String getCourseShortTitle(Context ctx){
+
+        File dir = new File(Storage.getDownloadPath(ctx));
+        String[] children = dir.list();
+
+        String courseXMLPath = "";
+        CourseXMLReader cxr = null;
+
+        File tempdir = new File(Storage.getStorageLocationRoot(ctx) + "temp/");
+        tempdir.mkdirs();
+
+        boolean unzipResult = org.digitalcampus.oppia.utils.storage.FileUtils.unzipFiles(Storage.getDownloadPath(ctx), children[0], tempdir.getAbsolutePath());
+
+
+        if (!unzipResult){
+            //then was invalid zip file and should be removed
+            FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[0]);
+
+        }
+
+        String[] courseDirs = tempdir.list();
+
+        File src = new File(tempdir + File.separator + courseDirs[0]);
+        return src.getName();
+    }
 }
