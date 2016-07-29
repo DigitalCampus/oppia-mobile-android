@@ -1,10 +1,17 @@
 package Utils;
 
 import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
@@ -30,5 +37,26 @@ public class FileUtils {
 
         stream.close();
         return ret;
+    }
+
+    public static void copyZipFromAssets(Context context, String filename){
+
+        try {
+            InputStream is = context.getResources().getAssets().open("courses/" + filename);
+            File outputFile = new File(Storage.getDownloadPath(context), filename);
+            OutputStream os = new FileOutputStream(outputFile);
+
+            //Copy File
+            byte[] buffer = new byte[1024];
+            int read;
+            while((read = is.read(buffer)) != -1){
+                os.write(buffer, 0, read);
+            }
+
+            is.close();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
