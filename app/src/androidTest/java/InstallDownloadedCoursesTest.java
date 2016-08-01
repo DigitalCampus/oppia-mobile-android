@@ -30,11 +30,13 @@ import Utils.FileUtils;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class InstallDownloadedCoursesTest {
     private final String CORRECT_COURSE = "Correct_Course.zip";
+    private final String EXISTING_COURSE = "Existing_Course.zip";
     private final String ALREADY_INSTALLED_COURSE = "";
     private final String INCORRECT_COURSE = "Incorrect_Course.zip";
     private final String NOXML_COURSE = "NoXML_Course.zip";
@@ -62,25 +64,26 @@ public class InstallDownloadedCoursesTest {
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
         String title = CourseUtils.getCourseTitle(context);
-        String shortTitle = "correct_course";
 
         runInstallCourseTask();//Run test task
 
         signal.await();
 
+        //Check if result is true
         assertTrue(response.isResult());
+        //Check if the resultResponse is correct
         assertEquals(response.getResultResponse(), context.getString(R.string.install_course_complete, title));
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
         assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
 
 
+        String shortTitle = "correct_course";
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
         assertTrue(finalPath.exists()); //Check that the course exists in the "modules" directory
 
         DbHelper db = DbHelper.getInstance(context);
         long courseId = db.getCourseID(shortTitle);
         long userId = db.getUserId(SessionManager.getUsername(context));
-        ArrayList<Course> courses = db.getAllCourses();
         Course c = db.getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
@@ -89,29 +92,36 @@ public class InstallDownloadedCoursesTest {
 
     @Test
     public void installCourse_existingCourse()throws Exception{
-        String filename = CORRECT_COURSE;
+        String filename = EXISTING_COURSE;
 
         String title = "";
-        String shortTitle = "";
         for(int i = 0; i < 2; i++){
             FileUtils.copyZipFromAssets(filename); //Copy course zip from assets to download path
             title = CourseUtils.getCourseTitle(context);
-            shortTitle = CourseUtils.getCourseShortTitle(context);
             runInstallCourseTask(); //Run test task
         }
 
         signal.await();
 
+        //Check if result is false
         assertFalse(response.isResult());
+        //Check if the resultResponse is correct
         assertEquals(response.getResultResponse(), context.getString(R.string.error_latest_already_installed, title));
 
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-        assertFalse(initialPath.exists());
+        assertFalse(initialPath.exists()); //Check that the course does not exists in the "downloads" directory
 
 
-
+        String shortTitle = "existing_course";
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertTrue(finalPath.exists());
+        assertTrue(finalPath.exists()); //Check that the course exists in the "modules" directory
+
+
+        DbHelper db = DbHelper.getInstance(context);
+        long courseId = db.getCourseID(shortTitle);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+        Course c = db.getCourse(courseId, userId);
+        assertNotNull(c);   //Check that the course exists in the database
     }
 
     @Test
@@ -121,20 +131,27 @@ public class InstallDownloadedCoursesTest {
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
         String title = CourseUtils.getCourseTitle(context);
-        String shortTitle = CourseUtils.getCourseShortTitle(context);
 
         runInstallCourseTask();     //Run test task
         signal.await();
 
+        //Check if result is false
         assertFalse(response.isResult());
-        assertEquals(response.getResultResponse(), context.getString(R.string.error_installing_course, title));
+        //Check if the resultResponse is correct
+        assertEquals(context.getString(R.string.error_installing_course, title), response.getResultResponse());
 
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-        assertFalse(initialPath.exists());
+        assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
 
-
+        String shortTitle = "incorrect_course";
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertFalse(finalPath.exists());
+        assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
+
+        DbHelper db = DbHelper.getInstance(context);
+        long courseId = db.getCourseID(shortTitle);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+        Course c = db.getCourse(courseId, userId);
+        assertNull(c);   //Check that the course does not exists in the database
 
     }
 
@@ -146,12 +163,9 @@ public class InstallDownloadedCoursesTest {
                 MALFORMEDXML_COURSE
         };
 
-        String shortTitle = "";
 
         for(String filename : filenames) {
             FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
-
-            shortTitle = CourseUtils.getCourseShortTitle(context);
 
             runInstallCourseTask();     //Run test task
         }

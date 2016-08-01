@@ -52,7 +52,7 @@ public class DeleteCourseTest {
         String filename = CORRECT_COURSE;
 
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
-        String shortTitle = CourseUtils.getCourseShortTitle(context);
+        String shortTitle = "correct_course";
 
         ArrayList<Object> data = new ArrayList<>();
         Payload payload = new Payload(data);
