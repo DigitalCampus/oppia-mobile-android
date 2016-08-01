@@ -72,7 +72,7 @@ public class InstallDownloadedCoursesTest {
         //Check if result is true
         assertTrue(response.isResult());
         //Check if the resultResponse is correct
-        assertEquals(response.getResultResponse(), context.getString(R.string.install_course_complete, title));
+        assertEquals(context.getString(R.string.install_course_complete, title), response.getResultResponse());
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
         assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
 
@@ -106,7 +106,7 @@ public class InstallDownloadedCoursesTest {
         //Check if result is false
         assertFalse(response.isResult());
         //Check if the resultResponse is correct
-        assertEquals(response.getResultResponse(), context.getString(R.string.error_latest_already_installed, title));
+        assertEquals(context.getString(R.string.error_latest_already_installed, title), response.getResultResponse());
 
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
         assertFalse(initialPath.exists()); //Check that the course does not exists in the "downloads" directory
