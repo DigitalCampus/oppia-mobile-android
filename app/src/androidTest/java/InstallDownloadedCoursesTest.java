@@ -31,9 +31,10 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class InstallDownloadedCoursesTest {
-    private final String CORRECT_COURSE = "Wash.zip";
+    private final String CORRECT_COURSE = "Correct_Course.zip";
     private final String ALREADY_INSTALLED_COURSE = "";
-    private final String INCORRECT_COURSE = "";
+    private final String INCORRECT_COURSE = "Incorrect_Course.zip";
+    private final String NOXML_COURSE = "NoXML_Course.zip";
 
     private Context context;
     private CountDownLatch signal;
@@ -124,6 +125,31 @@ public class InstallDownloadedCoursesTest {
         assertFalse(finalPath.exists());
 
     }
+
+    @Test
+    public void installCourse_incorrectCourse()throws Exception{
+        String filename = NOXML_COURSE;
+
+        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+
+        String title = CourseUtils.getCourseTitle(context);
+        String shortTitle = CourseUtils.getCourseShortTitle(context);
+
+        runInstallCourseTask();     //Run test task
+        signal.await();
+
+        assertFalse(response.isResult());
+        assertEquals(response.getResultResponse(), null);
+
+        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
+        assertTrue(initialPath.exists());
+
+
+        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
+        assertFalse(finalPath.exists());
+
+    }
+
 
     private void runInstallCourseTask(){
         ArrayList<Object> data = new ArrayList<>();

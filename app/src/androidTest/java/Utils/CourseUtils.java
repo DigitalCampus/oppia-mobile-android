@@ -37,19 +37,27 @@ public class CourseUtils {
         }
 
         String[] courseDirs = tempdir.list();
+        Course c = null;
+        SharedPreferences prefs = null;
+
         try {
             courseXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_XML;
             cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
 
+            prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+            c.setTitles(cxr.getTitles());
+
         } catch (ArrayIndexOutOfBoundsException aioobe){
             org.digitalcampus.oppia.utils.storage.FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[0]);
+            return null;
         } catch (InvalidXMLException e) {
             e.printStackTrace();
+            return null;
+        } catch(Exception e ){
+            e.printStackTrace();
+            return null;
         }
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-        c.setTitles(cxr.getTitles());
 
         return c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
     }

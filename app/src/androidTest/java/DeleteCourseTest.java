@@ -2,6 +2,8 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.Course;
@@ -9,21 +11,26 @@ import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import Utils.CourseUtils;
 import Utils.FileUtils;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+
 @RunWith(AndroidJUnit4.class)
 public class DeleteCourseTest {
 
-    private final String CORRECT_COURSE = "Wash.zip";
+    private final String CORRECT_COURSE = "Correct_Course.zip";
 
     private Context context;
     private CountDownLatch signal;
@@ -45,6 +52,7 @@ public class DeleteCourseTest {
         String filename = CORRECT_COURSE;
 
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+        String shortTitle = CourseUtils.getCourseShortTitle(context);
 
         ArrayList<Object> data = new ArrayList<>();
         Payload payload = new Payload(data);
@@ -69,7 +77,14 @@ public class DeleteCourseTest {
 
         signal.await();
 
-        Course c = (Course)response.getData().get(0);
+
+        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
+        assertTrue(finalPath.exists());
+
+        DbHelper db = DbHelper.getInstance(context);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+
+        Course c = db.getCourses(userId).get(0);
 
         DeleteCourseTask task = new DeleteCourseTask(context);
         ArrayList<Object> payloadData = new ArrayList<>();
@@ -85,6 +100,8 @@ public class DeleteCourseTest {
         task.execute(p);
 
         signal.await();
+
+        assertFalse(finalPath.exists());
 
     }
 
