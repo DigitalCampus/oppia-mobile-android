@@ -4,6 +4,8 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.Course;
@@ -27,6 +29,7 @@ import Utils.FileUtils;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -59,7 +62,7 @@ public class InstallDownloadedCoursesTest {
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
         String title = CourseUtils.getCourseTitle(context);
-        String shortTitle = CourseUtils.getCourseShortTitle(context);
+        String shortTitle = "correct_course";
 
         runInstallCourseTask();//Run test task
 
@@ -68,12 +71,20 @@ public class InstallDownloadedCoursesTest {
         assertTrue(response.isResult());
         assertEquals(response.getResultResponse(), context.getString(R.string.install_course_complete, title));
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-        assertFalse(initialPath.exists());
-
+        assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
 
 
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertTrue(finalPath.exists());
+        assertTrue(finalPath.exists()); //Check that the course exists in the "modules" directory
+
+        DbHelper db = DbHelper.getInstance(context);
+        long courseId = db.getCourseID(shortTitle);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+        ArrayList<Course> courses = db.getAllCourses();
+        Course c = db.getCourse(courseId, userId);
+        assertNotNull(c);   //Check that the course exists in the database
+
+
     }
 
     @Test
