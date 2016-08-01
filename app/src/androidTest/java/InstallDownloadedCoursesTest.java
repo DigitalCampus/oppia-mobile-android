@@ -35,6 +35,7 @@ public class InstallDownloadedCoursesTest {
     private final String ALREADY_INSTALLED_COURSE = "";
     private final String INCORRECT_COURSE = "Incorrect_Course.zip";
     private final String NOXML_COURSE = "NoXML_Course.zip";
+    private final String MALFORMEDXML_COURSE = "MalformedXML_Course.zip";
 
     private Context context;
     private CountDownLatch signal;
@@ -127,26 +128,33 @@ public class InstallDownloadedCoursesTest {
     }
 
     @Test
-    public void installCourse_incorrectCourse()throws Exception{
-        String filename = NOXML_COURSE;
+    public void installCourse_incorrectCourses()throws Exception{
+        String[] filenames = new String[] {
+                INCORRECT_COURSE,
+                NOXML_COURSE,
+                MALFORMEDXML_COURSE
+        };
 
-        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+        String shortTitle = "";
 
-        String title = CourseUtils.getCourseTitle(context);
-        String shortTitle = CourseUtils.getCourseShortTitle(context);
+        for(String filename : filenames) {
+            FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
-        runInstallCourseTask();     //Run test task
+            shortTitle = CourseUtils.getCourseShortTitle(context);
+
+            runInstallCourseTask();     //Run test task
+        }
+
         signal.await();
 
-        assertFalse(response.isResult());
-        assertEquals(response.getResultResponse(), null);
-
-        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-        assertTrue(initialPath.exists());
+        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        String[] children = initialPath.list();
+        assertEquals(0, children.length);
 
 
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertFalse(finalPath.exists());
+        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        children = finalPath.list();
+        assertEquals(0, children.length);
 
     }
 
