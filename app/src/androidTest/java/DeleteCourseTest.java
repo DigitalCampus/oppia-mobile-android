@@ -1,5 +1,6 @@
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.core.deps.guava.collect.ArrayListMultimap;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.digitalcampus.oppia.application.DbHelper;
@@ -25,6 +26,8 @@ import Utils.CourseUtils;
 import Utils.FileUtils;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -40,19 +43,11 @@ public class DeleteCourseTest {
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getTargetContext();
         signal = new CountDownLatch(1);
-    }
 
-    @After
-    public void tearDown() throws Exception {
-        signal.countDown();
-    }
 
-    @Test
-    public void deleteCourse_success() throws Exception{
+        //Proceed with the installation of the course that will be deleted
         String filename = CORRECT_COURSE;
-
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
-        String shortTitle = "correct_course";
 
         ArrayList<Object> data = new ArrayList<>();
         Payload payload = new Payload(data);
@@ -77,14 +72,29 @@ public class DeleteCourseTest {
 
         signal.await();
 
+        signal = new CountDownLatch(1);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        signal.countDown();
+    }
+
+    @Test
+    public void deleteCourse_success() throws Exception{
+
+        String shortTitle = "correct_course";
 
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertTrue(finalPath.exists());
+        assertTrue(finalPath.exists());  //Check that the course exists in the "modules" directory
+
 
         DbHelper db = DbHelper.getInstance(context);
         long userId = db.getUserId(SessionManager.getUsername(context));
-
-        Course c = db.getCourses(userId).get(0);
+        long courseId = db.getCourseID(shortTitle);
+        Course c = db.getCourse(courseId, userId);
+        assertNotNull(c);   //Check that the course exists in the database
+        ArrayList<Course> courses = db.getAllCourses();
 
         DeleteCourseTask task = new DeleteCourseTask(context);
         ArrayList<Object> payloadData = new ArrayList<>();
@@ -101,8 +111,11 @@ public class DeleteCourseTest {
 
         signal.await();
 
-        assertFalse(finalPath.exists());
+        ArrayList<Course> courses2 = db.getAllCourses();
+        c = db.getCourse(courseId, userId);
+        assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
+        assertNull(c);   //Check that the course does not exists in the database
 
     }
-
+ 
 }
