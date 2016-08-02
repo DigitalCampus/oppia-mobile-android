@@ -44,35 +44,6 @@ public class DeleteCourseTest {
         context = InstrumentationRegistry.getTargetContext();
         signal = new CountDownLatch(1);
 
-
-        //Proceed with the installation of the course that will be deleted
-        String filename = CORRECT_COURSE;
-        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
-
-        ArrayList<Object> data = new ArrayList<>();
-        Payload payload = new Payload(data);
-        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
-        imTask.setInstallerListener(new InstallCourseListener() {
-            @Override
-            public void downloadComplete(Payload p) {  }
-
-            @Override
-            public void downloadProgressUpdate(DownloadProgress dp) {  }
-
-            @Override
-            public void installComplete(Payload r) {
-                response = r;
-                signal.countDown();
-            }
-
-            @Override
-            public void installProgressUpdate(DownloadProgress dp) {  }
-        });
-        imTask.execute(payload);
-
-        signal.await();
-
-        signal = new CountDownLatch(1);
     }
 
     @After
@@ -85,6 +56,8 @@ public class DeleteCourseTest {
 
         String shortTitle = "correct_course";
 
+        installTestCourse();
+
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
         assertTrue(finalPath.exists());  //Check that the course exists in the "modules" directory
 
@@ -94,7 +67,6 @@ public class DeleteCourseTest {
         long courseId = db.getCourseID(shortTitle);
         Course c = db.getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
-        ArrayList<Course> courses = db.getAllCourses();
 
         DeleteCourseTask task = new DeleteCourseTask(context);
         ArrayList<Object> payloadData = new ArrayList<>();
@@ -111,11 +83,80 @@ public class DeleteCourseTest {
 
         signal.await();
 
-        ArrayList<Course> courses2 = db.getAllCourses();
         c = db.getCourse(courseId, userId);
         assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
         assertNull(c);   //Check that the course does not exists in the database
 
     }
- 
+
+    @Test
+    public void deleteCourse_nonExistingCourse() throws Exception{
+        String shortTitle = "correct_course";
+
+        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
+        assertFalse(finalPath.exists());  //Check that the course does not exists in the "modules" directory
+
+
+        DbHelper db = DbHelper.getInstance(context);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+        long courseId = db.getCourseID(shortTitle);
+        Course c = db.getCourse(courseId, userId);
+        assertNull(c);   //Check that the course does not exists in the database
+
+        DeleteCourseTask task = new DeleteCourseTask(context);
+        ArrayList<Object> payloadData = new ArrayList<>();
+        payloadData.add(c);
+        Payload p = new Payload(payloadData);
+        task.setOnDeleteCourseListener(new DeleteCourseListener() {
+            @Override
+            public void onCourseDeletionComplete(Payload r) {
+                response = r;
+                signal.countDown();
+            }
+        });
+        task.execute(p);
+
+        signal.await();
+
+        c = db.getCourse(courseId, userId);
+        assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
+        assertNull(c);   //Check that the course does not exists in the database
+    }
+
+    private void installTestCourse(){
+        //Proceed with the installation of the course
+        try {
+            String filename = CORRECT_COURSE;
+            FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+
+            ArrayList<Object> data = new ArrayList<>();
+            Payload payload = new Payload(data);
+            InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
+            imTask.setInstallerListener(new InstallCourseListener() {
+                @Override
+                public void downloadComplete(Payload p) {  }
+
+                @Override
+                public void downloadProgressUpdate(DownloadProgress dp) {  }
+
+                @Override
+                public void installComplete(Payload r) {
+                    response = r;
+                    signal.countDown();
+                }
+
+                @Override
+                public void installProgressUpdate(DownloadProgress dp) {  }
+            });
+            imTask.execute(payload);
+
+            signal.await();
+
+            signal = new CountDownLatch(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
