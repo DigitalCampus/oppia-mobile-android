@@ -56,6 +56,8 @@ public class DeleteCourseTest {
 
         String shortTitle = "correct_course";
 
+        CourseUtils.cleanUp();
+
         installTestCourse();
 
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
@@ -93,6 +95,8 @@ public class DeleteCourseTest {
     public void deleteCourse_nonExistingCourse() throws Exception{
         String shortTitle = "correct_course";
 
+        CourseUtils.cleanUp();
+
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
         assertFalse(finalPath.exists());  //Check that the course does not exists in the "modules" directory
 
@@ -102,7 +106,6 @@ public class DeleteCourseTest {
         long courseId = db.getCourseID(shortTitle);
         Course c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
-
 
         DeleteCourseTask task = new DeleteCourseTask(context);
         ArrayList<Object> payloadData = new ArrayList<>();
@@ -127,6 +130,8 @@ public class DeleteCourseTest {
     @Test
     public void deleteCourse_courseAlreadyOnDatabase() throws Exception {
         //Install a course that is already in the database but not in the storage system
+        CourseUtils.cleanUp();
+
         installTestCourse();
 
         String shortTitle = "correct_course";

@@ -61,6 +61,8 @@ public class InstallDownloadedCoursesTest {
     public void installCourse_correctCourse()throws Exception{
         String filename = CORRECT_COURSE;
 
+        CourseUtils.cleanUp();
+
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
         String title = CourseUtils.getCourseTitle(context);
@@ -94,14 +96,16 @@ public class InstallDownloadedCoursesTest {
     public void installCourse_existingCourse()throws Exception{
         String filename = EXISTING_COURSE;
 
+        CourseUtils.cleanUp();
+
         String title = "";
         for(int i = 0; i < 2; i++){
             FileUtils.copyZipFromAssets(filename); //Copy course zip from assets to download path
             title = CourseUtils.getCourseTitle(context);
             runInstallCourseTask(); //Run test task
+            signal.await();
+            signal = new CountDownLatch(1);
         }
-
-        signal.await();
 
         //Check if result is false
         assertFalse(response.isResult());
@@ -127,6 +131,8 @@ public class InstallDownloadedCoursesTest {
     @Test
     public void installCourse_errorInstallingCourse()throws Exception{
         String filename = INCORRECT_COURSE;
+
+        CourseUtils.cleanUp();
 
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
@@ -157,6 +163,9 @@ public class InstallDownloadedCoursesTest {
 
     @Test
     public void installCourse_incorrectCourses()throws Exception{
+
+        CourseUtils.cleanUp();
+
         String[] filenames = new String[] {
                 INCORRECT_COURSE,
                 NOXML_COURSE,
@@ -186,6 +195,7 @@ public class InstallDownloadedCoursesTest {
     @Test
     public void installCourse_courseAlreadyInStorage()throws Exception {
         //Install a course that is already in storage system but not in database
+        CourseUtils.cleanUp();
         installCourseAndRemoveItFromDatabase();
         installCourse_correctCourse();
     }
