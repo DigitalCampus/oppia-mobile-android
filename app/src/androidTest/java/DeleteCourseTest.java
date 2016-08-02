@@ -103,6 +103,7 @@ public class DeleteCourseTest {
         Course c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
+
         DeleteCourseTask task = new DeleteCourseTask(context);
         ArrayList<Object> payloadData = new ArrayList<>();
         payloadData.add(c);
@@ -121,6 +122,43 @@ public class DeleteCourseTest {
         c = db.getCourse(courseId, userId);
         assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
         assertNull(c);   //Check that the course does not exists in the database
+    }
+
+    @Test
+    public void deleteCourse_courseAlreadyOnDatabase() throws Exception {
+        //Install a course that is already in the database but not in the storage system
+        installTestCourse();
+
+        String shortTitle = "correct_course";
+        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
+        finalPath.delete();     //Remove course folder
+
+        DbHelper db = DbHelper.getInstance(context);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+        long courseId = db.getCourseID(shortTitle);
+        Course c = db.getCourse(courseId, userId);
+        assertNotNull(c);   //Check that the course exists in the database
+
+        DeleteCourseTask task = new DeleteCourseTask(context);
+        ArrayList<Object> payloadData = new ArrayList<>();
+        payloadData.add(c);
+        Payload p = new Payload(payloadData);
+        task.setOnDeleteCourseListener(new DeleteCourseListener() {
+            @Override
+            public void onCourseDeletionComplete(Payload r) {
+                response = r;
+                signal.countDown();
+            }
+        });
+        task.execute(p);
+
+        signal.await();
+
+        c = db.getCourse(courseId, userId);
+        assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
+        assertNull(c);   //Check that the course does not exists in the database
+
+
     }
 
     private void installTestCourse(){

@@ -183,6 +183,12 @@ public class InstallDownloadedCoursesTest {
 
     }
 
+    @Test
+    public void installCourse_courseAlreadyInStorage()throws Exception {
+        //Install a course that is already in storage system but not in database
+        installCourseAndRemoveItFromDatabase();
+        installCourse_correctCourse();
+    }
 
     private void runInstallCourseTask(){
         ArrayList<Object> data = new ArrayList<>();
@@ -205,6 +211,29 @@ public class InstallDownloadedCoursesTest {
             public void installProgressUpdate(DownloadProgress dp) {  }
         });
         imTask.execute(payload);
+
+
     }
 
+    private void installCourseAndRemoveItFromDatabase(){
+        String filename = CORRECT_COURSE;
+        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+
+        runInstallCourseTask();//Run test task
+        try {
+            signal.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        String shortTitle = "correct_course";
+
+        DbHelper db = DbHelper.getInstance(context);
+        long courseId = db.getCourseID(shortTitle);
+
+        db.deleteCourse((int) courseId);
+
+        signal = new CountDownLatch(1);
+    }
 }
