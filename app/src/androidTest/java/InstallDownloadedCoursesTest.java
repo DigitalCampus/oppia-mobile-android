@@ -225,7 +225,7 @@ public class InstallDownloadedCoursesTest {
 
     }
 
-    private void installCourseAndRemoveItFromDatabase(){
+    public void installCourseAndRemoveItFromDatabase(){
         String filename = CORRECT_COURSE;
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
