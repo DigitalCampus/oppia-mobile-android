@@ -129,6 +129,74 @@ public class InstallDownloadedCoursesTest {
     }
 
     @Test
+    public void installCourse_noXMLCourse()throws Exception{
+        String filename = NOXML_COURSE;
+
+        CourseUtils.cleanUp();
+
+        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+
+        String title = CourseUtils.getCourseTitle(context);
+
+        runInstallCourseTask();//Run test task
+
+        signal.await();
+
+        //Check if result is true
+        assertFalse(response.isResult());
+        //Check if the resultResponse is correct
+        assertEquals(context.getString(R.string.error_installing_course, title), response.getResultResponse());
+        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
+        assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
+
+
+        String shortTitle = "noxml_course";
+        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
+        assertFalse(finalPath.exists()); //Check that the course exists in the "modules" directory
+
+        DbHelper db = DbHelper.getInstance(context);
+        long courseId = db.getCourseID(shortTitle);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+        Course c = db.getCourse(courseId, userId);
+        assertNull(c);   //Check that the course exists in the database
+
+    }
+
+    @Test
+    public void installCourse_malformedXMLCourse()throws Exception{
+        String filename = MALFORMEDXML_COURSE;
+
+        CourseUtils.cleanUp();
+
+        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+
+        String title = CourseUtils.getCourseTitle(context);
+
+        runInstallCourseTask();//Run test task
+
+        signal.await();
+
+        //Check if result is true
+        assertFalse(response.isResult());
+        //Check if the resultResponse is correct
+        assertEquals(context.getString(R.string.error_installing_course, title), response.getResultResponse());
+        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
+        assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
+
+
+        String shortTitle = "malformedxml_course";
+        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
+        assertFalse(finalPath.exists()); //Check that the course exists in the "modules" directory
+
+        DbHelper db = DbHelper.getInstance(context);
+        long courseId = db.getCourseID(shortTitle);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+        Course c = db.getCourse(courseId, userId);
+        assertNull(c);   //Check that the course exists in the database
+
+    }
+
+    @Test
     public void installCourse_errorInstallingCourse()throws Exception{
         String filename = INCORRECT_COURSE;
 
@@ -175,9 +243,9 @@ public class InstallDownloadedCoursesTest {
 
         for(String filename : filenames) {
             FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
-
-            runInstallCourseTask();     //Run test task
         }
+
+        runInstallCourseTask();     //Run test task
 
         signal.await();
 
