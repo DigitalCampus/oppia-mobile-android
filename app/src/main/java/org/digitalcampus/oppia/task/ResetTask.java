@@ -77,7 +77,7 @@ public class ResetTask extends AsyncTask<Payload, Object, Payload> {
             else{
                 payload.setResult(false);
                 if (response.code() == 400){
-                    payload.setResultResponse(response.toString());
+                    payload.setResultResponse(ctx.getString(R.string.error_reset));
                 }
                 else{
                     payload.setResultResponse(ctx.getString(R.string.error_connection));
