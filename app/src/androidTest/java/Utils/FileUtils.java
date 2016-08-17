@@ -31,11 +31,17 @@ public class FileUtils {
     }
 
     public static String getStringFromFile(Context context, String filePath) throws Exception {
-        final InputStream stream = context.getResources().getAssets().open(filePath);
+        String ret = "";
 
-        String ret = convertStreamToString(stream);
+        try {
+            final InputStream stream = context.getResources().getAssets().open(filePath);
 
-        stream.close();
+            ret = convertStreamToString(stream);
+
+            stream.close();
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+        }
         return ret;
     }
 
