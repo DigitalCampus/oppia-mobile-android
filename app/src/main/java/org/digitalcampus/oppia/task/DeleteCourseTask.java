@@ -24,17 +24,22 @@ public class DeleteCourseTask extends AsyncTask<Payload, String, Payload> {
     protected Payload doInBackground(Payload... params) {
 
         Payload payload = params[0];
-        Course course = (Course) payload.getData().get(0);
 
-        DbHelper db = DbHelper.getInstance(ctx);
-        db.deleteCourse(course.getCourseId());
+        try {
+           Course course = (Course) payload.getData().get(0);
 
-        // remove files
-        String courseLocation = course.getLocation();
-        File f = new File(courseLocation);
+            DbHelper db = DbHelper.getInstance(ctx);
+            db.deleteCourse(course.getCourseId());
 
-        boolean success = FileUtils.deleteDir(f);
-        payload.setResult(success);
+            // remove files
+            String courseLocation = course.getLocation();
+            File f = new File(courseLocation);
+
+            boolean success = FileUtils.deleteDir(f);
+            payload.setResult(success);
+        }catch(NullPointerException npe){
+            payload.setResult(false);
+        }
 
         return payload;
     }
