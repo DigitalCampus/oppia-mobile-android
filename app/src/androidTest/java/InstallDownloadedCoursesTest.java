@@ -200,15 +200,13 @@ public class InstallDownloadedCoursesTest {
 
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
-        String title = CourseUtils.getCourseTitle(context);
-
         runInstallCourseTask();     //Run test task
         signal.await();
 
         //Check if result is false
         assertFalse(response.isResult());
         //Check if the resultResponse is correct
-        assertEquals(context.getString(R.string.error_installing_course, title), response.getResultResponse());
+        assertEquals(context.getString(R.string.error_installing_course, filename), response.getResultResponse());
 
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
         assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
