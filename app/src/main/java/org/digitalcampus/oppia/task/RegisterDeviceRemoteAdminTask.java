@@ -10,7 +10,10 @@ import com.splunk.mint.Mint;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +60,12 @@ public class RegisterDeviceRemoteAdminTask extends AsyncTask<Payload, Void, Payl
         String token = prefs.getString(PrefsActivity.GCM_TOKEN_ID, "");
         String deviceModel = android.os.Build.BRAND + " " + android.os.Build.MODEL;
         String deviceID = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
+        User user = null;
+        try {
+            user = DbHelper.getInstance(ctx).getUser(username);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
 
         Log.d(TAG, "Registering device in remote admin list");
         try {
@@ -69,6 +78,8 @@ public class RegisterDeviceRemoteAdminTask extends AsyncTask<Payload, Void, Payl
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
                     .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.DEVICEADMIN_ADD_PATH))
+                    .addHeader(HTTPClientUtils.HEADER_AUTH,
+                            HTTPClientUtils.getAuthHeaderValue(user.getUsername(), user.getApiKey()))
                     .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
                     .build();
 
