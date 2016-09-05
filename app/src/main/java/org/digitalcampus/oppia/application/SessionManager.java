@@ -30,7 +30,6 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
@@ -41,6 +40,7 @@ import java.util.List;
 public class SessionManager {
 
     public static final String ACCOUNTS_CSV_FILENAME = "oppia_accounts.csv";
+    public static final String APIKEY_VALID = "prefApiKeyInvalid";
 
     public static boolean isLoggedIn(Context ctx) {
         String username = getUsername(ctx);
@@ -85,6 +85,7 @@ public class SessionManager {
         editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, user.isBadgingEnabled());
 
         loadUserPrefs(ctx, username, editor);
+        setUserApiKeyValid(ctx, user, true);
         Mint.setUserIdentifier(username);
         editor.apply();
     }
@@ -158,6 +159,28 @@ public class SessionManager {
             //Then we set the default values again (only empty values, will not overwrite the others)
             PreferenceManager.setDefaultValues(ctx, R.xml.prefs, true);
         }
+    }
+
+    public static void setUserApiKeyValid(Context ctx, User user, boolean valid){
+        ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
+        Pair<String, String> userPref = new Pair<>(APIKEY_VALID, valid?"true":"false");
+        userPrefs.add(userPref);
+
+        DbHelper.getInstance(ctx).insertUserPreferences(user.getUsername(), userPrefs);
+    }
+
+    public static boolean isUserApiKeyValid(Context ctx){
+        if (isLoggedIn(ctx)){
+            String user = getUsername(ctx);
+            return isUserApiKeyValid(ctx, user);
+        }
+        return true;
+    }
+
+    public static boolean isUserApiKeyValid(Context ctx, String username){
+        DbHelper db = DbHelper.getInstance(ctx);
+        String prefValue = db.getUserPreference(username, APIKEY_VALID);
+        return (prefValue == null || "true".equals(prefValue));
     }
 
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener){

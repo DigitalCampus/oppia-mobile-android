@@ -37,6 +37,7 @@ import com.splunk.mint.Mint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -195,7 +196,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
 		} else {
-			UIUtils.showAlert(this, R.string.error, R.string.error_connection_required, finishActivity);
+            String errorMsg = response.getResultResponse();
+			UIUtils.showAlert(this, R.string.error, errorMsg, finishActivity);
 		}
 
 	}

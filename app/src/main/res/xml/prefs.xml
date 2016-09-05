@@ -103,7 +103,7 @@
             android:title="@string/prefBackgroudDataConnect" />
         
         <CheckBoxPreference
-        	android:defaultValue="true"
+        	android:defaultValue="@string/MENU_ALLOW_LOGOUT_DEFAULT_VALUE"
 	        android:key="prefLogoutEnabled"
 	        android:title="@string/prefLogoutEnabled" />
         

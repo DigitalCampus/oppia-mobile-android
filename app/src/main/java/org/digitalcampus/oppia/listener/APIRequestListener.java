@@ -19,6 +19,6 @@ package org.digitalcampus.oppia.listener;
 
 import org.digitalcampus.oppia.task.Payload;
 
-public interface APIRequestListener {
+public interface APIRequestListener extends APIKeyRequestListener {
 	void apiRequestComplete(Payload response);
 }

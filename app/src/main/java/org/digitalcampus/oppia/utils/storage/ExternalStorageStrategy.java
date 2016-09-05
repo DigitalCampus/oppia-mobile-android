@@ -194,7 +194,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         //We add the fragment so the intent gets launched
         FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
         fragmentTransaction.add(f, GrantStorageAccessFragment.FRAGMENT_TAG);
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     //@Override

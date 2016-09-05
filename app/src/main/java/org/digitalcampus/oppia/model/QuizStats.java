@@ -29,6 +29,7 @@ public class QuizStats {
 
     private int quizId;
     private String digest;
+    private int numAttempts;
     public boolean attempted;
     private float maxScore = -1;
     private float userScore = -1;
@@ -70,6 +71,9 @@ public class QuizStats {
         return passed;
     }
     public void setPassed(boolean passed){ this.passed = passed; }
+
+    public int getNumAttempts() { return numAttempts; }
+    public void setNumAttempts(int numAttempts) { this.numAttempts = numAttempts; }
 
 
 }

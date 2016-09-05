@@ -130,12 +130,16 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
                 }
             }
 
-		} catch (UnsupportedEncodingException | ClientProtocolException e) {
+		} catch(javax.net.ssl.SSLHandshakeException e) {
+            e.printStackTrace();
+            payload.setResult(false);
+            payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
+        } catch (UnsupportedEncodingException | ClientProtocolException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
 			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
+			payload.setResultResponse(ctx.getString(R.string.error_connection_required));
 		} catch (JSONException e) {
 			Mint.logException(e);
 			e.printStackTrace();
