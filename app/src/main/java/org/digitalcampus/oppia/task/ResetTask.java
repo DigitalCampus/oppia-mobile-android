@@ -71,6 +71,7 @@ public class ResetTask extends AsyncTask<Payload, Object, Payload> {
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
+                new JSONObject(response.body().string()); //Added to check that the response is well formed
                 payload.setResult(true);
                 payload.setResultResponse(ctx.getString(R.string.reset_complete));
             }
