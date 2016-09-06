@@ -104,6 +104,8 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					courseTrackerXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[i]);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_installing_course, children[i]));
 					continue;
 				}
 				
@@ -117,10 +119,12 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					File trackerXML = new File(courseTrackerXMLPath);
 					ctxr = new CourseTrackerXMLReader(trackerXML);
 				} catch (InvalidXMLException e) {
+					FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[i]);
 					payload.setResult(false);
-					return payload;
+					payload.setResultResponse(ctx.getString(R.string.error_installing_course, children[i]));
+					continue;
 				}
-				
+
 				Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 				c.setVersionId(cxr.getVersionId());
 				c.setTitles(cxr.getTitles());
