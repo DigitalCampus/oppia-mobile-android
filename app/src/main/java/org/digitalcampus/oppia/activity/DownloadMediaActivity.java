@@ -161,10 +161,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         int itemId = item.getItemId();
         switch(itemId){
-            case R.id.menuSortCourseTitle:  dmla.sortByCourse(); break;
-            case R.id.menuSortMediaTitle: dmla.sortByFilename(); break;
+            case R.id.menuSortCourseTitle:  dmla.sortByCourse(); return true;
+            case R.id.menuSortMediaTitle: dmla.sortByFilename(); return true;
+            case android.R.id.home: onBackPressed(); return true;
+            default: return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
 	private void downloadViaPC(){
