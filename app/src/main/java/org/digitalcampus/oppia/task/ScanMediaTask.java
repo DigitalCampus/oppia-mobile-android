@@ -19,6 +19,8 @@ package org.digitalcampus.oppia.task;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
@@ -70,8 +72,10 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 						for (Object cm: currentMedia){
                             //We have to add it if there is not other object with that filename
 							add = !((Media) cm).getFilename().equals(m.getFilename());
+							if(!add){ ((Media) cm).getCourses().add(course); break; }
 						}
 						if (add){
+							m.getCourses().add(course);
                             if (downloadingMedia!=null && downloadingMedia.contains(m.getDownloadUrl())){
                                 m.setDownloading(true);
                             }
