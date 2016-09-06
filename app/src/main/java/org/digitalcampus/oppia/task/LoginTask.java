@@ -18,15 +18,13 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
 
 import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -46,23 +44,19 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class LoginTask extends AsyncTask<Payload, Object, Payload> {
+public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 
 	public static final String TAG = LoginTask.class.getSimpleName();
 
-	private Context ctx;
-	private SharedPreferences prefs;
 	private SubmitListener mStateListener;
-	
-	public LoginTask(Context c) {
-		this.ctx = c;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-	}
 
-	@Override
+
+    public LoginTask(Context ctx) { super(ctx); }
+    public LoginTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
+
+    @Override
 	protected Payload doInBackground(Payload... params) {
-
-		Payload payload = params[0];
+        Payload payload = params[0];
 		User u = (User) payload.getData().get(0);
 		
 		// firstly try to login locally
@@ -93,7 +87,7 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
-                    .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.LOGIN_PATH))
+                    .url(apiEndpoint.getFullURL(ctx, MobileLearning.LOGIN_PATH))
                     .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
                     .build();
 
@@ -174,4 +168,5 @@ public class LoginTask extends AsyncTask<Payload, Object, Payload> {
             mStateListener = srl;
         }
     }
+
 }
