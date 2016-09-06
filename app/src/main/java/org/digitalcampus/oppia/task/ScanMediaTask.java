@@ -19,6 +19,8 @@ package org.digitalcampus.oppia.task;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
@@ -87,6 +89,14 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 			}
 			
 		}
+
+		//Sort the media list by filename
+		Collections.sort(payload.getResponseData(), new Comparator<Object>() {
+			@Override
+			public int compare(Object o1, Object o2){
+				return ((Media) o1).getFilename().compareTo(((Media) o2).getFilename());
+			}
+		});
 
 		return payload;
 	}
