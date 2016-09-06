@@ -293,9 +293,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         CourseIntallViewAdapter course = findCourse(fileUrl);
         if (course != null){
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            course.setInstalling(false);
-            course.setDownloading(false);
-            dla.notifyDataSetChanged();
+            resetCourseProgress(course, false, false);
         }
     }
 
@@ -305,9 +303,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         if (course != null){
             Toast.makeText(this, this.getString(R.string.install_course_complete, course.getShortname()), Toast.LENGTH_LONG).show();
             course.setInstalled(true);
-            course.setInstalling(false);
-            course.setDownloading(false);
-            dla.notifyDataSetChanged();
+            resetCourseProgress(course, false, false);
         }
     }
 
@@ -320,6 +316,15 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             }
         }
         return null;
+    }
+
+    protected void resetCourseProgress(CourseIntallViewAdapter courseSelected,
+                               boolean downloading, boolean installing ){
+
+        courseSelected.setDownloading(downloading);
+        courseSelected.setInstalling(installing);
+        courseSelected.setProgress(0);
+        dla.notifyDataSetChanged();
     }
 
     private class CourseListListener implements ListInnerBtnOnClickListener {
@@ -340,22 +345,16 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                     mServiceIntent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
                     DownloadActivity.this.startService(mServiceIntent);
 
-                    courseSelected.setDownloading(true);
-                    courseSelected.setInstalling(false);
-                    courseSelected.setProgress(0);
-                    dla.notifyDataSetChanged();
+                    resetCourseProgress(courseSelected, true, false);
                 }
                 else if(courseSelected.isToUpdateSchedule()){
                     Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
                     mServiceIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
                     mServiceIntent.putExtra(CourseIntallerService.SERVICE_SCHEDULEURL, courseSelected.getScheduleURI());
                     mServiceIntent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
-
                     DownloadActivity.this.startService(mServiceIntent);
-                    courseSelected.setDownloading(false);
-                    courseSelected.setInstalling(true);
-                    courseSelected.setProgress(0);
-                    dla.notifyDataSetChanged();
+
+                    resetCourseProgress(courseSelected, false, true);
                 }
             }
             else{
@@ -365,11 +364,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 mServiceIntent.putExtra(CourseIntallerService.SERVICE_URL, courseSelected.getDownloadUrl());
                 DownloadActivity.this.startService(mServiceIntent);
 
-                courseSelected.setDownloading(false);
-                courseSelected.setInstalling(false);
-                courseSelected.setProgress(0);
-
-                dla.notifyDataSetChanged();
+                resetCourseProgress(courseSelected, false, false);
             }
 
         }
