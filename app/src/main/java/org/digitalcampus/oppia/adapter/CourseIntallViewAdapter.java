@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.adapter;
 
+import android.util.Log;
+
 import org.digitalcampus.oppia.model.Course;
 
 public class CourseIntallViewAdapter extends Course {
@@ -50,9 +52,19 @@ public class CourseIntallViewAdapter extends Course {
     public int getProgress() { return progress; }
     public void setProgress(int progress) { this.progress = progress; }
 
-    public String getAuthorUsername() { return authorUsername; }
     public void setAuthorUsername(String authorUsername) { this.authorUsername = authorUsername; }
-
-    public String getAuthorName() { return authorName; }
     public void setAuthorName(String authorName) { this.authorName = authorName; }
+
+    public String getDisplayAuthorName(){
+        if ((authorName == null) && (authorUsername == null)) return null;
+        String displayName = authorName == null ? "" : authorName;
+        if (authorUsername != null){
+            if (authorName != null)
+                displayName += " (@" + authorUsername + ")";
+            else
+                displayName += authorUsername;
+        }
+        Log.d(TAG, "AAAAAAAAAAAAA");
+        return displayName;
+    }
 }
