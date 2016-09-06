@@ -53,6 +53,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener {
@@ -63,6 +64,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     private ArrayList<Media> missingMedia;
 	private DownloadMediaListAdapter dmla;
     private DownloadBroadcastReceiver receiver;
+    Button downloadViaPCBtn;
+    private TextView emptyState;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -85,7 +88,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         ListView listView = (ListView) findViewById(R.id.missing_media_list);
 		listView.setAdapter(dmla);
 		
-		Button downloadViaPCBtn = (Button) this.findViewById(R.id.download_media_via_pc_btn);
+		downloadViaPCBtn = (Button) this.findViewById(R.id.download_media_via_pc_btn);
 		downloadViaPCBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 downloadViaPC();
@@ -95,6 +98,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		Editor e = prefs.edit();
 		e.putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
 		e.commit();
+
+        emptyState = (TextView) findViewById(R.id.empty_state);
 	}
 	
 	@Override
@@ -104,12 +109,19 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             //We already have loaded media (coming from orientationchange)
             dmla.sortByFilename();
             dmla.notifyDataSetChanged();
+            emptyState.setVisibility(View.GONE);
+            downloadViaPCBtn.setVisibility(View.VISIBLE);
+        }else{
+            emptyState.setVisibility(View.VISIBLE);
+            downloadViaPCBtn.setVisibility(View.GONE);
         }
         receiver = new DownloadBroadcastReceiver();
         receiver.setMediaListener(this);
         IntentFilter broadcastFilter = new IntentFilter(DownloadService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         registerReceiver(receiver, broadcastFilter);
+
+        invalidateOptionsMenu();
 	}
 
     @Override
@@ -137,6 +149,10 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         getMenuInflater().inflate(R.menu.missing_media_sortby, menu);
+        MenuItem sortBy = menu.findItem(R.id.sort_by);
+        if(sortBy != null) {
+            sortBy.setVisible(missingMedia.size() != 0);
+        }
         return true;
     }
 
@@ -211,6 +227,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             Toast.makeText(this,  this.getString(R.string.download_complete), Toast.LENGTH_LONG).show();
             missingMedia.remove(mediaFile);
             dmla.notifyDataSetChanged();
+            emptyState.setVisibility((missingMedia.size()==0) ? View.VISIBLE : View.GONE);
+            downloadViaPCBtn.setVisibility((missingMedia.size()==0) ? View.GONE : View.VISIBLE);
+            invalidateOptionsMenu();
         }
     }
 

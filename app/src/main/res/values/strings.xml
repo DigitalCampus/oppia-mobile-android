@@ -24,6 +24,9 @@
     <string name="menu_scorecard">Scorecard</string>
     <string name="menu_search">Search</string>
     <string name="menu_stop_read_aloud">Stop reading</string>
+	<string name="menu_sort_by">Sort by</string>
+	<string name="menu_sort_by_course">Sort by course</string>
+	<string name="menu_sort_by_filename">Sort by filename</string>
     
     <string name="service_tracker">OppiaMobile Tracker Service</string>
     
@@ -309,6 +312,7 @@
     <string name="sequencing.section.message">You must complete the previous activities in this section before this one becomes available to you.</string>
     <string name="sequencing.course.message">You must complete all the previous activities in the course before this one becomes available to you.</string>
     <string name="empty_state_courses">There aren\'t any courses currently available to you on this server.</string>
+	<string name="empty_state_media">Great! You now have all the media content for your courses downloaded onto your device.</string>
     <string name="permissions.title">OppiaMobile needs the following permissions to function properly:</string>
     <string name="permissions.storage.title">read and modify contents of the SD card</string>
     <string name="permissions.storage.description">OppiaMobile needs access to the SD card to be able to store the downloaded media contents for the courses</string>
