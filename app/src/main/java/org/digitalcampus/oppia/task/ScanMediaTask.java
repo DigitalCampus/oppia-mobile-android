@@ -65,6 +65,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 				for(Media m: media){
 					publishProgress(m.getFilename());
 					String filename = Storage.getMediaPath(ctx) + m.getFilename();
+				//	m.getCourses().add(course);
 					File mediaFile = new File(filename);
 					if((!mediaFile.exists()) || ( (downloadingMedia!=null)&&(downloadingMedia.contains(m.getDownloadUrl())) )) {
 						// check media not already in list
@@ -91,12 +92,12 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 		}
 
 		//Sort the media list by filename
-		Collections.sort(payload.getResponseData(), new Comparator<Object>() {
+		/*Collections.sort(payload.getResponseData(), new Comparator<Object>() {
 			@Override
 			public int compare(Object o1, Object o2){
 				return ((Media) o1).getFilename().compareTo(((Media) o2).getFilename());
 			}
-		});
+		});*/
 
 		return payload;
 	}

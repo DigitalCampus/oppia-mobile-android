@@ -64,8 +64,8 @@
     <string name="widget_feedback_submit">Submit</string>
     <string name="widget_feedback_submit_title">Thank you for submitting your feedback.</string>
     
-    <string name="widget_quiz_next">Next</string>
-    <string name="widget_quiz_prev">Prev</string>
+    <string name="widget_quiz_next">Next &gt;&gt;</string>
+    <string name="widget_quiz_prev">&lt;&lt; Prev</string>
     <string name="widget_quiz_getresults">Get Results</string>
     <string name="widget_quiz_noanswergiven">Please give an answer before moving to the next question</string>
     <string name="widget_quiz_progress">Question %1$d of %2$d</string>
@@ -79,7 +79,7 @@
  	<string name="widget_quiz_feedback_feedback_title">Feedback: </string>
  	<string name="widget_quiz_unavailable_section">You must complete all the previous activities in this section before this quiz becomes available to you.</string>
  	<string name="widget_quiz_unavailable_course">You must complete all the previous activities in this course before this quiz becomes available to you.</string>
-    <string name="widget_quiz_unavailable_attempts">You have already attempted this quiz the max number of times allowed</string>
+ 	
  	<string name="widget_resource_open_file">Open \'%1$s\'</string>
  	
  	<string name="course_context_reset">Reset</string>
@@ -217,7 +217,6 @@
 	
 	<string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
 	<string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
-    <string name="error_connection_ssl">Error connecting to server due to SSL problems. Please, ensure that the host in your OppiaMobile server setting is correct, and that your device has the right time/date</string>
 	<string name="error_installing_course">%1$s: failed to install</string>
 	<string name="error_latest_already_installed">%1$s: latest version already installed</string>
 	<string name="error_login">Invalid username/password\nPlease try again</string>
@@ -236,6 +235,7 @@
 	<string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
 	<string name="error_resource_not_found">File: \'%1$s\' not found.</string>
     <string name="error_preloading_accounts">Error preloading accounts from CSV file</string>
+	<string name="error_reset">Username or email not found\nPlease try again</string>
 
     <string name="error_insufficient_storage_available">Insufficient storage available</string>
 	<string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
@@ -283,6 +283,7 @@
 	<string name="submit_stats_btn_text">Send now</string>
 	
 	<string name="media_player_description">Oppia Media Player</string>
+	<string name="media_appears">Appears in: </string>
 	
 	<string name="upgradev49_1">Copying files to new location - this may take several minutes, so please be patient</string>
     <string name="loading_course">Loading course…</string>
@@ -317,7 +318,7 @@
     <string name="permissions.allow_btn_text">Allow permissions</string>
     <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> OppiaMobile > Permissions to grant access to these permissions</string>
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
-    <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
+
 
 </resources>
 

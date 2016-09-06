@@ -6,13 +6,25 @@
     android:padding="5dp" >
 
     <TextView
-        android:id="@+id/media_title"
-        style="@style/NormalTextDark"
+        android:id="@+id/media_courses"
+        style="@style/SmallTextDark"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
         android:layout_toLeftOf="@+id/action_btn" />
+
+    <TextView
+        android:id="@+id/media_title"
+        style="@style/NormalTextDark"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/media_courses"
+        android:layout_gravity="center_vertical"
+        android:layout_toLeftOf="@+id/action_btn"
+        android:singleLine="true"
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/media_path"

@@ -18,13 +18,18 @@
 package org.digitalcampus.oppia.adapter;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +54,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 	}
 
     static class DownloadMediaViewHolder{
+        TextView mediaCourses;
         TextView mediaTitle;
         TextView mediaPath;
         TextView mediaFileSize;
@@ -65,6 +71,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.media_download_row, parent, false);
             viewHolder = new DownloadMediaViewHolder();
+            viewHolder.mediaCourses = (TextView) convertView.findViewById(R.id.media_courses);
             viewHolder.mediaTitle = (TextView) convertView.findViewById(R.id.media_title);
             viewHolder.mediaPath = (TextView) convertView.findViewById(R.id.media_path);
             viewHolder.mediaFileSize = (TextView) convertView.findViewById(R.id.media_file_size);
@@ -78,6 +85,15 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 
         Media m = mediaList.get(position);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String courses = ctx.getString(R.string.media_appears);
+        for(int i = 0; i < m.getCourses().size(); i++){
+            Course c = m.getCourses().get(i);
+            String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            courses += i != 0 ? ", " + title : " " + title;
+        }
+
+        viewHolder.mediaCourses.setText(courses);
         viewHolder.mediaTitle.setText(m.getFilename());
         viewHolder.mediaPath.setText(m.getDownloadUrl());
 		if(m.getFileSize() != 0){
