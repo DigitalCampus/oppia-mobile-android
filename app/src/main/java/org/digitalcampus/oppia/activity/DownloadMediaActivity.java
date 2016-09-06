@@ -29,6 +29,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadMediaListAdapter;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadBroadcastReceiver;
 import org.digitalcampus.oppia.service.DownloadService;
@@ -45,6 +47,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -98,6 +102,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		super.onResume();
         if ((missingMedia != null) && missingMedia.size()>0) {
             //We already have loaded media (coming from orientationchange)
+            dmla.sortByFilename();
             dmla.notifyDataSetChanged();
         }
         receiver = new DownloadBroadcastReceiver();
@@ -127,7 +132,25 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable(TAG, missingMedia);
     }
-	
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        getMenuInflater().inflate(R.menu.missing_media_sortby, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int itemId = item.getItemId();
+        switch(itemId){
+            case R.id.menuSortCourseTitle:  dmla.sortByCourse(); break;
+            case R.id.menuSortMediaTitle: dmla.sortByFilename(); break;
+        }
+        return true;
+    }
+
 	private void downloadViaPC(){
 		String filename = "oppia-media.html";
 		String strData = "<html>";

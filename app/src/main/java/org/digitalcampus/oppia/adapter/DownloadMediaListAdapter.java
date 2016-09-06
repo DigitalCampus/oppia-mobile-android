@@ -18,6 +18,8 @@
 package org.digitalcampus.oppia.adapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
@@ -132,5 +134,32 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 	
     public void setOnClickListener(ListInnerBtnOnClickListener onClickListener) {
         this.onClickListener = onClickListener;
+    }
+
+    public void sortByCourse(){
+        //Sort the media list by filename
+        Collections.sort(this.mediaList, new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2){
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            String titleCourse1 = ((Media) o1).getCourses().get(0).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            String titleCourse2= ((Media) o2).getCourses().get(0).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            return (titleCourse1.compareTo(titleCourse2));
+            }
+        });
+
+        notifyDataSetChanged();
+    }
+
+    public void sortByFilename(){
+        //Sort the media list by filename
+        Collections.sort(this.mediaList, new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2){
+                return ((Media) o1).getFilename().compareTo(((Media) o2).getFilename());
+            }
+        });
+
+        notifyDataSetChanged();
     }
 }

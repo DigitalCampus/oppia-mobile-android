@@ -92,14 +92,6 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 			
 		}
 
-		//Sort the media list by filename
-		Collections.sort(payload.getResponseData(), new Comparator<Object>() {
-			@Override
-			public int compare(Object o1, Object o2){
-				return ((Media) o1).getFilename().compareTo(((Media) o2).getFilename());
-			}
-		});
-
 		return payload;
 	}
 	
