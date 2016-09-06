@@ -167,75 +167,11 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	public void refreshCourseList() {
 		// process the response and display on screen in listview
 		// Create an array of courses, that will be put to our ListActivity
-
-        ArrayList<String> downloadingCourses = CourseIntallerService.getTasksDownloading();
-		
 		try {
-			this.courses.clear();
-			
-			for (int i = 0; i < (json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).length()); i++) {
-				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
-                CourseIntallViewAdapter course = new CourseIntallViewAdapter(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-				
-				ArrayList<Lang> titles = new ArrayList<>();
-				JSONObject jsonTitles = json_obj.getJSONObject("title");
-				Iterator<?> keys = jsonTitles.keys();
-		        while( keys.hasNext() ){
-		            String key = (String) keys.next();
-		            Lang l = new Lang(key,jsonTitles.getString(key));
-					titles.add(l);
-		        }
-                course.setTitles(titles);
-		        
-		        ArrayList<Lang> descriptions = new ArrayList<>();
-		        if (json_obj.has("description") && !json_obj.isNull("description")){
-		        	try {
-						JSONObject jsonDescriptions = json_obj.getJSONObject("description");
-						Iterator<?> dkeys = jsonDescriptions.keys();
-				        while( dkeys.hasNext() ){
-				            String key = (String) dkeys.next();
-				            if (!jsonDescriptions.isNull(key)){
-					            Lang l = new Lang(key,jsonDescriptions.getString(key));
-					            descriptions.add(l);
-				            }
-				        }
-                        course.setDescriptions(descriptions);
-		        	} catch (JSONException jsone){
-		        		//do nothing
-		        	}
-		        }
+            String storage = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+            courses.clear();
+            courses.addAll(CourseIntallViewAdapter.parseCoursesJSON(this, json, storage, showUpdatesOnly));
 
-                course.setShortname(json_obj.getString("shortname"));
-                course.setVersionId(json_obj.getDouble("version"));
-                course.setDownloadUrl(json_obj.getString("url"));
-		        try {
-                    course.setDraft(json_obj.getBoolean("is_draft"));
-		        }catch (JSONException je){
-                    course.setDraft(false);
-		        }
-                if (json_obj.has("author") && !json_obj.isNull("author")){
-                    course.setAuthorName(json_obj.getString("author"));
-                }
-                if (json_obj.has("username")  && !json_obj.isNull("username")){
-                    course.setAuthorUsername(json_obj.getString("username"));
-                }
-
-		        DbHelper db = DbHelper.getInstance(this);
-                course.setInstalled(db.isInstalled(course.getShortname()));
-                course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
-				if (json_obj.has("schedule_uri")){
-                    course.setScheduleVersionID(json_obj.getDouble("schedule"));
-                    course.setScheduleURI(json_obj.getString("schedule_uri"));
-                    course.setToUpdateSchedule(db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
-				}
-
-                if (downloadingCourses!=null && downloadingCourses.contains(course.getDownloadUrl())){
-                    course.setDownloading(true);
-                }
-				if (!this.showUpdatesOnly || course.isToUpdate()){
-					this.courses.add(course);
-				} 
-			}
             dla.notifyDataSetChanged();
             findViewById(R.id.empty_state).setVisibility((courses.size()==0) ? View.VISIBLE : View.GONE);
 
