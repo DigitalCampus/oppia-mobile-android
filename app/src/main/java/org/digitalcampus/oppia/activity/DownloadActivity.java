@@ -213,6 +213,13 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		        }catch (JSONException je){
                     course.setDraft(false);
 		        }
+                if (json_obj.has("author") && !json_obj.isNull("author")){
+                    course.setAuthorName(json_obj.getString("author"));
+                }
+                if (json_obj.has("username")  && !json_obj.isNull("username")){
+                    course.setAuthorUsername(json_obj.getString("username"));
+                }
+
 		        DbHelper db = DbHelper.getInstance(this);
                 course.setInstalled(db.isInstalled(course.getShortname()));
                 course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));

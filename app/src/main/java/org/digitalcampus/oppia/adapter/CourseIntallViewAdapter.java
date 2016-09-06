@@ -32,6 +32,9 @@ public class CourseIntallViewAdapter extends Course {
     private boolean installing;
     private int progress;
 
+    private String authorUsername;
+    private String authorName;
+
     public boolean isDownloading() {
         return downloading;
     }
@@ -46,4 +49,10 @@ public class CourseIntallViewAdapter extends Course {
 
     public int getProgress() { return progress; }
     public void setProgress(int progress) { this.progress = progress; }
+
+    public String getAuthorUsername() { return authorUsername; }
+    public void setAuthorUsername(String authorUsername) { this.authorUsername = authorUsername; }
+
+    public String getAuthorName() { return authorName; }
+    public void setAuthorName(String authorName) { this.authorName = authorName; }
 }
