@@ -86,11 +86,11 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
         Media m = mediaList.get(position);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String courses = ctx.getString(R.string.media_appears);
+        String courses = "";
         for(int i = 0; i < m.getCourses().size(); i++){
             Course c = m.getCourses().get(i);
             String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-            courses += i != 0 ? ", " + title : " " + title;
+            courses += i != 0 ? ", " + title : title;
         }
 
         viewHolder.mediaCourses.setText(courses);
@@ -113,6 +113,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
         if (m.isDownloading()){
             viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_cancel);
             viewHolder.downloadProgress.setVisibility(View.VISIBLE);
+            viewHolder.mediaPath.setVisibility(View.GONE);
             if (m.getProgress()>0){
                 viewHolder.downloadProgress.setIndeterminate(false);
                 viewHolder.downloadProgress.setProgress(m.getProgress());
@@ -124,6 +125,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
         else{
             viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_download);
             viewHolder.downloadProgress.setVisibility(View.GONE);
+            viewHolder.mediaPath.setVisibility(View.VISIBLE);
         }
         return convertView;
 	}

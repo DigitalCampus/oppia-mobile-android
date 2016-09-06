@@ -283,7 +283,6 @@
 	<string name="submit_stats_btn_text">Send now</string>
 	
 	<string name="media_player_description">Oppia Media Player</string>
-	<string name="media_appears">Appears in: </string>
 	
 	<string name="upgradev49_1">Copying files to new location - this may take several minutes, so please be patient</string>
     <string name="loading_course">Loading course…</string>
