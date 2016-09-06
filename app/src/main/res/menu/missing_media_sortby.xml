@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:oppiamobile="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/sort_by"
+        android:icon="@drawable/ic_sort"
+        oppiamobile:showAsAction="ifRoom"
+        android:title="@string/menu_sort_by">
+
+        <menu>
+            <item
+                android:id="@+id/menuSortCourseTitle"
+                android:title="@string/menu_sort_by_course" />
+            <item
+                android:id="@+id/menuSortMediaTitle"
+                android:title="@string/menu_sort_by_filename" />
+        </menu>
+    </item>
+</menu>

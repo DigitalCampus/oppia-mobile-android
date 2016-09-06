@@ -27,9 +27,20 @@
         android:dividerHeight="1dp" />
 
     <TextView
-        android:id="@android:id/empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_control_bar" />
+        android:text="@string/empty_state_media"
+        android:id="@+id/empty_state"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_above="@id/bottom_control_bar"
+        android:drawableTop="@drawable/empty_state_check"
+        android:drawablePadding="@dimen/activity_vertical_margin"
+        android:gravity="center"
+        android:paddingBottom="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:visibility="gone"/>
+
 
 </RelativeLayout>
