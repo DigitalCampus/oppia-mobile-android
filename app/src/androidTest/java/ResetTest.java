@@ -137,7 +137,7 @@ public class ResetTest {
             signal.await();
             System.out.println(response.getResultResponse());
             assertFalse(response.isResult());
-            assertEquals(context.getString(R.string.error_processing_response), response.getResultResponse());
+            assertEquals(context.getString(R.string.error_reset), response.getResultResponse());
 
         }catch (InterruptedException ie) {
             ie.printStackTrace();
