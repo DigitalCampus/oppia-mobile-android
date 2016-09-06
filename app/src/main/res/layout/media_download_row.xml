@@ -15,14 +15,29 @@
         android:layout_toLeftOf="@+id/action_btn" />
 
     <TextView
-        android:id="@+id/media_file_size"
-        style="@style/SmallTextDark"
+        android:id="@+id/media_path"
+        style="@style/SmallTextGrey"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
         android:layout_below="@+id/media_title"
+        android:paddingTop="5dp"
         android:layout_toLeftOf="@+id/action_btn" />
+
+    <TextView
+        android:id="@+id/media_file_size"
+        style="@style/SmallTextDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:gravity="center_horizontal"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@+id/action_btn"  />
 
     <ProgressBar
         android:layout_width="fill_parent"
@@ -46,6 +61,8 @@
         android:src="@drawable/ic_action_download"
         style="?android:attr/borderlessButtonStyle"
         android:scaleType="fitCenter"
-        android:padding="10dp" />
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 
 </RelativeLayout>

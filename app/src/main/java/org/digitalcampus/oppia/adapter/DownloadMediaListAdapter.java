@@ -50,6 +50,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 
     static class DownloadMediaViewHolder{
         TextView mediaTitle;
+        TextView mediaPath;
         TextView mediaFileSize;
         ImageButton downloadBtn;
         ProgressBar downloadProgress;
@@ -65,6 +66,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
             convertView  = inflater.inflate(R.layout.media_download_row, parent, false);
             viewHolder = new DownloadMediaViewHolder();
             viewHolder.mediaTitle = (TextView) convertView.findViewById(R.id.media_title);
+            viewHolder.mediaPath = (TextView) convertView.findViewById(R.id.media_path);
             viewHolder.mediaFileSize = (TextView) convertView.findViewById(R.id.media_file_size);
             viewHolder.downloadBtn = (ImageButton) convertView.findViewById(R.id.action_btn);
             viewHolder.downloadProgress = (ProgressBar) convertView.findViewById(R.id.download_progress);
@@ -77,6 +79,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
         Media m = mediaList.get(position);
 
         viewHolder.mediaTitle.setText(m.getFilename());
+        viewHolder.mediaPath.setText(m.getDownloadUrl());
 		if(m.getFileSize() != 0){
             viewHolder.mediaFileSize.setText(ctx.getString(R.string.media_file_size,m.getFileSize()/(1024*1024)));
 		} else {
