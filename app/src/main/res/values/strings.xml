@@ -27,6 +27,7 @@
     <string name="menu_sort_by">Sort by</string>
     <string name="menu_sort_by_course">Sort by course</string>
     <string name="menu_sort_by_filename">Sort by filename</string>
+    <string name="menu_select_all">Select all</string>
 
     <string name="service_tracker">OppiaMobile Tracker Service</string>
 

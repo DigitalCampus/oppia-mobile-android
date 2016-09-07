@@ -68,6 +68,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     Button downloadViaPCBtn;
     private Button downloadAll;
     private TextView emptyState;
+    private boolean isSortByCourse;
 
     public enum DownloadMode {INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL};
 	
@@ -127,6 +128,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         if ((missingMedia != null) && missingMedia.size()>0) {
             //We already have loaded media (coming from orientationchange)
             dmla.sortByFilename();
+            isSortByCourse = false;
             dmla.notifyDataSetChanged();
             emptyState.setVisibility(View.GONE);
             downloadViaPCBtn.setVisibility(View.VISIBLE);
@@ -168,9 +170,16 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         getMenuInflater().inflate(R.menu.missing_media_sortby, menu);
-        MenuItem sortBy = menu.findItem(R.id.sort_by);
-        if(sortBy != null) {
+        MenuItem selectAll = menu.findItem(R.id.menu_select_all);
+        if(selectAll != null) {
+            selectAll.setVisible(missingMedia.size() != 0);
+        }
+
+        MenuItem sortBy = menu.findItem(R.id.menu_sort_by);
+        if(sortBy != null){
             sortBy.setVisible(missingMedia.size() != 0);
+            sortBy.setTitle(isSortByCourse ? getString(R.string.menu_sort_by_filename)
+                    : getString(R.string.menu_sort_by_course));
         }
         return true;
     }
@@ -180,8 +189,17 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         int itemId = item.getItemId();
         switch(itemId){
-            case R.id.menuSortCourseTitle:  dmla.sortByCourse(); return true;
-            case R.id.menuSortMediaTitle: dmla.sortByFilename(); return true;
+            case R.id.menu_sort_by: {
+                if(isSortByCourse){
+                    dmla.sortByFilename();
+                    isSortByCourse = false;
+                }else{
+                    dmla.sortByCourse();
+                    isSortByCourse = true;
+                }
+                invalidateOptionsMenu();
+                return true;
+            }
             case android.R.id.home: onBackPressed(); return true;
             default: return super.onOptionsItemSelected(item);
         }
