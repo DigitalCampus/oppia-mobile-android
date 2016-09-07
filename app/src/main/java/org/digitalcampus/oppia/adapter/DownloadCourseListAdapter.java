@@ -117,7 +117,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 	    }
         
         String author = c.getDisplayAuthorName();
-        if (author != null){
+        if ((author != null) && !(c.isDownloading() || c.isInstalling())){
             viewHolder.courseAuthor.setVisibility(View.VISIBLE);
             viewHolder.courseAuthor.setText(author);
         }

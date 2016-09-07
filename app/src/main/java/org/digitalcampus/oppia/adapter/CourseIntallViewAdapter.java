@@ -83,9 +83,9 @@ public class CourseIntallViewAdapter extends Course {
 
     public String getDisplayAuthorName() {
         if ((authorName == null) && (authorUsername == null)) return null;
-        String displayName = authorName == null ? "" : authorName;
+        String displayName = authorName == null ? "" : authorName.trim();
         if (authorUsername != null) {
-            if (authorName != null)
+            if ( (authorName != null) && (authorName.trim().length() > 0))
                 displayName += " (@" + authorUsername + ")";
             else
                 displayName += authorUsername;
