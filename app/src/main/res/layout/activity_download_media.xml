@@ -43,18 +43,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".6"
-            android:gravity="center_vertical"
-            android:textSize="16sp"
-            android:textColor="@color/highlight_light"/>
+            android:gravity="center_vertical|left"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:textColor="@color/highlight_light"
+            />
 
         <TextView
             android:id="@+id/unselect_all"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".4"
-            android:gravity="center_vertical|center"
-            android:textSize="16sp"
-            android:textColor="@color/background_light"/>
+            android:gravity="center_vertical|right"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:textColor="@color/background_light"
+            />
     </LinearLayout>
 
     <TextView

@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
-    android:background="?android:attr/activatedBackgroundIndicator"
+    android:background="@drawable/background_change_selected"
     android:padding="5dp" >
 
     <TextView

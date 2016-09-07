@@ -29,8 +29,9 @@
         <item name="actionBarTabStyle">@style/ActionBarTabStyle.Om</item>
         <item name="android:windowActionBar">true</item>
         <item name="windowActionBar">true</item>
-
+        <item name="actionModeStyle">@style/Oppia.CAB.ActionMode</item>
         <item name="colorPrimary">@color/highlight_light</item>
+
         <item name="colorPrimaryDark">@color/highlight_shadow</item>
         <item name="colorAccent">@color/highlight_secondary</item>
         <item name="alertDialogTheme">@style/Oppia.AlertDialogStyle</item>
@@ -74,6 +75,10 @@
         <item name="android:textColor">@color/text_dark</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Oppia.CAB.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/highlight_shadow</item>
     </style>
 
     <style name="PopupMenu.Om" parent="android:Widget.ListPopupWindow">

@@ -32,6 +32,7 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_om</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Om</item>
         <item name="android:windowBackground">@color/background_light</item>
+        <item name="actionModeStyle">@style/Oppia.CAB.ActionMode</item>
         <item name="android:windowActionBar">true</item>
         <item name="windowActionBar">true</item>
         <item name="actionBarTheme">@style/Oppia.Theme.ActionBarTheme</item>
@@ -86,5 +87,8 @@
         <item name="android:maxLines">2</item>
     </style>
 
+    <style name="Oppia.CAB.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/highlight_shadow</item>
+    </style>
 
 </resources>

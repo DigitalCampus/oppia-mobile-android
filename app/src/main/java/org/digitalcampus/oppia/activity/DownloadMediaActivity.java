@@ -351,6 +351,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            mediaList.setItemChecked(missingMedia.indexOf(mediaFile), false);
             mediaFile.setDownloading(false);
             mediaFile.setProgress(0);
             dmla.notifyDataSetChanged();
@@ -362,6 +363,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
             Toast.makeText(this,  this.getString(R.string.download_complete), Toast.LENGTH_LONG).show();
+            mediaList.setItemChecked(missingMedia.indexOf(mediaFile), false);
             missingMedia.remove(mediaFile);
             dmla.notifyDataSetChanged();
             emptyState.setVisibility((missingMedia.size()==0) ? View.VISIBLE : View.GONE);
