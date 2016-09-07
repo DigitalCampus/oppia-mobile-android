@@ -73,7 +73,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 	private DownloadMediaListAdapter dmla;
     private DownloadBroadcastReceiver receiver;
     Button downloadViaPCBtn;
-    private Button downloadAll;
     private TextView emptyState;
     private boolean isSortByCourse;
     private TextView downloadSelected;
@@ -118,12 +117,19 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 }else{
                     mediaSelected.remove(missingMedia.get(position));
                 }
+
+                int count = mediaSelected.size();
+                mode.setSubtitle(count == 1 ? count + " item selected" : count + " items selected");
+
+
             }
 
             @Override
             public boolean onCreateActionMode(final ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.missing_media_sortby, menu);
+
+                onPrepareOptionsMenu(menu);
+
+                mode.setTitle("Download Media");
 
                 if (missingMediaContainer.getVisibility() != View.VISIBLE){
                     missingMediaContainer.setVisibility(View.VISIBLE);
@@ -157,17 +163,36 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
 
             @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {return false; }
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                return false;
+                switch(item.getItemId()){
+                    case R.id.menu_sort_by: {
+                        if(isSortByCourse){
+                            dmla.sortByFilename();
+                            isSortByCourse = false;
+                            item.setTitle(getString(R.string.menu_sort_by_course));
+                        }else{
+                            dmla.sortByCourse();
+                            isSortByCourse = true;
+                            item.setTitle(getString(R.string.menu_sort_by_filename));
+                        }
+                        invalidateOptionsMenu();
+                        return true;
+                    }
+                    case R.id.menu_select_all:
+                        for(int i= 0; i < mediaList.getAdapter().getCount(); i++){
+                            mediaList.setItemChecked(i, true);
+                        }
+                        return true;
+                    default: return true;
+                }
             }
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
+                mediaSelected.clear();
                 hideDownloadMediaMessage();
             }
         });
@@ -175,20 +200,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         missingMediaContainer = this.findViewById(R.id.home_messages);
         downloadSelected = (TextView) this.findViewById(R.id.download_selected);
         unselectAll = (TextView) this.findViewById(R.id.unselect_all);
-
-        downloadAll = (Button) this.findViewById(R.id.download_all);
-        downloadAll.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DownloadMode mode = downloadAll.getText().equals("Download All") ? DownloadMode.DOWNLOAD_ALL : DownloadMode.STOP_ALL;
-                downloadAll.setText(downloadAll.getText().equals("Download All") ? "Stop All" : "Download All");
-                for(int i = 0; i < missingMedia.size(); i++){
-
-                    Media mediaToDownload = missingMedia.get(i);
-                    downloadMedia(mediaToDownload, mode);
-                }
-            }
-        });
 
 		
 		downloadViaPCBtn = (Button) this.findViewById(R.id.download_media_via_pc_btn);
@@ -283,6 +294,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 invalidateOptionsMenu();
                 return true;
             }
+            case R.id.menu_select_all:
+                for(int i= 0; i < mediaList.getAdapter().getCount(); i++){
+                    mediaList.setItemChecked(i, true);
+                }
+                return true;
             case android.R.id.home: onBackPressed(); return true;
             default: return super.onOptionsItemSelected(item);
         }

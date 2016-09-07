@@ -12,13 +12,6 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/download_all"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:text="Download All" />
-
-        <Button
             android:id="@+id/download_media_via_pc_btn"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
