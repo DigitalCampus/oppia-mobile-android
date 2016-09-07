@@ -71,6 +71,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
         TextView courseDescription;
         ImageButton actionBtn;
         ProgressBar actionProgress;
+        TextView courseAuthor;
     }
 
 	@Override
@@ -87,6 +88,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             viewHolder.courseDescription = (TextView) convertView.findViewById(R.id.course_description);
             viewHolder.actionBtn = (ImageButton) convertView.findViewById(R.id.download_course_btn);
             viewHolder.actionProgress = (ProgressBar) convertView.findViewById(R.id.download_progress);
+            viewHolder.courseAuthor = (TextView) convertView.findViewById(R.id.course_author);
             convertView.setTag(viewHolder);
         }
         else{
@@ -100,6 +102,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
                 Locale.getDefault().getLanguage())));
 
 	    if (c.isDraft()){
+            viewHolder.courseDraft.setVisibility(View.VISIBLE);
             viewHolder.courseDraft.setText(ctx.getString(R.string.course_draft));
 	    } else {
             viewHolder.courseDraft.setVisibility(View.GONE);
@@ -107,10 +110,20 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 
 	    String desc = c.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 	    if (desc != null){
+            viewHolder.courseDescription.setVisibility(View.VISIBLE);
             viewHolder.courseDescription.setText(desc);
 	    } else {
             viewHolder.courseDescription.setVisibility(View.GONE);
 	    }
+        
+        String author = c.getDisplayAuthorName();
+        if ((author != null) && !(c.isDownloading() || c.isInstalling())){
+            viewHolder.courseAuthor.setVisibility(View.VISIBLE);
+            viewHolder.courseAuthor.setText(author);
+        }
+        else{
+            viewHolder.courseAuthor.setVisibility(View.GONE);
+        }
 
         if (c.isDownloading() || c.isInstalling()){
             viewHolder.actionBtn.setImageResource(R.drawable.ic_action_cancel);
