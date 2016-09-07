@@ -37,6 +37,7 @@ import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
+import com.androidplot.pie.PieRenderer;
 import com.splunk.mint.Mint;
 
 import android.content.Intent;
@@ -65,7 +66,10 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 	private DownloadMediaListAdapter dmla;
     private DownloadBroadcastReceiver receiver;
     Button downloadViaPCBtn;
+    private Button downloadAll;
     private TextView emptyState;
+
+    public enum DownloadMode {INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL};
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -87,6 +91,21 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         ListView listView = (ListView) findViewById(R.id.missing_media_list);
 		listView.setAdapter(dmla);
+
+        downloadAll = (Button) this.findViewById(R.id.download_all);
+        downloadAll.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DownloadMode mode = downloadAll.getText().equals("Download All") ? DownloadMode.DOWNLOAD_ALL : DownloadMode.STOP_ALL;
+                downloadAll.setText(downloadAll.getText().equals("Download All") ? "Stop All" : "Download All");
+                for(int i = 0; i < missingMedia.size(); i++){
+
+                    Media mediaToDownload = missingMedia.get(i);
+                    downloadMedia(mediaToDownload, mode);
+                }
+            }
+        });
+
 		
 		downloadViaPCBtn = (Button) this.findViewById(R.id.download_media_via_pc_btn);
 		downloadViaPCBtn.setOnClickListener(new OnClickListener() {
@@ -245,44 +264,64 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         return null;
     }
 
+    private void downloadMedia(Media mediaToDownload, DownloadMode mode){
+        if(!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)){
+            UIUtils.showAlert(DownloadMediaActivity.this, R.string.warning, R.string.warning_wifi_required);
+            return;
+        }
+
+        if(!mediaToDownload.isDownloading()){
+            if(mode.equals(DownloadMode.DOWNLOAD_ALL) ||
+                    mode.equals(DownloadMode.INDIVIDUALLY)) {
+                startDownload(mediaToDownload);
+            }
+        }else{
+            if(mode.equals(DownloadMode.STOP_ALL) ||
+                mode.equals(DownloadMode.INDIVIDUALLY)) {
+                 stopDownload(mediaToDownload);
+            }
+        }
+
+
+    }
+
+    private void startDownload(Media mediaToDownload){
+        Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
+        mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_DOWNLOAD);
+        mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
+        mServiceIntent.putExtra(DownloadService.SERVICE_DIGEST, mediaToDownload.getDigest());
+        mServiceIntent.putExtra(DownloadService.SERVICE_FILENAME, mediaToDownload.getFilename());
+        DownloadMediaActivity.this.startService(mServiceIntent);
+
+        mediaToDownload.setDownloading(true);
+        mediaToDownload.setProgress(0);
+        dmla.notifyDataSetChanged();
+    }
+    private void stopDownload(Media mediaToDownload){
+        Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
+        mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_CANCEL);
+        mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
+        DownloadMediaActivity.this.startService(mServiceIntent);
+
+        mediaToDownload.setDownloading(false);
+        mediaToDownload.setProgress(0);
+        dmla.notifyDataSetChanged();
+    }
     private class DownloadMediaListener implements ListInnerBtnOnClickListener {
     	
     	public final String TAG = DownloadMediaListener.class.getSimpleName();
     	
         //@Override
         public void onClick(int position) {
-        	
-            if(!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)){
-                UIUtils.showAlert(DownloadMediaActivity.this, R.string.warning, R.string.warning_wifi_required);
-                return;
-            }
+
             Log.d(TAG, "Clicked " + position);
             Media mediaToDownload = missingMedia.get(position);
 
-            if (!mediaToDownload.isDownloading()){
-                Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
-                mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_DOWNLOAD);
-                mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
-                mServiceIntent.putExtra(DownloadService.SERVICE_DIGEST, mediaToDownload.getDigest());
-                mServiceIntent.putExtra(DownloadService.SERVICE_FILENAME, mediaToDownload.getFilename());
-                DownloadMediaActivity.this.startService(mServiceIntent);
-
-                mediaToDownload.setDownloading(true);
-                mediaToDownload.setProgress(0);
-                dmla.notifyDataSetChanged();
-            }
-            else{
-                Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
-                mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_CANCEL);
-                mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
-                DownloadMediaActivity.this.startService(mServiceIntent);
-
-                mediaToDownload.setDownloading(false);
-                mediaToDownload.setProgress(0);
-                dmla.notifyDataSetChanged();
-            }
+        	downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
 
         }
+
+
     }
 
 }
