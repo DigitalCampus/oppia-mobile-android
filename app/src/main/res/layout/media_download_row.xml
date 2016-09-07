@@ -3,6 +3,8 @@
     android:id="@+id/media_row"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:background="?android:attr/activatedBackgroundIndicator"
     android:padding="5dp" >
 
     <TextView

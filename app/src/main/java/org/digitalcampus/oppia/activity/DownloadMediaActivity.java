@@ -40,6 +40,7 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import com.androidplot.pie.PieRenderer;
 import com.splunk.mint.Mint;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -48,11 +49,17 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +76,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     private Button downloadAll;
     private TextView emptyState;
     private boolean isSortByCourse;
+    private TextView downloadSelected;
+    private TextView unselectAll;
+    private View missingMediaContainer;
+    private ListView mediaList;
+    private ArrayList<Media> mediaSelected;
 
     public enum DownloadMode {INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL};
 	
@@ -84,14 +96,85 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 			missingMedia = (ArrayList<Media>) bundle.getSerializable(DownloadMediaActivity.TAG);
 		}
         else{
-            missingMedia = new ArrayList<Media>();
+            missingMedia = new ArrayList<>();
         }
+
+        mediaSelected = new ArrayList<>();
 
 		dmla = new DownloadMediaListAdapter(this, missingMedia);
         dmla.setOnClickListener(new DownloadMediaListener());
 
-        ListView listView = (ListView) findViewById(R.id.missing_media_list);
-		listView.setAdapter(dmla);
+        mediaList = (ListView) findViewById(R.id.missing_media_list);
+		mediaList.setAdapter(dmla);
+
+        mediaList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+        mediaList.setMultiChoiceModeListener(new ListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                Log.v(TAG, "Count: " + mediaList.getCheckedItemCount());
+                if(checked){
+                    mediaSelected.add(missingMedia.get(position));
+                }else{
+                    mediaSelected.remove(missingMedia.get(position));
+                }
+            }
+
+            @Override
+            public boolean onCreateActionMode(final ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.missing_media_sortby, menu);
+
+                if (missingMediaContainer.getVisibility() != View.VISIBLE){
+                    missingMediaContainer.setVisibility(View.VISIBLE);
+                    downloadSelected.setOnClickListener(new OnClickListener() {
+
+                        public void onClick(View v) {
+                            DownloadMode mode = downloadSelected.getText()
+                                    .equals(getString(R.string.missing_media_download_selected)) ? DownloadMode.DOWNLOAD_ALL
+                                                                                                 : DownloadMode.STOP_ALL;
+                            downloadSelected.setText(downloadSelected.getText()
+                                    .equals(getString(R.string.missing_media_download_selected)) ? getString(R.string.missing_media_stop_selected)
+                                                                                                 : getString(R.string.missing_media_download_selected));
+
+                            for(Media m : mediaSelected){
+                                downloadMedia(m, mode);
+                            }
+                        }
+                    });
+                    unselectAll.setOnClickListener(new OnClickListener() {
+
+                        public void onClick(View view) {
+                            mode.finish();
+                        }
+                    });
+                    showDownloadMediaMessage();
+                }
+
+                downloadSelected.setText(getString(R.string.missing_media_download_selected));
+                unselectAll.setText(getString(R.string.missing_media_unselect_all));
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                hideDownloadMediaMessage();
+            }
+        });
+
+        missingMediaContainer = this.findViewById(R.id.home_messages);
+        downloadSelected = (TextView) this.findViewById(R.id.download_selected);
+        unselectAll = (TextView) this.findViewById(R.id.unselect_all);
 
         downloadAll = (Button) this.findViewById(R.id.download_all);
         downloadAll.setOnClickListener(new OnClickListener() {
@@ -325,6 +408,49 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         mediaToDownload.setProgress(0);
         dmla.notifyDataSetChanged();
     }
+
+    private void showDownloadMediaMessage(){
+        TranslateAnimation anim = new TranslateAnimation(0, 0, -200, 0);
+        anim.setDuration(900);
+        missingMediaContainer.startAnimation(anim);
+
+        missingMediaContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ValueAnimator animator = ValueAnimator.ofInt(0, missingMediaContainer.getMeasuredHeight());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            //@Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                mediaList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
+                mediaList.setSelectionAfterHeaderView();
+            }
+        });
+        animator.setStartDelay(200);
+        animator.setDuration(700);
+        animator.start();
+    }
+
+    private void hideDownloadMediaMessage(){
+
+        TranslateAnimation anim = new TranslateAnimation(0, 0, 0, -200);
+        anim.setDuration(900);
+        missingMediaContainer.startAnimation(anim);
+
+        missingMediaContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ValueAnimator animator = ValueAnimator.ofInt(missingMediaContainer.getMeasuredHeight(), 0);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            //@Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                mediaList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
+                mediaList.setSelectionAfterHeaderView();
+            }
+        });
+        animator.setStartDelay(0);
+        animator.setDuration(700);
+        animator.start();
+
+
+        missingMediaContainer.setVisibility(View.GONE);
+    }
+
     private class DownloadMediaListener implements ListInnerBtnOnClickListener {
     	
     	public final String TAG = DownloadMediaListener.class.getSimpleName();

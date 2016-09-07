@@ -32,7 +32,37 @@
         android:layout_height="fill_parent"
         android:layout_above="@id/bottom_control_bar"
         android:divider="@color/list_divider_light"
+        android:listSelector="@drawable/background_change_selected"
         android:dividerHeight="1dp" />
+
+    <LinearLayout
+        android:id="@+id/home_messages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ab_stacked_solid_om"
+        android:orientation="horizontal"
+        android:padding="17dp"
+        android:weightSum="1.0"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/download_selected"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:textColor="@color/highlight_light"/>
+
+        <TextView
+            android:id="@+id/unselect_all"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:gravity="center_vertical|center"
+            android:textSize="16sp"
+            android:textColor="@color/background_light"/>
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
