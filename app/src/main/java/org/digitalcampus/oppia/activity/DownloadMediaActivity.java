@@ -121,6 +121,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 int count = mediaSelected.size();
                 mode.setSubtitle(count == 1 ? count + " item selected" : count + " items selected");
 
+                for(Media m: mediaSelected){
+                    if(!m.isDownloading()){
+                        downloadSelected.setText(getString(R.string.missing_media_download_selected));
+                        break;
+                    }
+                }
 
             }
 
@@ -159,7 +165,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                     showDownloadMediaMessage();
                 }
 
-                downloadSelected.setText(getString(R.string.missing_media_download_selected));
+
+                downloadSelected.setText(getString(R.string.missing_media_stop_selected));
                 unselectAll.setText(getString(R.string.missing_media_unselect_all));
                 return true;
             }
@@ -421,6 +428,14 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         mediaToDownload.setDownloading(true);
         mediaToDownload.setProgress(0);
         dmla.notifyDataSetChanged();
+
+        downloadSelected.setText(getString(R.string.missing_media_download_selected));
+        for(Media m: mediaSelected){
+            if(m.isDownloading()){
+                downloadSelected.setText(getString(R.string.missing_media_stop_selected));
+                break;
+            }
+        }
     }
     private void stopDownload(Media mediaToDownload){
         Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
@@ -431,6 +446,13 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         mediaToDownload.setDownloading(false);
         mediaToDownload.setProgress(0);
         dmla.notifyDataSetChanged();
+
+        for(Media m: mediaSelected){
+            if(!m.isDownloading()){
+                downloadSelected.setText(getString(R.string.missing_media_download_selected));
+                break;
+            }
+        }
     }
 
     private void showDownloadMediaMessage(){
