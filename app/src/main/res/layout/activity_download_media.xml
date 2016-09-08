@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".6"
             android:gravity="center_vertical|left"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textAllCaps="true"
             android:textColor="@color/highlight_light"
             />
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".4"
             android:gravity="center_vertical|right"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textAllCaps="true"
             android:textColor="@color/background_light"
             />
