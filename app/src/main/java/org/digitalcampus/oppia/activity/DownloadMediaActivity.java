@@ -49,6 +49,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -364,7 +365,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            mediaList.setItemChecked(missingMedia.indexOf(mediaFile), false);
+
+            SparseBooleanArray itemsChecked = mediaList.getCheckedItemPositions();
+            itemsChecked .delete(itemsChecked .keyAt(missingMedia.indexOf(mediaFile)));
             mediaFile.setDownloading(false);
             mediaFile.setProgress(0);
             dmla.notifyDataSetChanged();
@@ -376,7 +379,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
             Toast.makeText(this,  this.getString(R.string.download_complete), Toast.LENGTH_LONG).show();
-            mediaList.setItemChecked(missingMedia.indexOf(mediaFile), false);
+
+            SparseBooleanArray itemsChecked = mediaList.getCheckedItemPositions();
+            itemsChecked .delete(itemsChecked .keyAt(missingMedia.indexOf(mediaFile)));
             missingMedia.remove(mediaFile);
             dmla.notifyDataSetChanged();
             emptyState.setVisibility((missingMedia.size()==0) ? View.VISIBLE : View.GONE);
