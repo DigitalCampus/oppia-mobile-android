@@ -110,13 +110,14 @@ dependencies {
     }
 }
 
-task grantPermissions(dependsOn: 'installDebug') {
+task grantPermissions << {
     def adb = android.getAdbExe().toString()
 
     println "Granting permissions on device"
     "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.READ_PHONE_STATE".execute()
     "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.READ_EXTERNAL_STORAGE".execute()
     "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.WRITE_EXTERNAL_STORAGE".execute()
+
 }
 
 afterEvaluate {
@@ -126,5 +127,3 @@ afterEvaluate {
         }
     }
 }
-
-
