@@ -88,7 +88,7 @@
     </style>
 
     <style name="Oppia.CAB.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-        <item name="background">@color/highlight_shadow</item>
+        <item name="background">@drawable/actionbar_background_gradient</item>
     </style>
 
 </resources>
