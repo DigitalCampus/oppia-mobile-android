@@ -185,7 +185,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                     }
                     case R.id.menu_select_all:
                         for(int i= 0; i < mediaList.getAdapter().getCount(); i++){
-                            mediaList.setItemChecked(i, true);
+                            if(!mediaList.isItemChecked(i)) {
+                                mediaList.setItemChecked(i, true);
+                            }
                         }
                         return true;
                     default: return true;
@@ -298,7 +300,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
             case R.id.menu_select_all:
                 for(int i= 0; i < mediaList.getAdapter().getCount(); i++){
-                    mediaList.setItemChecked(i, true);
+                    if(!mediaList.isItemChecked(i)) {
+                        mediaList.setItemChecked(i, true);
+                    }
                 }
                 return true;
             case android.R.id.home: onBackPressed(); return true;
