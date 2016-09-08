@@ -136,7 +136,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                     downloadSelected.setOnClickListener(new OnClickListener() {
 
                         public void onClick(View v) {
-                            DownloadMode mode = downloadSelected.getText()
+                            DownloadMode downloadMode = downloadSelected.getText()
                                     .equals(getString(R.string.missing_media_download_selected)) ? DownloadMode.DOWNLOAD_ALL
                                                                                                  : DownloadMode.STOP_ALL;
                             downloadSelected.setText(downloadSelected.getText()
@@ -144,8 +144,10 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                                                                                                  : getString(R.string.missing_media_download_selected));
 
                             for(Media m : mediaSelected){
-                                downloadMedia(m, mode);
+                                downloadMedia(m, downloadMode);
                             }
+
+                            mode.finish();
                         }
                     });
                     unselectAll.setOnClickListener(new OnClickListener() {
