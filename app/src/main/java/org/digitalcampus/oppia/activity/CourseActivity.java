@@ -246,7 +246,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     private void loadActivities(){
         String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        String actionBarTitle = section.getTitle(currentLang);
+        String actionBarTitle = section.getMultiLangInfo().getTitle(currentLang);
         if (actionBarTitle != null) {
             setTitle(actionBarTitle);
         } else if (isBaseline) {
@@ -283,7 +283,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 UrlWidget f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
                 fragments.add(f);
             }
-            titles.add(activity.getTitle(currentLang));
+            titles.add(activity.getMultiLangInfo().getTitle(currentLang));
         }
 
         apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
@@ -300,7 +300,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         //Tab creation
         for (int i=0; i<activities.size(); i++){
             Activity activity = activities.get(i);
-            String title = activity.getTitle(currentLang);
+            String title = activity.getMultiLangInfo().getTitle(currentLang);
             //actionBar.addTab(
             //        actionBar.newTab().setText(title).setTabListener(this),
             //        (currentActivityNo == i) //Set the current active activity as active tab
@@ -310,7 +310,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, course.getMultiLangInfo().getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() throws Exception {
                 CourseActivity.this.loadActivities();
                 return true;

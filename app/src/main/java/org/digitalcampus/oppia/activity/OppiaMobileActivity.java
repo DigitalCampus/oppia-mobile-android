@@ -305,7 +305,7 @@ public class OppiaMobileActivity
         Intent i = new Intent(OppiaMobileActivity.this, PrefsActivity.class);
         Bundle tb = new Bundle();
         ArrayList<Lang> langs = new ArrayList<>();
-        for(Course m: courses){ langs.addAll(m.getLangs()); }
+        for(Course m: courses){ langs.addAll(m.getMultiLangInfo().getLangs()); }
         tb.putSerializable("langs", langs);
         i.putExtras(tb);
         startActivity(i);
@@ -330,7 +330,7 @@ public class OppiaMobileActivity
     }
 	private void createLanguageDialog() {
 		ArrayList<Lang> langs = new ArrayList<>();
-		for(Course m: courses){ langs.addAll(m.getLangs()); }
+		for(Course m: courses){ langs.addAll(m.getMultiLangInfo().getLangs()); }
 
         UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
             public Boolean call() throws Exception {

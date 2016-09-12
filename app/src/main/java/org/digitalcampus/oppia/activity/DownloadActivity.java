@@ -185,7 +185,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		            Lang l = new Lang(key,jsonTitles.getString(key));
 					titles.add(l);
 		        }
-                course.setTitles(titles);
+                course.getMultiLangInfo().setTitles(titles);
 		        
 		        ArrayList<Lang> descriptions = new ArrayList<>();
 		        if (json_obj.has("description") && !json_obj.isNull("description")){
@@ -199,7 +199,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 					            descriptions.add(l);
 				            }
 				        }
-                        course.setDescriptions(descriptions);
+                        course.getMultiLangInfo().setDescriptions(descriptions);
 		        	} catch (JSONException jsone){
 		        		//do nothing
 		        	}

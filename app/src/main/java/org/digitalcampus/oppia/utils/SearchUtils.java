@@ -49,7 +49,7 @@ public class SearchUtils {
 
         db.beginTransaction();
         for( Activity a : activities) {
-            ArrayList<Lang> langs = course.getLangs();
+            ArrayList<Lang> langs = course.getMultiLangInfo().getLangs();
             String fileContent = "";
             for (Lang l : langs) {
                 if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")) {
@@ -63,9 +63,9 @@ public class SearchUtils {
             }
 
             if (!fileContent.equals("")) {
-                db.insertActivityIntoSearchTable(course.getTitleJSONString(),
-                        cxr.getSection(a.getSectionId()).getTitleJSONString(),
-                        a.getTitleJSONString(),
+                db.insertActivityIntoSearchTable(course.getMultiLangInfo().getTitleJSONString(),
+                        cxr.getSection(a.getSectionId()).getMultiLangInfo().getTitleJSONString(),
+                        a.getMultiLangInfo().getTitleJSONString(),
                         db.getActivityByDigest(a.getDigest()).getDbId(),
                         fileContent);
             }
@@ -101,7 +101,7 @@ public class SearchUtils {
 			db.deleteSearchIndex();
 			ArrayList<Course> courses  = db.getAllCourses();
 			for (Course c : courses){
-				Log.d(TAG,"indexing: "+ c.getTitle("en"));
+				Log.d(TAG,"indexing: "+ c.getMultiLangInfo().getTitle("en"));
 				SearchUtils.indexAddCourse(ctx,c);
 			}
 			

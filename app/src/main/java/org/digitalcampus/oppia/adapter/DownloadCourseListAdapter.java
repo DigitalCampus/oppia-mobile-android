@@ -95,7 +95,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 
         CourseIntallViewAdapter c = courseList.get(position);
 
-        viewHolder.courseTitle.setText(c.getTitle(
+        viewHolder.courseTitle.setText(c.getMultiLangInfo().getTitle(
                 prefs.getString(PrefsActivity.PREF_LANGUAGE,
                 Locale.getDefault().getLanguage())));
 
@@ -105,7 +105,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             viewHolder.courseDraft.setVisibility(View.GONE);
 	    }
 
-	    String desc = c.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    String desc = c.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 	    if (desc != null){
             viewHolder.courseDescription.setText(desc);
 	    } else {

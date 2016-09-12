@@ -228,7 +228,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     public void endElement(String aUri, String aLocalName, String aQName) throws SAXException {
 
         if (NODE_SECTION.equals(aQName)){
-            currentSection.setTitles(sectTitles);
+            currentSection.getMultiLangInfo().setTitles(sectTitles);
             sections.add(currentSection);
             parentElements.pop();
         }
@@ -293,8 +293,8 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         }
         else if (NODE_ACTIVITY.equals(aQName)){
 
-            currentActivity.setTitles(actTitles);
-            currentActivity.setDescriptions(actDescriptions);
+            currentActivity.getMultiLangInfo().setTitles(actTitles);
+            currentActivity.getMultiLangInfo().setDescriptions(actDescriptions);
             currentActivity.setLocations(actLocations);
             currentActivity.setContents(actContents);
             currentActivity.setMedia(actMedia);

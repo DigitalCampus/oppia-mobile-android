@@ -213,11 +213,11 @@ public class CourseIntallerService extends IntentService {
 
         Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
         c.setVersionId(cxr.getVersionId());
-        c.setTitles(cxr.getTitles());
+        c.getMultiLangInfo().setTitles(cxr.getTitles());
         c.setShortname(courseDirs[0]);
         c.setImageFile(cxr.getCourseImage());
-        c.setLangs(cxr.getLangs());
-        c.setDescriptions(cxr.getDescriptions());
+        c.getMultiLangInfo().setLangs(cxr.getLangs());
+        c.getMultiLangInfo().setDescriptions(cxr.getDescriptions());
         c.setPriority(cxr.getPriority());
         String sequencingMode = cxr.getCourseSequencingMode();
         if ((sequencingMode!=null) && (sequencingMode.equals(Course.SEQUENCING_MODE_COURSE) ||
@@ -225,7 +225,7 @@ public class CourseIntallerService extends IntentService {
             c.setSequencingMode(sequencingMode);
         }
 
-        String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
         sendBroadcast(fileUrl, ACTION_INSTALL, ""+20);
 

@@ -62,7 +62,7 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		
 		TextView scheduleTitle = (TextView) rowView.findViewById(R.id.schedule_title);
-		scheduleTitle.setText(course.getTitle(lang) + ": " + a.getTitle(lang));
+		scheduleTitle.setText(course.getMultiLangInfo().getTitle(lang) + ": " + a.getMultiLangInfo().getTitle(lang));
 		rowView.setTag(R.id.TAG_COURSE,course);
 		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,a.getDigest());
 		

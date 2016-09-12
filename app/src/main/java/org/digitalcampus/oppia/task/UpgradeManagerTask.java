@@ -182,10 +182,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 
                 Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
                 c.setVersionId(cxr.getVersionId());
-                c.setTitles(cxr.getTitles());
+                c.getMultiLangInfo().setTitles(cxr.getTitles());
                 c.setShortname(course);
                 c.setImageFile(course + File.separator + cxr.getCourseImage());
-                c.setLangs(cxr.getLangs());
+                c.getMultiLangInfo().setLangs(cxr.getLangs());
                 c.setPriority(cxr.getPriority());
 
                 DbHelper db = DbHelper.getInstance(ctx);
