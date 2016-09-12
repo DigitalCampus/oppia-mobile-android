@@ -16,15 +16,8 @@ public class MultiLangInfo implements Serializable {
     private ArrayList<Lang> descriptions = new ArrayList<>();
 
     public String getTitle(String lang) {
-        for(Lang l: titles){
-            if(l.getLang().equals(lang)){
-                return l.getContent();
-            }
-        }
-        if(titles.size() > 0){
-            return titles.get(0).getContent();
-        }
-        return "No title set";
+        String title = getInfo(lang, titles);
+        return title == null ? "No title set" : title;
     }
 
     public void setTitles(ArrayList<Lang> titles) {
@@ -33,48 +26,16 @@ public class MultiLangInfo implements Serializable {
 
 
     public void setTitlesFromJSONString(String jsonStr) {
-        try {
-            JSONArray titlesArray = new JSONArray(jsonStr);
-            for(int i=0; i<titlesArray.length(); i++){
-                JSONObject titleObj = titlesArray.getJSONObject(i);
-                @SuppressWarnings("unchecked")
-                Iterator<String> iter = titleObj.keys();
-                while(iter.hasNext()){
-                    String key = iter.next();
-                    String title = titleObj.getString(key);
-                    Lang l = new Lang(key,title);
-                    this.titles.add(l);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        setInfoFromJSONString(jsonStr, this.titles, false);
     }
 
     public String getTitleJSONString(){
-        JSONArray array = new JSONArray();
-        for(Lang l: this.titles){
-            JSONObject obj = new JSONObject();
-            try {
-                obj.put(l.getLang(), l.getContent());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            array.put(obj);
-        }
-        return array.toString();
+        return getInfoJSONString(this.titles);
     }
 
     public String getDescription(String lang) {
-        for(Lang l: descriptions){
-            if(l.getLang().equals(lang)){
-                return l.getContent();
-            }
-        }
-        if(descriptions.size() > 0){
-            return descriptions.get(0).getContent();
-        }
-        return null;
+        String description = getInfo(lang, titles);
+        return description == null ? "No description set" : description;
     }
 
     public void setDescriptions(ArrayList<Lang> descriptions) {
@@ -82,27 +43,47 @@ public class MultiLangInfo implements Serializable {
     }
 
     public void setDescriptionsFromJSONString(String jsonStr) {
-        try {
-            JSONArray descriptionsArray = new JSONArray(jsonStr);
-            for(int i=0; i<descriptionsArray.length(); i++){
-                JSONObject descriptionObj = descriptionsArray.getJSONObject(i);
-                @SuppressWarnings("unchecked")
-                Iterator<String> iter = descriptionObj.keys();
-                while(iter.hasNext()){
-                    String key = iter.next();
-                    String description = descriptionObj.getString(key);
-                    Lang l = new Lang(key,description);
-                    this.descriptions.add(l);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        setInfoFromJSONString(jsonStr, this.descriptions, false);
     }
 
     public String getDescriptionJSONString(){
+        return getInfoJSONString(this.descriptions);
+    }
+
+    public ArrayList<Lang> getLangs() {
+        return langs;
+    }
+
+    public String getLangsJSONString(){
+        return getInfoJSONString(this.langs);
+    }
+
+    public void setLangs(ArrayList<Lang> langs) {
+        this.langs = langs;
+    }
+
+    public void setLangsFromJSONString(String jsonStr) {
+        setInfoFromJSONString(jsonStr, this.langs, true);
+    }
+
+
+
+    private String getInfo(String lang, ArrayList<Lang> values){
+        for(Lang l: values){
+            if(l.getLang().equals(lang)){
+                return l.getContent();
+            }
+        }
+        if(titles.size() > 0){
+            return titles.get(0).getContent();
+        }
+
+        return null;
+    }
+
+    private String getInfoJSONString(ArrayList<Lang> values){
         JSONArray array = new JSONArray();
-        for(Lang l: this.descriptions){
+        for(Lang l: values){
             JSONObject obj = new JSONObject();
             try {
                 obj.put(l.getLang(), l.getContent());
@@ -114,40 +95,21 @@ public class MultiLangInfo implements Serializable {
         return array.toString();
     }
 
-    public ArrayList<Lang> getLangs() {
-        return langs;
-    }
-
-    public String getLangsJSONString(){
-        JSONArray array = new JSONArray();
-        for(Lang l: langs){
-            JSONObject obj = new JSONObject();
-            try {
-                obj.put(l.getLang(), true);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            array.put(obj);
-        }
-        return array.toString();
-    }
-
-    public void setLangs(ArrayList<Lang> langs) {
-        this.langs = langs;
-    }
-
-
-
-    public void setLangsFromJSONString(String jsonStr) {
+    private void setInfoFromJSONString(String jsonStr, ArrayList<Lang> values, boolean isLangs){
         try {
-            JSONArray langsArray = new JSONArray(jsonStr);
-            for(int i=0; i<langsArray.length(); i++){
-                JSONObject titleObj = langsArray.getJSONObject(i);
+            JSONArray infoArray = new JSONArray(jsonStr);
+            for(int i=0; i< infoArray.length(); i++){
+                JSONObject infoObj = infoArray.getJSONObject(i);
                 @SuppressWarnings("unchecked")
-                Iterator<String> iter = titleObj.keys();
+                Iterator<String> iter = infoObj.keys();
                 while(iter.hasNext()){
-                    Lang l = new Lang(iter.next(),"");
-                    this.langs.add(l);
+                    String key = iter.next();
+                    String info = "";
+                    if(!isLangs) {
+                        info = infoObj.getString(key);
+                    }
+                    Lang l = new Lang(key, info);
+                    values.add(l);
                 }
             }
         } catch (JSONException e) {
