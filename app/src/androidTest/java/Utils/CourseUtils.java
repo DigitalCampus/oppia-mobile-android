@@ -9,7 +9,9 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.storage.*;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
@@ -19,6 +21,10 @@ import java.io.IOException;
 import java.util.Locale;
 
 import static org.apache.commons.io.FileUtils.cleanDirectory;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CourseUtils {
 
@@ -51,7 +57,7 @@ public class CourseUtils {
 
             prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-            c.setTitles(cxr.getTitles());
+            c.getMultiLangInfo().setTitles(cxr.getTitles());
 
         } catch (ArrayIndexOutOfBoundsException aioobe){
             org.digitalcampus.oppia.utils.storage.FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[0]);
@@ -64,7 +70,7 @@ public class CourseUtils {
             return null;
         }
 
-        return c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        return c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
     }
 
     public static void cleanUp(){
@@ -97,5 +103,31 @@ public class CourseUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Course createMockCourse(){
+
+        Course mockCourse = mock(Course.class);
+
+        when(mockCourse.getNoActivities()).thenReturn(3);
+        doNothing().when(mockCourse.getMultiLangInfo()).setTitlesFromJSONString(anyString());
+
+        when(mockCourse.getCourseId()).thenReturn(999);
+
+
+        Section mockSection = mock(Section.class);
+        when(mockSection.getMultiLangInfo().getTitle(anyString())).thenReturn("Mock Section");
+
+
+        Activity mockActivity = mock(Activity.class);
+        when(mockActivity.getCourseId()).thenReturn((long) 999);
+        when(mockActivity.getActId()).thenReturn(999);
+        when(mockActivity.getSectionId()).thenReturn(999);
+
+        mockSection.addActivity(mockActivity);
+
+
+        return mockCourse;
+
     }
 }
