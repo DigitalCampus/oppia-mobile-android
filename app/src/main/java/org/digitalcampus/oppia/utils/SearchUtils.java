@@ -24,6 +24,7 @@ import android.util.Log;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.Payload;
@@ -43,8 +44,8 @@ public class SearchUtils {
 		task.execute(p);
 	}
 
-    public static void indexAddCourse(Context ctx, Course course, CourseXMLReader cxr){
-        ArrayList<Activity> activities = cxr.getActivities(course.getCourseId());
+    public static void indexAddCourse(Context ctx, Course course, CompleteCourse parsedCourse){
+        ArrayList<Activity> activities = parsedCourse.getActivities(course.getCourseId());
         DbHelper db = DbHelper.getInstance(ctx);
 
         db.beginTransaction();
@@ -64,7 +65,7 @@ public class SearchUtils {
 
             if (!fileContent.equals("")) {
                 db.insertActivityIntoSearchTable(course.getMultiLangInfo().getTitleJSONString(),
-                        cxr.getSection(a.getSectionId()).getMultiLangInfo().getTitleJSONString(),
+                        parsedCourse.getSection(a.getSectionId()).getMultiLangInfo().getTitleJSONString(),
                         a.getMultiLangInfo().getTitleJSONString(),
                         db.getActivityByDigest(a.getDigest()).getDbId(),
                         fileContent);
@@ -76,15 +77,14 @@ public class SearchUtils {
 	public static void indexAddCourse(Context ctx, Course course){
         try {
             CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(),course.getCourseId(), ctx);
-            indexAddCourse(ctx, course, cxr);
+            cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+            indexAddCourse(ctx, course, cxr.getParsedCourse());
         } catch (InvalidXMLException e) {
             // Ignore course
             e.printStackTrace();
         }
-
 	}
-	
-	
+
 
 	private static class SearchReIndexTask extends AsyncTask<Payload, String, Payload> {
 		

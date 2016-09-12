@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -113,27 +114,17 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				CourseTrackerXMLReader ctxr;
 				try {
 					cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
+                    cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-					File trackerXML = new File(courseTrackerXMLPath);
-					ctxr = new CourseTrackerXMLReader(trackerXML);
+					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
 					payload.setResult(false);
 					return payload;
 				}
-				
-				Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-				c.setVersionId(cxr.getVersionId());
-				c.getMultiLangInfo().setTitles(cxr.getTitles());
-				c.setShortname(courseDirs[0]);
-				c.setImageFile(cxr.getCourseImage());
-				c.getMultiLangInfo().setLangs(cxr.getLangs());
-				c.getMultiLangInfo().setDescriptions(cxr.getDescriptions());
-				c.setPriority(cxr.getPriority());
-                String sequencingMode = cxr.getCourseSequencingMode();
-                if ((sequencingMode!=null) && (sequencingMode.equals(Course.SEQUENCING_MODE_COURSE) ||
-                        sequencingMode.equals(Course.SEQUENCING_MODE_SECTION) || sequencingMode.equals(Course.SEQUENCING_MODE_NONE))){
-                    c.setSequencingMode(sequencingMode);
-                }
+
+                CompleteCourse c = cxr.getParsedCourse();
+                c.setShortname(courseDirs[0]);
 
 				String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 				
@@ -150,7 +141,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					File src = new File(tempdir + File.separator + courseDirs[0]);
 					File dest = new File(Storage.getCoursesPath(ctx));
 
-					db.insertActivities(cxr.getActivities(courseId));
+					db.insertActivities(c.getActivities(courseId));
                     dp.setProgress(50);
                     publishProgress(dp);
 

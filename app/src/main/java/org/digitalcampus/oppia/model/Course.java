@@ -20,14 +20,10 @@ package org.digitalcampus.oppia.model;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
 
 public class Course implements Serializable {

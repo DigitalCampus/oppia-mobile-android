@@ -9,8 +9,11 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+<<<<<<< Updated upstream
 import org.digitalcampus.oppia.model.Activity;
+=======
 import org.digitalcampus.oppia.model.CompleteCourse;
+>>>>>>> Stashed changes
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.storage.*;
@@ -51,8 +54,14 @@ public class CourseUtils {
             cxr.parse(CourseXMLReader.ParseMode.ONLY_META);
             CompleteCourse c = cxr.getParsedCourse();
 
+<<<<<<< Updated upstream
+            prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+            c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+            c.getMultiLangInfo().setTitles(cxr.getTitles());
+=======
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
             c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+>>>>>>> Stashed changes
 
         } catch (ArrayIndexOutOfBoundsException aioobe){
             org.digitalcampus.oppia.utils.storage.FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[0]);
@@ -65,7 +74,11 @@ public class CourseUtils {
             return null;
         }
 
+<<<<<<< Updated upstream
+        return c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+=======
         return "";
+>>>>>>> Stashed changes
     }
 
     public static void cleanUp(){

@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
@@ -81,7 +82,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
     public void onCreate( Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         this.course = (Course) getArguments().getSerializable(Course.TAG);
-        xmlTask = new ParseCourseXMLTask(getActivity(), true);
+        xmlTask = new ParseCourseXMLTask(getActivity());
         xmlTask.setListener(this);
         xmlTask.execute(course);
     }
@@ -132,14 +133,14 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
 	}
 
     //@Override
-    public void onParseComplete(CourseXMLReader parsed) {
+    public void onParseComplete(CompleteCourse parsed) {
 
         ArrayList<Activity> baseline = parsed.getBaselineActivities();
         
     	DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
         ArrayList<Activity> quizActs = db.getCourseQuizzes(course.getCourseId());
-        ArrayList<QuizStats> quizzes = new ArrayList<QuizStats>();
+        ArrayList<QuizStats> quizzes = new ArrayList<>();
         for (Activity a: quizActs){
         	// get the max score for the quiz for the user
         	QuizStats qs = db.getQuizAttempt(a.getDigest(), userId);

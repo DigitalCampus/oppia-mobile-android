@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -28,6 +29,7 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
@@ -1387,8 +1389,8 @@ public class DbHelper extends SQLiteOpenHelper {
             listener.onQueryPerformed();
 
             long startTime = System.currentTimeMillis();
-            HashMap<Long, Course> fetchedCourses = new HashMap<Long, Course>();
-            HashMap<Long, CourseXMLReader> fetchedXMLCourses = new HashMap<Long, CourseXMLReader>();
+            Map<Long, Course> fetchedCourses = new HashMap<>();
+            Map<Long, CompleteCourse> fetchedXMLCourses = new HashMap<>();
 
             c.moveToFirst();
             while (!c.isAfterLast()) {
@@ -1407,18 +1409,25 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		result.setActivity(activity);
 				
 	    		int sectionOrderId = activity.getSectionId();
-	    		CourseXMLReader cxr = fetchedXMLCourses.get(courseId);
-				try {
-                    if (cxr == null){
-                        cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
-                        fetchedXMLCourses.put(courseId, cxr);
+	    		CompleteCourse parsed = fetchedXMLCourses.get(courseId);
+                if (parsed == null){
+                    try {
+                        CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
+                        cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+                        parsed = cxr.getParsedCourse();
+                        fetchedXMLCourses.put(courseId, parsed);
+                        result.setSection(parsed.getSection(sectionOrderId));
+                        results.add(result);
+                    } catch (InvalidXMLException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                     }
-					result.setSection(cxr.getSection(sectionOrderId));
-		    		results.add(result);
-				} catch (InvalidXMLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                }
+                else{
+                    result.setSection(parsed.getSection(sectionOrderId));
+                    results.add(result);
+                }
+
 	    		c.moveToNext();
 			}
             long ellapsedTime = System.currentTimeMillis() - startTime;
