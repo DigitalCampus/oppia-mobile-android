@@ -6,6 +6,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfo;
+import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,6 +33,9 @@ public class MultiLangInfoTest {
         titles.add(new Lang("es", spanishTitle));
         multiLangInfo.setTitles(titles);
 
+        String json = multiLangInfo.getTitleJSONString();
+
+
         assertEquals(englishTitle, multiLangInfo.getTitle("en"));
         assertEquals(spanishTitle, multiLangInfo.getTitle("es"));
     }
@@ -57,5 +61,45 @@ public class MultiLangInfoTest {
 
 
         assertEquals(firstTitle, multiLangInfo.getTitle("es"));
+    }
+
+    @Test
+    public void MultiLangInfo_malformedJSONString() throws Exception{
+        MultiLangInfo multiLangInfo = new MultiLangInfo();
+
+        String malformedJSONString = "[{\"en\":\"EnglishTitle\"}, {\"es\": ]";
+
+        multiLangInfo.setTitlesFromJSONString(malformedJSONString);
+    }
+
+    @Test
+    public void MultiLangInfo_wellFormedJSONString() throws Exception{
+        MultiLangInfo multiLangInfo = new MultiLangInfo();
+
+        String englishTitle = "English Title";
+        String spanishTitle = "Titulo Español";
+
+        String wellFormedJSONString = "[{\"en\":\"" + englishTitle + "\"}, {\"es\":\"" + spanishTitle + "\"}]";
+        multiLangInfo.setTitlesFromJSONString(wellFormedJSONString);
+
+        assertEquals(englishTitle, multiLangInfo.getTitle("en"));
+        assertEquals(spanishTitle, multiLangInfo.getTitle("es"));
+    }
+
+    @Test
+    public void MultiLangInfo_emptyJSONString() throws Exception {
+        MultiLangInfo multiLangInfo = new MultiLangInfo();
+
+        String wellFormedJSONString = "[]";
+        multiLangInfo.setTitlesFromJSONString(wellFormedJSONString);
+
+        assertEquals("No title set", multiLangInfo.getTitle("en"));
+    }
+
+    @Test
+    public void MultiLangInfo_NoDescription() throws Exception {
+        MultiLangInfo multiLangInfo = new MultiLangInfo();
+
+        assertEquals(null, multiLangInfo.getDescription("en"));
     }
 }
