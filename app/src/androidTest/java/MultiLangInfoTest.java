@@ -97,6 +97,6 @@ public class MultiLangInfoTest {
     public void MultiLangInfo_NoDescription() throws Exception {
         MultiLangInfo multiLangInfo = new MultiLangInfo();
 
-        assertEquals(null, multiLangInfo.getDescription("en"));
+        assertEquals("No description set", multiLangInfo.getDescription("en"));
     }
 }
