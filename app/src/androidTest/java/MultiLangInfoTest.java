@@ -1,18 +1,13 @@
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfo;
-import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
-import Utils.CourseUtils;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -70,6 +65,8 @@ public class MultiLangInfoTest {
         String malformedJSONString = "[{\"en\":\"EnglishTitle\"}, {\"es\": ]";
 
         multiLangInfo.setTitlesFromJSONString(malformedJSONString);
+
+        assertEquals("No title set", multiLangInfo.getTitle("en"));
     }
 
     @Test
