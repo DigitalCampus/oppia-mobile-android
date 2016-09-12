@@ -108,6 +108,8 @@ dependencies {
         exclude module: 'support-v13'
         exclude module: 'recyclerview-v7'
     }
+
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
 }
 
 task grantPermissions << {
