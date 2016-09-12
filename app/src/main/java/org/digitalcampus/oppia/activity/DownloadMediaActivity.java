@@ -135,8 +135,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             public boolean onCreateActionMode(final ActionMode mode, Menu menu) {
 
                 onPrepareOptionsMenu(menu);
-
-                mode.setTitle("Download Media");
+                mode.setTitle(R.string.title_download_media);
 
                 if (missingMediaContainer.getVisibility() != View.VISIBLE){
                     missingMediaContainer.setVisibility(View.VISIBLE);
