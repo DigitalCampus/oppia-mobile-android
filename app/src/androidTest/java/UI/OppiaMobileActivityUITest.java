@@ -10,6 +10,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
+import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.MonitorActivity;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -270,7 +271,7 @@ public class OppiaMobileActivityUITest {
                     .atPosition(0)
                     .perform(click());
 
-            //assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+            assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
 
 
         }else{

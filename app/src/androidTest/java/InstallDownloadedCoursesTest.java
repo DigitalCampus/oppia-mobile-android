@@ -1,4 +1,6 @@
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -43,12 +45,14 @@ public class InstallDownloadedCoursesTest {
     private final String MALFORMEDXML_COURSE = "MalformedXML_Course.zip";
 
     private Context context;
+    private SharedPreferences prefs;
     private CountDownLatch signal;
     private Payload response;
 
     @Before
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getTargetContext();
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
         signal = new CountDownLatch(1);
     }
 
@@ -65,30 +69,27 @@ public class InstallDownloadedCoursesTest {
 
         FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
 
-        String title = CourseUtils.getCourseTitle(context);
-
         runInstallCourseTask();//Run test task
 
         signal.await();
 
         //Check if result is true
         assertTrue(response.isResult());
+
+        String shortTitle = "correct_course";
+        Course c = CourseUtils.getCourseFromDatabase(context, shortTitle);
+        assertNotNull(c);   //Check that the course exists in the database
+
+        String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.install_course_complete, title), response.getResultResponse());
+
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
         assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
 
-
-        String shortTitle = "correct_course";
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
         assertTrue(finalPath.exists()); //Check that the course exists in the "modules" directory
-
-        DbHelper db = DbHelper.getInstance(context);
-        long courseId = db.getCourseID(shortTitle);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        Course c = db.getCourse(courseId, userId);
-        assertNotNull(c);   //Check that the course exists in the database
-
 
     }
 
@@ -98,10 +99,8 @@ public class InstallDownloadedCoursesTest {
 
         CourseUtils.cleanUp();
 
-        String title = "";
         for(int i = 0; i < 2; i++){
             FileUtils.copyZipFromAssets(filename); //Copy course zip from assets to download path
-            title = CourseUtils.getCourseTitle(context);
             runInstallCourseTask(); //Run test task
             signal.await();
             signal = new CountDownLatch(1);
@@ -109,23 +108,22 @@ public class InstallDownloadedCoursesTest {
 
         //Check if result is false
         assertFalse(response.isResult());
+
+        String shortTitle = "existing_course";
+        Course c = CourseUtils.getCourseFromDatabase(context, shortTitle);
+        assertNotNull(c);   //Check that the course exists in the database
+
+        String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.error_latest_already_installed, title), response.getResultResponse());
 
         File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
         assertFalse(initialPath.exists()); //Check that the course does not exists in the "downloads" directory
 
-
-        String shortTitle = "existing_course";
         File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
         assertTrue(finalPath.exists()); //Check that the course exists in the "modules" directory
 
-
-        DbHelper db = DbHelper.getInstance(context);
-        long courseId = db.getCourseID(shortTitle);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        Course c = db.getCourse(courseId, userId);
-        assertNotNull(c);   //Check that the course exists in the database
     }
 
     @Test

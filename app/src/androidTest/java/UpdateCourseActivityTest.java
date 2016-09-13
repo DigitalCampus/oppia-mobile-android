@@ -64,7 +64,6 @@ public class UpdateCourseActivityTest {
         imTask.execute(payload);
 
 
-        String title = CourseUtils.getCourseTitle(context);
         DbHelper db = DbHelper.getInstance(context);
         Course tempCourse = db.getAllCourses().get(0);
         long userId = db.getUserId(SessionManager.getUsername(context));

@@ -8,6 +8,7 @@ import android.support.test.InstrumentationRegistry;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -29,43 +30,11 @@ import static org.mockito.Mockito.when;
 
 public class CourseUtils {
 
-    public static String getCourseTitle(Context ctx){
-
-        File dir = new File(Storage.getDownloadPath(ctx));
-        String[] children = dir.list();
-        File tempdir = new File(Storage.getStorageLocationRoot(ctx) + "temp/");
-        tempdir.mkdirs();
-
-        boolean unzipResult = org.digitalcampus.oppia.utils.storage.FileUtils.unzipFiles(Storage.getDownloadPath(ctx), children[0], tempdir.getAbsolutePath());
-
-        if (!unzipResult){
-            //then was invalid zip file and should be removed
-            FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[0]);
-        }
-
-        String[] courseDirs = tempdir.list();
-
-        try {
-            String courseXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_XML;
-            CourseXMLReader cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
-            cxr.parse(CourseXMLReader.ParseMode.ONLY_META);
-            CompleteCourse c = cxr.getParsedCourse();
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-
-        } catch (ArrayIndexOutOfBoundsException aioobe){
-            org.digitalcampus.oppia.utils.storage.FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[0]);
-            return null;
-        } catch (InvalidXMLException e) {
-            e.printStackTrace();
-            return null;
-        } catch(Exception e ){
-            e.printStackTrace();
-            return null;
-        }
-
-        return "";
+    public static Course getCourseFromDatabase(Context ctx, String shortTitle){
+        DbHelper db = DbHelper.getInstance(ctx);
+        long courseId = db.getCourseID(shortTitle);
+        long userId = db.getUserId(SessionManager.getUsername(ctx));
+        return db.getCourse(courseId, userId);
     }
 
     public static void cleanUp(){
