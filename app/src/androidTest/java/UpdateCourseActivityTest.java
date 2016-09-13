@@ -88,6 +88,9 @@ public class UpdateCourseActivityTest {
         Payload p = new Payload(payloadData);
         task.setUpdateActivityListener(new UpdateActivityListener() {
             @Override
+            public void apiKeyInvalidated() {  }
+
+            @Override
             public void updateActivityComplete(Payload p) {
                 response = p;
                 signal.countDown();

@@ -82,6 +82,9 @@ public class LoginTest{
             LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
             task.setLoginListener(new SubmitListener() {
                 @Override
+                public void apiKeyInvalidated() {  }
+
+                @Override
                 public void submitComplete(Payload r) {
                     response = r;
                     signal.countDown();
@@ -131,6 +134,9 @@ public class LoginTest{
             LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
             task.setLoginListener(new SubmitListener() {
                 @Override
+                public void apiKeyInvalidated() { }
+
+                @Override
                 public void submitComplete(Payload r) {
                     response = r;
                     signal.countDown();
@@ -178,6 +184,9 @@ public class LoginTest{
         try {
             LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
             task.setLoginListener(new SubmitListener() {
+                @Override
+                public void apiKeyInvalidated() { }
+
                 @Override
                 public void submitComplete(Payload r) {
                     response = r;

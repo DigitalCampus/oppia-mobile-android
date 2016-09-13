@@ -77,6 +77,9 @@ public class ResetTest {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitListener() {
                 @Override
+                public void apiKeyInvalidated() { }
+
+                @Override
                 public void submitComplete(Payload r) {
                     response = r;
                     signal.countDown();
@@ -127,6 +130,9 @@ public class ResetTest {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitListener() {
                 @Override
+                public void apiKeyInvalidated() { }
+
+                @Override
                 public void submitComplete(Payload r) {
                     response = r;
                     signal.countDown();
@@ -174,6 +180,9 @@ public class ResetTest {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitListener() {
                 @Override
+                public void apiKeyInvalidated() {  }
+
+                @Override
                 public void submitComplete(Payload r) {
                     response = r;
                     signal.countDown();
@@ -220,6 +229,9 @@ public class ResetTest {
         try {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitListener() {
+                @Override
+                public void apiKeyInvalidated() {  }
+
                 @Override
                 public void submitComplete(Payload r) {
                     response = r;
