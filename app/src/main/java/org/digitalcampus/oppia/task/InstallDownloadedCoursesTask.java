@@ -105,6 +105,8 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					courseTrackerXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_TRACKER_XML;
 				} catch (ArrayIndexOutOfBoundsException aioobe){
 					FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[i]);
+					payload.setResult(false);
+					payload.setResultResponse(ctx.getString(R.string.error_installing_course, children[i]));
 					continue;
 				}
 				
@@ -119,14 +121,34 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
 					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
 				} catch (InvalidXMLException e) {
+					FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[i]);
 					payload.setResult(false);
-					return payload;
+					payload.setResultResponse(ctx.getString(R.string.error_installing_course, children[i]));
+					continue;
 				}
 
+<<<<<<< HEAD
                 CompleteCourse c = cxr.getParsedCourse();
                 c.setShortname(courseDirs[0]);
 
 				String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+=======
+				Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+				c.setVersionId(cxr.getVersionId());
+				c.setTitles(cxr.getTitles());
+				c.setShortname(courseDirs[0]);
+				c.setImageFile(cxr.getCourseImage());
+				c.setLangs(cxr.getLangs());
+				c.setDescriptions(cxr.getDescriptions());
+				c.setPriority(cxr.getPriority());
+                String sequencingMode = cxr.getCourseSequencingMode();
+                if ((sequencingMode!=null) && (sequencingMode.equals(Course.SEQUENCING_MODE_COURSE) ||
+                        sequencingMode.equals(Course.SEQUENCING_MODE_SECTION) || sequencingMode.equals(Course.SEQUENCING_MODE_NONE))){
+                    c.setSequencingMode(sequencingMode);
+                }
+
+				String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+>>>>>>> testing-fixes
 				
 				dp.setMessage(ctx.getString(R.string.installing_course, title));
                 dp.setProgress(20);

@@ -58,7 +58,14 @@ public class SessionManager {
         DbHelper db = DbHelper.getInstance(ctx);
         try {
             User u = db.getUser(username);
+            /*
+            //To test fast the apiKey expired case, uncomment this lines
+            ////////////////////////
+            u.setApiKey("xxxxxxx"); //to invalidate apiKey
+            db.addOrUpdateUser(u);
+             */
             return u.getDisplayName();
+
         } catch (UserNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -128,7 +135,6 @@ public class SessionManager {
 
         DbHelper db = DbHelper.getInstance(ctx);
         db.insertUserPreferences(username, userPrefs);
-
     }
 
     //Warning: this method doesn't call prefs.apply()

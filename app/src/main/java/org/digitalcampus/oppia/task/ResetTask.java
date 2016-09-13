@@ -69,13 +69,14 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
+                new JSONObject(response.body().string()); //Added to check that the response is well formed
                 payload.setResult(true);
                 payload.setResultResponse(ctx.getString(R.string.reset_complete));
             }
             else{
                 payload.setResult(false);
                 if (response.code() == 400){
-                    payload.setResultResponse(response.toString());
+                    payload.setResultResponse(ctx.getString(R.string.error_reset));
                 }
                 else{
                     payload.setResultResponse(ctx.getString(R.string.error_connection));
