@@ -296,6 +296,12 @@ public class OppiaMobileActivityUITest {
                     .inAdapterView(withId(R.id.course_list))
                     .atPosition(0)
                     .perform(click());
+            try{
+                onView(withChild(withText(R.string.cancel)))
+                        .check(matches(isDisplayed()))
+                        .perform(click());
+
+            }catch (AssertionFailedError e){   }
 
             assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
 
