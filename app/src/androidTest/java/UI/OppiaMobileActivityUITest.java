@@ -1,12 +1,16 @@
 package UI;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import junit.framework.AssertionFailedError;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
@@ -20,9 +24,12 @@ import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import Utils.CourseUtils;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -44,13 +51,19 @@ import static org.hamcrest.Matchers.anything;
 @RunWith(AndroidJUnit4.class)
 public class OppiaMobileActivityUITest {
 
+    private Context context;
+
     @Rule
     public ActivityTestRule<OppiaMobileActivity> oppiaMobileActivityTestRule =
             new ActivityTestRule<OppiaMobileActivity>(OppiaMobileActivity.class);
 
+    @Before
+    public void setUp() throws Exception {
+        context = InstrumentationRegistry.getTargetContext();
+    }
+
 
     private int getCoursesCount(){
-        Context context = InstrumentationRegistry.getTargetContext();
         DbHelper db = DbHelper.getInstance(context);
         long userId = db.getUserId(SessionManager.getUsername(context));
         return db.getCourses(userId).size();
@@ -169,13 +182,19 @@ public class OppiaMobileActivityUITest {
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
-        onView(withText(R.string.menu_logout))
-                .perform(click());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean logoutEnabled = prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, false);
 
-        onView(withText(R.string.no))
-                .perform(click());
+        if(logoutEnabled) {
 
-        assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+            onView(withText(R.string.menu_logout))
+                    .perform(click());
+
+            onView(withText(R.string.no))
+                    .perform(click());
+
+            assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+        }
 
     }
 
@@ -185,13 +204,20 @@ public class OppiaMobileActivityUITest {
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
-        onView(withText(R.string.menu_logout))
-                .perform(click());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean logoutEnabled = prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, false);
 
-        onView(withText(R.string.yes))
-                .perform(click());
+        if(logoutEnabled){
+            onView(withText(R.string.menu_logout))
+                    .perform(click());
 
-        assertEquals(WelcomeActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+            onView(withText(R.string.yes))
+                    .perform(click());
+
+            assertEquals(WelcomeActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+        }
+
+
 
     }
 
