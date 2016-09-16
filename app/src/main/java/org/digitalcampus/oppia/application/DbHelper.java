@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -145,6 +146,15 @@ public class DbHelper extends SQLiteOpenHelper {
             instance = new DbHelper(ctx.getApplicationContext());
         }
         return instance;
+    }
+
+    public synchronized void resetDatabase(){
+        //Remove the data from all the tables
+        List<String> tables = Arrays.asList(USER_PREFS_TABLE, USER_TABLE, SEARCH_TABLE, QUIZATTEMPTS_TABLE,
+                                            TRACKER_LOG_TABLE, ACTIVITY_TABLE, COURSE_TABLE);
+        for (String tablename : tables){
+            db.delete(tablename, null, null);
+        }
     }
 
 	@Override

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
 
 repositories {
     maven {
@@ -14,6 +15,8 @@ android {
         applicationId "org.digitalcampus.mobile.learning"
         minSdkVersion 14
         targetSdkVersion 23
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     packagingOptions {
@@ -63,6 +66,11 @@ android {
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
         }
 
+	debug{
+            testCoverageEnabled = true
+
+	}
+
         release {
             minifyEnabled true
             shrinkResources true
@@ -71,7 +79,12 @@ android {
     }
 
     apply plugin: 'com.google.gms.google-services'
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -79,7 +92,39 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile "com.androidplot:androidplot-core:0.6.1"
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile "com.splunk.mint:mint:5.0.0"
     compile "com.google.android.gms:play-services-gcm:8.1.0"
+
+    testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.3.1'
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support.test:rules:0.4'
+    androidTestCompile 'com.android.support:support-annotations:23.3.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1'){
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'support-v13'
+        exclude module: 'recyclerview-v7'
+    }
 }
+
+task grantPermissions(dependsOn: 'installDebug') {
+    def adb = android.getAdbExe().toString()
+
+    println "Granting permissions on device"
+    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.READ_PHONE_STATE".execute()
+    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.READ_EXTERNAL_STORAGE".execute()
+    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.WRITE_EXTERNAL_STORAGE".execute()
+}
+
+afterEvaluate {
+    tasks.each { task ->
+        if (task.name.startsWith('assembleDebugAndroidTest')) {
+            task.dependsOn grantPermissions
+        }
+    }
+}
+
+
