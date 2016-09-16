@@ -53,7 +53,6 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -70,12 +69,10 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     private Course course;
 
     private int currentActivityNo = 0;
-    private int previousActivityNo = 0;
 
     private SharedPreferences prefs;
     private ArrayList<Activity> activities;
     private boolean isBaseline = false;
-    private ActionBar actionBar;
     private long userID;
 
     private static int TTS_CHECK = 0;
@@ -92,7 +89,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
         setContentView(R.layout.activity_course);
         setSupportActionBar( (Toolbar)findViewById(R.id.toolbar) );
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         viewPager = (ViewPager) findViewById(R.id.activity_widget_pager);
 
@@ -100,20 +97,21 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         if (bundle != null) {
             section = (Section) bundle.getSerializable(Section.TAG);
             course = (Course) bundle.getSerializable(Course.TAG);
+
             activities = section.getActivities();
             currentActivityNo = bundle.getInt(SectionListAdapter.TAG_PLACEHOLDER);
-            previousActivityNo = currentActivityNo;
             if (bundle.getSerializable(CourseActivity.BASELINE_TAG) != null) {
                 this.isBaseline = bundle.getBoolean(CourseActivity.BASELINE_TAG);
             }
             // set image
-            BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), MobileLearning.APP_LOGO);
-            //actionBar.setIcon(bm);
-            actionBar.setHomeAsUpIndicator(bm);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-            //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            if (actionBar != null){
+                BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), MobileLearning.APP_LOGO);
+                actionBar.setHomeAsUpIndicator(bm);
+                actionBar.setDisplayShowHomeEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setDisplayShowTitleEnabled(true);
+                //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            }
         }
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
 
@@ -123,22 +121,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     @Override
     public void onStart() {
         super.onStart();
-        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            public void onPageScrollStateChanged(int arg0) {
-                // do nothing
-            }
-
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-                // do nothing
-            }
-
-            public void onPageSelected(int numPage) {
-                Log.d(TAG, "Page selected " + numPage + " current act " + currentActivityNo);
-                //actionBar.setSelectedNavigationItem(numPage);
-            }
-        });
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
     }
 
     @Override
@@ -151,7 +134,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentActivityNo = savedInstanceState.getInt("currentActivityNo");
-        previousActivityNo = currentActivityNo;
     }
 
     @Override
@@ -297,15 +279,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             if (tab!=null) tab.setCustomView(apAdapter.getTabView(i));
         }
 
-        //Tab creation
-        for (int i=0; i<activities.size(); i++){
-            Activity activity = activities.get(i);
-            String title = activity.getTitle(currentLang);
-            //actionBar.addTab(
-            //        actionBar.newTab().setText(title).setTabListener(this),
-            //        (currentActivityNo == i) //Set the current active activity as active tab
-            //);
-        }
         viewPager.setCurrentItem(currentActivityNo);
     }
 
@@ -335,12 +308,11 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 @Override
                 public void run() {
                     UIUtils.showAlert(CourseActivity.this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
-                    actionBar.setSelectedNavigationItem(currentActivityNo);
-                    viewPager.setCurrentItem(currentActivityNo);
+                    TabLayout.Tab target = tabs.getTabAt(currentActivityNo);
+                    if (target != null){ target.select(); }
                 }
             };
-            Handler handler=new Handler();
-            handler.post(setPreviousTab);
+            new Handler().post(setPreviousTab);
         }
     }
 
@@ -350,7 +322,13 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     @Override
-    public void onTabReselected(TabLayout.Tab tab) { }
+    public void onTabReselected(TabLayout.Tab tab) {
+        int tabSelected = tab.getPosition();
+        Log.d(TAG, "Tab selected " + tabSelected + " current act " + currentActivityNo);
+
+        WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
+        currentWidget.resetTimeTracking();
+    }
 
 
     private boolean canNavigateTo(int newTab){
@@ -371,7 +349,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             ttsRunning = true;
             ((WidgetFactory) apAdapter.getItem(currentActivityNo)).setReadAloud(true);
             supportInvalidateOptionsMenu();
-            HashMap<String,String> params = new HashMap<String,String>();
+            HashMap<String,String> params = new HashMap<>();
             params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,TAG);
             myTTS.speak(((WidgetFactory) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, params);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {

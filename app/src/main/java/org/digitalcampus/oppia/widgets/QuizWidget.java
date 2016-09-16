@@ -480,15 +480,31 @@ public class QuizWidget extends WidgetFactory {
 		
 		// Show restart or continue button
 		Button restartBtn = (Button) getView().findViewById(R.id.quiz_results_button);
-		
-		if (this.isBaseline || this.getActivityCompleted()) {
+
+        int quizAvailability = checkQuizAvailability();
+        boolean quizAvailable = quizAvailability == QUIZ_AVAILABLE;
+
+        if (!quizAvailable){
+            TextView availabilityMsg = (TextView) getView().findViewById(R.id.quiz_availability_message);
+            availabilityMsg.setText(quizAvailability);
+            availabilityMsg.setVisibility(View.VISIBLE);
+        }
+
+		if (this.isBaseline) {
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_baseline_goto_course));
 			restartBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					QuizWidget.this.getActivity().finish();
 				}
 			});
-		} else{
+		} else if (this.getActivityCompleted() || !quizAvailable){
+            restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_continue));
+            restartBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    QuizWidget.this.getActivity().finish();
+                }
+            });
+        } else{
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_results_restart));
 			restartBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
