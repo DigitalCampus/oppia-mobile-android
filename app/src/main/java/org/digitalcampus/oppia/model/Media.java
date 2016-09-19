@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Media implements Serializable{
 
@@ -29,8 +30,13 @@ public class Media implements Serializable{
 	private String digest;
 	private int length;
 	private double fileSize;
+	private ArrayList<Course> courses;
 
 	private int downloaded;
+
+	public Media(){
+		courses = new ArrayList<>();
+	}
 	
 	public String getFilename() {
 		return filename;
@@ -76,6 +82,7 @@ public class Media implements Serializable{
 		return downloaded;
 	}
 
+	public ArrayList<Course> getCourses(){ return courses; }
 
     //ONLY FOR UI PURPOSES
     private boolean downloading;

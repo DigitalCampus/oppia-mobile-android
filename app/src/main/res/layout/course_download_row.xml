@@ -34,6 +34,14 @@
         android:layout_below="@+id/course_draft"
         android:layout_toLeftOf="@+id/download_course_btn" />
 
+    <TextView
+        android:id="@+id/course_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/course_description"
+        android:layout_toLeftOf="@+id/download_course_btn" />
+
     <ProgressBar
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -57,6 +65,9 @@
         android:src="@drawable/ic_action_download"
         style="?android:attr/borderlessButtonStyle"
         android:scaleType="fitCenter"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:layout_centerVertical="true" />
+
+
 
 </RelativeLayout>
