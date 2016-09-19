@@ -39,9 +39,8 @@ public class AdminReceiver extends DeviceAdminReceiver {
         Toast.makeText(context, "Admin enabled", Toast.LENGTH_LONG).show();
         Log.d(TAG, "Device Administration enabled");
 
-        SharedPreferences prefs =  PreferenceManager.getDefaultSharedPreferences(context);
         //When the remote admin is enabled, we register the device in the admin panel
-        new RegisterDeviceRemoteAdminTask(context, prefs).execute();
+        new RegisterDeviceRemoteAdminTask(context).execute();
     }
 
     /** Called when this application is no longer the device administrator. */
@@ -52,9 +51,7 @@ public class AdminReceiver extends DeviceAdminReceiver {
         Log.d(TAG, "Device Administration disabled");
 
         SharedPreferences prefs =  PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
-        editor.commit();
+        prefs.edit().putBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false).apply();
     }
 
     @Override

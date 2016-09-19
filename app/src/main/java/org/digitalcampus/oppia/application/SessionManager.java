@@ -30,7 +30,6 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
 

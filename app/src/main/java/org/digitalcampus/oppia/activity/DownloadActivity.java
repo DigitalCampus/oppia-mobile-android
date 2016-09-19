@@ -42,7 +42,7 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.CourseIntallerService;
 import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
-import org.digitalcampus.oppia.task.APIRequestTask;
+import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
@@ -158,7 +158,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		progressDialog.setCancelable(false);
 		progressDialog.show();
 
-		APIRequestTask task = new APIRequestTask(this);
+		APIUserRequestTask task = new APIUserRequestTask(this);
 		Payload p = new Payload(url);
 		task.setAPIRequestListener(this);
 		task.execute(p);
@@ -167,68 +167,11 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	public void refreshCourseList() {
 		// process the response and display on screen in listview
 		// Create an array of courses, that will be put to our ListActivity
-
-        ArrayList<String> downloadingCourses = CourseIntallerService.getTasksDownloading();
-		
 		try {
-			this.courses.clear();
-			
-			for (int i = 0; i < (json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).length()); i++) {
-				JSONObject json_obj = (JSONObject) json.getJSONArray(MobileLearning.SERVER_COURSES_NAME).get(i);
-                CourseIntallViewAdapter course = new CourseIntallViewAdapter(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-				
-				ArrayList<Lang> titles = new ArrayList<>();
-				JSONObject jsonTitles = json_obj.getJSONObject("title");
-				Iterator<?> keys = jsonTitles.keys();
-		        while( keys.hasNext() ){
-		            String key = (String) keys.next();
-		            Lang l = new Lang(key,jsonTitles.getString(key));
-					titles.add(l);
-		        }
-                course.setTitles(titles);
-		        
-		        ArrayList<Lang> descriptions = new ArrayList<>();
-		        if (json_obj.has("description") && !json_obj.isNull("description")){
-		        	try {
-						JSONObject jsonDescriptions = json_obj.getJSONObject("description");
-						Iterator<?> dkeys = jsonDescriptions.keys();
-				        while( dkeys.hasNext() ){
-				            String key = (String) dkeys.next();
-				            if (!jsonDescriptions.isNull(key)){
-					            Lang l = new Lang(key,jsonDescriptions.getString(key));
-					            descriptions.add(l);
-				            }
-				        }
-                        course.setDescriptions(descriptions);
-		        	} catch (JSONException jsone){
-		        		//do nothing
-		        	}
-		        }
+            String storage = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+            courses.clear();
+            courses.addAll(CourseIntallViewAdapter.parseCoursesJSON(this, json, storage, showUpdatesOnly));
 
-                course.setShortname(json_obj.getString("shortname"));
-                course.setVersionId(json_obj.getDouble("version"));
-                course.setDownloadUrl(json_obj.getString("url"));
-		        try {
-                    course.setDraft(json_obj.getBoolean("is_draft"));
-		        }catch (JSONException je){
-                    course.setDraft(false);
-		        }
-		        DbHelper db = DbHelper.getInstance(this);
-                course.setInstalled(db.isInstalled(course.getShortname()));
-                course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
-				if (json_obj.has("schedule_uri")){
-                    course.setScheduleVersionID(json_obj.getDouble("schedule"));
-                    course.setScheduleURI(json_obj.getString("schedule_uri"));
-                    course.setToUpdateSchedule(db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
-				}
-
-                if (downloadingCourses!=null && downloadingCourses.contains(course.getDownloadUrl())){
-                    course.setDownloading(true);
-                }
-				if (!this.showUpdatesOnly || course.isToUpdate()){
-					this.courses.add(course);
-				} 
-			}
             dla.notifyDataSetChanged();
             findViewById(R.id.empty_state).setVisibility((courses.size()==0) ? View.VISIBLE : View.GONE);
 
@@ -293,9 +236,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         CourseIntallViewAdapter course = findCourse(fileUrl);
         if (course != null){
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            course.setInstalling(false);
-            course.setDownloading(false);
-            dla.notifyDataSetChanged();
+            resetCourseProgress(course, false, false);
         }
     }
 
@@ -305,9 +246,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         if (course != null){
             Toast.makeText(this, this.getString(R.string.install_course_complete, course.getShortname()), Toast.LENGTH_LONG).show();
             course.setInstalled(true);
-            course.setInstalling(false);
-            course.setDownloading(false);
-            dla.notifyDataSetChanged();
+            resetCourseProgress(course, false, false);
         }
     }
 
@@ -320,6 +259,15 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             }
         }
         return null;
+    }
+
+    protected void resetCourseProgress(CourseIntallViewAdapter courseSelected,
+                               boolean downloading, boolean installing ){
+
+        courseSelected.setDownloading(downloading);
+        courseSelected.setInstalling(installing);
+        courseSelected.setProgress(0);
+        dla.notifyDataSetChanged();
     }
 
     private class CourseListListener implements ListInnerBtnOnClickListener {
@@ -340,22 +288,16 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                     mServiceIntent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
                     DownloadActivity.this.startService(mServiceIntent);
 
-                    courseSelected.setDownloading(true);
-                    courseSelected.setInstalling(false);
-                    courseSelected.setProgress(0);
-                    dla.notifyDataSetChanged();
+                    resetCourseProgress(courseSelected, true, false);
                 }
                 else if(courseSelected.isToUpdateSchedule()){
                     Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
                     mServiceIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
                     mServiceIntent.putExtra(CourseIntallerService.SERVICE_SCHEDULEURL, courseSelected.getScheduleURI());
                     mServiceIntent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
-
                     DownloadActivity.this.startService(mServiceIntent);
-                    courseSelected.setDownloading(false);
-                    courseSelected.setInstalling(true);
-                    courseSelected.setProgress(0);
-                    dla.notifyDataSetChanged();
+
+                    resetCourseProgress(courseSelected, false, true);
                 }
             }
             else{
@@ -365,11 +307,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 mServiceIntent.putExtra(CourseIntallerService.SERVICE_URL, courseSelected.getDownloadUrl());
                 DownloadActivity.this.startService(mServiceIntent);
 
-                courseSelected.setDownloading(false);
-                courseSelected.setInstalling(false);
-                courseSelected.setProgress(0);
-
-                dla.notifyDataSetChanged();
+                resetCourseProgress(courseSelected, false, false);
             }
 
         }

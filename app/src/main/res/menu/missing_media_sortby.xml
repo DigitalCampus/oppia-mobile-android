@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:oppiamobile="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/sort_by"
-        android:icon="@drawable/ic_sort"
-        oppiamobile:showAsAction="ifRoom"
-        android:title="@string/menu_sort_by">
+        <item
+            android:title="Options"
+            android:icon="@drawable/ic_options"
+            oppiamobile:showAsAction="ifRoom">
+                <menu>
+                        <item
+                            android:id="@+id/menu_sort_by"
+                            android:title=""/>
+                        <item
+                            android:id="@+id/menu_select_all"
+                            android:title="@string/menu_select_all" />
+                </menu>
+        </item>
 
-        <menu>
-            <item
-                android:id="@+id/menuSortCourseTitle"
-                android:title="@string/menu_sort_by_course" />
-            <item
-                android:id="@+id/menuSortMediaTitle"
-                android:title="@string/menu_sort_by_filename" />
-        </menu>
-    </item>
+
 </menu>
