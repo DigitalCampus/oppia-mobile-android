@@ -79,6 +79,12 @@
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
+    <style name="SmallTextGrey">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/text_grey</item>
+    </style>
+
     <style name="PointsText">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>

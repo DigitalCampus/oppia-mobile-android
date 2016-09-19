@@ -77,7 +77,7 @@ public class RegisterDeviceRemoteAdminTask extends APIRequestTask<Payload, Void,
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
-                    .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.DEVICEADMIN_ADD_PATH))
+                    .url(api.getFullURL(ctx, MobileLearning.DEVICEADMIN_ADD_PATH))
                     .addHeader(HTTPClientUtils.HEADER_AUTH,
                             HTTPClientUtils.getAuthHeaderValue(user.getUsername(), user.getApiKey()))
                     .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))

@@ -487,7 +487,8 @@ public class OppiaMobileActivity
         anim.setDuration(900);
         messageContainer.startAnimation(anim);
 
-        ValueAnimator animator = ValueAnimator.ofInt(initialCourseListPadding, 90);
+        messageContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ValueAnimator animator = ValueAnimator.ofInt(initialCourseListPadding, messageContainer.getMeasuredHeight());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {

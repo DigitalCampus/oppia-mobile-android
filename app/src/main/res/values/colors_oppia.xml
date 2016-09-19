@@ -6,6 +6,7 @@
     <color name="list_divider">#222222</color>
     <color name="list_divider_light">#cccccc</color>
     <color name="text_dark">#222222</color>
+    <color name="text_grey">#666666</color>
     <color name="text_light">#ffffff</color>
     <color name="highlight_light">#74B042</color>
     <color name="highlight_mid">#9aca3c</color>
