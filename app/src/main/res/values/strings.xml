@@ -86,7 +86,6 @@
     <string name="widget_quiz_unavailable_course">You must complete all the previous activities in this course before this quiz becomes available to you.</string>
     <string name="widget_quiz_unavailable_attempts">You have already attempted this quiz the max number of times allowed</string>
     <string name="widget_resource_open_file">Open \'%1$s\'</string>
-    <string name="widget_quiz_continue">Continue</string>
 
     <string name="course_context_reset">Reset</string>
     <string name="course_context_delete">Delete</string>
