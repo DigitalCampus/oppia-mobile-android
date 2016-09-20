@@ -324,7 +324,7 @@
     <string name="permissions.storage.title">read and modify contents of the SD card</string>
     <string name="permissions.storage.description">OppiaMobile needs access to the SD card to be able to store the downloaded media contents for the courses</string>
     <string name="permissions.phone_state.title">read phone state and identity</string>
-    <string name="permissions.phone_state.description">Explanation of why OppiaMobile needs the phone identity</string>
+    <string name="permissions.phone_state.description">OppiaMobile needs access to the phone identity to get information about your device model and Android version</string>
     <string name="permissions.allow_btn_text">Allow permissions</string>
     <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> OppiaMobile > Permissions to grant access to these permissions</string>
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>

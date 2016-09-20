@@ -15,7 +15,7 @@
     <string name="menu_search">Búsqueda</string>
     <string name="menu_stop_read_aloud">Detener lectura</string>
     
-    <string name="service_tracker">OppiaMobile buscador de servicio</string>
+    <string name="service_tracker">OppiaMobile - Seguimiento</string>
     
     <string name="fragment_welcome_title">Bienvenido a OppiaMobile</string>
     <string name="fragment_welcome_desc">Oppia Mobile es una plataforma de aprendizaje móvil de código abierto para la entrega de contenido de aprendizaje, vídeo y cuestionarios.\n\n\'Oppia\' viene del verbo \'aprender\' en finés.</string>
@@ -32,7 +32,7 @@
     <string name="tab_title_welcome">Bienvenida</string>
     
     <string name="title_about">Acerca de</string>
-    <string name="title_baseline">Baseline</string>
+    <string name="title_baseline">Preliminar</string>
     <string name="title_help">Ayuda</string>
     <string name="title_download_activity">Gestionar cursos</string>
     <string name="title_monitor">Monitor</string>
@@ -80,7 +80,7 @@
 	<string name="prefServerTimeoutConnection">Tiempo de espera de conexión superado</string>
 	<string name="prefServerTimeoutResponse">Tiempo de espera de respuesta superado</string>
 	
-	<string name="prefBackgroudDataConnect">Buscador de actividad previa</string>
+	<string name="prefBackgroudDataConnect">Seguimiento de actividad</string>
 	<string name="prefBackgroudDataConnect_summary">Enviar registros de actividad, incluso cuando esta aplicación no se esté ejecutando.</string>
     <string name="prefTextSize">Tamaño del texto</string>
     <string name="prefUser">Usuario</string>
@@ -182,7 +182,7 @@
 	<string name="error_no_username">Por favor, introduce un nombre de usuario</string>
 	<string name="error_installing_course">%1$s: no se pudo instalar</string>
 	<string name="error_latest_already_installed">%1$s: última versión ya está instalada</string>
-	<string name="error_login">Error en el acceso</string>
+	<string name="error_login">Usuario o contraseña incorrectos\nInténtalo de nuevo</string>
 	<string name="error_sdcard">Tu tarjeta SD no está disponible - por favor reinicia la aplicación cuando vuelva a estarlo.\nLa app se cerrará ahora.</string>
 	<string name="error_media_not_found">Media: \'%1$s\' no encontrado.</string>
 	<string name="error_media_app_not_found">Parece que no tienes un reproductor multimedia instalado que pueda reproducir este vídeo.</string>
@@ -212,10 +212,10 @@
     <string name="course_deleting_success">Curso eliminado satisfactoriamente</string>
     <string name="course_deleting_error">Error eliminando curso</string>
 
-	<string name="login_process">Accediendo</string>
+	<string name="login_process">Iniciando sesión</string>
 	<string name="login_complete">Registrado</string>
 	
-	<string name="logout_confirm">Estás seguro de que quieres desconectarte?\n\nDesconectarte eliminará todos los registros de actividad del teléfono. Necesitarás una conexión a internet activa para loguearte de nuevo.</string>
+	<string name="logout_confirm">Estás seguro de que quieres cerrar sesión?\n\nDesconectarte eliminará todos los registros de actividad del teléfono. Necesitarás una conexión a internet activa para loguearte de nuevo.</string>
 	
 	<string name="register_process">Identificando</string>
 	<string name="register_complete">Registro completo</string>
@@ -283,7 +283,7 @@
     <string name="menu_sort_by_course">Ordenar por curso</string>
     <string name="menu_sort_by_filename">Ordenar por nombre de archivo</string>
     <string name="error_connection_ssl">Error conectando al servidor debido a problemas con SSL. Por favor, asegúrese de que el host del servidor de OppiaMobile en los ajustes es correcto, y de que el dispositivo tiene configurada la fecha y hora actuales</string>
-    <string name="error_apikey_expired">La clave de API ha expirado. Por favor, logueate de nuevo.</string>
+    <string name="error_apikey_expired">Tu clave de API ha expirado. Por favor, inicia sesión de nuevo.</string>
     <string name="media_player_description">Reproductor Oppia</string>
     <string name="menu_select_all">Seleccionar todos</string>
     <string name="missing_media_download_selected">Descargar seleccionados</string>
@@ -318,4 +318,6 @@
     <string name="prefRemoteAdminEnabled">Habilitar administración remota del dispositivo</string>
     <string name="scorecard_quizzes_title">Quizzes</string>
     <string name="upgradev49_1">Copiando archivos al nuevo destino - esta tarea podría llevar varios minutos</string>
+    <string name="permissions.phone_state.title">consultar la identidad y estado del teléfono</string>
+    <string name="permissions.phone_state.description">OppiaMobile necesita acceso a la identidad del teléfono para obtener información sobre el modelo de dispositivo y la versión de Android</string>
 </resources>
