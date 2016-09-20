@@ -318,7 +318,8 @@
     <string name="sequencing.course.message">You must complete all the previous activities in the course before this one becomes available to you.</string>
     <string name="empty_state_courses">There aren\'t any courses currently available to you on this server.</string>
     <string name="empty_state_media">Great! You now have all the media content for your courses downloaded onto your device.</string>
-
+	<string name="empty_state_scorecard">You don\'t have any courses installed yet. \nOnce you install a course, you will see your progress here.</string>
+	
     <string name="permissions.title">OppiaMobile needs the following permissions to function properly:</string>
     <string name="permissions.storage.title">read and modify contents of the SD card</string>
     <string name="permissions.storage.description">OppiaMobile needs access to the SD card to be able to store the downloaded media contents for the courses</string>
