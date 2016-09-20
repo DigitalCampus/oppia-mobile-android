@@ -287,7 +287,7 @@
     <string name="search.result_summary">%1$d results for \"%2$s\"</string>
     <string name="search.message.searching">Searching…</string>
     <string name="search.message.no_results">No results found for \"%1$s\"</string>
-    <string name="search.message.fetching">"Fetching results…"</string>
+    <string name="search.message.fetching">Fetching results…</string>
     <string name="submit_stats_btn_text">Send now</string>
 
     <string name="media_player_description">Oppia Media Player</string>
