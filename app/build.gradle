@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
+apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     maven {
@@ -96,11 +97,14 @@ dependencies {
     compile "com.splunk.mint:mint:5.0.0"
     compile "com.google.android.gms:play-services-gcm:8.1.0"
 
+    //JUnit Dependencies
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.3.1'
     androidTestCompile 'com.android.support.test:runner:0.4'
     androidTestCompile 'com.android.support.test:rules:0.4'
     androidTestCompile 'com.android.support:support-annotations:23.3.0'
+
+    //Espresso Dependencies
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1'){
         exclude module: 'support-annotations'
@@ -109,9 +113,17 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
 
+    //Mockito Dependencies
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    //Dagger Dependencies
+    apt 'com.google.dagger:dagger-compiler:2.5'
+    compile 'com.google.dagger:dagger:2.5'
+    provided 'javax.annotation:jsr250-api:1.0'
+    compile 'org.glassfish:javax.annotation:10.0-b28'
+
 }
 
 task grantPermissions << {
