@@ -60,6 +60,7 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.service.CourseIntallerService;
@@ -74,6 +75,8 @@ import org.digitalcampus.oppia.utils.ui.CourseContextMenuCustom;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 public class OppiaMobileActivity
         extends AppActivity
@@ -105,11 +108,15 @@ public class OppiaMobileActivity
     private ProgressDialog progressDialog;
     private InstallerBroadcastReceiver receiver;
 
+    @Inject CoursesRepository coursesRepository;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_main);
+
+        initializeDagger();
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
         PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
@@ -184,7 +191,12 @@ public class OppiaMobileActivity
         actionBarDrawerToggle.syncState();
 	}
 
-	@Override
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
+
+    @Override
 	public void onStart() {
 		super.onStart();
 		DbHelper db = DbHelper.getInstance(this);
@@ -214,7 +226,7 @@ public class OppiaMobileActivity
 
 		DbHelper db = DbHelper.getInstance(this);
         courses.clear();
-		courses.addAll(db.getCourses(userId));
+		courses.addAll(coursesRepository.getCourses(this, userId));
 		
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
