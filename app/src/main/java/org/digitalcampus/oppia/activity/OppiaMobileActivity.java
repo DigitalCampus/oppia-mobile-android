@@ -226,7 +226,7 @@ public class OppiaMobileActivity
 
 		DbHelper db = DbHelper.getInstance(this);
         courses.clear();
-		courses.addAll(coursesRepository.getCourses(this, userId));
+		courses.addAll(coursesRepository.getCourses(this));
 		
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
