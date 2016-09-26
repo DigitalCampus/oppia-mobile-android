@@ -22,14 +22,23 @@ import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.di.AppComponent;
+import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+
+import java.util.ArrayList;
 
 import Utils.CourseUtils;
+import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -47,26 +56,52 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.anything;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class OppiaMobileActivityUITest {
 
-    private Context context;
+
+    @Rule public DaggerMockRule<AppComponent> daggerRule =
+            new DaggerMockRule<>(AppComponent.class, new AppModule()).set(
+                    new DaggerMockRule.ComponentSetter<AppComponent>() {
+                        @Override public void setComponent(AppComponent component) {
+                            MobileLearning app =
+                                    (MobileLearning) InstrumentationRegistry.getInstrumentation()
+                                            .getTargetContext()
+                                            .getApplicationContext();
+                            app.setComponent(component);
+                        }
+                    });
 
     @Rule
     public ActivityTestRule<OppiaMobileActivity> oppiaMobileActivityTestRule =
-            new ActivityTestRule<OppiaMobileActivity>(OppiaMobileActivity.class);
+            new ActivityTestRule<OppiaMobileActivity>(OppiaMobileActivity.class, false, false);
+
+    
+    @Mock Context context;
+    @Mock CoursesRepository coursesRepository;
 
     @Before
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getTargetContext();
     }
 
+    private void givenThereAreSomeCourses(int numberOfCourses) {
+
+        ArrayList<Course> courses = new ArrayList<>();
+
+        for(int i = 0; i < numberOfCourses; i++){
+            courses.add(CourseUtils.createMockCourse());
+        }
+
+        when(coursesRepository.getCourses((Context) any())).thenReturn(courses);
+    }
+
 
     private int getCoursesCount(){
-        DbHelper db = DbHelper.getInstance(context);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        return db.getCourses(userId).size();
+        return coursesRepository.getCourses(context).size();
     }
 
     @Test

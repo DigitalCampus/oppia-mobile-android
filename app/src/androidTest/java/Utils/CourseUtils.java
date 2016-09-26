@@ -71,16 +71,12 @@ public class CourseUtils {
 
     public static Course createMockCourse(){
 
-        Course mockCourse = mock(Course.class);
+        Course mockCourse = new Course("");
 
-        when(mockCourse.getNoActivities()).thenReturn(3);
-        doNothing().when(mockCourse.getMultiLangInfo()).setTitlesFromJSONString(anyString());
-
-        when(mockCourse.getCourseId()).thenReturn(999);
+        mockCourse.setShortname("Mock Course");
 
 
         Section mockSection = mock(Section.class);
-        when(mockSection.getMultiLangInfo().getTitle(anyString())).thenReturn("Mock Section");
 
 
         Activity mockActivity = mock(Activity.class);
