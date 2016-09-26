@@ -159,7 +159,7 @@ public class MobileLearning extends Application {
 	public AppComponent getComponent(){
 		if(appComponent == null){
 			appComponent = DaggerAppComponent.builder()
-					.appModule(new AppModule(this))
+					.appModule(new AppModule())
 					.build();
 		}
 		return appComponent;
