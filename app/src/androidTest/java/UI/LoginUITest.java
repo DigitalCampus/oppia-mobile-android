@@ -25,11 +25,11 @@ public class LoginUITest {
 
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
+            new ActivityTestRule<>(WelcomeActivity.class);
 
 
     @Test
-    public void clickLoginButton_NoUser() throws Exception{
+    public void showsErrorMessageWhenThereIsNoUsername() throws Exception{
         onView(withId(R.id.welcome_login))
                 .perform(click());
 
@@ -41,7 +41,7 @@ public class LoginUITest {
     }
 
     @Test
-    public void clickLoginButton_WrongUser() throws Exception{
+    public void showsErrorMessageWhenTheUsernameOrPasswordAreWrong() throws Exception{
         onView(withId(R.id.welcome_login))
                 .perform(click());
 
@@ -59,7 +59,7 @@ public class LoginUITest {
     }
 
     @Test
-    public void clickLoginButton_CorrectUser() throws Exception{
+    public void changeActivityWhenTheCredentialsAreCorrect() throws Exception{
 
        onView(withId(R.id.welcome_login))
                .perform(click());
@@ -73,6 +73,6 @@ public class LoginUITest {
        onView(withId(R.id.login_btn))
                .perform(click());
 
-       assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), OppiaMobileActivity.class);
+       assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 }

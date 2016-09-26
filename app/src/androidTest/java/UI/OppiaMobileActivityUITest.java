@@ -56,6 +56,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -77,16 +78,12 @@ public class OppiaMobileActivityUITest {
 
     @Rule
     public ActivityTestRule<OppiaMobileActivity> oppiaMobileActivityTestRule =
-            new ActivityTestRule<OppiaMobileActivity>(OppiaMobileActivity.class, false, false);
+            new ActivityTestRule<>(OppiaMobileActivity.class, false, false);
 
     
-    @Mock Context context;
+
     @Mock CoursesRepository coursesRepository;
 
-    @Before
-    public void setUp() throws Exception {
-        context = InstrumentationRegistry.getTargetContext();
-    }
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
 
@@ -97,12 +94,89 @@ public class OppiaMobileActivityUITest {
         }
 
         when(coursesRepository.getCourses((Context) any())).thenReturn(courses);
+
     }
-
-
     private int getCoursesCount(){
-        return coursesRepository.getCourses(context).size();
+        return coursesRepository.getCourses((Context) any()).size();
     }
+
+
+    @Test
+    public void showsManageCoursesButtonIfThereAreNoCourses(){
+        givenThereAreSomeCourses(0);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.manage_courses_btn))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void doesNotShowManageCoursesButtonIfThereAreCourses(){
+        givenThereAreSomeCourses(2);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.manage_courses_btn))
+                .check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void showsTagSelectActivityOnClickManageCourses() throws Exception{
+
+        givenThereAreSomeCourses(0);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.manage_courses_btn))
+                .perform(click());
+
+        assertEquals(TagSelectActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+
+    }
+
+    @Test
+    public void showsCourseIndexOnCourseClick() throws Exception{
+
+        givenThereAreSomeCourses(1);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.course_list))
+                .atPosition(0)
+                .perform(click());
+        try{
+            onView(withChild(withText(R.string.cancel)))
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+
+        }catch (AssertionFailedError e){   }
+
+        assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+
+    }
+
+    @Test
+    public void showsContextMenuOnCourseLongClick() throws Exception{
+        givenThereAreSomeCourses(1);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.course_list))
+                .atPosition(0)
+                .perform(longClick());
+
+        onView(withChild(withId(R.id.course_context_reset)))
+                .check(matches(isDisplayed()));
+
+
+        //assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+
+    }
+
+
 
     @Test
     public void drawer_clickDownloadCourses() throws Exception{
@@ -217,7 +291,7 @@ public class OppiaMobileActivityUITest {
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences((Context) any());
         boolean logoutEnabled = prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, false);
 
         if(logoutEnabled) {
@@ -239,7 +313,7 @@ public class OppiaMobileActivityUITest {
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences((Context) any());
         boolean logoutEnabled = prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, false);
 
         if(logoutEnabled){
@@ -308,81 +382,19 @@ public class OppiaMobileActivityUITest {
 
     }
 
-    @Test
-    public void clickManageCourses_emptyCoursesList() throws Exception{
-        int coursesCount = getCoursesCount();
-
-        if(coursesCount == 0) {
-            onView(withId(R.id.manage_courses_btn))
-                    .perform(click());
-
-            assertEquals(TagSelectActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
-        }
-
-    }
-
-    @Test
-    public void clickCourseItem_ShowCourse() throws Exception{
-
-        int coursesCount = getCoursesCount();
-
-        if(coursesCount > 0) {
-            onData(anything())
-                    .inAdapterView(withId(R.id.course_list))
-                    .atPosition(0)
-                    .perform(click());
-            try{
-                onView(withChild(withText(R.string.cancel)))
-                        .check(matches(isDisplayed()))
-                        .perform(click());
-
-            }catch (AssertionFailedError e){   }
-
-            assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
-
-
-        }else{
-            clickManageCourses_emptyCoursesList();
-        }
-
-    }
-
-    @Test
-    public void longClickCourseItem_DisplayContextMenu() throws Exception{
-        int coursesCount = getCoursesCount();
-
-        if(coursesCount > 0) {
-            onData(anything())
-                    .inAdapterView(withId(R.id.course_list))
-                    .atPosition(0)
-                    .perform(longClick());
-
-            onView(withChild(withId(R.id.course_context_reset)))
-                    .check(matches(isDisplayed()));
-
-
-            //assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
-
-
-        }else{
-            clickManageCourses_emptyCoursesList();
-        }
-    }
 
     @Test
     public void contextMenu_UpdateCourseActivity() throws Exception{
-        int coursesCount = getCoursesCount();
+        givenThereAreSomeCourses(1);
 
-        if(coursesCount > 0) {
-            longClickCourseItem_DisplayContextMenu();
+        oppiaMobileActivityTestRule.launchActivity(null);
 
-            onView(withChild(withId(R.id.course_context_update_activity)))
-                    .perform(click());
+//        longClickCourseItem_DisplayContextMenu();
 
-           onView(withText(containsString(InstrumentationRegistry.getTargetContext().getString(R.string.course_updating_success))));
+        onView(withChild(withId(R.id.course_context_update_activity)))
+                .perform(click());
 
-
-        }
+       onView(withText(containsString(InstrumentationRegistry.getTargetContext().getString(R.string.course_updating_success))));
 
     }
 

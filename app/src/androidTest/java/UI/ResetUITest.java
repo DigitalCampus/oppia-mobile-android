@@ -28,7 +28,7 @@ public class ResetUITest {
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
 
     @Test
-    public void clickResetButton_NoUsername() throws  Exception {
+    public void  showsErrorMessageWhenThereIsNoUsername() throws  Exception {
         onView(withText(R.string.tab_title_reset))
                 .perform(click());
 
