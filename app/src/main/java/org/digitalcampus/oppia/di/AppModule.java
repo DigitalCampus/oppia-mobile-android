@@ -1,12 +1,7 @@
 package org.digitalcampus.oppia.di;
 
-import android.content.Context;
-
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CoursesRepository;
-
-import java.util.ArrayList;
 
 import javax.inject.Singleton;
 
@@ -21,6 +16,13 @@ public class AppModule {
     @Singleton
     public CoursesRepository provideCoursesRepository(){
         return new CoursesRepository();
+    }
+
+    @Provides
+    @Singleton
+    public CompleteCourseProvider providesCourse(){
+        return new CompleteCourseProvider();
+
     }
 
 

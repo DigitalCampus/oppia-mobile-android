@@ -24,9 +24,11 @@ import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Lang;
@@ -53,6 +55,8 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ListView;
 
+import javax.inject.Inject;
+
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
 	public static final String TAG = CourseIndexActivity.class.getSimpleName();
@@ -69,11 +73,15 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private SectionListAdapter sla;
 
     private String digestJumpTo;
+
+    @Inject  CompleteCourseProvider completeCourseProvider; 
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_index);
+
+        initializeDagger();
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -86,15 +94,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             String digest = (String) bundle.getSerializable(JUMPTO_TAG);
             if (digest != null){
                 //If there is a digest, we have to parse the course synchronously to avoid showing this activity
-                try {
-                    CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), this);
-                    cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
-                    parsedCourse = cxr.getParsedCourse();
-                } catch (InvalidXMLException e) {
-                    e.printStackTrace();
-                    showErrorMessage();
-                    return;
-                }
+                parsedCourse = completeCourseProvider.getCompleteCourseSync(this, course);
+
                 //We also check first if the baseline is completed before jumping to digest
                 boolean baselineCompleted = isBaselineCompleted();
                 if (baselineCompleted) {
@@ -110,13 +111,18 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 }
             }
             else{
-                ParseCourseXMLTask task =  new ParseCourseXMLTask(this);
+                ParseCourseXMLTask task = completeCourseProvider.getParseCourseXMLAsyncTask(this);
                 task.setListener(this);
                 task.execute(course);
             }
         }
 
 	}
+
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
 
     @Override
 	public void onStart() {
