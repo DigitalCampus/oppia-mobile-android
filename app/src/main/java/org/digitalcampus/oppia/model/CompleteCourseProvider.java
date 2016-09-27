@@ -27,8 +27,10 @@ public class CompleteCourseProvider {
         }
     }
 
-    public ParseCourseXMLTask getParseCourseXMLAsyncTask(Context ctx){
-        return new ParseCourseXMLTask(ctx);
+    public void getCompleteCourseAsync(Context ctx, Course course){
+        ParseCourseXMLTask task = new ParseCourseXMLTask(ctx);
+        task.setListener((ParseCourseXMLTask.OnParseXmlListener) ctx);
+        task.execute(course);
     }
 
     private void showErrorMessage(final Context ctx){
