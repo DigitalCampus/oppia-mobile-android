@@ -111,9 +111,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 }
             }
             else{
-                ParseCourseXMLTask task = completeCourseProvider.getParseCourseXMLAsyncTask(this);
-                task.setListener(this);
-                task.execute(course);
+                completeCourseProvider.getCompleteCourseAsync(this, course);
             }
         }
 
