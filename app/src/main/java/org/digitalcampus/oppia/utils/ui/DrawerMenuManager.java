@@ -11,6 +11,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuItemWrapperICS;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,8 +69,10 @@ public class DrawerMenuManager {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 boolean result = onOptionsItemSelected(menuItem);
-                menuItem.setChecked(false);
-                drawerLayout.closeDrawers();
+                if (result){
+                    menuItem.setChecked(false);
+                    drawerLayout.closeDrawers();
+                }
                 return result;
             }
         });
@@ -82,9 +85,15 @@ public class DrawerMenuManager {
     }
 
     public void onPrepareOptionsMenu(Menu menu){
-        this.onPrepareOptionsMenu(menu, null);
+        this.onPrepareOptionsMenu(menu, null, null);
+    }
+    public void onPrepareOptionsMenu(Menu menu, int currentOption){
+        this.onPrepareOptionsMenu(menu, currentOption, null);
     }
     public void onPrepareOptionsMenu(Menu menu, Map<Integer, MenuOption> options){
+        this.onPrepareOptionsMenu(menu, null, options);
+    }
+    public void onPrepareOptionsMenu(Menu menu, Integer currentOption, Map<Integer, MenuOption> options){
 
         if (options != null)
             this.additionalOptions = options;
@@ -95,6 +104,14 @@ public class DrawerMenuManager {
         MenuItem itemMonitor = drawerMenu.findItem(R.id.menu_monitor);
         MenuItem itemCourseDownload = drawerMenu.findItem(R.id.menu_download);
         MenuItem itemLanguageDialog = drawerMenu.findItem(R.id.menu_language);
+
+        if (currentOption != null){
+            MenuItem current = drawerMenu.findItem(currentOption);
+            if (current != null){
+                current.setCheckable(true);
+                current.setChecked(true);
+            }
+        }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(drawerAct);
         itemLogout.setVisible(prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT));
@@ -114,6 +131,9 @@ public class DrawerMenuManager {
     }
 
     private boolean onOptionsItemSelected(MenuItem item){
+        // If it is the current selected item, we do nothing
+        if (item.isChecked()) return false;
+
         final int itemId = item.getItemId();
         AdminSecurityManager.checkAdminPermission(drawerAct, itemId, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {

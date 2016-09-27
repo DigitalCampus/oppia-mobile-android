@@ -26,16 +26,20 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
+import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -62,6 +66,8 @@ public class SearchActivity extends AppActivity {
 	private String currentSearch;
     private SearchResultsListAdapter srla;
     protected ArrayList<SearchResult> results = new ArrayList<>();
+
+    private DrawerMenuManager drawer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +92,11 @@ public class SearchActivity extends AppActivity {
                 SearchActivity.this.startActivity(i);
             }
         });
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawer = new DrawerMenuManager(this, false);
+        drawer.initializeDrawer();
 	}
 	
 	@Override
@@ -215,5 +226,25 @@ public class SearchActivity extends AppActivity {
         public void onQueryPerformed() {
             publishProgress(true);
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        drawer.onPrepareOptionsMenu(menu, R.id.menu_search);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawer.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        drawer.onConfigurationChanged(newConfig);
     }
 }

@@ -94,6 +94,7 @@
             android:label="@string/title_scorecard" />
          <activity
             android:name="org.digitalcampus.oppia.activity.SearchActivity"
+             android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/search.activity_title" />
          <activity
             android:name="org.digitalcampus.oppia.activity.AppActivity"
