@@ -9,6 +9,7 @@ import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.animation.AnimationSet;
 
 import junit.framework.AssertionFailedError;
 
@@ -27,13 +28,19 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
@@ -52,7 +59,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.anything;
@@ -83,6 +89,7 @@ public class OppiaMobileActivityUITest {
     
 
     @Mock CoursesRepository coursesRepository;
+    @Mock CompleteCourseProvider completeCourseProvider;
 
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
@@ -139,6 +146,16 @@ public class OppiaMobileActivityUITest {
     public void showsCourseIndexOnCourseClick() throws Exception{
 
         givenThereAreSomeCourses(1);
+
+        Mockito.doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                Context ctx = (Context) invocation.getArguments()[0];
+                ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(new CompleteCourse());
+                return null;
+            }
+        }).when(completeCourseProvider).getCompleteCourseAsync((Context) any(), (Course) any());
+
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
