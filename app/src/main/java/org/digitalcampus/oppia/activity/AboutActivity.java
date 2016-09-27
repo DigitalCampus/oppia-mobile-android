@@ -22,8 +22,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -34,7 +32,6 @@ import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.AboutFragment;
 import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
 import org.digitalcampus.oppia.fragments.StatsFragment;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.ArrayList;
@@ -51,10 +48,8 @@ public class AboutActivity extends AppActivity {
 	public static final int TAB_PRIVACY = 2;
 	public static final int TAB_STATS = 3;
 
-	private ActionBar actionBar;
 	private ViewPager viewPager;
     private TabLayout tabs;
-	private ActivityPagerAdapter apAdapter;
 	private int currentTab = 0;
 	private SharedPreferences prefs;
 	
@@ -63,21 +58,21 @@ public class AboutActivity extends AppActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_about);
-		actionBar = getSupportActionBar();
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		viewPager = (ViewPager) findViewById(R.id.activity_about_pager);
 
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
-		
+		ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
-			currentTab = (Integer) bundle.getSerializable(AboutActivity.TAB_ACTIVE);
+			currentTab = bundle.getInt(AboutActivity.TAB_ACTIVE);
 		}
 	}
 	
@@ -106,9 +101,8 @@ public class AboutActivity extends AppActivity {
 		Fragment fStats = StatsFragment.newInstance();
 		fragments.add(fStats);
         titles.add(this.getString(R.string.tab_title_activity));
-		
-		apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
-		viewPager.setAdapter(apAdapter);
+
+		viewPager.setAdapter(new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles));
         tabs.setupWithViewPager(viewPager);
         tabs.setTabMode(TabLayout.MODE_FIXED);
         tabs.setTabGravity(TabLayout.GRAVITY_FILL);
