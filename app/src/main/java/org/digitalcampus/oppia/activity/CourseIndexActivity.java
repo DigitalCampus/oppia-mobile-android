@@ -45,6 +45,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -83,7 +84,20 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		prefs.registerOnSharedPreferenceChangeListener(this);
         loadingCourseView =  findViewById(R.id.loading_course);
 
-		Bundle bundle = this.getIntent().getExtras();
+        FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.scorecard_fab);
+        if (myFab != null) {
+            myFab.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent i = new Intent(CourseIndexActivity.this, ScorecardActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(Course.TAG, course);
+                    i.putExtras(tb);
+                    startActivityForResult(i, 1);
+                }
+            });
+        }
+
+        Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			course = (Course) bundle.getSerializable(Course.TAG);
 
@@ -134,8 +148,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             if (description != null) {
                 description.setText(course.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
             }
-            //getSupportActionBar().setIcon(bm);
-            //getSupportActionBar().setHomeAsUpIndicator(bm);
         }
     }
 
@@ -169,7 +181,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 editor.remove(entry.getKey());
             }
         }
-        editor.commit();
+        editor.apply();
 
         if ((sections != null) && (sections.size()>0)){
             cxr.updateCourseActivity();
