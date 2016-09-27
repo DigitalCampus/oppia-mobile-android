@@ -37,7 +37,6 @@ import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener {

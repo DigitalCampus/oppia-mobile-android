@@ -106,13 +106,16 @@ public class SearchActivity extends AppActivity {
 		summary = (TextView) findViewById(R.id.search_results_summary);
         loadingSpinner = (ProgressBar) findViewById(R.id.progressBar);
         searchButton = (ImageView) findViewById(R.id.searchbutton);
-        searchButton.setClickable(true);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                hideKeyboard(v);
-                performSearch();
-            }
-        });
+        if (searchButton != null) {
+            searchButton.setClickable(true);
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    hideKeyboard(v);
+                    performSearch();
+                }
+            });
+        }
+
 	}
 
     @Override
