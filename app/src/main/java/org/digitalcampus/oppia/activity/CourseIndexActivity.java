@@ -52,7 +52,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
@@ -124,7 +126,15 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		if (course.getImageFile() != null) {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
 					R.drawable.dc_logo);
-			//getSupportActionBar().setIcon(bm);
+            ImageView backdrop = (ImageView) findViewById(R.id.appbar_backdrop);
+            TextView description = (TextView) findViewById(R.id.appbar_description);
+            if (backdrop != null) {
+                backdrop.setImageDrawable(bm);
+            }
+            if (description != null) {
+                description.setText(course.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+            }
+            //getSupportActionBar().setIcon(bm);
             //getSupportActionBar().setHomeAsUpIndicator(bm);
         }
     }

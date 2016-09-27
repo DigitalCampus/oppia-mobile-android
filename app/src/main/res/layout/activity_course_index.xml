@@ -13,7 +13,7 @@
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/main.appbar"
-        android:layout_height="210dp"
+        android:layout_height="190dp"
         android:layout_width="match_parent"
         android:fitsSystemWindows="true">
         <android.support.design.widget.CollapsingToolbarLayout
@@ -22,6 +22,38 @@
             android:fitsSystemWindows="true"
             app:expandedTitleTextAppearance="@style/ScrollableLayoutHeaderText"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.45">
+
+                <ImageView
+                    android:id="@+id/appbar_backdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="?attr/actionBarSize"
+                    android:paddingLeft="5dp"
+                    android:scaleType="fitStart"
+                    android:fitsSystemWindows="false"
+                    android:src="@drawable/default_course"
+                    android:alpha="0.4"
+                    android:contentDescription="@string/title_activity_course_index" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/appbar_description"
+                    android:paddingTop="?attr/actionBarSize"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="20dp"
+                    android:textColor="@color/text_dark"
+                    android:maxLines="3"
+                    />
+            </FrameLayout>
+
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -30,7 +62,6 @@
                 app:theme="@style/Oppia.Theme.Dark"
                 style="@style/ActionBar.Solid.Om"
                 android:fitsSystemWindows="false"
-
                 app:layout_collapseMode="pin">
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -77,7 +108,7 @@
                 android:dividerHeight="1dp"
                 android:listSelector="@drawable/background_change_pressed"
                 android:cacheColorHint="#00000000"
-                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingTop="@dimen/fab_bottom_margin"
                 android:clipToPadding="false"
                 android:foreground="?android:windowContentOverlay"
                 />
