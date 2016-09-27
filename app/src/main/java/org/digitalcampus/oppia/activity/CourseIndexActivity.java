@@ -45,7 +45,9 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,6 +75,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_index);
+        setSupportActionBar( (Toolbar)findViewById(R.id.toolbar) );
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -122,7 +125,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
 					R.drawable.dc_logo);
 			//getSupportActionBar().setIcon(bm);
-            getSupportActionBar().setHomeAsUpIndicator(bm);
+            //getSupportActionBar().setHomeAsUpIndicator(bm);
         }
     }
 
@@ -240,6 +243,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private void initializeCourseIndex(boolean animate){
 
         final ListView listView = (ListView) findViewById(R.id.section_list);
+        ViewCompat.setNestedScrollingEnabled(listView, true);
         sla = new SectionListAdapter(CourseIndexActivity.this, course, sections, new SectionListAdapter.CourseClickListener() {
             @Override
             public void onActivityClicked(String activityDigest) {

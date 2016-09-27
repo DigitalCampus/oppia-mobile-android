@@ -185,4 +185,10 @@
         <item name="android:paddingLeft">12dp</item>
     </style>
 
+    <style name="ScrollableLayoutHeaderText">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_dark</item>
+    </style>
+
 </resources>

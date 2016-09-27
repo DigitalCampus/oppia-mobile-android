@@ -66,8 +66,8 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 	}
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onStart() {
+        super.onStart();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

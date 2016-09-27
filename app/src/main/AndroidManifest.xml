@@ -51,8 +51,8 @@
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseIndexActivity"
-            android:label="@string/title_activity_course_index" 
-            android:theme="@style/Oppia.Theme.Dark">
+            android:label="@string/title_activity_course_index"
+            android:theme="@style/Oppia.ToolbarTheme.Dark">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseActivity"
