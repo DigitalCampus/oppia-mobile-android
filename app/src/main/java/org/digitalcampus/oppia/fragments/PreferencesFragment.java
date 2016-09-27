@@ -40,7 +40,7 @@ public class PreferencesFragment extends PreferenceFragment {
         Bundle bundle = getArguments();
 
         ArrayList<Lang> langs = new ArrayList<>();
-        if (bundle.getSerializable("langs") != null) {
+        if (bundle != null && bundle.getSerializable("langs") != null) {
 	        langs = (ArrayList<Lang>) bundle.getSerializable("langs");
         }
         updateLangsList(langs);

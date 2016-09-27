@@ -73,25 +73,24 @@ public class SearchActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         srla = new SearchResultsListAdapter(this, results);
         resultsList = (ListView) findViewById(R.id.search_results_list);
-        resultsList.setAdapter(srla);
-        resultsList.setOnItemClickListener(new OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Course course = (Course) view.getTag(R.id.TAG_COURSE);
-                String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
-                Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
-                Bundle tb = new Bundle();
-                tb.putSerializable(Course.TAG, course);
-                tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, digest);
-                i.putExtras(tb);
-                SearchActivity.this.startActivity(i);
-            }
-        });
+        if (resultsList != null) {
+            resultsList.setAdapter(srla);
+            resultsList.setOnItemClickListener(new OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Course course = (Course) view.getTag(R.id.TAG_COURSE);
+                    String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
+                    Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(Course.TAG, course);
+                    tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, digest);
+                    i.putExtras(tb);
+                    SearchActivity.this.startActivity(i);
+                }
+            });
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -11,7 +11,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.menu.MenuItemWrapperICS;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +41,7 @@ public class DrawerMenuManager {
 
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
-    private Map<Integer, MenuOption> additionalOptions = new HashMap<>();
+    private Map<Integer, MenuOption> customOptions = new HashMap<>();
 
     public DrawerMenuManager(AppActivity act){
         drawerAct = act;
@@ -96,7 +95,7 @@ public class DrawerMenuManager {
     public void onPrepareOptionsMenu(Menu menu, Integer currentOption, Map<Integer, MenuOption> options){
 
         if (options != null)
-            this.additionalOptions = options;
+            this.customOptions = options;
 
         Menu drawerMenu = navigationView.getMenu();
         MenuItem itemLogout = drawerMenu.findItem(R.id.menu_logout);
@@ -115,10 +114,10 @@ public class DrawerMenuManager {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(drawerAct);
         itemLogout.setVisible(prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT));
-        itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS && additionalOptions.containsKey(R.id.menu_settings));
+        itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS);
         itemMonitor.setVisible(MobileLearning.MENU_ALLOW_MONITOR);
         itemCourseDownload.setVisible(MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD);
-        itemLanguageDialog.setVisible(additionalOptions.containsKey(R.id.menu_language));
+        itemLanguageDialog.setVisible(customOptions.containsKey(R.id.menu_language));
     }
 
     public void onPostCreate(Bundle savedInstanceState){
@@ -137,9 +136,12 @@ public class DrawerMenuManager {
         final int itemId = item.getItemId();
         AdminSecurityManager.checkAdminPermission(drawerAct, itemId, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {
-                Intent i;
-
-                if (itemId == R.id.menu_download) {
+                // Check if the option has custom manager
+                if(
+                    customOptions.containsKey(itemId)){
+                    customOptions.get(itemId).onOptionSelected();
+                }
+                else if (itemId == R.id.menu_download) {
                     launchIntentForActivity(TagSelectActivity.class);
                 } else if (itemId == R.id.menu_about) {
                     launchIntentForActivity(AboutActivity.class);
@@ -149,13 +151,10 @@ public class DrawerMenuManager {
                     launchIntentForActivity(ScorecardActivity.class);
                 } else if (itemId == R.id.menu_search) {
                     launchIntentForActivity(SearchActivity.class);
-                } else if (itemId == R.id.menu_logout) {
+                } else if (itemId == R.id.menu_settings) {
+                    launchIntentForActivity(PrefsActivity.class);
+                }else if (itemId == R.id.menu_logout) {
                     logout();
-                }else{
-                    //If it is another option, check that we have it in the additional options
-                    if(additionalOptions.containsKey(itemId)){
-                        additionalOptions.get(itemId).onOptionSelected();
-                    }
                 }
             }
         });
@@ -163,12 +162,15 @@ public class DrawerMenuManager {
         return true;
     }
 
-    private void launchIntentForActivity(Class<?> activityClass){
+    public void launchIntentForActivity(Class<?> activityClass){
         Intent i = new Intent(drawerAct, activityClass);
         if (!this.isRootActivity){
             //If the activity was not the root one, we close it
             drawerAct.finish();
         }
+        drawerAct.overridePendingTransition(
+                android.R.anim.slide_in_left,
+                android.R.anim.fade_out);
         drawerAct.startActivity(i);
     }
 
