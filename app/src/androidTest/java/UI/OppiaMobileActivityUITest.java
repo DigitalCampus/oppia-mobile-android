@@ -32,6 +32,9 @@ import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.MultiLangInfo;
+import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.junit.Before;
 import org.junit.Rule;
@@ -147,11 +150,13 @@ public class OppiaMobileActivityUITest {
 
         givenThereAreSomeCourses(1);
 
+        final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
+
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Context ctx = (Context) invocation.getArguments()[0];
-                ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(new CompleteCourse());
+                ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
                 return null;
             }
         }).when(completeCourseProvider).getCompleteCourseAsync((Context) any(), (Course) any());
@@ -163,12 +168,6 @@ public class OppiaMobileActivityUITest {
                 .inAdapterView(withId(R.id.course_list))
                 .atPosition(0)
                 .perform(click());
-        try{
-            onView(withChild(withText(R.string.cancel)))
-                    .check(matches(isDisplayed()))
-                    .perform(click());
-
-        }catch (AssertionFailedError e){   }
 
         assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
 

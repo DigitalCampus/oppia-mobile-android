@@ -20,7 +20,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public CompleteCourseProvider providesCourse(){
+    public CompleteCourseProvider provideCompleteCourseProvider(){
         return new CompleteCourseProvider();
 
     }

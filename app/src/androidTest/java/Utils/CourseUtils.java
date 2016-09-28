@@ -13,6 +13,8 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.MultiLangInfo;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.storage.*;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -20,6 +22,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import static org.apache.commons.io.FileUtils.cleanDirectory;
@@ -88,6 +91,49 @@ public class CourseUtils {
 
 
         return mockCourse;
+
+    }
+
+    public static CompleteCourse createMockCompleteCourse(int numberOfSections, int numberOfActivities){
+        ArrayList<Section> sections = new ArrayList<>();
+        ArrayList<Activity> activities = new ArrayList<>();
+
+        //Add activities
+        for(int i = 0; i < numberOfActivities; i++){
+            final int n = i;
+            MultiLangInfo mli = new MultiLangInfo();
+            mli.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Activity " + n)); }});
+
+            Activity activity = new Activity();
+            activity.setMultiLangInfo(mli);
+            activity.setDigest("");
+            activity.setActType("ActType");
+            activities.add(activity);
+        }
+
+        //Add sections
+        for(int i = 0; i < numberOfSections; i++){
+            final int n = i;
+            MultiLangInfo mli = new MultiLangInfo();
+            mli.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Section " + n)); }});
+
+            Section section = new Section();
+            section.setMultiLangInfo(mli);
+            section.setActivities(activities);
+            sections.add(section);
+
+        }
+
+        MultiLangInfo mli = new MultiLangInfo();
+        mli.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Mock Course")); }});
+
+
+        CompleteCourse completeCourse = new CompleteCourse();
+        completeCourse.setShortname("Mock Course");
+        completeCourse.setMultiLangInfo(mli);
+        completeCourse.setSections(sections);
+
+        return completeCourse;
 
     }
 }
