@@ -67,6 +67,10 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -74,7 +78,9 @@ public class OppiaMobileActivityUITest {
 
 
     @Rule public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule()).set(
+            new DaggerMockRule<>(AppComponent.class, new AppModule((MobileLearning) InstrumentationRegistry.getInstrumentation()
+                                                                                    .getTargetContext()
+                                                                                    .getApplicationContext())).set(
                     new DaggerMockRule.ComponentSetter<AppComponent>() {
                         @Override public void setComponent(AppComponent component) {
                             MobileLearning app =
@@ -93,7 +99,20 @@ public class OppiaMobileActivityUITest {
 
     @Mock CoursesRepository coursesRepository;
     @Mock CompleteCourseProvider completeCourseProvider;
+    @Mock SharedPreferences prefs;
+    @Mock SharedPreferences.Editor editor;
 
+    @Before
+    public void setUp() throws Exception{
+        initMockEditor();
+        when(prefs.edit()).thenReturn(editor);
+    }
+
+    private void initMockEditor(){
+        when(editor.putString(anyString(), anyString())).thenReturn(editor);
+        when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
+        when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
+    }
 
     private void givenThereAreSomeCourses(int numberOfCourses) {
 
@@ -112,7 +131,7 @@ public class OppiaMobileActivityUITest {
 
 
     @Test
-    public void showsManageCoursesButtonIfThereAreNoCourses(){
+    public void showsManageCoursesButtonIfThereAreNoCourses() throws Exception{
         givenThereAreSomeCourses(0);
 
         oppiaMobileActivityTestRule.launchActivity(null);
@@ -122,7 +141,7 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void doesNotShowManageCoursesButtonIfThereAreCourses(){
+    public void doesNotShowManageCoursesButtonIfThereAreCourses() throws Exception{
         givenThereAreSomeCourses(2);
 
         oppiaMobileActivityTestRule.launchActivity(null);
@@ -187,8 +206,11 @@ public class OppiaMobileActivityUITest {
         onView(withChild(withId(R.id.course_context_reset)))
                 .check(matches(isDisplayed()));
 
+        onView(withChild(withId(R.id.course_context_update_activity)))
+                .check(matches(isDisplayed()));
 
-        //assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+        onView(withChild(withId(R.id.course_context_delete)))
+                .check(matches(isDisplayed()));
 
     }
 
@@ -196,6 +218,8 @@ public class OppiaMobileActivityUITest {
 
     @Test
     public void drawer_clickDownloadCourses() throws Exception{
+
+        oppiaMobileActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
@@ -209,6 +233,8 @@ public class OppiaMobileActivityUITest {
     @Test
     public void drawer_clickSearch() throws Exception{
 
+        oppiaMobileActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
@@ -220,6 +246,8 @@ public class OppiaMobileActivityUITest {
 
     @Test
     public void drawer_clickChangeLanguage() throws Exception{
+
+        oppiaMobileActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
@@ -239,6 +267,8 @@ public class OppiaMobileActivityUITest {
     @Test
     public void drawer_clickScorecard() throws Exception{
 
+        oppiaMobileActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
@@ -252,6 +282,8 @@ public class OppiaMobileActivityUITest {
     @Test
     public void drawer_clickMonitor() throws Exception{
 
+        oppiaMobileActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
@@ -264,6 +296,8 @@ public class OppiaMobileActivityUITest {
     @Test
     public void drawer_clickSettings() throws Exception{
 
+        oppiaMobileActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
@@ -275,6 +309,8 @@ public class OppiaMobileActivityUITest {
 
     @Test
     public void drawer_clickAbout() throws Exception{
+
+        oppiaMobileActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
@@ -291,6 +327,10 @@ public class OppiaMobileActivityUITest {
     @Test
     public void drawer_clickLogout() throws Exception{
 
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
@@ -304,50 +344,49 @@ public class OppiaMobileActivityUITest {
     @Test
     public void drawer_clickLogout_dialogNo() throws Exception{
 
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences((Context) any());
-        boolean logoutEnabled = prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, false);
+        onView(withText(R.string.menu_logout))
+                .perform(click());
 
-        if(logoutEnabled) {
+        onView(withText(R.string.no))
+                .perform(click());
 
-            onView(withText(R.string.menu_logout))
-                    .perform(click());
-
-            onView(withText(R.string.no))
-                    .perform(click());
-
-            assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
-        }
+        assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
 
     }
 
     @Test
     public void drawer_clickLogout_dialogYes() throws Exception{
 
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences((Context) any());
-        boolean logoutEnabled = prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, false);
+        onView(withText(R.string.menu_logout))
+                .perform(click());
 
-        if(logoutEnabled){
-            onView(withText(R.string.menu_logout))
-                    .perform(click());
+        onView(withText(R.string.yes))
+                .perform(click());
 
-            onView(withText(R.string.yes))
-                    .perform(click());
-
-            assertEquals(WelcomeActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
-        }
-
+        assertEquals(WelcomeActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
 
 
     }
 
     @Test
     public void actionBar_clickPoints() throws Exception{
+
+        oppiaMobileActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.userpoints))
                 .perform(click());
@@ -374,6 +413,8 @@ public class OppiaMobileActivityUITest {
 
     @Test
     public void actionBar_clickBadges() throws Exception{
+
+        oppiaMobileActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.userbadges))
                 .perform(click());
@@ -405,7 +446,10 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-//        longClickCourseItem_DisplayContextMenu();
+        onData(anything())
+                .inAdapterView(withId(R.id.course_list))
+                .atPosition(0)
+                .perform(longClick());
 
         onView(withChild(withId(R.id.course_context_update_activity)))
                 .perform(click());
