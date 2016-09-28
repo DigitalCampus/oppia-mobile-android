@@ -55,6 +55,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.pressBack;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withChild;
@@ -214,6 +215,75 @@ public class OppiaMobileActivityUITest {
 
     }
 
+    @Test
+    public void showsCurrentActivityOnLogoutClickNo() throws Exception{
+
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.drawer))
+                .perform(DrawerActions.open());
+
+        onView(withText(R.string.menu_logout))
+                .perform(click());
+
+        onView(withText(R.string.no))
+                .perform(click());
+
+        assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+
+    }
+
+    @Test
+    public void showsWelcomeActivityOnLogoutClickYes() throws Exception{
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.drawer))
+                .perform(DrawerActions.open());
+
+        onView(withText(R.string.menu_logout))
+                .perform(click());
+
+        onView(withText(R.string.yes))
+                .perform(click());
+
+        assertEquals(WelcomeActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+
+
+    }
+
+    @Test
+    public void doesNotShowLogoutItemOnPrefsValueFalse() throws Exception{
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(false);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.drawer))
+                .perform(DrawerActions.open());
+
+        onView(withText(R.string.logout))
+                .check(doesNotExist());
+    }
+
+    @Test
+    public void showsLogoutItemOnPrefsValueTrue() throws Exception{
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.drawer))
+                .perform(DrawerActions.open());
+
+        onView(withText(R.string.logout))
+                .check(matches(isDisplayed()));
+    }
 
 
     @Test
@@ -322,65 +392,6 @@ public class OppiaMobileActivityUITest {
 
         onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 withId(R.id.about_versionno))).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void drawer_clickLogout() throws Exception{
-
-        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
-
-        oppiaMobileActivityTestRule.launchActivity(null);
-
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withText(R.string.menu_logout))
-                .perform(click());
-
-        onView(withText(R.string.logout))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void drawer_clickLogout_dialogNo() throws Exception{
-
-
-        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
-
-        oppiaMobileActivityTestRule.launchActivity(null);
-
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withText(R.string.menu_logout))
-                .perform(click());
-
-        onView(withText(R.string.no))
-                .perform(click());
-
-        assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
-
-    }
-
-    @Test
-    public void drawer_clickLogout_dialogYes() throws Exception{
-
-        when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
-
-        oppiaMobileActivityTestRule.launchActivity(null);
-
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withText(R.string.menu_logout))
-                .perform(click());
-
-        onView(withText(R.string.yes))
-                .perform(click());
-
-        assertEquals(WelcomeActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
-
-
     }
 
     @Test
