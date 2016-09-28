@@ -89,7 +89,6 @@ public class OppiaMobileActivity
             CourseContextMenuCustom.OnContextMenuListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
-	private SharedPreferences prefs;
 	private ArrayList<Course> courses;
 	private Course tempCourse;
 	private long userId = 0;
@@ -109,6 +108,7 @@ public class OppiaMobileActivity
     private InstallerBroadcastReceiver receiver;
 
     @Inject CoursesRepository coursesRepository;
+    @Inject SharedPreferences prefs;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -118,7 +118,6 @@ public class OppiaMobileActivity
 
         initializeDagger();
 
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
         PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
         prefs.registerOnSharedPreferenceChangeListener(this);
 
