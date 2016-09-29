@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.di;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
+import org.digitalcampus.oppia.model.User;
 
 import javax.inject.Singleton;
 
@@ -15,4 +16,6 @@ public interface AppComponent {
     void inject(CourseIndexActivity activity);
 
     void inject(GlobalScorecardFragment fragment);
+
+    User getUser();
 }

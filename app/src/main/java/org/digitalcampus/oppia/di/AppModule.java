@@ -4,8 +4,12 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.User;
 
 import javax.inject.Singleton;
 
@@ -38,6 +42,16 @@ public class AppModule {
     @Singleton
     public SharedPreferences provideSharedPreferences(){
         return PreferenceManager.getDefaultSharedPreferences(app);
+    }
+
+    @Provides
+    public User provideUser(){
+        try {
+            return DbHelper.getInstance(app).getUser(SessionManager.getUsername(app));
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
