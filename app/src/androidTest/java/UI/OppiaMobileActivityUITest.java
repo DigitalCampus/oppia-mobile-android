@@ -34,7 +34,9 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfo;
+import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.junit.Before;
 import org.junit.Rule;
@@ -63,15 +65,19 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -102,6 +108,8 @@ public class OppiaMobileActivityUITest {
     @Mock CompleteCourseProvider completeCourseProvider;
     @Mock SharedPreferences prefs;
     @Mock SharedPreferences.Editor editor;
+    @Mock User user;
+    @Mock ArrayList<Points> pointList;
 
     @Before
     public void setUp() throws Exception{
@@ -284,6 +292,23 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.logout))
                 .check(matches(isDisplayed()));
     }
+
+    @Test
+    public void showEmptyPointsList() throws Exception{
+
+        when(user.getPoints()).thenReturn(0);
+
+        doReturn(true).when(pointList).add((Points) any());
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.userpoints))
+                .perform(click());
+
+        assertEquals(0, pointList.size());
+    }
+
+
 
 
     @Test
