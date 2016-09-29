@@ -9,7 +9,10 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.User;
+
+import java.util.ArrayList;
 
 import javax.inject.Singleton;
 
@@ -52,6 +55,11 @@ public class AppModule {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Provides
+    public ArrayList<Points> providePointsList(){
+        return new ArrayList<>();
     }
 
 
