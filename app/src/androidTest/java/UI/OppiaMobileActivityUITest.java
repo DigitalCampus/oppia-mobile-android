@@ -317,6 +317,34 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
+    public void actionBar_clickBadges() throws Exception{
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.userbadges))
+                .perform(click());
+
+        Context context = InstrumentationRegistry.getTargetContext();
+        DbHelper db = DbHelper.getInstance(context);
+        long userId = db.getUserId(SessionManager.getUsername(context));
+        try {
+            int badgesCount = db.getUser(userId).getBadges();
+
+
+            if (badgesCount > 0) {
+                onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                        withId(R.id.badges_list))).check(matches(isDisplayed()));
+            } else {
+                onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                        withId(R.id.fragment_badges_title))).check(matches(isDisplayed()));
+            }
+        }catch(UserNotFoundException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
     public void deleteCourseOnContextMenuDeleteClickNo() throws Exception{
         givenThereAreSomeCourses(1);
 
@@ -429,11 +457,29 @@ public class OppiaMobileActivityUITest {
 
     }
 
+    @Test
+    public void updateCourseActivityOnContextMenu() throws Exception{
+        givenThereAreSomeCourses(1);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.course_list))
+                .atPosition(0)
+                .perform(longClick());
+
+        onView(withChild(withId(R.id.course_context_update_activity)))
+                .perform(click());
+
+        onView(withText(containsString(InstrumentationRegistry.getTargetContext().getString(R.string.course_updating_success))));
+
+    }
 
 
+    //Drawer Tests
 
     @Test
-    public void drawer_clickDownloadCourses() throws Exception{
+    public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception{
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
@@ -447,7 +493,7 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void drawer_clickSearch() throws Exception{
+    public void showsSearchActivityOnDrawerClickSearch() throws Exception{
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
@@ -461,7 +507,32 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void drawer_clickChangeLanguage() throws Exception{
+    public void showsChangeLanguageDialogIfACourseHasAtLeastOneLang() throws Exception{
+
+        givenThereAreSomeCourses(1);
+        MultiLangInfo mli = new MultiLangInfo();
+
+        mli.setLangs(new ArrayList<Lang>(){{
+            add(new Lang("en", "English"));
+        }});
+
+        coursesRepository.getCourses((Context) any()).get(0).setMultiLangInfo(mli);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.drawer))
+                .perform(DrawerActions.open());
+
+        onView(withText(R.string.menu_language))
+                .perform(click());
+
+        onView(withText(R.string.change_language)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void doesNotShowChangeLanguageDialogIfThereAreNoCoursesWithLangs() throws Exception{
+
+        givenThereAreSomeCourses(1);
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
@@ -473,15 +544,11 @@ public class OppiaMobileActivityUITest {
 
         ViewInteraction dialog = onView(withText(R.string.change_language));
 
-        int coursesCount = getCoursesCount();
-
-        if(coursesCount > 0) {
-            dialog.check(matches(isDisplayed()));
-        }
+        dialog.check(doesNotExist());
     }
 
     @Test
-    public void drawer_clickScorecard() throws Exception{
+    public void showsScorecardsOnDrawerClickScorecard() throws Exception{
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
@@ -496,7 +563,7 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void drawer_clickMonitor() throws Exception{
+    public void showsMonitorActivityOnDrawerClickMonitor() throws Exception{
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
@@ -510,7 +577,7 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void drawer_clickSettings() throws Exception{
+    public void showsPrefsActivityOnDrawerClickSettings() throws Exception{
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
@@ -524,7 +591,7 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void drawer_clickAbout() throws Exception{
+    public void showsAboutActivityOnDrawerClickAbout() throws Exception{
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
@@ -539,74 +606,6 @@ public class OppiaMobileActivityUITest {
         onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 withId(R.id.about_versionno))).check(matches(isDisplayed()));
     }
-
-    @Test
-    public void actionBar_clickBadges() throws Exception{
-
-        oppiaMobileActivityTestRule.launchActivity(null);
-
-        onView(withId(R.id.userbadges))
-                .perform(click());
-
-        Context context = InstrumentationRegistry.getTargetContext();
-        DbHelper db = DbHelper.getInstance(context);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        try {
-            int badgesCount = db.getUser(userId).getBadges();
-
-
-            if (badgesCount > 0) {
-                onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                        withId(R.id.badges_list))).check(matches(isDisplayed()));
-            } else {
-                onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                        withId(R.id.fragment_badges_title))).check(matches(isDisplayed()));
-            }
-        }catch(UserNotFoundException e){
-            e.printStackTrace();
-        }
-
-    }
-
-
-    @Test
-    public void contextMenu_UpdateCourseActivity() throws Exception{
-        givenThereAreSomeCourses(1);
-
-        oppiaMobileActivityTestRule.launchActivity(null);
-
-        onData(anything())
-                .inAdapterView(withId(R.id.course_list))
-                .atPosition(0)
-                .perform(longClick());
-
-        onView(withChild(withId(R.id.course_context_update_activity)))
-                .perform(click());
-
-       onView(withText(containsString(InstrumentationRegistry.getTargetContext().getString(R.string.course_updating_success))));
-
-    }
-
-    /*@Test
-    public void contextMenu_DeleteCourse_clickNo() throws Exception{
-        int coursesCount = getCoursesCount();
-
-        if(coursesCount > 0) {
-            longClickCourseItem_DisplayContextMenu();
-
-            onView(withChild(withId(R.id.course_context_delete)))
-                    .perform(click());
-
-            onView(withText(R.string.no))
-                    .perform(click());
-
-
-            assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
-
-        }
-
-    }*/
-
 
 
    /* @Test
