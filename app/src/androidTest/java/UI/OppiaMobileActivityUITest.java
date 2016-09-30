@@ -76,6 +76,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
@@ -293,8 +294,9 @@ public class OppiaMobileActivityUITest {
                 .check(matches(isDisplayed()));
     }
 
+    
     @Test
-    public void showEmptyPointsList() throws Exception{
+    public void doesNotShowPointsListWhenThereAreNoPoints() throws Exception{
 
         when(user.getPoints()).thenReturn(0);
 
@@ -306,6 +308,9 @@ public class OppiaMobileActivityUITest {
                 .perform(click());
 
         assertEquals(0, pointList.size());
+
+        onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                withId(R.id.points_list))).check(matches(not(isDisplayed())));
     }
 
 
