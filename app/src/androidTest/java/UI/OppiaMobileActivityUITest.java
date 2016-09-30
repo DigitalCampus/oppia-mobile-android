@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import Utils.CourseUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
+import static android.app.PendingIntent.getActivity;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -59,6 +61,7 @@ import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
@@ -70,6 +73,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -294,7 +298,6 @@ public class OppiaMobileActivityUITest {
                 .check(matches(isDisplayed()));
     }
 
-    
     @Test
     public void doesNotShowPointsListWhenThereAreNoPoints() throws Exception{
 
@@ -311,6 +314,119 @@ public class OppiaMobileActivityUITest {
 
         onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 withId(R.id.points_list))).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void deleteCourseOnContextMenuDeleteClickNo() throws Exception{
+        givenThereAreSomeCourses(1);
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_DELETE_COURSE_ENABLED), anyBoolean())).thenReturn(true);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.course_list))
+                .atPosition(0)
+                .perform(longClick());
+
+        onView(withId(R.id.course_context_delete))
+                .perform(click());
+
+        onView(withText(R.string.no))
+                .check(matches(isDisplayed()))
+                .perform(click());
+
+        //TODO: Check
+
+    }
+
+    @Test
+    public void deleteCourseOnContextMenuDeleteClickYes() throws Exception{
+        givenThereAreSomeCourses(3);
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_DELETE_COURSE_ENABLED), anyBoolean())).thenReturn(true);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.course_list))
+                .atPosition(0)
+                .perform(longClick());
+
+        onView(withId(R.id.course_context_delete))
+                .perform(click());
+
+        onView(withText(R.string.yes))
+                .check(matches(isDisplayed()))
+                .perform(click());
+
+        //TODO: Check
+
+    }
+
+    @Test
+    public void doesNotDeleteCourseOnContextMenuDelete() throws Exception{
+        givenThereAreSomeCourses(3);
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_DELETE_COURSE_ENABLED), anyBoolean())).thenReturn(false);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.course_list))
+                .atPosition(0)
+                .perform(longClick());
+
+        onView(withId(R.id.course_context_delete))
+                .perform(click());
+
+        onView(withText(R.string.course_context_delete))
+                .check(doesNotExist());
+
+    }
+
+    @Test
+    public void resetCourseOnContextMenuResetClickYes() throws Exception{
+        givenThereAreSomeCourses(3);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.course_list))
+                .atPosition(0)
+                .perform(longClick());
+
+        onView(withId(R.id.course_context_reset))
+                .perform(click());
+
+        onView(withText(R.string.yes))
+                .check(matches(isDisplayed()))
+                .perform(click());
+
+        //TODO: Check
+
+    }
+
+    @Test
+    public void resetCourseOnContextMenuResetClickNo() throws Exception{
+        givenThereAreSomeCourses(3);
+
+        oppiaMobileActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.course_list))
+                .atPosition(0)
+                .perform(longClick());
+
+        onView(withId(R.id.course_context_reset))
+                .perform(click());
+
+        onView(withText(R.string.no))
+                .check(matches(isDisplayed()))
+                .perform(click());
+
+        //TODO: Check
+
     }
 
 
@@ -422,34 +538,6 @@ public class OppiaMobileActivityUITest {
 
         onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 withId(R.id.about_versionno))).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void actionBar_clickPoints() throws Exception{
-
-        oppiaMobileActivityTestRule.launchActivity(null);
-
-        onView(withId(R.id.userpoints))
-                .perform(click());
-
-        Context context = InstrumentationRegistry.getTargetContext();
-        DbHelper db = DbHelper.getInstance(context);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        try{
-            int points = db.getUser(userId).getPoints();
-
-
-            if(points > 0) {
-                onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                        withId(R.id.points_list))).check(matches(isDisplayed()));
-            }else{
-                onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                        withId(R.id.fragment_points_title))).check(matches(isDisplayed()));
-            }
-        }catch(UserNotFoundException e){
-            e.printStackTrace();
-        }
-
     }
 
     @Test
