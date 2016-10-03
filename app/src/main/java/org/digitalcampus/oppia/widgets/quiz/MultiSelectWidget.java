@@ -39,12 +39,10 @@ public class MultiSelectWidget extends QuestionWidget {
 	public static final String TAG = MultiSelectWidget.class.getSimpleName();
 	private LinearLayout responsesLL;
 	protected SharedPreferences prefs;
-	private Activity activity;
 	
 	public MultiSelectWidget(Activity activity,  View v, ViewGroup container) {
 		init(activity,container,R.layout.widget_quiz_multiselect, v);
 		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-		this.activity = activity;
 	}
 
 	@Override
@@ -53,26 +51,23 @@ public class MultiSelectWidget extends QuestionWidget {
     	responsesLL.removeAllViews();
     	
     	for (Response r : responses){
-    		CheckBox chk= new CheckBox(ctx);  
-    		chk.setText("Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    		CheckBox chk= new CheckBox(ctx);
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
-			params.setMargins(0, (int) activity.getResources().getDimension(R.dimen.quiz_response_margin), 0, 0);
+			setResponseMarginInLayoutParams(params);
 			responsesLL.addView(chk, params);
-    		Iterator<String> itr = currentAnswer.iterator();
-    		while(itr.hasNext()){
-    			String a = itr.next(); 
-    			if(a.equals(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())))){
-    				chk.setChecked(true);
-    			}
-    		}
+			for (String a : currentAnswer) {
+				if (a.equals(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())))) {
+					chk.setChecked(true);
+				}
+			}
     	}	
 	}
 
 	@Override
 	public List<String> getQuestionResponses(List<Response> responses) {
 		int count = responsesLL.getChildCount();
-		List<String> response = new ArrayList<String>();
+		List<String> response = new ArrayList<>();
 		for (int i=0; i<count; i++) {
 			CheckBox cb = (CheckBox) responsesLL.getChildAt(i);
 			if(cb.isChecked()){
