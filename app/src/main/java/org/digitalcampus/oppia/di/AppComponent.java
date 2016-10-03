@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.di;
 
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.model.User;
@@ -18,6 +19,7 @@ public interface AppComponent {
 
     void inject(GlobalScorecardFragment fragment);
     void inject(PointsFragment fragment);
+    void inject(BadgesFragment fragment);
 
     User getUser();
 }

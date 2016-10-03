@@ -42,12 +42,15 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
 public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	public static final String TAG = BadgesFragment.class.getSimpleName();
 	private JSONObject json;
-    private ArrayList<Badges> badges;
     private BadgesListAdapter badgesAdapter;
+
+	@Inject ArrayList<Badges> badges;
 	
 	public static BadgesFragment newInstance() {
 		BadgesFragment myFragment = new BadgesFragment();
@@ -74,15 +77,20 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		initializeDagger();
 
-        badges = new ArrayList<Badges>();
         badgesAdapter = new BadgesListAdapter(super.getActivity(), badges);
         ListView listView = (ListView) this.getView().findViewById(R.id.badges_list);
         listView.setAdapter(badgesAdapter);
 
 		getBadges();
 	}
-	
+
+	private void initializeDagger() {
+		MobileLearning app = (MobileLearning) getActivity().getApplication();
+		app.getComponent().inject(this);
+	}
+
 	private void getBadges(){		
 		APIUserRequestTask task = new APIUserRequestTask(super.getActivity());
 		Payload p = new Payload(MobileLearning.SERVER_AWARDS_PATH);

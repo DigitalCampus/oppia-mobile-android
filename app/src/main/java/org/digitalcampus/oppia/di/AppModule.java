@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Points;
@@ -62,6 +63,10 @@ public class AppModule {
         return new ArrayList<>();
     }
 
+    @Provides
+    public ArrayList<Badges> provideBadgesList(){
+        return new ArrayList<>();
+    }
 
 
 }
