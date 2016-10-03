@@ -79,7 +79,6 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		super.onActivityCreated(savedInstanceState);
 		initializeDagger();
 
-        badges = new ArrayList<Badges>();
         badgesAdapter = new BadgesListAdapter(super.getActivity(), badges);
         ListView listView = (ListView) this.getView().findViewById(R.id.badges_list);
         listView.setAdapter(badgesAdapter);
