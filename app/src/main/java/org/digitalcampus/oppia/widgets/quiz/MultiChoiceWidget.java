@@ -38,9 +38,11 @@ public class MultiChoiceWidget extends QuestionWidget{
 
 	public static final String TAG = MultiChoiceWidget.class.getSimpleName();
 	protected SharedPreferences prefs;
+	private Activity activity;
 	
 	public MultiChoiceWidget(Activity activity, View v, ViewGroup container) {
 		init(activity,container,R.layout.widget_quiz_multichoice,v);
+		this.activity = activity;
 		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	}
 
@@ -54,9 +56,13 @@ public class MultiChoiceWidget extends QuestionWidget{
     	int id = 1000+1;
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);
+			RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
+					RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
+			params.setMargins(0, (int) activity.getResources().getDimension(R.dimen.padding_medium),
+							0, (int) activity.getResources().getDimension(R.dimen.padding_medium));
     		rb.setId(id);
 			rb.setText(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-			responsesRG.addView(rb);
+			responsesRG.addView(rb, params);
             for (String answer : currentAnswer) {
                 if (r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())) == answer) {
                     rb.setChecked(true);
