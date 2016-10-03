@@ -39,10 +39,12 @@ public class MultiSelectWidget extends QuestionWidget {
 	public static final String TAG = MultiSelectWidget.class.getSimpleName();
 	private LinearLayout responsesLL;
 	protected SharedPreferences prefs;
+	private Activity activity;
 	
 	public MultiSelectWidget(Activity activity,  View v, ViewGroup container) {
 		init(activity,container,R.layout.widget_quiz_multiselect, v);
 		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+		this.activity = activity;
 	}
 
 	@Override
@@ -52,8 +54,11 @@ public class MultiSelectWidget extends QuestionWidget {
     	
     	for (Response r : responses){
     		CheckBox chk= new CheckBox(ctx);  
-    		chk.setText(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-    		responsesLL.addView(chk);
+    		chk.setText("Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+			params.setMargins(0, (int) activity.getResources().getDimension(R.dimen.quiz_response_margin), 0, 0);
+			responsesLL.addView(chk, params);
     		Iterator<String> itr = currentAnswer.iterator();
     		while(itr.hasNext()){
     			String a = itr.next(); 
