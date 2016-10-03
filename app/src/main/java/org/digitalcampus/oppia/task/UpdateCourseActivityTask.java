@@ -22,7 +22,6 @@ import android.os.AsyncTask;
 
 import com.splunk.mint.Mint;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -106,7 +105,7 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
             e.printStackTrace();
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
-		} catch (ClientProtocolException | SocketTimeoutException cpe) {
+		} catch (SocketTimeoutException cpe) {
 			Mint.logException(cpe);
 			cpe.printStackTrace();
 			payload.setResult(false);

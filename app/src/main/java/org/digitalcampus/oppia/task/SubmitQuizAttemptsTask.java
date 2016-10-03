@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -100,9 +99,6 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
                 }
 
 			} catch (UnsupportedEncodingException e) {
-				payload.setResult(false);
-				publishProgress(ctx.getString(R.string.error_connection));
-			} catch (ClientProtocolException e) {
 				payload.setResult(false);
 				publishProgress(ctx.getString(R.string.error_connection));
 			} catch (IOException e) {

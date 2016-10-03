@@ -18,16 +18,11 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 
 import com.splunk.mint.Mint;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.SubmitListener;
@@ -134,7 +129,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             e.printStackTrace();
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
-        } catch (UnsupportedEncodingException | ClientProtocolException e) {
+        } catch (UnsupportedEncodingException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {
