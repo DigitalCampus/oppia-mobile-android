@@ -58,8 +58,7 @@ public class MultiChoiceWidget extends QuestionWidget{
     		RadioButton rb = new RadioButton(ctx);
 			RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
 					RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
-			params.setMargins(0, (int) activity.getResources().getDimension(R.dimen.padding_medium),
-							0, (int) activity.getResources().getDimension(R.dimen.padding_medium));
+			params.setMargins(0, (int) activity.getResources().getDimension(R.dimen.quiz_response_margin), 0, 0);
     		rb.setId(id);
 			rb.setText(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 			responsesRG.addView(rb, params);
