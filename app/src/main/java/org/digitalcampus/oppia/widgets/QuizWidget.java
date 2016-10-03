@@ -669,7 +669,7 @@ public class QuizWidget extends WidgetFactory {
             }
 
 			String mimeType = FileUtils.getMimeType(Storage.getMediaPath(QuizWidget.super.getActivity()) + mediaFileName);
-			if (!FileUtils.supportedMediafileType(mimeType)) {
+			if (!FileUtils.isSupportedMediafileType(mimeType)) {
 				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
 						Toast.LENGTH_LONG).show();
                 return;

@@ -157,7 +157,7 @@ public class PageWidget extends WidgetFactory {
 
 					String mimeType = FileUtils.getMimeType(Storage.getMediaPath(PageWidget.super.getActivity()) + mediaFileName);
 
-					if (!FileUtils.supportedMediafileType(mimeType)) {
+					if (!FileUtils.isSupportedMediafileType(mimeType)) {
 						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
 								Toast.LENGTH_LONG).show();
 						return true;
