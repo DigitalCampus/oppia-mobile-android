@@ -28,6 +28,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
@@ -83,6 +84,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -115,6 +117,7 @@ public class OppiaMobileActivityUITest {
     @Mock SharedPreferences.Editor editor;
     @Mock User user;
     @Mock ArrayList<Points> pointList;
+    @Mock ArrayList<Badges> badgesList;
 
     @Before
     public void setUp() throws Exception{
@@ -317,31 +320,20 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void actionBar_clickBadges() throws Exception{
+    public void doesNotShowBadgesListWhenThereAreNoBadges() throws Exception{
+
+        when(user.getBadges()).thenReturn(0);
+
+        doReturn(true).when(badgesList).add((Badges) any());
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.userbadges))
                 .perform(click());
 
-        Context context = InstrumentationRegistry.getTargetContext();
-        DbHelper db = DbHelper.getInstance(context);
-        long userId = db.getUserId(SessionManager.getUsername(context));
-        try {
-            int badgesCount = db.getUser(userId).getBadges();
+        assertEquals(0, badgesList.size());
 
-
-            if (badgesCount > 0) {
-                onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                        withId(R.id.badges_list))).check(matches(isDisplayed()));
-            } else {
-                onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                        withId(R.id.fragment_badges_title))).check(matches(isDisplayed()));
-            }
-        }catch(UserNotFoundException e){
-            e.printStackTrace();
-        }
-
+        onView(withText(R.string.info_no_badges)).check(matches(isDisplayed()));
     }
 
     @Test
