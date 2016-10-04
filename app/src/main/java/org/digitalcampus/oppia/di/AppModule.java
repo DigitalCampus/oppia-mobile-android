@@ -9,6 +9,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
+import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.TagRepository;
@@ -74,6 +75,12 @@ public class AppModule {
     @Singleton
     public TagRepository provideTagRepository() {
         return new TagRepository();
+    }
+
+    @Provides
+    @Singleton
+    public CourseInstallRepository provideCourseInstallRepository() {
+        return new CourseInstallRepository();
     }
 
 
