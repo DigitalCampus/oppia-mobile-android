@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/course_description"
-        android:text="Publisher:"
+        android:text="@string/publisher"
         android:layout_marginRight="4dp"
         android:textStyle="bold"/>
     <TextView
