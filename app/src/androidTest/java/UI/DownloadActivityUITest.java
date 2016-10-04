@@ -2,17 +2,16 @@ package UI;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
-import org.digitalcampus.oppia.model.Tag;
-import org.digitalcampus.oppia.model.TagRepository;
+import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.task.Payload;
 import org.json.JSONObject;
 import org.junit.Rule;
@@ -27,21 +26,22 @@ import java.util.ArrayList;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 
 @RunWith(AndroidJUnit4.class)
-public class TagActivityUITest {
+public class DownloadActivityUITest {
 
-    @Rule public DaggerMockRule<AppComponent> daggerRule =
+    @Rule
+    public DaggerMockRule<AppComponent> daggerRule =
             new DaggerMockRule<>(AppComponent.class, new AppModule((MobileLearning) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
@@ -56,15 +56,15 @@ public class TagActivityUITest {
                     });
 
     @Rule
-    public ActivityTestRule<TagSelectActivity> tagSelectActivityTestRule =
-            new ActivityTestRule<>(TagSelectActivity.class, false, false);
+    public ActivityTestRule<DownloadActivity> tagSelectActivityTestRule =
+            new ActivityTestRule<>(DownloadActivity.class, false, false);
 
 
-    @Mock TagRepository tagRepository;
-
+    @Mock CourseInstallRepository courseInstallRepository;
 
     @Test
-    public void showCorrectCategory() throws Exception {
+    public void showProgressBarOnDownloadCourseButtonClick() throws Exception {
+
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -72,31 +72,46 @@ public class TagActivityUITest {
                 Payload response = new Payload();
                 response.setResult(true);
                 response.setResultResponse("{}");
-                ((TagSelectActivity) ctx).apiRequestComplete(response);
+                ((DownloadActivity) ctx).apiRequestComplete(response);
                 return null;
             }
-        }).when(tagRepository).getTagList((Context) any());
+        }).when(courseInstallRepository).getCourseList((Context) any(), anyString());
 
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                ArrayList<Tag> tags = (ArrayList<Tag>) invocationOnMock.getArguments()[0];
-                tags.add(new Tag() {{
-                    setName("Mocked Course Name");
-                    setDescription("Mocked Course Description");
+                ArrayList<CourseIntallViewAdapter> courses = (ArrayList<CourseIntallViewAdapter>) invocationOnMock.getArguments()[1];
+                courses.add(new CourseIntallViewAdapter("") {{
+                    setShortname("Mocked Course Name");
+                    setAuthorName("Mock Author");
+                    setDownloadUrl("https://demo.oppia-mobile.org/api/v1/course/72/download/");
                 }});
                 return null;
             }
-        }).when(tagRepository).refreshTagList((ArrayList<Tag>) any(), (JSONObject) any());
+        }).when(courseInstallRepository).refreshCourseList((Context) any(), (ArrayList<CourseIntallViewAdapter>) any(),
+                                                            (JSONObject) any(), anyString(), anyBoolean());
 
         tagSelectActivityTestRule.launchActivity(null);
 
         onData(anything())
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
-                .onChildView(withId(R.id.tag_name))
-                .check(matches(withText(startsWith("Mocked Course Name"))));
+                .onChildView(withId(R.id.course_progress_bar))
+                .check(doesNotExist());
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .perform(click());
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_progress))
+                .check(matches(isDisplayed()));
+
     }
 
 }
