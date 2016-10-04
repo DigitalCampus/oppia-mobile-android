@@ -11,6 +11,7 @@ import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Points;
+import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
 
 import java.util.ArrayList;
@@ -66,6 +67,13 @@ public class AppModule {
     @Provides
     public ArrayList<Badges> provideBadgesList(){
         return new ArrayList<>();
+    }
+
+
+    @Provides
+    @Singleton
+    public TagRepository provideTagRepository() {
+        return new TagRepository();
     }
 
 
