@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
+import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.CourseIntallerService;
@@ -53,6 +54,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.Callable;
 
+import javax.inject.Inject;
+
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
 	
 	public static final String TAG = DownloadActivity.class.getSimpleName();
@@ -67,10 +70,15 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     private InstallerBroadcastReceiver receiver;
 
+    @Inject CourseInstallRepository courseInstallRepository;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
+
+        initializeDagger();
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         
 		Bundle bundle = this.getIntent().getExtras(); 
@@ -88,6 +96,11 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         ListView listView = (ListView) findViewById(R.id.tag_list);
         listView.setAdapter(dla);
 	}
+
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
 	
 	@Override
 	public void onResume(){
@@ -158,10 +171,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		progressDialog.setCancelable(false);
 		progressDialog.show();
 
-		APIUserRequestTask task = new APIUserRequestTask(this);
-		Payload p = new Payload(url);
-		task.setAPIRequestListener(this);
-		task.execute(p);
+        courseInstallRepository.getCourseList(this, url);
 	}
 
 	public void refreshCourseList() {
@@ -170,7 +180,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		try {
             String storage = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
             courses.clear();
-            courses.addAll(CourseIntallViewAdapter.parseCoursesJSON(this, json, storage, showUpdatesOnly));
+
+            courseInstallRepository.refreshCourseList(this, courses, json, storage, showUpdatesOnly);
 
             dla.notifyDataSetChanged();
             findViewById(R.id.empty_state).setVisibility((courses.size()==0) ? View.VISIBLE : View.GONE);

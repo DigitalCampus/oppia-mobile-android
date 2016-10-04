@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.di;
 
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
@@ -18,6 +19,7 @@ public interface AppComponent {
     void inject(OppiaMobileActivity activity);
     void inject(CourseIndexActivity activity);
     void inject(TagSelectActivity activity);
+    void inject(DownloadActivity activity);
 
     void inject(GlobalScorecardFragment fragment);
     void inject(PointsFragment fragment);
