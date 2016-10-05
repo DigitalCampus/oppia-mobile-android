@@ -41,6 +41,7 @@ import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Tag;
+import org.digitalcampus.oppia.service.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.CourseIntallerService;
 import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
@@ -71,6 +72,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     private InstallerBroadcastReceiver receiver;
 
     @Inject CourseInstallRepository courseInstallRepository;
+    @Inject CourseInstallerServiceDelegate courseInstallerServiceDelegate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -290,33 +292,24 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             //When installing, don't do anything on click
             if (courseSelected.isInstalling()) return;
 
+
+            Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
+
             if (!courseSelected.isDownloading()){
                 if(!courseSelected.isInstalled() || courseSelected.isToUpdate()){
-                    Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_URL, courseSelected.getDownloadUrl());
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_VERSIONID, courseSelected.getVersionId());
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
-                    DownloadActivity.this.startService(mServiceIntent);
+                    courseInstallerServiceDelegate.installCourse(DownloadActivity.this, mServiceIntent, courseSelected);
 
                     resetCourseProgress(courseSelected, true, false);
                 }
                 else if(courseSelected.isToUpdateSchedule()){
-                    Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_SCHEDULEURL, courseSelected.getScheduleURI());
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
-                    DownloadActivity.this.startService(mServiceIntent);
+                    courseInstallerServiceDelegate.updateCourse(DownloadActivity.this, mServiceIntent, courseSelected);
 
                     resetCourseProgress(courseSelected, false, true);
                 }
             }
             else{
                 //If it's already downloading, send an intent to cancel the task
-                Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
-                mServiceIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_CANCEL);
-                mServiceIntent.putExtra(CourseIntallerService.SERVICE_URL, courseSelected.getDownloadUrl());
-                DownloadActivity.this.startService(mServiceIntent);
+                courseInstallerServiceDelegate.cancelCourseInstall(DownloadActivity.this, mServiceIntent, courseSelected);
 
                 resetCourseProgress(courseSelected, false, false);
             }

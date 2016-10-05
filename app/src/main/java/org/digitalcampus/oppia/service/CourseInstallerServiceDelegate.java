@@ -9,13 +9,7 @@ import org.digitalcampus.oppia.model.Course;
 
 public class CourseInstallerServiceDelegate {
 
-    private Context context;
-
-    public CourseInstallerServiceDelegate(Context context){
-        this.context = context;
-    }
-
-    public void installCourse(Intent intent, Course courseSelected){
+    public void installCourse(Context context, Intent intent, Course courseSelected){
         intent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
         intent.putExtra(CourseIntallerService.SERVICE_URL, courseSelected.getDownloadUrl());
         intent.putExtra(CourseIntallerService.SERVICE_VERSIONID, courseSelected.getVersionId());
@@ -24,14 +18,14 @@ public class CourseInstallerServiceDelegate {
 
     }
 
-    public void updateCourse(Intent intent, Course courseSelected){
+    public void updateCourse(Context context, Intent intent, Course courseSelected){
         intent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
         intent.putExtra(CourseIntallerService.SERVICE_SCHEDULEURL, courseSelected.getScheduleURI());
         intent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
         context.startService(intent);
     }
 
-    public void cancelCourseInstall(Intent intent, Course courseSelected){
+    public void cancelCourseInstall(Context context, Intent intent, Course courseSelected){
         intent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_CANCEL);
         intent.putExtra(CourseIntallerService.SERVICE_URL, courseSelected.getDownloadUrl());
         context.startService(intent);

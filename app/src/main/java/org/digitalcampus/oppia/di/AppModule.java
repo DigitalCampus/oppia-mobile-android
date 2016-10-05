@@ -14,6 +14,7 @@ import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.service.CourseInstallerServiceDelegate;
 
 import java.util.ArrayList;
 
@@ -81,6 +82,12 @@ public class AppModule {
     @Singleton
     public CourseInstallRepository provideCourseInstallRepository() {
         return new CourseInstallRepository();
+    }
+
+    @Provides
+    @Singleton
+    public CourseInstallerServiceDelegate provideCourseInstallerServiceDelegate(){
+        return new CourseInstallerServiceDelegate();
     }
 
 
