@@ -90,7 +90,7 @@ public class DownloadActivityUITest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                ArrayList<CourseIntallViewAdapter> courses = (ArrayList<CourseIntallViewAdapter>) invocationOnMock.getArguments()[1];
+                ArrayList<CourseIntallViewAdapter>  courses = (ArrayList<CourseIntallViewAdapter>) invocationOnMock.getArguments()[1];
 
                 for(int i = 0; i < numberOfCourses; i++) {
                     courses.add(new CourseIntallViewAdapter("") {{
@@ -230,7 +230,7 @@ public class DownloadActivityUITest {
     }
 
     @Test
-    public void showCancellButtonOnDownloadCourse() throws Exception {
+    public void showCancelButtonOnDownloadCourse() throws Exception {
 
         givenThereAreSomeCourses(2);
 
@@ -290,6 +290,41 @@ public class DownloadActivityUITest {
                 .atPosition(0)
                 .onChildView(withId(R.id.download_course_btn))
                 .check(matches(withDrawable(R.drawable.ic_action_download)));
+
+    }
+
+    @Test
+    public void showAcceptButtonOnInstallComplete() throws Exception {
+
+        givenThereAreSomeCourses(2);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_COMPLETE);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .perform(click());
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .check(matches(withDrawable(R.drawable.ic_action_accept)));
 
     }
 
