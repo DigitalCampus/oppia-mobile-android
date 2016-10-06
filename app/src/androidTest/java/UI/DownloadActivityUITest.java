@@ -1,6 +1,7 @@
 package UI;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -11,7 +12,10 @@ import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
+import org.digitalcampus.oppia.service.CourseInstallerServiceDelegate;
+import org.digitalcampus.oppia.service.CourseIntallerService;
 import org.digitalcampus.oppia.task.Payload;
 import org.json.JSONObject;
 import org.junit.Rule;
@@ -23,6 +27,7 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
+import Utils.CourseUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onData;
@@ -36,6 +41,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class DownloadActivityUITest {
@@ -61,9 +67,9 @@ public class DownloadActivityUITest {
 
 
     @Mock CourseInstallRepository courseInstallRepository;
+    @Mock CourseInstallerServiceDelegate courseInstallerServiceDelegate;
 
-    @Test
-    public void showProgressBarOnDownloadCourseButtonClick() throws Exception {
+    private void givenThereAreSomeCourses(final int numberOfCourses) throws Exception{
 
         doAnswer(new Answer() {
             @Override
@@ -82,15 +88,39 @@ public class DownloadActivityUITest {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 ArrayList<CourseIntallViewAdapter> courses = (ArrayList<CourseIntallViewAdapter>) invocationOnMock.getArguments()[1];
-                courses.add(new CourseIntallViewAdapter("") {{
-                    setShortname("Mocked Course Name");
-                    setAuthorName("Mock Author");
-                    setDownloadUrl("https://demo.oppia-mobile.org/api/v1/course/72/download/");
-                }});
+
+                for(int i = 0; i < numberOfCourses; i++) {
+                    courses.add(new CourseIntallViewAdapter("") {{
+                        setShortname("Mocked Course Name");
+                        setAuthorName("Mock Author");
+                        setDownloadUrl("Mock URL");
+                    }});
+                }
                 return null;
             }
         }).when(courseInstallRepository).refreshCourseList((Context) any(), (ArrayList<CourseIntallViewAdapter>) any(),
-                                                            (JSONObject) any(), anyString(), anyBoolean());
+                (JSONObject) any(), anyString(), anyBoolean());
+
+    }
+
+    @Test
+    public void showProgressBarOnDownloadCourseButtonClick() throws Exception {
+
+        givenThereAreSomeCourses(2);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
 
         tagSelectActivityTestRule.launchActivity(null);
 
