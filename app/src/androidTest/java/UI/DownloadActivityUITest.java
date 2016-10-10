@@ -746,7 +746,65 @@ public class DownloadActivityUITest {
                 .check(matches(isEnabled()));
     }
 
+    @Test
+    public void showCompleteImageWhenCourseFinishUpdating() throws Exception {
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setInstalled(true);
+        c.setToUpdate(true);
 
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_INSTALL);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                Intent downloadIntent2 = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent2.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_COMPLETE);
+                downloadIntent2.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent2.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent2, null);
+
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .perform(click())
+                .check(matches(withDrawable(R.drawable.ic_action_accept)));
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_progress))
+                .check(matches(not(isDisplayed())));
+
+    }
 
 
 }
