@@ -15,6 +15,8 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.MultiLangInfo;
 import org.digitalcampus.oppia.service.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.CourseIntallerService;
 import org.digitalcampus.oppia.task.Payload;
@@ -37,13 +39,17 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -72,7 +78,7 @@ public class DownloadActivityUITest {
     @Mock CourseInstallRepository courseInstallRepository;
     @Mock CourseInstallerServiceDelegate courseInstallerServiceDelegate;
 
-    private void givenThereAreSomeCourses(final int numberOfCourses) throws Exception{
+    private void givenThereAreSomeCourses(final int numberOfCourses, final CourseIntallViewAdapter course) throws Exception{
 
         doAnswer(new Answer() {
             @Override
@@ -93,11 +99,7 @@ public class DownloadActivityUITest {
                 ArrayList<CourseIntallViewAdapter>  courses = (ArrayList<CourseIntallViewAdapter>) invocationOnMock.getArguments()[1];
 
                 for(int i = 0; i < numberOfCourses; i++) {
-                    courses.add(new CourseIntallViewAdapter("") {{
-                        setShortname("Mocked Course Name");
-                        setAuthorName("Mock Author");
-                        setDownloadUrl("Mock URL");
-                    }});
+                    courses.add(course);
                 }
                 return null;
             }
@@ -106,10 +108,20 @@ public class DownloadActivityUITest {
 
     }
 
-    @Test
-    public void showProgressBarOnDownloadCourse() throws Exception {
+    private CourseIntallViewAdapter getBaseCourse(){
+        CourseIntallViewAdapter c = new CourseIntallViewAdapter("");
+        c.setShortname("Mocked Course Name");
+        c.setDownloadUrl("Mock URL");
 
-        givenThereAreSomeCourses(2);
+        return c;
+    }
+
+    @Test
+    public void showDraftTextIfCourseIsDraft() throws Exception{
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDraft(true);
+
+        givenThereAreSomeCourses(2, c);
 
         doAnswer(new Answer() {
             @Override
@@ -130,27 +142,205 @@ public class DownloadActivityUITest {
         onData(anything())
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
-                .onChildView(withId(R.id.course_progress_bar))
-                .check(doesNotExist());
+                .onChildView(withId(R.id.course_draft))
+                .check(matches(withText(R.string.course_draft)));
+    }
+
+    @Test
+    public void dowsNotShowDraftTextIfCourseIsNotDraft() throws Exception{
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDraft(false);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.course_draft))
+                .check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void showDescriptionIfExists() throws Exception{
+        CourseIntallViewAdapter c = getBaseCourse();
+        final String description =  "Mock Description";
+        c.setMultiLangInfo(new MultiLangInfo(){{
+            setDescriptions(new ArrayList<Lang>() {{
+                add(new Lang("en", description));
+            }});
+        }});
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.course_description))
+                .check(matches(withText(description)));
+    }
+
+    @Test
+    public void doesNotShowDescriptionIfNotExists() throws Exception{
+        CourseIntallViewAdapter c = getBaseCourse();
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.course_description))
+                .check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void showCourseAuthorIfExists() throws Exception{
+        CourseIntallViewAdapter c = getBaseCourse();
+        String authorName = "Mock Author";
+        c.setAuthorName(authorName);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.course_author))
+                .check(matches(withText(authorName)));
+    }
+
+    @Test
+    public void doesNotShowCourseAuthorIfNotExists() throws Exception{
+        CourseIntallViewAdapter c = getBaseCourse();
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.course_author))
+                .check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void showCancelButtonOnDownloadingCourse() throws Exception {
+
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(true);
+        c.setInstalled(false);
+        c.setToUpdate(false);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
 
         onData(anything())
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
                 .onChildView(withId(R.id.download_course_btn))
-                .perform(click());
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.download_progress))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+                .check(matches(withDrawable(R.drawable.ic_action_cancel)));
 
     }
 
     @Test
-    public void showProgressBarOnInstallCourse() throws Exception {
+    public void showCancelButtonOnInstallingCourse() throws Exception {
 
-        givenThereAreSomeCourses(2);
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setInstalling(true);
+
+        givenThereAreSomeCourses(2, c);
 
         doAnswer(new Answer() {
             @Override
@@ -171,68 +361,20 @@ public class DownloadActivityUITest {
         onData(anything())
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
-                .onChildView(withId(R.id.course_progress_bar))
-                .check(doesNotExist());
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
                 .onChildView(withId(R.id.download_course_btn))
-                .perform(click());
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.download_progress))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+                .check(matches(withDrawable(R.drawable.ic_action_cancel)));
 
     }
 
     @Test
-    public void doesNotShowProgressBarOnCompleteCourse() throws Exception {
+    public void showProgressBarOnDownloadCourse() throws Exception {
 
-        givenThereAreSomeCourses(2);
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalled(false);
+        c.setToUpdate(false);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_COMPLETE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
-        tagSelectActivityTestRule.launchActivity(null);
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.course_progress_bar))
-                .check(doesNotExist());
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.download_course_btn))
-                .perform(click());
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.download_progress))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-
-    }
-
-    @Test
-    public void showCancelButtonOnDownloadCourse() throws Exception {
-
-        givenThereAreSomeCourses(2);
+        givenThereAreSomeCourses(2, c);
 
         doAnswer(new Answer() {
             @Override
@@ -253,21 +395,96 @@ public class DownloadActivityUITest {
         onData(anything())
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
+                .onChildView(withId(R.id.course_progress_bar))
+                .check(doesNotExist());
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
                 .onChildView(withId(R.id.download_course_btn))
                 .perform(click());
 
         onData(anything())
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
-                .onChildView(withId(R.id.download_course_btn))
-                .check(matches(withDrawable(R.drawable.ic_action_cancel)));
+                .onChildView(withId(R.id.download_progress))
+                .check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void showProgressBarOnInstallingCourse() throws Exception {
+
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setInstalling(true);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_INSTALL);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_progress))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+
+    }
+
+    @Test
+    public void doesNotShowProgressBarOnNotInstallingNorDownloadingCourse() throws Exception {
+
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalling(false);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_COMPLETE);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).cancelCourseInstall((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_progress))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
 
     }
 
     @Test
     public void showDownloadButtonBeforeDownloadCourse() throws Exception {
 
-        givenThereAreSomeCourses(2);
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalled(false);
+        c.setToUpdate(false);
+
+        givenThereAreSomeCourses(2, c);
 
         doAnswer(new Answer() {
             @Override
@@ -294,9 +511,149 @@ public class DownloadActivityUITest {
     }
 
     @Test
+    public void showUpdateButtonIfCourseIsToUpdate() throws Exception {
+
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalled(true);
+        c.setToUpdate(true);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .check(matches(withDrawable(R.drawable.ic_action_refresh)));
+    }
+
+    @Test
+    public void buttonEnabledIfCourseIsToUpdate() throws Exception {
+
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalled(true);
+        c.setToUpdate(true);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .check(matches(isEnabled()));
+    }
+
+    @Test
+    public void showUpdateButtonIfCourseIsToUpdateSchedule() throws Exception {
+
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalled(true);
+        c.setToUpdate(false);
+        c.setToUpdateSchedule(true);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .check(matches(withDrawable(R.drawable.ic_action_refresh)));
+    }
+
+    @Test
+    public void buttonEnabledIfCourseIsToUpdateSchedule() throws Exception {
+
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalled(true);
+        c.setToUpdate(false);
+        c.setToUpdateSchedule(true);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .check(matches(isEnabled()));
+    }
+
+    @Test
     public void showAcceptButtonOnInstallComplete() throws Exception {
 
-        givenThereAreSomeCourses(2);
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalled(true);
+        c.setToUpdate(false);
+        c.setToUpdateSchedule(false);
+
+        givenThereAreSomeCourses(2, c);
 
         doAnswer(new Answer() {
             @Override
@@ -318,14 +675,78 @@ public class DownloadActivityUITest {
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
                 .onChildView(withId(R.id.download_course_btn))
-                .perform(click());
+                .check(matches(withDrawable(R.drawable.ic_action_accept)));
+
+    }
+
+    @Test
+    public void buttonDisabledIfCourseIsNotToUpdateNorToUpdateSchedule() throws Exception {
+
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalled(true);
+        c.setToUpdate(false);
+        c.setToUpdateSchedule(false);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_COMPLETE);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
 
         onData(anything())
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
                 .onChildView(withId(R.id.download_course_btn))
-                .check(matches(withDrawable(R.drawable.ic_action_accept)));
+                .check(matches(not(isEnabled())));
 
     }
+
+    @Test
+    public void buttonEnabledIfCourseIsNotInstalled() throws Exception {
+
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setDownloading(false);
+        c.setInstalled(false);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+                ctx.sendOrderedBroadcast(downloadIntent, null);
+
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .check(matches(isEnabled()));
+    }
+
+
+
 
 }
