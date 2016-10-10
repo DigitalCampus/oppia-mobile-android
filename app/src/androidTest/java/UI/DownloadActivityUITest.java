@@ -116,26 +116,20 @@ public class DownloadActivityUITest {
         return c;
     }
 
+    private void sendBroadcast(Context ctx, String action){
+        Intent intent = new Intent(CourseIntallerService.BROADCAST_ACTION);
+        intent.putExtra(CourseIntallerService.SERVICE_ACTION, action);
+        intent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
+        intent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
+        ctx.sendOrderedBroadcast(intent, null);
+    }
+
     @Test
     public void showDraftTextIfCourseIsDraft() throws Exception{
         CourseIntallViewAdapter c = getBaseCourse();
         c.setDraft(true);
 
         givenThereAreSomeCourses(2, c);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
 
         tagSelectActivityTestRule.launchActivity(null);
 
@@ -152,20 +146,6 @@ public class DownloadActivityUITest {
         c.setDraft(false);
 
         givenThereAreSomeCourses(2, c);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
 
         tagSelectActivityTestRule.launchActivity(null);
 
@@ -188,20 +168,6 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
         tagSelectActivityTestRule.launchActivity(null);
 
         onData(anything())
@@ -216,20 +182,6 @@ public class DownloadActivityUITest {
         CourseIntallViewAdapter c = getBaseCourse();
 
         givenThereAreSomeCourses(2, c);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
 
         tagSelectActivityTestRule.launchActivity(null);
 
@@ -248,20 +200,6 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
         tagSelectActivityTestRule.launchActivity(null);
 
         onData(anything())
@@ -273,23 +211,8 @@ public class DownloadActivityUITest {
 
     @Test
     public void doesNotShowCourseAuthorIfNotExists() throws Exception{
-        CourseIntallViewAdapter c = getBaseCourse();
 
-        givenThereAreSomeCourses(2, c);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+        givenThereAreSomeCourses(2, getBaseCourse());
 
         tagSelectActivityTestRule.launchActivity(null);
 
@@ -303,23 +226,13 @@ public class DownloadActivityUITest {
     @Test
     public void showCancelButtonOnDownloadingCourse() throws Exception {
 
-        CourseIntallViewAdapter c = getBaseCourse();
-        c.setDownloading(true);
-        c.setInstalled(false);
-        c.setToUpdate(false);
-
-        givenThereAreSomeCourses(2, c);
+        givenThereAreSomeCourses(2, getBaseCourse());
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
+                sendBroadcast(ctx, CourseIntallerService.ACTION_DOWNLOAD);
                 return null;
             }
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
@@ -330,6 +243,7 @@ public class DownloadActivityUITest {
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
                 .onChildView(withId(R.id.download_course_btn))
+                .perform(click())
                 .check(matches(withDrawable(R.drawable.ic_action_cancel)));
 
     }
@@ -338,7 +252,6 @@ public class DownloadActivityUITest {
     public void showCancelButtonOnInstallingCourse() throws Exception {
 
         CourseIntallViewAdapter c = getBaseCourse();
-        c.setInstalling(true);
 
         givenThereAreSomeCourses(2, c);
 
@@ -346,12 +259,8 @@ public class DownloadActivityUITest {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_INSTALL);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
+                sendBroadcast(ctx, CourseIntallerService.ACTION_DOWNLOAD);
+                sendBroadcast(ctx, CourseIntallerService.ACTION_INSTALL);
                 return null;
             }
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
@@ -362,6 +271,7 @@ public class DownloadActivityUITest {
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
                 .onChildView(withId(R.id.download_course_btn))
+                .perform(click())
                 .check(matches(withDrawable(R.drawable.ic_action_cancel)));
 
     }
@@ -369,23 +279,13 @@ public class DownloadActivityUITest {
     @Test
     public void showProgressBarOnDownloadCourse() throws Exception {
 
-        CourseIntallViewAdapter c = getBaseCourse();
-        c.setDownloading(false);
-        c.setInstalled(false);
-        c.setToUpdate(false);
-
-        givenThereAreSomeCourses(2, c);
+        givenThereAreSomeCourses(2, getBaseCourse());
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
+                sendBroadcast(ctx, CourseIntallerService.ACTION_DOWNLOAD);
                 return null;
             }
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
@@ -415,21 +315,14 @@ public class DownloadActivityUITest {
     @Test
     public void showProgressBarOnInstallingCourse() throws Exception {
 
-        CourseIntallViewAdapter c = getBaseCourse();
-        c.setInstalling(true);
-
-        givenThereAreSomeCourses(2, c);
+        givenThereAreSomeCourses(2, getBaseCourse());
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_INSTALL);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
+                sendBroadcast(ctx, CourseIntallerService.ACTION_DOWNLOAD);
+                sendBroadcast(ctx, CourseIntallerService.ACTION_INSTALL);
                 return null;
             }
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
@@ -439,8 +332,14 @@ public class DownloadActivityUITest {
         onData(anything())
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .perform(click());
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
                 .onChildView(withId(R.id.download_progress))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+                .check(matches(isDisplayed()));
 
     }
 
@@ -453,26 +352,46 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_COMPLETE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).cancelCourseInstall((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
         tagSelectActivityTestRule.launchActivity(null);
+
         onData(anything())
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
                 .onChildView(withId(R.id.download_progress))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+                .check(matches(not(isDisplayed())));
+
+    }
+
+    @Test
+    public void doesNotShowProgressBarOnCourseInstalled() throws Exception {
+
+        givenThereAreSomeCourses(2, getBaseCourse());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                sendBroadcast(ctx, CourseIntallerService.ACTION_DOWNLOAD);
+                sendBroadcast(ctx, CourseIntallerService.ACTION_INSTALL);
+                sendBroadcast(ctx, CourseIntallerService.ACTION_COMPLETE);
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .perform(click());
+
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_progress))
+                .check(matches(not(isDisplayed())));
 
     }
 
@@ -485,20 +404,6 @@ public class DownloadActivityUITest {
         c.setToUpdate(false);
 
         givenThereAreSomeCourses(2, c);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
 
         tagSelectActivityTestRule.launchActivity(null);
 
@@ -520,20 +425,6 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
         tagSelectActivityTestRule.launchActivity(null);
 
         onData(anything())
@@ -552,20 +443,6 @@ public class DownloadActivityUITest {
         c.setToUpdate(true);
 
         givenThereAreSomeCourses(2, c);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
 
         tagSelectActivityTestRule.launchActivity(null);
 
@@ -587,20 +464,6 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
         tagSelectActivityTestRule.launchActivity(null);
 
         onData(anything())
@@ -621,20 +484,6 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
         tagSelectActivityTestRule.launchActivity(null);
 
         onData(anything())
@@ -647,24 +496,15 @@ public class DownloadActivityUITest {
     @Test
     public void showAcceptButtonOnInstallComplete() throws Exception {
 
-        CourseIntallViewAdapter c = getBaseCourse();
-        c.setDownloading(false);
-        c.setInstalled(true);
-        c.setToUpdate(false);
-        c.setToUpdateSchedule(false);
-
-        givenThereAreSomeCourses(2, c);
+        givenThereAreSomeCourses(2, getBaseCourse());
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_COMPLETE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
+                sendBroadcast(ctx, CourseIntallerService.ACTION_DOWNLOAD);
+                sendBroadcast(ctx, CourseIntallerService.ACTION_INSTALL);
+                sendBroadcast(ctx, CourseIntallerService.ACTION_COMPLETE);
                 return null;
             }
         }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
@@ -675,6 +515,46 @@ public class DownloadActivityUITest {
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
                 .onChildView(withId(R.id.download_course_btn))
+                .perform(click())
+                .check(matches(withDrawable(R.drawable.ic_action_accept)));
+
+    }
+
+    @Test
+    public void showAcceptButtonOnUpdateComplete() throws Exception {
+        CourseIntallViewAdapter c = getBaseCourse();
+        c.setInstalled(true);
+        c.setToUpdate(true);
+
+        givenThereAreSomeCourses(2, c);
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                sendBroadcast(ctx, CourseIntallerService.ACTION_UPDATE);
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                Context ctx = (Context) invocationOnMock.getArguments()[0];
+                sendBroadcast(ctx, CourseIntallerService.ACTION_INSTALL);
+                sendBroadcast(ctx, CourseIntallerService.ACTION_COMPLETE);
+                return null;
+            }
+        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
+
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.download_course_btn))
+                .perform(click())
                 .check(matches(withDrawable(R.drawable.ic_action_accept)));
 
     }
@@ -689,20 +569,6 @@ public class DownloadActivityUITest {
         c.setToUpdateSchedule(false);
 
         givenThereAreSomeCourses(2, c);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_COMPLETE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
 
         tagSelectActivityTestRule.launchActivity(null);
 
@@ -723,20 +589,6 @@ public class DownloadActivityUITest {
 
         givenThereAreSomeCourses(2, c);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
         tagSelectActivityTestRule.launchActivity(null);
 
         onData(anything())
@@ -745,66 +597,6 @@ public class DownloadActivityUITest {
                 .onChildView(withId(R.id.download_course_btn))
                 .check(matches(isEnabled()));
     }
-
-    @Test
-    public void showCompleteImageWhenCourseFinishUpdating() throws Exception {
-        CourseIntallViewAdapter c = getBaseCourse();
-        c.setInstalled(true);
-        c.setToUpdate(true);
-
-        givenThereAreSomeCourses(2, c);
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).updateCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Context ctx = (Context) invocationOnMock.getArguments()[0];
-                Intent downloadIntent = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_INSTALL);
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent, null);
-
-                Intent downloadIntent2 = new Intent(CourseIntallerService.BROADCAST_ACTION);
-                downloadIntent2.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_COMPLETE);
-                downloadIntent2.putExtra(CourseIntallerService.SERVICE_URL, "Mock URL");
-                downloadIntent2.putExtra(CourseIntallerService.SERVICE_MESSAGE, "1");
-                ctx.sendOrderedBroadcast(downloadIntent2, null);
-
-
-                return null;
-            }
-        }).when(courseInstallerServiceDelegate).installCourse((Context) any(), (Intent) any(), (CourseIntallViewAdapter) any());
-
-        tagSelectActivityTestRule.launchActivity(null);
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.download_course_btn))
-                .perform(click())
-                .check(matches(withDrawable(R.drawable.ic_action_accept)));
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.download_progress))
-                .check(matches(not(isDisplayed())));
-
-    }
-
+    
 
 }
