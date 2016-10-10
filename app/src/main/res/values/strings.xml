@@ -262,7 +262,7 @@
     <string name="login_process">Logging in</string>
     <string name="login_complete">Logged in</string>
 
-    <string name="logout_confirm">Are you sure you want to logout?\n\nLogging out will remove all your activity logs from this phone. You will need an active internet connection to log in again.</string>
+    <string name="logout_confirm">Are you sure you want to logout?\n\nYou will need an active internet connection to log in again.</string>
 
     <string name="register_alert_title">Register</string>
     <string name="register_process">Registering …</string>
