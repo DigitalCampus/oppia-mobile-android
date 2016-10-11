@@ -46,6 +46,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 
 	private final Context ctx;
 	private ArrayList<Media> mediaList;
+    private boolean isMultiChoiceMode;
 
     private ListInnerBtnOnClickListener onClickListener;
 	
@@ -103,6 +104,8 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 		} else {
             viewHolder.mediaFileSize.setVisibility(View.GONE);
 		}
+        
+        viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.GONE : View.VISIBLE);
 
         viewHolder.downloadBtn.setTag(position); //For passing the list item index
         viewHolder.downloadBtn.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +137,10 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 	
     public void setOnClickListener(ListInnerBtnOnClickListener onClickListener) {
         this.onClickListener = onClickListener;
+    }
+
+    public void setEnterOnMultiChoiceMode(boolean value){
+        isMultiChoiceMode = value;
     }
 
     public void sortByCourse(){
