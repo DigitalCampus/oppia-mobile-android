@@ -17,26 +17,10 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import java.util.ArrayList;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.AppActivity;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.listener.SubmitListener;
-import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.service.GCMRegistrationService;
-import org.digitalcampus.oppia.task.LoginTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.UIUtils;
-
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,13 +29,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout.LayoutParams;
 
-public class LoginFragment extends AppFragment implements SubmitListener {
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.service.GCMRegistrationService;
+import org.digitalcampus.oppia.task.LoginTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.UIUtils;
 
+import java.util.ArrayList;
+
+public class LoginFragment extends AppFragment implements SubmitListener {
 
 	public static final String TAG = LoginFragment.class.getSimpleName();
     private EditText usernameField;
 	private EditText passwordField;
 	private ProgressDialog pDialog;
+    private Context appContext;
 	
 	public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -82,6 +79,7 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 				onLoginClick();
 			}
 		});
+        appContext = super.getActivity().getApplicationContext();
 	}
 
     @Override
@@ -130,7 +128,7 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 		}
 		if(response.isResult()){
 			User user = (User) response.getData().get(0);
-            SessionManager.loginUser(getActivity(), user);
+            SessionManager.loginUser(appContext, user);
 
             // Start IntentService to re-register the phone with GCM.
             Intent intent = new Intent(this.getActivity(), GCMRegistrationService.class);
@@ -140,7 +138,9 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 	    	startActivity(new Intent(super.getActivity(), OppiaMobileActivity.class));
 	    	super.getActivity().finish();
 		} else {
-			UIUtils.showAlert(super.getActivity(), R.string.title_login, response.getResultResponse());
+            if (appContext != null){
+                UIUtils.showAlert(appContext, R.string.title_login, response.getResultResponse());
+            }
 		}
 	}
 	

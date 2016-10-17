@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.activity;
 
 import android.animation.ValueAnimator;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,7 +32,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,7 +51,6 @@ import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
@@ -287,7 +284,7 @@ public class OppiaMobileActivity
 		Log.d(TAG, "Menu item selected: " + item.getTitle());
 
         final int itemId = item.getItemId();
-        checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
+        AdminSecurityManager.checkAdminPermission(this, itemId, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {
                 if (itemId == R.id.menu_download) {
                     startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
@@ -331,7 +328,7 @@ public class OppiaMobileActivity
         Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
         manageBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            checkAdminPermission(R.id.menu_download, new AdminSecurityManager.AuthListener() {
+                AdminSecurityManager.checkAdminPermission(OppiaMobileActivity.this, R.id.menu_download, new AdminSecurityManager.AuthListener() {
                 public void onPermissionGranted() {
                     startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
                 }
@@ -367,7 +364,7 @@ public class OppiaMobileActivity
 
     //@Override
     public void onContextMenuItemSelected(final int position, final int itemId) {
-        checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
+        AdminSecurityManager.checkAdminPermission(this, itemId, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {
                 tempCourse = courses.get(position);
                 if (itemId == R.id.course_context_delete) {
@@ -598,18 +595,6 @@ public class OppiaMobileActivity
 	}
 
 
-    private void checkAdminPermission(int actionId, AdminSecurityManager.AuthListener authListener){
 
-        boolean adminPasswordRequired = AdminSecurityManager.isActionProtected(this, actionId);
-        if (adminPasswordRequired) {
-            PasswordDialogFragment passDialog = new PasswordDialogFragment();
-            passDialog.setListener(authListener);
-            passDialog.show(getFragmentManager(), TAG);
-        }
-        else{
-            //If the admin password is not needed, we simply call the listener method
-            authListener.onPermissionGranted();
-        }
-    }
 
 }

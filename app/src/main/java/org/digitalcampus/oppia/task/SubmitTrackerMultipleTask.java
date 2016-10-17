@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -149,7 +148,7 @@ public class SubmitTrackerMultipleTask extends AsyncTask<Payload, Integer, Paylo
                             }
                         }
                     }
-                } catch (UnsupportedEncodingException | ClientProtocolException e) {
+                } catch (UnsupportedEncodingException e) {
                     p.setResult(false);
                 } catch (IOException e) {
                     p.setResult(false);

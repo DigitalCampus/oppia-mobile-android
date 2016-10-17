@@ -17,8 +17,15 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
@@ -28,21 +35,12 @@ import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
 import org.digitalcampus.oppia.model.Lang;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WelcomeActivity extends AppActivity {
 
 	public static final String TAG = WelcomeActivity.class.getSimpleName();
-	private ActionBar actionBar;
 	private ViewPager viewPager;
     private TabLayout tabs;
     private int currentTab = 0;
@@ -56,10 +54,13 @@ public class WelcomeActivity extends AppActivity {
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
+
 		viewPager = (ViewPager) findViewById(R.id.activity_about_pager);
 
 	}
@@ -67,7 +68,7 @@ public class WelcomeActivity extends AppActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		List<Fragment> fragments = new ArrayList<Fragment>();
+		List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();
 		
 		Fragment fWelcome = WelcomeFragment.newInstance();
@@ -108,7 +109,7 @@ public class WelcomeActivity extends AppActivity {
 		if (itemId == R.id.menu_settings) {
 			Intent i = new Intent(this, PrefsActivity.class);
 			Bundle tb = new Bundle();
-			ArrayList<Lang> langs = new ArrayList<Lang>();
+			ArrayList<Lang> langs = new ArrayList<>();
 			Lang lang = new Lang("en","English");
 			langs.add(lang);
 			tb.putSerializable("langs", langs);

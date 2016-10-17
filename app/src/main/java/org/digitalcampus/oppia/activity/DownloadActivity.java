@@ -76,28 +76,31 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_download);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_download);
 
         initializeDagger();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        
-		Bundle bundle = this.getIntent().getExtras(); 
-        if(bundle != null) {
-        	Tag t = (Tag) bundle.getSerializable(Tag.TAG);
-            if (t!=null) this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
+
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null) {
+            Tag t = (Tag) bundle.getSerializable(Tag.TAG);
+            if (t != null)
+                this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
         } else {
-        	this.url = MobileLearning.SERVER_COURSES_PATH;
-        	this.showUpdatesOnly = true;
+            this.url = MobileLearning.SERVER_COURSES_PATH;
+            this.showUpdatesOnly = true;
         }
 
         courses = new ArrayList<>();
         dla = new DownloadCourseListAdapter(this, courses);
         dla.setOnClickListener(new CourseListListener());
         ListView listView = (ListView) findViewById(R.id.tag_list);
-        listView.setAdapter(dla);
-	}
+        if (listView != null) {
+            listView.setAdapter(dla);
+        }
+    }
 
     private void initializeDagger() {
         MobileLearning app = (MobileLearning) getApplication();
@@ -108,14 +111,14 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	public void onResume(){
 		super.onResume();
 		if(json == null){
-            //The JSON download task has not started or been completed yet
+            // The JSON download task has not started or been completed yet
 			getCourseList();
 		} else if ((courses != null) && courses.size()>0) {
-            //We already have loaded JSON and courses (coming from orientationchange)
+            // We already have loaded JSON and courses (coming from orientationchange)
             dla.notifyDataSetChanged();
         }
         else{
-            //The JSON is downloaded but course list is not
+            // The JSON is downloaded but course list is not
 	        refreshCourseList();
 		}
         receiver = new InstallerBroadcastReceiver();
@@ -128,7 +131,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 	@Override
 	public void onPause(){
-		//Kill any open dialogs
+		// Kill any open dialogs
 		if (progressDialog != null){
             progressDialog.dismiss();
         }
@@ -159,7 +162,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
             if (json != null){
-                //Only save the instance if the request has been proccessed already
+                // Only save the instance if the request has been proccessed already
                 savedInstanceState.putString("json", json.toString());
                 savedInstanceState.putSerializable("courses", courses);
             }
@@ -259,6 +262,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         if (course != null){
             Toast.makeText(this, this.getString(R.string.install_course_complete, course.getShortname()), Toast.LENGTH_LONG).show();
             course.setInstalled(true);
+            course.setToUpdate(false);
+            course.setToUpdateSchedule(false);
             resetCourseProgress(course, false, false);
         }
     }
@@ -284,12 +289,12 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     }
 
     private class CourseListListener implements ListInnerBtnOnClickListener {
-        //@Override
+        @Override
         public void onClick(int position) {
             Log.d("course-download", "Clicked " + position);
             CourseIntallViewAdapter courseSelected = courses.get(position);
 
-            //When installing, don't do anything on click
+            // When installing, don't do anything on click
             if (courseSelected.isInstalling()) return;
 
 

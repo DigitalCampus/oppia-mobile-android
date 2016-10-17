@@ -24,12 +24,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -76,11 +79,38 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
         super.onActivityCreated(savedInstanceState);
         initializeDagger();
 
+
         ArrayList<Course> courses = coursesRepository.getCourses(getActivity());
-        scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
+
         GridView scorecardList = (GridView) super.getActivity().findViewById(R.id.scorecards_list);
-        scorecardList.setAdapter(scorecardListAdapter);
-        scorecardList.setOnItemClickListener(this);
+        View emptyState = this.getActivity().findViewById(R.id.empty_state);
+
+        if (courses.size() == 0){
+            //If there are now courses, display the empty state
+            scorecardList.setVisibility(View.GONE);
+            emptyState.setVisibility(View.VISIBLE);
+
+            Button download = (Button) emptyState.findViewById(R.id.btn_download_courses);
+            download.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AdminSecurityManager.checkAdminPermission(getActivity(), R.id.menu_download, new AdminSecurityManager.AuthListener() {
+                        public void onPermissionGranted() {
+                            startActivity(new Intent(getActivity(), TagSelectActivity.class));
+                        }
+                    });
+                }
+            });
+        }
+        else{
+            scorecardList.setVisibility(View.VISIBLE);
+            emptyState.setVisibility(View.GONE);
+
+            scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
+            scorecardList.setAdapter(scorecardListAdapter);
+            scorecardList.setOnItemClickListener(this);
+        }
+
     }
 
     @Override
