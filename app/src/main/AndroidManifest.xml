@@ -110,7 +110,8 @@
             android:screenOrientation="landscape"
             android:theme="@style/Oppia.Fullscreen"/>
 
-        <activity android:name="org.digitalcampus.oppia.activity.ViewDigestActivity">
+        <activity android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
+                  android:theme="@style/Oppia.ToolbarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

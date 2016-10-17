@@ -1,15 +1,46 @@
 package org.digitalcampus.oppia.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.w3c.dom.Text;
 
 public class ViewDigestActivity extends AppCompatActivity {
+
+    public static final String TAG = ViewDigestActivity.class.getSimpleName();
+    public static final String ACTIVITY_DIGEST_PARAM = "digest";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_digest);
+
+        final Intent intent = getIntent();
+        final String action = intent.getAction();
+        final String digest = intent.getData().getQueryParameter(ACTIVITY_DIGEST_PARAM);
+
+        boolean error = false;
+        View activityDetail = findViewById(R.id.activity_detail);
+        TextView errorText = (TextView) findViewById(R.id.error_text);
+
+        if (digest == null){
+            //The query parameter is missing or misconfigured
+            Log.d(TAG, action);
+            error = true;
+        }
+
+        if (error){
+            activityDetail.setVisibility(View.GONE);
+        }
+        else{
+            errorText.setVisibility(View.GONE);
+        }
+
+
     }
 }

@@ -8,6 +8,67 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.digitalcampus.oppia.activity.ViewDigestActivity">
+    tools:context="org.digitalcampus.oppia.activity.ViewDigestActivity"
+    android:background="@color/highlight_secondary">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView12"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/dc_logo"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_large"/>
+
+        <TextView
+            android:id="@+id/welcome_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_welcome"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            style="@style/HeaderText" />
+
+        <TextView
+            android:id="@+id/welcome_desc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/open_digest.description"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            style="@style/NormalTextDark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@android:drawable/ic_dialog_alert"
+            android:drawablePadding="15dp"
+            android:text="@string/open_digest.errors.invalid_param"
+            android:id="@+id/error_text"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/activity_detail">
+
+            <Button
+                android:id="@+id/btn_open_activity"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/open_digest.btn_action"
+                android:layout_marginTop="@dimen/padding_medium"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
