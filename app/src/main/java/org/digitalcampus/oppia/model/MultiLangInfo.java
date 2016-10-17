@@ -50,7 +50,7 @@ public class MultiLangInfo implements Serializable {
     }
 
     public String getDescription(String lang) {
-        String description = getInfo(lang, titles);
+        String description = getInfo(lang, descriptions);
         return description == null ? "No description set" : description;
     }
 
