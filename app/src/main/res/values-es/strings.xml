@@ -278,6 +278,8 @@
     <string name="title_stats_submitted">Actividades enviadas al servidor</string>
     <string name="error_preloading_accounts">Error precargando cuentas de usuario desde fichero CSV</string>
     <string name="error_reset">Username o email no encontrado\nInténtalo de nuevo</string>
+    <string name="no_title_set">Sin título</string>
+    <string name="no_description_set">Sin descripción</string>
     <string name="info.startup.preloaded_accounts">Precargadas %1$d nueva(s) cuenta(s) de usuario.</string>
     <string name="empty_state_media">Genial! Has descargado todo el contenido multimedia necesario para los cursos en tu dispositivo.</string>
     <string name="menu_sort_by">Ordenar por</string>
