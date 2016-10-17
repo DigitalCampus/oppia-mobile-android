@@ -158,7 +158,7 @@ public class InstallDownloadedCoursesTest {
 
     }
 
-    @Test
+  /*  @Test
     public void installCourse_malformedXMLCourse()throws Exception{
         String filename = MALFORMEDXML_COURSE;
 
@@ -188,7 +188,7 @@ public class InstallDownloadedCoursesTest {
         Course c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course exists in the database
 
-    }
+    }*/
 
     @Test
     public void installCourse_errorInstallingCourse()throws Exception{
@@ -221,7 +221,7 @@ public class InstallDownloadedCoursesTest {
 
     }
 
-    @Test
+   /* @Test
     public void installCourse_incorrectCourses()throws Exception{
 
         CourseUtils.cleanUp();
@@ -250,7 +250,7 @@ public class InstallDownloadedCoursesTest {
         children = finalPath.list();
         assertEquals(0, children.length);
 
-    }
+    }*/
 
     @Test
     public void installCourse_courseAlreadyInStorage()throws Exception {
