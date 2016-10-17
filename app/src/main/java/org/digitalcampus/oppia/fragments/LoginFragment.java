@@ -138,9 +138,7 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 	    	startActivity(new Intent(super.getActivity(), OppiaMobileActivity.class));
 	    	super.getActivity().finish();
 		} else {
-            if (appContext != null){
-                UIUtils.showAlert(appContext, R.string.title_login, response.getResultResponse());
-            }
+			UIUtils.showAlert(super.getActivity(), R.string.title_login, response.getResultResponse());
 		}
 	}
 	
