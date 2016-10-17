@@ -157,6 +157,42 @@ public class DownloadActivityUITest {
     }
 
     @Test
+    public void showTitleIfExists() throws Exception{
+        CourseIntallViewAdapter c = getBaseCourse();
+        final String title =  "Mock Title";
+        c.setMultiLangInfo(new MultiLangInfo(){{
+            setTitles(new ArrayList<Lang>() {{
+                add(new Lang("en", title));
+            }});
+        }});
+
+        givenThereAreSomeCourses(2, c);
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.course_title))
+                .check(matches(withText(title)));
+    }
+
+    @Test
+    public void showDefaultTitleIfNotExists() throws Exception{
+        CourseIntallViewAdapter c = getBaseCourse();
+
+        givenThereAreSomeCourses(2, c);
+
+        tagSelectActivityTestRule.launchActivity(null);
+
+        onData(anything())
+                .inAdapterView(withId(R.id.tag_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.course_title))
+                .check(matches(withText(R.string.no_title_set)));
+    }
+
+    @Test
     public void showDescriptionIfExists() throws Exception{
         CourseIntallViewAdapter c = getBaseCourse();
         final String description =  "Mock Description";
