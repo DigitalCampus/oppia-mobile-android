@@ -178,7 +178,7 @@ public class DownloadActivityUITest {
     }
 
     @Test
-    public void doesNotShowDescriptionIfNotExists() throws Exception{
+    public void showDefaultDescriptionIfNotExists() throws Exception{
         CourseIntallViewAdapter c = getBaseCourse();
 
         givenThereAreSomeCourses(2, c);
@@ -189,7 +189,7 @@ public class DownloadActivityUITest {
                 .inAdapterView(withId(R.id.tag_list))
                 .atPosition(0)
                 .onChildView(withId(R.id.course_description))
-                .check(matches(not(isDisplayed())));
+                .check(matches(withText(R.string.no_description_set)));
     }
 
     @Test

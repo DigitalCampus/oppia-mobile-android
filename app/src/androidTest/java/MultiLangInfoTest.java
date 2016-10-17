@@ -1,8 +1,12 @@
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfo;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,6 +19,12 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class MultiLangInfoTest {
 
+    private Context context;
+
+    @Before
+    public void setUp() throws Exception {
+        context = InstrumentationRegistry.getTargetContext();
+    }
 
     @Test
     public void MultiLangInfo_correctTitles() throws Exception {
@@ -39,7 +49,7 @@ public class MultiLangInfoTest {
     public void MultiLangInfo_NoTitles() throws Exception {
         MultiLangInfo multiLangInfo = new MultiLangInfo();
 
-        assertEquals("No title set", multiLangInfo.getTitle("en"));
+        assertEquals(context.getString(R.string.no_title_set), multiLangInfo.getTitle("en"));
     }
 
     @Test
@@ -66,7 +76,7 @@ public class MultiLangInfoTest {
 
         multiLangInfo.setTitlesFromJSONString(malformedJSONString);
 
-        assertEquals("No title set", multiLangInfo.getTitle("en"));
+        assertEquals(context.getString(R.string.no_title_set), multiLangInfo.getTitle("en"));
     }
 
     @Test
@@ -90,13 +100,13 @@ public class MultiLangInfoTest {
         String wellFormedJSONString = "[]";
         multiLangInfo.setTitlesFromJSONString(wellFormedJSONString);
 
-        assertEquals("No title set", multiLangInfo.getTitle("en"));
+        assertEquals(context.getString(R.string.no_title_set), multiLangInfo.getTitle("en"));
     }
 
     @Test
     public void MultiLangInfo_NoDescription() throws Exception {
         MultiLangInfo multiLangInfo = new MultiLangInfo();
 
-        assertEquals("No description set", multiLangInfo.getDescription("en"));
+        assertEquals(context.getString(R.string.no_description_set), multiLangInfo.getDescription("en"));
     }
 }
