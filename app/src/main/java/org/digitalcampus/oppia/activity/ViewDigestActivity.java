@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +18,6 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.Locale;
@@ -29,6 +29,7 @@ public class ViewDigestActivity extends AppCompatActivity {
 
     private TextView errorText;
     private View activityDetail;
+    private Course activityCourse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,23 +44,48 @@ public class ViewDigestActivity extends AppCompatActivity {
 
         boolean validDigest = validate(digest);
         if (validDigest){
-            Activity act = DbHelper.getInstance(this).getActivityByDigest(digest);
+            DbHelper db = DbHelper.getInstance(this);
+            Activity act = db.getActivityByDigest(digest);
             if (act == null){
                 errorText.setText(this.getText(R.string.open_digest_errors_activity_not_found));
                 validDigest = false;
             }
             else{
+                long userID = db.getUserId(SessionManager.getUsername(this));
+                activityCourse = db.getCourse(act.getCourseId(), userID);
                 showActivityDetails(act);
             }
         }
 
         if (validDigest){
             errorText.setVisibility(View.GONE);
+            Button cancelButton = (Button) findViewById(R.id.btn_cancel);
+            Button viewButton = (Button) findViewById(R.id.btn_show_activity);
+
+            if (( cancelButton != null) && (viewButton != null)){
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ViewDigestActivity.this.finish();
+                    }
+                });
+
+                viewButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(ViewDigestActivity.this, CourseIndexActivity.class);
+                        Bundle tb = new Bundle();
+                        tb.putSerializable(Course.TAG, activityCourse);
+                        tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, digest);
+                        i.putExtras(tb);
+                        ViewDigestActivity.this.startActivity(i);
+                    }
+                });
+            }
         }
         else{
             activityDetail.setVisibility(View.GONE);
         }
-
 
     }
 
@@ -69,7 +95,6 @@ public class ViewDigestActivity extends AppCompatActivity {
             errorText.setText(this.getText(R.string.open_digest_errors_invalid_param));
             return false;
         }
-
         if (!SessionManager.isLoggedIn(this)){
             Log.d(TAG, "Not logged in");
             errorText.setText(this.getText(R.string.open_digest_errors_not_logged_in));
@@ -82,17 +107,13 @@ public class ViewDigestActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
-        DbHelper db = DbHelper.getInstance(this);
-        long userID = db.getUserId(SessionManager.getUsername(this));
-        Course c = DbHelper.getInstance(this).getCourse(act.getCourseId(), userID);
-
         TextView title = (TextView) activityDetail.findViewById(R.id.activity_title);
         TextView courseTitle = (TextView) activityDetail.findViewById(R.id.course_title);
         ImageView courseImg = (ImageView) activityDetail.findViewById(R.id.course_image);
         title.setText(act.getTitle(lang));
-        courseTitle.setText(c.getTitle(lang));
-        if(c.getImageFile() != null){
-            String image = c.getImageFileFromRoot();
+        courseTitle.setText(activityCourse.getTitle(lang));
+        if(activityCourse.getImageFile() != null){
+            String image = activityCourse.getImageFileFromRoot();
             Picasso.with(this).load(new File(image))
                     .placeholder(R.drawable.default_course)
                     .into(courseImg);
