@@ -19,4 +19,5 @@
     <color name="highlight_label">#434343</color>
     <color name="highlight_separator">#b9b9b9</color>
     <color name="text_error">#DD2C00</color>
+    <color name="stroke">#DFDFDF</color>
 </resources>
