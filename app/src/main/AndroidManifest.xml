@@ -111,7 +111,7 @@
             android:theme="@style/Oppia.Fullscreen"/>
 
         <activity android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
-                  android:theme="@style/Oppia.ToolbarTheme">
+                  android:theme="@style/Oppia.ToolbarTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
