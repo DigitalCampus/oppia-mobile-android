@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.model.Activity;
 import org.w3c.dom.Text;
 
 public class ViewDigestActivity extends AppCompatActivity {
@@ -15,32 +18,64 @@ public class ViewDigestActivity extends AppCompatActivity {
     public static final String TAG = ViewDigestActivity.class.getSimpleName();
     public static final String ACTIVITY_DIGEST_PARAM = "digest";
 
+    private TextView errorText;
+    private View activityDetail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_digest);
 
         final Intent intent = getIntent();
-        final String action = intent.getAction();
         final String digest = intent.getData().getQueryParameter(ACTIVITY_DIGEST_PARAM);
 
-        boolean error = false;
-        View activityDetail = findViewById(R.id.activity_detail);
-        TextView errorText = (TextView) findViewById(R.id.error_text);
+        activityDetail = findViewById(R.id.activity_detail);
+        errorText = (TextView) findViewById(R.id.error_text);
 
-        if (digest == null){
-            //The query parameter is missing or misconfigured
-            Log.d(TAG, action);
-            error = true;
+        boolean validDigest = validate(digest);
+        if (validDigest){
+            Activity act = DbHelper.getInstance(this).getActivityByDigest(digest);
+            if (act == null){
+                errorText.setText(this.getText(R.string.open_digest_errors_activity_not_found));
+                validDigest = false;
+            }
+            else{
+                showActivityDetails(act);
+            }
         }
 
-        if (error){
-            activityDetail.setVisibility(View.GONE);
-        }
-        else{
+        if (validDigest){
             errorText.setVisibility(View.GONE);
         }
+        else{
+            activityDetail.setVisibility(View.GONE);
+        }
 
 
+    }
+
+    private boolean validate(String digest){
+        if (digest == null){
+            //The query parameter is missing or misconfigured
+            errorText.setText(this.getText(R.string.open_digest_errors_invalid_param));
+            return false;
+        }
+
+        if (!SessionManager.isLoggedIn(this)){
+            Log.d(TAG, "Not logged in");
+            errorText.setText(this.getText(R.string.open_digest_errors_not_logged_in));
+            return false;
+        }
+        return true;
+    }
+
+    private void showActivityDetails(Activity act){
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.finish();
     }
 }
