@@ -61,53 +61,73 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="5dp">
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/padding_medium">
+                    <ImageView
+                        android:id="@+id/course_image"
+                        android:layout_width="@dimen/course_icon_size"
+                        android:layout_height="@dimen/course_icon_size"
+                        android:layout_alignParentLeft="true"
+                        android:layout_margin="4dp"
+                        android:contentDescription="@string/app_logo_alt"
+                        android:src="@drawable/default_course"
+                        android:layout_centerVertical="true"/>
+
+                    <TextView
+                        android:id="@+id/activity_title"
+                        android:layout_width="wrap_content"
+                        android:layout_toRightOf="@+id/course_image"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/course_image"
+                        android:paddingLeft="@dimen/padding_medium"
+                        android:textSize="16sp"
+                        android:paddingRight="@dimen/padding_medium"/>
+
+                    <TextView
+                        android:id="@+id/course_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/activity_title"
+                        android:layout_toRightOf="@+id/course_image"
+                        android:paddingLeft="@dimen/padding_medium"
+                        android:textSize="14sp"
+                        android:textColor="@color/highlight_label"
+                        android:paddingRight="@dimen/padding_medium"/>
+
+                </RelativeLayout>
+
                 <ImageView
-                    android:id="@+id/course_image"
-                    android:layout_width="@dimen/course_icon_size"
-                    android:layout_height="@dimen/course_icon_size"
-                    android:layout_alignParentLeft="true"
-                    android:layout_margin="4dp"
-                    android:contentDescription="@string/app_logo_alt"
-                    android:src="@drawable/default_course"
-                    android:layout_centerVertical="true"/>
-
-                <TextView
-                    android:id="@+id/activity_title"
-                    android:layout_width="wrap_content"
-                    android:layout_toRightOf="@+id/course_image"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/course_image"
-                    android:paddingLeft="@dimen/padding_medium"
-                    android:textSize="16sp"
-                    android:paddingRight="@dimen/padding_medium"/>
-
-                <TextView
-                    android:id="@+id/course_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/activity_title"
-                    android:layout_toRightOf="@+id/course_image"
-                    android:paddingLeft="@dimen/padding_medium"
-                    android:textSize="14sp"
-                    android:textColor="@color/highlight_label"
-                    android:paddingRight="@dimen/padding_medium"/>
-
-            </RelativeLayout>
+                    android:id="@+id/activity_completed"
+                    android:src="@drawable/ic_action_accept"
+                    android:tint="@color/highlight_light"
+                    android:baselineAlignBottom="false"
+                    android:cropToPadding="false"
+                    android:adjustViewBounds="false"
+                    android:layout_gravity="bottom|right"
+                    android:contentDescription="@string/open_digest.activity_completed"/>
+            </FrameLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/stroke"
-                android:layout_marginTop="@dimen/padding_medium"/>
+                />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/activity_actions">
                 <Button
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:id="@+id/btn_show_activity"
@@ -115,6 +135,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/open_digest.btn_action"
                     android:layout_marginLeft="@dimen/padding_medium"
+                    android:layout_marginStart="@dimen/padding_medium"
                     />
                 <Button
                     android:id="@+id/btn_cancel"
@@ -140,6 +161,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_margin="@dimen/padding_large"
-        android:textColor="@color/text_light"/>
+        android:textColor="@color/text_light"
+        android:visibility="gone"/>
 
 </LinearLayout>

@@ -29,6 +29,7 @@ public class ViewDigestActivity extends AppCompatActivity {
 
     private TextView errorText;
     private View activityDetail;
+    private Activity activity;
     private Course activityCourse;
 
     @Override
@@ -45,46 +46,19 @@ public class ViewDigestActivity extends AppCompatActivity {
         boolean validDigest = validate(digest);
         if (validDigest){
             DbHelper db = DbHelper.getInstance(this);
-            Activity act = db.getActivityByDigest(digest);
-            if (act == null){
+            activity = db.getActivityByDigest(digest);
+
+            if (activity == null){
                 errorText.setText(this.getText(R.string.open_digest_errors_activity_not_found));
-                validDigest = false;
+                activityDetail.setVisibility(View.GONE);
             }
             else{
                 long userID = db.getUserId(SessionManager.getUsername(this));
-                activityCourse = db.getCourse(act.getCourseId(), userID);
-                showActivityDetails(act);
+                activityCourse = db.getCourse(activity.getCourseId(), userID);
+                activity.setCompleted(db.activityCompleted(activityCourse.getCourseId(), digest, userID));
+                showActivityDetails();
+                configureButtonActions();
             }
-        }
-
-        if (validDigest){
-            errorText.setVisibility(View.GONE);
-            Button cancelButton = (Button) findViewById(R.id.btn_cancel);
-            Button viewButton = (Button) findViewById(R.id.btn_show_activity);
-
-            if (( cancelButton != null) && (viewButton != null)){
-                cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ViewDigestActivity.this.finish();
-                    }
-                });
-
-                viewButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(ViewDigestActivity.this, CourseIndexActivity.class);
-                        Bundle tb = new Bundle();
-                        tb.putSerializable(Course.TAG, activityCourse);
-                        tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, digest);
-                        i.putExtras(tb);
-                        ViewDigestActivity.this.startActivity(i);
-                    }
-                });
-            }
-        }
-        else{
-            activityDetail.setVisibility(View.GONE);
         }
 
     }
@@ -93,30 +67,69 @@ public class ViewDigestActivity extends AppCompatActivity {
         if (digest == null){
             //The query parameter is missing or misconfigured
             errorText.setText(this.getText(R.string.open_digest_errors_invalid_param));
+            errorText.setVisibility(View.VISIBLE);
+            activityDetail.setVisibility(View.GONE);
             return false;
         }
         if (!SessionManager.isLoggedIn(this)){
             Log.d(TAG, "Not logged in");
             errorText.setText(this.getText(R.string.open_digest_errors_not_logged_in));
-            return false;
+            errorText.setVisibility(View.VISIBLE);
         }
         return true;
     }
 
-    private void showActivityDetails(Activity act){
+    private void showActivityDetails(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         TextView title = (TextView) activityDetail.findViewById(R.id.activity_title);
         TextView courseTitle = (TextView) activityDetail.findViewById(R.id.course_title);
         ImageView courseImg = (ImageView) activityDetail.findViewById(R.id.course_image);
-        title.setText(act.getTitle(lang));
+        title.setText(activity.getTitle(lang));
         courseTitle.setText(activityCourse.getTitle(lang));
         if(activityCourse.getImageFile() != null){
             String image = activityCourse.getImageFileFromRoot();
             Picasso.with(this).load(new File(image))
                     .placeholder(R.drawable.default_course)
                     .into(courseImg);
+        }
+        View actCompleted = activityDetail.findViewById(R.id.activity_completed);
+        actCompleted.setVisibility(activity.getCompleted() ? View.VISIBLE : View.GONE);
+    }
+
+    private void configureButtonActions(){
+        if (!SessionManager.isLoggedIn(this)){
+            //If there is not user logged in, we dont let him navigate to the activity
+            View actions = findViewById(R.id.activity_actions);
+            if (actions != null) {
+                actions.setVisibility(View.GONE);
+            }
+            return;
+        }
+
+        Button cancelButton = (Button) findViewById(R.id.btn_cancel);
+        Button viewButton = (Button) findViewById(R.id.btn_show_activity);
+
+        if (( cancelButton != null) && (viewButton != null)){
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ViewDigestActivity.this.finish();
+                }
+            });
+
+            viewButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(ViewDigestActivity.this, CourseIndexActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(Course.TAG, activityCourse);
+                    tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, activity.getDigest());
+                    i.putExtras(tb);
+                    ViewDigestActivity.this.startActivity(i);
+                }
+            });
         }
     }
 

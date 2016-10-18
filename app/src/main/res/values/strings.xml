@@ -335,6 +335,7 @@
     <string name="open_digest.errors.activity_not_found">Activity not found. Are you sure you have installed the course that contains this activity?</string>
     <string name="open_digest.description">OppiaMobile has the functionality to open activities based in its URL (opened from an SMS, for example)</string>
     <string name="open_digest.btn_action">Open activity</string>
+    <string name="open_digest.activity_completed">Activity completed</string>
 
 
 </resources>
