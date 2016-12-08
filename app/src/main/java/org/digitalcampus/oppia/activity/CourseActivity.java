@@ -231,9 +231,13 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         String actionBarTitle = section.getMultiLangInfo().getTitle(currentLang);
         if (actionBarTitle != null) {
             setTitle(actionBarTitle);
-        } else if (isBaseline) {
-            setTitle(getString(R.string.title_baseline));
+        }else {
+            ArrayList<Activity> activities = section.getActivities();
+            String preTestTitle = getString(R.string.alert_pretest);
+            setTitle(!activities.isEmpty() && activities.get(0).getTitle(currentLang).toUpperCase().equals(preTestTitle.toUpperCase()) ?
+                    preTestTitle : isBaseline ? getString(R.string.title_baseline): "");
         }
+
         //actionBar.removeAllTabs();
         List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
