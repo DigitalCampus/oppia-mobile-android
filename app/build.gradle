@@ -127,19 +127,27 @@ dependencies {
 }
 apply plugin: 'com.google.gms.google-services'
 
-task grantPermissions << {
-    def adb = android.getAdbExe().toString()
+task grantPermissions (type: Exec, dependsOn: 'installDebug'){
+    group = 'test'
+    description = 'Grant permissions for testing.'
 
-    println "Granting permissions on device"
-    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.READ_PHONE_STATE".execute()
-    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.READ_EXTERNAL_STORAGE".execute()
-    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.WRITE_EXTERNAL_STORAGE".execute()
+    def adb = android.getAdbExe().toString()
+    def absolutePath = file('..')
+
+    if (!System.getProperty('os.name').toLowerCase().contains('windows')) {
+        println "Granting permissions for a non windows os"
+        commandLine "sh $absolutePath/scripts/grant_permissions.sh shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE".split(' ')
+    }else{
+        println "Granting permissions for a windows os"
+        commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE".split(" ")
+    }
+
 
 }
 
 afterEvaluate {
     tasks.each { task ->
-        if (task.name.startsWith('assembleDebugAndroidTest')) {
+        if (task.name.startsWith('connected')) {
             task.dependsOn grantPermissions
         }
     }
