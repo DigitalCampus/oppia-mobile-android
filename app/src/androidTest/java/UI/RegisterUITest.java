@@ -10,9 +10,12 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import TestRules.DisableAnimationsRule;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -32,6 +35,9 @@ public class RegisterUITest {
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<>(WelcomeActivity.class);
+
+    @ClassRule
+    public static DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws  Exception {
