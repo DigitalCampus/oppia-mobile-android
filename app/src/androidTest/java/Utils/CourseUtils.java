@@ -48,11 +48,15 @@ public class CourseUtils {
 
             //Clean downloads folder
             File downloadsFolder = new File(Storage.getDownloadPath(ctx));
-            cleanDirectory(downloadsFolder);
+            if(downloadsFolder.exists()) {
+                cleanDirectory(downloadsFolder);
+            }
 
             //Clean courses folder
             File coursesFolder = new File(Storage.getCoursesPath(ctx));
-            cleanDirectory(coursesFolder);
+            if(coursesFolder.exists()) {
+                cleanDirectory(coursesFolder);
+            }
 
             //Clean temp folder
             File tempFolder = new File(Storage.getStorageLocationRoot(ctx) + "temp/");
