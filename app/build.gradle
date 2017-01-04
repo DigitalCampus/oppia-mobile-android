@@ -136,7 +136,7 @@ task grantPermissions (type: Exec, dependsOn: 'installDebug'){
 
     if (!System.getProperty('os.name').toLowerCase().contains('windows')) {
         println "Granting permissions for a non windows os"
-        commandLine "bash $absolutePath/scripts/grant_permissions.sh shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE".split(' ')
+        commandLine "$absolutePath/scripts/grant_permissions.sh shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE".split(' ')
     }else{
         println "Granting permissions for a windows os"
         commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE".split(" ")
