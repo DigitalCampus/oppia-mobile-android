@@ -221,7 +221,7 @@ public class FileUtils {
 		return type;
 	}
 
-	public static boolean supportedMediafileType(String mimeType) {
+	public static boolean isSupportedMediafileType(String mimeType) {
 		Log.d(TAG, mimeType);
 		if (mimeType == null) {
 			return false;

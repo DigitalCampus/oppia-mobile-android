@@ -32,6 +32,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +49,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -321,7 +323,8 @@ public class ResourceWidget extends WidgetFactory {
 		public void onClick(View v) {
 			File file = (File) v.getTag();
 			// check the file is on the file system (should be but just in case)
-			if(!file.exists()){
+			boolean exists = Storage.mediaFileExists(_ctx, file.getName());
+			if(!exists){
 				Toast.makeText(_ctx, _ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
 				return;
 			} 

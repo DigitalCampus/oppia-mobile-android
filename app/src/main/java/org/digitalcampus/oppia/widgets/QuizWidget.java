@@ -661,27 +661,7 @@ public class QuizWidget extends WidgetFactory {
 		}
 
 		public void onClick(View v) {
-			// check video file exists
-			boolean exists = Storage.mediaFileExists(QuizWidget.super.getActivity(), mediaFileName);
-			if (!exists) {
-				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName), Toast.LENGTH_LONG).show();
-			    return;
-            }
-
-			String mimeType = FileUtils.getMimeType(Storage.getMediaPath(QuizWidget.super.getActivity()) + mediaFileName);
-			if (!FileUtils.supportedMediafileType(mimeType)) {
-				Toast.makeText(QuizWidget.super.getActivity(), QuizWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
-						Toast.LENGTH_LONG).show();
-                return;
-			}
-			
-			Intent intent = new Intent(QuizWidget.super.getActivity(), VideoPlayerActivity.class);
-			Bundle tb = new Bundle();
-			tb.putSerializable(VideoPlayerActivity.MEDIA_TAG, mediaFileName);
-			tb.putSerializable(Activity.TAG, activity);
-			tb.putSerializable(Course.TAG, course);
-			intent.putExtras(tb);
-			startActivity(intent);
+            QuizWidget.super.startMediaPlayerWithFile(mediaFileName);
 		}
 		
 	}
