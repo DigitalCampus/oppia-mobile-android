@@ -29,6 +29,7 @@ public class Tracker {
 
 	public static final String TAG = Tracker.class.getSimpleName();
 	public static final String SEARCH_TYPE = "search";
+	public static final String MISSING_MEDIA_TYPE = "missing_media";
 
 	private final Context ctx;
 	
@@ -67,7 +68,19 @@ public class Tracker {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
     }
+
+	public void saveMissingMediaTracker(String filename){
+
+		try {
+			JSONObject missingMedia = new JSONObject();
+			missingMedia = new MetaDataUtils(ctx).getMetaData(missingMedia);
+			missingMedia.put("filename", filename);
+			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 
 }
