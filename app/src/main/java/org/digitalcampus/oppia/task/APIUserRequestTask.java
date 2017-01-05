@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.task;
 
 import java.io.IOException;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -30,7 +29,6 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import okhttp3.OkHttpClient;
@@ -82,7 +80,7 @@ public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>
                 }
             }
 
-		} catch (ClientProtocolException | UserNotFoundException e) {
+		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
