@@ -176,6 +176,7 @@
     <string name="tag_label">%1$s (%2$d)</string>
     <string name="alt_activity_icon">Activity icon</string>
 
+    <string name="publisher">Publisher:</string>
     <string name="update">Update</string>
     <string name="update_schedule">Update Schedule</string>
     <string name="installed">Installed</string>
@@ -329,6 +330,7 @@
     <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> OppiaMobile > Permissions to grant access to these permissions</string>
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
     <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
+
 
 </resources>
 
