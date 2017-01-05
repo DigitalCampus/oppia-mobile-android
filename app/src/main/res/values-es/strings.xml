@@ -215,7 +215,7 @@
 	<string name="login_process">Iniciando sesión</string>
 	<string name="login_complete">Registrado</string>
 	
-	<string name="logout_confirm">Estás seguro de que quieres cerrar sesión?\n\nDesconectarte eliminará todos los registros de actividad del teléfono. Necesitarás una conexión a internet activa para loguearte de nuevo.</string>
+	<string name="logout_confirm">Estás seguro de que quieres cerrar sesión?\n\nNecesitarás una conexión a internet activa para loguearte de nuevo.</string>
 	
 	<string name="register_process">Identificando</string>
 	<string name="register_complete">Registro completo</string>
