@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
@@ -83,7 +82,7 @@ public class RegisterDeviceRemoteAdminTask extends APIRequestTask<Payload, Void,
                 return false;
             }
 
-        } catch (UnsupportedEncodingException | ClientProtocolException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             Log.d(TAG, e.toString());
         } catch (IOException | JSONException e) {
