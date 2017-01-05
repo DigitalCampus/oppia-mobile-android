@@ -51,23 +51,23 @@ public class MultiSelectWidget extends QuestionWidget {
     	responsesLL.removeAllViews();
     	
     	for (Response r : responses){
-    		CheckBox chk= new CheckBox(ctx);  
-    		chk.setText(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-    		responsesLL.addView(chk);
-    		Iterator<String> itr = currentAnswer.iterator();
-    		while(itr.hasNext()){
-    			String a = itr.next(); 
-    			if(a.equals(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())))){
-    				chk.setChecked(true);
-    			}
-    		}
+    		CheckBox chk= new CheckBox(ctx);
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+			setResponseMarginInLayoutParams(params);
+			responsesLL.addView(chk, params);
+			for (String a : currentAnswer) {
+				if (a.equals(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())))) {
+					chk.setChecked(true);
+				}
+			}
     	}	
 	}
 
 	@Override
 	public List<String> getQuestionResponses(List<Response> responses) {
 		int count = responsesLL.getChildCount();
-		List<String> response = new ArrayList<String>();
+		List<String> response = new ArrayList<>();
 		for (int i=0; i<count; i++) {
 			CheckBox cb = (CheckBox) responsesLL.getChildAt(i);
 			if(cb.isChecked()){
