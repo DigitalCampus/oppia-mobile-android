@@ -19,6 +19,9 @@ package org.digitalcampus.oppia.utils.storage;
 
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+
+import org.digitalcampus.oppia.application.MobileLearning;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -225,15 +228,13 @@ public class FileUtils {
 		Log.d(TAG, mimeType);
 		if (mimeType == null) {
 			return false;
-		} else if (mimeType.equals("video/m4v")) {
-			return true;
-		} else if (mimeType.equals("video/mp4")) {
-			return true;
-		} else if(mimeType.equals("audio/mpeg")) {
-			return true;
-		} else {
-			return false;
 		}
+        for (String s: MobileLearning.SUPPORTED_MEDIA_TYPES){
+            if(mimeType.equals(s)){
+                return true;
+            }
+        }
+        return false;
 	}
 
 }

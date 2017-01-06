@@ -97,6 +97,7 @@ public class MobileLearning extends Application {
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
 	public static final int MAX_TRACKER_SUBMIT = 10;
 	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
+    public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v","video/mp4","audio/mpeg","video/3gp","video/3gpp"};
 
     public static final String DEVICEADMIN_ADD_PATH = OPPIAMOBILE_API + "device/register/";
     public static final boolean DEVICEADMIN_ENABLED = BuildConfig.DEVICEADMIN_ENABLED;
