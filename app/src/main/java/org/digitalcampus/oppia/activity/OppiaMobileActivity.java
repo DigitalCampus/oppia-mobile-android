@@ -465,7 +465,7 @@ public class OppiaMobileActivity
 		}
 		
 		// update the points/badges by invalidating the menu
-		if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
+		if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH) || key.equalsIgnoreCase(PrefsActivity.PREF_LOGOUT_ENABLED)){
 			supportInvalidateOptionsMenu();
 		}
 	}
