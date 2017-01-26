@@ -38,7 +38,7 @@ public class ResetUITest {
                 .perform(click());
 
         onView(withId(R.id.reset_username_field))
-                .perform(click(), typeText(""));
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
         onView(withId(R.id.reset_btn))
                 .perform(scrollTo(), click());
@@ -47,18 +47,18 @@ public class ResetUITest {
                 .check(matches(isDisplayed()));
     }
 
-    /*@Test
+    @Test
     public void clickResetButton_WrongUsername() throws  Exception {
         onView(withText(R.string.tab_title_reset))
                 .perform(click());
 
         onView(withId(R.id.reset_username_field))
-                .perform(click(), typeText("WrongUsername"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
 
         onView(withId(R.id.reset_btn))
                 .perform(scrollTo(), click());
 
-        onView(withText(R.string.error_register_no_username))
+        onView(withText(R.string.error_reset))
                 .check(matches(isDisplayed()));
-    }*/
+    }
 }

@@ -187,7 +187,7 @@ public class OppiaMobileActivityUITest {
         onView(withId(R.id.manage_courses_btn))
                 .perform(click());
 
-        assertEquals(TagSelectActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+        checkCorrectActivity(TagSelectActivity.class);
 
     }
 
@@ -215,7 +215,7 @@ public class OppiaMobileActivityUITest {
                 .atPosition(0)
                 .perform(click());
 
-        assertEquals(CourseIndexActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+        checkCorrectActivity(CourseIndexActivity.class);
 
     }
 
@@ -249,8 +249,7 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+        openDrawer();
 
         onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
 
