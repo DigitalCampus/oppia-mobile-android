@@ -7,17 +7,24 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfo;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
 
+import TestRules.DisableAnimationsRule;
+
 import static junit.framework.Assert.assertEquals;
 
 
 @RunWith(AndroidJUnit4.class)
 public class MultiLangInfoTest {
+
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
+
 
     private Context context;
 

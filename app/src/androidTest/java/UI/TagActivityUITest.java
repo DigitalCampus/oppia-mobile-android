@@ -24,6 +24,7 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
+import TestRules.DisableAnimationsRule;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static android.support.test.espresso.Espresso.onData;
@@ -58,6 +59,9 @@ public class TagActivityUITest {
     @Rule
     public ActivityTestRule<TagSelectActivity> tagSelectActivityTestRule =
             new ActivityTestRule<>(TagSelectActivity.class, false, false);
+
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
 
     @Mock TagRepository tagRepository;

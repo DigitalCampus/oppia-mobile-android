@@ -30,6 +30,7 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
+import TestRules.DisableAnimationsRule;
 import Utils.CourseUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
@@ -73,6 +74,9 @@ public class DownloadActivityUITest {
     @Rule
     public ActivityTestRule<DownloadActivity> tagSelectActivityTestRule =
             new ActivityTestRule<>(DownloadActivity.class, false, false);
+
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
 
     @Mock CourseInstallRepository courseInstallRepository;

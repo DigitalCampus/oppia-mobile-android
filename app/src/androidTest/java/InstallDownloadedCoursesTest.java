@@ -17,6 +17,7 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
+import TestRules.DisableAnimationsRule;
 import Utils.CourseUtils;
 import Utils.FileUtils;
 
@@ -37,6 +39,11 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class InstallDownloadedCoursesTest {
+
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
+
+
     private final String CORRECT_COURSE = "Correct_Course.zip";
     private final String EXISTING_COURSE = "Existing_Course.zip";
     private final String ALREADY_INSTALLED_COURSE = "";

@@ -3,6 +3,7 @@ package UI;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.DrawerActions;
@@ -51,6 +52,7 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
+import TestRules.DisableAnimationsRule;
 import Utils.CourseUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
@@ -60,9 +62,12 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.pressBack;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
@@ -108,6 +113,9 @@ public class OppiaMobileActivityUITest {
     @Rule
     public ActivityTestRule<OppiaMobileActivity> oppiaMobileActivityTestRule =
             new ActivityTestRule<>(OppiaMobileActivity.class, false, false);
+
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
     
 
@@ -242,6 +250,8 @@ public class OppiaMobileActivityUITest {
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
+        onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
+
         onView(withText(R.string.menu_logout))
                 .perform(click());
 
@@ -261,6 +271,8 @@ public class OppiaMobileActivityUITest {
 
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
+
+        onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
 
         onView(withText(R.string.menu_logout))
                 .perform(click());
@@ -283,6 +295,8 @@ public class OppiaMobileActivityUITest {
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
+        onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
+
         onView(withText(R.string.logout))
                 .check(doesNotExist());
     }
@@ -296,6 +310,8 @@ public class OppiaMobileActivityUITest {
 
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
+
+        onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
 
         onView(withText(R.string.logout))
                 .check(matches(isDisplayed()));

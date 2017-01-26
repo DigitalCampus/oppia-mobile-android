@@ -100,17 +100,19 @@ dependencies {
     //JUnit Dependencies
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.3.1'
-    androidTestCompile 'com.android.support.test:runner:0.4'
-    androidTestCompile 'com.android.support.test:rules:0.4'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support:support-annotations:23.4.0'
 
     //Espresso Dependencies
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1'){
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2'){
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
         exclude module: 'support-v13'
         exclude module: 'recyclerview-v7'
+        exclude module: 'appcompat-v7'
+        exclude module: 'design'
     }
 
     //Mockito Dependencies
@@ -136,12 +138,10 @@ task grantPermissions (type: Exec, dependsOn: 'installDebug'){
 
     if (!System.getProperty('os.name').toLowerCase().contains('windows')) {
         println "Granting permissions for a non windows os"
-        commandLine "chmod a+x $absolutePath/scripts/grant_permissions.sh".split(' ')
-        commandLine "$absolutePath/scripts/grant_permissions.sh shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE".split(' ')
     }else{
         println "Granting permissions for a windows os"
-        commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE".split(" ")
     }
+    commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE".split(" ")
 
 
 }
