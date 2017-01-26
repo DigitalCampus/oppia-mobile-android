@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.DrawerActions;
+import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -66,6 +67,7 @@ import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -486,18 +488,31 @@ public class OppiaMobileActivityUITest {
 
     //Drawer Tests
 
+    private void openDrawer(){
+        onView(withId(R.id.drawer))
+                .perform(DrawerActions.open());
+
+        onView(withId(R.id.drawer)).check(matches(isOpen()));
+    }
+
+    private void performClickDrawerItem(int itemId){
+        onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(itemId));
+    }
+
+    private void checkCorrectActivity(Class activity){
+        assertEquals(activity, Utils.TestUtils.getCurrentActivity().getClass());
+    }
+
+
     @Test
     public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception{
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+        openDrawer();
+        performClickDrawerItem(R.id.menu_download);
+        checkCorrectActivity(TagSelectActivity.class);
 
-        onView(withText(R.string.menu_download))
-                .perform(click());
-
-        assertEquals(TagSelectActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
     @Test
@@ -505,13 +520,10 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+        openDrawer();
+        performClickDrawerItem(R.id.menu_search);
+        checkCorrectActivity(SearchActivity.class);
 
-        onView(withText(R.string.menu_search))
-                .perform(click());
-
-        assertEquals(SearchActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
     @Test
@@ -528,11 +540,8 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withText(R.string.menu_language))
-                .perform(click());
+        openDrawer();
+        performClickDrawerItem(R.id.menu_language);
 
         onView(withText(R.string.change_language)).check(matches(isDisplayed()));
     }
@@ -544,11 +553,8 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withText(R.string.menu_language))
-                .perform(click());
+        openDrawer();
+        performClickDrawerItem(R.id.menu_language);
 
         ViewInteraction dialog = onView(withText(R.string.change_language));
 
@@ -560,11 +566,8 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withText(R.string.menu_scorecard))
-                .perform(click());
+        openDrawer();
+        performClickDrawerItem(R.id.menu_scorecard);
 
         onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 withId(R.id.activity_scorecard_pager))).check(matches(isDisplayed()));
@@ -575,13 +578,10 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+        openDrawer();
+        performClickDrawerItem(R.id.menu_monitor);
+        checkCorrectActivity(MonitorActivity.class);
 
-        onView(withText(R.string.menu_monitor))
-                .perform(click());
-
-        assertEquals(MonitorActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
     @Test
@@ -589,13 +589,10 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+        openDrawer();
+        performClickDrawerItem(R.id.menu_settings);
+        checkCorrectActivity(PrefsActivity.class);
 
-        onView(withText(R.string.menu_settings))
-                .perform(click());
-
-        assertEquals(PrefsActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
     @Test
@@ -603,13 +600,9 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withText(R.string.menu_about))
-                .perform(click());
-
-        assertEquals(AboutActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+        openDrawer();
+        performClickDrawerItem(R.id.menu_about);
+        checkCorrectActivity(AboutActivity.class); 
 
         onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 withId(R.id.about_versionno))).check(matches(isDisplayed()));
