@@ -32,16 +32,17 @@ public class WelcomeUITest {
     @Test
     public void showsLoginFragmentOnLoginButtonClick() throws Exception{
         onView(withId(R.id.welcome_login))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.login_btn))
+                .perform(scrollTo())
                 .check(matches(isDisplayed()));
     }
 
     @Test
     public void showsRegisterFragmentOnRegisterButtonClick() throws Exception{
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo())
@@ -51,9 +52,10 @@ public class WelcomeUITest {
     @Test
     public void showsResetFragmentOnResetTabClicked() throws Exception{
         onView(withText(R.string.tab_title_reset))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.reset_btn))
+                .perform(scrollTo())
                 .check(matches(isDisplayed()));
     }
 
