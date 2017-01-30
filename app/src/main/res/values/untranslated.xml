@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OppiaMobile</string>
-    <string name="version_name">6.1.0</string>
+    <string name="version_name">6.2.0</string>
     <string name="prefServerTimeoutConnectionDefault" translatable="false">60000</string>
     <string name="prefServerTimeoutResponseDefault" translatable="false">60000</string>
 </resources>
