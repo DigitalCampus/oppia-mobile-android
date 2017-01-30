@@ -259,7 +259,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.no))
                 .perform(click());
 
-        assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+        checkCorrectActivity(OppiaMobileActivity.class);
 
     }
 
@@ -270,8 +270,7 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+        openDrawer();
 
         onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
 
@@ -281,8 +280,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.yes))
                 .perform(click());
 
-        assertEquals(WelcomeActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
-
+        checkCorrectActivity(WelcomeActivity.class);
 
     }
 
@@ -293,8 +291,7 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+        openDrawer();
 
         onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
 
@@ -309,8 +306,7 @@ public class OppiaMobileActivityUITest {
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+        openDrawer();
 
         onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
 
