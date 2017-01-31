@@ -45,11 +45,13 @@ public class ViewDigestActivity extends AppCompatActivity {
 
         boolean validDigest = validate(digest);
         if (validDigest){
+            Log.d(TAG, "Digest valid, checking activity");
             DbHelper db = DbHelper.getInstance(this);
             activity = db.getActivityByDigest(digest);
 
             if (activity == null){
                 errorText.setText(this.getText(R.string.open_digest_errors_activity_not_found));
+                errorText.setVisibility(View.VISIBLE);
                 activityDetail.setVisibility(View.GONE);
             }
             else{
@@ -66,6 +68,7 @@ public class ViewDigestActivity extends AppCompatActivity {
     private boolean validate(String digest){
         if (digest == null){
             //The query parameter is missing or misconfigured
+            Log.d(TAG, "Invalid digest");
             errorText.setText(this.getText(R.string.open_digest_errors_invalid_param));
             errorText.setVisibility(View.VISIBLE);
             activityDetail.setVisibility(View.GONE);
