@@ -20,4 +20,6 @@
     <color name="highlight_separator">#b9b9b9</color>
     <color name="text_error">#DD2C00</color>
     <color name="stroke">#DFDFDF</color>
+    <color name="quiz_navigation_bar">#D2D2D2</color>
+    <color name="quiz_navigation_button">#FF5A595B</color>
 </resources>

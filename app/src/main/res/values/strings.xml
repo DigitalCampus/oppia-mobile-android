@@ -176,6 +176,7 @@
     <string name="tag_label">%1$s (%2$d)</string>
     <string name="alt_activity_icon">Activity icon</string>
 
+    <string name="publisher">Publisher:</string>
     <string name="update">Update</string>
     <string name="update_schedule">Update Schedule</string>
     <string name="installed">Installed</string>
@@ -262,7 +263,7 @@
     <string name="login_process">Logging in</string>
     <string name="login_complete">Logged in</string>
 
-    <string name="logout_confirm">Are you sure you want to logout?\n\nLogging out will remove all your activity logs from this phone. You will need an active internet connection to log in again.</string>
+    <string name="logout_confirm">Are you sure you want to logout?\n\nYou will need an active internet connection to log in again.</string>
 
     <string name="register_alert_title">Register</string>
     <string name="register_process">Registering …</string>
@@ -287,7 +288,7 @@
     <string name="search.result_summary">%1$d results for \"%2$s\"</string>
     <string name="search.message.searching">Searching…</string>
     <string name="search.message.no_results">No results found for \"%1$s\"</string>
-    <string name="search.message.fetching">"Fetching results…"</string>
+    <string name="search.message.fetching">Fetching results…</string>
     <string name="submit_stats_btn_text">Send now</string>
 
     <string name="media_player_description">Oppia Media Player</string>
@@ -324,7 +325,7 @@
     <string name="permissions.storage.title">read and modify contents of the SD card</string>
     <string name="permissions.storage.description">OppiaMobile needs access to the SD card to be able to store the downloaded media contents for the courses</string>
     <string name="permissions.phone_state.title">read phone state and identity</string>
-    <string name="permissions.phone_state.description">Explanation of why OppiaMobile needs the phone identity</string>
+    <string name="permissions.phone_state.description">OppiaMobile needs access to the phone identity to get information about your device model and Android version</string>
     <string name="permissions.allow_btn_text">Allow permissions</string>
     <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> OppiaMobile > Permissions to grant access to these permissions</string>
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>

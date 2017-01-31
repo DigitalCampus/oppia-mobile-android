@@ -22,7 +22,6 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -138,7 +137,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
             e.printStackTrace();
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
-        }catch (UnsupportedEncodingException | ClientProtocolException e) {
+        }catch (UnsupportedEncodingException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {

@@ -54,11 +54,14 @@ public class MultiChoiceWidget extends QuestionWidget{
     	int id = 1000+1;
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);
+			RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
+					RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
+			setResponseMarginInLayoutParams(params);
     		rb.setId(id);
 			rb.setText(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-			responsesRG.addView(rb);
+			responsesRG.addView(rb, params);
             for (String answer : currentAnswer) {
-                if (r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())) == answer) {
+                if (answer.equals(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())))){
                     rb.setChecked(true);
                 }
             }
@@ -74,7 +77,7 @@ public class MultiChoiceWidget extends QuestionWidget{
     	View rb = responsesRG.findViewById(resp);
     	int idx = responsesRG.indexOfChild(rb);
     	if (idx >= 0){
-    		List<String> response = new ArrayList<String>();
+    		List<String> response = new ArrayList<>();
 			response.add(responses.get(idx).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
     		return response;
     	}

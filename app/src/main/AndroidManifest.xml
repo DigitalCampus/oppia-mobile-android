@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="org.digitalcampus.mobile.learning"
-          android:versionCode="59"
-          android:versionName="@string/version_name">
+    android:versionCode="60"
+    android:versionName="@string/version_name">
 
     <uses-sdk
         android:minSdkVersion="14"

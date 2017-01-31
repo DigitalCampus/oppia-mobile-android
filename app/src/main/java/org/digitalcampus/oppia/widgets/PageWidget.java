@@ -144,33 +144,8 @@ public class PageWidget extends WidgetFactory {
 					int startPos = url.indexOf("/video/") + 7;
 					String mediaFileName = url.substring(startPos, url.length());
 
-					// check video file exists
-					boolean exists = Storage.mediaFileExists(PageWidget.super.getActivity(), mediaFileName);
-					if (!exists) {
-						Log.d(TAG,PageWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName));
-						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_not_found, mediaFileName),
-								Toast.LENGTH_LONG).show();
-						return true;
-					} else {
-						Log.d(TAG,"Media found: " + mediaFileName);
-					}
-
-					String mimeType = FileUtils.getMimeType(Storage.getMediaPath(PageWidget.super.getActivity()) + mediaFileName);
-
-					if (!FileUtils.supportedMediafileType(mimeType)) {
-						Toast.makeText(PageWidget.super.getActivity(), PageWidget.super.getActivity().getString(R.string.error_media_unsupported, mediaFileName),
-								Toast.LENGTH_LONG).show();
-						return true;
-					}
-					
-					Intent intent = new Intent(PageWidget.super.getActivity(), VideoPlayerActivity.class);
-					Bundle tb = new Bundle();
-					tb.putSerializable(VideoPlayerActivity.MEDIA_TAG, mediaFileName);
-					tb.putSerializable(Activity.TAG, activity);
-					tb.putSerializable(Course.TAG, course);
-					intent.putExtras(tb);
-					startActivity(intent);
-					return true;
+					PageWidget.super.startMediaPlayerWithFile(mediaFileName);
+                    return true;
 					
 				} else {
 					
@@ -267,9 +242,7 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	public String getContentToRead() {
-		File f = new File(File.separator
-				+ course.getLocation()
-				+ File.separator
+		File f = new File(File.separator + course.getLocation() + File.separator
 				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 						.getLanguage())));
 		StringBuilder text = new StringBuilder();

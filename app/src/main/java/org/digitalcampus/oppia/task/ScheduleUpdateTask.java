@@ -18,11 +18,8 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.os.AsyncTask;
-
 import com.splunk.mint.Mint;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -119,7 +116,7 @@ public class ScheduleUpdateTask extends APIRequestTask<Payload, DownloadProgress
 			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
-		} catch (ClientProtocolException | UserNotFoundException e) {
+		} catch (UserNotFoundException e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {

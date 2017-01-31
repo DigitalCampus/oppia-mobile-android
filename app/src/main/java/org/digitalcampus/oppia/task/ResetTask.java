@@ -21,7 +21,6 @@ import android.content.Context;
 
 import com.splunk.mint.Mint;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -83,7 +82,7 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
                 }
             }
 
-		} catch (UnsupportedEncodingException | ClientProtocolException e) {
+		} catch (UnsupportedEncodingException  e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException e) {

@@ -19,11 +19,18 @@ package org.digitalcampus.oppia.widgets;
 
 import java.util.HashMap;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 public abstract class WidgetFactory extends Fragment {
 	
@@ -46,7 +53,7 @@ public abstract class WidgetFactory extends Fragment {
 	public abstract void setWidgetConfig(HashMap<String,Object> config);
 	
 	public void setReadAloud(boolean readAloud){
-		this.readAloud = true;
+		this.readAloud = readAloud;
 	}
 	
 	protected String getDigest() {
@@ -95,5 +102,32 @@ public abstract class WidgetFactory extends Fragment {
             addSpentTime();
         }
         return this.spentTime;
+    }
+
+    protected void startMediaPlayerWithFile(String mediaFileName){
+        // check media file exists
+        boolean exists = Storage.mediaFileExists(getActivity(), mediaFileName);
+        if (!exists) {
+            Toast.makeText(getActivity(),
+                    getActivity().getString(R.string.error_media_not_found, mediaFileName),
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String mimeType = FileUtils.getMimeType(Storage.getMediaPath(getActivity()) + mediaFileName);
+        if (!FileUtils.isSupportedMediafileType(mimeType)) {
+            Toast.makeText(getActivity(),
+                    getActivity().getString(R.string.error_media_unsupported, mediaFileName),
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
+        Bundle tb = new Bundle();
+        tb.putSerializable(VideoPlayerActivity.MEDIA_TAG, mediaFileName);
+        tb.putSerializable(Activity.TAG, activity);
+        tb.putSerializable(Course.TAG, course);
+        intent.putExtras(tb);
+        getActivity().startActivity(intent);
     }
 }
