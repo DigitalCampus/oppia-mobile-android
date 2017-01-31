@@ -108,22 +108,23 @@
             android:name="org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity"
             android:label="@string/media_player_description"
             android:screenOrientation="landscape"
-            android:theme="@style/Oppia.Fullscreen"/>
+            android:theme="@style/Oppia.Fullscreen" />
 
         <activity android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
-                  android:theme="@style/Oppia.ToolbarTheme.Dark">
+            android:theme="@style/Oppia.ToolbarTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
-                      android:host="demo.oppia-mobile.org"
-                      android:pathPrefix="/view" />
+                    android:host="demo.oppia-mobile.org"
+                    android:pathPrefix="/view" />
                 <data android:scheme="https"
-                      android:host="demo.oppia-mobile.org"
-                      android:pathPrefix="/view" />
+                    android:host="demo.oppia-mobile.org"
+                    android:pathPrefix="/view" />
             </intent-filter>
         </activity>
+
 
         <service
             android:name="org.digitalcampus.oppia.service.TrackerService"
