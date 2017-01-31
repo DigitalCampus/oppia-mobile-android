@@ -78,6 +78,7 @@ public class SearchActivity extends AppActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Course course = (Course) view.getTag(R.id.TAG_COURSE);
                 String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
+                //TODO: Extract this functionality to common class (used also in ViewDigestActivity)
                 Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();
                 tb.putSerializable(Course.TAG, course);

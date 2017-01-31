@@ -1218,12 +1218,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		String sql = "SELECT * FROM  "+ ACTIVITY_TABLE + " a " +
 					" WHERE " + ACTIVITY_C_ACTIVITYDIGEST + "='"+ digest + "'";
 		Cursor c = db.rawQuery(sql,null);
+
+        if (c.getCount() <= 0){
+            c.close();
+            return null;
+        }
 		c.moveToFirst();
 		Activity a = new Activity();
-		while (c.isAfterLast() == false) {
-			
+		while (!c.isAfterLast()) {
 			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
+                a.setCourseId(c.getLong(c.getColumnIndex(ACTIVITY_C_COURSEID)));
 				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+                a.setActType(c.getString(c.getColumnIndex(ACTIVITY_C_ACTTYPE)));
 				a.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
 				a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
 				a.setSectionId(c.getInt(c.getColumnIndex(ACTIVITY_C_SECTIONID)));
@@ -1240,7 +1246,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.rawQuery(sql,null);
 		c.moveToFirst();
 		Activity a = new Activity();
-		while (c.isAfterLast() == false) {
+		while (!c.isAfterLast()) {
 			
 			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
 				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
@@ -1404,21 +1410,22 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		
 	    		int digest = c.getColumnIndex("activitydigest");
 	    		Activity activity = this.getActivityByDigest(c.getString(digest));
-	    		result.setActivity(activity);
-				
-	    		int sectionOrderId = activity.getSectionId();
-	    		CourseXMLReader cxr = fetchedXMLCourses.get(courseId);
-				try {
-                    if (cxr == null){
-                        cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
-                        fetchedXMLCourses.put(courseId, cxr);
+                if (activity != null){
+                    result.setActivity(activity);
+                    int sectionOrderId = activity.getSectionId();
+                    CourseXMLReader cxr = fetchedXMLCourses.get(courseId);
+                    try {
+                        if (cxr == null){
+                            cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
+                            fetchedXMLCourses.put(courseId, cxr);
+                        }
+                        result.setSection(cxr.getSection(sectionOrderId));
+                        results.add(result);
+                    } catch (InvalidXMLException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
                     }
-					result.setSection(cxr.getSection(sectionOrderId));
-		    		results.add(result);
-				} catch (InvalidXMLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                }
 	    		c.moveToNext();
 			}
             long ellapsedTime = System.currentTimeMillis() - startTime;
