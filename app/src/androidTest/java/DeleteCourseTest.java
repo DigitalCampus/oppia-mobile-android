@@ -175,7 +175,7 @@ public class DeleteCourseTest {
         //Proceed with the installation of the course
         try {
             String filename = CORRECT_COURSE;
-            FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+            FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
             ArrayList<Object> data = new ArrayList<>();
             Payload payload = new Payload(data);

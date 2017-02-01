@@ -74,7 +74,7 @@ public class InstallDownloadedCoursesTest {
 
         CourseUtils.cleanUp();
 
-        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+        FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
         runInstallCourseTask();//Run test task
 
@@ -107,7 +107,7 @@ public class InstallDownloadedCoursesTest {
         CourseUtils.cleanUp();
 
         for(int i = 0; i < 2; i++){
-            FileUtils.copyZipFromAssets(filename); //Copy course zip from assets to download path
+            FileUtils.copyZipFromAssets(context, filename); //Copy course zip from assets to download path
             runInstallCourseTask(); //Run test task
             signal.await();
             signal = new CountDownLatch(1);
@@ -139,7 +139,7 @@ public class InstallDownloadedCoursesTest {
 
         CourseUtils.cleanUp();
 
-        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+        FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
         runInstallCourseTask();//Run test task
 
@@ -171,7 +171,7 @@ public class InstallDownloadedCoursesTest {
 
         CourseUtils.cleanUp();
 
-        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+        FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
         runInstallCourseTask();//Run test task
 
@@ -203,7 +203,7 @@ public class InstallDownloadedCoursesTest {
 
         CourseUtils.cleanUp();
 
-        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+        FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
         runInstallCourseTask();     //Run test task
         signal.await();
@@ -241,7 +241,7 @@ public class InstallDownloadedCoursesTest {
 
 
         for(String filename : filenames) {
-            FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+            FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
         }
 
         runInstallCourseTask();     //Run test task
@@ -294,7 +294,7 @@ public class InstallDownloadedCoursesTest {
 
     public void installCourseAndRemoveItFromDatabase(){
         String filename = CORRECT_COURSE;
-        FileUtils.copyZipFromAssets(filename);  //Copy course zip from assets to download path
+        FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
         runInstallCourseTask();//Run test task
         try {
