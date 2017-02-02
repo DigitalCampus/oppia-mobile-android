@@ -1,37 +1,28 @@
-import android.Manifest;
+
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.di.AppComponent;
-import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.ExternalStorageState;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
-
-import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -93,9 +84,11 @@ public class ChangeStorageOptionTest {
     }
 
     @Test
-    public void fromInternalToExternal_storageNotAvailable() throws Exception {
+    public void fromInternalToExternal_storageNotAvailable_mediaRemoved() throws Exception {
 
-        when(externalStorageState.getExternalStorageState()).thenReturn(Environment.MEDIA_REMOVED);
+        ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
+        ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
+        when(state.getExternalStorageState()).thenReturn(Environment.MEDIA_REMOVED);    //Provide mocked behaviour
 
         Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
         Storage.createFolderStructure(context);
@@ -122,8 +115,8 @@ public class ChangeStorageOptionTest {
 
         signal.await();
 
-        assertTrue(response.isResult());
-        assertEquals(PrefsActivity.STORAGE_OPTION_EXTERNAL, prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, ""));
+        assertFalse(response.isResult());
+        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
     }
 
     @Test
