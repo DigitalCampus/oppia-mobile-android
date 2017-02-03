@@ -83,6 +83,8 @@ public class ChangeStorageOptionTest {
         assertEquals(PrefsActivity.STORAGE_OPTION_EXTERNAL, prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, ""));
     }
 
+
+    //Is Storage Available Tests
     @Test
     public void fromInternalToExternal_storageNotAvailable_mediaRemoved() throws Exception {
 
@@ -118,6 +120,147 @@ public class ChangeStorageOptionTest {
         assertFalse(response.isResult());
         assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
     }
+    @Test
+    public void fromInternalToExternal_storageNotAvailable_mediaUnmountable() throws Exception {
+
+        ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
+        ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
+        when(state.getExternalStorageState()).thenReturn(Environment.MEDIA_UNMOUNTABLE);    //Provide mocked behaviour
+
+        Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
+        Storage.createFolderStructure(context);
+
+        ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
+
+        ArrayList<Object> data = new ArrayList<>();
+        String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
+        data.add(storageOption);
+        Payload p = new Payload(data);
+        task.setMoveStorageListener(new MoveStorageListener() {
+            @Override
+            public void moveStorageComplete(Payload p) {
+                response = p;
+                signal.countDown();
+            }
+
+            @Override
+            public void moveStorageProgressUpdate(String s) {
+
+            }
+        });
+        task.execute(p);
+
+        signal.await();
+
+        assertFalse(response.isResult());
+        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+    }
+    @Test
+    public void fromInternalToExternal_storageNotAvailable_mediaUnmounted() throws Exception {
+
+        ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
+        ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
+        when(state.getExternalStorageState()).thenReturn(Environment.MEDIA_UNMOUNTED);    //Provide mocked behaviour
+
+        Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
+        Storage.createFolderStructure(context);
+
+        ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
+
+        ArrayList<Object> data = new ArrayList<>();
+        String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
+        data.add(storageOption);
+        Payload p = new Payload(data);
+        task.setMoveStorageListener(new MoveStorageListener() {
+            @Override
+            public void moveStorageComplete(Payload p) {
+                response = p;
+                signal.countDown();
+            }
+
+            @Override
+            public void moveStorageProgressUpdate(String s) {
+
+            }
+        });
+        task.execute(p);
+
+        signal.await();
+
+        assertFalse(response.isResult());
+        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+    }
+    @Test
+    public void fromInternalToExternal_storageNotAvailable_mediaMountedReadOnly() throws Exception {
+
+        ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
+        ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
+        when(state.getExternalStorageState()).thenReturn(Environment.MEDIA_MOUNTED_READ_ONLY);    //Provide mocked behaviour
+
+        Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
+        Storage.createFolderStructure(context);
+
+        ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
+
+        ArrayList<Object> data = new ArrayList<>();
+        String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
+        data.add(storageOption);
+        Payload p = new Payload(data);
+        task.setMoveStorageListener(new MoveStorageListener() {
+            @Override
+            public void moveStorageComplete(Payload p) {
+                response = p;
+                signal.countDown();
+            }
+
+            @Override
+            public void moveStorageProgressUpdate(String s) {
+
+            }
+        });
+        task.execute(p);
+
+        signal.await();
+
+        assertFalse(response.isResult());
+        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+    }
+    @Test
+    public void fromInternalToExternal_storageNotAvailable_mediaShared() throws Exception {
+
+        ExternalStorageState state = Mockito.mock(ExternalStorageState.class);  //Mock ExternalStorageState object
+        ExternalStorageState.setExternalStorageState(state);    //Inject mocked object in ExternalStorageState class
+        when(state.getExternalStorageState()).thenReturn(Environment.MEDIA_SHARED);    //Provide mocked behaviour
+
+        Storage.setStorageStrategy(StorageAccessStrategyFactory.createStrategy(PrefsActivity.STORAGE_OPTION_INTERNAL));
+        Storage.createFolderStructure(context);
+
+        ChangeStorageOptionTask task = new ChangeStorageOptionTask(context);
+
+        ArrayList<Object> data = new ArrayList<>();
+        String storageOption = PrefsActivity.STORAGE_OPTION_EXTERNAL;
+        data.add(storageOption);
+        Payload p = new Payload(data);
+        task.setMoveStorageListener(new MoveStorageListener() {
+            @Override
+            public void moveStorageComplete(Payload p) {
+                response = p;
+                signal.countDown();
+            }
+
+            @Override
+            public void moveStorageProgressUpdate(String s) {
+
+            }
+        });
+        task.execute(p);
+
+        signal.await();
+
+        assertFalse(response.isResult());
+        assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+    }
+
 
     @Test
     public void fromExternalToExternal_moveFilesToSameLocationFailure() throws Exception {
