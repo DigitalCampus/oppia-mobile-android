@@ -65,8 +65,10 @@ public class DeleteCourseTest {
 
         installTestCourse();
 
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertTrue(finalPath.exists());  //Check that the course exists in the "modules" directory
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        String[] children = modulesPath.list();
+        assertTrue(children.length > 0);
+        assertThat(CORRECT_COURSE, containsString(children[0]));  //Check that the course exists in the "modules" directory
 
 
         DbHelper db = DbHelper.getInstance(context);
@@ -90,9 +92,12 @@ public class DeleteCourseTest {
 
         signal.await();
 
+        assertTrue(response.isResult());
+
         c = db.getCourse(courseId, userId);
-        assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
         assertNull(c);   //Check that the course does not exists in the database
+
+        assertTrue(modulesPath.list().length == 0);    //Check that the course does not exists in the "downloads" directory
 
     }
 
@@ -175,6 +180,9 @@ public class DeleteCourseTest {
         //Proceed with the installation of the course
         try {
             String filename = CORRECT_COURSE;
+
+            CourseUtils.cleanUp();
+
             FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
             ArrayList<Object> data = new ArrayList<>();

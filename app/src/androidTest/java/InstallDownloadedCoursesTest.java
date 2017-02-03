@@ -92,11 +92,13 @@ public class InstallDownloadedCoursesTest {
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.install_course_complete, title), response.getResultResponse());
 
-        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-        assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
+        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        assertTrue(downloadPath.list().length == 0);    //Check that the course does not exists in the "downloads" directory
 
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertTrue(finalPath.exists()); //Check that the course exists in the "modules" directory
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        String[] children = modulesPath.list();
+        assertTrue(children.length > 0);
+        assertThat(filename, containsString(children[0]));  //Check that the course exists in the "modules" directory
 
     }
 
@@ -125,11 +127,13 @@ public class InstallDownloadedCoursesTest {
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.error_latest_already_installed, title), response.getResultResponse());
 
-        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-        assertFalse(initialPath.exists()); //Check that the course does not exists in the "downloads" directory
+        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        assertTrue(downloadPath.list().length == 0);    //Check that the course does not exists in the "downloads" directory
 
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertTrue(finalPath.exists()); //Check that the course exists in the "modules" directory
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        String[] children = modulesPath.list();
+        assertTrue(children.length > 0);
+        assertThat(filename, containsString(children[0]));  //Check that the course exists in the "modules" directory
 
     }
 
@@ -149,14 +153,14 @@ public class InstallDownloadedCoursesTest {
         assertFalse(response.isResult());
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.error_installing_course, filename), response.getResultResponse());
-        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-        assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
 
+        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        assertTrue(downloadPath.list().length == 0); //Check that the course does not exists in the "downloads" directory
+
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        assertTrue(modulesPath.list().length == 0);    //Check that the course does not exists in the "modules" directory
 
         String shortTitle = "noxml_course";
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertFalse(finalPath.exists()); //Check that the course exists in the "modules" directory
-
         DbHelper db = DbHelper.getInstance(context);
         long courseId = db.getCourseID(shortTitle);
         long userId = db.getUserId(SessionManager.getUsername(context));
@@ -213,13 +217,13 @@ public class InstallDownloadedCoursesTest {
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.error_installing_course, filename), response.getResultResponse());
 
-        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-        assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
+        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        assertTrue(downloadPath.list().length == 0); //Check that the course does not exists in the "downloads" directory
+
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        assertTrue(modulesPath.list().length == 0);    //Check that the course does not exists in the "modules" directory
 
         String shortTitle = "incorrect_course";
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
-
         DbHelper db = DbHelper.getInstance(context);
         long courseId = db.getCourseID(shortTitle);
         long userId = db.getUserId(SessionManager.getUsername(context));
@@ -294,6 +298,9 @@ public class InstallDownloadedCoursesTest {
 
     public void installCourseAndRemoveItFromDatabase(){
         String filename = CORRECT_COURSE;
+
+        CourseUtils.cleanUp();
+
         FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
 
         runInstallCourseTask();//Run test task
