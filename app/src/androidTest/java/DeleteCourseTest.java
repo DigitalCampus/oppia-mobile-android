@@ -59,7 +59,6 @@ public class DeleteCourseTest {
 
     private Context context;
     private SharedPreferences prefs;
-    private CountDownLatch signal;
     private Payload response;
     private StorageAccessStrategy storageStrategy;
 
@@ -76,14 +75,8 @@ public class DeleteCourseTest {
     public void setUp() throws Exception {
         context = InstrumentationRegistry.getTargetContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        signal = new CountDownLatch(1);
 
         setStorageStrategy();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        signal.countDown();
     }
 
     //Run test once for every StorageStrategy (Internal, External)
@@ -117,20 +110,7 @@ public class DeleteCourseTest {
         Course c = db.getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
-        DeleteCourseTask task = new DeleteCourseTask(context);
-        ArrayList<Object> payloadData = new ArrayList<>();
-        payloadData.add(c);
-        Payload p = new Payload(payloadData);
-        task.setOnDeleteCourseListener(new DeleteCourseListener() {
-            @Override
-            public void onCourseDeletionComplete(Payload r) {
-                response = r;
-                signal.countDown();
-            }
-        });
-        task.execute(p);
-
-        signal.await();
+        deleteTestCourse(c);
 
         assertTrue(response.isResult());
 
@@ -158,20 +138,7 @@ public class DeleteCourseTest {
         Course c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
-        DeleteCourseTask task = new DeleteCourseTask(context);
-        ArrayList<Object> payloadData = new ArrayList<>();
-        payloadData.add(c);
-        Payload p = new Payload(payloadData);
-        task.setOnDeleteCourseListener(new DeleteCourseListener() {
-            @Override
-            public void onCourseDeletionComplete(Payload r) {
-                response = r;
-                signal.countDown();
-            }
-        });
-        task.execute(p);
-
-        signal.await();
+        deleteTestCourse(c);
 
         c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
@@ -202,20 +169,7 @@ public class DeleteCourseTest {
         Course c = db.getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
-        DeleteCourseTask task = new DeleteCourseTask(context);
-        ArrayList<Object> payloadData = new ArrayList<>();
-        payloadData.add(c);
-        Payload p = new Payload(payloadData);
-        task.setOnDeleteCourseListener(new DeleteCourseListener() {
-            @Override
-            public void onCourseDeletionComplete(Payload r) {
-                response = r;
-                signal.countDown();
-            }
-        });
-        task.execute(p);
-
-        signal.await();
+        deleteTestCourse(c);
 
         c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
@@ -228,41 +182,62 @@ public class DeleteCourseTest {
 
     private void installTestCourse(){
         //Proceed with the installation of the course
+
+        final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
+
+        String filename = CORRECT_COURSE;
+        CourseUtils.cleanUp();
+
+        FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
+
+        ArrayList<Object> data = new ArrayList<>();
+        Payload payload = new Payload(data);
+        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
+        imTask.setInstallerListener(new InstallCourseListener() {
+            @Override
+            public void downloadComplete(Payload p) {  }
+            @Override
+            public void downloadProgressUpdate(DownloadProgress dp) {  }
+            @Override
+            public void installComplete(Payload r) {
+                response = r;
+                signal.countDown();
+            }
+
+            @Override
+            public void installProgressUpdate(DownloadProgress dp) {  }
+        });
+        imTask.execute(payload);
+
         try {
-            String filename = CORRECT_COURSE;
-
-            CourseUtils.cleanUp();
-
-            FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
-
-            ArrayList<Object> data = new ArrayList<>();
-            Payload payload = new Payload(data);
-            InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
-            imTask.setInstallerListener(new InstallCourseListener() {
-                @Override
-                public void downloadComplete(Payload p) {  }
-
-                @Override
-                public void downloadProgressUpdate(DownloadProgress dp) {  }
-
-                @Override
-                public void installComplete(Payload r) {
-                    response = r;
-                    signal.countDown();
-                }
-
-                @Override
-                public void installProgressUpdate(DownloadProgress dp) {  }
-            });
-            imTask.execute(payload);
-
             signal.await();
-
-            signal = new CountDownLatch(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
     }
 
+    private void deleteTestCourse(Course course){
+
+        final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
+
+        DeleteCourseTask task = new DeleteCourseTask(context);
+        ArrayList<Object> payloadData = new ArrayList<>();
+        payloadData.add(course);
+        Payload p = new Payload(payloadData);
+        task.setOnDeleteCourseListener(new DeleteCourseListener() {
+            @Override
+            public void onCourseDeletionComplete(Payload r) {
+                response = r;
+                signal.countDown();
+            }
+        });
+        task.execute(p);
+
+        try {
+            signal.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
