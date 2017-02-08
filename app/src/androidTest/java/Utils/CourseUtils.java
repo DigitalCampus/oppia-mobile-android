@@ -34,22 +34,15 @@ public class CourseUtils {
 
         Context ctx = InstrumentationRegistry.getTargetContext();
 
-        //Clean downloads folder
-        File downloadsFolder = new File(Storage.getDownloadPath(ctx));
-        if(downloadsFolder.exists()) {
-            FileUtils.cleanDir(downloadsFolder);
-        }
+        File root = new File(Storage.getStorageLocationRoot(ctx));
+        FileUtils.cleanDir(root);
 
-        //Clean courses folder
-        File coursesFolder = new File(Storage.getCoursesPath(ctx));
-        if(coursesFolder.exists()) {
-            FileUtils.cleanDir(coursesFolder);
-        }
+        Storage.createFolderStructure(ctx);
 
         //Clean temp folder
         File tempFolder = new File(Storage.getStorageLocationRoot(ctx) + "temp/");
         if (tempFolder.exists()) {
-            FileUtils.cleanDir(tempFolder);
+            FileUtils.deleteDir(tempFolder);
         }
 
         //Clean database
