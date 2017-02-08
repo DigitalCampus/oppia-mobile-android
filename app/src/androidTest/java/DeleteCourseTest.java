@@ -8,9 +8,12 @@ import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
@@ -20,6 +23,7 @@ import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,18 +33,21 @@ import org.junit.runners.Parameterized;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
 import TestRules.DisableAnimationsRule;
 import Utils.CourseUtils;
 import Utils.FileUtils;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(Parameterized.class)
 public class DeleteCourseTest {
@@ -85,31 +92,28 @@ public class DeleteCourseTest {
         Log.v(TAG, "Using Strategy: " + storageStrategy.getStorageType());
         Storage.setStorageStrategy(storageStrategy);
 
-        // And revert the storage option to the previos one
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageStrategy.getStorageType());
-        editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, storageStrategy.getStorageLocation(context));
+        storageStrategy.updateStorageLocation(context);
         editor.commit();
     }
 
     @Test
     public void deleteCourse_success() throws Exception{
-
-        String shortTitle = "correct_course";
-
         CourseUtils.cleanUp();
 
         installTestCourse();
 
         File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
-        assertTrue(children.length > 0);
-        assertThat(CORRECT_COURSE, containsString(children[0]));  //Check that the course exists in the "modules" directory
+        assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
 
 
         DbHelper db = DbHelper.getInstance(context);
         long userId = db.getUserId(SessionManager.getUsername(context));
-        long courseId = db.getCourseID(shortTitle);
+        String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
+        long courseId = db.getCourseID(shortName);
         Course c = db.getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
@@ -133,23 +137,24 @@ public class DeleteCourseTest {
         c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
-        assertTrue(modulesPath.list().length == 0);    //Check that the course does not exists in the "downloads" directory
+        assertEquals(0, modulesPath.list().length);    //Check that the course does not exists in the "modules" directory
 
     }
 
     @Test
     public void deleteCourse_nonExistingCourse() throws Exception{
-        String shortTitle = "correct_course";
 
         CourseUtils.cleanUp();
 
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        assertFalse(finalPath.exists());  //Check that the course does not exists in the "modules" directory
-
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        assertTrue(modulesPath.exists());
+        String[] children = modulesPath.list();
+        assertEquals(0, children.length); //Check that the course does not exists in the "modules" directory
 
         DbHelper db = DbHelper.getInstance(context);
         long userId = db.getUserId(SessionManager.getUsername(context));
-        long courseId = db.getCourseID(shortTitle);
+        String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
+        long courseId = db.getCourseID(shortName);
         Course c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
@@ -169,24 +174,31 @@ public class DeleteCourseTest {
         signal.await();
 
         c = db.getCourse(courseId, userId);
-        assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
         assertNull(c);   //Check that the course does not exists in the database
+
+        assertEquals(0, modulesPath.list().length);    //Check that the course does not exists in the "modules" directory
     }
 
     @Test
+    //Install a course that is already in the database but not in the storage system
     public void deleteCourse_courseAlreadyOnDatabase() throws Exception {
-        //Install a course that is already in the database but not in the storage system
         CourseUtils.cleanUp();
 
         installTestCourse();
 
-        String shortTitle = "correct_course";
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
-        finalPath.delete();     //Remove course folder
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        assertTrue(modulesPath.exists());
+        String[] children = modulesPath.list();
+        assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
+        File finalPath = new File(modulesPath, children[0]);
+        org.digitalcampus.oppia.utils.storage.FileUtils.deleteDir(finalPath);  //Remove course folder
+        assertFalse(finalPath.exists());
+
 
         DbHelper db = DbHelper.getInstance(context);
         long userId = db.getUserId(SessionManager.getUsername(context));
-        long courseId = db.getCourseID(shortTitle);
+        String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
+        long courseId = db.getCourseID(shortName);
         Course c = db.getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
@@ -206,8 +218,10 @@ public class DeleteCourseTest {
         signal.await();
 
         c = db.getCourse(courseId, userId);
-        assertFalse(finalPath.exists());    //Check that the course does not exists in the "modules" directory
         assertNull(c);   //Check that the course does not exists in the database
+
+
+        assertEquals(0, modulesPath.list().length);    //Check that the course does not exists in the "modules" directory
 
 
     }
