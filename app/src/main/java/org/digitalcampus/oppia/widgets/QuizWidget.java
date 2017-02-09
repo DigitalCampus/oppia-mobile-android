@@ -49,6 +49,7 @@ import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.widgets.quiz.DDImageOrTextWidget;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -280,6 +281,8 @@ public class QuizWidget extends WidgetFactory {
 			qw = new NumericalWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Description) {
 			qw = new DescriptionWidget(super.getActivity(), getView(), container);
+		} else if (q instanceof DDImageOrTextWidget) {
+			qw = new DDImageOrTextWidget(super.getActivity(), getView(), container);
 		} else {
 			return;
 		}
