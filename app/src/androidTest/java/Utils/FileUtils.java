@@ -49,9 +49,9 @@ public class FileUtils {
 
         try {
             InputStream is = InstrumentationRegistry.getContext().getResources().getAssets().open("courses/" + filename);
-            File outputFile = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-            if(!outputFile.exists()){Storage.createFolderStructure(context);}
-            OutputStream os = new FileOutputStream(outputFile);
+            File downloadPath = new File(Storage.getDownloadPath(context));
+            if(!downloadPath.exists()){Storage.createFolderStructure(context);}
+            OutputStream os = new FileOutputStream(new File(downloadPath, filename));
 
             //Copy File
             byte[] buffer = new byte[1024];
