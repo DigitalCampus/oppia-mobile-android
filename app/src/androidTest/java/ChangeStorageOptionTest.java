@@ -119,6 +119,8 @@ public class ChangeStorageOptionTest {
 
         assertFalse(response.isResult());
         assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+
+        ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
     @Test
     public void fromInternalToExternal_storageNotAvailable_mediaUnmountable() throws Exception {
@@ -154,6 +156,8 @@ public class ChangeStorageOptionTest {
 
         assertFalse(response.isResult());
         assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+
+        ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
     @Test
     public void fromInternalToExternal_storageNotAvailable_mediaUnmounted() throws Exception {
@@ -189,6 +193,8 @@ public class ChangeStorageOptionTest {
 
         assertFalse(response.isResult());
         assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+
+        ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
     @Test
     public void fromInternalToExternal_storageNotAvailable_mediaMountedReadOnly() throws Exception {
@@ -224,6 +230,8 @@ public class ChangeStorageOptionTest {
 
         assertFalse(response.isResult());
         assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+
+        ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
     @Test
     public void fromInternalToExternal_storageNotAvailable_mediaShared() throws Exception {
@@ -259,6 +267,8 @@ public class ChangeStorageOptionTest {
 
         assertFalse(response.isResult());
         assertEquals(context.getString(R.string.error_sdcard), response.getResultResponse());
+
+        ExternalStorageState.setExternalStorageState(new ExternalStorageState());   //Replace mocked object
     }
 
 
