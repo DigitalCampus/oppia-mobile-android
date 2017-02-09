@@ -148,7 +148,10 @@ task grantPermissions (type: Exec, dependsOn: 'installDebug'){
 
 afterEvaluate {
     tasks.each { task ->
-        if (task.name.startsWith('connected')) {
+        if (task.name.contentEquals('connectedAndroidTest') ||
+            task.name.contentEquals('connectedDebugAndroidTest') ||
+            task.name.contentEquals('assembleDebugAndroidTest') ||
+            task.name.contentEquals('assembleAndroidTest')) {
             task.dependsOn grantPermissions
         }
     }
