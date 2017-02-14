@@ -32,9 +32,12 @@ public class MultiLangInfo implements Serializable {
     private ArrayList<Lang> titles = new ArrayList<>();
     private ArrayList<Lang> descriptions = new ArrayList<>();
 
+    public static String DEFAULT_NOTITLE = "No title set";
+    public static String DEFAULT_NODESCRIPTION = "No description set";
+
     public String getTitle(String lang) {
         String title = getInfo(lang, titles);
-        return title == null ? "No title set" : title;
+        return title == null ? DEFAULT_NOTITLE : title;
     }
 
     public void setTitles(ArrayList<Lang> titles) {
@@ -51,7 +54,7 @@ public class MultiLangInfo implements Serializable {
 
     public String getDescription(String lang) {
         String description = getInfo(lang, descriptions);
-        return description == null ? "No description set" : description;
+        return description == null ? DEFAULT_NODESCRIPTION : description;
     }
 
     public void setDescriptions(ArrayList<Lang> descriptions) {
