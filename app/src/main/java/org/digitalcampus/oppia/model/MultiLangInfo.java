@@ -87,8 +87,8 @@ public class MultiLangInfo implements Serializable {
                 return l.getContent();
             }
         }
-        if(titles.size() > 0){
-            return titles.get(0).getContent();
+        if(values.size() > 0){
+            return values.get(0).getContent();
         }
 
         return null;
