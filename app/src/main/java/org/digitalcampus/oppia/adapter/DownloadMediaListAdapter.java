@@ -46,6 +46,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 
 	private final Context ctx;
 	private ArrayList<Media> mediaList;
+    private boolean isMultiChoiceMode;
 
     private ListInnerBtnOnClickListener onClickListener;
 	
@@ -91,7 +92,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
         String courses = "";
         for(int i = 0; i < m.getCourses().size(); i++){
             Course c = m.getCourses().get(i);
-            String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
             courses += i != 0 ? ", " + title : title;
         }
 
@@ -103,6 +104,8 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 		} else {
             viewHolder.mediaFileSize.setVisibility(View.GONE);
 		}
+        
+        viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.GONE : View.VISIBLE);
 
         viewHolder.downloadBtn.setTag(position); //For passing the list item index
         viewHolder.downloadBtn.setOnClickListener(new View.OnClickListener() {
@@ -136,14 +139,18 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
         this.onClickListener = onClickListener;
     }
 
+    public void setEnterOnMultiChoiceMode(boolean value){
+        isMultiChoiceMode = value;
+    }
+
     public void sortByCourse(){
         //Sort the media list by filename
         Collections.sort(this.mediaList, new Comparator<Object>() {
             @Override
             public int compare(Object o1, Object o2){
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            String titleCourse1 = ((Media) o1).getCourses().get(0).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-            String titleCourse2= ((Media) o2).getCourses().get(0).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            String titleCourse1 = ((Media) o1).getCourses().get(0).getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            String titleCourse2= ((Media) o2).getCourses().get(0).getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
             return (titleCourse1.compareTo(titleCourse2));
             }
         });

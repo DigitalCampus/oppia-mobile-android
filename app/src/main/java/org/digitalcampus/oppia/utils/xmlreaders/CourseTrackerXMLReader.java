@@ -52,7 +52,8 @@ public class CourseTrackerXMLReader {
     
 	private Document document;
 	
-	public CourseTrackerXMLReader(File courseXML) throws InvalidXMLException {
+	public CourseTrackerXMLReader(String filename) throws InvalidXMLException {
+        File courseXML = new File(filename);
 		if (courseXML.exists()) {
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory
@@ -71,25 +72,7 @@ public class CourseTrackerXMLReader {
 			}
 		}
 	}
-	
-	public CourseTrackerXMLReader(String trackerXML) throws InvalidXMLException {
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory
-				.newInstance();
-		DocumentBuilder builder;
-		try {
-			builder = factory.newDocumentBuilder();
-			InputSource is = new InputSource(new StringReader(trackerXML));
-			document = builder.parse(is);
-
-		} catch (ParserConfigurationException e) {
-			throw new InvalidXMLException(e);
-		} catch (SAXException e) {
-			throw new InvalidXMLException(e);
-		} catch (IOException e) {
-			throw new InvalidXMLException(e);
-		}
-	}
 	
 	public ArrayList<TrackerLog> getTrackers(long courseId, long userId){
 		ArrayList<TrackerLog> trackers = new ArrayList<TrackerLog>();

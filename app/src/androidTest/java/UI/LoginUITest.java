@@ -10,9 +10,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import TestRules.DisableAnimationsRule;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -25,54 +28,57 @@ public class LoginUITest {
 
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
+            new ActivityTestRule<>(WelcomeActivity.class);
+
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
 
     @Test
-    public void clickLoginButton_NoUser() throws Exception{
+    public void showsErrorMessageWhenThereIsNoUsername() throws Exception{
         onView(withId(R.id.welcome_login))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.login_btn))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withText(R.string.error_no_username))
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void clickLoginButton_WrongUser() throws Exception{
+    public void showsErrorMessageWhenTheUsernameOrPasswordAreWrong() throws Exception{
         onView(withId(R.id.welcome_login))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.login_username_field))
-                .perform(typeText("WrongUsername"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
 
         onView(withId(R.id.login_password_field))
-                .perform(typeText("WrongPassword"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongPassword"));
 
         onView(withId(R.id.login_btn))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withText(R.string.error_login))
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void clickLoginButton_CorrectUser() throws Exception{
+    public void changeActivityWhenTheCredentialsAreCorrect() throws Exception{
 
        onView(withId(R.id.welcome_login))
-               .perform(click());
+               .perform(scrollTo(), click());
 
        onView(withId(R.id.login_username_field))
-               .perform(typeText("unittester"), closeSoftKeyboard());
+               .perform(closeSoftKeyboard(), scrollTo(), typeText("aaaaaaa"));
 
        onView(withId(R.id.login_password_field))
-               .perform(typeText("12345678"), closeSoftKeyboard());
+               .perform(closeSoftKeyboard(), scrollTo(), typeText("aaaaaaa"));
 
        onView(withId(R.id.login_btn))
-               .perform(click());
+               .perform(scrollTo(), click());
 
-       assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), OppiaMobileActivity.class);
+       assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 }

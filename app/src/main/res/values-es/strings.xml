@@ -33,7 +33,6 @@
     
     <string name="title_about">Acerca de</string>
     <string name="title_baseline">Preliminar</string>
-    <string name="title_help">Ayuda</string>
     <string name="title_download_activity">Gestionar cursos</string>
     <string name="title_monitor">Monitor</string>
     <string name="title_prefs">Ajustes</string>
@@ -277,6 +276,8 @@
     <string name="title_stats_submitted">Actividades enviadas al servidor</string>
     <string name="error_preloading_accounts">Error precargando cuentas de usuario desde fichero CSV</string>
     <string name="error_reset">Nombre de usuario o email no encontrado\nInténtalo de nuevo</string>
+    <string name="no_title_set">Sin título</string>
+    <string name="no_description_set">Sin descripción</string>
     <string name="info.startup.preloaded_accounts">Precargadas %1$d nueva(s) cuenta(s) de usuario.</string>
     <string name="empty_state_media">Genial! Has descargado todo el contenido multimedia de tus cursos en el dispositivo.</string>
     <string name="menu_sort_by">Ordenar por</string>

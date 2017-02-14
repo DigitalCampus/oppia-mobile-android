@@ -21,26 +21,24 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
-public class ParseCourseXMLTask extends AsyncTask<Course, Object, CourseXMLReader> {
+public class ParseCourseXMLTask extends AsyncTask<Course, Object, CompleteCourse> {
 
     //Interface to listen to this task results
     public interface OnParseXmlListener{
-        void onParseComplete(CourseXMLReader parsed);
+        void onParseComplete(CompleteCourse parsedCourse);
         void onParseError();
     }
 
-    private Course courseToProcess;
-    private CourseXMLReader cxr;
     private Context ctx;
-    private boolean completeParse = true;
+    private CompleteCourse parsedCourse;
     private OnParseXmlListener listener;
 
-    public ParseCourseXMLTask(Context ctx, boolean complete){
+    public ParseCourseXMLTask(Context ctx){
         this.ctx = ctx;
-        completeParse = complete;
     }
 
     public void setListener(OnParseXmlListener listener){
@@ -48,35 +46,30 @@ public class ParseCourseXMLTask extends AsyncTask<Course, Object, CourseXMLReade
     }
 
     @Override
-    protected CourseXMLReader doInBackground(Course... courses) {
+    protected CompleteCourse doInBackground(Course... courses) {
 
-        courseToProcess = courses[0];
+        Course courseToProcess = courses[0];
         try {
-            cxr = new CourseXMLReader(
+            CourseXMLReader cxr = new CourseXMLReader(
                     courseToProcess.getCourseXMLLocation(),
                     courseToProcess.getCourseId(),
                     this.ctx);
-
-            if (completeParse){
-                cxr.getSections();
-            }
-            else{
-                cxr.getDescriptions();
-            }
+            cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+            parsedCourse = cxr.getParsedCourse();
 
         } catch (InvalidXMLException e) {
             e.printStackTrace();
         }
-        return cxr;
+        return parsedCourse;
     }
 
     @Override
-    protected void onPostExecute(CourseXMLReader parseResults) {
+    protected void onPostExecute(CompleteCourse parseResults) {
         if (listener != null) {
-            if (cxr == null) {
+            if (parsedCourse == null) {
                 listener.onParseError();
             } else {
-                listener.onParseComplete(cxr);
+                listener.onParseComplete(parsedCourse);
             }
         }
     }

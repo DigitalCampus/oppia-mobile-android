@@ -7,37 +7,37 @@
     android:background="@drawable/background_change_selected"
     android:padding="5dp" >
 
-    <TextView
-        android:id="@+id/media_courses"
-        style="@style/SmallTextDark"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:id="@+id/media_info"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="center_vertical"
-        android:layout_toLeftOf="@+id/action_btn" />
+        android:orientation="vertical"
+        android:layout_toLeftOf="@+id/media_file_size" >
 
-    <TextView
-        android:id="@+id/media_title"
-        style="@style/NormalTextDark"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/media_courses"
-        android:layout_gravity="center_vertical"
-        android:layout_toLeftOf="@+id/action_btn"
-        android:singleLine="true"
-        android:ellipsize="end"/>
+        <TextView
+            android:id="@+id/media_courses"
+            style="@style/SmallTextDark"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"  />
 
-    <TextView
-        android:id="@+id/media_path"
-        style="@style/SmallTextGrey"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="center_vertical"
-        android:layout_below="@+id/media_title"
-        android:paddingTop="5dp"
-        android:layout_toLeftOf="@+id/action_btn" />
+        <TextView
+            android:id="@+id/media_title"
+            style="@style/NormalTextDark"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:singleLine="true"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/media_path"
+            style="@style/SmallTextGrey"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingTop="5dp"  />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/media_file_size"
@@ -47,7 +47,8 @@
         android:layout_marginTop="-10dp" 
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="center_vertical"
         android:layout_below="@+id/action_btn"  />
@@ -57,13 +58,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
-        android:layout_below="@+id/media_path"
+        android:layout_below="@+id/media_info"
         android:id="@+id/download_progress"
         android:indeterminate="true"
         android:indeterminateOnly="false"
         android:progress="0"
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
-        android:layout_toLeftOf="@+id/action_btn" />
+        android:layout_toLeftOf="@+id/media_file_size" />
 
     <ImageButton
         android:id="@+id/action_btn"

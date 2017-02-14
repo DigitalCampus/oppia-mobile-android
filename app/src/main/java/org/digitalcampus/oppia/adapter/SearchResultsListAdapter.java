@@ -81,9 +81,9 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 
 	    SearchResult sr = searchResultList.get(position);
 
-	    String cTitle = sr.getCourse().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-	    String sTitle = sr.getSection().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-	    String aTitle = sr.getActivity().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    String cTitle = sr.getCourse().getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    String sTitle = sr.getSection().getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    String aTitle = sr.getActivity().getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
         viewHolder.activityTitle.setText(aTitle);
         viewHolder.sectionTitle.setText(sTitle);

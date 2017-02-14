@@ -110,7 +110,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
 	    if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false)){
 	    	title += String.valueOf(section.getOrder()) + ". ";
 	    }
-	    title += section.getTitle(locale);
+	    title += section.getMultiLangInfo().getTitle(locale);
         viewHolder.sectionTitle.setText(title);
         innerListAdapter.setData(sectionActivities);
         viewHolder.sectionActivities.setSelection(0);
@@ -182,7 +182,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
                 viewHolder = (ActivityViewHolder) convertView.getTag();
             }
 
-            viewHolder.activityTitle.setText(activity.getTitle(locale));
+            viewHolder.activityTitle.setText(activity.getMultiLangInfo().getTitle(locale));
             viewHolder.activityImage.setScaleType(!activity.hasCustomImage()?ImageView.ScaleType.CENTER: ImageView.ScaleType.FIT_CENTER);
             int defaultActivityDrawable = activity.getDefaultResourceImage();
             if (activity.hasCustomImage()){

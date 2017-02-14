@@ -3,8 +3,7 @@
     
     <string name="about_logged_in">Logged in as: %1$s</string>
     <string name="about_not_logged_in">Not logged in</string>
-    
-    
+
     <string name="menu_download">کورس ڈاؤن لوڈ کریں</string>
     <string name="menu_language">زبان تبدیل کریں</string>
     <string name="menu_settings">سیٹنگز</string>
@@ -26,11 +25,6 @@
     <string name="fragment_welcome_desc">اس پروگرام کے ذریعے آپ اپنے موبائل پر صحت  کے متعلق معلومات حاصل کر سکتے ہیں اور صحت کے متعلق فلمز دیکھ بھی دیکھ سکتے ہیں اور دوسروں کو دکھا بھی سکتے ہیں۔</string>
     <string name="fragment_welcome_login_info">اس پروگرام کو شروع کرنے سے پہلے آپ کو اپنا رجسٹریشن کرنا ہوگا۔</string>
     <string name="fragment_welcome_privacy">ہم آپ خیال ركھتے ہیں<a href="http://digital-campus.org/privacy/">find out more about Digital Campus\'s privacy policy</a></string>
-    
-    <string name="routing_activity_title">کسی ایک اختیار کو منتخب کریں:</string>
-    <string name="routing_button_mlearning">موبائل کے زریعے تعلیمِ صحت</string>
-    <string name="routing_button_client">موبائل کے زریعے مشاورت</string>
-    
     
     <string name="tab_title_about">پروگرام کے بارے میں معالومات</string>
     <string name="tab_title_badges">Badges</string>
@@ -61,12 +55,9 @@
     <string name="title_welcome">Bright Future</string>
     <string name="version">Version: %1$s</string>
     <string name="title_download_media">فلمز ڈاؤن لوڈ کریں</string>
-    <string name="title_activity_client_list">کلائنٹ کی فہرست</string>
-    <string name="title_activity_client_info">کلائنٹ کی معلومات</string>
     
     <string name="widget_feedback_submit">جمع کروائں</string>
     <string name="widget_feedback_submit_title">شکریہ!</string>
-    <string name="widget_feedback_continue">آگے بڑہیں&gt;&gt;</string>
     
     <string name="widget_quiz_next">آگے بڑہیں </string>
     <string name="widget_quiz_prev"> پیچھے جاۓ</string>
@@ -224,11 +215,11 @@
 	<string name="logout_confirm">.آپ کو یقین ہے کے آپ کو لاگ آؤٹ کرنا ہے \ n \ n اگر آپ لاگ آؤٹ کریں گے تو آپ کا سارا کام ملتوی ہو جائے گا اور پھر لاگ ان کرنے کے لئے انٹرنیٹ کی ضرورت پڑے گی</string>
 	
 	<string name="register_alert_title">Register</string>
-	<string name="register_process">Registering ...</string>
+	<string name="register_process">Registering &#8203;</string>
 	<string name="register_complete">Successfully registered</string>
 	
 	<string name="reset_alert_title">رسےٹ</string>
-	<string name="reset_process">پاسورڈ رسےٹ ہو رہا ہے...</string>
+	<string name="reset_process">&#8203;پاسورڈ رسےٹ ہو رہا ہے </string>
 	<string name="reset_complete">آپ کا پاس ورڈ رسےٹ ہو گیا ہے.\n\nPlease check your email for your new password.</string>
 	
 	<string name="change_language">زبان تبدیل کریں</string>
@@ -243,13 +234,9 @@
 	<string name="course_draft">(Draft version)</string>
 	
 	<string name="search.result_summary">%1$d results for \"%2$s\"</string>
-	<string name="search.message.searching">Searching...</string>
+	<string name="search.message.searching">Searching &#8203;</string>
 	<string name="search.message.no_results">No results found for \"%1$s\"</string>
 
-    <string name="year">سال</string>
-    <string name="month">ماہ</string>
-	
-	<string name="submit_btn_text">آگے بڑھیں &gt;&gt;</string>
 	<string name="submit_stats_btn_text">جمع کروادیں</string>
 	
 	<string name="media_player_description">Oppia Media Player</string>

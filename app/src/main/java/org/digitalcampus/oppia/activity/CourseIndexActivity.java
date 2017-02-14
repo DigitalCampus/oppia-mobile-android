@@ -24,8 +24,11 @@ import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Lang;
@@ -52,6 +55,8 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ListView;
 
+import javax.inject.Inject;
+
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
 	public static final String TAG = CourseIndexActivity.class.getSimpleName();
@@ -59,8 +64,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     public static final int RESULT_JUMPTO = 99;
 
 	private Course course;
-	private CourseXMLReader cxr;
-	private ArrayList<Section> sections;
+    private CompleteCourse parsedCourse;
+    private ArrayList<Section> sections;
 	private SharedPreferences prefs;
 	private Activity baselineActivity;
 	private AlertDialog aDialog;
@@ -68,11 +73,15 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private SectionListAdapter sla;
 
     private String digestJumpTo;
+
+    @Inject  CompleteCourseProvider completeCourseProvider; 
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_index);
+
+        initializeDagger();
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
@@ -85,34 +94,33 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             String digest = (String) bundle.getSerializable(JUMPTO_TAG);
             if (digest != null){
                 //If there is a digest, we have to parse the course synchronously to avoid showing this activity
-                try {
-                    cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), this);
-                } catch (InvalidXMLException e) {
-                    e.printStackTrace();
-                    showErrorMessage();
-                    return;
-                }
+                parsedCourse = completeCourseProvider.getCompleteCourseSync(this, course);
+
+                //We also check first if the baseline is completed before jumping to digest
                 boolean baselineCompleted = isBaselineCompleted();
                 if (baselineCompleted) {
-                    course.setMetaPages(cxr.getMetaPages());
-                    sections = cxr.getSections();
+                    course.setMetaPages(parsedCourse.getMetaPages());
+                    sections = parsedCourse.getSections();
                     startCourseActivityByDigest(digest);
                     initializeCourseIndex(false);
                 }
                 else{
-                    sections = cxr.getSections();
+                    sections = parsedCourse.getSections();
                     initializeCourseIndex(false);
                     showBaselineMessage(digest);
                 }
             }
             else{
-                ParseCourseXMLTask task =  new ParseCourseXMLTask(this, true);
-                task.setListener(this);
-                task.execute(course);
+                completeCourseProvider.getCompleteCourseAsync(this, course);
             }
         }
 
 	}
+
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
 
     @Override
 	public void onStart() {
@@ -156,10 +164,11 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 editor.remove(entry.getKey());
             }
         }
-        editor.commit();
+        editor.apply();
 
-        if ((sections != null) && (sections.size()>0)){
-            cxr.updateCourseActivity();
+        if ((parsedCourse != null) && (sections != null) && (sections.size()>0)){
+            parsedCourse.setCourseId(course.getCourseId());
+            parsedCourse.updateCourseActivity(this);
             sla.notifyDataSetChanged();
             if (!isBaselineCompleted()){
                 showBaselineMessage(null);
@@ -229,7 +238,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, course.getMultiLangInfo().getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() throws Exception {
                 CourseIndexActivity.this.onStart();
                 return true;
@@ -240,6 +249,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private void initializeCourseIndex(boolean animate){
 
         final ListView listView = (ListView) findViewById(R.id.section_list);
+        if (listView == null) return;
+
         sla = new SectionListAdapter(CourseIndexActivity.this, course, sections, new SectionListAdapter.CourseClickListener() {
             @Override
             public void onActivityClicked(String activityDigest) {
@@ -274,7 +285,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private boolean isBaselineCompleted() {
-        ArrayList<Activity> baselineActs = cxr.getBaselineActivities();
+        ArrayList<Activity> baselineActs = parsedCourse.getBaselineActivities();
         // TODO how to handle if more than one baseline activity
         for (Activity a : baselineActs) {
             if (!a.isAttempted()) {
@@ -372,10 +383,10 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
     //@Override
-    public void onParseComplete(CourseXMLReader parsed) {
-        cxr = parsed;
-        course.setMetaPages(cxr.getMetaPages());
-        sections = cxr.getSections();
+    public void onParseComplete(CompleteCourse parsed) {
+        parsedCourse = parsed;
+        course.setMetaPages(parsedCourse.getMetaPages());
+        sections = parsedCourse.getSections();
 
         boolean baselineCompleted = isBaselineCompleted();
         if (!baselineCompleted){

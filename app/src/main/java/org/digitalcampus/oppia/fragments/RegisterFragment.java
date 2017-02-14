@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -117,11 +118,14 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 	    	startActivity(new Intent(getActivity(), OppiaMobileActivity.class));
 	    	super.getActivity().finish();
 		} else {
-			try {
-				JSONObject jo = new JSONObject(response.getResultResponse());
-				UIUtils.showAlert(getActivity(),R.string.error,jo.getString("error"));
-			} catch (JSONException je) {
-				UIUtils.showAlert(getActivity(),R.string.error,response.getResultResponse());
+			Context ctx = super.getActivity();
+			if (ctx != null){
+				try {
+					JSONObject jo = new JSONObject(response.getResultResponse());
+					UIUtils.showAlert(ctx,R.string.error,jo.getString("error"));
+				} catch (JSONException je) {
+					UIUtils.showAlert(ctx,R.string.error,response.getResultResponse());
+				}
 			}
 		}
 	}

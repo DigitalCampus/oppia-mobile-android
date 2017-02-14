@@ -20,14 +20,10 @@ package org.digitalcampus.oppia.model;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
 
 public class Course implements Serializable {
@@ -42,15 +38,13 @@ public class Course implements Serializable {
 
 	public static final String TAG = Course.class.getSimpleName();
 	private int courseId;
-	private ArrayList<Lang> titles = new ArrayList<Lang>();
-	private ArrayList<Lang> descriptions = new ArrayList<Lang>();
 	private String shortname;
 	private Double versionId;
+    private MultiLangInfo multiLangInfo = new MultiLangInfo();
 	private boolean installed;
 	private boolean toUpdate;
 	private boolean toUpdateSchedule;
 	private String downloadUrl;
-	private ArrayList<Lang> langs = new ArrayList<Lang>();
 	private String imageFile;
 	private ArrayList<Media> media = new ArrayList<Media>();
 	private ArrayList<CourseMetaPage> metaPages = new ArrayList<CourseMetaPage>();
@@ -104,47 +98,6 @@ public class Course implements Serializable {
 	
 	public void setImageFile(String imageFile) {
 		this.imageFile = imageFile;
-	}
-	
-	public ArrayList<Lang> getLangs() {
-		return langs;
-	}
-
-	public String getLangsJSONString(){
-		JSONArray array = new JSONArray();
-		for(Lang l: langs){
-			JSONObject obj = new JSONObject();
-			try {
-				obj.put(l.getLang(), true);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			array.put(obj);
-		}
-		return array.toString();
-	}
-	
-	public void setLangs(ArrayList<Lang> langs) {
-		this.langs = langs;
-	}
-	
-	public void setLangsFromJSONString(String jsonStr) {
-		try {
-			JSONArray langsArray = new JSONArray(jsonStr);
-			for(int i=0; i<langsArray.length(); i++){
-				JSONObject titleObj = langsArray.getJSONObject(i);
-				@SuppressWarnings("unchecked")
-				Iterator<String> iter = (Iterator<String>) titleObj.keys();
-				while(iter.hasNext()){
-					Lang l = new Lang(iter.next().toString(),"");
-					this.langs.add(l);
-				}
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (NullPointerException npe){
-			npe.printStackTrace();
-		}
 	}
 	
 	public String getDownloadUrl() {
@@ -217,106 +170,6 @@ public class Course implements Serializable {
 		//String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
 	}
-	
-
-	public String getTitle(String lang) {
-		for(Lang l: titles){
-			if(l.getLang().equals(lang)){
-				return l.getContent();
-			}
-		}
-		if(titles.size() > 0){
-			return titles.get(0).getContent();
-		}
-		return "No title set";
-	}
-	
-	public void setTitles(ArrayList<Lang> titles) {
-		this.titles = titles;
-	}
-	
-	public void setTitlesFromJSONString(String jsonStr) {
-		try {
-			JSONArray titlesArray = new JSONArray(jsonStr);
-			for(int i=0; i<titlesArray.length(); i++){
-				JSONObject titleObj = titlesArray.getJSONObject(i);
-				@SuppressWarnings("unchecked")
-				Iterator<String> iter = (Iterator<String>) titleObj.keys();
-				while(iter.hasNext()){
-					String key = iter.next().toString();
-					String title = titleObj.getString(key);
-					Lang l = new Lang(key,title);
-					this.titles.add(l);
-				}
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public String getTitleJSONString(){
-		JSONArray array = new JSONArray();
-		for(Lang l: this.titles){
-			JSONObject obj = new JSONObject();
-			try {
-				obj.put(l.getLang(), l.getContent());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			array.put(obj);
-		}
-		return array.toString();
-	}
-	
-	public String getDescription(String lang) {
-		for(Lang l: descriptions){
-			if(l.getLang().equals(lang)){
-				return l.getContent();
-			}
-		}
-		if(descriptions.size() > 0){
-			return descriptions.get(0).getContent();
-		}
-		return null;
-	}
-	
-	public void setDescriptions(ArrayList<Lang> descriptions) {
-		this.descriptions = descriptions;
-	}
-	
-	public void setDescriptionsFromJSONString(String jsonStr) {
-		try {
-			JSONArray descriptionsArray = new JSONArray(jsonStr);
-			for(int i=0; i<descriptionsArray.length(); i++){
-				JSONObject descriptionObj = descriptionsArray.getJSONObject(i);
-				@SuppressWarnings("unchecked")
-				Iterator<String> iter = (Iterator<String>) descriptionObj.keys();
-				while(iter.hasNext()){
-					String key = iter.next().toString();
-					String description = descriptionObj.getString(key);
-					Lang l = new Lang(key,description);
-					this.descriptions.add(l);
-				}
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public String getDescriptionJSONString(){
-		JSONArray array = new JSONArray();
-		for(Lang l: this.descriptions){
-			JSONObject obj = new JSONObject();
-			try {
-				obj.put(l.getLang(), l.getContent());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			array.put(obj);
-		}
-		return array.toString();
-	}
-	
 	
 	public boolean hasMedia(){
 		if(media.size() == 0){
@@ -409,5 +262,10 @@ public class Course implements Serializable {
 
     public void setSequencingMode(String sequencingMode) {
         this.sequencingMode = sequencingMode;
+    }
+
+    public MultiLangInfo getMultiLangInfo() { return multiLangInfo; }
+    public void setMultiLangInfo(MultiLangInfo multiLangInfo) {
+        this.multiLangInfo = multiLangInfo;
     }
 }

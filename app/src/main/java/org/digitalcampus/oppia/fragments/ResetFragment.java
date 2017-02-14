@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -85,11 +86,14 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 		if (response.isResult()) {
 			UIUtils.showAlert(super.getActivity(),R.string.reset_alert_title,response.getResultResponse());
 		} else {
-			try {
-				JSONObject jo = new JSONObject(response.getResultResponse());
-				UIUtils.showAlert(super.getActivity(),R.string.error,jo.getString("error"));
-			} catch (JSONException je) {
-				UIUtils.showAlert(super.getActivity(),R.string.error,response.getResultResponse());
+			Context ctx = super.getActivity();
+			if (ctx != null){
+				try {
+					JSONObject jo = new JSONObject(response.getResultResponse());
+					UIUtils.showAlert(super.getActivity(),R.string.error,jo.getString("error"));
+				} catch (JSONException je) {
+					UIUtils.showAlert(super.getActivity(),R.string.error,response.getResultResponse());
+				}
 			}
 		}
 	}

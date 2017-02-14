@@ -92,7 +92,7 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 		ScorecardViewHolder viewHolder;
 
 		Course course = courseList.get(position);
-		Log.i(TAG, course.getTitle("en") + ": " + position);
+		//Log.i(TAG, course.getMultiLangInfo().getTitle("en") + ": " + position);
 		
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -119,7 +119,7 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
             viewHolder = (ScorecardViewHolder) convertView.getTag();
         }
 
-        viewHolder.courseTitle.setText(course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+        viewHolder.courseTitle.setText(course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
         //viewHolder.pie.clear();
 
 

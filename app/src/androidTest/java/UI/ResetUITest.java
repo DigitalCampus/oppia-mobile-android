@@ -10,6 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import TestRules.DisableAnimationsRule;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -27,13 +29,16 @@ public class ResetUITest {
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
 
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
+
     @Test
-    public void clickResetButton_NoUsername() throws  Exception {
+    public void  showsErrorMessageWhenThereIsNoUsername() throws  Exception {
         onView(withText(R.string.tab_title_reset))
                 .perform(click());
 
         onView(withId(R.id.reset_username_field))
-                .perform(click(), typeText(""));
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
         onView(withId(R.id.reset_btn))
                 .perform(scrollTo(), click());
@@ -42,18 +47,18 @@ public class ResetUITest {
                 .check(matches(isDisplayed()));
     }
 
-    /*@Test
+    @Test
     public void clickResetButton_WrongUsername() throws  Exception {
         onView(withText(R.string.tab_title_reset))
                 .perform(click());
 
         onView(withId(R.id.reset_username_field))
-                .perform(click(), typeText("WrongUsername"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("WrongUsername"));
 
         onView(withId(R.id.reset_btn))
                 .perform(scrollTo(), click());
 
-        onView(withText(R.string.error_register_no_username))
+        onView(withText(R.string.error_reset))
                 .check(matches(isDisplayed()));
-    }*/
+    }
 }

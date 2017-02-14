@@ -86,6 +86,8 @@ public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
         viewHolder.quizUserResponse.setText(userResponseText);
 
 	    if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
+            viewHolder.quizFeedbackTitle.setVisibility(View.VISIBLE);
+            viewHolder.quizFeedbackText.setVisibility(View.VISIBLE);
             viewHolder.quizFeedbackText.setText(qf.getFeedbackText());
 	    } else {
             //If there's no feedback to show, hide both text and title

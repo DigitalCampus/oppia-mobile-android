@@ -10,9 +10,12 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import TestRules.DisableAnimationsRule;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -31,16 +34,19 @@ public class RegisterUITest {
 
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
+            new ActivityTestRule<>(WelcomeActivity.class);
+
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
     @Test
-    public void clickRegisterButton_NoUsername() throws  Exception {
+    public void showsErrorMessageWhenThereIsNoUsername() throws  Exception {
 
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_form_username_field))
-                .perform(typeText(""));
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
@@ -50,13 +56,13 @@ public class RegisterUITest {
     }
 
     @Test
-    public void clickRegisterButton_UsernameWithSpaces() throws  Exception {
+    public void showsErrorMessageWhenTheUsernameContainsSpaces() throws  Exception {
 
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_form_username_field))
-                .perform(typeText("Username With Spaces"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username With Spaces"));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
@@ -66,16 +72,16 @@ public class RegisterUITest {
     }
 
     @Test
-    public void clickRegisterButton_NoEmail() throws  Exception {
+    public void showsErrorMessageWhenThereIsNoEmail() throws  Exception {
 
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_form_username_field))
-                .perform(typeText("UsernameWithoutSpaces"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("UsernameWithoutSpaces"));
 
         onView(withId(R.id.register_form_email_field))
-                .perform(typeText(""));
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
@@ -85,19 +91,85 @@ public class RegisterUITest {
     }
 
     @Test
-    public void clickRegisterButton_PasswordTooShort() throws Exception {
-
+    public void showErrorMessageWhenTheEmailIsWrong() throws Exception {
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_form_username_field))
-                .perform(typeText("Username"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
         onView(withId(R.id.register_form_email_field))
-                .perform(typeText("Email"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("NoValidEmail"));
 
         onView(withId(R.id.register_form_password_field))
-                .perform(typeText("123"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+
+        onView(withId(R.id.register_form_password_again_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+
+        onView(withId(R.id.register_form_firstname_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
+
+        onView(withId(R.id.register_form_lastname_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
+
+        onView(withId(R.id.register_form_phoneno_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
+
+        onView(withId(R.id.register_btn))
+                .perform(scrollTo(), click());
+
+        onView(withText("Error"))   //String "Please enter a valid e-mail address."
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void showErrorMessageWhenTheEmailContainsSpaces() throws Exception {
+        onView(withId(R.id.welcome_register))
+                .perform(scrollTo(), click());
+
+        onView(withId(R.id.register_form_username_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+
+        onView(withId(R.id.register_form_email_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("email with spaces@gmail.com"));
+
+        onView(withId(R.id.register_form_password_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+
+        onView(withId(R.id.register_form_password_again_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
+
+        onView(withId(R.id.register_form_firstname_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
+
+        onView(withId(R.id.register_form_lastname_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
+
+        onView(withId(R.id.register_form_phoneno_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
+
+        onView(withId(R.id.register_btn))
+                .perform(scrollTo(), click());
+
+        onView(withText("Error"))   //String "Please enter a valid e-mail address."
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void showsErrorMessageWhenThePasswordIsTooShort() throws Exception {
+
+        onView(withId(R.id.welcome_register))
+                .perform(scrollTo(), click());
+
+        onView(withId(R.id.register_form_username_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
+
+        onView(withId(R.id.register_form_email_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
+
+        onView(withId(R.id.register_form_password_field))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("123"));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
@@ -107,22 +179,22 @@ public class RegisterUITest {
     }
 
     @Test
-    public void clickRegisterButton_PasswordNotMatch() throws Exception{
+    public void showsErrorMessageWhenThePasswordsDoNotMatch() throws Exception{
 
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_form_username_field))
-                .perform(typeText("Username"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
         onView(withId(R.id.register_form_email_field))
-                .perform(typeText("Email"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
         onView(withId(R.id.register_form_password_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
         onView(withId(R.id.register_form_password_again_field))
-                .perform(typeText("password2"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password2"));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
@@ -132,25 +204,25 @@ public class RegisterUITest {
     }
 
     @Test
-    public void clickRegisterButton_NoFirstName() throws Exception {
+    public void showsErrorMessageWhenThereIsNoFirstName() throws Exception {
 
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_form_username_field))
-                .perform(typeText("Username"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
         onView(withId(R.id.register_form_email_field))
-                .perform(typeText("Email"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
         onView(withId(R.id.register_form_password_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
         onView(withId(R.id.register_form_password_again_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
         onView(withId(R.id.register_form_firstname_field))
-                .perform(typeText(""), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
@@ -160,28 +232,28 @@ public class RegisterUITest {
     }
 
     @Test
-    public void clickRegisterButton_NoLastName() throws Exception {
+    public void showsErrorMessageWhenThereIsNoLastName() throws Exception {
 
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_form_username_field))
-                .perform(typeText("Username"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
         onView(withId(R.id.register_form_email_field))
-                .perform(typeText("Email"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
         onView(withId(R.id.register_form_password_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
         onView(withId(R.id.register_form_password_again_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
         onView(withId(R.id.register_form_firstname_field))
-                .perform(typeText("First Name"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
         onView(withId(R.id.register_form_lastname_field))
-                .perform(typeText(""), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
@@ -191,31 +263,31 @@ public class RegisterUITest {
     }
 
     @Test
-    public void clickRegisterButton_ValidPhoneNumber() throws Exception {
+    public void showsErrorMessageWhenThePhoneNumberIsNotValid() throws Exception {
 
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_form_username_field))
-                .perform(typeText("Username"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
         onView(withId(R.id.register_form_email_field))
-                .perform(typeText("Email"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email"));
 
         onView(withId(R.id.register_form_password_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
         onView(withId(R.id.register_form_password_again_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
         onView(withId(R.id.register_form_firstname_field))
-                .perform(typeText("First Name"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
         onView(withId(R.id.register_form_lastname_field))
-                .perform(typeText("Last Name"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
         onView(withId(R.id.register_form_phoneno_field))
-                .perform(typeText(""), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
@@ -225,7 +297,7 @@ public class RegisterUITest {
                 .perform(pressBack());
 
         onView(withId(R.id.register_form_phoneno_field))
-                .perform(typeText("1234567"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("1234567"));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
@@ -235,76 +307,41 @@ public class RegisterUITest {
     }
 
     @Test
-    public void clickRegisterButton_RegisterSuccessful() throws Exception {
+    public void changeActivityWhenAllTheFieldsAreCorrect() throws Exception {
 
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_form_username_field))
-                .perform(typeText("Username"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
         onView(withId(R.id.register_form_email_field))
-                .perform(typeText("Email@email.com"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Email@email.com"));
 
         onView(withId(R.id.register_form_password_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
         onView(withId(R.id.register_form_password_again_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
 
         onView(withId(R.id.register_form_firstname_field))
-                .perform(typeText("First Name"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
 
         onView(withId(R.id.register_form_lastname_field))
-                .perform(typeText("Last Name"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
         onView(withId(R.id.register_form_phoneno_field))
-                .perform(typeText("12345678"), closeSoftKeyboard());
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("12345678"));
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo(), click());
 
         try{
-            assertEquals(Utils.TestUtils.getCurrentActivity().getClass(), OppiaMobileActivity.class);
+            assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
         }catch(AssertionFailedError afe){
             afe.printStackTrace();
         }
 
     }
-
-    @Test
-    public void clickRegisterButton_NoValidEmail() throws Exception {
-        onView(withId(R.id.welcome_register))
-                .perform(click());
-
-        onView(withId(R.id.register_form_username_field))
-                .perform(typeText("Username"), closeSoftKeyboard());
-
-        onView(withId(R.id.register_form_email_field))
-                .perform(typeText("NoValidEmail"), closeSoftKeyboard());
-
-        onView(withId(R.id.register_form_password_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
-
-        onView(withId(R.id.register_form_password_again_field))
-                .perform(typeText("password1"), closeSoftKeyboard());
-
-        onView(withId(R.id.register_form_firstname_field))
-                .perform(typeText("First Name"), closeSoftKeyboard());
-
-        onView(withId(R.id.register_form_lastname_field))
-                .perform(typeText("Last Name"), closeSoftKeyboard());
-
-        onView(withId(R.id.register_form_phoneno_field))
-                .perform(typeText("123456789"), closeSoftKeyboard());
-
-        onView(withId(R.id.register_btn))
-                .perform(scrollTo(), click());
-
-        onView(withText("Error"))   //String "Please enter a valid e-mail address."
-                .check(matches(isDisplayed()));
-    }
-
-
 
 }

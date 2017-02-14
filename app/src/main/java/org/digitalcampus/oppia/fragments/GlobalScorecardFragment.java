@@ -34,20 +34,32 @@ import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 public class GlobalScorecardFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     public static final String TAG = CourseScorecardFragment.class.getSimpleName();
     private ScorecardListAdapter scorecardListAdapter;
 
+    @Inject
+    CoursesRepository coursesRepository;
+
     public static GlobalScorecardFragment newInstance() {
         return new GlobalScorecardFragment();
     }
     public GlobalScorecardFragment(){ }
+
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getActivity().getApplication();
+        app.getComponent().inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,10 +77,10 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initializeDagger();
 
-        DbHelper db = DbHelper.getInstance(super.getActivity());
-        long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-        ArrayList<Course> courses = db.getCourses(userId);
+
+        ArrayList<Course> courses = coursesRepository.getCourses(getActivity());
 
         GridView scorecardList = (GridView) super.getActivity().findViewById(R.id.scorecards_list);
         View emptyState = this.getActivity().findViewById(R.id.empty_state);

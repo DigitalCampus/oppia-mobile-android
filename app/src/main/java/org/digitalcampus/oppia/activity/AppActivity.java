@@ -82,7 +82,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             if (bundle != null) {
                 Course course = (Course) bundle.getSerializable(Course.TAG);
                 if (course == null ) return;
-                String title = course.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+                String title = course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
                 setTitle(title);
                 actionBar.setTitle(title);
             }
