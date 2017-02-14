@@ -67,10 +67,9 @@ android {
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
         }
 
-	debug{
+	    debug{
             testCoverageEnabled = true
-
-	}
+	    }
 
         release {
             minifyEnabled false
@@ -78,8 +77,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-
-    apply plugin: 'com.google.gms.google-services'
 
     testOptions {
         unitTests.returnDefaultValues = true
@@ -128,6 +125,7 @@ dependencies {
     compile 'org.glassfish:javax.annotation:10.0-b28'
     androidTestCompile 'com.github.fabioCollini:DaggerMock:0.6.2'
 }
+
 apply plugin: 'com.google.gms.google-services'
 
 task grantPermissions (type: Exec, dependsOn: 'installDebug'){
@@ -142,8 +140,7 @@ task grantPermissions (type: Exec, dependsOn: 'installDebug'){
     }else{
         println "Granting permissions for a windows os"
     }
-    commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE".split(" ")
-
+    commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE --stacktrace".split(" ")
 
 }
 

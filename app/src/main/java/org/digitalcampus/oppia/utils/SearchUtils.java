@@ -68,7 +68,7 @@ public class SearchUtils {
                 db.insertActivityIntoSearchTable(course.getMultiLangInfo().getTitleJSONString(),
                         parsedCourse.getSection(a.getSectionId()).getMultiLangInfo().getTitleJSONString(),
                         a.getMultiLangInfo().getTitleJSONString(),
-                        act.getDbId(),,
+                        act.getDbId(),
                         fileContent);
             }
         }

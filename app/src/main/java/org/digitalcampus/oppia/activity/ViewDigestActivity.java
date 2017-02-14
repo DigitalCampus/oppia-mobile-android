@@ -89,8 +89,8 @@ public class ViewDigestActivity extends AppCompatActivity {
         TextView title = (TextView) activityDetail.findViewById(R.id.activity_title);
         TextView courseTitle = (TextView) activityDetail.findViewById(R.id.course_title);
         ImageView courseImg = (ImageView) activityDetail.findViewById(R.id.course_image);
-        title.setText(activity.getTitle(lang));
-        courseTitle.setText(activityCourse.getTitle(lang));
+        title.setText(activity.getMultiLangInfo().getTitle(lang));
+        courseTitle.setText(activityCourse.getMultiLangInfo().getTitle(lang));
         if(activityCourse.getImageFile() != null){
             String image = activityCourse.getImageFileFromRoot();
             Picasso.with(this).load(new File(image))
