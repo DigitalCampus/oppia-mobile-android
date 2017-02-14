@@ -83,6 +83,8 @@ public class CourseIntallViewAdapter extends Course {
 
     public String getDisplayAuthorName() {
         if ((authorName == null) && (authorUsername == null)) return null;
+
+        /*** Previous code to display the author like "Name Surname (@username)"
         String displayName = authorName == null ? "" : authorName.trim();
         if (authorUsername != null) {
             if ( (authorName != null) && (authorName.trim().length() > 0))
@@ -91,6 +93,8 @@ public class CourseIntallViewAdapter extends Course {
                 displayName += authorUsername;
         }
         return displayName;
+        */
+        return authorName;
     }
 
 

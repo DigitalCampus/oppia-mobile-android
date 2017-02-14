@@ -6,7 +6,9 @@ import android.os.Build;
 import android.os.StatFs;
 import android.util.Log;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.Tracker;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -82,6 +84,12 @@ public class Storage {
     public static boolean mediaFileExists(Context ctx, String filename) {
         File media = new File(Storage.getMediaPath(ctx) + filename);
         Log.d(TAG, "Looking for: " + Storage.getMediaPath(ctx) + filename);
+
+        if (!media.exists()){
+            //Save the missing media tracker
+            new Tracker(ctx).saveMissingMediaTracker(filename);
+        }
+
         return media.exists();
     }
 

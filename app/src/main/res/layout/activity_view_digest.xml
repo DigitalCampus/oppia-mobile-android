@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.digitalcampus.oppia.activity.ViewDigestActivity"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:orientation="vertical"
+        android:background="@drawable/actionbar_background_gradient"
+        android:paddingBottom="60dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView12"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/dc_logo"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_large"/>
+
+        <TextView
+            android:id="@+id/welcome_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_welcome"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            style="@style/HeaderText" />
+
+        <TextView
+            android:id="@+id/welcome_desc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/open_digest.description"
+            android:gravity="center"
+            style="@style/NormalTextDark" />
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/activity_detail"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="8dp"
+        card_view:cardCornerRadius="4dp"
+        android:layout_marginTop="-40dp"
+        android:layout_marginLeft="@dimen/padding_large"
+        android:layout_marginRight="@dimen/padding_large">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="5dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/padding_medium">
+                    <ImageView
+                        android:id="@+id/course_image"
+                        android:layout_width="@dimen/course_icon_size"
+                        android:layout_height="@dimen/course_icon_size"
+                        android:layout_alignParentLeft="true"
+                        android:layout_margin="4dp"
+                        android:contentDescription="@string/app_logo_alt"
+                        android:src="@drawable/default_course"
+                        android:layout_centerVertical="true"/>
+
+                    <TextView
+                        android:id="@+id/activity_title"
+                        android:layout_width="wrap_content"
+                        android:layout_toRightOf="@+id/course_image"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/course_image"
+                        android:paddingLeft="@dimen/padding_medium"
+                        android:textSize="16sp"
+                        android:paddingRight="@dimen/padding_medium"/>
+
+                    <TextView
+                        android:id="@+id/course_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/activity_title"
+                        android:layout_toRightOf="@+id/course_image"
+                        android:paddingLeft="@dimen/padding_medium"
+                        android:textSize="14sp"
+                        android:textColor="@color/highlight_label"
+                        android:paddingRight="@dimen/padding_medium"/>
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/activity_completed"
+                    android:src="@drawable/ic_action_accept"
+                    android:tint="@color/highlight_light"
+                    android:baselineAlignBottom="false"
+                    android:cropToPadding="false"
+                    android:adjustViewBounds="false"
+                    android:layout_gravity="bottom|right"
+                    android:contentDescription="@string/open_digest.activity_completed"/>
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/stroke"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/activity_actions">
+                <Button
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:id="@+id/btn_show_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/open_digest.btn_action"
+                    android:layout_marginLeft="@dimen/padding_medium"
+                    android:layout_marginStart="@dimen/padding_medium"
+                    />
+                <Button
+                    android:id="@+id/btn_cancel"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_grey"
+                    android:text="@string/cancel"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_dialog_alert"
+        android:drawablePadding="15dp"
+        android:text="@string/open_digest.errors.invalid_param"
+        android:id="@+id/error_text"
+        android:layout_gravity="center_horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_margin="@dimen/padding_large"
+        android:textColor="@color/text_light"
+        android:visibility="gone"/>
+
+</LinearLayout>

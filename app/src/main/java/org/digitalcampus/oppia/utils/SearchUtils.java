@@ -63,11 +63,12 @@ public class SearchUtils {
                 }
             }
 
-            if (!fileContent.equals("")) {
+		Activity act = db.getActivityByDigest(a.getDigest());
+            if ((act != null) && !fileContent.equals("")) {
                 db.insertActivityIntoSearchTable(course.getMultiLangInfo().getTitleJSONString(),
                         parsedCourse.getSection(a.getSectionId()).getMultiLangInfo().getTitleJSONString(),
                         a.getMultiLangInfo().getTitleJSONString(),
-                        db.getActivityByDigest(a.getDigest()).getDbId(),
+                        act.getDbId(),,
                         fileContent);
             }
         }
