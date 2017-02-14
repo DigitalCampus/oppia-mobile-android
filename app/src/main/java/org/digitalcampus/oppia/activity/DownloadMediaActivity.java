@@ -165,6 +165,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                     showDownloadMediaMessage();
                 }
 
+                dmla.setEnterOnMultiChoiceMode(true);
+                dmla.notifyDataSetChanged();
 
                 downloadSelected.setText(getString(R.string.missing_media_stop_selected));
                 unselectAll.setText(getString(R.string.missing_media_unselect_all));
@@ -205,6 +207,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             public void onDestroyActionMode(ActionMode mode) {
                 mediaSelected.clear();
                 hideDownloadMediaMessage();
+                dmla.setEnterOnMultiChoiceMode(false);
+                dmla.notifyDataSetChanged();
             }
         });
 
@@ -365,8 +369,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         if (mediaFile != null){
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
-            SparseBooleanArray itemsChecked = mediaList.getCheckedItemPositions();
-            itemsChecked .delete(itemsChecked .keyAt(missingMedia.indexOf(mediaFile)));
             mediaFile.setDownloading(false);
             mediaFile.setProgress(0);
             dmla.notifyDataSetChanged();
@@ -379,8 +381,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         if (mediaFile != null){
             Toast.makeText(this,  this.getString(R.string.download_complete), Toast.LENGTH_LONG).show();
 
-            SparseBooleanArray itemsChecked = mediaList.getCheckedItemPositions();
-            itemsChecked .delete(itemsChecked .keyAt(missingMedia.indexOf(mediaFile)));
             missingMedia.remove(mediaFile);
             dmla.notifyDataSetChanged();
             emptyState.setVisibility((missingMedia.size()==0) ? View.VISIBLE : View.GONE);

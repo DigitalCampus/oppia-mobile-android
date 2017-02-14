@@ -37,7 +37,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.webkit.WebSettings.PluginState;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -84,7 +83,7 @@ public class UrlWidget extends WidgetFactory {
 		super.onActivityCreated(savedInstanceState);
 		
 		// show description if any
-		String desc = activity.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+		String desc = activity.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
 		TextView descTV = (TextView) getView().findViewById(R.id.widget_url_description);
 		if (desc.length() > 0){

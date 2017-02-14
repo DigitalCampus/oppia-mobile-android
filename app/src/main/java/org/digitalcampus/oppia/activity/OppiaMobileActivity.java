@@ -57,6 +57,7 @@ import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.service.CourseIntallerService;
@@ -72,6 +73,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
+import javax.inject.Inject;
+
 public class OppiaMobileActivity
         extends AppActivity
         implements
@@ -83,7 +86,6 @@ public class OppiaMobileActivity
             CourseContextMenuCustom.OnContextMenuListener {
 
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
-	private SharedPreferences prefs;
 	private ArrayList<Course> courses;
 	private Course tempCourse;
 	private long userId = 0;
@@ -102,13 +104,17 @@ public class OppiaMobileActivity
     private ProgressDialog progressDialog;
     private InstallerBroadcastReceiver receiver;
 
+    @Inject CoursesRepository coursesRepository;
+    @Inject SharedPreferences prefs;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_main);
 
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        initializeDagger();
+
         PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
         prefs.registerOnSharedPreferenceChangeListener(this);
 
@@ -181,7 +187,12 @@ public class OppiaMobileActivity
         actionBarDrawerToggle.syncState();
 	}
 
-	@Override
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
+
+    @Override
 	public void onStart() {
 		super.onStart();
 		DbHelper db = DbHelper.getInstance(this);
@@ -211,7 +222,7 @@ public class OppiaMobileActivity
 
 		DbHelper db = DbHelper.getInstance(this);
         courses.clear();
-		courses.addAll(db.getCourses(userId));
+		courses.addAll(coursesRepository.getCourses(this));
 		
 		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
@@ -302,7 +313,7 @@ public class OppiaMobileActivity
         Intent i = new Intent(OppiaMobileActivity.this, PrefsActivity.class);
         Bundle tb = new Bundle();
         ArrayList<Lang> langs = new ArrayList<>();
-        for(Course m: courses){ langs.addAll(m.getLangs()); }
+        for(Course m: courses){ langs.addAll(m.getMultiLangInfo().getLangs()); }
         tb.putSerializable("langs", langs);
         i.putExtras(tb);
         startActivity(i);
@@ -327,7 +338,7 @@ public class OppiaMobileActivity
     }
 	private void createLanguageDialog() {
 		ArrayList<Lang> langs = new ArrayList<>();
-		for(Course m: courses){ langs.addAll(m.getLangs()); }
+		for(Course m: courses){ langs.addAll(m.getMultiLangInfo().getLangs()); }
 
         UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
             public Boolean call() throws Exception {

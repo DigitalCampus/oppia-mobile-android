@@ -26,6 +26,7 @@ import org.digitalcampus.oppia.adapter.TagListAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Tag;
+import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -43,6 +44,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import javax.inject.Inject;
+
 public class TagSelectActivity extends AppActivity implements APIRequestListener {
 
 	public static final String TAG = TagSelectActivity.class.getSimpleName();
@@ -51,11 +54,15 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 	private JSONObject json;
 	private TagListAdapter tla;
     private ArrayList<Tag> tags;
+
+	@Inject TagRepository tagRepository;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
+
+		initializeDagger();
 
         tags = new ArrayList<>();
         tla = new TagListAdapter(this, tags);
@@ -73,6 +80,11 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
             }
         });
 
+	}
+
+	private void initializeDagger() {
+		MobileLearning app = (MobileLearning) getApplication();
+		app.getComponent().inject(this);
 	}
 	
 	@Override
@@ -132,39 +144,14 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		pDialog.setCancelable(true);
 		pDialog.show();
 
-		APIUserRequestTask task = new APIUserRequestTask(this);
-		Payload p = new Payload(MobileLearning.SERVER_TAG_PATH);
-		task.setAPIRequestListener(this);
-		task.execute(p);
+		tagRepository.getTagList(this);
 	}
 
 	public void refreshTagList() {
 		tags.clear();
 		try {
-			for (int i = 0; i < (json.getJSONArray("tags").length()); i++) {
-				JSONObject json_obj = (JSONObject) json.getJSONArray("tags").get(i);
-				Tag t = new Tag();
-				t.setName(json_obj.getString("name"));
-				t.setId(json_obj.getInt("id"));
-				t.setCount(json_obj.getInt("count"));
-				// Description
-				if (json_obj.has("description") && !json_obj.isNull("description")){
-					t.setDescription(json_obj.getString("description"));
-				}
-				// icon
-				if (json_obj.has("icon") && !json_obj.isNull("icon")){
-					t.setIcon(json_obj.getString("icon"));
-				}
-				// highlight
-				if (json_obj.has("highlight") && !json_obj.isNull("highlight")){
-					t.setHighlight(json_obj.getBoolean("highlight"));
-				}
-				// order priority
-				if (json_obj.has("order_priority") && !json_obj.isNull("order_priority")){
-					t.setOrderPriority(json_obj.getInt("order_priority"));
-				}
-				tags.add(t);
-			}
+			tagRepository.refreshTagList(tags, json);
+
             tla.notifyDataSetChanged();
             findViewById(R.id.empty_state).setVisibility((tags.size()==0) ? View.VISIBLE : View.GONE);
 

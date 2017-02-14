@@ -45,12 +45,13 @@ public class FileUtils {
         return ret;
     }
 
-    public static void copyZipFromAssets(String filename){
+    public static void copyZipFromAssets(Context context, String filename){
 
         try {
             InputStream is = InstrumentationRegistry.getContext().getResources().getAssets().open("courses/" + filename);
-            File outputFile = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
-            OutputStream os = new FileOutputStream(outputFile);
+            File downloadPath = new File(Storage.getDownloadPath(context));
+            if(!downloadPath.exists()){Storage.createFolderStructure(context);}
+            OutputStream os = new FileOutputStream(new File(downloadPath, filename));
 
             //Copy File
             byte[] buffer = new byte[1024];

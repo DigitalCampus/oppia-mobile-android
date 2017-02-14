@@ -20,6 +20,8 @@ package org.digitalcampus.oppia.utils.xmlreaders;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
@@ -78,48 +80,9 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         this.db = db;
     }
 
-    public double getCourseVersionId() {
-        return courseVersionId;
-    }
-
-    public String getCourseImage() {
-        return courseIcon;
-    }
-
-    public int getCoursePriority() {
-        return coursePriority;
-    }
-
-    public ArrayList<Lang> getCourseDescriptions() {
-        return courseDescriptions;
-    }
-
-    public ArrayList<Lang> getCourseTitles() {
-        return courseTitles;
-    }
-
-    public ArrayList<Lang> getCourseLangs() {
-        return courseLangs;
-    }
-
-    public ArrayList<Activity> getCourseBaseline() {
-        return courseBaseline;
-    }
-
+    public String getCourseImage() { return courseIcon; }
     public ArrayList<Media> getCourseMedia() {
         return courseMedia;
-    }
-
-    public ArrayList<Section> getSections() {
-        return sections;
-    }
-
-    public ArrayList<CourseMetaPage> getCourseMetaPages() {
-        return courseMetaPages;
-    }
-
-    public String getCourseSequencingMode() {
-        return courseSequencingMode;
     }
 
     //Vars for traversing the tree
@@ -228,7 +191,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     public void endElement(String aUri, String aLocalName, String aQName) throws SAXException {
 
         if (NODE_SECTION.equals(aQName)){
-            currentSection.setTitles(sectTitles);
+            currentSection.getMultiLangInfo().setTitles(sectTitles);
             sections.add(currentSection);
             parentElements.pop();
         }
@@ -293,8 +256,8 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         }
         else if (NODE_ACTIVITY.equals(aQName)){
 
-            currentActivity.setTitles(actTitles);
-            currentActivity.setDescriptions(actDescriptions);
+            currentActivity.getMultiLangInfo().setTitles(actTitles);
+            currentActivity.getMultiLangInfo().setDescriptions(actDescriptions);
             currentActivity.setLocations(actLocations);
             currentActivity.setContents(actContents);
             currentActivity.setMedia(actMedia);
@@ -332,4 +295,23 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         }
     }
 
+    public CompleteCourse getCourse(String root) {
+        CompleteCourse c = new CompleteCourse(root);
+        c.setVersionId(courseVersionId);
+        c.setImageFile(courseIcon);
+        c.setPriority(coursePriority);
+        c.getMultiLangInfo().setTitles(courseTitles);
+        c.getMultiLangInfo().setLangs(courseLangs);
+        c.getMultiLangInfo().setDescriptions(courseDescriptions);
+        c.setBaselineActivities(courseBaseline);
+        c.setMetaPages(courseMetaPages);
+        c.setSections(sections);
+
+        if ((courseSequencingMode!=null) && (courseSequencingMode.equals(Course.SEQUENCING_MODE_COURSE) ||
+                courseSequencingMode.equals(Course.SEQUENCING_MODE_SECTION) || courseSequencingMode.equals(Course.SEQUENCING_MODE_NONE))){
+            c.setSequencingMode(courseSequencingMode);
+        }
+
+        return c;
+    }
 }

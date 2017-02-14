@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,10 +39,7 @@ import com.splunk.mint.Mint;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -114,7 +110,7 @@ public class ResourceWidget extends WidgetFactory {
 		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.widget_resource_object);
 		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		// show description if any
-		String desc = activity.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+		String desc = activity.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
 		TextView descTV = (TextView) getView().findViewById(R.id.widget_resource_description);
 		if (desc.length() > 0){

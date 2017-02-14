@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
+apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     maven {
@@ -9,7 +10,7 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "org.digitalcampus.mobile.learning"
@@ -66,10 +67,9 @@ android {
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
         }
 
-	debug{
+	    debug{
             testCoverageEnabled = true
-
-	}
+	    }
 
         release {
             minifyEnabled false
@@ -95,36 +95,62 @@ dependencies {
     compile "com.splunk.mint:mint:5.0.0"
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
 
+    //JUnit Dependencies
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.3.1'
-    androidTestCompile 'com.android.support.test:runner:0.4'
-    androidTestCompile 'com.android.support.test:rules:0.4'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support:support-annotations:23.4.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.1'){
+
+    //Espresso Dependencies
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2'){
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
         exclude module: 'support-v13'
         exclude module: 'recyclerview-v7'
+        exclude module: 'appcompat-v7'
+        exclude module: 'design'
     }
+
+    //Mockito Dependencies
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    //Dagger Dependencies
+    apt 'com.google.dagger:dagger-compiler:2.5'
+    compile 'com.google.dagger:dagger:2.5'
+    provided 'javax.annotation:jsr250-api:1.0'
+    compile 'org.glassfish:javax.annotation:10.0-b28'
+    androidTestCompile 'com.github.fabioCollini:DaggerMock:0.6.2'
 }
+
 apply plugin: 'com.google.gms.google-services'
 
-task grantPermissions(dependsOn: 'installDebug') {
-    def adb = android.getAdbExe().toString()
+task grantPermissions (type: Exec, dependsOn: 'installDebug'){
+    group = 'test'
+    description = 'Grant permissions for testing.'
 
-    println "Granting permissions on device"
-    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.READ_PHONE_STATE".execute()
-    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.READ_EXTERNAL_STORAGE".execute()
-    "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.WRITE_EXTERNAL_STORAGE".execute()
+    def adb = android.getAdbExe().toString()
+    def absolutePath = file('..')
+
+    if (!System.getProperty('os.name').toLowerCase().contains('windows')) {
+        println "Granting permissions for a non windows os"
+    }else{
+        println "Granting permissions for a windows os"
+    }
+    commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE --stacktrace".split(" ")
+
 }
 
 afterEvaluate {
     tasks.each { task ->
-        if (task.name.startsWith('assembleDebugAndroidTest')) {
+        if (task.name.contentEquals('connectedAndroidTest') ||
+            task.name.contentEquals('connectedDebugAndroidTest') ||
+            task.name.contentEquals('assembleDebugAndroidTest') ||
+            task.name.contentEquals('assembleAndroidTest')) {
             task.dependsOn grantPermissions
         }
     }
 }
-
-
