@@ -21,12 +21,7 @@
     <string name="fragment_welcome_desc">यह प्रोग्राम के माध्यम से आप अपने मोबाइल के ज़रिये स्वास्थ्य सम्बंधित जानकारी प्राप्त कर सकते हैं एवं स्वस्थ्य सम्बंधित फिल्में देख सकतें हैं और दूसरों को दिखा भी सकते हैं.</string>
     <string name="fragment_welcome_login_info">इस प्रोग्राम को शुरू करने से पहले आपको अपना रजिस्ट्रेशन करना होगा.</string>
     <string name="fragment_welcome_privacy">हम आपकी निजिता का ख़याल रखतें हैं, </string>
-    
-    <string name="routing_activity_title">किसी एक विकल्प का चयन करें:</string>
-    <string name="routing_button_mlearning">मोबाइल द्वारा शिक्षा</string>
-    <string name="routing_button_client">लाभारती के लिए परामर्श</string>
-    
-    
+
     <string name="tab_title_about">प्रोग्राम के बारे में जाने</string>
     <string name="tab_title_badges">बिल्ला</string>
     <string name="tab_title_help">मदद</string>
@@ -53,12 +48,9 @@
     <string name="title_welcome">उज्जवल साथी </string>
     <string name="version">Version: %1$s</string>
     <string name="title_download_media">फिल्में डाउनलोड करें</string>
-    
-    
-    
+
     <string name="widget_feedback_submit">प्रस्तुत</string>
     <string name="widget_feedback_submit_title">धन्यवाद!</string>
-    <string name="widget_feedback_continue">जारी रखें &gt;&gt;</string>
     
     <string name="widget_quiz_next">आगे बढें </string>
     <string name="widget_quiz_prev">पीछे जायें</string>
@@ -211,13 +203,13 @@
 	<string name="login_complete">लॉग इन सम्पूर्ण</string>
 	
 	<string name="logout_confirm">आप सुनिश्चित हैं की आपको लॉग आउट करना है \n\n अगर आप लॉग आउट करेंगे तो आपका सारा कार्य स्थगित हो जायेगा और आपको फिर से लॉग इन करने के लिए इंटरनेट की ज़रुरत पड़ेगी.</string>
-	
+
 	<string name="register_alert_title">Register</string>
-	<string name="register_process">Registering ...</string>
+	<string name="register_process">Registering &#8203;</string>
 	<string name="register_complete">Successfully registered</string>
 	
 	<string name="reset_alert_title">रिसेट </string>
-	<string name="reset_process">पासवर्ड रिसेट हो रहा है  ...</string>
+	<string name="reset_process">पासवर्ड रिसेट हो रहा है  &#8203;</string>
 	<string name="reset_complete">आपका पासवर्ड रिसेट हो गया है.\n\nPlease check your email for your new password.</string>
 	
 	<string name="change_language">भाषा बदलें</string>
@@ -232,7 +224,7 @@
 	<string name="course_draft">(Draft version)</string>
 	
 	<string name="search.result_summary">%1$d results for \"%2$s\"</string>
-	<string name="search.message.searching">Searching...</string>
+	<string name="search.message.searching">Searching  &#8203;</string>
 	<string name="search.message.no_results">No results found for \"%1$s\"</string>
 
 </resources>
