@@ -18,16 +18,14 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -44,16 +42,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> {
+public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payload> {
 
 	public final static String TAG = SubmitQuizAttemptsTask.class.getSimpleName();
-	private Context ctx;
-	private SharedPreferences prefs;
-	
-	public SubmitQuizAttemptsTask(Context c) {
-		this.ctx = c;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-	}
+
+	public SubmitQuizAttemptsTask(Context ctx) { super(ctx); }
+	public SubmitQuizAttemptsTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
 	@Override
 	protected Payload doInBackground(Payload... params) {
@@ -66,7 +60,7 @@ public class SubmitQuizAttemptsTask extends AsyncTask<Payload, Object, Payload> 
 				Log.d(TAG, qa.getData());
                 OkHttpClient client = HTTPClientUtils.getClient(ctx);
                 Request request = new Request.Builder()
-                        .url(HTTPClientUtils.getFullURL(ctx, MobileLearning.QUIZ_SUBMIT_PATH))
+                        .url(apiEndpoint.getFullURL(ctx, MobileLearning.QUIZ_SUBMIT_PATH))
                         .addHeader(HTTPClientUtils.HEADER_AUTH,
                                 HTTPClientUtils.getAuthHeaderValue(qa.getUser().getUsername(), qa.getUser().getApiKey()))
                         .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, qa.getData()))

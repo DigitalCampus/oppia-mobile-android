@@ -103,6 +103,8 @@
     <string name="prefNoScheduleReminders">Number of suggested activities</string>
     <string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
     <string name="prefServer">Server</string>
+    <string name="prefServer_errorTitle">Invalid URL</string>
+    <string name="prefServer_errorDescription">Please, enter a well-formed URL corresponding to your OppiaMobile server endpoint</string>
     <string name="prefServerTimeoutConnection">Connection timeout</string>
     <string name="prefServerTimeoutResponse">Response timeout</string>
     <string name="prefShowCourseDescription">Show course description</string>

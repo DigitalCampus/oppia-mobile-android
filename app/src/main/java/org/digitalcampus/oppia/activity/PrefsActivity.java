@@ -156,7 +156,16 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "Preference changed: " + key);
-        if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
+
+        if(key.equalsIgnoreCase(PrefsActivity.PREF_SERVER)){
+            String newServerURL = sharedPreferences.getString(PrefsActivity.PREF_SERVER, "");
+            if(!newServerURL.endsWith("/")){
+                newServerURL = newServerURL.trim()+"/";
+                sharedPreferences.edit().putString(PrefsActivity.PREF_SERVER, newServerURL).apply();
+            }
+            mPrefsFragment.updateServerPref(newServerURL);
+        }
+        else if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
             String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
             String storageOption   = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
             String path = null;
