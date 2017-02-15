@@ -63,12 +63,7 @@ public class HTTPClientUtils{
     public static String getAuthHeaderValue(String username, String apiKey){
         return "ApiKey " + username + ":" + apiKey;
     }
-
-    public static String getFullURL(Context ctx, String apiPath){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        return prefs.getString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault)) + apiPath;
-    }
-
+    
     public static HttpUrl getUrlWithCredentials(String url, String username, String apiKey){
         return HttpUrl.parse(url).newBuilder()
                 .addQueryParameter("username", username)

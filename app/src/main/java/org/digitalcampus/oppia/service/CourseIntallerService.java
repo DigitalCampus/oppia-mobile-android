@@ -27,6 +27,8 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -84,6 +86,7 @@ public class CourseIntallerService extends IntentService {
     private ArrayList<String> tasksCancelled;
     private ArrayList<String> tasksDownloading;
     private SharedPreferences prefs;
+    private ApiEndpoint apiEndpoint;
 
     private static CourseIntallerService currentInstance;
     private static void setInstance(CourseIntallerService instance){
@@ -98,7 +101,13 @@ public class CourseIntallerService extends IntentService {
         return null;
     }
 
-    public CourseIntallerService() { super(TAG); }
+    public CourseIntallerService() {
+        this(new RemoteApiEndpoint());
+    }
+    public CourseIntallerService(ApiEndpoint api) {
+        super(TAG);
+        apiEndpoint = api;
+    }
 
     @Override
     public void onCreate(){
@@ -433,7 +442,7 @@ public class CourseIntallerService extends IntentService {
 
             OkHttpClient client = HTTPClientUtils.getClient(this);
             Request request = new Request.Builder()
-                    .url(HTTPClientUtils.getFullURL(this, scheduleUrl))
+                    .url(apiEndpoint.getFullURL(this, scheduleUrl))
                     .addHeader(HTTPClientUtils.HEADER_AUTH,
                             HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
                     .build();
