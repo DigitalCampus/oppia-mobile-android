@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 import org.digitalcampus.mobile.learning.R;
@@ -19,6 +20,7 @@ import java.util.Locale;
 public class PreferencesFragment extends PreferenceFragment {
 
     private ListPreference storagePref;
+    private EditTextPreference serverPref;
 
     public static PreferencesFragment newInstance() {
         return new PreferencesFragment();
@@ -36,11 +38,12 @@ public class PreferencesFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.prefs);
 
         storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
+        serverPref = (EditTextPreference) findPreference(PrefsActivity.PREF_SERVER);
+        serverPref.setSummary(serverPref.getText());
 
         Bundle bundle = getArguments();
-
         ArrayList<Lang> langs = new ArrayList<>();
-        if (bundle.getSerializable("langs") != null) {
+        if ((bundle != null) && bundle.getSerializable("langs") != null) {
 	        langs = (ArrayList<Lang>) bundle.getSerializable("langs");
         }
         updateLangsList(langs);
@@ -51,13 +54,14 @@ public class PreferencesFragment extends PreferenceFragment {
                 getString(R.string.about_not_logged_in) :
                 getString(R.string.about_logged_in, username.getText()) );
 
-        EditTextPreference server = (EditTextPreference) findPreference(PrefsActivity.PREF_SERVER);
-        server.setSummary(server.getText());
+    }
 
+    public void updateServerPref(String url){
+        serverPref.setText(url);
+        serverPref.setSummary(url);
     }
 
     public void updateStoragePref(String storageOption){
-
         if (PrefsActivity.STORAGE_OPTION_EXTERNAL.equals(storageOption)){
             storagePref.setValue(storagePref.getEntryValues()[1].toString());
         }
@@ -73,8 +77,8 @@ public class PreferencesFragment extends PreferenceFragment {
             //If there is more than one storage option, we create a preferences list
 
             int writableLocations = 0;
-            List<String> entries = new ArrayList<String>();
-            List<String> entryValues = new ArrayList<String>();
+            List<String> entries = new ArrayList<>();
+            List<String> entryValues = new ArrayList<>();
 
             String currentLocation =  getPreferenceManager().getSharedPreferences().getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
             String currentPath = "";
@@ -106,8 +110,8 @@ public class PreferencesFragment extends PreferenceFragment {
     }
 
     private void updateLangsList(ArrayList<Lang> langs){
-        List<String> entries = new ArrayList<String>();
-        List<String> entryValues = new ArrayList<String>();
+        List<String> entries = new ArrayList<>();
+        List<String> entryValues = new ArrayList<>();
 
         for(Lang l: langs){
             if(!entryValues.contains(l.getLang())){

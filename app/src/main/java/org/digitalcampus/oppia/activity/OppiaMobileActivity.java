@@ -447,14 +447,7 @@ public class OppiaMobileActivity
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		
-		if(key.equalsIgnoreCase(PrefsActivity.PREF_SERVER)){
-			if(!sharedPreferences.getString(PrefsActivity.PREF_SERVER, "").endsWith("/")){
-				String newServer = sharedPreferences.getString(PrefsActivity.PREF_SERVER, "").trim()+"/";
-                sharedPreferences.edit().putString(PrefsActivity.PREF_SERVER, newServer).apply();
-			}
-		}
-		
+
 		if(key.equalsIgnoreCase(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS) || key.equalsIgnoreCase(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS)){
 			displayCourses(userId);
 		}
