@@ -6,7 +6,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding_large">25dp</dimen>
     <dimen name="course_icon_size">48dp</dimen>
-    
+    <dimen name="course_actionbar_icon_size">36dp</dimen>
+
     <!-- For AndroidPlot graphs -->
     <dimen name="pie_segment_label_font_size">16dp</dimen>
     <dimen name="title_font_size">20dp</dimen>
