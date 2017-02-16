@@ -23,17 +23,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.Response;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -47,11 +43,9 @@ public class MatchingWidget extends QuestionWidget {
 	
 	private LinearLayout responsesLL;
 	private LinearLayout[] responseLayouts;
-	protected SharedPreferences prefs;
 	
 	public MatchingWidget(Activity activity, View v, ViewGroup container) {
-		init(activity,container,R.layout.widget_quiz_matching,v);
-		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+		super(activity, v, container, R.layout.widget_quiz_matching);
 	}
 
 	@Override
@@ -60,11 +54,11 @@ public class MatchingWidget extends QuestionWidget {
     	responsesLL.removeAllViews();
     	
     	// this could be tidied up - to use ArrayAdapters/Lists
-    	HashMap<String,String> possibleAnswers = new HashMap<String,String>();
-    	ArrayList<String> possibleAnswersShuffle = new ArrayList<String>();
+    	HashMap<String,String> possibleAnswers = new HashMap<>();
+    	ArrayList<String> possibleAnswersShuffle = new ArrayList<>();
     	int noresponses = 0;
     	for (Response r : responses){
-    		String[] temp = r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).split(Quiz.MATCHING_REGEX,-1);
+    		String[] temp = r.getTitle(currentUserLang).split(Quiz.MATCHING_REGEX,-1);
     		if(!temp[0].equals("")){
     			noresponses++;
     		}
@@ -79,7 +73,7 @@ public class MatchingWidget extends QuestionWidget {
     	responseLayouts = new LinearLayout[noresponses];
     	
     	while (responseIt.hasNext()) {
-    		HashMap.Entry<String,String> responsePairs = (HashMap.Entry<String,String>) responseIt.next();
+    		HashMap.Entry<String,String> responsePairs = responseIt.next();
     		// only add if there is question text
     		if(!responsePairs.getKey().equals("")){
 	    		LinearLayout responseLayout = new LinearLayout(ctx);
@@ -89,7 +83,7 @@ public class MatchingWidget extends QuestionWidget {
 	    		tv.setText(responsePairs.getKey());
 	    		
 	    		Spinner spinner = new Spinner(ctx);
-	    		ArrayAdapter<CharSequence> responseAdapter = new ArrayAdapter<CharSequence>(ctx, android.R.layout.simple_spinner_item); 
+	    		ArrayAdapter<CharSequence> responseAdapter = new ArrayAdapter<>(ctx, android.R.layout.simple_spinner_item);
 	    		responseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    		spinner.setAdapter(responseAdapter); 
 	    		
@@ -119,7 +113,7 @@ public class MatchingWidget extends QuestionWidget {
 	
 	public List<String> getQuestionResponses(List<Response> responses){
 		
-		List<String> userResponses = new ArrayList<String>();
+		List<String> userResponses = new ArrayList<>();
 		
 		for (LinearLayout ll : this.responseLayouts){
 			TextView tv = (TextView) ll.getChildAt(0);

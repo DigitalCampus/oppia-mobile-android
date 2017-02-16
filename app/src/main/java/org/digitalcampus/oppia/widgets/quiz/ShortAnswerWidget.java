@@ -34,7 +34,7 @@ public class ShortAnswerWidget extends TextInputQuizWidget {
 	public static final String TAG = ShortAnswerWidget.class.getSimpleName();
 	
 	public ShortAnswerWidget(Activity activity, View v, ViewGroup container) {
-		init(activity, container ,R.layout.widget_quiz_shortanswer,v);
+		super(activity, v, container , R.layout.widget_quiz_shortanswer);
 	}
 
 
@@ -54,7 +54,7 @@ public class ShortAnswerWidget extends TextInputQuizWidget {
 		if(et.getText().toString().trim().equals("")){
 			return null;
 		} else {
-			List<String> response = new ArrayList<String>();
+			List<String> response = new ArrayList<>();
 			response.add(et.getText().toString().trim());
 			return response;
 		}

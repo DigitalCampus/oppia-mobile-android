@@ -19,15 +19,11 @@ package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -37,11 +33,9 @@ import android.widget.RadioGroup;
 public class MultiChoiceWidget extends QuestionWidget{
 
 	public static final String TAG = MultiChoiceWidget.class.getSimpleName();
-	protected SharedPreferences prefs;
 	
 	public MultiChoiceWidget(Activity activity, View v, ViewGroup container) {
-		init(activity,container,R.layout.widget_quiz_multichoice,v);
-		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+		super(activity, v, container, R.layout.widget_quiz_multichoice);
 	}
 
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
@@ -58,10 +52,10 @@ public class MultiChoiceWidget extends QuestionWidget{
 					RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);
     		rb.setId(id);
-			rb.setText(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+			rb.setText(r.getTitle(currentUserLang));
 			responsesRG.addView(rb, params);
             for (String answer : currentAnswer) {
-                if (answer.equals(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())))){
+                if (answer.equals(r.getTitle(currentUserLang))){
                     rb.setChecked(true);
                 }
             }
@@ -78,7 +72,7 @@ public class MultiChoiceWidget extends QuestionWidget{
     	int idx = responsesRG.indexOfChild(rb);
     	if (idx >= 0){
     		List<String> response = new ArrayList<>();
-			response.add(responses.get(idx).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+			response.add(responses.get(idx).getTitle(currentUserLang));
     		return response;
     	}
     	return null;
