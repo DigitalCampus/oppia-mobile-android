@@ -276,7 +276,7 @@
     <string name="error_preloading_accounts">Error precargando cuentas de usuario desde fichero CSV</string>
     <string name="error_reset">Nombre de usuario o email no encontrado\nInténtalo de nuevo</string>
     <string name="no_title_set">Sin título</string>
-    <string name="no_description_set">Sin descripción</string>
+    h
     <string name="info.startup.preloaded_accounts">Precargadas %1$d nueva(s) cuenta(s) de usuario.</string>
     <string name="empty_state_media">Genial! Has descargado todo el contenido multimedia de tus cursos en el dispositivo.</string>
     <string name="menu_sort_by">Ordenar por</string>
