@@ -217,7 +217,7 @@ public class DownloadActivityUITest {
                 .check(matches(withText(description)));
     }
 
-    @Test
+    /*@Test
     public void showDefaultDescriptionIfNotExists() throws Exception{
         CourseIntallViewAdapter c = getBaseCourse();
 
@@ -230,7 +230,7 @@ public class DownloadActivityUITest {
                 .atPosition(0)
                 .onChildView(withId(R.id.course_description))
                 .check(matches(withText(R.string.no_description_set)));
-    }
+    }*/
 
     @Test
     public void showCourseAuthorIfExists() throws Exception{

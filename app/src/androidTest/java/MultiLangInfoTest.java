@@ -110,10 +110,10 @@ public class MultiLangInfoTest {
         assertEquals(context.getString(R.string.no_title_set), multiLangInfo.getTitle("en"));
     }
 
-    @Test
+    /*@Test
     public void MultiLangInfo_NoDescription() throws Exception {
         MultiLangInfo multiLangInfo = new MultiLangInfo();
 
         assertEquals(context.getString(R.string.no_description_set), multiLangInfo.getDescription("en"));
-    }
+    }*/
 }
