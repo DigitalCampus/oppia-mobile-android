@@ -18,16 +18,20 @@
 package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
+import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
@@ -50,6 +54,7 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
+import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
@@ -64,6 +69,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -91,11 +97,13 @@ public class QuizWidget extends WidgetFactory {
 	private QuestionWidget qw;
 	public Button prevBtn;
 	public Button nextBtn;
+	public ImageView playAudioBtn;
 	private TextView qText;
 	private String quizContent;
 	private LinearLayout questionImage;
 	private boolean isOnResultsPage = false;
 	private ViewGroup container;
+	private MediaPlayer mp;
 
 	public static QuizWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		QuizWidget myFragment = new QuizWidget();
@@ -139,6 +147,7 @@ public class QuizWidget extends WidgetFactory {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("widget_config", getWidgetConfig());
+
 	}
 	
 	@Override
@@ -148,7 +157,7 @@ public class QuizWidget extends WidgetFactory {
 		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
 		qText = (TextView) getView().findViewById(R.id.question_text);
 		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
-
+		playAudioBtn = (ImageView) getView().findViewById(R.id.playAudioBtn);
         loadQuiz();
 	}
 	
@@ -230,6 +239,7 @@ public class QuizWidget extends WidgetFactory {
     }
 
 	public void showQuestion() {
+		clearMediaPlayer();
 		QuizQuestion q;
 		try {
 			q = this.quiz.getCurrentQuestion();
@@ -238,9 +248,11 @@ public class QuizWidget extends WidgetFactory {
 			e.printStackTrace();
 			return;
 		}
+
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
-		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))));
+		String questionText = stripAudioFromText(q);
+		qText.setText(Html.fromHtml(questionText));
 
 		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
@@ -288,6 +300,43 @@ public class QuizWidget extends WidgetFactory {
 		qw.setQuestionResponses(q.getResponseOptions(), q.getUserResponses());
 		this.setProgress();
 		this.setNav();
+	}
+
+	private String stripAudioFromText(QuizQuestion q) {
+		String questionText = q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+		Pattern p = Pattern.compile("[a-zA-Z0-9\\-_]+\\.mp3");
+		Matcher m = p.matcher(questionText);
+		if (m.find()){
+			final String mp3filename = m.group();
+			File file = new File(course.getLocation() + "resources/" + mp3filename);
+			if (!file.exists()){
+
+			}
+			Log.d(TAG, file.exists()? "siooo" : "noooo" );
+			final Uri mp3Uri = Uri.fromFile(file);
+
+			Log.d(TAG, mp3Uri.getPath());
+			questionText = questionText.replace(mp3filename, "");
+			playAudioBtn.setVisibility(View.VISIBLE);
+			playAudioBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if ((mp != null) && mp.isPlaying() ) {
+						mp.stop();
+						mp.release();
+						mp = null;
+					}
+
+					mp = MediaPlayer.create(getContext(), mp3Uri);
+					mp.start();
+
+				}
+			});
+		}
+		else{
+			playAudioBtn.setVisibility(View.GONE);
+		}
+		return questionText;
 	}
 
 	private void setNav() {
@@ -415,7 +464,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	public void showResults() {
-
+		clearMediaPlayer();
 		// log the activity as complete
 		isOnResultsPage = true;
 		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
@@ -623,6 +672,16 @@ public class QuizWidget extends WidgetFactory {
 		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
 		return percent;
+	}
+
+	private void clearMediaPlayer(){
+		if ((mp != null) ) {
+			if (mp.isPlaying()){
+				mp.stop();
+			}
+			mp.release();
+			mp = null;
+		}
 	}
 	
 	private class OnImageClickListener implements OnClickListener{
