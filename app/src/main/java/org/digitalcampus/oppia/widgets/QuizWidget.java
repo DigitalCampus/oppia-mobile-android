@@ -280,7 +280,9 @@ public class QuizWidget extends WidgetFactory {
 			qw = new NumericalWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Description) {
 			qw = new DescriptionWidget(super.getActivity(), getView(), container);
-		} else {
+		} else if (q instanceof DragAndDrop) {
+			qw = new DragAndDropWidget(super.getActivity(), getView(), container, q, course.getLocation());
+		}	else {
 			return;
 		}
 		qw.setQuestionResponses(q.getResponseOptions(), q.getUserResponses());
