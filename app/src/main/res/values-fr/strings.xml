@@ -159,7 +159,7 @@
     <string name="error">Erreur</string>
     <string name="info">Information</string>
     <string name="warning">Attention</string>
-    <string name="Chargement">Loading</string>
+    <string name="loading">Chargement</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
     <string name="logout">Se déconnecter</string>

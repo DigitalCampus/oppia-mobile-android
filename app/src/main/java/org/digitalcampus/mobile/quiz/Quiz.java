@@ -31,6 +31,7 @@ import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.digitalcampus.mobile.quiz.model.questiontypes.DDImageOrText;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
+import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
@@ -183,8 +184,8 @@ public class Quiz implements Serializable {
                 question = new MultiSelect();
             } else if (qtype.toLowerCase().equals(Description.TAG.toLowerCase())) {
                 question = new Description();
-            } else if (qtype.toLowerCase().equals(DDImageOrText.TAG.toLowerCase())) {
-                question = new DDImageOrText();
+            } else if (qtype.toLowerCase().equals(DragAndDrop.TAG.toLowerCase())) {
+                question = new DragAndDrop();
             } else {
 
                 Log.d(TAG, "Question type " + qtype + " is not yet supported");

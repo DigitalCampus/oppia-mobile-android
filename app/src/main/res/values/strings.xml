@@ -248,7 +248,6 @@
     <string name="error_preloading_accounts">Error preloading accounts from CSV file</string>
     <string name="error_reset">Username or email not found\nPlease try again</string>
     <string name="no_title_set">No title set</string>
-    <string name="no_description_set">No description set</string>
 
     <string name="error_insufficient_storage_available">Insufficient storage available</string>
     <string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
