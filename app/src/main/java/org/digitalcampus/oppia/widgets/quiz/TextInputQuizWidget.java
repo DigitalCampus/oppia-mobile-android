@@ -17,8 +17,10 @@
 
 package org.digitalcampus.oppia.widgets.quiz;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -26,6 +28,10 @@ import org.digitalcampus.mobile.learning.R;
 
 
 public abstract class TextInputQuizWidget extends QuestionWidget {
+
+    public TextInputQuizWidget(Activity activity, View v, ViewGroup container, int layout) {
+        super(activity, v, container, layout);
+    }
 
     protected void hideOnFocusLoss(EditText et){
         View.OnFocusChangeListener ofcListener = new ResponseTextFocusChangeListener();

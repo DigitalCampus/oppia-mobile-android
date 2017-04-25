@@ -18,17 +18,13 @@
 package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -38,26 +34,25 @@ public class MultiSelectWidget extends QuestionWidget {
 
 	public static final String TAG = MultiSelectWidget.class.getSimpleName();
 	private LinearLayout responsesLL;
-	protected SharedPreferences prefs;
 	
-	public MultiSelectWidget(Activity activity,  View v, ViewGroup container) {
-		init(activity,container,R.layout.widget_quiz_multiselect, v);
-		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+	public MultiSelectWidget(Activity activity, View v, ViewGroup container) {
+		super(activity, v, container, R.layout.widget_quiz_multiselect);
 	}
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
 		responsesLL = (LinearLayout) view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
-    	
+
     	for (Response r : responses){
     		CheckBox chk= new CheckBox(ctx);
+			chk.setText(Html.fromHtml(r.getTitle(currentUserLang)));
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);
 			responsesLL.addView(chk, params);
 			for (String a : currentAnswer) {
-				if (a.equals(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())))) {
+				if (a.equals(r.getTitle(currentUserLang))) {
 					chk.setChecked(true);
 				}
 			}
