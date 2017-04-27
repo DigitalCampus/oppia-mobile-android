@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,11 +48,7 @@ import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizFeedback;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
-import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
-import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.widgets.quiz.DDImageOrTextWidget;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
