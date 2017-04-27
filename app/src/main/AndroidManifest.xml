@@ -28,7 +28,7 @@
         android:name="org.digitalcampus.mobile.learning.C2D_MESSAGE"
         android:protectionLevel="signature"/>
 
-    <uses-permission android:name="org.digitalcampus.mobile.learning.C2D_MESSAGE"/>consider
+    <uses-permission android:name="org.digitalcampus.mobile.learning.C2D_MESSAGE"/>
 
     <application
         android:name="org.digitalcampus.oppia.application.MobileLearning"

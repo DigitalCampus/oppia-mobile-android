@@ -16,3 +16,4 @@ gradlew
 gradlew.bat
 app/app-release.apk
 custom.properties
+projectFilesBackup/

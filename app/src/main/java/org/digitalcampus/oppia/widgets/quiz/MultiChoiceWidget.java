@@ -18,16 +18,14 @@
 package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -37,11 +35,12 @@ import android.widget.RadioGroup;
 public class MultiChoiceWidget extends QuestionWidget{
 
 	public static final String TAG = MultiChoiceWidget.class.getSimpleName();
-	protected SharedPreferences prefs;
+
+	private QuizQuestion question;
 	
-	public MultiChoiceWidget(Activity activity, View v, ViewGroup container) {
-		init(activity,container,R.layout.widget_quiz_multichoice,v);
-		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+	public MultiChoiceWidget(Activity activity, View v, ViewGroup container, QuizQuestion q) {
+		super(activity, v, container, R.layout.widget_quiz_multichoice);
+		this.question = q;
 	}
 
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
@@ -51,6 +50,11 @@ public class MultiChoiceWidget extends QuestionWidget{
     	// TODO change to use getchild views (like the MultiSelect)
     	responsesRG.setId(R.id.multichoiceRadioGroup);
     	responsesLL.addView(responsesRG);
+		String shuffle = question.getProp("shuffleanswers");
+		if ((shuffle != null) && shuffle.equals("1")){
+			Collections.shuffle(responses);
+		}
+
     	int id = 1000+1;
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);
@@ -58,10 +62,10 @@ public class MultiChoiceWidget extends QuestionWidget{
 					RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);
     		rb.setId(id);
-			rb.setText(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+			rb.setText(r.getTitle(currentUserLang));
 			responsesRG.addView(rb, params);
             for (String answer : currentAnswer) {
-                if (answer.equals(r.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())))){
+                if (answer.equals(r.getTitle(currentUserLang))){
                     rb.setChecked(true);
                 }
             }
@@ -78,7 +82,7 @@ public class MultiChoiceWidget extends QuestionWidget{
     	int idx = responsesRG.indexOfChild(rb);
     	if (idx >= 0){
     		List<String> response = new ArrayList<>();
-			response.add(responses.get(idx).getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+			response.add(responses.get(idx).getTitle(currentUserLang));
     		return response;
     	}
     	return null;

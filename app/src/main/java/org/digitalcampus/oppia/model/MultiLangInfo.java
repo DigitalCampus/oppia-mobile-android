@@ -53,8 +53,7 @@ public class MultiLangInfo implements Serializable {
     }
 
     public String getDescription(String lang) {
-        String description = getInfo(lang, descriptions);
-        return description == null ? DEFAULT_NODESCRIPTION : description;
+        return getInfo(lang, descriptions);
     }
 
     public void setDescriptions(ArrayList<Lang> descriptions) {
