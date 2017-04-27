@@ -18,9 +18,11 @@
 package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
@@ -33,9 +35,12 @@ import android.widget.RadioGroup;
 public class MultiChoiceWidget extends QuestionWidget{
 
 	public static final String TAG = MultiChoiceWidget.class.getSimpleName();
+
+	private QuizQuestion question;
 	
-	public MultiChoiceWidget(Activity activity, View v, ViewGroup container) {
+	public MultiChoiceWidget(Activity activity, View v, ViewGroup container, QuizQuestion q) {
 		super(activity, v, container, R.layout.widget_quiz_multichoice);
+		this.question = q;
 	}
 
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
@@ -45,6 +50,11 @@ public class MultiChoiceWidget extends QuestionWidget{
     	// TODO change to use getchild views (like the MultiSelect)
     	responsesRG.setId(R.id.multichoiceRadioGroup);
     	responsesLL.addView(responsesRG);
+		String shuffle = question.getProp("shuffleanswers");
+		if ((shuffle != null) && shuffle.equals("1")){
+			Collections.shuffle(responses);
+		}
+
     	int id = 1000+1;
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);

@@ -18,9 +18,11 @@
 package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
@@ -34,15 +36,22 @@ public class MultiSelectWidget extends QuestionWidget {
 
 	public static final String TAG = MultiSelectWidget.class.getSimpleName();
 	private LinearLayout responsesLL;
+	private QuizQuestion question;
 	
-	public MultiSelectWidget(Activity activity, View v, ViewGroup container) {
+	public MultiSelectWidget(Activity activity, View v, ViewGroup container, QuizQuestion q) {
 		super(activity, v, container, R.layout.widget_quiz_multiselect);
+		this.question = q;
 	}
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
 		responsesLL = (LinearLayout) view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
+
+		String shuffle = question.getProp("shuffleanswers");
+		if ((shuffle != null) && shuffle.equals("1")){
+			Collections.shuffle(responses);
+		}
 
     	for (Response r : responses){
     		CheckBox chk= new CheckBox(ctx);

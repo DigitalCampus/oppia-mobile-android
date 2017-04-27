@@ -125,7 +125,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, null);
+		View vv = LayoutInflater.from(getActivity()).inflate(R.layout.widget_quiz, null);
 		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
@@ -281,9 +281,9 @@ public class QuizWidget extends WidgetFactory {
 		}
 
 		if (q instanceof MultiChoice) {
-			qw = new MultiChoiceWidget(super.getActivity(), getView(), container);
+			qw = new MultiChoiceWidget(super.getActivity(), getView(), container, q);
 		} else if (q instanceof MultiSelect) {
-			qw = new MultiSelectWidget(super.getActivity(), getView(), container);
+			qw = new MultiSelectWidget(super.getActivity(), getView(), container, q);
 		} else if (q instanceof ShortAnswer) {
 			qw = new ShortAnswerWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Matching) {
