@@ -85,10 +85,11 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         }
 
 	    Course c = courseList.get(position);
-        viewHolder.courseTitle.setText(c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-
-	    if (prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)){
-            viewHolder.courseDescription.setText(c.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+        String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        viewHolder.courseTitle.setText(c.getMultiLangInfo().getTitle(lang));
+        String description = c.getMultiLangInfo().getDescription(lang);
+	    if ((description != null) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)){
+            viewHolder.courseDescription.setText(description);
 	    } else {
             viewHolder.courseDescription.setVisibility(View.GONE);
 	    }

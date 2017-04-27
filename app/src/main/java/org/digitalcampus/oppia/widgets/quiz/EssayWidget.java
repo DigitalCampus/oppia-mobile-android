@@ -34,7 +34,7 @@ public class EssayWidget extends TextInputQuizWidget{
 	public static final String TAG = ShortAnswerWidget.class.getSimpleName();
 	
 	public EssayWidget(Activity activity, View v, ViewGroup container) {
-		init(activity, container ,R.layout.widget_quiz_shortanswer,v);
+		super(activity, v, container ,R.layout.widget_quiz_shortanswer);
 	}
 
 

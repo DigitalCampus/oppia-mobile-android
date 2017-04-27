@@ -18,12 +18,16 @@
 package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,20 +38,26 @@ public abstract class QuestionWidget {
 
 	protected Context ctx;
 	protected View view;
-	
+	protected SharedPreferences prefs;
+	protected String currentUserLang;
+
+	public QuestionWidget() {}
+
 	// Abstract methods
 	public abstract void setQuestionResponses(List<Response> responses, List<String> currentAnswers);
 
 	public abstract List<String> getQuestionResponses(List<Response> responses);
 	
-	protected void init(Activity activity, ViewGroup container, int layout, View v){
-		this.ctx = new ContextThemeWrapper(activity, R.style.Oppia_Theme);
-		this.view = v;
-		
+	protected QuestionWidget(Activity activity, View v, ViewGroup container, int layout){
+		ctx = new ContextThemeWrapper(activity, R.style.Oppia_Theme);
+		prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+		currentUserLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+		view = v;
+
 		LinearLayout ll = (LinearLayout) v.findViewById(R.id.quiz_response_widget);
 		ll.removeAllViews();
 		LayoutInflater localInflater = ((LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).cloneInContext(ctx);
-		View vv = localInflater.inflate(layout ,container, false);
+		View vv = localInflater.inflate(layout, container, false);
 		ll.addView(vv);
 	}
 

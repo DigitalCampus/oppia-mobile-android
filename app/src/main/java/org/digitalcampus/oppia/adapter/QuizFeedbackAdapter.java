@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,13 +83,13 @@ public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
             }
         }
 
-        viewHolder.quizQuestion.setText(qf.getQuestionText());
-        viewHolder.quizUserResponse.setText(userResponseText);
+        viewHolder.quizQuestion.setText(Html.fromHtml(qf.getQuestionText()));
+        viewHolder.quizUserResponse.setText(Html.fromHtml(userResponseText));
 
 	    if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
             viewHolder.quizFeedbackTitle.setVisibility(View.VISIBLE);
             viewHolder.quizFeedbackText.setVisibility(View.VISIBLE);
-            viewHolder.quizFeedbackText.setText(qf.getFeedbackText());
+            viewHolder.quizFeedbackText.setText(Html.fromHtml(qf.getFeedbackText()));
 	    } else {
             //If there's no feedback to show, hide both text and title
             viewHolder.quizFeedbackTitle.setVisibility(View.GONE);
