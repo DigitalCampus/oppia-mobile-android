@@ -37,7 +37,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.webkit.WebSettings.PluginState;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -82,12 +81,12 @@ public class UrlWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) { 
 		super.onActivityCreated(savedInstanceState);
-		
-		// show description if any
-		String desc = activity.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
+		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+		// show description if any
+		String desc = activity.getMultiLangInfo().getDescription(lang);
 		TextView descTV = (TextView) getView().findViewById(R.id.widget_url_description);
-		if (desc.length() > 0){
+		if ((desc != null) && desc.length() > 0){
 			descTV.setText(desc);
 		} else {
 			descTV.setVisibility(View.GONE);
@@ -104,9 +103,8 @@ public class UrlWidget extends WidgetFactory {
 	            return false;
 	        }
 	    });
-		wv.loadUrl(activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-		
-		
+		wv.loadUrl(activity.getLocation(lang));
+
 	}
 	
 	

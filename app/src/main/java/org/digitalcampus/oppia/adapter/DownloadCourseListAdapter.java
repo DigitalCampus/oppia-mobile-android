@@ -72,6 +72,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
         ImageButton actionBtn;
         ProgressBar actionProgress;
         TextView courseAuthor;
+        TextView labelAuthor;
     }
 
 	@Override
@@ -89,6 +90,8 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             viewHolder.actionBtn = (ImageButton) convertView.findViewById(R.id.download_course_btn);
             viewHolder.actionProgress = (ProgressBar) convertView.findViewById(R.id.download_progress);
             viewHolder.courseAuthor = (TextView) convertView.findViewById(R.id.course_author);
+            viewHolder.labelAuthor = (TextView) convertView.findViewById(R.id.label_author);
+
             convertView.setTag(viewHolder);
         }
         else{
@@ -97,7 +100,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 
         CourseIntallViewAdapter c = courseList.get(position);
 
-        viewHolder.courseTitle.setText(c.getTitle(
+        viewHolder.courseTitle.setText(c.getMultiLangInfo().getTitle(
                 prefs.getString(PrefsActivity.PREF_LANGUAGE,
                 Locale.getDefault().getLanguage())));
 
@@ -108,7 +111,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             viewHolder.courseDraft.setVisibility(View.GONE);
 	    }
 
-	    String desc = c.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    String desc = c.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 	    if (desc != null){
             viewHolder.courseDescription.setVisibility(View.VISIBLE);
             viewHolder.courseDescription.setText(desc);
@@ -118,10 +121,12 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
         
         String author = c.getDisplayAuthorName();
         if ((author != null) && !(c.isDownloading() || c.isInstalling())){
+            viewHolder.labelAuthor.setVisibility(View.VISIBLE);
             viewHolder.courseAuthor.setVisibility(View.VISIBLE);
             viewHolder.courseAuthor.setText(author);
         }
         else{
+            viewHolder.labelAuthor.setVisibility(View.GONE);
             viewHolder.courseAuthor.setVisibility(View.GONE);
         }
 

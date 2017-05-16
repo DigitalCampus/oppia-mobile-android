@@ -259,15 +259,15 @@ public class FileUtilsTests {
 
     /* @Test
     public void FileUtils_supportedMediafileType(){
-        assertFalse(FileUtils.supportedMediafileType(null));
+        assertFalse(FileUtils.isSupportedMediafileType(null));
 
-        assertTrue(FileUtils.supportedMediafileType("video/m4v"));
+        assertTrue(FileUtils.isSupportedMediafileType("video/m4v"));
 
-        assertTrue(FileUtils.supportedMediafileType("video/mp4"));
+        assertTrue(FileUtils.isSupportedMediafileType("video/mp4"));
 
-        assertTrue(FileUtils.supportedMediafileType("audio/mpeg"));
+        assertTrue(FileUtils.isSupportedMediafileType("audio/mpeg"));
 
-        assertFalse(FileUtils.supportedMediafileType("application/json"));
+        assertFalse(FileUtils.isSupportedMediafileType("application/json"));
 
     }
 */

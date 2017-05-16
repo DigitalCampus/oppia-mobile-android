@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/quiz_widget">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <TextView
         android:id="@+id/quiz_progress"
@@ -25,16 +31,32 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/question_text"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="5dp"
-                android:gravity="left"
-                android:textSize="20sp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:clickable="true"
+                    app:fabSize="normal"
+                    app:srcCompat="@drawable/ic_media_play"
+                    android:id="@+id/playAudioBtn"
+                    android:scaleType="fitCenter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/question_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="left"
+                    android:textSize="20sp"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/question_image"
@@ -70,7 +92,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/common_action_bar_splitter"
+        android:background="@color/quiz_navigation_bar"
         style="?android:buttonBarStyle">
 
         <Button
@@ -81,7 +103,7 @@
             android:layout_weight=".5"
             android:text="@string/widget_quiz_prev"
             android:drawableLeft="@drawable/ic_arrow_left"
-            android:drawableTint="@color/button_material_dark"
+            android:drawableTint="@color/quiz_navigation_button"
             android:textSize="18sp" />
 
         <Button
@@ -92,8 +114,8 @@
             android:layout_weight=".5"
             android:text="@string/widget_quiz_next"
             android:drawableRight="@drawable/ic_arrow_right"
-            android:drawableTint="@color/button_material_dark"
+            android:drawableTint="@color/quiz_navigation_button"
             android:textSize="18sp" />
     </LinearLayout>
-
-</LinearLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

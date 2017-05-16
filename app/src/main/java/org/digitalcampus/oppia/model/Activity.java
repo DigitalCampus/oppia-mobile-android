@@ -46,7 +46,7 @@ public class Activity implements Serializable{
 	private int actId;
 	private int dbId;
 	private String actType;
-	private ArrayList<Lang> titles = new ArrayList<Lang>();
+    private MultiLangInfo multiLangInfo = new MultiLangInfo();
 	private ArrayList<Lang> locations = new ArrayList<Lang>();
 	private ArrayList<Lang> contents = new ArrayList<Lang>();
 	private String digest;
@@ -58,7 +58,6 @@ public class Activity implements Serializable{
 	private DateTime startDate;
 	private DateTime endDate;
 	private String mimeType;
-	private ArrayList<Lang> descriptions = new ArrayList<Lang>();
 
 	public Activity(){
 	}
@@ -140,55 +139,6 @@ public class Activity implements Serializable{
 		this.actType = actType;
 	}
 
-	public String getTitleJSONString(){
-		JSONArray array = new JSONArray();
-		for(Lang l: titles){
-			JSONObject obj = new JSONObject();
-			try {
-				obj.put(l.getLang(), l.getContent());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			array.put(obj);
-		}
-		return array.toString();
-	}
-	
-	public String getTitle(String lang) {
-		for(Lang l: titles){
-			if(l.getLang().equals(lang)){
-				return l.getContent();
-			}
-		}
-		if(titles.size() > 0){
-			return titles.get(0).getContent();
-		}
-		return "No title set";
-	}
-	
-	public void setTitlesFromJSONString(String json){
-		try {
-			JSONArray titlesArray = new JSONArray(json);
-			for(int i=0; i<titlesArray.length(); i++){
-				JSONObject titleObj = titlesArray.getJSONObject(i);
-				@SuppressWarnings("unchecked")
-				Iterator<String> iter = (Iterator<String>) titleObj.keys();
-				while(iter.hasNext()){
-					String key = iter.next().toString();
-					String title = titleObj.getString(key);
-					Lang l = new Lang(key,title);
-					this.titles.add(l);
-				}
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void setTitles(ArrayList<Lang> titles) {
-		this.titles = titles;
-	}
-	
 	public String getLocation(String lang) {
 		for(Lang l: locations){
 			if(l.getLang().equals(lang)){
@@ -278,22 +228,6 @@ public class Activity implements Serializable{
 	public void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
 	}
-	
-	public String getDescription(String lang) {
-		for(Lang l: descriptions){
-			if(l.getLang().equals(lang)){
-				return l.getContent();
-			}
-		}
-		if(descriptions.size() > 0){
-			return descriptions.get(0).getContent();
-		}
-		return "No description set";
-	}
-	
-	public void setDescriptions(ArrayList<Lang> descriptions) {
-		this.descriptions = descriptions;
-	}
 
 	public boolean isAttempted() {
 		return attempted;
@@ -310,4 +244,9 @@ public class Activity implements Serializable{
 	public void setDbId(int dbId) {
 		this.dbId = dbId;
 	}
+
+    public MultiLangInfo getMultiLangInfo() { return multiLangInfo; }
+    public void setMultiLangInfo(MultiLangInfo multiLangInfo) {
+        this.multiLangInfo = multiLangInfo;
+    }
 }

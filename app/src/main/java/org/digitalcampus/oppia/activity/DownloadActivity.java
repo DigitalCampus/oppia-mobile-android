@@ -38,8 +38,10 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
+import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Tag;
+import org.digitalcampus.oppia.service.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.CourseIntallerService;
 import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
@@ -52,6 +54,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
 	
@@ -67,40 +71,54 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     private InstallerBroadcastReceiver receiver;
 
+    @Inject CourseInstallRepository courseInstallRepository;
+    @Inject CourseInstallerServiceDelegate courseInstallerServiceDelegate;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_download);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_download);
+
+        initializeDagger();
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        
-		Bundle bundle = this.getIntent().getExtras(); 
-        if(bundle != null) {
-        	Tag t = (Tag) bundle.getSerializable(Tag.TAG);
-            if (t!=null) this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
+
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null) {
+            Tag t = (Tag) bundle.getSerializable(Tag.TAG);
+            if (t != null)
+                this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
         } else {
-        	this.url = MobileLearning.SERVER_COURSES_PATH;
-        	this.showUpdatesOnly = true;
+            this.url = MobileLearning.SERVER_COURSES_PATH;
+            this.showUpdatesOnly = true;
         }
 
         courses = new ArrayList<>();
         dla = new DownloadCourseListAdapter(this, courses);
         dla.setOnClickListener(new CourseListListener());
         ListView listView = (ListView) findViewById(R.id.tag_list);
-        listView.setAdapter(dla);
-	}
+        if (listView != null) {
+            listView.setAdapter(dla);
+        }
+    }
+
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
 	
 	@Override
 	public void onResume(){
 		super.onResume();
 		if(json == null){
-            //The JSON download task has not started or been completed yet
+            // The JSON download task has not started or been completed yet
 			getCourseList();
 		} else if ((courses != null) && courses.size()>0) {
-            //We already have loaded JSON and courses (coming from orientationchange)
+            // We already have loaded JSON and courses (coming from orientationchange)
             dla.notifyDataSetChanged();
         }
         else{
-            //The JSON is downloaded but course list is not
+            // The JSON is downloaded but course list is not
 	        refreshCourseList();
 		}
         receiver = new InstallerBroadcastReceiver();
@@ -113,7 +131,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 	@Override
 	public void onPause(){
-		//Kill any open dialogs
+		// Kill any open dialogs
 		if (progressDialog != null){
             progressDialog.dismiss();
         }
@@ -144,7 +162,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
             if (json != null){
-                //Only save the instance if the request has been proccessed already
+                // Only save the instance if the request has been proccessed already
                 savedInstanceState.putString("json", json.toString());
                 savedInstanceState.putSerializable("courses", courses);
             }
@@ -158,10 +176,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		progressDialog.setCancelable(false);
 		progressDialog.show();
 
-		APIUserRequestTask task = new APIUserRequestTask(this);
-		Payload p = new Payload(url);
-		task.setAPIRequestListener(this);
-		task.execute(p);
+        courseInstallRepository.getCourseList(this, url);
 	}
 
 	public void refreshCourseList() {
@@ -170,7 +185,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		try {
             String storage = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
             courses.clear();
-            courses.addAll(CourseIntallViewAdapter.parseCoursesJSON(this, json, storage, showUpdatesOnly));
+
+            courseInstallRepository.refreshCourseList(this, courses, json, storage, showUpdatesOnly);
 
             dla.notifyDataSetChanged();
             findViewById(R.id.empty_state).setVisibility((courses.size()==0) ? View.VISIBLE : View.GONE);
@@ -246,6 +262,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         if (course != null){
             Toast.makeText(this, this.getString(R.string.install_course_complete, course.getShortname()), Toast.LENGTH_LONG).show();
             course.setInstalled(true);
+            course.setToUpdate(false);
+            course.setToUpdateSchedule(false);
             resetCourseProgress(course, false, false);
         }
     }
@@ -271,41 +289,32 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     }
 
     private class CourseListListener implements ListInnerBtnOnClickListener {
-        //@Override
+        @Override
         public void onClick(int position) {
             Log.d("course-download", "Clicked " + position);
             CourseIntallViewAdapter courseSelected = courses.get(position);
 
-            //When installing, don't do anything on click
+            // When installing, don't do anything on click
             if (courseSelected.isInstalling()) return;
+
+
+            Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
 
             if (!courseSelected.isDownloading()){
                 if(!courseSelected.isInstalled() || courseSelected.isToUpdate()){
-                    Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_DOWNLOAD);
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_URL, courseSelected.getDownloadUrl());
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_VERSIONID, courseSelected.getVersionId());
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
-                    DownloadActivity.this.startService(mServiceIntent);
+                    courseInstallerServiceDelegate.installCourse(DownloadActivity.this, mServiceIntent, courseSelected);
 
                     resetCourseProgress(courseSelected, true, false);
                 }
                 else if(courseSelected.isToUpdateSchedule()){
-                    Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_SCHEDULEURL, courseSelected.getScheduleURI());
-                    mServiceIntent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
-                    DownloadActivity.this.startService(mServiceIntent);
+                    courseInstallerServiceDelegate.updateCourse(DownloadActivity.this, mServiceIntent, courseSelected);
 
                     resetCourseProgress(courseSelected, false, true);
                 }
             }
             else{
                 //If it's already downloading, send an intent to cancel the task
-                Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
-                mServiceIntent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_CANCEL);
-                mServiceIntent.putExtra(CourseIntallerService.SERVICE_URL, courseSelected.getDownloadUrl());
-                DownloadActivity.this.startService(mServiceIntent);
+                courseInstallerServiceDelegate.cancelCourseInstall(DownloadActivity.this, mServiceIntent, courseSelected);
 
                 resetCourseProgress(courseSelected, false, false);
             }

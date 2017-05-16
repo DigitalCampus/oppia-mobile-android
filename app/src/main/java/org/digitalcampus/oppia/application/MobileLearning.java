@@ -21,6 +21,9 @@ package org.digitalcampus.oppia.application;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.di.AppComponent;
+import org.digitalcampus.oppia.di.AppModule;
+import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -97,6 +100,7 @@ public class MobileLearning extends Application {
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
 	public static final int MAX_TRACKER_SUBMIT = 10;
 	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
+    public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v","video/mp4","audio/mpeg","video/3gp","video/3gpp"};
 
     public static final String DEVICEADMIN_ADD_PATH = OPPIAMOBILE_API + "device/register/";
     public static final boolean DEVICEADMIN_ENABLED = BuildConfig.DEVICEADMIN_ENABLED;
@@ -109,6 +113,9 @@ public class MobileLearning extends Application {
 	
 	// for tracking if SubmitQuizAttemptsTask is already running
 	public SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = null;
+
+
+	private AppComponent appComponent;
 
     @Override
     public void onCreate() {
@@ -149,5 +156,18 @@ public class MobileLearning extends Application {
         if (success) Storage.setStorageStrategy(strategy);
         return success;
     }
+
+	public AppComponent getComponent(){
+		if(appComponent == null){
+			appComponent = DaggerAppComponent.builder()
+					.appModule(new AppModule(this))
+					.build();
+		}
+		return appComponent;
+	}
+
+	public void setComponent(AppComponent appComponent){
+		this.appComponent = appComponent;
+	}
 
 }

@@ -18,11 +18,9 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import com.splunk.mint.Mint;
 
-import org.apache.http.client.ClientProtocolException;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -42,21 +40,19 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgress, Payload> {
+public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadProgress, Payload> {
 
 	public final static String TAG = UpdateCourseActivityTask.class.getSimpleName();
 	private UpdateActivityListener mStateListener;
     private boolean APIKeyInvalidated = false;
-	
-	private Context ctx;
 	private long userId;
-	
+
 	public UpdateCourseActivityTask(Context ctx, long userId) {
-		this.ctx = ctx;
+        super(ctx);
 		this.userId = userId;
 	}
-	
-	@Override
+
+    @Override
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
@@ -69,7 +65,7 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
-                    .url(HTTPClientUtils.getFullURL(ctx, course.getTrackerLogUrl()))
+                    .url(apiEndpoint.getFullURL(ctx, course.getTrackerLogUrl()))
                     .addHeader(HTTPClientUtils.HEADER_AUTH,
                             HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
                     .build();
@@ -106,7 +102,7 @@ public class UpdateCourseActivityTask extends AsyncTask<Payload, DownloadProgres
             e.printStackTrace();
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
-		} catch (ClientProtocolException | SocketTimeoutException cpe) {
+		} catch (SocketTimeoutException cpe) {
 			Mint.logException(cpe);
 			cpe.printStackTrace();
 			payload.setResult(false);

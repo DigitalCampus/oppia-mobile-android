@@ -25,10 +25,8 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 public class NumericalWidget extends TextInputQuizWidget {
@@ -36,7 +34,7 @@ public class NumericalWidget extends TextInputQuizWidget {
 	public static final String TAG = NumericalWidget.class.getSimpleName();
 	
 	public NumericalWidget(Activity activity, View v, ViewGroup container) {
-		init(activity, container, R.layout.widget_quiz_numerical, v);
+		super(activity, v, container, R.layout.widget_quiz_numerical);
 	}
 
 
@@ -57,7 +55,7 @@ public class NumericalWidget extends TextInputQuizWidget {
 		if(et.getText().toString().trim().equals("")){
 			return null;
 		} else {
-			List<String> response = new ArrayList<String>();
+			List<String> response = new ArrayList<>();
 			response.add(et.getText().toString().trim());
 			return response;
 		}

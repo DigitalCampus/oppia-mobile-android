@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.utils.xmlreaders;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -27,14 +28,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.model.CourseMetaPage;
-import org.digitalcampus.oppia.model.Section;
 import org.xml.sax.SAXException;
 import org.xml.sax.*;
 
@@ -49,7 +48,6 @@ public class CourseXMLReader {
 
 	public static final String TAG = CourseXMLReader.class.getSimpleName();
 	private Context ctx;
-	private SharedPreferences prefs;
 
     private XMLReader reader;
     private CourseXMLHandler completeParseHandler;
@@ -57,10 +55,13 @@ public class CourseXMLReader {
     private File courseXML;
     private long courseId;
 
+    public enum ParseMode{
+        COMPLETE, ONLY_META, ONLY_MEDIA
+    }
+
     public CourseXMLReader(String filename, long courseId, Context ctx) throws InvalidXMLException{
         this.ctx = ctx;
         this.courseId = courseId;
-        prefs = PreferenceManager.getDefaultSharedPreferences(this.ctx);
         courseXML = new File(filename);
 
         if (courseXML.exists()) {
@@ -80,45 +81,64 @@ public class CourseXMLReader {
         }
     }
 
-    private CourseXMLHandler getCompleteResponses(){
-        if (completeParseHandler == null){
-            if (courseXML.exists()) {
-                try {
-                    SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
-                    SAXParser parser = parserFactory.newSAXParser();
-                    reader = parser.getXMLReader();
-                    DbHelper db = DbHelper.getInstance(ctx);
-                    long userId = db.getUserId(SessionManager.getUsername(ctx));
-                    completeParseHandler = new CourseXMLHandler(courseId, userId, db);
+    public boolean parse(ParseMode PARSE_MODE){
+        if (courseXML.exists()) {
+            try {
+                if (PARSE_MODE == ParseMode.ONLY_MEDIA)
+                    parseMedia();
+                else
+                    parseComplete();
 
-                    reader.setContentHandler(completeParseHandler);
-                    reader.setProperty("http://xml.org/sax/properties/lexical-handler", completeParseHandler);
-                    InputStream in = new BufferedInputStream(new FileInputStream(courseXML));
-                    reader.parse(new InputSource(in));
-
-
-                } catch (Exception e) {
-                    Mint.logException(e);
-                    e.printStackTrace();
-                }
-            } else {
-                Log.d(TAG, "course XML not found at: " + courseXML.getPath());
+            } catch (Exception e) {
+                Mint.logException(e);
+                e.printStackTrace();
+                return false;
             }
+        } else {
+            Log.d(TAG, "course XML not found at: " + courseXML.getPath());
+            return false;
         }
-        return completeParseHandler;
+        return true;
     }
 
-    private CourseXMLHandler getMetaResponses(){
-        if (completeParseHandler != null){
-            return completeParseHandler;
-        }
-        else{
-            //does it make sense to make a custom meta info handler?
-            return getCompleteResponses();
-        }
+    private void parseComplete() throws ParserConfigurationException, SAXException, IOException {
+
+        SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
+        SAXParser parser = parserFactory.newSAXParser();
+        reader = parser.getXMLReader();
+        DbHelper db = DbHelper.getInstance(ctx);
+        long userId = db.getUserId(SessionManager.getUsername(ctx));
+        completeParseHandler = new CourseXMLHandler(courseId, userId, db);
+
+        reader.setContentHandler(completeParseHandler);
+        reader.setProperty("http://xml.org/sax/properties/lexical-handler", completeParseHandler);
+        InputStream in = new BufferedInputStream(new FileInputStream(courseXML));
+        reader.parse(new InputSource(in));
+
     }
 
-    private IMediaXMLHandler getMediaResponses(){
+    private void parseMedia() throws ParserConfigurationException, SAXException, IOException {
+        mediaParseHandler = new CourseMediaXMLHandler();
+        SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
+        SAXParser parser = parserFactory.newSAXParser();
+        reader = parser.getXMLReader();
+        reader.setContentHandler(mediaParseHandler);
+        reader.setProperty("http://xml.org/sax/properties/lexical-handler", mediaParseHandler);
+        InputStream in = new BufferedInputStream(new FileInputStream(courseXML));
+        reader.parse(new InputSource(in));
+    }
+
+
+    public CompleteCourse getParsedCourse(){
+        if (completeParseHandler == null){
+            parse(ParseMode.COMPLETE);
+        }
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String location = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+        return completeParseHandler.getCourse(location);
+    }
+
+    public IMediaXMLHandler getMediaResponses(){
 
         if (mediaParseHandler != null){
             return mediaParseHandler;
@@ -127,76 +147,11 @@ public class CourseXMLReader {
             return completeParseHandler;
         }
         else{
-            if (courseXML.exists()) {
-                try {
-                    mediaParseHandler = new CourseMediaXMLHandler();
-                    SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
-                    SAXParser parser = parserFactory.newSAXParser();
-                    reader = parser.getXMLReader();
-                    reader.setContentHandler(mediaParseHandler);
-                    reader.setProperty("http://xml.org/sax/properties/lexical-handler", mediaParseHandler);
-                    InputStream in = new BufferedInputStream(new FileInputStream(courseXML));
-                    reader.parse(new InputSource(in));
-
-                } catch (Exception e) {
-                    Mint.logException(e);
-                    e.printStackTrace();
-                }
-            } else {
-                Log.d(TAG, "course XML not found at: " + courseXML.getPath());
-            }
+            parse(ParseMode.ONLY_MEDIA);
             return mediaParseHandler;
         }
     }
 
-	public ArrayList<Lang> getTitles(){ return getMetaResponses().getCourseTitles(); }
-	public int getPriority(){ return getMetaResponses().getCoursePriority(); }
-	public ArrayList<Lang> getDescriptions(){ return getMetaResponses().getCourseDescriptions(); }
-	public ArrayList<Lang> getLangs(){ return getMetaResponses().getCourseLangs();	}
-	public double getVersionId(){  return getMetaResponses().getCourseVersionId();	}
-	public ArrayList<CourseMetaPage> getMetaPages(){ return getMetaResponses().getCourseMetaPages(); }
-	public ArrayList<Activity> getBaselineActivities(){ return getCompleteResponses().getCourseBaseline(); }
 	public ArrayList<Media> getMedia(){ return getMediaResponses().getCourseMedia(); }
-	public String getCourseImage(){ return getMetaResponses().getCourseImage(); }
-    public String getCourseSequencingMode(){ return getMetaResponses().getCourseSequencingMode(); }
-    public ArrayList<Section> getSections(){ return getCompleteResponses().getSections(); }
-
-	/*
-	 * This is used when installing a new course
-	 * and so adding all the activities to the db
-	 */
-	public ArrayList<Activity> getActivities(long courseId){
-		ArrayList<Activity> activities = new ArrayList<Activity>();
-        for (Section section : getCompleteResponses().getSections()){
-            for (Activity act : section.getActivities()){
-                act.setCourseId(courseId);
-                activities.add(act);
-            }
-        }
-        return activities;
-	}
-
-	public Section getSection(int order){
-
-        for (Section section : getCompleteResponses().getSections()){
-            if (section.getOrder() == order) return section;
-        }
-        return null;
-	}
-
-    public void updateCourseActivity(){
-
-        DbHelper db = DbHelper.getInstance(ctx);
-        long userId = db.getUserId(SessionManager.getUsername(ctx));
-
-        for (Section section : getCompleteResponses().getSections()){
-            for (Activity activity : section.getActivities()){
-                activity.setCompleted(db.activityCompleted((int)courseId, activity.getDigest(), userId));
-            }
-        }
-        for (Activity activity : getCompleteResponses().getCourseBaseline()){
-            activity.setAttempted(db.activityAttempted((int)courseId, activity.getDigest(), userId));
-        }
-    }
 
 }

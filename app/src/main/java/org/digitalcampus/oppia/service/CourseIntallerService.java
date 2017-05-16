@@ -27,12 +27,15 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.ActivitySchedule;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
@@ -83,6 +86,7 @@ public class CourseIntallerService extends IntentService {
     private ArrayList<String> tasksCancelled;
     private ArrayList<String> tasksDownloading;
     private SharedPreferences prefs;
+    private ApiEndpoint apiEndpoint;
 
     private static CourseIntallerService currentInstance;
     private static void setInstance(CourseIntallerService instance){
@@ -97,7 +101,13 @@ public class CourseIntallerService extends IntentService {
         return null;
     }
 
-    public CourseIntallerService() { super(TAG); }
+    public CourseIntallerService() {
+        this(new RemoteApiEndpoint());
+    }
+    public CourseIntallerService(ApiEndpoint api) {
+        super(TAG);
+        apiEndpoint = api;
+    }
 
     @Override
     public void onCreate(){
@@ -202,31 +212,20 @@ public class CourseIntallerService extends IntentService {
         CourseTrackerXMLReader ctxr;
         try {
             cxr = new CourseXMLReader(courseXMLPath, 0, this);
+            cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+
             csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-            File trackerXML = new File(courseTrackerXMLPath);
-			ctxr = new CourseTrackerXMLReader(trackerXML);
+			ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
         } catch (InvalidXMLException e) {
             Mint.logException(e);
             logAndNotifyError(fileUrl, e);
             return;
         }
 
-        Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-        c.setVersionId(cxr.getVersionId());
-        c.setTitles(cxr.getTitles());
+        CompleteCourse c = cxr.getParsedCourse();
         c.setShortname(courseDirs[0]);
-        c.setImageFile(cxr.getCourseImage());
-        c.setLangs(cxr.getLangs());
-        c.setDescriptions(cxr.getDescriptions());
-        c.setPriority(cxr.getPriority());
-        String sequencingMode = cxr.getCourseSequencingMode();
-        if ((sequencingMode!=null) && (sequencingMode.equals(Course.SEQUENCING_MODE_COURSE) ||
-                sequencingMode.equals(Course.SEQUENCING_MODE_SECTION) || sequencingMode.equals(Course.SEQUENCING_MODE_NONE))){
-            c.setSequencingMode(sequencingMode);
-        }
 
-        String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-
+        String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
         sendBroadcast(fileUrl, ACTION_INSTALL, ""+20);
 
         boolean success = false;
@@ -237,7 +236,7 @@ public class CourseIntallerService extends IntentService {
             File src = new File(tempdir + File.separator + courseDirs[0]);
             File dest = new File(Storage.getCoursesPath(this));
 
-            db.insertActivities(cxr.getActivities(courseId));
+            db.insertActivities(c.getActivities(courseId));
             sendBroadcast(fileUrl, ACTION_INSTALL, "" + 50);
             
             long userId = db.getUserId(SessionManager.getUsername(this));
@@ -443,7 +442,7 @@ public class CourseIntallerService extends IntentService {
 
             OkHttpClient client = HTTPClientUtils.getClient(this);
             Request request = new Request.Builder()
-                    .url(HTTPClientUtils.getFullURL(this, scheduleUrl))
+                    .url(apiEndpoint.getFullURL(this, scheduleUrl))
                     .addHeader(HTTPClientUtils.HEADER_AUTH,
                             HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
                     .build();

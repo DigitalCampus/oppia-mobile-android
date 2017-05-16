@@ -9,6 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import TestRules.DisableAnimationsRule;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -24,19 +26,23 @@ public class WelcomeUITest {
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
 
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
+
     @Test
-    public void clickLoginButton() throws Exception{
+    public void showsLoginFragmentOnLoginButtonClick() throws Exception{
         onView(withId(R.id.welcome_login))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.login_btn))
+                .perform(scrollTo())
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void clickRegisterButton() throws Exception{
+    public void showsRegisterFragmentOnRegisterButtonClick() throws Exception{
         onView(withId(R.id.welcome_register))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.register_btn))
                 .perform(scrollTo())
@@ -44,11 +50,12 @@ public class WelcomeUITest {
     }
 
     @Test
-    public void clickResetTab() throws Exception{
+    public void showsResetFragmentOnResetTabClicked() throws Exception{
         onView(withText(R.string.tab_title_reset))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         onView(withId(R.id.reset_btn))
+                .perform(scrollTo())
                 .check(matches(isDisplayed()));
     }
 

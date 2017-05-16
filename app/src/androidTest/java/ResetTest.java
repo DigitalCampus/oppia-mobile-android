@@ -12,6 +12,7 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ResetTask;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+import TestRules.DisableAnimationsRule;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -30,6 +32,11 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ResetTest {
+
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
+
+
     private CountDownLatch signal;
     private MockWebServer mockServer;
     private Context context;
@@ -76,6 +83,9 @@ public class ResetTest {
         try {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitListener() {
+                @Override
+                public void apiKeyInvalidated() { }
+
                 @Override
                 public void submitComplete(Payload r) {
                     response = r;
@@ -127,6 +137,9 @@ public class ResetTest {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitListener() {
                 @Override
+                public void apiKeyInvalidated() { }
+
+                @Override
                 public void submitComplete(Payload r) {
                     response = r;
                     signal.countDown();
@@ -174,6 +187,9 @@ public class ResetTest {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitListener() {
                 @Override
+                public void apiKeyInvalidated() {  }
+
+                @Override
                 public void submitComplete(Payload r) {
                     response = r;
                     signal.countDown();
@@ -220,6 +236,9 @@ public class ResetTest {
         try {
             ResetTask task = new ResetTask(context, new MockApiEndpoint(mockServer));
             task.setResetListener(new SubmitListener() {
+                @Override
+                public void apiKeyInvalidated() {  }
+
                 @Override
                 public void submitComplete(Payload r) {
                     response = r;

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+import TestRules.DisableAnimationsRule;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -33,6 +34,11 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest{
+
+    @Rule
+    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
+
+
     private CountDownLatch signal;
     private MockWebServer mockServer;
     private Context context;
@@ -81,6 +87,9 @@ public class LoginTest{
         try {
             LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
             task.setLoginListener(new SubmitListener() {
+                @Override
+                public void apiKeyInvalidated() {  }
+
                 @Override
                 public void submitComplete(Payload r) {
                     response = r;
@@ -131,6 +140,9 @@ public class LoginTest{
             LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
             task.setLoginListener(new SubmitListener() {
                 @Override
+                public void apiKeyInvalidated() { }
+
+                @Override
                 public void submitComplete(Payload r) {
                     response = r;
                     signal.countDown();
@@ -178,6 +190,9 @@ public class LoginTest{
         try {
             LoginTask task = new LoginTask(context, new MockApiEndpoint(mockServer));
             task.setLoginListener(new SubmitListener() {
+                @Override
+                public void apiKeyInvalidated() { }
+
                 @Override
                 public void submitComplete(Payload r) {
                     response = r;

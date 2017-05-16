@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_logo_alt">Digital Campus Logo</string>
+
+
+    <!-- Dont need to define gcm values here anymore, as they are defined in google-services.json
+    <string name="gcm_defaultSenderId">1:1075863350964:android:e457f5046c8376a5</string>
+    string name="gcm_defaultSenderId">admin-api-cc4ba</string -->
+
+    <string name="about_logged_in">Connecté en tant que %1$s</string>
+    <string name="about_not_logged_in">Non connecté in</string>
+
+    <string name="menu_download">Télécharger des cours</string>
+    <string name="menu_language">Choisir la langue</string>
+    <string name="menu_settings">Paramètres</string>
+    <string name="menu_about">À propos</string>
+    <string name="menu_font_increase">Agrandir la taille du texte</string>
+    <string name="menu_font_decrease">Réduire la taille du texte</string>
+    <string name="menu_help">Aide</string>
+    <string name="menu_logout">Déconnection</string>
+    <string name="menu_monitor">Moniteur</string>
+    <string name="menu_read_aloud">Lire à voix haute</string>
+    <string name="menu_return_to_courses">Revenir aux cours</string>
+    <string name="menu_scorecard">Carnet de notes</string>
+    <string name="menu_search">Chercher</string>
+    <string name="menu_stop_read_aloud">Arrêter la lecture</string>
+    <string name="menu_sort_by">Trier par</string>
+    <string name="menu_sort_by_course">Trier par cours</string>
+    <string name="menu_sort_by_filename">Trier par nom de fichier</string>
+    <string name="menu_select_all">Tout sélectionner</string>
+
+    <string name="service_tracker">Service de suivi OppiaMobile</string>
+
+    <string name="fragment_welcome_title">Bienvenue sur OppiaMobile</string>
+    <string name="fragment_welcome_desc">OppiaMobile est une application d\'enseignement Androïd pour mobiles et tablettes qui permet le téléchargement des cours de la plateforme OppiaMobile. Les utilisateurs peuvent travailler en mode hors-ligne notamment dans les tests.\n\n\'Oppia\' veut dire \'apprendre\' en finlandais.</string>
+    <string name="fragment_welcome_login_info">Pour débuter sur OppiaMobile, vous devez vous inscrire ou vous connecter.</string>
+    <string name="fragment_welcome_privacy">Nous respectons votre droit à la vie privée et à la sécurité de vos données personnelles, <a href="http://digital-campus.org/privacy/">en savoir plus sur la politique de confidentialité de OppiaMobile</a></string>
+
+    <string name="tab_title_about">À propos</string>
+    <string name="tab_title_badges">Badges</string>
+    <string name="tab_title_help">Aide</string>
+    <string name="tab_title_login">Se connecter</string>
+    <string name="tab_title_points">Points</string>
+    <string name="tab_title_privacy">Vie privée</string>
+    <string name="tab_title_register">S\'inscrire</string>
+    <string name="tab_title_reset">Changer le mot de passe</string>
+    <string name="tab_title_scorecard">Carnet</string>
+    <string name="tab_title_activity">Activité</string>
+    <string name="tab_title_welcome">Bienvenue</string>
+
+    <string name="title_about">À propos</string>
+    <string name="title_baseline">Base de référence</string>
+    <string name="title_btn_reset">Changer le mot de passe</string>
+    <string name="title_download_activity">Gérer les cours</string>
+    <string name="title_activity_course_index">Catalogue des cours</string>
+    <string name="title_activity_course">Activité</string>
+    <string name="title_course_meta">À propos</string>
+    <string name="title_monitor">Moniteur</string>
+    <string name="title_stats_submitted">Pas d\'activités envoyées au serveur</string>
+    <string name="title_stats_unsubmitted">Pas d\'activités en attente</string>
+    <string name="title_prefs">Paramètres</string>
+    <string name="title_scorecard">Carnet</string>
+    <string name="title_tag_select_activity">Choisir une catégorie</string>
+    <string name="version">Version: %1$s</string>
+    <string name="title_download_media">Télécharger les médias</string>
+
+    <string name="widget_feedback_submit">Soumettre</string>
+    <string name="widget_feedback_submit_title">Merci d\'avoir envoyé vos commentaires.</string>
+
+    <string name="widget_quiz_next">Suivant</string>
+    <string name="widget_quiz_prev">Précédent</string>
+    <string name="widget_quiz_getresults">Résultats</string>
+    <string name="widget_quiz_noanswergiven">Veuillez répondre avant de passer à la question suivante</string>
+    <string name="widget_quiz_progress">Question %1$d de %2$d</string>
+    <string name="widget_quiz_results_score">Vous avez obtenu : %1$.0f%%</string>
+    <string name="widget_quiz_results_restart">Refaire ce test</string>
+    <string name="widget_quiz_continue">Continuer &gt;&gt;</string>
+    <string name="widget_quiz_baseline_completed">Merci d\'avoir complété le pré-test. Vous pouvez commencer le cours.</string>
+    <string name="widget_quiz_baseline_goto_course">Commencer le cours&gt;&gt;</string>
+    <string name="widget_quiz_image_caption">Cliquer sur l\'image pour l\'agrandir</string>
+    <string name="widget_quiz_media_caption">Cliquer sur l\'image pour démarrer la vidéo</string>
+    <string name="widget_quiz_feedback_response_title">Vous avez répondu : </string>
+    <string name="widget_quiz_feedback_feedback_title">Feedback : </string>
+    <string name="widget_quiz_unavailable_section">Vous devez compléter toutes les activités précédentes de la section avant d\'avoir accès au test.</string>
+    <string name="widget_quiz_unavailable_course">Vous devez compléter toutes les activités précédentes de ce cours avant d\'avoir accès au test.</string>
+    <string name="widget_quiz_unavailable_attempts">Vous avez atteint la limite de vos tentatives pour ce test.</string>
+    <string name="widget_resource_open_file">Ouvrir \'%1$s\'</string>
+
+    <string name="course_context_reset">Réinitialiser</string>
+    <string name="course_context_delete">Supprimer</string>
+    <string name="course_context_update_activity">Mettre à jour l\'activité</string>
+    <string name="course_context_reset_confirm">Êtes-vous sûr de vouloir réinitialiser ce cours ? Cette action supprimera le travail déjà effectué.</string>
+    <string name="course_context_delete_confirm">Êtes-vous sûr de vouloir supprimer ce cours ? Cette action supprimera totalement le cours de votre appareil.</string>
+
+    <string name="no_courses">Vous n\'avez pas de cours installé</string>
+    <string name="more_courses">Download more courses</string>
+
+    <string name="prefAdvanced">Paramètres avancés</string>
+    <string name="prefBackgroudDataConnect">Suivi d\'activité en arrière-plan</string>
+    <string name="prefBackgroudDataConnect_summary">Envoyer le journal d\'activités même lorsque l\'application est en mode de veille</string>
+    <string name="prefLanguage">Langue préférée</string>
+    <string name="prefHighlightCompleted">Mettre en surbrillance les activités terminées</string>
+    <string name="prefNoScheduleReminders">Number of suggested activities</string>
+    <string name="prefNoScheduleReminders_summary">Nombre d\'activités proposées à afficher</string>
+    <string name="prefServer">Serveur</string>
+    <string name="prefServerTimeoutConnection">Délai de connexion</string>
+    <string name="prefServerTimeoutResponse">Délai de réponse</string>
+    <string name="prefShowCourseDescription">Afficher la description des cours</string>
+    <string name="prefShowProgressBar">Afficher la barre de progression</string>
+    <string name="prefShowScheduleReminders">Afficher les activités suggérées</string>
+    <string name="prefShowScheduleReminders_summary">Afficher les activités qui doivent être complétées par la suite</string>
+    <string name="prefShowSectionNumbers">Afficher les numéros des sections</string>
+    <string name="prefTextSize">Taille du texte</string>
+    <string name="prefUser">Nom d\'utilisateur</string>
+    <string name="prefUserHint">(Lecture seule)</string>
+    <string name="prefLogoutEnabled">Permettre la déconnexion depuis la page d\'accueil</string>
+    <string name="prefDeleteCourseEnabled">Permettre la supression de cours</string>
+    <string name="prefDownloadViaCellularEnabled">Téléchargement de médias via le réseau cellulaire</string>
+
+    <!-- Strings relative to Storage -->
+    <string name="prefStorageLocation">Emplacement de stockage</string>
+    <string name="prefStorageOptionInternal">Interne</string>
+    <string name="prefStorageOptionExternal">Externe</string>
+    <string name="moving_storage_location">Déplacement des fichiers vers un nouvel emplacement de stockage …</string>
+    <string name="move_storage_completed">Déplacement du stockage terminé</string>
+    <string name="storageNonRemovable">Stockage sur la mémoire interne</string>
+    <string name="storageRemovable">Carte SD amovible</string>
+    <string name="storageAccessNotGranted">Accès à la carte SD interdit</string>
+    <string name="storageAccess_help1">Depuis la version 5 d\'Androïd (Lollipop) les applications ont un nouveau protocole d\'écriture sur les cartes SD amovibles. Les applications demandent à l\'utilisateur d\'accorder le droit d\'écriture dans un répertoire sur la carte SD. Une fenêtre de dialogue s\'ouvrira et vous devrez choisir la carte SD.</string>
+    <string name="storageAccess_help2">Si la boîte de dialogue est vide et qu\'il n\'y a pas d\'éléments dans le volet de gauche, vous devez aller au menu pour demander au système d\'afficher la carte SD.</string>
+    <string name="storageAccess_help3">Ensuite, appuyez sur la carte SD de la liste dans le volet gauche pour afficher la structure de dossiers. Dans cette capture d\'écran, vous voyez à la fois \"Stockage interne\" et la carte SD. La carte SD peut être affichée sous un nom différent de ce que vous voyez ici, par exemple \"Kingston\". Il s\'agit du label de la carte.</string>
+    <string name="storageAccess_help4">Sélectionnez ensuite la carte SD. Ne sélectionnez pas n\'importe quel sous-dossier. Vous devez sélectionner le dossier racine de la carte SD.</string>
+    <string name="storageAccess_help5">Après avoir cliqué sur le bouton \"Sélectionner la carte SD \", vous devriez être de retour dans l\'application. L\'application vérifie alors si elle peut écrire sur la carte SD, et si le dossier sélectionné est la racine de la carte.</string>
+
+    <string name="notification_course_update_title">Nouvelles mises à jour du cours</string>
+    <string name="notification_course_update_text">Des mises à jour sont disponibles pour vos cours.</string>
+
+    <string name="title_login">Connexion</string>
+    <string name="login_username_title">Nom d\'utilisateur</string>
+    <string name="login_password_title">Mot de passe</string>
+    <string name="title_register">S\'inscrire</string>
+
+    <string name="register_form_username_title">Nom d\'utilisateur(*)</string>
+    <string name="register_form_email_title">Email address (*)</string>
+    <string name="register_form_firstname_title">Prénom (*)</string>
+    <string name="register_form_jobtitle_title">Job Title</string>
+    <string name="register_form_lastname_title">Nom de famille (*)</string>
+    <string name="register_form_organisation_title">Organisation</string>
+    <string name="register_form_password_title">Mot de passe (*)</string>
+    <string name="register_form_password_again_title">Mot de passe (encore une fois) (*)</string>
+    <string name="register_form_phoneno_title">Numéro de téléphone (*)</string>
+    <string name="register_btn_text">S\'inscrire</string>
+
+    <string name="reset_username_title">Nom d\'utilisateur ou Email</string>
+
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="close">Fermer</string>
+    <string name="error">Erreur</string>
+    <string name="info">Information</string>
+    <string name="warning">Attention</string>
+    <string name="loading">Chargement</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="logout">Se déconnecter</string>
+    <string name="feedback">Feedback</string>
+    <string name="download">Télécharger</string>
+    <string name="downloaded">Téléchargé</string>
+    <string name="open">Ouvrir</string>
+    <string name="storage_default">Valeurs par défaut</string>
+
+    <string name="alert_pretest">Pré-test</string>
+    <string name="alert_pretest_summary">Ce cours contient un pré-test que vous devez effectuer avant de pouvoir accéder au cours.</string>
+
+    <string name="tag_label">%1$s (%2$d)</string>
+    <string name="alt_activity_icon">Icône d\'activité</string>
+
+    <string name="publisher">Éditeur :</string>
+    <string name="update">Mise à jour</string>
+    <string name="update_schedule">Calendrier de mise à jour</string>
+    <string name="installed">Installé</string>
+    <string name="install">Installation en cours</string>
+
+    <string name="download_starting">Début du téléchargement</string>
+    <string name="downloading">Téléchargement en cours &#8230;</string>
+    <string name="download_complete">Téléchargement terminé</string>
+
+    <string name="update_starting">Obtenir des mises à jour régulières</string>
+    <string name="updating">Mise à jour en cours &#8230;</string>
+    <string name="update_complete">Mise à jour terminée</string>
+
+    <string name="installing_course">Installation de :  %1$s</string>
+    <string name="install_complete">Installation terminée</string>
+
+    <string name="install_course_complete">%1$s: Installé</string>
+
+    <string name="info_scan_media_start">Recherche de médias</string>
+    <string name="info_scan_media_checking">Vérification de :%1$s</string>
+    <string name="info_scan_media_missing">Certains fichiers médias manquent dans vos cours.</string>
+
+    <string name="info_upgrading">Mise à niveau vers%1$s</string>
+    <string name="course_updating">Mise à jour de l\'activité…</string>
+    <string name="course_updating_success">\'%1$s\': Mise à jour de l\'activité réussie</string>
+    <string name="course_updating_error">\'%1$s\': Erreur lors de la mise à jour du cours</string>
+    <string name="course_deleting">Cours supprimé</string>
+    <string name="course_deleting_success">Supression du cours réussie</string>
+    <string name="course_deleting_error">Erreur lors de la supression du cours</string>
+    <string name="info.startup.preloaded_accounts">Préchargé %1$d nouvel utilisateur(s).</string>
+
+    <string name="loading_courses">Chargement des cours</string>
+    <string name="loading_points">Chargement des points &#8230;</string>
+    <string name="loading_badges">Chargement des badges &#8230;</string>
+
+    <string name="info_no_badges">Vous n\'avez pas encore de badges. Terminez votre premier cours pour obtenir votre premier badge.</string>
+
+    <string name="scan_media_download_button">Télécharger</string>
+    <string name="scan_media_download_via_pc_button">Télécharger à partir d\'un PC</string>
+    <string name="success_media_download">Fichier média : \'%1$s\' téléchargé avec succès.</string>
+    <string name="media_file_size">%1$.1fMb</string>
+    <string name="missing_media_download_selected">Télécharger la sélection</string>
+    <string name="missing_media_stop_selected">Arrêter la sélection</string>
+    <string name="missing_media_unselect_all">Tout dé-sélectionner</string>
+    <string name="notification_media_title">OppiaMobile : gestion des médias</string>
+    <string name="notification_media_subject">Tous les fichiers médias ont été téléchargés avec succès.</string>
+
+    <string name="error_connection">Erreur lors de la connexion au serveur. Prière de vérifier votre connexion Internet avant d\'essayer de nouveau.</string>
+    <string name="error_connection_required">Vous avez besoin d\'une connexion Internet pour accéder à cette page. Connectez-vous à Internet via WiFi ou Mobile et essayez de nouveau.</string>
+    <string name="error_connection_ssl">Erreur de connexion au serveur à cause de problèmes SSL. Assurez-vous que les paramètres de votre hôte OppiaMobile sont corrects et que la date et l\'heure de votre appareil sont corrects.</string>
+    <string name="error_installing_course">Erreur lors de l\'installation du cours : %1$s</string>
+    <string name="error_latest_already_installed">%1$s: Version la plus récente déjà installée</string>
+    <string name="error_login">Nom d\'utilisateur/mot de passe non valides. Essayez de nouveau.</string>
+    <string name="error_media_app_not_found">Vous n\'avez pas le lecteur vidéo adéquat installé sur votre appareil.</string>
+    <string name="error_no_username">Veuillez saisir votre nom d\'utilisateur</string>
+    <string name="error_processing_response">Erreur lors du traitement des données</string>
+    <string name="error_quiz_no_questions">Ce test ne contient pas de questions.</string>
+    <string name="error_register_no_email">Veuillez saisir votre adresse email</string>
+    <string name="error_register_password">Votre mot de passe doit comporter au moins %1$d caractères</string>
+    <string name="error_register_password_no_match">Vos mots de passe ne sont pas identiques</string>
+    <string name="error_register_no_firstname">Veuillez saisir votre prénom</string>
+    <string name="error_register_no_lastname">Veuillez saisir votre nom de famille</string>
+    <string name="error_register_no_phoneno">Veuillez saisir votre numéro de téléphone</string>
+    <string name="error_register_no_username">Veuillez saisir un nom d\'utilisateur </string>
+    <string name="error_register_username_spaces">Votre nom d\'utilisateur ne peut pas contenir d\'espaces</string>
+    <string name="error_resource_app_not_found">Vous n\'avez pas d\'application installée sur votre appareil et capable d\'ouvrir ce type de fichier \'%1$s\'. Veuillez installer une application qui puisse accéder à ce type de fichier.</string>
+    <string name="error_resource_not_found">Fichier : \'%1$s\' non trouvé.</string>
+    <string name="error_preloading_accounts">Erreur lors de l\'importation de comptes utilisateurs du fichier CSV</string>
+
+    <string name="error_insufficient_storage_available">Espace de stockage insuffisant</string>
+    <string name="error_sdcard">Votre carte SD n\'est pas disponible - veuillez redémarrer l\'application lorsque votre carte SD sera disponible. \nL\'application va s\'arrêter.</string>
+    <string name="error_media_not_found">Fichier média : \'%1$s\' non trouvé.</string>
+    <string name="error_media_unsupported">\'%1$s\' n\'est pas un type de fichier valide.</string>
+    <string name="error_download_failure">Erreur lors du téléchargement</string>
+    <string name="error_update_failure">Erreur lors de la mise à jour</string>
+    <string name="error_install_failure">Erreur lors de l\'installation</string>
+    <string name="error_media_download">Erreur lors du téléchargement de fichiers média, veuillez réessayer.</string>
+    <string name="error_reading_xml">Erreur lors de l\'ouverture du cours. Veuillez réinstaller ce cours.</string>
+    <string name="error_tts_start">La lecture à voix haute ne fonctionne pas. Veuillez vérifier que cette application est bien installée sur votre appareil et qu\'elle est activée</string>
+    <string name="warning_wifi_required">Vous devez être connecté à un réseau WiFi pour pouvoir télécharger les fichiers média.\nVeuillez vous connecter à un réseau WiFi pour pouvoir télécharger les fichiers média sur votre appareil, ou téléchargez ces fichiers média à travers votre ordinateur.</string>
+    <string name="warning_delete_disabled">Désolé mais la suppression de cours est désactivée pour l\'instant - veuillez mettre à jour les paramètres de l\'application pour permettre la suppression de cours.</string>
+    <string name="warning_download_via_cellular_enabled">Attention ! Permettre le téléchargement de fichiers média via réseau mobile (cellulaire) pourrait entrainer des frais supplémentaires.\n\n Il n\'est pas recommandé d\'activé cette fonctionnalité si vous êtes sur un réseau mobile très lent.</string>
+
+    <string name="login_process">Connexion en cours</string>
+    <string name="login_complete">Connecté</string>
+
+    <string name="logout_confirm">Etes-vous sûr de vouloir vous déconnecter ?\n\nVous aurez besoin d\'une connexion Internet active pour vous reconnecter.</string>
+
+    <string name="register_alert_title">Inscription</string>
+    <string name="register_process">Inscription en cours…</string>
+    <string name="register_complete">Inscription réussie</string>
+
+    <string name="reset_alert_title">Réinitialisation</string>
+    <string name="reset_process">Réinitialisation du mot de passe …</string>
+    <string name="reset_complete">Votre mot de passe a bien été réinitialisé.\n\nVeuillez consulter votre email pour obtenir votre nouveau mot de passe.</string>
+
+    <string name="change_language">Changer la langue</string>
+
+    <string name="download_via_pc_message">Le fichier  \'%1$s\' est à présent sur la carte SD de votre appareil, ouvrez-le sur votre ordinateur et suivez les instructions pour télécharger les fichiers média et les copier sur la carte SD de votre appareil.</string>
+    <string name="download_via_pc_title">Téléchargement des fichiers média</string>
+    <string name="download_via_pc_intro">Téléchargez tous les fichiers ci-dessous sur votre ordinateur (utiliser le bouton droit de la souris et choisissez enregistrer-sous)</string>
+    <string name="download_via_pc_final">Une fois que vous aurez téléchargé les fichiers, copiez-les sur le repertoire \'%1$s\' de la carte SD de votre appareil.</string>
+
+    <string name="schedule_reminders">Prochaines activité proposées :</string>
+
+    <string name="course_draft">(Brouillon)</string>
+
+    <string name="search.activity_title">Rechercher</string>
+    <string name="search.result_summary">%1$d résultats pour votre recherche \"%2$s\"</string>
+    <string name="search.message.searching">Recherche en cours…</string>
+    <string name="search.message.no_results">Pas de résultats trouvé pour : \"%1$s\"</string>
+    <string name="search.message.fetching">Récupération des résultats…</string>
+    <string name="submit_stats_btn_text">Envoyer maintenant</string>
+
+    <string name="media_player_description">OppiaMobile lecteur de média</string>
+
+    <string name="upgradev49_1">Copie des fichiers en cours - cet opération nécessite quelques minutes, veuillez être patient.</string>
+    <string name="loading_course">Chargement du cours…</string>
+    <string name="scorecard_quizzes_title">Tests</string>
+    <string name="scorecard_quizzes_highlight_pretest">Pré-test</string>
+    <string name="scorecard_quizzes_highlight_attempted">Tentatives</string>
+    <string name="scorecard_quizzes_highlight_passed">Réussis</string>
+    <string name="scorecard_activities_completed">activité terminée</string>
+    <string name="scorecard_activities_total">total</string>
+
+    <string name="admin_password_required">Cette fonctionnalité est accessible uniquement à l\'administrateur. Veuillez saisir le mot de passe Administrateur afin de continuer :</string>
+    <string name="admin_password_error_incorrect_password">Le mot de passe Administrateur n\'est pas valable. Essayez de nouveau</string>
+    <string name="admin_password_newpassword_dialog_title">Mot de passe Administrateur</string>
+    <string name="admin_password_newpassword_dialog_message">Veuillez saisir le mot de passe Administrateur</string>
+    <string name="prefAdminProtection">Protéger l\'accès Administrateur avec un mot de passe</string>
+    <string name="prefAdminPassword">Changer le mot de passe Administrateur</string>
+    <string name="prefRemoteAdminEnabled">Activer l\'administration à distance de l\'appareil</string>
+
+    <string name="notification.remote_admin.title">Administration à distance de OppiaMobile</string>
+    <string name="notification.remote_admin.camera_disabled">La caméra de l\'appareil a été désactivée à distance</string>
+    <string name="notification.remote_admin.camera_enabled">La caméra de l\'appareil a été activée à distance</string>
+
+    <string name="sequencing.dialog_title">Activité vérouillée</string>
+    <string name="sequencing.section.message">Vous devez compléter les activités précédentes de cette section pour que cette activité vous soit accessible.</string>
+    <string name="sequencing.course.message">Vous devez compléter toutes les activités précédentes du cours pour que cette activité vous soit accessible.</string>
+    <string name="empty_state_courses">Il n\'existe pas de cours actuellement disponible pour vous sur ce serveur.</string>
+    <string name="empty_state_media">Parfait ! Tous les fichiers média ont été téléchargés sur votre appareil.</string>
+	<string name="empty_state_scorecard">Vous n\'avez pas encore de cours installés. Lorsque vous installerez un cours, vous pourrez vérifier votre progression ici.</string>
+	
+    <string name="permissions.title">OppiaMobile a besoin des permissions suivantes pour pouvoir fonctionner :</string>
+    <string name="permissions.storage.title">accéder et modifier le contenu de la carte SD</string>
+    <string name="permissions.storage.description">OppiaMobile doit pouvoir accéder à la carte SD de l\'appareil pour installer les fichiers média nécessaires</string>
+    <string name="permissions.phone_state.title">read phone state and identity</string>
+    <string name="permissions.phone_state.description">OppiaMobile doit pouvoir accéder à l\'identité du téléphone pour recueillir les informations concernant le modèle de votre appareil ainsi que la version d\'Androïd installée</string>
+    <string name="permissions.allow_btn_text">Accepter les autorisations</string>
+    <string name="permissions.not_askable.message">L\'application n\'a pas les permissions nécessaires pour fonctionner convenablement. Veuillez accéder au menu paramètres \> Applications \> OppiaMobile \> Permissions de votre appareil afin d\'accepter les autorisations nécessaires</string>
+    <string name="permissions.not_askable.info">Vous recevez ce message parce que les autorisations ont déjà été demandées et que vous les avez refusées et que vous avez cliqué sur l\'option \"Ne plus demander\"</string>
+    <string name="error_apikey_expired">Votre clé API a expiré. Veuillez vous connecter de nouveau.</string>
+
+    <string name="open_digest.errors.invalid_param">Le paramètre \"digest\" est soit manquant soit mal configuré. Veuillez vérifier que ce lien est valide.</string>
+    <string name="open_digest.errors.not_logged_in">Vous n\'êtes pas connecté. Veuillez vous connecter avant de tenter d\'ouvrir ce lien de nouveau.</string>
+    <string name="open_digest.errors.activity_not_found">Activité introuvable. Etes-vous sûr d\'avoir installé le cours qui contient cette activité ?</string>
+    <string name="open_digest.description">OppiaMobile has the functionality to open activities based in its URL (opened from an SMS, for example)</string>
+    <string name="open_digest.btn_action">Ouvrir l\'activité</string>
+    <string name="open_digest.activity_completed">Activité terminée</string>
+
+
+</resources>

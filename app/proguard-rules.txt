@@ -92,6 +92,10 @@
 -keep interface android.support.design.** { *; }
 -keep public class android.support.design.R$* { *; }
 
+-dontwarn android.support.v7.**
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+
 -keep class com.actionbarsherlock.** { *; }
 -keep interface com.actionbarsherlock.** { *; }
 # The support library contains references to newer platform versions.
@@ -125,3 +129,10 @@
 ## Square Picasso specific rules ##
 ## https://square.github.io/picasso/ ##
 -dontwarn com.squareup.okhttp.**
+
+## Apache HTTP (issue https://code.google.com/p/android/issues/detail?id=194513) ##
+-keep class org.apache.http.** { *; }
+-dontwarn org.apache.http.**
+-dontnote android.net.http.*
+-dontnote org.apache.commons.codec.**
+-dontnote org.apache.http.**

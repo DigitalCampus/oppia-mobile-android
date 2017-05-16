@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="org.digitalcampus.mobile.learning"
-    android:versionCode="59"
+    android:versionCode="62"
     android:versionName="@string/version_name">
 
     <uses-sdk
@@ -9,39 +10,44 @@
         android:targetSdkVersion="23"
         tools:ignore="GradleOverrides"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <!-- Dangerous-level permissions (need user confirmation) -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <!-- GCM permissions -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <permission android:name="org.digitalcampus.mobile.learning.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="org.digitalcampus.mobile.learning.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+    <permission
+        android:name="org.digitalcampus.mobile.learning.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="org.digitalcampus.mobile.learning.C2D_MESSAGE"/>
 
     <application
+        android:name="org.digitalcampus.oppia.application.MobileLearning"
+        android:allowBackup="true"
         android:icon="@drawable/dc_logo"
         android:label="@string/app_name"
-        android:theme="@style/Oppia.Theme"
-        android:allowBackup="true"
-        android:name="org.digitalcampus.oppia.application.MobileLearning">
+        android:theme="@style/Oppia.Theme">
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name="org.digitalcampus.oppia.activity.StartUpActivity"
             android:label="@string/app_name"
             android:theme="@style/Oppia.Theme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -58,14 +64,14 @@
             android:name="org.digitalcampus.oppia.activity.CourseActivity"
             android:label="@string/title_activity_course"
             android:theme="@style/Oppia.ToolbarTheme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadActivity"
-            android:label="@string/title_download_activity" />
-         <activity
+            android:label="@string/title_download_activity"/>
+        <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
-            android:label="@string/title_tag_select_activity"
-   			android:configChanges="keyboardHidden">
+            android:configChanges="keyboardHidden"
+            android:label="@string/title_tag_select_activity">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
@@ -73,83 +79,96 @@
             android:label="@string/title_prefs"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.AboutActivity"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:label="@string/title_about" />
+            android:label="@string/title_about"
+            android:theme="@style/Oppia.ToolbarTheme"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.WelcomeActivity"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:label="@string/title_welcome" />
-         <activity
+            android:label="@string/app_name"
+            android:theme="@style/Oppia.ToolbarTheme"/>
+        <activity
             android:name="org.digitalcampus.oppia.activity.MonitorActivity"
-            android:label="@string/title_monitor"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout" />
-         <activity
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout"
+            android:label="@string/title_monitor"/>
+        <activity
             android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"
-            android:label="@string/title_course_meta" />
-         <activity
+            android:label="@string/title_course_meta"/>
+        <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"
-            android:label="@string/title_download_media" />
-         <activity
+            android:label="@string/title_download_media"/>
+        <activity
             android:name="org.digitalcampus.oppia.activity.ScorecardActivity"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:label="@string/title_scorecard" />
-         <activity
+            android:label="@string/title_scorecard"
+            android:theme="@style/Oppia.ToolbarTheme"/>
+        <activity
             android:name="org.digitalcampus.oppia.activity.SearchActivity"
             android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/search.activity_title" />
          <activity
             android:name="org.digitalcampus.oppia.activity.AppActivity"
-            android:label="@string/app_name" />
-         <activity
+            android:label="@string/app_name"/>
+        <activity
             android:name="org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity"
             android:label="@string/media_player_description"
             android:screenOrientation="landscape"
             android:theme="@style/Oppia.Fullscreen" />
+
+        <activity android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
+            android:theme="@style/Oppia.ToolbarTheme.Dark">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="demo.oppia-mobile.org"
+                    android:pathPrefix="/view" />
+                <data android:scheme="https"
+                    android:host="demo.oppia-mobile.org"
+                    android:pathPrefix="/view" />
+            </intent-filter>
+        </activity>
+
+
         <service
             android:name="org.digitalcampus.oppia.service.TrackerService"
             android:icon="@drawable/dc_logo"
-            android:label="@string/service_tracker" >
+            android:label="@string/service_tracker">
         </service>
-
         <service
             android:name="org.digitalcampus.oppia.service.DownloadService"
-            android:icon="@drawable/dc_logo"
-            android:exported="false"/>
-
+            android:exported="false"
+            android:icon="@drawable/dc_logo"/>
         <service
             android:name="org.digitalcampus.oppia.service.CourseIntallerService"
-            android:icon="@drawable/dc_logo"
-            android:exported="false"/>
+            android:exported="false"
+            android:icon="@drawable/dc_logo"/>
 
-
-
-		<receiver android:name="org.digitalcampus.oppia.service.TrackerScheduleReceiver" >
-            <intent-filter>                
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <receiver android:name="org.digitalcampus.oppia.service.TrackerScheduleReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <receiver android:name="org.digitalcampus.oppia.service.TrackerStartServiceReceiver" >
+        <receiver android:name="org.digitalcampus.oppia.service.TrackerStartServiceReceiver">
         </receiver>
 
         <!-- Google Cloud Messaging part -->
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="org.digitalcampus.mobile.learning" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
+                <category android:name="org.digitalcampus.mobile.learning"/>
             </intent-filter>
         </receiver>
 
         <service
             android:name="org.digitalcampus.oppia.application.AdminGCMListener"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
-
         <service
             android:name="org.digitalcampus.oppia.service.GCMUpdatedIIDService"
             android:exported="false">
@@ -157,24 +176,25 @@
                 <action android:name="com.google.android.gms.iid.InstanceID"/>
             </intent-filter>
         </service>
-
         <service
             android:name="org.digitalcampus.oppia.service.GCMRegistrationService"
             android:exported="false">
         </service>
 
         <!-- Device Administration API -->
-        <receiver android:name="org.digitalcampus.oppia.application.AdminReceiver"
-                  android:permission="android.permission.BIND_DEVICE_ADMIN">
+        <receiver
+            android:name="org.digitalcampus.oppia.application.AdminReceiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
             <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED" />
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.app.device_admin"
-                android:resource="@xml/admin_policies" />
+                android:resource="@xml/admin_policies"/>
         </receiver>
 
-</application>
+    </application>
 
 </manifest>

@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.widgets;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -32,6 +31,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,15 +39,13 @@ import com.splunk.mint.Mint;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -107,15 +105,16 @@ public class ResourceWidget extends WidgetFactory {
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) { 
-		 super.onActivityCreated(savedInstanceState);
-		
-		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.widget_resource_object);
-		String fileUrl = course.getLocation() + activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-		// show description if any
-		String desc = activity.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+		super.onActivityCreated(savedInstanceState);
 
+		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.widget_resource_object);
+		String fileUrl = course.getLocation() + activity.getLocation(lang);
+
+		// show description if any
+		String desc = activity.getMultiLangInfo().getDescription(lang);
 		TextView descTV = (TextView) getView().findViewById(R.id.widget_resource_description);
-		if (desc.length() > 0){
+		if ((desc != null) && desc.length() > 0){
 			descTV.setText(desc);
 		} else {
 			descTV.setVisibility(View.GONE);
@@ -321,7 +320,8 @@ public class ResourceWidget extends WidgetFactory {
 		public void onClick(View v) {
 			File file = (File) v.getTag();
 			// check the file is on the file system (should be but just in case)
-			if(!file.exists()){
+			boolean exists = Storage.mediaFileExists(_ctx, file.getName());
+			if(!exists){
 				Toast.makeText(_ctx, _ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
 				return;
 			} 

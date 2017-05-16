@@ -35,12 +35,21 @@
         android:layout_toLeftOf="@+id/download_course_btn" />
 
     <TextView
-        android:id="@+id/course_author"
+        android:id="@+id/label_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/course_description"
-        android:layout_toLeftOf="@+id/download_course_btn" />
+        android:text="@string/publisher"
+        android:layout_marginRight="4dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/course_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/course_description"
+        android:layout_toLeftOf="@+id/download_course_btn"
+        android:layout_toRightOf="@+id/label_author"/>
 
     <ProgressBar
         android:layout_width="fill_parent"

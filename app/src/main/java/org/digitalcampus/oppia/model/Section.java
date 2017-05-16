@@ -20,9 +20,6 @@ package org.digitalcampus.oppia.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Section implements Serializable  {
 
@@ -33,7 +30,7 @@ public class Section implements Serializable  {
 	
 	public static final String TAG = Section.class.getSimpleName();
 	private int order;
-	private ArrayList<Lang> titles = new ArrayList<Lang>();
+    private MultiLangInfo multiLangInfo = new MultiLangInfo();
 	private ArrayList<Activity> activities;
 	private String imageFile;
 	
@@ -57,36 +54,6 @@ public class Section implements Serializable  {
 		this.order = order;
 	}
 
-	public String getTitle(String lang) {
-		for(Lang l: titles){
-			if(l.getLang().equals(lang)){
-				return l.getContent();
-			}
-		}
-		if(titles.size() > 0){
-			return titles.get(0).getContent();
-		}
-		return null;
-	}
-	
-	public String getTitleJSONString(){
-		JSONArray array = new JSONArray();
-		for(Lang l: titles){
-			JSONObject obj = new JSONObject();
-			try {
-				obj.put(l.getLang(), l.getContent());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			array.put(obj);
-		}
-		return array.toString();
-	}
-	
-	public void setTitles(ArrayList<Lang> titles) {
-		this.titles = titles;
-	}
-
 	public ArrayList<Activity> getActivities() {
 		return activities;
 	}
@@ -97,4 +64,9 @@ public class Section implements Serializable  {
 	public void setActivities(ArrayList<Activity> activities) {
 		this.activities = activities;
 	}
+
+    public MultiLangInfo getMultiLangInfo() { return multiLangInfo; }
+    public void setMultiLangInfo(MultiLangInfo multiLangInfo) {
+        this.multiLangInfo = multiLangInfo;
+    }
 }

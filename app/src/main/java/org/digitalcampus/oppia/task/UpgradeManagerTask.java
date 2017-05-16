@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
@@ -173,26 +174,21 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
                 try {
                     cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
                     csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-                    File trackerXML = new File(courseTrackerXMLPath);
-                    ctxr = new CourseTrackerXMLReader(trackerXML);
+                    ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
                 } catch (InvalidXMLException e) {
                     e.printStackTrace();
                     break;
                 }
 
-                Course c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-                c.setVersionId(cxr.getVersionId());
-                c.setTitles(cxr.getTitles());
+                CompleteCourse c = cxr.getParsedCourse();
                 c.setShortname(course);
-                c.setImageFile(course + File.separator + cxr.getCourseImage());
-                c.setLangs(cxr.getLangs());
-                c.setPriority(cxr.getPriority());
+                c.setImageFile(course + File.separator + c.getImageFile());
 
                 DbHelper db = DbHelper.getInstance(ctx);
                 long courseId = db.addOrUpdateCourse(c);
 
                 if (courseId != -1) {
-                    db.insertActivities(cxr.getActivities(courseId));
+                    db.insertActivities(c.getActivities(courseId));
                     db.insertTrackers(ctxr.getTrackers(courseId, 0));
                 }
 
@@ -326,8 +322,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		for (Course c: courses){
 			try {
 				CourseXMLReader cxr = new CourseXMLReader(c.getCourseXMLLocation(),c.getCourseId(),ctx);
-				
-				ArrayList<Activity> baseActs = cxr.getBaselineActivities();
+				cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+                CompleteCourse parsedCourse = cxr.getParsedCourse();
+
+				ArrayList<Activity> baseActs = parsedCourse.getBaselineActivities();
 				for (Activity a: baseActs){
 					if (a.getActType().equalsIgnoreCase("quiz")){
 						String quizContent = a.getContents("en");
@@ -346,7 +344,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				}
 				
 				// now add the standard activities
-				ArrayList<Activity> acts = cxr.getActivities(c.getCourseId());
+				ArrayList<Activity> acts = parsedCourse.getActivities(c.getCourseId());
 				for (Activity a: acts){
 					if (a.getActType().equalsIgnoreCase("quiz")){
 						String quizContent = a.getContents("en");

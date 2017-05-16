@@ -25,6 +25,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.Course;
@@ -58,16 +59,13 @@ public class UIUtils {
 	public static void showUserData(Menu menu, final Context ctx, final Course courseInContext) {
 		MenuItem pointsItem = menu.findItem(R.id.points);
       	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-		
-		DbHelper db = DbHelper.getInstance(ctx);
-		User u;
-		try {
-			u = db.getUser(SessionManager.getUsername(ctx));
-			Log.d(TAG,"username: " + u.getUsername());
-			Log.d(TAG,"points: " + u.getPoints());
-		} catch (UserNotFoundException e) {
-			return;
-		}
+
+		//Get User from AppModule with dagger
+		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+		User u = app.getComponent().getUser();
+
+		Log.d(TAG,"username: " + u.getUsername());
+		Log.d(TAG,"points: " + u.getPoints());
 		
 		if(pointsItem == null){
 			return;

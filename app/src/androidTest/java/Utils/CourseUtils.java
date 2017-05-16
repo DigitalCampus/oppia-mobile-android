@@ -1,101 +1,119 @@
 package Utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.MultiLangInfo;
+import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.storage.*;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Locale;
+import java.util.ArrayList;
 
-import static org.apache.commons.io.FileUtils.cleanDirectory;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CourseUtils {
 
-    public static String getCourseTitle(Context ctx){
-
-        File dir = new File(Storage.getDownloadPath(ctx));
-        String[] children = dir.list();
-
-        String courseXMLPath = "";
-        CourseXMLReader cxr = null;
-        File tempdir = new File(Storage.getStorageLocationRoot(ctx) + "temp/");
-        tempdir.mkdirs();
-
-        boolean unzipResult = org.digitalcampus.oppia.utils.storage.FileUtils.unzipFiles(Storage.getDownloadPath(ctx), children[0], tempdir.getAbsolutePath());
-
-
-        if (!unzipResult){
-            //then was invalid zip file and should be removed
-            FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[0]);
-
-        }
-
-        String[] courseDirs = tempdir.list();
-        Course c = null;
-        SharedPreferences prefs = null;
-
-        try {
-            courseXMLPath = tempdir + File.separator + courseDirs[0] + File.separator + MobileLearning.COURSE_XML;
-            cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
-
-            prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            c = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-            c.setTitles(cxr.getTitles());
-
-        } catch (ArrayIndexOutOfBoundsException aioobe){
-            org.digitalcampus.oppia.utils.storage.FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + children[0]);
-            return null;
-        } catch (InvalidXMLException e) {
-            e.printStackTrace();
-            return null;
-        } catch(Exception e ){
-            e.printStackTrace();
-            return null;
-        }
-
-        return c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+    public static Course getCourseFromDatabase(Context ctx, String shortTitle){
+        DbHelper db = DbHelper.getInstance(ctx);
+        long courseId = db.getCourseID(shortTitle);
+        long userId = db.getUserId(SessionManager.getUsername(ctx));
+        return db.getCourse(courseId, userId);
     }
 
     public static void cleanUp(){
         //Clean course folders and database
-        try {
 
-            Context ctx = InstrumentationRegistry.getTargetContext();
+        Context ctx = InstrumentationRegistry.getTargetContext();
 
-            //Clean downloads folder
-            File downloadsFolder = new File(Storage.getDownloadPath(ctx));
-            cleanDirectory(downloadsFolder);
+        File root = new File(Storage.getStorageLocationRoot(ctx));
+        FileUtils.cleanDir(root);
 
-            //Clean courses folder
-            File coursesFolder = new File(Storage.getCoursesPath(ctx));
-            cleanDirectory(coursesFolder);
+        Storage.createFolderStructure(ctx);
 
-            //Clean temp folder
-            File tempFolder = new File(Storage.getStorageLocationRoot(ctx) + "temp/");
-            if (tempFolder.exists()) {
-                cleanDirectory(tempFolder);
-            }
-
-            //Clean database
-            DbHelper db = DbHelper.getInstance(ctx);
-            for(Course c : db.getAllCourses()){
-                db.deleteCourse(c.getCourseId());
-            }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        //Clean temp folder
+        File tempFolder = new File(Storage.getStorageLocationRoot(ctx) + "temp/");
+        if (tempFolder.exists()) {
+            FileUtils.deleteDir(tempFolder);
         }
+
+        //Clean database
+        DbHelper db = DbHelper.getInstance(ctx);
+        for(Course c : db.getAllCourses()){
+            db.deleteCourse(c.getCourseId());
+        }
+    }
+
+    public static Course createMockCourse(){
+
+        Course mockCourse = new Course("");
+
+        mockCourse.setShortname("Mock Course");
+
+
+        Section mockSection = mock(Section.class);
+
+
+        Activity mockActivity = mock(Activity.class);
+        when(mockActivity.getCourseId()).thenReturn((long) 999);
+        when(mockActivity.getActId()).thenReturn(999);
+        when(mockActivity.getSectionId()).thenReturn(999);
+
+        mockSection.addActivity(mockActivity);
+
+
+        return mockCourse;
+
+    }
+
+    public static CompleteCourse createMockCompleteCourse(int numberOfSections, int numberOfActivities){
+        ArrayList<Section> sections = new ArrayList<>();
+        ArrayList<Activity> activities = new ArrayList<>();
+
+        //Add activities
+        for(int i = 0; i < numberOfActivities; i++){
+            final int n = i;
+            MultiLangInfo mli = new MultiLangInfo();
+            mli.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Activity " + n)); }});
+
+            Activity activity = new Activity();
+            activity.setMultiLangInfo(mli);
+            activity.setDigest("");
+            activity.setActType("ActType");
+            activities.add(activity);
+        }
+
+        //Add sections
+        for(int i = 0; i < numberOfSections; i++){
+            final int n = i;
+            MultiLangInfo mli = new MultiLangInfo();
+            mli.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Section " + n)); }});
+
+            Section section = new Section();
+            section.setMultiLangInfo(mli);
+            section.setActivities(activities);
+            sections.add(section);
+
+        }
+
+        MultiLangInfo mli = new MultiLangInfo();
+        mli.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Mock Course")); }});
+
+
+        CompleteCourse completeCourse = new CompleteCourse();
+        completeCourse.setShortname("Mock Course");
+        completeCourse.setMultiLangInfo(mli);
+        completeCourse.setSections(sections);
+
+        return completeCourse;
+
     }
 }
