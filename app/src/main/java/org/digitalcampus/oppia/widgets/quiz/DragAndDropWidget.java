@@ -31,6 +31,9 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
     private List<Draggable> draggables = new ArrayList<>();
     private String courseLocation;
 
+    private static final String TYPE_DROPZONE = "dropzone";
+    private static final String TYPE_DRAGGABLE = "drag";
+
     private int backgroundWidth = 0, maxDragWidth = 0, maxDragHeight = 0;
 
     public DragAndDropWidget(Activity activity, View v, ViewGroup container, QuizQuestion q, String courseLocation) {
@@ -93,36 +96,41 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
 
         for (Response r : responses){
 
-            String dropzone = r.getProp("dropzone");
-            Dropzone drop = new Dropzone(ctx, dropzone);
+            String type = r.getProp("type");
+            if (TYPE_DROPZONE.equals(type)){
 
-            String xLeft= r.getProp("xleft");
-            String yTop = r.getProp("ytop");
-            if (xLeft != null && yTop != null){
-                drop.setPosition(Integer.parseInt(xLeft), Integer.parseInt(yTop));
-                drop.setOnDropListener(new OnDropListener() {
-                    @Override
-                    public void elemDropped(Draggable previousElem, Draggable newElem) {
-                        if (previousElem != null){
-                            draggablesContainer.addView(previousElem);
+                String solution = r.getProp("no");
+                Dropzone drop = new Dropzone(ctx, solution);
+
+                String xLeft= r.getProp("xleft");
+                String yTop = r.getProp("ytop");
+                if (xLeft != null && yTop != null){
+                    drop.setPosition(Integer.parseInt(xLeft), Integer.parseInt(yTop));
+                    drop.setOnDropListener(new OnDropListener() {
+                        @Override
+                        public void elemDropped(Draggable previousElem, Draggable newElem) {
+                            if (previousElem != null){
+                                draggablesContainer.addView(previousElem);
+                            }
                         }
-                    }
-                });
-                dropzones.add(drop);
-                dropsContainer.addView(drop);
+                    });
+                    dropzones.add(drop);
+                    dropsContainer.addView(drop);
+                }
             }
-
-            Draggable drag = new Draggable(ctx, dropzone);
-            String dragImage = r.getProp("dragimage");
-            if (dragImage != null){
-                dragImage = courseLocation + dragImage;
-                Bitmap dragBg = BitmapFactory.decodeFile(dragImage);
-                maxDragWidth = Math.max(maxDragWidth, dragBg.getWidth());
-                maxDragHeight = Math.max(maxDragHeight, dragBg.getHeight());
-                drag.setImageBitmap(dragBg);
+            else if (TYPE_DRAGGABLE.equals(type)){
+                String dragID = r.getProp("no");
+                Draggable drag = new Draggable(ctx, dragID);
+                String dragImage = r.getProp("dragimage");
+                if (dragImage != null){
+                    dragImage = courseLocation + dragImage;
+                    Bitmap dragBg = BitmapFactory.decodeFile(dragImage);
+                    maxDragWidth = Math.max(maxDragWidth, dragBg.getWidth());
+                    maxDragHeight = Math.max(maxDragHeight, dragBg.getHeight());
+                    drag.setImageBitmap(dragBg);
+                }
+                draggables.add(drag);
             }
-
-            draggables.add(drag);
         }
 
 
@@ -134,9 +142,9 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
                 String dropzone = temp[0].trim();
                 String draggable = temp[1].trim();
 
-                if (drag.getDropzone().equals(draggable)){
+                if (drag.getDragID().equals(draggable)){
                     for (Dropzone drop : dropzones){
-                        if (drop.getDropZoneId().equals(dropzone)){
+                        if (drop.getDragSolution().equals(dropzone)){
                             drop.addView(drag);
                             added = true;
                         }
@@ -192,7 +200,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
 
     class Draggable extends ImageView {
 
-        private String dropzone;
+        private String dragID;
 
         public Draggable(Context context) {
             super(context);
@@ -201,11 +209,11 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
 
         public Draggable(Context context, String dropZone){
             this(context);
-            this.dropzone = dropZone;
+            this.dragID = dropZone;
         }
 
-        public String getDropzone() {
-            return dropzone;
+        public String getDragID() {
+            return dragID;
         }
 
         @Override
@@ -229,14 +237,14 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
         private static final int activeState = R.drawable.dropzone_active;
         private static final int hoverState = R.drawable.dropzone_hover;
 
-        private String dropZoneId;
+        private String dragSolution;
         private int topY;
         private int leftX;
         private OnDropListener onDropListener;
 
         public Dropzone(Context context, String dropzone) {
             super(context);
-            this.dropZoneId = dropzone;
+            this.dragSolution = dropzone;
         }
 
         public void setPosition(int startX, int startY) {
@@ -248,14 +256,14 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
             onDropListener = listener;
         }
 
-        public String getDropZoneId() {
-            return dropZoneId;
+        public String getDragSolution() {
+            return dragSolution;
         }
 
         public String getResponse() {
             Draggable current = getCurrentDraggable();
             if (current != null){
-                return dropZoneId + Quiz.MATCHING_SEPARATOR + current.getDropzone();
+                return dragSolution + Quiz.MATCHING_SEPARATOR + current.getDragID();
             }
             else{
                 return null;
