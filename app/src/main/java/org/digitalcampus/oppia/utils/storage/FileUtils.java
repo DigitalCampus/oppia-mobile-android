@@ -216,10 +216,11 @@ public class FileUtils {
 
 	public static String getMimeType(String url) {
 		String type = null;
-		String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-		if (extension != null) {
+		int lastIndex = url.lastIndexOf('.');
+		if (lastIndex > 0) {
+			String extension = url.substring(lastIndex + 1);
 			MimeTypeMap mime = MimeTypeMap.getSingleton();
-			type = mime.getMimeTypeFromExtension(extension);
+			type = mime.getMimeTypeFromExtension(extension.toLowerCase());
 		}
 		return type;
 	}
