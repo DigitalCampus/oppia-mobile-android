@@ -118,7 +118,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
                     dropsContainer.addView(drop);
                 }
             }
-            else if (TYPE_DRAGGABLE.equals(type)){
+            else { //if (TYPE_DRAGGABLE.equals(type)){
                 String dragID = r.getProp("no");
                 Draggable drag = new Draggable(ctx, dragID);
                 String dragImage = r.getProp("dragimage");
@@ -131,6 +131,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
                 }
                 draggables.add(drag);
             }
+
         }
 
 
