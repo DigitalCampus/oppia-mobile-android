@@ -41,6 +41,9 @@ public class DragAndDrop implements Serializable, QuizQuestion {
     private String feedback = "";
     private boolean feedbackDisplayed = false;
 
+    public static final String TYPE_DROPZONE = "dropzone";
+    public static final String TYPE_DRAGGABLE = "drag";
+
     @Override
     public void addResponseOption(Response r){
         responseOptions.add(r);
@@ -54,8 +57,14 @@ public class DragAndDrop implements Serializable, QuizQuestion {
     @Override
     public void mark(String lang){
 
+        int dropzones = 0;
+        for (Response r : responseOptions){
+            if (TYPE_DROPZONE.equals(r.getProp("type"))){
+                dropzones++;
+            }
+        }
         // if not all the drops where filled, mark as failed
-        if (userResponses.size() < responseOptions.size()){
+        if (userResponses.size() < dropzones){
             userscore = 0;
             return;
         }
@@ -64,7 +73,6 @@ public class DragAndDrop implements Serializable, QuizQuestion {
         // find whichever are set as selected and add up the responses
         boolean passed = true;
         for (Response r : this.responseOptions){
-
             if (r.getProp("xleft") == null || r.getProp("ytop") == null){
                 //only a draggable, no need to check
                 continue;
@@ -76,7 +84,7 @@ public class DragAndDrop implements Serializable, QuizQuestion {
                 String dropzone = temp[0].trim();
                 String draggable = temp[1].trim();
 
-                if (dropzone.equals(r.getProp("dropzone"))){
+                if (dropzone.equals(r.getProp("choice"))){
                     passed &= dropzone.equals(draggable);
                 }
             }
