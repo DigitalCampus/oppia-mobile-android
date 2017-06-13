@@ -23,6 +23,8 @@ import org.digitalcampus.mobile.quiz.model.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
+
 public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserver.OnGlobalLayoutListener {
 
     private ViewGroup draggablesContainer, dropsContainer;
@@ -31,8 +33,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
     private List<Draggable> draggables = new ArrayList<>();
     private String courseLocation;
 
-    private static final String TYPE_DROPZONE = "dropzone";
-    private static final String TYPE_DRAGGABLE = "drag";
+
 
     private int backgroundWidth = 0, maxDragWidth = 0, maxDragHeight = 0;
 
@@ -97,9 +98,9 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
         for (Response r : responses){
 
             String type = r.getProp("type");
-            if (TYPE_DROPZONE.equals(type)){
+            if (DragAndDrop.TYPE_DROPZONE.equals(type)){
 
-                String solution = r.getProp("no");
+                String solution = r.getProp("choice");
                 Dropzone drop = new Dropzone(ctx, solution);
 
                 String xLeft= r.getProp("xleft");
@@ -118,7 +119,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
                     dropsContainer.addView(drop);
                 }
             }
-            else if (TYPE_DRAGGABLE.equals(type)){
+            else if (DragAndDrop.TYPE_DRAGGABLE.equals(type)){
                 String dragID = r.getProp("no");
                 Draggable drag = new Draggable(ctx, dragID);
                 String dragImage = r.getProp("dragimage");
