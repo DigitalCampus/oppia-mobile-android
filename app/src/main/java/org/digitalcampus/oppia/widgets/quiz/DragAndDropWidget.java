@@ -109,7 +109,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
                     drop.setOnDropListener(new OnDropListener() {
                         @Override
                         public void elemDropped(Draggable previousElem, Draggable newElem) {
-                            if (previousElem != null){
+                            if ((previousElem != null) && (!previousElem.isInfinite())){
                                 draggablesContainer.addView(previousElem);
                             }
                         }
@@ -118,20 +118,20 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
                     dropsContainer.addView(drop);
                 }
             }
-            else { //if (TYPE_DRAGGABLE.equals(type)){
+            else if (TYPE_DRAGGABLE.equals(type)){
                 String dragID = r.getProp("no");
                 Draggable drag = new Draggable(ctx, dragID);
                 String dragImage = r.getProp("dragimage");
+                String infinite = r.getProp("infinite");
+                if ((infinite != null) && (Integer.parseInt(infinite) == 1)){
+                    drag.setInfinite(true);
+                }
                 if (dragImage != null){
                     dragImage = courseLocation + dragImage;
-                    Bitmap dragBg = BitmapFactory.decodeFile(dragImage);
-                    maxDragWidth = Math.max(maxDragWidth, dragBg.getWidth());
-                    maxDragHeight = Math.max(maxDragHeight, dragBg.getHeight());
-                    drag.setImageBitmap(dragBg);
+                    drag.setImagePath(dragImage);
                 }
                 draggables.add(drag);
             }
-
         }
 
 
@@ -199,9 +199,11 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
     }
 
 
-    class Draggable extends ImageView {
+    class Draggable extends android.support.v7.widget.AppCompatImageView {
 
         private String dragID;
+        private boolean infinite = false;
+        private String imagePath;
 
         public Draggable(Context context) {
             super(context);
@@ -216,6 +218,27 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
         public String getDragID() {
             return dragID;
         }
+
+        public String getImagePath() {
+            return imagePath;
+        }
+
+        public void setImagePath(String imagePath) {
+            this.imagePath = imagePath;
+            Bitmap dragBg = BitmapFactory.decodeFile(imagePath);
+            maxDragWidth = Math.max(maxDragWidth, dragBg.getWidth());
+            maxDragHeight = Math.max(maxDragHeight, dragBg.getHeight());
+            this.setImageBitmap(dragBg);
+        }
+
+        public boolean isInfinite() {
+            return infinite;
+        }
+
+        public void setInfinite(boolean infinite) {
+            this.infinite = infinite;
+        }
+
 
         @Override
         public boolean onTouchEvent(MotionEvent motionEvent){
@@ -308,7 +331,21 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup
                     ViewGroup owner = (ViewGroup) draggable.getParent();
-                    owner.removeView(draggable);
+                    if (draggable.isInfinite()){
+                       if (owner == draggablesContainer){
+                           Draggable dragCopy = new Draggable(ctx, draggable.getDragID());
+                           dragCopy.setImagePath(draggable.getImagePath());
+                           dragCopy.setInfinite(draggable.isInfinite());
+                           draggable = dragCopy;
+                       }
+                       else{
+                           owner.removeView(draggable);
+                       }
+                    }
+                    else{
+                        owner.removeView(draggable);
+                    }
+
 
                     Draggable previous = getCurrentDraggable();
                     this.removeAllViews();
