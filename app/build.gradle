@@ -81,6 +81,17 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    productFlavors {
+        normal {
+            applicationIdSuffix ".normal"
+        }
+
+        admin {
+            applicationIdSuffix ".admin"
+        }
+
+    }
 }
 
 
