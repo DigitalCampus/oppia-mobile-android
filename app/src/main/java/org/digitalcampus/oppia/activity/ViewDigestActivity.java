@@ -22,7 +22,7 @@ import org.digitalcampus.oppia.model.Course;
 import java.io.File;
 import java.util.Locale;
 
-public class ViewDigestActivity extends AppCompatActivity {
+public class ViewDigestActivity extends AppActivity {
 
     public static final String TAG = ViewDigestActivity.class.getSimpleName();
     public static final String ACTIVITY_DIGEST_PARAM = "digest";
@@ -137,7 +137,7 @@ public class ViewDigestActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         this.finish();
     }

@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.UIUtils;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
@@ -52,6 +55,11 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             reminders.initSheduleReminders(activities);
         }
 	}
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

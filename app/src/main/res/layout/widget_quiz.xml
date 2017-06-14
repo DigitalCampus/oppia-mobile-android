@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -21,7 +22,7 @@
                 android:id="@+id/progress_quiz"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="5dp"
                 android:progressDrawable="@drawable/progress_bar_quiz"/>
 
             <TextView
@@ -31,6 +32,7 @@
                 android:gravity="center"
                 android:padding="3dp"
                 android:textSize="15sp"
+                fontPath="fonts/montserrat.ttf"
                 android:textStyle="bold"/>
 
         </FrameLayout>
