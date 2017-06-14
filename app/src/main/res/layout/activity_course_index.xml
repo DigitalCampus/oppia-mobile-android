@@ -21,6 +21,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:expandedTitleTextAppearance="@style/ScrollableLayoutHeaderText"
+            app:collapsedTitleTextAppearance="@style/CollapsedToolbarHeader"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout
@@ -53,14 +54,17 @@
                     />
             </FrameLayout>
 
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:minHeight="?attr/actionBarSize"
                 app:theme="@style/Oppia.Theme.Dark"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
                 style="@style/ActionBar.Solid.Om"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 android:fitsSystemWindows="false"
                 app:layout_collapseMode="pin">
             </android.support.v7.widget.Toolbar>

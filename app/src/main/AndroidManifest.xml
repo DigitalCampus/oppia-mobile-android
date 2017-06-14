@@ -67,10 +67,12 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadActivity"
-            android:label="@string/title_download_activity"/>
+            android:label="@string/title_download_activity"
+            android:theme="@style/Oppia.ToolbarTheme"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
             android:configChanges="keyboardHidden"
+            android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/title_tag_select_activity">
         </activity>
         <activity
@@ -94,6 +96,7 @@
             android:label="@string/title_course_meta"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"
+            android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/title_download_media"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.ScorecardActivity"

@@ -149,10 +149,6 @@ public class OppiaMobileActivity
         noCoursesView = this.findViewById(R.id.no_courses);
         initialCourseListPadding = courseList.getPaddingTop();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        drawer = new DrawerMenuManager(this, true);
-        drawer.initializeDrawer();
 	}
 
     private void initializeDagger() {
@@ -163,6 +159,9 @@ public class OppiaMobileActivity
     @Override
 	public void onStart() {
 		super.onStart();
+        drawer = new DrawerMenuManager(this, true);
+        drawer.initializeDrawer();
+
 		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(SessionManager.getUsername(this));
 		displayCourses(userId);

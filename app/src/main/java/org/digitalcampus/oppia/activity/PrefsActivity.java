@@ -136,11 +136,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         Bundle bundle = this.getIntent().getExtras();
         if(bundle != null) { mPrefsFragment.setArguments(bundle); }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+	}
+
+	protected void onStart(){
+        super.onStart();
         drawer = new DrawerMenuManager(this, false);
         drawer.initializeDrawer();
-	}
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

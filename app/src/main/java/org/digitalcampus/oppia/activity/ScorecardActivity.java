@@ -17,29 +17,27 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
-import org.digitalcampus.oppia.fragments.BadgesFragment;
-import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
-import org.digitalcampus.oppia.fragments.PointsFragment;
-import org.digitalcampus.oppia.fragments.CourseScorecardFragment;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.ImageUtils;
-
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
+import org.digitalcampus.oppia.fragments.BadgesFragment;
+import org.digitalcampus.oppia.fragments.CourseScorecardFragment;
+import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
+import org.digitalcampus.oppia.fragments.PointsFragment;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.ImageUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ScorecardActivity extends AppActivity {
@@ -65,14 +63,7 @@ public class ScorecardActivity extends AppActivity {
 		setContentView(R.layout.activity_scorecard);
 
 		viewPager = (ViewPager) findViewById(R.id.activity_scorecard_pager);
-
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
-
-        setSupportActionBar( (Toolbar)findViewById(R.id.toolbar) );
-        actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setHomeButtonEnabled(true);
-
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		Bundle bundle = this.getIntent().getExtras();
@@ -86,7 +77,8 @@ public class ScorecardActivity extends AppActivity {
 	public void onStart() {
 		super.onStart();
 
-		List<Fragment> fragments = new ArrayList<Fragment>();
+		actionBar = getSupportActionBar();
+		List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();
 
 		Fragment fScorecard;

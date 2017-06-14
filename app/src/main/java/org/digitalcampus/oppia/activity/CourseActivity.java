@@ -89,7 +89,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_course);
-        setSupportActionBar( (Toolbar)findViewById(R.id.toolbar) );
         ActionBar actionBar = getSupportActionBar();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         viewPager = (ViewPager) findViewById(R.id.activity_widget_pager);

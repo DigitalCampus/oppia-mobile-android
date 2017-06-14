@@ -52,15 +52,6 @@ public class WelcomeActivity extends AppActivity {
 		setContentView(R.layout.activity_about);
 
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
-
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-        }
-
 		viewPager = (ViewPager) findViewById(R.id.activity_about_pager);
 
 	}

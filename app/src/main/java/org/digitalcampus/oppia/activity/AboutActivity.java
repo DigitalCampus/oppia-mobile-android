@@ -63,13 +63,6 @@ public class AboutActivity extends AppActivity {
 
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-		ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-        }
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			currentTab = bundle.getInt(AboutActivity.TAB_ACTIVE);

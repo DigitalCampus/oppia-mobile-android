@@ -188,9 +188,15 @@
     </style>
 
     <style name="ScrollableLayoutHeaderText">
-        <item name="android:textSize">26sp</item>
+        <item name="android:textSize">21sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/text_dark</item>
+        <item name="fontPath">fonts/lato.ttf</item>
     </style>
+
+    <style name="CollapsedToolbarHeader" parent="android:TextAppearance">
+        <item name="fontPath">fonts/lato.ttf</item>
+    </style>
+
 
 </resources>

@@ -85,8 +85,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_index);
-        setSupportActionBar( (Toolbar)findViewById(R.id.toolbar) );
-	initializeDagger();
+	    initializeDagger();
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);

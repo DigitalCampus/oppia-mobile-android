@@ -83,7 +83,7 @@
     <style name="Oppia.ActionBar.TitleTextStyle" parent="Base.ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColor">@color/text_dark</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="Oppia.CAB.ActionMode" parent="@style/Widget.AppCompat.ActionMode">

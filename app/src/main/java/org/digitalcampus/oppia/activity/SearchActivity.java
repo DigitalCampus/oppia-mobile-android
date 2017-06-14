@@ -93,15 +93,16 @@ public class SearchActivity extends AppActivity {
             });
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        drawer = new DrawerMenuManager(this, false);
-        drawer.initializeDrawer();
+
 	}
 	
 	@Override
 	public void onStart(){
 		super.onStart();
+
+        drawer = new DrawerMenuManager(this, false);
+        drawer.initializeDrawer();
+
 		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("preUsername", ""));
 		
