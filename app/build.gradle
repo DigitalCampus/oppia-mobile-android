@@ -83,14 +83,9 @@ android {
     }
 
     productFlavors {
-        normal {
-            applicationIdSuffix ".normal"
-        }
+        normal { }
 
-        admin {
-            applicationIdSuffix ".admin"
-        }
-
+        admin { }
     }
 }
 
