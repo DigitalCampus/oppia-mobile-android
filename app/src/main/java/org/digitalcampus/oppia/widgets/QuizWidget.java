@@ -84,6 +84,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -306,15 +307,15 @@ public class QuizWidget extends WidgetFactory {
 		Matcher m = p.matcher(questionText);
 		if (m.find()){
 			final String mp3filename = m.group();
+			questionText = questionText.replace(mp3filename, "");
 			File file = new File(course.getLocation() + "resources/" + mp3filename);
 			if (!file.exists()){
-
+				playAudioBtn.setVisibility(View.GONE);
+				return questionText;
 			}
-			Log.d(TAG, file.exists()? "siooo" : "noooo" );
 			final Uri mp3Uri = Uri.fromFile(file);
-
 			Log.d(TAG, mp3Uri.getPath());
-			questionText = questionText.replace(mp3filename, "");
+
 			playAudioBtn.setVisibility(View.VISIBLE);
 			playAudioBtn.setOnClickListener(new OnClickListener() {
 				@Override
@@ -324,10 +325,8 @@ public class QuizWidget extends WidgetFactory {
 						mp.release();
 						mp = null;
 					}
-
 					mp = MediaPlayer.create(getContext(), mp3Uri);
 					mp.start();
-
 				}
 			});
 		}
@@ -401,16 +400,19 @@ public class QuizWidget extends WidgetFactory {
 
 	private void setProgress() {
 		TextView progress = (TextView) getView().findViewById(R.id.quiz_progress);
+		ProgressBar bar = (ProgressBar) getView().findViewById(R.id.progress_quiz);
+
+		bar.setMax(quiz.getTotalNoQuestions());
+		bar.setProgress(quiz.getCurrentQuestionNo());
 		try {
 			if (quiz.getCurrentQuestion().responseExpected()) {
-				progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, quiz.getCurrentQuestionNo(), quiz.getTotalNoQuestions()));
+				progress.setText(quiz.getCurrentQuestionNo() + "/" + quiz.getTotalNoQuestions());
 			} else {
 				progress.setText("");
 			}
 		} catch (InvalidQuizException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private boolean saveAnswer() {
@@ -489,7 +491,7 @@ public class QuizWidget extends WidgetFactory {
         View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
         if (quizResultsLayout == null){
             // load new layout
-            View C = getView().findViewById(R.id.quiz_progress);
+            View C = getView().findViewById(R.id.progress_container);
             ViewGroup parent = (ViewGroup) C.getParent();
             int index = parent.indexOfChild(C);
             parent.removeView(C);
@@ -583,6 +585,7 @@ public class QuizWidget extends WidgetFactory {
 	    this.qText = (TextView) getView().findViewById(R.id.question_text);
 	    this.questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
 	    this.questionImage.setVisibility(View.GONE);
+		this.playAudioBtn.setVisibility(View.GONE);
 		this.showQuestion();
 	}
 

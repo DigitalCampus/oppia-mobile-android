@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,15 +12,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/quiz_progress"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
+        <FrameLayout
+            android:id="@+id/progress_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ScrollView
+            <ProgressBar
+                android:id="@+id/progress_quiz"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:progressDrawable="@drawable/progress_bar_quiz"/>
+
+            <TextView
+                android:id="@+id/quiz_progress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+        </FrameLayout>
+
+        <ScrollView
         android:id="@+id/quiz_scroll_view"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
