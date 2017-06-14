@@ -30,7 +30,7 @@ import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
 
 public class AdminSecurityManager {
 
-    public static final String TAG = CourseScorecardFragment.class.getSimpleName();
+    public static final String TAG = AdminSecurityManager.class.getSimpleName();
 
     public interface AuthListener{
         void onPermissionGranted();

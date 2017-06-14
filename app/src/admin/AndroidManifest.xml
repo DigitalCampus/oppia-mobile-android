@@ -179,15 +179,20 @@
             android:exported="false">
         </service>
 
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}"
-            android:exported="false"
-            android:grantUriPermissions="true">
+        <!-- Device Administration API -->
+        <receiver
+            android:name="org.digitalcampus.oppia.application.AdminReceiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED"/>
+            </intent-filter>
+
             <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
-        </provider>
-</application>
+                android:name="android.app.device_admin"
+                android:resource="@xml/admin_policies"/>
+        </receiver>
+
+    </application>
 
 </manifest>
