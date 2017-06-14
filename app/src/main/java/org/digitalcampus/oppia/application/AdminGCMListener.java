@@ -32,6 +32,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
@@ -58,8 +59,13 @@ public class AdminGCMListener extends GcmListenerService {
             // message received from some topic.
         } else {
             String type = messageData.getString(MESSAGE_TYPE);
-            if (type == null) return;
-            else if (type.equals(TYPE_ADMIN)){
+            if ((type != null) && (type.equals(TYPE_ADMIN))){
+
+                if (!BuildConfig.FLAVOR.equals("admin")) {
+                    //Is not the admin-flavor app (we don't have the permission, would produce crash)
+                    Log.d(TAG, "Device Administration is disabled :(");
+                    return;
+                }
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 boolean adminEnabled = prefs.getBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
@@ -90,7 +96,6 @@ public class AdminGCMListener extends GcmListenerService {
                         policyManager.resetPassword(password, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
                         policyManager.lockNow();
                     }
-
                 }
             }
 
