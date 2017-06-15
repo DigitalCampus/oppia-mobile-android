@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="org.digitalcampus.mobile.learning"
-    android:versionCode="63"
+    android:versionCode="62"
     android:versionName="@string/version_name">
 
     <uses-sdk
@@ -58,7 +58,7 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseIndexActivity"
             android:label="@string/title_activity_course_index"
-            android:theme="@style/Oppia.ToolbarTheme.Dark">
+            android:theme="@style/Oppia.Theme.Dark">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseActivity"
@@ -67,17 +67,14 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadActivity"
-            android:label="@string/title_download_activity"
-            android:theme="@style/Oppia.ToolbarTheme"/>
+            android:label="@string/title_download_activity"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
             android:configChanges="keyboardHidden"
-            android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/title_tag_select_activity">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
-            android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/title_prefs"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.AboutActivity"
@@ -96,7 +93,6 @@
             android:label="@string/title_course_meta"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"
-            android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/title_download_media"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.ScorecardActivity"
@@ -104,9 +100,8 @@
             android:theme="@style/Oppia.ToolbarTheme"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.SearchActivity"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:label="@string/search.activity_title" />
-         <activity
+            android:label="@string/search.activity_title"/>
+        <activity
             android:name="org.digitalcampus.oppia.activity.AppActivity"
             android:label="@string/app_name"/>
         <activity
@@ -184,15 +179,20 @@
             android:exported="false">
         </service>
 
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}"
-            android:exported="false"
-            android:grantUriPermissions="true">
+        <!-- Device Administration API -->
+        <receiver
+            android:name="org.digitalcampus.oppia.application.AdminReceiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+                <action android:name="android.app.action.ACTION_DEVICE_ADMIN_DISABLED"/>
+            </intent-filter>
+
             <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
-        </provider>
-</application>
+                android:name="android.app.device_admin"
+                android:resource="@xml/admin_policies"/>
+        </receiver>
+
+    </application>
 
 </manifest>

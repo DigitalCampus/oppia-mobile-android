@@ -81,6 +81,12 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    productFlavors {
+        normal { }
+
+        admin { }
+    }
 }
 
 

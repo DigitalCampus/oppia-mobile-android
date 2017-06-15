@@ -22,6 +22,7 @@ public class ExternalResourceOpener {
         // check there is actually an app installed to open this filetype
         Intent intent = new Intent();
         intent.setAction(android.content.Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setDataAndType(resourceUri, resourceMimeType);
 
         PackageManager pm = ctx.getPackageManager();
