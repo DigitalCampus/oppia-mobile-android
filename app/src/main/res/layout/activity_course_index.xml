@@ -108,13 +108,13 @@
                 android:id="@+id/section_list"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:divider="@color/list_divider"
-                android:dividerHeight="1dp"
-                android:listSelector="@drawable/background_change_pressed"
                 android:cacheColorHint="#00000000"
-                android:paddingTop="@dimen/fab_bottom_margin"
                 android:clipToPadding="false"
+                android:divider="@color/list_divider"
+                android:dividerHeight="0dp"
                 android:foreground="?android:windowContentOverlay"
+                android:listSelector="@drawable/background_change_pressed"
+                android:paddingTop="@dimen/fab_bottom_margin"
                 />
 
         </FrameLayout>

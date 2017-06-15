@@ -22,4 +22,5 @@
     <color name="stroke">#DFDFDF</color>
     <color name="quiz_navigation_bar">#D2D2D2</color>
     <color name="quiz_navigation_button">#FF5A595B</color>
+    <color name="activity_completed_filter">#999aca3c</color>
 </resources>

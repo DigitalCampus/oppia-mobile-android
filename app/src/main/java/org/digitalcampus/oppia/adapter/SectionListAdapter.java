@@ -17,25 +17,13 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Section;
-import org.digitalcampus.oppia.utils.ui.TwoWayView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +34,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.utils.ui.TwoWayView;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class SectionListAdapter extends ArrayAdapter<Section>{
 
@@ -81,8 +83,8 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
         TextView sectionTitle;
         TwoWayView sectionActivities;
     }
-
-	public View getView(int position, View convertView, ViewGroup parent) {
+    
+    public View getView(int position, View convertView, ViewGroup parent) {
 
         SectionViewHolder viewHolder;
         final ActivityAdapter innerListAdapter;
@@ -149,9 +151,16 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
         private String locale;
         private String courseLocation;
 
-        public ActivityAdapter(String locale, String courseLocation){
+        private int highlightColor;
+        private int normalColor;
+        private int filterColor;
+
+        ActivityAdapter(String locale, String courseLocation){
             this.locale = locale;
             this.courseLocation = courseLocation;
+            highlightColor = ContextCompat.getColor(ctx, R.color.highlight_mid);
+            filterColor = ContextCompat.getColor(ctx, R.color.activity_completed_filter);
+            normalColor = ContextCompat.getColor(ctx, R.color.text_light);
         }
 
         public int getCount() {
@@ -194,7 +203,9 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
             }
 
             boolean highlightActivity = activity.getCompleted() && prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED);
-            viewHolder.activityContainer.setBackgroundResource(highlightActivity ? R.drawable.activity_background_completed : 0);
+            viewHolder.activityTitle.setTextColor(highlightActivity ? highlightColor : normalColor);
+            viewHolder.activityImage.setColorFilter(highlightActivity ? filterColor : 0);
+                    //.setBackgroundResource(highlightActivity ? R.drawable.activity_background_completed : 0);
 
             return convertView;
         }
