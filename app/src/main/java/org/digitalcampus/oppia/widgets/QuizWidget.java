@@ -17,51 +17,6 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.quiz.InvalidQuizException;
-import org.digitalcampus.mobile.quiz.Quiz;
-import org.digitalcampus.mobile.quiz.model.QuizQuestion;
-import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
-import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
-import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
-import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
-import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
-import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
-import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
-import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.model.QuizFeedback;
-import org.digitalcampus.oppia.model.QuizStats;
-import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
-import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
-import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
-import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
-import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
-import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
-import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
-import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
-import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -88,10 +43,55 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.InvalidQuizException;
+import org.digitalcampus.mobile.quiz.Quiz;
+import org.digitalcampus.mobile.quiz.model.QuizQuestion;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
+import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Matching;
+import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
+import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
+import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.model.QuizFeedback;
+import org.digitalcampus.oppia.model.QuizStats;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
+import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
+import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
+import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
+import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
+import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
+import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
+import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
+import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
+import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class QuizWidget extends WidgetFactory {
 
 	public static final String TAG = QuizWidget.class.getSimpleName();
     private static final int QUIZ_AVAILABLE = -1;
+	private static final int PROGRESS_ANIM_DURATION = 600;
 	private Quiz quiz;
 	private QuestionWidget qw;
 	public Button prevBtn;
@@ -103,6 +103,9 @@ public class QuizWidget extends WidgetFactory {
 	private boolean isOnResultsPage = false;
 	private ViewGroup container;
 	private MediaPlayer mp;
+
+	private ProgressBar progressBar;
+	private ProgressBarAnimator barAnim;
 
 	public static QuizWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		QuizWidget myFragment = new QuizWidget();
@@ -152,12 +155,21 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
-		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
-		qText = (TextView) getView().findViewById(R.id.question_text);
-		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
-		playAudioBtn = (ImageView) getView().findViewById(R.id.playAudioBtn);
+		fetchViews();
         loadQuiz();
+	}
+
+	private void fetchViews(){
+		this.prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
+		this.nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
+		this.qText = (TextView) getView().findViewById(R.id.question_text);
+		this.questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
+		this.playAudioBtn = (ImageView) getView().findViewById(R.id.playAudioBtn);
+		this.progressBar = (ProgressBar) getView().findViewById(R.id.progress_quiz);
+		this.barAnim = new ProgressBarAnimator(progressBar);
+		this.barAnim.setAnimDuration(PROGRESS_ANIM_DURATION);
+		this.questionImage.setVisibility(View.GONE);
+		this.playAudioBtn.setVisibility(View.GONE);
 	}
 	
 	@Override
@@ -400,10 +412,10 @@ public class QuizWidget extends WidgetFactory {
 
 	private void setProgress() {
 		TextView progress = (TextView) getView().findViewById(R.id.quiz_progress);
-		ProgressBar bar = (ProgressBar) getView().findViewById(R.id.progress_quiz);
 
-		bar.setMax(quiz.getTotalNoQuestions());
-		bar.setProgress(quiz.getCurrentQuestionNo());
+		int current = progressBar.getProgress();
+		progressBar.setMax(quiz.getTotalNoQuestions());
+		barAnim.animate(current, quiz.getCurrentQuestionNo());
 		try {
 			if (quiz.getCurrentQuestion().responseExpected()) {
 				progress.setText(quiz.getCurrentQuestionNo() + "/" + quiz.getTotalNoQuestions());
@@ -579,14 +591,9 @@ public class QuizWidget extends WidgetFactory {
 	    parent.removeView(C);
 	    C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz, parent, false);
 	    parent.addView(C, index);
-	    
-	    this.prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
-	    this.nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
-	    this.qText = (TextView) getView().findViewById(R.id.question_text);
-	    this.questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
-	    this.questionImage.setVisibility(View.GONE);
-		this.playAudioBtn.setVisibility(View.GONE);
-		this.showQuestion();
+
+		fetchViews();
+		showQuestion();
 	}
 
 	@Override
