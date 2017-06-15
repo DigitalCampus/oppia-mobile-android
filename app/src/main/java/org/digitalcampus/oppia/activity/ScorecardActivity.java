@@ -47,10 +47,8 @@ public class ScorecardActivity extends AppActivity {
     public static final String TAB_TARGET_POINTS = "tab_points";
     public static final String TAB_TARGET_BADGES = "tab_badges";
 
-    private ActionBar actionBar;
-    private TabLayout tabs;
+	private TabLayout tabs;
 	private ViewPager viewPager;
-	private ActivityPagerAdapter apAdapter;
 	private SharedPreferences prefs;
 	private Course course = null;
 
@@ -77,16 +75,15 @@ public class ScorecardActivity extends AppActivity {
 	public void onStart() {
 		super.onStart();
 
-		actionBar = getSupportActionBar();
 		List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();
 
 		Fragment fScorecard;
 		if(this.course != null){
 			fScorecard = CourseScorecardFragment.newInstance(course);
-            if (course.getImageFile() != null) {
+			ActionBar actionBar = getSupportActionBar();
+            if ((actionBar != null) && (course.getImageFile() != null)) {
                 BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.dc_logo);
-                //actionBar.setIcon(bm);
                 actionBar.setHomeAsUpIndicator(bm);
             }
 		} else {
@@ -109,11 +106,10 @@ public class ScorecardActivity extends AppActivity {
             tabTitles.add(this.getString(R.string.tab_title_badges));
         }
 
-		apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
+		ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
 		viewPager.setAdapter(apAdapter);
         tabs.setupWithViewPager(viewPager);
-        tabs.setTabMode(TabLayout.MODE_FIXED);
-        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
+		apAdapter.updateTabViews(tabs);
 
         int currentTab = 0;
         if ( targetTabOnLoad != null){

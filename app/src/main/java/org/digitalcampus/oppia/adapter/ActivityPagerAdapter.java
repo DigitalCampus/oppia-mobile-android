@@ -20,14 +20,21 @@ package org.digitalcampus.oppia.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class ActivityPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -51,7 +58,11 @@ public class ActivityPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return tabTitles.get(position);
+        String title = tabTitles.get(position);
+        CalligraphyTypefaceSpan typefaceSpan = new CalligraphyTypefaceSpan(TypefaceUtils.load(ctx.getAssets(), "fonts/montserrat.ttf"));
+        SpannableStringBuilder s = new SpannableStringBuilder();
+        s.append(title).setSpan(typefaceSpan, 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return SpannableString.valueOf(s);
     }
 
 	@Override
@@ -59,10 +70,16 @@ public class ActivityPagerAdapter extends FragmentStatePagerAdapter {
 		return fragments.size();
 	}
 
-    public View getTabView(int position) {
-        View v = LayoutInflater.from(ctx).inflate(R.layout.tablayout_fixed_tab, null);
-        TextView tv = (TextView) v.findViewById(R.id.tabTitle);
-        tv.setText(tabTitles.get(position));
-        return v;
+    public void updateTabViews(TabLayout tabs) {
+
+        for (int i = 0; i < tabs.getTabCount(); i++) {
+            View v = LayoutInflater.from(ctx).inflate(R.layout.tablayout_fixed_tab, null);
+            TextView tv = (TextView) v.findViewById(R.id.tabTitle);
+            tv.setText(tabTitles.get(i));
+
+            TabLayout.Tab tab = tabs.getTabAt(i);
+            if (tab!=null) tab.setCustomView(v);
+        }
     }
+
 }
