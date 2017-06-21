@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="org.digitalcampus.mobile.learning"
-    android:versionCode="63"
-    android:versionName="@string/version_name">
+          package="org.digitalcampus.mobile.learning">
 
     <uses-sdk
         android:minSdkVersion="14"

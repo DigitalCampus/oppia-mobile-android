@@ -95,11 +95,10 @@ public class AboutActivity extends AppActivity {
 		fragments.add(fStats);
         titles.add(this.getString(R.string.tab_title_activity));
 
-		viewPager.setAdapter(new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles));
+		ActivityPagerAdapter adapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
+		viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
-        tabs.setTabMode(TabLayout.MODE_FIXED);
-        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
-
+		adapter.updateTabViews(tabs);
 		viewPager.setCurrentItem(currentTab);
         viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 	}
