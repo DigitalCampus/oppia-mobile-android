@@ -17,14 +17,31 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
@@ -48,9 +65,9 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizFeedback;
 import org.digitalcampus.oppia.model.QuizStats;
-import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
+import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
 import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
 import org.digitalcampus.oppia.widgets.quiz.MatchingWidget;
@@ -62,35 +79,19 @@ import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class QuizWidget extends WidgetFactory {
 
 	public static final String TAG = QuizWidget.class.getSimpleName();
     private static final int QUIZ_AVAILABLE = -1;
+	private static final int PROGRESS_ANIM_DURATION = 600;
 	private Quiz quiz;
 	private QuestionWidget qw;
 	public Button prevBtn;
@@ -102,6 +103,9 @@ public class QuizWidget extends WidgetFactory {
 	private boolean isOnResultsPage = false;
 	private ViewGroup container;
 	private MediaPlayer mp;
+
+	private ProgressBar progressBar;
+	private ProgressBarAnimator barAnim;
 
 	public static QuizWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		QuizWidget myFragment = new QuizWidget();
@@ -151,12 +155,21 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
-		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
-		qText = (TextView) getView().findViewById(R.id.question_text);
-		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
-		playAudioBtn = (ImageView) getView().findViewById(R.id.playAudioBtn);
+		fetchViews();
         loadQuiz();
+	}
+
+	private void fetchViews(){
+		this.prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
+		this.nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
+		this.qText = (TextView) getView().findViewById(R.id.question_text);
+		this.questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
+		this.playAudioBtn = (ImageView) getView().findViewById(R.id.playAudioBtn);
+		this.progressBar = (ProgressBar) getView().findViewById(R.id.progress_quiz);
+		this.barAnim = new ProgressBarAnimator(progressBar);
+		this.barAnim.setAnimDuration(PROGRESS_ANIM_DURATION);
+		this.questionImage.setVisibility(View.GONE);
+		this.playAudioBtn.setVisibility(View.GONE);
 	}
 	
 	@Override
@@ -306,15 +319,15 @@ public class QuizWidget extends WidgetFactory {
 		Matcher m = p.matcher(questionText);
 		if (m.find()){
 			final String mp3filename = m.group();
+			questionText = questionText.replace(mp3filename, "");
 			File file = new File(course.getLocation() + "resources/" + mp3filename);
 			if (!file.exists()){
-
+				playAudioBtn.setVisibility(View.GONE);
+				return questionText;
 			}
-			Log.d(TAG, file.exists()? "siooo" : "noooo" );
 			final Uri mp3Uri = Uri.fromFile(file);
-
 			Log.d(TAG, mp3Uri.getPath());
-			questionText = questionText.replace(mp3filename, "");
+
 			playAudioBtn.setVisibility(View.VISIBLE);
 			playAudioBtn.setOnClickListener(new OnClickListener() {
 				@Override
@@ -324,10 +337,8 @@ public class QuizWidget extends WidgetFactory {
 						mp.release();
 						mp = null;
 					}
-
 					mp = MediaPlayer.create(getContext(), mp3Uri);
 					mp.start();
-
 				}
 			});
 		}
@@ -401,16 +412,19 @@ public class QuizWidget extends WidgetFactory {
 
 	private void setProgress() {
 		TextView progress = (TextView) getView().findViewById(R.id.quiz_progress);
+
+		int current = progressBar.getProgress();
+		progressBar.setMax(quiz.getTotalNoQuestions());
+		barAnim.animate(current, quiz.getCurrentQuestionNo());
 		try {
 			if (quiz.getCurrentQuestion().responseExpected()) {
-				progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, quiz.getCurrentQuestionNo(), quiz.getTotalNoQuestions()));
+				progress.setText(quiz.getCurrentQuestionNo() + "/" + quiz.getTotalNoQuestions());
 			} else {
 				progress.setText("");
 			}
 		} catch (InvalidQuizException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private boolean saveAnswer() {
@@ -489,7 +503,7 @@ public class QuizWidget extends WidgetFactory {
         View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
         if (quizResultsLayout == null){
             // load new layout
-            View C = getView().findViewById(R.id.quiz_progress);
+            View C = getView().findViewById(R.id.progress_container);
             ViewGroup parent = (ViewGroup) C.getParent();
             int index = parent.indexOfChild(C);
             parent.removeView(C);
@@ -577,13 +591,9 @@ public class QuizWidget extends WidgetFactory {
 	    parent.removeView(C);
 	    C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz, parent, false);
 	    parent.addView(C, index);
-	    
-	    this.prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
-	    this.nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
-	    this.qText = (TextView) getView().findViewById(R.id.question_text);
-	    this.questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
-	    this.questionImage.setVisibility(View.GONE);
-		this.showQuestion();
+
+		fetchViews();
+		showQuestion();
 	}
 
 	@Override

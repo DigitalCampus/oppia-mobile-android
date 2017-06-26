@@ -17,29 +17,27 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
-import org.digitalcampus.oppia.fragments.BadgesFragment;
-import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
-import org.digitalcampus.oppia.fragments.PointsFragment;
-import org.digitalcampus.oppia.fragments.CourseScorecardFragment;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.ImageUtils;
-
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
+import org.digitalcampus.oppia.fragments.BadgesFragment;
+import org.digitalcampus.oppia.fragments.CourseScorecardFragment;
+import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
+import org.digitalcampus.oppia.fragments.PointsFragment;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.ImageUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ScorecardActivity extends AppActivity {
@@ -49,10 +47,8 @@ public class ScorecardActivity extends AppActivity {
     public static final String TAB_TARGET_POINTS = "tab_points";
     public static final String TAB_TARGET_BADGES = "tab_badges";
 
-    private ActionBar actionBar;
-    private TabLayout tabs;
+	private TabLayout tabs;
 	private ViewPager viewPager;
-	private ActivityPagerAdapter apAdapter;
 	private SharedPreferences prefs;
 	private Course course = null;
 
@@ -65,14 +61,7 @@ public class ScorecardActivity extends AppActivity {
 		setContentView(R.layout.activity_scorecard);
 
 		viewPager = (ViewPager) findViewById(R.id.activity_scorecard_pager);
-
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
-
-        setSupportActionBar( (Toolbar)findViewById(R.id.toolbar) );
-        actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setHomeButtonEnabled(true);
-
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		Bundle bundle = this.getIntent().getExtras();
@@ -86,15 +75,15 @@ public class ScorecardActivity extends AppActivity {
 	public void onStart() {
 		super.onStart();
 
-		List<Fragment> fragments = new ArrayList<Fragment>();
+		List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();
 
 		Fragment fScorecard;
 		if(this.course != null){
 			fScorecard = CourseScorecardFragment.newInstance(course);
-            if (course.getImageFile() != null) {
+			ActionBar actionBar = getSupportActionBar();
+            if ((actionBar != null) && (course.getImageFile() != null)) {
                 BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.dc_logo);
-                //actionBar.setIcon(bm);
                 actionBar.setHomeAsUpIndicator(bm);
             }
 		} else {
@@ -117,11 +106,10 @@ public class ScorecardActivity extends AppActivity {
             tabTitles.add(this.getString(R.string.tab_title_badges));
         }
 
-		apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
+		ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
 		viewPager.setAdapter(apAdapter);
         tabs.setupWithViewPager(viewPager);
-        tabs.setTabMode(TabLayout.MODE_FIXED);
-        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
+		apAdapter.updateTabViews(tabs);
 
         int currentTab = 0;
         if ( targetTabOnLoad != null){

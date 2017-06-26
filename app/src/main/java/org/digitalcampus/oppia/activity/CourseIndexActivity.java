@@ -48,12 +48,17 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
@@ -80,14 +85,26 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_course_index);
-
-        initializeDagger();
+	    initializeDagger();
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
         loadingCourseView =  findViewById(R.id.loading_course);
 
-		Bundle bundle = this.getIntent().getExtras();
+        FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.scorecard_fab);
+        if (myFab != null) {
+            myFab.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent i = new Intent(CourseIndexActivity.this, ScorecardActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(Course.TAG, course);
+                    i.putExtras(tb);
+                    startActivityForResult(i, 1);
+                }
+            });
+        }
+
+        Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			course = (Course) bundle.getSerializable(Course.TAG);
 
@@ -129,8 +146,14 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		if (course.getImageFile() != null) {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
 					R.drawable.dc_logo);
-			//getSupportActionBar().setIcon(bm);
-            getSupportActionBar().setHomeAsUpIndicator(bm);
+            ImageView backdrop = (ImageView) findViewById(R.id.appbar_backdrop);
+            TextView description = (TextView) findViewById(R.id.appbar_description);
+            if (backdrop != null) {
+                backdrop.setImageDrawable(bm);
+            }
+            if (description != null) {
+                description.setText(course.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+            }
         }
     }
 
@@ -249,8 +272,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private void initializeCourseIndex(boolean animate){
 
         final ListView listView = (ListView) findViewById(R.id.section_list);
-        if (listView == null) return;
-
+	if (listView == null) return;        
+	ViewCompat.setNestedScrollingEnabled(listView, true);
         sla = new SectionListAdapter(CourseIndexActivity.this, course, sections, new SectionListAdapter.CourseClickListener() {
             @Override
             public void onActivityClicked(String activityDigest) {
@@ -393,7 +416,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             showBaselineMessage(null);
         }
         initializeCourseIndex(true);
-        invalidateOptionsMenu();
     }
 
     //@Override

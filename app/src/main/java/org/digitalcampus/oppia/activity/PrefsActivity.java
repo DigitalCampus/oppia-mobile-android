@@ -34,6 +34,7 @@ import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
+import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -45,12 +46,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -116,21 +120,30 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
     private PreferencesFragment mPrefsFragment;
+    private DrawerMenuManager drawer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_preferences);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentManager mFragmentManager = getFragmentManager();
         FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
         mPrefsFragment = PreferencesFragment.newInstance();
-        mFragmentTransaction.replace(android.R.id.content, mPrefsFragment);
+        mFragmentTransaction.replace(R.id.root_layout, mPrefsFragment);
         mFragmentTransaction.commit();
 
         Bundle bundle = this.getIntent().getExtras();
         if(bundle != null) { mPrefsFragment.setArguments(bundle); }
+
 	}
+
+	protected void onStart(){
+        super.onStart();
+        drawer = new DrawerMenuManager(this, false);
+        drawer.initializeDrawer();
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -336,8 +349,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
                 boolean adminEnabled = (resultCode == Activity.RESULT_OK);
                 Log.i(TAG, "Remote admin " + (adminEnabled?"allowed":"denied") + " by the user.");
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean(PrefsActivity.PREF_REMOTE_ADMIN, adminEnabled);
+                prefs.edit().putBoolean(PrefsActivity.PREF_REMOTE_ADMIN, adminEnabled).apply();
                 CheckBoxPreference adminPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_REMOTE_ADMIN);
                 adminPref.setChecked(adminEnabled);
                 return;
@@ -345,4 +357,23 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        drawer.onPrepareOptionsMenu(menu, R.id.menu_settings);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawer.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggle
+        drawer.onConfigurationChanged(newConfig);
+    }
 }

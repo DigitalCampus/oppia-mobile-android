@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -37,8 +39,9 @@ import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.utils.UIUtils;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener {
 	
@@ -53,6 +56,11 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             reminders.initSheduleReminders(activities);
         }
 	}
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -66,14 +74,19 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 	}
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onStart() {
+        super.onStart();
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        if (toolbar != null){
+            setSupportActionBar( toolbar );
+        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            //actionBar.setHomeButtonEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
 
             //If we are in a course-related activity, we show its title

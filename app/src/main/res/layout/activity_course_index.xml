@@ -1,40 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-   >
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/loading_course">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="fill_parent"
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/main.appbar"
+        android:layout_height="190dp"
+        android:layout_width="match_parent"
+        android:fitsSystemWindows="true">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:expandedTitleTextAppearance="@style/ScrollableLayoutHeaderText"
+            app:collapsedTitleTextAppearance="@style/CollapsedToolbarHeader"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.45">
+
+                <ImageView
+                    android:id="@+id/appbar_backdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="?attr/actionBarSize"
+                    android:paddingLeft="5dp"
+                    android:scaleType="fitStart"
+                    android:fitsSystemWindows="false"
+                    android:src="@drawable/default_course"
+                    android:alpha="0.4"
+                    android:contentDescription="@string/title_activity_course_index" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/appbar_description"
+                    android:paddingTop="?attr/actionBarSize"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="20dp"
+                    android:textColor="@color/text_dark"
+                    android:maxLines="3"
+                    />
+            </FrameLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:minHeight="?attr/actionBarSize"
+                app:theme="@style/Oppia.Theme.Dark"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                style="@style/ActionBar.Solid.Om"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:fitsSystemWindows="false"
+                app:layout_collapseMode="pin">
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar2"
-            android:layout_gravity="center_horizontal" />
+            >
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/loading_course">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/loading_course"
-            android:id="@+id/textView"
-            android:layout_gravity="center"
-            style="@style/SmallTextLight" />
-    </LinearLayout>
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar2"
+                    android:layout_gravity="center_horizontal" />
 
-    <ListView
-        android:id="@+id/section_list"
-        android:layout_width="fill_parent"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_course"
+                    android:id="@+id/textView"
+                    android:layout_gravity="center"
+                    style="@style/SmallTextLight" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/section_list"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="#00000000"
+                android:clipToPadding="false"
+                android:divider="@color/list_divider"
+                android:dividerHeight="0dp"
+                android:foreground="?android:windowContentOverlay"
+                android:listSelector="@drawable/background_change_pressed"
+                android:paddingTop="@dimen/fab_bottom_margin"
+                />
+
+        </FrameLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/scorecard_fab"
         android:layout_height="wrap_content"
-        android:divider="@color/list_divider"
-        android:dividerHeight="1dp"
-        android:listSelector="@drawable/background_change_pressed"
-        android:cacheColorHint="#00000000"
-        android:foreground="?android:windowContentOverlay"
-        />
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_scorecard"
+        app:layout_anchor="@id/main.appbar"
+        app:backgroundTint="@color/highlight_mid"
+        app:layout_anchorGravity="bottom|right|end" />
 
-</merge>
+</android.support.design.widget.CoordinatorLayout>

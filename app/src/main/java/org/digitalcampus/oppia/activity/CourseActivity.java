@@ -17,11 +17,24 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.Callable;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
+import android.speech.tts.UtteranceProgressListener;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
@@ -42,25 +55,11 @@ import org.digitalcampus.oppia.widgets.ResourceWidget;
 import org.digitalcampus.oppia.widgets.UrlWidget;
 import org.digitalcampus.oppia.widgets.WidgetFactory;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
-import android.speech.tts.UtteranceProgressListener;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.Callable;
 
 public class CourseActivity extends AppActivity implements OnInitListener, TabLayout.OnTabSelectedListener {
 
@@ -89,7 +88,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_course);
-        setSupportActionBar( (Toolbar)findViewById(R.id.toolbar) );
         ActionBar actionBar = getSupportActionBar();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         viewPager = (ViewPager) findViewById(R.id.activity_widget_pager);
@@ -278,12 +276,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         tabs.setupWithViewPager(viewPager);
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabs.setOnTabSelectedListener(this);
-
-        for (int i = 0; i < tabs.getTabCount(); i++) {
-            TabLayout.Tab tab = tabs.getTabAt(i);
-            if (tab!=null) tab.setCustomView(apAdapter.getTabView(i));
-        }
-
+        apAdapter.updateTabViews(tabs);
         viewPager.setCurrentItem(currentActivityNo);
     }
 
