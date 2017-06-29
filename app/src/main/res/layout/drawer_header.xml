@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/highlight_mid"
     android:layout_height="180dp">
@@ -9,7 +8,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/bg_sfh_training"
+        android:src="@drawable/drawer_header_bg"
         android:id="@+id/imageView8"
         android:padding="0dp"
         android:scaleType="centerCrop"

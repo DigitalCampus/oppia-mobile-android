@@ -32,8 +32,8 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-import org.kano.training.oppia.BuildConfig;
-import org.kano.training.oppia.R;
+import org.digitalcampus.mobile.learning.BuildConfig;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.StartUpActivity;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationBuilder;
@@ -96,7 +96,6 @@ public class AdminGCMListener extends GcmListenerService {
                         policyManager.resetPassword(password, DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
                         policyManager.lockNow();
                     }
-
                 }
             }
 

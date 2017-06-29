@@ -30,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import org.kano.training.oppia.R;
+import org.digitalcampus.mobile.learning.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;

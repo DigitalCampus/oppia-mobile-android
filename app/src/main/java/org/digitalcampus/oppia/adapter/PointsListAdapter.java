@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.adapter;
 
 import java.util.ArrayList;
 
-import org.kano.training.oppia.R;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Points;
 
 import android.app.Activity;

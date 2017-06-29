@@ -3,7 +3,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.kano.training.oppia.R;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfo;
 import org.junit.Before;

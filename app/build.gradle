@@ -13,7 +13,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "org.kano.training.oppia"
+        applicationId "org.digitalcampus.mobile.learning"
         minSdkVersion 14
         targetSdkVersion 25
 

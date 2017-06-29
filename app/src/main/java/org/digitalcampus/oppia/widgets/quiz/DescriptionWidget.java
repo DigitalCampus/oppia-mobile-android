@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.List;
 
-import org.kano.training.oppia.R;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
 import android.app.Activity;

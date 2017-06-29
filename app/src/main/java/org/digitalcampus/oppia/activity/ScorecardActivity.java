@@ -20,7 +20,7 @@ package org.digitalcampus.oppia.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kano.training.oppia.R;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;

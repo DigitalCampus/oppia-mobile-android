@@ -40,7 +40,7 @@ import java.lang.ref.WeakReference;
 import java.util.Formatter;
 import java.util.Locale;
 
-import org.kano.training.oppia.R;
+import org.digitalcampus.mobile.learning.R;
 
 
 /**

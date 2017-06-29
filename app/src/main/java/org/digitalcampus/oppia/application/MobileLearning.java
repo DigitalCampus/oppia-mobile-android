@@ -18,8 +18,8 @@
 package org.digitalcampus.oppia.application;
 
 
-import org.kano.training.oppia.BuildConfig;
-import org.kano.training.oppia.R;
+import org.digitalcampus.mobile.learning.BuildConfig;
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
