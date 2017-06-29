@@ -39,7 +39,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 
 public class GrantStorageAccessFragment extends Fragment implements ListInnerBtnOnClickListener {

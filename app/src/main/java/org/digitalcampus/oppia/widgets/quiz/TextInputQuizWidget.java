@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 
 
 public abstract class TextInputQuizWidget extends QuestionWidget {

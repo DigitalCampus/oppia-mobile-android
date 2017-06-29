@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.digitalcampus.mobile.learning.BuildConfig;
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.application.AdminReceiver;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
@@ -261,18 +260,17 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             }
         }
         else if (key.equalsIgnoreCase(PREF_REMOTE_ADMIN)){
-            if (BuildConfig.FLAVOR.equals("admin")) {
-                boolean adminEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
-                ComponentName adminReceiver = new ComponentName(this, AdminReceiver.class);
-                if (adminEnabled) {
-                    // Activate device administration
-                    Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                    intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminReceiver);
-                    startActivityForResult(intent, ADMIN_ACTIVATION_REQUEST);
-                } else {
-                    DevicePolicyManager dpm = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
-                    dpm.removeActiveAdmin(adminReceiver);
-                }
+            boolean adminEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
+            ComponentName adminReceiver = new ComponentName(this, AdminReceiver.class);
+            if (adminEnabled){
+                // Activate device administration
+                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminReceiver);
+                startActivityForResult(intent, ADMIN_ACTIVATION_REQUEST);
+            }
+            else{
+                DevicePolicyManager dpm = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
+                dpm.removeActiveAdmin(adminReceiver);
             }
         }
     }

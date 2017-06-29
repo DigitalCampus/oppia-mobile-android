@@ -26,7 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 

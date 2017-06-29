@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
 import org.digitalcampus.oppia.application.DbHelper;

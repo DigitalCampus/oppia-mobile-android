@@ -6,7 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import junit.framework.AssertionFailedError;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;

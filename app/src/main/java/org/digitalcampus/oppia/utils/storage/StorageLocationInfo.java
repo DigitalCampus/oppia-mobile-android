@@ -2,7 +2,7 @@ package org.digitalcampus.oppia.utils.storage;
 
 import android.content.Context;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 
 public class StorageLocationInfo {
 

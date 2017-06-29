@@ -24,7 +24,7 @@ import android.support.v7.app.ActionBar;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.utils.storage.FileUtils;

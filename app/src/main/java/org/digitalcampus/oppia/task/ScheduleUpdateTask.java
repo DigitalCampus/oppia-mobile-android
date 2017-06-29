@@ -20,7 +20,7 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;

@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.widgets;
 
 import java.util.HashMap;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;

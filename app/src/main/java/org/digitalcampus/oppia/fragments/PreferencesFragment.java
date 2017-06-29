@@ -9,7 +9,7 @@ import android.preference.PreferenceFragment;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.utils.UIUtils;

@@ -15,7 +15,7 @@ import android.view.animation.AnimationSet;
 
 import junit.framework.AssertionFailedError;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.MonitorActivity;

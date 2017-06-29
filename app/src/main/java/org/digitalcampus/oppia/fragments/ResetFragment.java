@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.fragments;
 
 import java.util.ArrayList;
 
-import org.digitalcampus.mobile.learning.R;
+import org.kano.training.oppia.R;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
