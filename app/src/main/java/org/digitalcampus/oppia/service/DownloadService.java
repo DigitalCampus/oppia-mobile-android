@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.service;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -27,23 +26,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.ui.OppiaNotificationBuilder;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -126,14 +123,14 @@ public class DownloadService extends IntentService {
             Log.d(TAG, "Sending notification from Service for the completion of all pending media downloads");
 
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
-            Notification notification  = OppiaNotificationBuilder.getBaseBuilder(this, true)
-                    .setContentTitle(getString(R.string.app_name))
+            NotificationCompat.Builder mBuilder  = OppiaNotificationUtils.getBaseBuilder(this, true);
+            mBuilder.setContentTitle(getString(R.string.app_name))
                     .setContentText(getString(R.string.notification_media_subject))
                     .setContentIntent(contentIntent)
                     .build();
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(0, notification);
+            OppiaNotificationUtils.sendNotification(this, notificationManager, 0, mBuilder.build());
         }
 
     }
