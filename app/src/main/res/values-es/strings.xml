@@ -100,6 +100,7 @@
     <string name="prefDeleteCourseEnabled">Permitir borrado de cursos</string>
 	<string name="notification_course_update_title">Nuevas actualizaciones de cursos</string>
 	<string name="notification_course_update_text">Hay actualizaciones disponibles para tus cursos.</string>
+    <string name="prefDisableNotifications">Desactivar notificaciones</string>
 	
 	<string name="title_login">Inicio sesión</string>
 	<string name="login_username_title">Usuario</string>
