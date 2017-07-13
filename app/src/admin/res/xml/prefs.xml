@@ -60,6 +60,11 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
+        android:key="prefDisableNotifications"
+        android:title="@string/prefDisableNotifications" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
         android:key="prefAdminProtection"
         android:title="@string/prefAdminProtection" />
 

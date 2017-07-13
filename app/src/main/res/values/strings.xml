@@ -118,6 +118,7 @@
     <string name="prefLogoutEnabled">Enable logout from homepage</string>
     <string name="prefDeleteCourseEnabled">Enable deleting of courses</string>
     <string name="prefDownloadViaCellularEnabled">Download media via cellular network</string>
+    <string name="prefDisableNotifications">Disable notifications</string>
 
     <!-- Strings relative to Storage -->
     <string name="prefStorageLocation">Storage Location</string>
