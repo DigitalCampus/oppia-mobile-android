@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY appName "OppiaMobile">
+    <!ENTITY companyName "Digital Campus"> ]>
 <resources>
-    <string name="app_logo_alt">Digital Campus Logo</string>
+    <string name="app_logo_alt">&companyName; Logo</string>
 
 
     <!-- Dont need to define gcm values here anymore, as they are defined in google-services.json
@@ -29,12 +32,12 @@
     <string name="menu_sort_by_filename">Trier par nom de fichier</string>
     <string name="menu_select_all">Tout sélectionner</string>
 
-    <string name="service_tracker">Service de suivi OppiaMobile</string>
+    <string name="service_tracker">Service de suivi &appName;</string>
 
-    <string name="fragment_welcome_title">Bienvenue sur OppiaMobile</string>
-    <string name="fragment_welcome_desc">OppiaMobile est une application d\'enseignement Androïd pour mobiles et tablettes qui permet le téléchargement des cours de la plateforme OppiaMobile. Les utilisateurs peuvent travailler en mode hors-ligne notamment dans les tests.\n\n\'Oppia\' veut dire \'apprendre\' en finlandais.</string>
-    <string name="fragment_welcome_login_info">Pour débuter sur OppiaMobile, vous devez vous inscrire ou vous connecter.</string>
-    <string name="fragment_welcome_privacy">Nous respectons votre droit à la vie privée et à la sécurité de vos données personnelles, <a href="http://digital-campus.org/privacy/">en savoir plus sur la politique de confidentialité de OppiaMobile</a></string>
+    <string name="fragment_welcome_title">Bienvenue sur &appName;</string>
+    <string name="fragment_welcome_desc">&appName; est une application d\'enseignement Androïd pour mobiles et tablettes qui permet le téléchargement des cours de la plateforme &appName;. Les utilisateurs peuvent travailler en mode hors-ligne notamment dans les tests.\n\n\'Oppia\' veut dire \'apprendre\' en finlandais.</string>
+    <string name="fragment_welcome_login_info">Pour débuter sur &appName;, vous devez vous inscrire ou vous connecter.</string>
+    <string name="fragment_welcome_privacy">Nous respectons votre droit à la vie privée et à la sécurité de vos données personnelles, <a href="http://digital-campus.org/privacy/">en savoir plus sur la politique de confidentialité de &appName;</a></string>
 
     <string name="tab_title_about">À propos</string>
     <string name="tab_title_badges">Badges</string>
@@ -220,12 +223,12 @@
     <string name="missing_media_download_selected">Télécharger la sélection</string>
     <string name="missing_media_stop_selected">Arrêter la sélection</string>
     <string name="missing_media_unselect_all">Tout dé-sélectionner</string>
-    <string name="notification_media_title">OppiaMobile : gestion des médias</string>
+    <string name="notification_media_title">&appName;: gestion des médias</string>
     <string name="notification_media_subject">Tous les fichiers médias ont été téléchargés avec succès.</string>
 
     <string name="error_connection">Erreur lors de la connexion au serveur. Prière de vérifier votre connexion Internet avant d\'essayer de nouveau.</string>
     <string name="error_connection_required">Vous avez besoin d\'une connexion Internet pour accéder à cette page. Connectez-vous à Internet via WiFi ou Mobile et essayez de nouveau.</string>
-    <string name="error_connection_ssl">Erreur de connexion au serveur à cause de problèmes SSL. Assurez-vous que les paramètres de votre hôte OppiaMobile sont corrects et que la date et l\'heure de votre appareil sont corrects.</string>
+    <string name="error_connection_ssl">Erreur de connexion au serveur à cause de problèmes SSL. Assurez-vous que les paramètres de votre hôte &appName; sont corrects et que la date et l\'heure de votre appareil sont corrects.</string>
     <string name="error_installing_course">Erreur lors de l\'installation du cours : %1$s</string>
     <string name="error_latest_already_installed">%1$s: Version la plus récente déjà installée</string>
     <string name="error_login">Nom d\'utilisateur/mot de passe non valides. Essayez de nouveau.</string>
@@ -290,7 +293,7 @@
     <string name="search.message.fetching">Récupération des résultats…</string>
     <string name="submit_stats_btn_text">Envoyer maintenant</string>
 
-    <string name="media_player_description">OppiaMobile lecteur de média</string>
+    <string name="media_player_description">&appName; lecteur de média</string>
 
     <string name="upgradev49_1">Copie des fichiers en cours - cet opération nécessite quelques minutes, veuillez être patient.</string>
     <string name="loading_course">Chargement du cours…</string>
@@ -309,7 +312,7 @@
     <string name="prefAdminPassword">Changer le mot de passe Administrateur</string>
     <string name="prefRemoteAdminEnabled">Activer l\'administration à distance de l\'appareil</string>
 
-    <string name="notification.remote_admin.title">Administration à distance de OppiaMobile</string>
+    <string name="notification.remote_admin.title">Administration à distance de &appName;</string>
     <string name="notification.remote_admin.camera_disabled">La caméra de l\'appareil a été désactivée à distance</string>
     <string name="notification.remote_admin.camera_enabled">La caméra de l\'appareil a été activée à distance</string>
 
@@ -320,20 +323,20 @@
     <string name="empty_state_media">Parfait ! Tous les fichiers média ont été téléchargés sur votre appareil.</string>
 	<string name="empty_state_scorecard">Vous n\'avez pas encore de cours installés. Lorsque vous installerez un cours, vous pourrez vérifier votre progression ici.</string>
 	
-    <string name="permissions.title">OppiaMobile a besoin des permissions suivantes pour pouvoir fonctionner :</string>
+    <string name="permissions.title">&appName; a besoin des permissions suivantes pour pouvoir fonctionner :</string>
     <string name="permissions.storage.title">accéder et modifier le contenu de la carte SD</string>
-    <string name="permissions.storage.description">OppiaMobile doit pouvoir accéder à la carte SD de l\'appareil pour installer les fichiers média nécessaires</string>
+    <string name="permissions.storage.description">&appName; doit pouvoir accéder à la carte SD de l\'appareil pour installer les fichiers média nécessaires</string>
     <string name="permissions.phone_state.title">read phone state and identity</string>
-    <string name="permissions.phone_state.description">OppiaMobile doit pouvoir accéder à l\'identité du téléphone pour recueillir les informations concernant le modèle de votre appareil ainsi que la version d\'Androïd installée</string>
+    <string name="permissions.phone_state.description">&appName; doit pouvoir accéder à l\'identité du téléphone pour recueillir les informations concernant le modèle de votre appareil ainsi que la version d\'Androïd installée</string>
     <string name="permissions.allow_btn_text">Accepter les autorisations</string>
-    <string name="permissions.not_askable.message">L\'application n\'a pas les permissions nécessaires pour fonctionner convenablement. Veuillez accéder au menu paramètres \> Applications \> OppiaMobile \> Permissions de votre appareil afin d\'accepter les autorisations nécessaires</string>
+    <string name="permissions.not_askable.message">L\'application n\'a pas les permissions nécessaires pour fonctionner convenablement. Veuillez accéder au menu paramètres \> Applications \> &appName; \> Permissions de votre appareil afin d\'accepter les autorisations nécessaires</string>
     <string name="permissions.not_askable.info">Vous recevez ce message parce que les autorisations ont déjà été demandées et que vous les avez refusées et que vous avez cliqué sur l\'option \"Ne plus demander\"</string>
     <string name="error_apikey_expired">Votre clé API a expiré. Veuillez vous connecter de nouveau.</string>
 
     <string name="open_digest.errors.invalid_param">Le paramètre \"digest\" est soit manquant soit mal configuré. Veuillez vérifier que ce lien est valide.</string>
     <string name="open_digest.errors.not_logged_in">Vous n\'êtes pas connecté. Veuillez vous connecter avant de tenter d\'ouvrir ce lien de nouveau.</string>
     <string name="open_digest.errors.activity_not_found">Activité introuvable. Etes-vous sûr d\'avoir installé le cours qui contient cette activité ?</string>
-    <string name="open_digest.description">OppiaMobile has the functionality to open activities based in its URL (opened from an SMS, for example)</string>
+    <string name="open_digest.description">&appName; has the functionality to open activities based in its URL (opened from an SMS, for example)</string>
     <string name="open_digest.btn_action">Ouvrir l\'activité</string>
     <string name="open_digest.activity_completed">Activité terminée</string>
 
