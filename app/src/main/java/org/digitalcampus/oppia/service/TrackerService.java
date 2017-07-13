@@ -30,7 +30,7 @@ import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
-import org.digitalcampus.oppia.utils.ui.OppiaNotificationBuilder;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -180,15 +180,14 @@ public class TrackerService extends Service implements APIRequestListener {
             Intent resultIntent = new Intent(this, DownloadActivity.class);
             PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            NotificationCompat.Builder mBuilder = OppiaNotificationBuilder.getBaseBuilder(this, true);
-            mBuilder
-                .setContentTitle(getString(R.string.notification_course_update_title))
-                .setContentText(getString(R.string.notification_course_update_text))
-			    .setContentIntent(resultPendingIntent);
+            NotificationCompat.Builder mBuilder = OppiaNotificationUtils.getBaseBuilder(this, true);
+			mBuilder
+					.setContentTitle(getString(R.string.notification_course_update_title))
+					.setContentText(getString(R.string.notification_course_update_text))
+					.setContentIntent(resultPendingIntent);
 			int mId = 001;
 
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(mId, mBuilder.build());
+			OppiaNotificationUtils.sendNotification(this, mId, mBuilder.build());
 		}
 	}
 
