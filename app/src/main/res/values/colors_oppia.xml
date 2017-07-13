@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    	<color name="pressed_om">#CC9ACA3C</color>
-    <color name="background_dark">#333333</color>
-    <color name="background_light">#eeeeee</color>
-    <color name="list_divider">#222222</color>
-    <color name="list_divider_light">#cccccc</color>
-    <color name="text_dark">#222222</color>
-    <color name="text_grey">#666666</color>
-    <color name="text_light">#ffffff</color>
     <color name="highlight_light">#74B042</color>
     <color name="highlight_mid">#9aca3c</color>
     <color name="highlight_dark">#495525</color>
     <color name="highlight_shadow">#597725</color>
-    <color name="default_icon_foreground">#666666</color>
-    <color name="button_background">#eeeeee</color>
-    <color name="activity_icon_background">#ffffff</color>
     <color name="highlight_secondary">#689e3a</color>
-    <color name="highlight_label">#434343</color>
-    <color name="highlight_separator">#b9b9b9</color>
-    <color name="text_error">#DD2C00</color>
-    <color name="stroke">#DFDFDF</color>
-    <color name="quiz_navigation_bar">#D2D2D2</color>
-    <color name="quiz_navigation_button">#FF5A595B</color>
 </resources>
