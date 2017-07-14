@@ -10,15 +10,24 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
+        versionCode 63
+        versionName "6.3.0"
+
         applicationId "org.digitalcampus.mobile.learning"
         minSdkVersion 14
         targetSdkVersion 25
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    //Add the version_name value to strings resources
+    applicationVariants.all { variant ->
+        variant.resValue "string", "version_name", variant.versionName
+    }
+
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'

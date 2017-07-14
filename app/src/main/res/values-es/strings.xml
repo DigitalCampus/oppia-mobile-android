@@ -1,6 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY appName "OppiaMobile">
+    <!ENTITY companyName "Digital Campus"> ]>
 <resources>
-    <string name="app_name">OppiaMobile</string>
-    <string name="app_logo_alt">Logo Digital Campus</string>
+    <string name="app_name">&appName;</string>
+    <string name="app_logo_alt">Logo &companyName;</string>
     
     <string name="menu_download">Gestionar cursos</string>
     <string name="menu_language">Cambiar idioma</string>
@@ -15,12 +19,12 @@
     <string name="menu_search">Búsqueda</string>
     <string name="menu_stop_read_aloud">Detener lectura</string>
     
-    <string name="service_tracker">OppiaMobile - Seguimiento</string>
+    <string name="service_tracker">&appName; - Seguimiento</string>
     
-    <string name="fragment_welcome_title">Bienvenido a OppiaMobile</string>
-    <string name="fragment_welcome_desc">Oppia Mobile es una plataforma de aprendizaje móvil de código abierto para la entrega de contenido de aprendizaje, vídeo y cuestionarios.\n\n\'Oppia\' viene del verbo \'aprender\' en finés.</string>
-    <string name="fragment_welcome_login_info">Para empezar a utilizar OppiaMobile, necesitarás registrarte o iniciar sesión.</string>
-    <string name="fragment_welcome_privacy">Nos tomamos tu privacidad en serio, <a href="http://digital-campus.org/privacy/">descubre más acerca de la política de privacidad de Digital Campus</a></string>
+    <string name="fragment_welcome_title">Bienvenido a &appName;</string>
+    <string name="fragment_welcome_desc">&appName; es una plataforma de aprendizaje móvil de código abierto para la entrega de contenido de aprendizaje, vídeo y cuestionarios.\n\n\'Oppia\' viene del verbo \'aprender\' en finés.</string>
+    <string name="fragment_welcome_login_info">Para empezar a utilizar &appName;, necesitarás registrarte o iniciar sesión.</string>
+    <string name="fragment_welcome_privacy">Nos tomamos tu privacidad en serio, <a href="http://digital-campus.org/privacy/">descubre más acerca de la política de privacidad de &companyName;</a></string>
     
     <string name="tab_title_about">Acerca de</string>
     <string name="tab_title_badges">Insignias</string>
@@ -172,7 +176,7 @@
 	<string name="scan_media_download_via_pc_button">Descarga vía PC</string>
 	<string name="success_media_download">Media: \'%1$s\' descargado correctamente.</string>
 	<string name="media_file_size">%1$.1fMb</string>
-    <string name="notification_media_title">OppiaMobile: gestión de descargas</string>
+    <string name="notification_media_title">&appName;: gestión de descargas</string>
     <string name="notification_media_subject">Todos los ficheros multimedia fueron descargados correctamente</string>
 	
 	<string name="error_connection">Error conectando al servidor. Por favor, comprueba que tienes una conexión a internet activa y prueba otra vez.</string>
@@ -283,22 +287,22 @@
     <string name="menu_sort_by">Ordenar por</string>
     <string name="menu_sort_by_course">Ordenar por curso</string>
     <string name="menu_sort_by_filename">Ordenar por nombre de archivo</string>
-    <string name="error_connection_ssl">Error conectando al servidor debido a problemas con SSL. Por favor, asegúrese de que el host del servidor de OppiaMobile en los ajustes es correcto, y de que el dispositivo tiene configurada la fecha y hora actuales</string>
+    <string name="error_connection_ssl">Error conectando al servidor debido a problemas con SSL. Por favor, asegúrese de que el host del servidor de &appName; en los ajustes es correcto, y de que el dispositivo tiene configurada la fecha y hora actuales</string>
     <string name="error_apikey_expired">Tu clave de API ha expirado. Por favor, inicia sesión de nuevo.</string>
-    <string name="media_player_description">Reproductor Oppia</string>
+    <string name="media_player_description">Reproductor &appName;</string>
     <string name="menu_select_all">Seleccionar todos</string>
     <string name="missing_media_download_selected">Descargar seleccionados</string>
     <string name="missing_media_stop_selected">Parar seleccionados</string>
     <string name="missing_media_unselect_all">Deseleccionar todo</string>
     <string name="notification.remote_admin.camera_disabled">Se han deshabilitado las cámaras del dispositivo remotamente</string>
     <string name="notification.remote_admin.camera_enabled">Se han habilitado las cámaras del dispositivo remotamente</string>
-    <string name="notification.remote_admin.title">Oppia: Administración Remota </string>
+    <string name="notification.remote_admin.title">&appName;: Administración Remota </string>
     <string name="permissions.allow_btn_text">Conceder permisos</string>
     <string name="permissions.not_askable.info">Estás viendo este mensaje porque se han solicitado permisos previamente y los denegaste marcando la casilla "No preguntar de nuevo"</string>
-    <string name="permissions.not_askable.message"><![CDATA[La app no tiene los permisos necesarios para funcionar. Por favor, ve a Configuración \> Aplicaciones \> OppiaMobile \> Permisos para conceder estos permisos]]></string>
-    <string name="permissions.storage.description">OppiaMobile necesita acceso a la tarjeta SD para poder guardar los contenidos multimedia descargados para los cursos</string>
+    <string name="permissions.not_askable.message"><![CDATA[La app no tiene los permisos necesarios para funcionar. Por favor, ve a Configuración \> Aplicaciones \> &appname; \> Permisos para conceder estos permisos]]></string>
+    <string name="permissions.storage.description">&appName; necesita acceso a la tarjeta SD para poder guardar los contenidos multimedia descargados para los cursos</string>
     <string name="permissions.storage.title">leer y modificar contenidos de la tarjeta SD</string>
-    <string name="permissions.title">OppiaMobile necesita los siguientes permisos para funcionar correctamente:</string>
+    <string name="permissions.title">&appName; necesita los siguientes permisos para funcionar correctamente:</string>
     <string name="prefDownloadViaCellularEnabled">Descargar multimedia usando los datos del teléfono</string>
     <string name="prefLogoutEnabled">Permitir cierre de sesión desde el menú principal</string>
     <string name="register_alert_title">Registro</string>
@@ -320,5 +324,5 @@
     <string name="scorecard_quizzes_title">Quizzes</string>
     <string name="upgradev49_1">Copiando archivos al nuevo destino - esta tarea podría llevar varios minutos</string>
     <string name="permissions.phone_state.title">consultar la identidad y estado del teléfono</string>
-    <string name="permissions.phone_state.description">OppiaMobile necesita acceso a la identidad del teléfono para obtener información sobre el modelo de dispositivo y la versión de Android</string>
+    <string name="permissions.phone_state.description">&appName; necesita acceso a la identidad del teléfono para obtener información sobre el modelo de dispositivo y la versión de Android</string>
 </resources>
