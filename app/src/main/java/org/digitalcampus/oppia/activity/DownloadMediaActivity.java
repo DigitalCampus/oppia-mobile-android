@@ -343,7 +343,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		}
 		strData += "</ul>";
 		strData += "</body></html>";
-		strData += "<p>"+this.getString(R.string.download_via_pc_final,"/digitalcampus/media/")+"</p>";
+        String path = ExternalStorageStrategy.getInternalBasePath(this);
+		strData += "<p>"+this.getString(R.string.download_via_pc_final, path)+"</p>";
 		
 		File file = new File(Environment.getExternalStorageDirectory(),filename);
 		try {

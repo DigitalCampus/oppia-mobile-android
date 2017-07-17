@@ -207,7 +207,7 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
         prefs.edit().putString(PrefsActivity.PREF_STORAGE_LOCATION, location).apply();
     }
 
-    private static String getInternalBasePath(Context ctx){
+    public static String getInternalBasePath(Context ctx){
         if (internalPath == null){
             String packageName = ctx.getPackageName();
             // internalPath: /Android/data/{{packageName}}/files
