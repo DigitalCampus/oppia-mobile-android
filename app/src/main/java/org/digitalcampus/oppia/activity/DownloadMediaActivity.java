@@ -36,6 +36,8 @@ import org.digitalcampus.oppia.service.DownloadBroadcastReceiver;
 import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import com.androidplot.pie.PieRenderer;
 import com.splunk.mint.Mint;
@@ -322,6 +324,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
 	private void downloadViaPC(){
+
+        if (Storage.getStorageStrategy().getStorageType().equals(PrefsActivity.STORAGE_OPTION_INTERNAL)){
+            UIUtils.showAlert(this, R.string.prefStorageLocation, this.getString(R.string.download_via_pc_extenal_storage));
+            return;
+        }
+
 		String filename = "oppia-media.html";
 		String strData = "<html>";
 		strData += "<head><title>"+this.getString(R.string.download_via_pc_title)+"</title></head>";
