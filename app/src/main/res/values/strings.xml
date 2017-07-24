@@ -104,6 +104,8 @@
     <string name="prefServer_errorDescription">Please, enter a well-formed URL corresponding to your &appName; server endpoint</string>
     <string name="prefServerTimeoutConnection">Connection timeout</string>
     <string name="prefServerTimeoutResponse">Response timeout</string>
+    <string name="prefInt_errorTitle">Invalid value</string>
+    <string name="prefInt_errorDescription">Please, enter a valid integer value</string>
     <string name="prefShowCourseDescription">Show course description</string>
     <string name="prefShowProgressBar">Show progress bar</string>
     <string name="prefShowScheduleReminders">Display suggested activities</string>
@@ -280,6 +282,7 @@
     <string name="download_via_pc_title">Download Media Files</string>
     <string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
     <string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
+    <string name="download_via_pc_extenal_storage">You need to set an external storage option to be able to place the files downloaded from your PC inside the app directory. Please, go to "Settings" and change your storage option.</string>
 
     <string name="schedule_reminders">Suggested next activities:</string>
 
