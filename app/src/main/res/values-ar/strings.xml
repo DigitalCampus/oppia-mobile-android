@@ -1,344 +1,372 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY appName "OppiaMobile">
+    <!ENTITY companyName "Digital Campus"> ]>
 <resources>
-    <string name="app_logo_alt">Digital Campus Logo</string>
+    <string name="app_logo_alt">&companyName; Logo</string>
 
 
     <!-- Dont need to define gcm values here anymore, as they are defined in google-services.json
     <string name="gcm_defaultSenderId">1:1075863350964:android:e457f5046c8376a5</string>
     string name="gcm_defaultSenderId">admin-api-cc4ba</string -->
 
-    <string name="about_logged_in">Logged in as: %1$s</string>
-    <string name="about_not_logged_in">Not logged in</string>
+    <string name="about_logged_in"> المستخدم %1$s</string>
+    <string name="about_not_logged_in">غير متصل بالانترنت</string>
 
-    <string name="menu_download">Download Courses</string>
-    <string name="menu_language">Change language</string>
-    <string name="menu_settings">Settings</string>
-    <string name="menu_about">About</string>
-    <string name="menu_font_increase">Increase text size</string>
-    <string name="menu_font_decrease">Decrease text size</string>
-    <string name="menu_help">Help</string>
-    <string name="menu_logout">Logout</string>
-    <string name="menu_monitor">Monitor</string>
-    <string name="menu_read_aloud">Read aloud</string>
-    <string name="menu_return_to_courses">Return to courses</string>
-    <string name="menu_scorecard">Scorecard</string>
-    <string name="menu_search">Search</string>
-    <string name="menu_stop_read_aloud">Stop reading</string>
-    <string name="menu_sort_by">Sort by</string>
-    <string name="menu_sort_by_course">Sort by course</string>
-    <string name="menu_sort_by_filename">Sort by filename</string>
-    <string name="menu_select_all">Select all</string>
+    <string name="menu_download">تحميل الدروس</string>
+    <string name="menu_language">اختيار اللغة</string>
+    <string name="menu_settings">الإعدادات</string>
+    <string name="menu_about">عن طبشورة أوبيا</string>
+    <string name="menu_font_increase">تكبير حجم النص</string>
+    <string name="menu_font_decrease">تصغير حجم النص</string>
+    <string name="menu_help">المساعدة</string>
+    <string name="menu_logout">تسجيل الخروج</string>
+    <string name="menu_monitor">مراقب</string>
+    <string name="menu_read_aloud">القراءة بصوت عال</string>
+    <string name="menu_return_to_courses">العودة الى الدروس</string>
+    <string name="menu_scorecard">دفتر العلامات</string>
+    <string name="menu_search">إبحث</string>
+    <string name="menu_stop_read_aloud">إيقاف القراءة</string>
+    <string name="menu_sort_by">رتب حسب</string>
+    <string name="menu_sort_by_course">رتب حسب الدرس</string>
+    <string name="menu_sort_by_filename">رتب حسب اسم الملف</string>
+    <string name="menu_select_all">انتقاء الكل</string>
 
-    <string name="service_tracker">OppiaMobile Tracker Service</string>
+    <string name="service_tracker">خدمة المتابعة لدى طبشورة أوبيا</string>
 
-    <string name="fragment_welcome_title">Welcome to OppiaMobile</string>
-    <string name="fragment_welcome_desc">OppiaMobile is a mobile learning platform for delivering learning content, video and quizzes.\n\n\'Oppia\' means \'to learn\' in Finnish</string>
-    <string name="fragment_welcome_login_info">To get started with OppiaMobile, you will need to register or login.</string>
-    <string name="fragment_welcome_privacy">We take your privacy seriously, <a href="http://digital-campus.org/privacy/">find out more about Digital Campus\'s privacy policy</a></string>
+    <string name="fragment_welcome_title">أهلا وسهلا في التطبيق طبشورة أوبيا</string>
+    <string name="fragment_welcome_desc">طبشورة أوبيا هي تطبيق تعليمي مخصص لنظام أندرويد يعمل على الهاتف النقال أو الجهاز اللوحي ويسمح بتحميل الدروس من منصة طبشورة الإلكترونية. كلمة أوبيا تعود إلى الفنلندي وتعني التعلم</string>
+    <string name="fragment_welcome_login_info">لإستخدام طبشورة أوبيا عليك تسجيل الدخول أو إنشاء حساب</string>
+    <string name="fragment_welcome_privacy">تنطبق سياسة الخصوصية على كافة البيانات الشخصية التي تقوم بتزويدنا بها عبر هذا الموقع<a href="http://tabshoura.com/wordpress/politique-de-confidentialite/">للمزيد حول سياسة الخصوصية المعتمدة لدى ديجيتيل كامبوس</a></string>
 
-    <string name="tab_title_about">About</string>
-    <string name="tab_title_badges">Badges</string>
-    <string name="tab_title_help">Help</string>
-    <string name="tab_title_login">Login</string>
-    <string name="tab_title_points">Points</string>
-    <string name="tab_title_privacy">Privacy</string>
-    <string name="tab_title_register">Register</string>
-    <string name="tab_title_reset">Reset Password</string>
-    <string name="tab_title_scorecard">Scorecard</string>
-    <string name="tab_title_activity">Activity</string>
-    <string name="tab_title_welcome">Welcome</string>
+    <string name="tab_title_about">عن طبشورة أوبيا</string>
+    <string name="tab_title_badges">شارات</string>
+    <string name="tab_title_help">المساعدة</string>
+    <string name="tab_title_login">إنشاء حساب</string>
+    <string name="tab_title_points">نقاط</string>
+    <string name="tab_title_privacy">سياسة الخصوصية</string>
+    <string name="tab_title_register">تسجيل دخول</string>
+    <string name="tab_title_reset">تغيير كلمة السر</string>
+    <string name="tab_title_scorecard">دفتر العلامات</string>
+    <string name="tab_title_activity">نشاط</string>
+    <string name="tab_title_welcome">أهلا وسهلا في التطبيق طبشورة أوبيا</string>
 
-    <string name="title_about">About</string>
-    <string name="title_baseline">Baseline</string>
-    <string name="title_btn_reset">Reset password</string>
-    <string name="title_download_activity">Manage courses</string>
-    <string name="title_activity_course_index">Course Index</string>
-    <string name="title_activity_course">Activity</string>
-    <string name="title_course_meta">About</string>
-    <string name="title_monitor">Monitor</string>
-    <string name="title_stats_submitted">No activities submitted to server</string>
-    <string name="title_stats_unsubmitted">No activities waiting to submit</string>
-    <string name="title_prefs">Settings</string>
-    <string name="title_scorecard">Scorecard</string>
-    <string name="title_tag_select_activity">Select Category</string>
-    <string name="version">Version: %1$s</string>
-    <string name="title_download_media">Download Media</string>
+    <string name="title_about">عن طبشورة أوبيا</string>
+    <string name="title_baseline">المرجع الاساسي</string>
+    <string name="title_btn_reset">تغيير كلمة السر</string>
+    <string name="title_download_activity">إدارة الدروس</string>
+    <string name="title_activity_course_index">مناهج الدروس</string>
+    <string name="title_activity_course">نشاط</string>
+    <string name="title_course_meta">عن طبشورة أوبيا</string>
+    <string name="title_monitor">مرقاب</string>
+    <string name="title_stats_submitted">لا أنشطة مرسلة الى الخادم</string>
+    <string name="title_stats_unsubmitted">لا أنشطة معلقة</string>
+    <string name="title_prefs">الإعدادات</string>
+    <string name="title_scorecard">دفتر العلامات</string>
+    <string name="title_tag_select_activity">اختار فئة</string>
+    <string name="title_welcome">طبشورة أوبيا</string>
+    <string name="version"> إصدار: %1$s</string>
+    <string name="title_download_media">تحميل أو تنزيل ملفات الوسائط</string>
 
-    <string name="widget_feedback_submit">Submit</string>
-    <string name="widget_feedback_submit_title">Thank you for submitting your feedback.</string>
+    <string name="widget_feedback_submit">حفظ معلومات الدخول</string>
+    <string name="widget_feedback_submit_title">نشكرك على إرسال ملاحظاتك</string>
 
-    <string name="widget_quiz_next">Next</string>
-    <string name="widget_quiz_prev">Prev</string>
-    <string name="widget_quiz_getresults">Get Results</string>
-    <string name="widget_quiz_noanswergiven">Please give an answer before moving to the next question</string>
-    <string name="widget_quiz_progress">Question %1$d of %2$d</string>
-    <string name="widget_quiz_results_score">You scored: %1$.0f%%</string>
-    <string name="widget_quiz_results_restart">Retake this quiz</string>
-    <string name="widget_quiz_continue">Continue &gt;&gt;</string>
-    <string name="widget_quiz_baseline_completed">Thank you for completing the pre-test. You can now continue to the course.</string>
-    <string name="widget_quiz_baseline_goto_course">Continue to course &gt;&gt;</string>
-    <string name="widget_quiz_image_caption">Press the image to view larger version</string>
-    <string name="widget_quiz_media_caption">Press the image to start the video</string>
-    <string name="widget_quiz_feedback_response_title">You answered: </string>
-    <string name="widget_quiz_feedback_feedback_title">Feedback: </string>
-    <string name="widget_quiz_unavailable_section">You must complete all the previous activities in this section before this quiz becomes available to you.</string>
-    <string name="widget_quiz_unavailable_course">You must complete all the previous activities in this course before this quiz becomes available to you.</string>
-    <string name="widget_quiz_unavailable_attempts">You have already attempted this quiz the max number of times allowed</string>
-    <string name="widget_resource_open_file">Open \'%1$s\'</string>
+<string name="widget_quiz_next">الاحق</string>
+<string name="widget_quiz_prev">السابق</string>
+<string name="widget_quiz_getresults">النتائج</string>
+<string name="widget_quiz_noanswergiven">الرجاء تسجيل الإجابة قبل الإنتقال الى السؤال اللاحق</string>
+<string name="widget_quiz_progress">السؤال رقم  %1$d من %2$d</string>
+<string name="widget_quiz_results_score">لقد حصلتم على : %1$.0f%%</string>
+<string name="widget_quiz_results_restart">إعادة الاختبار</string>
+<string name="widget_quiz_continue">تابع &gt;&gt;</string>
+<string name="widget_quiz_baseline_completed">شكرا على إنجاز الإختبار المسبق يمكنك بدء الدرس</string>
+<string name="widget_quiz_baseline_goto_course">أبدأ الدرس&gt;&gt;</string>
+<string name="widget_quiz_image_caption">إضغط على الصورة لتكبيرهاr</string>
+<string name="widget_quiz_media_caption">إضغط على الصورة لتشغيل الفيديو</string>
+<string name="widget_quiz_feedback_response_title">لقد أجبت </string>
+<string name="widget_quiz_feedback_feedback_title">ردود الفعل </string>
+<string name="widget_quiz_unavailable_section">يجب إنجاز كافة االأنشطة في هذا القسم قبل الإنتقال الى الإختبار</string>
+<string name="widget_quiz_unavailable_course">يجب إنجاز كافة الأنشطة في هذا الدرس قبل الإنتقال الى الإختبار</string>
+<string name="widget_quiz_unavailable_attempts">بلغت الحد الأقصى من المحاولات لهذا الإختبار</string>
+<string name="widget_resource_open_file">إفتح \'%1$s\'</string>
 
-    <string name="course_context_reset">Reset</string>
-    <string name="course_context_delete">Delete</string>
-    <string name="course_context_update_activity">Update activity</string>
-    <string name="course_context_reset_confirm">Are you sure you want to reset this course? It will remove all the progress logs for this course.</string>
-    <string name="course_context_delete_confirm">Are you sure you want to delete this course? It will completely remove the course from your phone.</string>
+<string name="course_context_reset">إعادة تعيين</string>
+<string name="course_context_delete">إلغاء</string>
+<string name="course_context_update_activity">تحديث النشاط</string>
+<string name="course_context_reset_confirm">هل أنت متأكد من أنك تريد إعادة تعيين هذا الدرس؟ سوف يلغي هذا الإجراء ما قمت به</string>
+<string name="course_context_delete_confirm">هل أنت متأكد من أنك تريد إاغاء هذا الدرس؟ سوف يلغي هذا الإجراء الدرس كليا </string>
 
-    <string name="no_courses">There are no courses currently installed</string>
-    <string name="more_courses">Download more courses</string>
+<string name="no_courses">لا دروس محملة على الجهاز المستخدم</string>
+<string name="more_courses">تحميل المزيد من الدروس</string>
 
-    <string name="prefAdvanced">Advanced settings</string>
-    <string name="prefBackgroudDataConnect">Background activity tracker</string>
-    <string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
-    <string name="prefLanguage">Preferred Language</string>
-    <string name="prefHighlightCompleted">Highlight completed activities</string>
-    <string name="prefNoScheduleReminders">Number of suggested activities</string>
-    <string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
-    <string name="prefServer">Server</string>
-    <string name="prefServerTimeoutConnection">Connection timeout</string>
-    <string name="prefServerTimeoutResponse">Response timeout</string>
-    <string name="prefShowCourseDescription">Show course description</string>
-    <string name="prefShowProgressBar">Show progress bar</string>
-    <string name="prefShowScheduleReminders">Display suggested activities</string>
-    <string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
-    <string name="prefShowSectionNumbers">Show section numbers</string>
-    <string name="prefTextSize">Text size</string>
-    <string name="prefUser">Username</string>
-    <string name="prefUserHint">(read only)</string>
-    <string name="prefLogoutEnabled">Enable logout from homepage</string>
-    <string name="prefDeleteCourseEnabled">Enable deleting of courses</string>
-    <string name="prefDownloadViaCellularEnabled">Download media via cellular network</string>
+<string name="prefAdvanced">الإعدادات المتقدمة</string>
+<string name="prefBackgroudDataConnect">رصد مراقبة الأنشطة في الخلفية</string>
+<string name="prefBackgroudDataConnect_summary">أرسل سجل الأنشطة حتى إذا كان التطبيق في وضع توقف مؤقت</string>
+<string name="prefLanguage">اللغة المفضلة</string>
+<string name="prefHighlightCompleted">إبراز الأنشطة المنتهية</string>
+<string name="prefNoScheduleReminders">عرض عدد الأنشطة المقترحة</string>
+<string name="prefNoScheduleReminders_summary">عرض عدد الأنشطة المقترحة</string>
+<string name="prefServer">الخادم</string>
+<string name="prefServerTimeoutConnection">مهلة الإتصال</string>
+<string name="prefServerTimeoutResponse">مدة الإجابة</string>
+<string name="prefShowCourseDescription">عرض وصف الدروس</string>
+<string name="prefShowProgressBar">عرض شريط التقدم</string>
+<string name="prefShowScheduleReminders">عرض الأنشطة المقترحة</string>
+<string name="prefShowScheduleReminders_summary">عرض الأنشطة التي يجب إكمالها لاحقا</string>
+<string name="prefShowSectionNumbers">عرض أرقام الأقسام</string>
+<string name="prefTextSize">حجم النص</string>
+<string name="prefUser">إسم المستخدم</string>
+<string name="prefUserHint">للقراءة فقط</string>
+<string name="prefLogoutEnabled">السماح بتسجيل الخروج من الصفحة الرئيسة</string>
+<string name="prefDeleteCourseEnabled">السماح بإلغاء الدرس</string>
+<string name="prefDownloadViaCellularEnabled">تنزيل ملفات الوسائط عبر شبكة الهاتف الخليوي</string>
 
     <!-- Strings relative to Storage -->
-    <string name="prefStorageLocation">Storage Location</string>
-    <string name="prefStorageOptionInternal">Internal</string>
-    <string name="prefStorageOptionExternal">External</string>
-    <string name="moving_storage_location">Moving files to new storage location…</string>
-    <string name="move_storage_completed">Moving storage completed</string>
-    <string name="storageNonRemovable">Non-removable storage</string>
-    <string name="storageRemovable">Removable SD Card</string>
-    <string name="storageAccessNotGranted">SD Card access not granted</string>
-    <string name="storageAccess_help1">Since Android 5 (Lollipop) there is a new official way for apps to write to the external SD card. Apps must ask the user to grant write access to a folder on the SD card. A system folder chooser dialog will open, and you will need to select the SD card from there.</string>
-    <string name="storageAccess_help2">If the dialog appears empty and there are no items in the left drawer, you first need to go to the menu and tell the system to show the SD card.</string>
-    <string name="storageAccess_help3">Then, tap on the SD card from the list on the left side to display its folder structure. In this screenshot you see both \"Internal storage\" and the SD card. The SD card can be displayed under a different name then what you see here, for example \"Kingston\". It\'s the so called disk label of the card.</string>
-    <string name="storageAccess_help4">Then select the card. Don\'t navigate down into any subfolder. You must select the top-level root folder of the SD card. This is important.</string>
-    <string name="storageAccess_help5">After tapping the \"Select SD card\" button you should be back in the app. The app double checks if it now indeed can write to the SD card, and if the folder selected is the root one.</string>
+<string name="prefStorageLocation">مساحة التخزين</string>
+<string name="prefStorageOptionInternal">الداخلي</string>
+<string name="prefStorageOptionExternal">الخارجي</string>
+<string name="moving_storage_location">نقل الملفات الى مساحة تخزين جديدة</string>
+<string name="move_storage_completed">إنتهاء عملية نقل التخزين</string>
+<string name="storageNonRemovable">التخزين في الذاكرة الداخلية</string>
+<string name="storageRemovable">بطاقة الذاكرة الرقمية القابلة للإزالة</string>
+<string name="storageAccessNotGranted">رفض قراءة بطاقة الذاكة الرقمية</string>
+<string name="storageAccess_help1">منذ صدور نظام أندرويد الإصدار  5 لوليبوب
+(Lollipop)
+تعتمد التطبيقات على بروتوكول كتابة جديد توفره بطاقات الذاكرة الرقمية
+تطلب التطبيقات من المستخدم السماح بتسجيل حق الكتابة في دليل محفوظ على بطاقة الذاكرة الرقمية
+ثم تظهر نافذة حوار ويجب اختيار بطاقة الذاكرة الرقمية</string>
+<string name="storageAccess_help2">إذا كان مربع الحوار فارغا ولم يتضمن الجزء الأيسر أي عناصر إذهب الى القائمة طالبا من النظام عرض بطاقة الذاكرة الرقمية</string>
+<string name="storageAccess_help3">ثم أضغط على بطاقة الذاكرة الرقمية من اللأئحة في الجزء الأيسر لعرض بنية المجلدات
+تتضمن هذه اللقطة كل من العبارتين تخزين داخلي وبطاقة الذاكرة الرقمية
+كما يمكن أن تحمل بطاقة الذاكرة الرقميةاسما آخر من الذي يتم عرضه هنا على سبيل المثال اسم "كينغستون" وهو بمثابة العلامة التجارية لبطاقة الذاكرة الرقمية</string>
+<string name="storageAccess_help4">ثم انتقي بطاقة الذاكرة الرقمية
+لا تختار أي مجلد فرعي بل انتقي المجلد الجذري لبطاقة الذاكرة الرقمية</string>
+<string name="storageAccess_help5">بعد نقر على الزر اختيار بطاقة الذاكرة الرقمية تكون قد عدت الى التطبيق
+ثم يدقق التطبيق ما إذا كان من الممكن الكتابة على بطاقة الذاكرة الرقمية وما إذا كان المجلد الذي تم اختياره هو فعلا المجلد الجذري لبطاقة الذاكرة الرقمية </string>
 
-    <string name="notification_course_update_title">New course updates</string>
-    <string name="notification_course_update_text">Updates are available for your courses.</string>
+<string name="notification_course_update_title">تحديثات جديدة للدرس</string>
+<string name="notification_course_update_text">تحديثات متوفرة للدروس</string>
 
-    <string name="title_login">Login</string>
-    <string name="login_username_title">Username</string>
-    <string name="login_password_title">Password</string>
-    <string name="title_register">Register</string>
+<string name="title_login">الاتصال بالانترنت</string>
+<string name="login_username_title">إسم المستخدم</string>
+<string name="login_password_title">كلمة السر</string>
+<string name="title_register">تسجيل دخول</string>
 
-    <string name="register_form_username_title">Username (*)</string>
-    <string name="register_form_email_title">Email address (*)</string>
-    <string name="register_form_firstname_title">First name (*)</string>
-    <string name="register_form_jobtitle_title">Job Title</string>
-    <string name="register_form_lastname_title">Last name (*)</string>
-    <string name="register_form_organisation_title">Organisation</string>
-    <string name="register_form_password_title">Password (*)</string>
-    <string name="register_form_password_again_title">Password (again) (*)</string>
-    <string name="register_form_phoneno_title">Phone number (*)</string>
-    <string name="register_btn_text">Register</string>
+<string name="register_form_username_title">إسم المستخدم (*)</string>
+<string name="register_form_email_title">عنوان البريد الاكتروني (*)</string>
+<string name="register_form_firstname_title">الإسم (*)</string>
+<string name="register_form_jobtitle_title">المسمى الوظيفي</string>
+<string name="register_form_lastname_title">الشهرة (*)</string>
+<string name="register_form_organisation_title">إلمؤسسة</string>
+<string name="register_form_password_title">كلمة السر (*)</string>
+<string name="register_form_password_again_title">أعد إدخال كلمة السر (*)</string>
+<string name="register_form_phoneno_title">رقم الهاتف (*)</string>
+<string name="register_btn_text">تسجيل دخول</string>
 
-    <string name="reset_username_title">Username or Email</string>
+<string name="reset_username_title">الإسم أو عنوان البريد الإلكتروني</string>
 
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="close">Close</string>
-    <string name="error">Error</string>
-    <string name="info">Info</string>
-    <string name="warning">Warning</string>
-    <string name="loading">Loading</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="logout">Logout</string>
-    <string name="feedback">Feedback</string>
-    <string name="download">Download</string>
-    <string name="downloaded">Downloaded</string>
-    <string name="open">Open</string>
-    <string name="storage_default">Default</string>
+<string name="yes">نعم</string>
+<string name="no">كلا</string>
+<string name="close">إغلاق</string>
+<string name="error">خطأ</string>
+<string name="info">معلومات</string>
+<string name="warning">الإنتباه</string>
+<string name="Chargement">تنزيل</string>
+<string name="ok">حسنا</string>
+<string name="cancel">إلغاء</string>
+<string name="logout">تسجيل خروج</string>
+<string name="feedback">ردود الفعل</string>
+<string name="download">تحميل</string>
+<string name="downloaded">تم تحميله بنجاح</string>
+<string name="open">إفتح</string>
+<string name="storage_default">قيم نظامية</string>
 
-    <string name="alert_pretest">Pre-test</string>
-    <string name="alert_pretest_summary">This course contains a pre-test which you need to complete before you can view the full course.</string>
+<string name="alert_pretest">إختبار مسبق</string>
+<string name="alert_pretest_summary">يحتوي هذا الدرس على إختبار مسبق يجب إجراؤه قبل الإنتقال الى الدرس</string>
 
-    <string name="tag_label">%1$s (%2$d)</string>
-    <string name="alt_activity_icon">Activity icon</string>
+<string name="tag_label">%1$s (%2$d)</string>
+<string name="alt_activity_icon">رمز النشاط</string>
 
-    <string name="publisher">Publisher:</string>
-    <string name="update">Update</string>
-    <string name="update_schedule">Update Schedule</string>
-    <string name="installed">Installed</string>
-    <string name="install">Install</string>
+<string name="publisher">الناشر</string>
+<string name="update">تحديث</string>
+<string name="update_schedule">جدول التحديثات</string>
+<string name="installed">تم تنزيله بنجاح</string>
+<string name="install">تنزيل الدرس</string>
 
-    <string name="download_starting">Download starting</string>
-    <string name="downloading">Downloading &#8230;</string>
-    <string name="download_complete">Download complete</string>
+<string name="download_starting">بدء التحميل</string>
+<string name="downloading">جاري التحميل &#8230;</string>
+<string name="download_complete">إكتمل التحميل</string>
 
-    <string name="update_starting">Getting schedule updates</string>
-    <string name="updating">Updating &#8230;</string>
-    <string name="update_complete">Schedule update complete</string>
+<string name="update_starting">تحديثات انتظامية</string>
+<string name="updating">جاري التحديث &#8230;</string>
+<string name="update_complete">اكتمل التحديث</string>
 
-    <string name="installing_course">Installing: %1$s</string>
-    <string name="install_complete">Installation complete</string>
+<string name="installing_course">تنزيل  %1$s:</string>
+<string name="install_complete">إاكتمل التنزيل</string>
 
-    <string name="install_course_complete">%1$s: installed</string>
+<string name="install_course_complete">%1$s: تم تنزيله بنجاح</string>
 
-    <string name="info_scan_media_start">Scanning for media</string>
-    <string name="info_scan_media_checking">Checking for: %1$s</string>
-    <string name="info_scan_media_missing">Some media files are missing for your courses.</string>
+<string name="info_scan_media_start">البحث عن ملفات الوسائط</string>
+<string name="info_scan_media_checking">التحقق من%1$s</string>
+<string name="info_scan_media_missing">ملفات وسائط ناقصة في الدروس</string>
 
-    <string name="info_upgrading">Upgrading to %1$s</string>
-    <string name="course_updating">Updating course activity…</string>
-    <string name="course_updating_success">\'%1$s\': Course activity updated successfully</string>
-    <string name="course_updating_error">\'%1$s\': Error updating course</string>
-    <string name="course_deleting">Deleting course…</string>
-    <string name="course_deleting_success">Course deleted successfully</string>
-    <string name="course_deleting_error">Error deleting course</string>
-    <string name="info.startup.preloaded_accounts">Preloaded %1$d new user(s).</string>
+<string name="info_upgrading">ترقية%1$s</string>
+<string name="course_updating">تحديث النشاط</string>
+<string name="course_updating_success">\'%1$s\': نجاح تحديث النشاط</string>
+<string name="course_updating_error">\'%1$s\': خطأ لدى تحديث الدرس</string>
+<string name="course_deleting">إلغاء الدرس</string>
+<string name="course_deleting_success">تم إلغاء الدرس بنجاح</string>
+<string name="course_deleting_error">خطأ لدى إلغاء الدرس</string>
+<string name="info.startup.preloaded_accounts">حمل مسبق %1$d مستخدم جديد</string>
 
-    <string name="loading_courses">Loading courses</string>
-    <string name="loading_points">Loading points &#8230;</string>
-    <string name="loading_badges">Loading badges &#8230;</string>
+<string name="loading_courses">تنزيل الدرس</string>
+<string name="loading_points">تنزيل النقاط &#8230;</string>
+<string name="loading_badges">تنزيل الشارات &#8230;</string>
 
-    <string name="info_no_badges">You don\'t have any badges yet. Complete a full course to earn your first badge.</string>
+<string name="info_no_badges">ليس لديك شارة أنهي الدرس الأول للحصول على الشارة الأولى</string>
 
-    <string name="scan_media_download_button">Download</string>
-    <string name="scan_media_download_via_pc_button">Download via PC</string>
-    <string name="success_media_download">Media file: \'%1$s\' successfully downloaded.</string>
-    <string name="media_file_size">%1$.1fMb</string>
-    <string name="missing_media_download_selected">Download selected</string>
-    <string name="missing_media_stop_selected">Stop selected</string>
-    <string name="missing_media_unselect_all">Unselect all</string>
-    <string name="notification_media_title">OppiaMobile: media management</string>
-    <string name="notification_media_subject">All media files downloaded successfully</string>
+<string name="scan_media_download_button">تحميل</string>
+<string name="scan_media_download_via_pc_button">تحميل من الحاسوب</string>
+<string name="success_media_download">تحميل ملف الوسائط : \'%1$s\' بنجاح</string>
+<string name="media_file_size">%1$.1fMb</string>
+<string name="missing_media_download_selected">تحميل المجموعة المحددة</string>
+<string name="missing_media_stop_selected">تحميل المجموعة المحددة</string>
+<string name="missing_media_unselect_all">إلغاء التحديدر</string>
+<string name="notification_media_title">طبشورة أوبيا: إدارة ملف الوسائط</string>
+<string name="notification_media_subject">تم تحميل كافة ملفات الوسائط بنجاح</string>
 
-    <string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
-    <string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
-    <string name="error_connection_ssl">Error connecting to server due to SSL problems. Please, ensure that the host in your OppiaMobile server setting is correct, and that your device has the right time/date</string>
-    <string name="error_installing_course">%1$s: failed to install</string>
-    <string name="error_latest_already_installed">%1$s: latest version already installed</string>
-    <string name="error_login">Invalid username/password\nPlease try again</string>
-    <string name="error_media_app_not_found">You don\'t appear to have a media player installed which supports playing this video.</string>
-    <string name="error_no_username">Please enter your username</string>
-    <string name="error_processing_response">Error processing response</string>
-    <string name="error_quiz_no_questions">There aren\'t any questions in this quiz.</string>
-    <string name="error_register_no_email">Please enter your email address</string>
-    <string name="error_register_password">Your password must be at least %1$d or more characters</string>
-    <string name="error_register_password_no_match">Your passwords don\'t match</string>
-    <string name="error_register_no_firstname">Please enter your first name</string>
-    <string name="error_register_no_lastname">Please enter your last name</string>
-    <string name="error_register_no_phoneno">Please enter your phone number</string>
-    <string name="error_register_no_username">Please enter a username</string>
-    <string name="error_register_username_spaces">Your username cannot contain spaces</string>
-    <string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
-    <string name="error_resource_not_found">File: \'%1$s\' not found.</string>
-    <string name="error_preloading_accounts">Error preloading accounts from CSV file</string>
-    <string name="error_reset">Username or email not found\nPlease try again</string>
-    <string name="no_title_set">No title set</string>
+<string name="error_connection">خطأ لدى الإتصال بالخادم الرجاء التأكد من صحة الإتصال بالخادم قبل إعادة الإتصال</string>
+<string name="error_connection_required">WiFi الحاجة الى الإتصال بالانترنت لقراءة هذه الصفحة اتصل بالانترنت عبر
+ أو الهاتف
+النقال ثم أعد تسجيل دخول  </string>
+<string name="error_connection_ssl">خطأ الدى الإتصال بالخادم بسبب مشاكل
+ SSL
+التأكد من صحة إعدادات تطبيق طبشورة أوبيا و
+صحة التاريخ والساعة</string>
+<string name="error_installing_course">خطأ عند تنزيل الدرس %1$s</string>
+<string name="error_latest_already_installed">%1$s: تم تنزيل النسخة الأكثر حداثة</string>
+<string name="error_login">عدم صحة إسم المستخدم أو كلمة السر
+أعد إدخال اسم المستخدم أو كلمة السر</string>
+<string name="error_media_app_not_found">الجهاز غير مجهز بقارئ الفيديو المناسب</string>
+<string name="error_no_username">رجاء أدخل إسم المستخدم</string>
+<string name="error_processing_response">خطأ لدى معالجة البيانات</string>
+<string name="error_quiz_no_questions">لا يضم هذا الاختبار اسئلة</string>
+<string name="error_register_no_email">رجاء أدخل عنوان البريد الالكتروني</string>
+<string name="error_register_password">يجب أن تحتوي كلمة السر على 8 أحرف كحد أدنى</string>
+<string name="error_register_password_no_match">كلمات السر الخاصة بك ليست  نفسها</string>
+<string name="error_register_no_firstname">رجاء إدخال الإسم</string>
+<string name="error_register_no_lastname">رجاء إدخال الشهرة</string>
+<string name="error_register_no_phoneno">رجاء إدخال رقم الهاتف</string>
+<string name="error_register_no_username">رجاء إدخال إسم المستخدم </string>
+<string name="error_register_username_spaces">لا يمكن أن يحتوي إسم المستخدم على فراغات</string>
+<string name="error_resource_app_not_found">الجهاز غير مجهز بتطبيق يسمح بقراءة هذا النوع من الملفات \'%1$s\'. رجاء تنزيل تطبيق يسمح بقراءة هذا النوع من الملفات</string>
+<string name="error_resource_not_found">الملف  : \'%1$s\' غير موجود</string>
+<string name="error_preloading_accounts">خطأ عند استيراد حسابات مستخدمي ملف
+ CSV </string>
 
-    <string name="error_insufficient_storage_available">Insufficient storage available</string>
-    <string name="error_sdcard">Your SD card is not available - please restart this app when the SD card is available.\nThe app will now close.</string>
-    <string name="error_media_not_found">Media file: \'%1$s\' not found.</string>
-    <string name="error_media_unsupported">\'%1$s\' does not appear to be a supported media file type.</string>
-    <string name="error_download_failure">Download failed</string>
-    <string name="error_update_failure">Update failed</string>
-    <string name="error_install_failure">Install failed</string>
-    <string name="error_media_download">Error trying to download media, please try again later</string>
-    <string name="error_reading_xml">An error occurred trying to load the course. Please reinstall the course.</string>
-    <string name="error_tts_start">Text To Speech failed. Please check your phone to ensure have Text to Speech installed and enabled</string>
-    <string name="warning_wifi_required">You must be connected to a wifi network to download the media files.\nPlease connect to a wifi network to download the media files on your phone, or download the files via your PC.</string>
-    <string name="warning_delete_disabled">Sorry, deleting a course is currently disabled - please update your settings to allow deleting of courses.</string>
-    <string name="warning_download_via_cellular_enabled">Warning! Allowing media files to be downloaded via your mobile (cellular) network may incur high charges for data download.\n\n It is not recommended to enable this if you are on a slow mobile network.</string>
+<string name="error_insufficient_storage_available">طاقة التخزين غير كافية</string>
+<string name="error_sdcard">بطاقة الذاكرة الرقمية
+غير متوفرة رجاء إعادة تشغيل التطبيق عند توفر بطاقة الذاكرة الرقمية  \n\'سوف يتوقف التطبيق عن العمل</string>
+<string name="error_media_not_found">ملف الوسائط  \'%1$s\' غير موجود</string>
+<string name="error_media_unsupported">\'%1$s\' عدم صحة هذا النوع من الملفات</string>
+<string name="error_download_failure">خطأ عند التحميل</string>
+<string name="error_update_failure">خطأ عند التحديث</string>
+<string name="error_install_failure">خطأ عند التنزيل</string>
+<string name="error_media_download">طأ عند تحميل ملفات الوسائط رجاء أعد التحميل</string>
+<string name="error_reading_xml">خطأ لدى فتح الدرس رجاء أعد تنزيل الدرس</string>
+<string name="error_tts_start">القراءة بصوت عالي غير متوفر رجاء التأكد من صحة  تنزيل التطبيق على الجهاز ومن صحة تشغيله </string>
+<string name="warning_wifi_required">WiFi يجب التصال باشبكة
+لتنزيل ملفات الوسائط
+    WiFi  رجاء الإتصال بشبكة
+لتحميل ملفات الوساءط على جهازك أو تحميل ملفات الوسائط عبر الحاسوب</string>
+<string name="warning_delete_disabled">عذرا لا يمكن إلغاء الدرس الآن
+    رجاء تحديث إعدادات التطبيق للسماح بإلغاء الدرس</string>
+<string name="warning_download_via_cellular_enabled">الانتباه! السماح بتحميل ملفات الوسائط عبر شبكة الهاتف النقال قد يترتب على المستخدم تكاليف إضافية \n\n لا ينصح بتشغيل هذه الميزة إذا كنت على شبكة جوال بطيئة جدا</string>
 
-    <string name="login_process">Logging in</string>
-    <string name="login_complete">Logged in</string>
+<string name="login_process">التصال جاري</string>
+<string name="login_complete">تم الإتصال بالانترنت بنجاح</string>
 
-    <string name="logout_confirm">Are you sure you want to logout?\n\nYou will need an active internet connection to log in again.</string>
+<string name="logout_confirm">هل تريد تسجيل الخروج؟ تحتاج الى التصال بالانترنت لإعادة تسجيل الدخول</string>
 
-    <string name="register_alert_title">Register</string>
-    <string name="register_process">Registering …</string>
-    <string name="register_complete">Successfully registered</string>
+<string name="register_alert_title">تسجيل الدخول</string>
+<string name="register_process">جاري تسجيل الدخول</string>
+<string name="register_complete">نجاح تسجيل الدخول</string>
 
-    <string name="reset_alert_title">Reset</string>
-    <string name="reset_process">Resetting password …</string>
-    <string name="reset_complete">Your password has now been reset.\n\nPlease check your email for your new password.</string>
+<string name="reset_alert_title">أعد تعيين</string>
+<string name="reset_process">أعد تعيين كلمة السر</string>
+<string name="reset_complete">تمت إعادة تعيين كلمة السر بنجاح رجاء مراجعة البريد الالكتروني للحصول على كلمة السر الجديدة</string>
 
-    <string name="change_language">Change Language</string>
+<string name="change_language">تغيير اللغة</string>
 
-    <string name="download_via_pc_message">A small file \'%1$s\' has been placed on your phone SD card, open this on your computer and follow the instructions to download the media files and copy them onto your phone SD card.</string>
-    <string name="download_via_pc_title">Download Media Files</string>
-    <string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
-    <string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
+<string name="download_via_pc_message">الملف   \'%1$s\' موجود على بطاقة الذاكرة الرقمية للجهاز إفتحه على الحاسوب واتبع التعليمات لتحميل ملفات الوسائط وانسخها على بطاقة
+الذاكرة الرقمية للجهاز المستعمل</string>
+<string name="download_via_pc_title">تحميل ملفات الوسائط</string>
+<string name="download_via_pc_intro">تحميل كافة الملفات أدناه على الحاسوب إضغط على زر الفأرة الأيمن واختار العبارة حفظ بإسم</string>
+<string name="download_via_pc_final">بعد تحميل الملفات إنسخها على الدليل  \'%1$s\' من بطاقة الذاكرة الرقمية للجهاز المستعمل</string>
 
-    <string name="schedule_reminders">Suggested next activities:</string>
+<string name="schedule_reminders">الأنشطة اللاحقة المقترحة</string>
 
-    <string name="course_draft">(Draft version)</string>
+<string name="course_draft">(مسودة)</string>
 
-    <string name="search.activity_title">Search</string>
-    <string name="search.result_summary">%1$d results for \"%2$s\"</string>
-    <string name="search.message.searching">Searching…</string>
-    <string name="search.message.no_results">No results found for \"%1$s\"</string>
-    <string name="search.message.fetching">Fetching results…</string>
-    <string name="submit_stats_btn_text">Send now</string>
+<string name="search.activity_title">إبحث</string>
+<string name="search.result_summary">%1$d نتائج    البحث \"%2$s\"</string>
+<string name="search.message.searching">جاري البحث</string>
+<string name="search.message.no_results">نتائج غير موجودة \"%1$s\"</string>
+<string name="search.message.fetching">إستعادة النتائج</string>
+<string name="submit_stats_btn_text">أرسل الآن</string>
 
-    <string name="media_player_description">Oppia Media Player</string>
+<string name="media_player_description">طبشورة أوبيا قارئ ملفات الوسائط</string>
 
-    <string name="upgradev49_1">Copying files to new location - this may take several minutes, so please be patient</string>
-    <string name="loading_course">Loading course…</string>
-    <string name="scorecard_quizzes_title">Quizzes</string>
-    <string name="scorecard_quizzes_highlight_pretest">Pre-test</string>
-    <string name="scorecard_quizzes_highlight_attempted">Attempted</string>
-    <string name="scorecard_quizzes_highlight_passed">Passed</string>
-    <string name="scorecard_activities_completed">activities completed</string>
-    <string name="scorecard_activities_total">total</string>
+<string name="upgradev49_1">الملفات قيد النسخ رجاء الانتظار</string>
+<string name="loading_course">جاري التحميل</string>
+<string name="scorecard_quizzes_title">إختبارات</string>
+<string name="scorecard_quizzes_highlight_pretest">إختبار مسبق</string>
+<string name="scorecard_quizzes_highlight_attempted">محاولات</string>
+<string name="scorecard_quizzes_highlight_passed">نسبة النجاح</string>
+<string name="scorecard_activities_completed">إنتهاء النشاط</string>
+<string name="scorecard_activities_total">المجموع</string>
 
-    <string name="admin_password_required">This feature is protected for admin use only. Please, insert below the admin password to continue:</string>
-    <string name="admin_password_error_incorrect_password">Incorrect admin password. Try again</string>
-    <string name="admin_password_newpassword_dialog_title">Admin password</string>
-    <string name="admin_password_newpassword_dialog_message">Please, introduce your admin password</string>
-    <string name="prefAdminProtection">Protect admin actions with password</string>
-    <string name="prefAdminPassword">Change admin password</string>
-    <string name="prefRemoteAdminEnabled">Enable remote administration of the device</string>
+<string name="admin_password_required">هذه الميزة متاحة فقط للمسؤول عن إدارة التطبيق
+رجاء أدخل كلمة سر المسؤول عن إدارة التطبيق للمتابعة</string>
+<string name="admin_password_error_incorrect_password">كلمة سر المسؤول عن إدارة التطبيق غير صالحة رجاء أعد إدخال كلمة السر</string>
+<string name="admin_password_newpassword_dialog_title">كلمة سر المسؤول عن إدارة التطبيق</string>
+<string name="admin_password_newpassword_dialog_message">رجاء أدخل كلمة سر المسؤول عن إدارة التطبيق</string>
+<string name="prefAdminProtection">حماية زيارة الموقع على الشبكة باستعمال كلمة السر</string>
+<string name="prefAdminPassword">تغيير كلمة سر المسؤول عن إدارة التطبيق</string>
+<string name="prefRemoteAdminEnabled">تشغيل إدارة الجهاز عن بعد</string>
 
-    <string name="notification.remote_admin.title">Oppia Remote Administration</string>
-    <string name="notification.remote_admin.camera_disabled">The device cameras have been disabled remotely</string>
-    <string name="notification.remote_admin.camera_enabled">The device cameras have been enabled remotely</string>
+<string name="notification.remote_admin.title">إدارة تطبيق طبشورة أوبيا عن بعد</string>
+<string name="notification.remote_admin.camera_disabled">تم توقيف آلة التصوير عن بعد</string>
+<string name="notification.remote_admin.camera_enabled">تم تشغيل آلة التصوير عن بعد</string>
 
-    <string name="sequencing.dialog_title">Activity locked</string>
-    <string name="sequencing.section.message">You must complete the previous activities in this section before this one becomes available to you.</string>
-    <string name="sequencing.course.message">You must complete all the previous activities in the course before this one becomes available to you.</string>
-    <string name="empty_state_courses">There aren\'t any courses currently available to you on this server.</string>
-    <string name="empty_state_media">Great! You now have all the media content for your courses downloaded onto your device.</string>
-	<string name="empty_state_scorecard">You don\'t have any courses installed yet. \nOnce you install a course, you will see your progress here.</string>
-	
-    <string name="permissions.title">OppiaMobile needs the following permissions to function properly:</string>
-    <string name="permissions.storage.title">read and modify contents of the SD card</string>
-    <string name="permissions.storage.description">OppiaMobile needs access to the SD card to be able to store the downloaded media contents for the courses</string>
-    <string name="permissions.phone_state.title">read phone state and identity</string>
-    <string name="permissions.phone_state.description">OppiaMobile needs access to the phone identity to get information about your device model and Android version</string>
-    <string name="permissions.allow_btn_text">Allow permissions</string>
-    <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> OppiaMobile > Permissions to grant access to these permissions</string>
-    <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
-    <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
+<string name="sequencing.dialog_title">النشاط مقفل</string>
+<string name="sequencing.section.message">يجب إنجاز كافة الأنشطة في هذا القسم قبل الانتقال الى هذا النشاط</string>
+<string name="sequencing.course.message">يجب إنجاز كافة الأنشطة في هذا الدرس قبل الإنتقال الى هذا النشاط</string>
+<string name="empty_state_courses">لا دروس على هذا الخادم</string>
+<string name="empty_state_media">حسنا! تم تحميل جهازك بكافة ملفات الوساءط</string>
+<string name="empty_state_scorecard">لم تنزل أية دروس على جهازك
+عند تنزيل درس يمكنك التحقق من التقدم الذي تحرزه</string>
 
-    <string name="open_digest.errors.invalid_param">The \"digest\" parameter is either misconfigured or missing. Please, check that the link is valid.</string>
-    <string name="open_digest.errors.not_logged_in">You are not logged in. Please, login and try to open the link again.</string>
-    <string name="open_digest.errors.activity_not_found">Activity not found. Are you sure you have installed the course that contains this activity?</string>
-    <string name="open_digest.description">OppiaMobile has the functionality to open activities based in its URL (opened from an SMS, for example)</string>
-    <string name="open_digest.btn_action">Open activity</string>
-    <string name="open_digest.activity_completed">Activity completed</string>
+<string name="permissions.title">يحتاج تطبيق طبشورة أوبيا الى التصريحات التالية لحسن التشغيل</string>
+<string name="permissions.storage.title">التعرف الى بطاقة الذاكرة الرقمية وقتغيير محتواها</string>
+<string name="permissions.storage.description">يجب على طبشورة أوبيا التعرف الى بطاقة الذاكرة الرقمية لتنزيل ملفات الوسائط الازمة</string>
+<string name="permissions.phone_state.title">قراءة وضع وهوية الهاتف</string>
+<string name="permissions.phone_state.description">يجب على طبشورة أوبيا التعرف الى هوية الهاتف للحصول على المعلومات المتعلقة بطراز الجهاز فضلا عن إصدار نظام أندرويد المحمل </string>
+<string name="permissions.allow_btn_text">قبول التصريحات</string>
+    <string name="permissions.not_askable.message">لا يتمتع التطبيق بالتصريحات الازمة لتشغيله بصورة مناسبة
+رجاء قراءة القائمة الاعدادات |  التطبيقات |  طبشورة أوبيا | يسمح جهاز المستخدم بقبول التصريحات الازمة</string>
+    <string name="permissions.not_askable.info">تتلقى هذه الرسالة لأن التصريحات قد طلبت  وقمت برفضها ونقرت على الزر "لا تطلب مجددا"    ا</string>
+<string name="error_apikey_expired">انتهت صلاحية مفتاح واجهة البرمجة التطبيقية
+رجاء أعد الإتصال بالشبكة </string>
+
+<string name="open_digest.errors.invalid_param">أن الإعداد "ديجيست" ناقص وإما أنه مكون بشكل خاطئ
+رجاء التحقق من أن الرابط مقبول</string>
+<string name="open_digest.errors.not_logged_in">لست متصل بالانترنت  رجاء الاتصال بالانترنت قبل محاولة إعادة فتح هذا الرابط</string>
+<string name="open_digest.errors.activity_not_found">لا نشاط  هل أنت متأكد من أنك أنزلت الدرس الذي يضم هذا النشاط؟</string>
+<string name="open_digest.description">يمكن لطبشورة أوبيا الوصول الى نشاط بالرجوع الى العنوان الالكترونيURL
+(ع      ( عبر إشعار رسالة قصيرة أو بريد الكتروني أو رسالة واتس أب </string>
+<string name="open_digest.btn_action">مباشرة النشاط</string>
+<string name="open_digest.activity_completed">إنتهاء النشاط</string>
 
 
 </resources>
-
