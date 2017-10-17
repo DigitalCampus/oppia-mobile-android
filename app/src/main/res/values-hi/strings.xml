@@ -1,6 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+	<!ENTITY appName "OppiaMobile">
+	<!ENTITY companyName "Digital Campus"> ]>
+
 <resources>
-    <string name="app_name">OppiaMobile</string>
-    <string name="app_logo_alt">Digital Campus Logo</string>
+    <string name="app_name">&appName;</string>
+    <string name="app_logo_alt">&companyName; Logo</string>
     
     <string name="menu_download">कोर्स डाउनलोड करें</string>
     <string name="menu_language">भाषा बदलें</string>
@@ -15,7 +20,7 @@
     <string name="menu_search">खोज</string>
     <string name="menu_stop_read_aloud">पढ़ना रोकें</string>
     
-    <string name="service_tracker">OppiaMobile Tracker Service</string>
+    <string name="service_tracker">&appName; Tracker Service</string>
     
     <string name="fragment_welcome_title">उज्जवल साथी प्रोग्राम में आपका स्वागत है</string>
     <string name="fragment_welcome_desc">यह प्रोग्राम के माध्यम से आप अपने मोबाइल के ज़रिये स्वास्थ्य सम्बंधित जानकारी प्राप्त कर सकते हैं एवं स्वस्थ्य सम्बंधित फिल्में देख सकतें हैं और दूसरों को दिखा भी सकते हैं.</string>

@@ -3,6 +3,7 @@
     <!ENTITY appName "OppiaMobile">
     <!ENTITY companyName "Digital Campus"> ]>
 <resources>
+    <string name="app_name">&appName;</string>
     <string name="app_logo_alt">&companyName; Logo</string>
 
 

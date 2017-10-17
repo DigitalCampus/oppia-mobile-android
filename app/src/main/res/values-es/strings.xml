@@ -251,7 +251,7 @@
     <string name="more_courses">Descargar más cursos</string>
     <string name="register_form_organisation_title">Organización</string>
     <string name="register_form_jobtitle_title">Puesto de trabajo</string>
-    <string name="register_form_phoneno_title">Número de teléfono</string>
+    <string name="register_form_phoneno_title">Número de teléfono (*)</string>
     <string name="submit_stats_btn_text">Enviar ahora</string>
     <string name="admin_password_required">Esta funcionalidad está protegida para uso de admin únicamente. Por favor, introduce la constraseña de admin para continuar:</string>
     <string name="admin_password_newpassword_dialog_title">Contraseña </string>

@@ -3,12 +3,9 @@
     <!ENTITY appName "OppiaMobile">
     <!ENTITY companyName "Digital Campus"> ]>
 <resources>
+
+    <string name="app_name">&appName;</string>
     <string name="app_logo_alt">&companyName; Logo</string>
-
-
-    <!-- Dont need to define gcm values here anymore, as they are defined in google-services.json
-    <string name="gcm_defaultSenderId">1:1075863350964:android:e457f5046c8376a5</string>
-    string name="gcm_defaultSenderId">admin-api-cc4ba</string -->
 
     <string name="about_logged_in"> المستخدم %1$s</string>
     <string name="about_not_logged_in">غير متصل بالانترنت</string>
@@ -64,7 +61,6 @@
     <string name="title_prefs">الإعدادات</string>
     <string name="title_scorecard">دفتر العلامات</string>
     <string name="title_tag_select_activity">اختار فئة</string>
-    <string name="title_welcome">طبشورة أوبيا</string>
     <string name="version"> إصدار: %1$s</string>
     <string name="title_download_media">تحميل أو تنزيل ملفات الوسائط</string>
 
@@ -171,7 +167,7 @@
 <string name="error">خطأ</string>
 <string name="info">معلومات</string>
 <string name="warning">الإنتباه</string>
-<string name="Chargement">تنزيل</string>
+<string name="loading">تنزيل</string>
 <string name="ok">حسنا</string>
 <string name="cancel">إلغاء</string>
 <string name="logout">تسجيل خروج</string>
