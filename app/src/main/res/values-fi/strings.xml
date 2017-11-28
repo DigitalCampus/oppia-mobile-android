@@ -38,5 +38,20 @@
     <string name="close">Sulje</string>
     <string name="download">Lataa</string>
     <string name="change_language">Vaihda Lieltä</string>
+    <string name="downloaded">Ladattu</string>
+    <string name="error">Virhe</string>
+    <string name="error_resource_not_found">Tiedosto: \'%1$s\' ei löytynyt.</string>
+    <string name="prefServer_errorTitle">Virheellinen URL-osoite</string>
+    <string name="register_form_jobtitle_title">Työnimike</string>
+    <string name="title_prefs">Asetukset</string>
+    <string name="prefAdvanced">Lisäasetukset</string>
+    <string name="loading">Ladataan</string>
+    <string name="loading_courses">Ladataan kursseja</string>
+    <string name="widget_quiz_next">Seuraava</string>
+    <string name="widget_quiz_prev">Edellinen</string>
+    <string name="fragment_welcome_title">Tervetuola</string>
+    <string name="menu_help">Ohje</string>
+    <string name="logout">Kirjaudu ulos</string>
+    <string name="menu_logout">Kirjaudu ulos</string>
 </resources>
 
