@@ -16,7 +16,7 @@ android {
         versionCode 63
         versionName "6.3.0"
 
-        applicationId "org.digitalcampus.mobile.learning"
+        applicationId "org.lastmilehealth.oppiamobile"
         minSdkVersion 14
         targetSdkVersion 25
 
