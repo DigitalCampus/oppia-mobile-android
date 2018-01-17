@@ -74,11 +74,12 @@ android {
 
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
+            resValue "string", "oppiaServerHost", runtimeProps['OPPIA_SERVER_HOST']
         }
 
-	    debug{
+        debug{
             testCoverageEnabled = true
-	    }
+        }
 
         release {
             minifyEnabled false
