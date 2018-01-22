@@ -58,8 +58,12 @@ public class ViewDigestActivity extends AppCompatActivity {
                 long userID = db.getUserId(SessionManager.getUsername(this));
                 activityCourse = db.getCourse(activity.getCourseId(), userID);
                 activity.setCompleted(db.activityCompleted(activityCourse.getCourseId(), digest, userID));
-                showActivityDetails();
-                configureButtonActions();
+                Intent i = new Intent(ViewDigestActivity.this, CourseIndexActivity.class);
+                Bundle tb = new Bundle();
+                tb.putSerializable(Course.TAG, activityCourse);
+                tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, activity.getDigest());
+                i.putExtras(tb);
+                ViewDigestActivity.this.startActivity(i);
             }
         }
 
@@ -78,6 +82,8 @@ public class ViewDigestActivity extends AppCompatActivity {
             Log.d(TAG, "Not logged in");
             errorText.setText(this.getText(R.string.open_digest_errors_not_logged_in));
             errorText.setVisibility(View.VISIBLE);
+            activityDetail.setVisibility(View.GONE);
+            return false;
         }
         return true;
     }
