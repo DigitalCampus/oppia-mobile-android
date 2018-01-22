@@ -1,4 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY appName "OppiaMobile">
+    <!ENTITY companyName "Digital Campus"> ]>
+
 <resources>
+
+    <string name="app_name">&appName;</string>
     <string name="app_logo_alt">Digital Campus Logo</string>
     
     <string name="about_logged_in">Logged in as: %1$s</string>
@@ -19,9 +26,9 @@
     <string name="menu_search">تلاش</string>
     <string name="menu_stop_read_aloud">پڑھنا روک دیں</string>
     
-    <string name="service_tracker">OppiaMobile Tracker Service</string>
+    <string name="service_tracker">&appName; Tracker Service</string>
     
-    <string name="fragment_welcome_title">میں خوش آمدید OppiaMobile</string>
+    <string name="fragment_welcome_title"> میں خوش آمدید &appName;</string>
     <string name="fragment_welcome_desc">اس پروگرام کے ذریعے آپ اپنے موبائل پر صحت  کے متعلق معلومات حاصل کر سکتے ہیں اور صحت کے متعلق فلمز دیکھ بھی دیکھ سکتے ہیں اور دوسروں کو دکھا بھی سکتے ہیں۔</string>
     <string name="fragment_welcome_login_info">اس پروگرام کو شروع کرنے سے پہلے آپ کو اپنا رجسٹریشن کرنا ہوگا۔</string>
     <string name="fragment_welcome_privacy">ہم آپ خیال ركھتے ہیں<a href="http://digital-campus.org/privacy/">find out more about Digital Campus\'s privacy policy</a></string>
@@ -238,6 +245,6 @@
 
 	<string name="submit_stats_btn_text">جمع کروادیں</string>
 	
-	<string name="media_player_description">Oppia Media Player</string>
+	<string name="media_player_description">&appName; Media Player</string>
 
 </resources>

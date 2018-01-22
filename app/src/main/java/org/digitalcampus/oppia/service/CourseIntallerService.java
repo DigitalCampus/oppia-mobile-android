@@ -210,21 +210,20 @@ public class CourseIntallerService extends IntentService {
         CourseXMLReader cxr;
         CourseScheduleXMLReader csxr;
         CourseTrackerXMLReader ctxr;
+        CompleteCourse c;
         try {
             cxr = new CourseXMLReader(courseXMLPath, 0, this);
             cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+            c = cxr.getParsedCourse();
 
             csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
 			ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
         } catch (InvalidXMLException e) {
-            Mint.logException(e);
-            logAndNotifyError(fileUrl, e);
+            sendBroadcast(fileUrl, ACTION_FAILED, e.getMessage());
             return;
         }
 
-        CompleteCourse c = cxr.getParsedCourse();
         c.setShortname(courseDirs[0]);
-
         String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
         sendBroadcast(fileUrl, ACTION_INSTALL, ""+20);
 

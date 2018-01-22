@@ -10,15 +10,23 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
+        versionCode 63
+        versionName "6.3.0"
+
         applicationId "org.digitalcampus.mobile.learning"
         minSdkVersion 14
         targetSdkVersion 25
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    //Add the version_name value to strings resources
+    applicationVariants.all { variant ->
+        variant.resValue "string", "version_name", variant.versionName
+    }
+
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -31,6 +39,7 @@ android {
         // Disable checks for String translations
         disable 'MissingTranslation', 'ExtraTranslation'
     }
+
 
     def Properties runtimeProps = new Properties()
     runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))
@@ -65,11 +74,12 @@ android {
 
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
+            resValue "string", "oppiaServerHost", runtimeProps['OPPIA_SERVER_HOST']
         }
 
-	    debug{
+        debug{
             testCoverageEnabled = true
-	    }
+        }
 
         release {
             minifyEnabled false
@@ -87,6 +97,8 @@ android {
 
         admin { }
     }
+
+
 }
 
 

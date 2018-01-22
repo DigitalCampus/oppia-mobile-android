@@ -27,6 +27,8 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 public class ParseCourseXMLTask extends AsyncTask<Course, Object, CompleteCourse> {
 
+    private static final String TAG = ParseCourseXMLTask.class.getSimpleName();;
+
     //Interface to listen to this task results
     public interface OnParseXmlListener{
         void onParseComplete(CompleteCourse parsedCourse);
@@ -54,8 +56,10 @@ public class ParseCourseXMLTask extends AsyncTask<Course, Object, CompleteCourse
                     courseToProcess.getCourseXMLLocation(),
                     courseToProcess.getCourseId(),
                     this.ctx);
-            cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
-            parsedCourse = cxr.getParsedCourse();
+            boolean success = cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+            if (success){
+                parsedCourse = cxr.getParsedCourse();
+            }
 
         } catch (InvalidXMLException e) {
             e.printStackTrace();

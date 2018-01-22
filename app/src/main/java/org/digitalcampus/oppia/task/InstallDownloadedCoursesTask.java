@@ -114,9 +114,11 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 				CourseXMLReader cxr;
 				CourseScheduleXMLReader csxr;
 				CourseTrackerXMLReader ctxr;
+				CompleteCourse c;
 				try {
 					cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
                     cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+					c = cxr.getParsedCourse();
 
 					csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
 					ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
@@ -126,9 +128,8 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 					payload.setResultResponse(ctx.getString(R.string.error_installing_course, children[i]));
 					continue;
 				}
-                CompleteCourse c = cxr.getParsedCourse();
-                c.setShortname(courseDirs[0]);
 
+                c.setShortname(courseDirs[0]);
 				String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 				
 				dp.setMessage(ctx.getString(R.string.installing_course, title));
