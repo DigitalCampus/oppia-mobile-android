@@ -101,6 +101,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_LOGOUT_ENABLED = "prefLogoutEnabled";
 	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
+    public static final String PREF_DISABLE_NOTIFICATIONS = "prefDisableNotifications";
 
     public static final String PREF_STORAGE_OPTION = "prefStorageOption";
     public static final String STORAGE_OPTION_INTERNAL = "internal";

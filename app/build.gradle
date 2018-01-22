@@ -15,6 +15,7 @@ android {
     defaultConfig {
         versionCode 63
         versionName "6.3.0"
+
         applicationId "org.digitalcampus.mobile.learning"
         minSdkVersion 14
         targetSdkVersion 25
@@ -25,6 +26,7 @@ android {
     applicationVariants.all { variant ->
         variant.resValue "string", "version_name", variant.versionName
     }
+
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -72,11 +74,12 @@ android {
 
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
+            resValue "string", "oppiaServerHost", runtimeProps['OPPIA_SERVER_HOST']
         }
 
-	    debug{
+        debug{
             testCoverageEnabled = true
-	    }
+        }
 
         release {
             minifyEnabled false

@@ -56,6 +56,12 @@ public class PreferencesFragment extends PreferenceFragment {
             }
         });
 
+        MaxIntOnStringPreferenceListener maxIntListener = new MaxIntOnStringPreferenceListener();
+        Preference connTimeout = findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN);
+        Preference responseTimeout = findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP);
+        connTimeout.setOnPreferenceChangeListener(maxIntListener);
+        responseTimeout.setOnPreferenceChangeListener(maxIntListener);
+
         Bundle bundle = getArguments();
         ArrayList<Lang> langs = new ArrayList<>();
         if ((bundle != null) && bundle.getSerializable("langs") != null) {
@@ -145,5 +151,29 @@ public class PreferencesFragment extends PreferenceFragment {
             getPreferenceScreen().removePreference(langsList);
         }
 
+    }
+
+    public class MaxIntOnStringPreferenceListener implements Preference.OnPreferenceChangeListener{
+
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+            boolean valid;
+            try{
+                String intValue = (String) newValue;
+                valid = (intValue.length() <= 9); //it'll be bigger than int's max value
+                int value = Integer.parseInt(intValue);
+            }
+            catch (NumberFormatException e){
+                valid = false;
+            }
+
+            if (!valid){
+                UIUtils.showAlert(getActivity(),
+                        R.string.prefInt_errorTitle,
+                        R.string.prefInt_errorDescription);
+            }
+            return valid;
+        }
     }
 }

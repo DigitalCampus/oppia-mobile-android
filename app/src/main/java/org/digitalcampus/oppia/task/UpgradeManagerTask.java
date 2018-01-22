@@ -171,8 +171,12 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
                 CourseXMLReader cxr;
                 CourseScheduleXMLReader csxr;
                 CourseTrackerXMLReader ctxr;
+				CompleteCourse c;
                 try {
                     cxr = new CourseXMLReader(courseXMLPath, 0, ctx);
+					cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+					c = cxr.getParsedCourse();
+
                     csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
                     ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
                 } catch (InvalidXMLException e) {
@@ -180,7 +184,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
                     break;
                 }
 
-                CompleteCourse c = cxr.getParsedCourse();
+
                 c.setShortname(course);
                 c.setImageFile(course + File.separator + c.getImageFile());
 

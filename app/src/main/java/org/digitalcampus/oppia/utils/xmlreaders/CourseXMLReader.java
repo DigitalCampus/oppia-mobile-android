@@ -28,6 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -81,7 +82,7 @@ public class CourseXMLReader {
         }
     }
 
-    public boolean parse(ParseMode PARSE_MODE){
+    public boolean parse(ParseMode PARSE_MODE) throws InvalidXMLException {
         if (courseXML.exists()) {
             try {
                 if (PARSE_MODE == ParseMode.ONLY_MEDIA)
@@ -92,7 +93,7 @@ public class CourseXMLReader {
             } catch (Exception e) {
                 Mint.logException(e);
                 e.printStackTrace();
-                return false;
+                throw new InvalidXMLException(e, ctx.getResources().getString(R.string.error_reading_xml));
             }
         } else {
             Log.d(TAG, "course XML not found at: " + courseXML.getPath());
@@ -129,7 +130,7 @@ public class CourseXMLReader {
     }
 
 
-    public CompleteCourse getParsedCourse(){
+    public CompleteCourse getParsedCourse() throws InvalidXMLException {
         if (completeParseHandler == null){
             parse(ParseMode.COMPLETE);
         }
@@ -138,7 +139,7 @@ public class CourseXMLReader {
         return completeParseHandler.getCourse(location);
     }
 
-    public IMediaXMLHandler getMediaResponses(){
+    public IMediaXMLHandler getMediaResponses() throws InvalidXMLException {
 
         if (mediaParseHandler != null){
             return mediaParseHandler;
@@ -152,6 +153,8 @@ public class CourseXMLReader {
         }
     }
 
-	public ArrayList<Media> getMedia(){ return getMediaResponses().getCourseMedia(); }
+	public ArrayList<Media> getMedia() throws InvalidXMLException {
+        return getMediaResponses().getCourseMedia();
+	}
 
 }
