@@ -44,7 +44,7 @@ public class PreferencesFragment extends PreferenceFragment {
         serverPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String url = (String) newValue;
+                String url = ((String) newValue).trim();
                 if (!URLUtil.isNetworkUrl(url) || !Patterns.WEB_URL.matcher(url).matches()){
                     UIUtils.showAlert(getActivity(),
                             R.string.prefServer_errorTitle,
