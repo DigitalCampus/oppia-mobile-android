@@ -6,11 +6,5 @@
     <color name="highlight_dark">#495525</color>
     <color name="highlight_shadow">#597725</color>
     <color name="highlight_secondary">#689e3a</color>
-    <color name="highlight_label">#434343</color>
-    <color name="highlight_separator">#b9b9b9</color>
-    <color name="text_error">#DD2C00</color>
-    <color name="stroke">#DFDFDF</color>
-    <color name="quiz_navigation_bar">#D2D2D2</color>
-    <color name="quiz_navigation_button">#FF5A595B</color>
     <color name="activity_completed_filter">#999aca3c</color>
 </resources>
