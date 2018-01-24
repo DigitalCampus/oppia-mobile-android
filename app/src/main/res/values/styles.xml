@@ -49,12 +49,12 @@
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
-     <style name="MediumTextItalic">
+    <style name="MediumTextItalic">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
-    
+
     <style name="SmallTextLight">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>
@@ -96,7 +96,7 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
-    
+
     <style name="NormalTextBoldDark">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
@@ -143,13 +143,13 @@
     </style>
 
     <style name="Highlight.Label" parent="android:TextAppearance">
-    <item name="android:textSize">12sp</item>
-    <item name="android:layout_marginTop">-5dp</item>
-    <item name="android:textAllCaps">true</item>
-    <item name="android:gravity">center</item>
-    <item name="android:singleLine">true</item>
-    <item name="android:textColor">@color/highlight_label</item>
-</style>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">-5dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/highlight_label</item>
+    </style>
 
     <style name="Oppia.Theme.InputError" parent="android:TextAppearance">
         <item name="android:textSize">12sp</item>
@@ -197,6 +197,15 @@
     <style name="CollapsedToolbarHeader" parent="android:TextAppearance">
         <item name="fontPath">fonts/lato.ttf</item>
     </style>
+
+    <style name="Oppia.Theme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Oppia.Theme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="Oppia.Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 
 </resources>
