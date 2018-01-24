@@ -91,6 +91,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		prefs.registerOnSharedPreferenceChangeListener(this);
         loadingCourseView =  findViewById(R.id.loading_course);
 
+        /*
+        ----- CollapsingToolbar layout
         FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.scorecard_fab);
         if (myFab != null) {
             myFab.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +104,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                     startActivityForResult(i, 1);
                 }
             });
-        }
+        }*/
 
         Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -146,6 +148,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		if (course.getImageFile() != null) {
 			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
 					R.drawable.dc_logo);
+            /*
+            ----- CollapsingToolbar layout
             ImageView backdrop = (ImageView) findViewById(R.id.appbar_backdrop);
             TextView description = (TextView) findViewById(R.id.appbar_description);
             if (backdrop != null) {
@@ -153,7 +157,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             }
             if (description != null) {
                 description.setText(course.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-            }
+            }*/
         }
     }
 
