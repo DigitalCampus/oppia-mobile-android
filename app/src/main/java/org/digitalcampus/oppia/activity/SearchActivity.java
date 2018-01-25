@@ -26,16 +26,20 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.SearchResult;
+import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -62,36 +66,43 @@ public class SearchActivity extends AppActivity {
 	private String currentSearch;
     private SearchResultsListAdapter srla;
     protected ArrayList<SearchResult> results = new ArrayList<>();
+
+    private DrawerMenuManager drawer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         srla = new SearchResultsListAdapter(this, results);
         resultsList = (ListView) findViewById(R.id.search_results_list);
-        resultsList.setAdapter(srla);
-        resultsList.setOnItemClickListener(new OnItemClickListener() {
+        if (resultsList != null) {
+            resultsList.setAdapter(srla);
+            resultsList.setOnItemClickListener(new OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Course course = (Course) view.getTag(R.id.TAG_COURSE);
+                    String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
+		//TODO: Extract this functionality to common class (used also in ViewDigestActivity)
+                    Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
+                    Bundle tb = new Bundle();
+                    tb.putSerializable(Course.TAG, course);
+                    tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, digest);
+                    i.putExtras(tb);
+                    SearchActivity.this.startActivity(i);
+                }
+            });
+        }
 
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Course course = (Course) view.getTag(R.id.TAG_COURSE);
-                String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
-                //TODO: Extract this functionality to common class (used also in ViewDigestActivity)
-                Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
-                Bundle tb = new Bundle();
-                tb.putSerializable(Course.TAG, course);
-                tb.putSerializable(CourseIndexActivity.JUMPTO_TAG, digest);
-                i.putExtras(tb);
-                SearchActivity.this.startActivity(i);
-            }
-        });
+
 	}
 	
 	@Override
 	public void onStart(){
 		super.onStart();
+
+        drawer = new DrawerMenuManager(this, false);
+        drawer.initializeDrawer();
+
 		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("preUsername", ""));
 		
@@ -107,13 +118,16 @@ public class SearchActivity extends AppActivity {
 		summary = (TextView) findViewById(R.id.search_results_summary);
         loadingSpinner = (ProgressBar) findViewById(R.id.progressBar);
         searchButton = (ImageView) findViewById(R.id.searchbutton);
-        searchButton.setClickable(true);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                hideKeyboard(v);
-                performSearch();
-            }
-        });
+        if (searchButton != null) {
+            searchButton.setClickable(true);
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    hideKeyboard(v);
+                    performSearch();
+                }
+            });
+        }
+
 	}
 
     @Override
@@ -213,5 +227,25 @@ public class SearchActivity extends AppActivity {
         public void onQueryPerformed() {
             publishProgress(true);
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        drawer.onPrepareOptionsMenu(menu, R.id.menu_search);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawer.onPostCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        drawer.onConfigurationChanged(newConfig);
     }
 }

@@ -23,6 +23,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -86,8 +88,14 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             Tag t = (Tag) bundle.getSerializable(Tag.TAG);
-            if (t != null)
+            if (t != null){
                 this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
+                Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+                if (toolbar != null){
+                    toolbar.setSubtitle(t.getName());
+                }
+            }
+
         } else {
             this.url = MobileLearning.SERVER_COURSES_PATH;
             this.showUpdatesOnly = true;
@@ -100,6 +108,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         if (listView != null) {
             listView.setAdapter(dla);
         }
+
+
+
     }
 
     private void initializeDagger() {

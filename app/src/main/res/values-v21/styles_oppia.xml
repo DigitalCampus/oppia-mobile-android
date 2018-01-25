@@ -12,6 +12,8 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:textAppearanceButton">@style/TextAppearanceButtonBorderless</item>
+        <item name="android:buttonStyle">@style/RaisedButton</item>
     </style>
 
     <style name="Oppia.ToolbarTheme.Dark" parent="@style/Oppia.ToolbarTheme">

@@ -38,6 +38,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 public class MobileLearning extends Application {
 
 	public static final String TAG = MobileLearning.class.getSimpleName();
@@ -123,6 +125,11 @@ public class MobileLearning extends Application {
 
         // this method fires once at application start
         Log.d(TAG, "Application start");
+		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+				.setDefaultFontPath("fonts/lato.ttf")
+				.setFontAttrId(R.attr.fontPath)
+				.build()
+		);
 
         Context ctx = getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
