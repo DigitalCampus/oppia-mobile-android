@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY appName "CHA Academy">
+    <!ENTITY appName "CME">
     <!ENTITY companyName "Last Mile Health"> ]>
 <resources>
     <string name="app_name">&appName;</string>
