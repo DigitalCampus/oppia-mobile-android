@@ -6,4 +6,5 @@
     <color name="highlight_dark">#193948</color>
     <color name="highlight_shadow">#1c84a1</color>
     <color name="highlight_secondary">#229cbe</color>
+    <color name="activity_completed_filter">#1939483c</color>
 </resources>

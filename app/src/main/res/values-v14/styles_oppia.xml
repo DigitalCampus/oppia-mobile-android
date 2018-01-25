@@ -44,6 +44,8 @@
         <item name="colorPrimary">@color/highlight_light</item>
         <item name="colorPrimaryDark">@color/highlight_dark</item>
         <item name="colorAccent">@color/highlight_secondary</item>
+        <item name="android:textAppearanceButton">@style/TextAppearanceButtonBorderless</item>
+        <item name="android:buttonStyle">@style/RaisedButton</item>
     </style>
     
     <style name="Oppia.Theme.Dark" parent="@style/Oppia.Theme">

@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
@@ -67,6 +68,8 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
     private ProgressBar quizzesProgressBar;
     private View quizzesView;
     private View quizzesContainer;
+
+    private ProgressBar loadingSpinner;
 
 	public static CourseScorecardFragment newInstance(Course course) {
 		CourseScorecardFragment myFragment = new CourseScorecardFragment();
@@ -109,6 +112,8 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
         activitiesTotal = (TextView)vv.findViewById(R.id.scorecard_activities_total);
         activitiesCompleted = (TextView) vv.findViewById(R.id.scorecard_activities_completed);
 
+        loadingSpinner = (ProgressBar) vv.findViewById(R.id.loading_spinner);
+        loadingSpinner.setVisibility(View.VISIBLE);
 		return vv;
 	}
 
@@ -177,6 +182,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
         highlightPassed.setText("" + quizzesPassed);
         quizzesAdapter.notifyDataSetChanged();
 
+        loadingSpinner.setVisibility(View.GONE);
         AlphaAnimation fadeInAnimation = new AlphaAnimation(0f, 1f);
         fadeInAnimation.setDuration(700);
         fadeInAnimation.setFillAfter(true);

@@ -48,16 +48,19 @@ public class ProgressBarAnimator implements ValueAnimator.AnimatorUpdateListener
 
     //@Override
     public void onAnimationUpdate(ValueAnimator animator) {
+
         bar.setProgress((Integer) animator.getAnimatedValue());
         bar.invalidate();
     }
 
     public void animate(int progressStart, int progressEnd){
-        bar.setProgress(progressStart*ANIMATION_SCALE);
+        bar.setMax(bar.getMax()*ANIMATION_SCALE);
+        bar.setProgress(progressStart);
         animate(progressEnd);
     }
 
     public void animate(int progress){
+
         if (isAnimated()) {
             bar.setProgress(progress * ANIMATION_SCALE);
         }
