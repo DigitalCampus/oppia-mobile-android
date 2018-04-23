@@ -65,6 +65,7 @@ public class AdminSecurityManager {
             case R.id.course_context_update_activity: return MobileLearning.ADMIN_PROTECT_COURSE_UPDATE;
             case R.id.menu_download: return MobileLearning.ADMIN_PROTECT_COURSE_INSTALL;
             case R.id.menu_settings: return MobileLearning.ADMIN_PROTECT_SETTINGS;
+            case R.id.menu_sync: return MobileLearning.ADMIN_PROTECT_ACTIVITY_SYNC;
             default: return false;
         }
     }
