@@ -45,7 +45,7 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
     @Override
     protected String doInBackground(Payload... payloads) {
 
-        String filename = "activity_" +  new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".json";
+        String filename = "activity_" +  new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".json";
 
         DbHelper db = DbHelper.getInstance(ctx);
         ArrayList<User> users = db.getAllUsers();
@@ -62,6 +62,7 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
         String json = "{\"export_date\":\"" + new Date().toString() + "\", ";
         json += "\"server\":\"" + prefs.getString(PrefsActivity.PREF_SERVER, "") + "\", ";
+        json += "\"points\":[" + TextUtils.join(",", userResults) + "], ";
         json += "\"users\":[" + TextUtils.join(",", userResults) + "]}";
         Log.d(TAG, json);
         File destDir = new File(Storage.getActivityPath(ctx));
