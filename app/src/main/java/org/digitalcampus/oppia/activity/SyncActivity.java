@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.AboutFragment;
+import org.digitalcampus.oppia.fragments.ExportActivityFragment;
 import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
 import org.digitalcampus.oppia.fragments.StatsFragment;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -22,6 +23,9 @@ public class SyncActivity extends AppActivity {
 
     public static final String TAG = SyncActivity.class.getSimpleName();
     public static final String TAB_ACTIVE = "TAB_ACTIVE";
+
+    public static final int TAB_EXPORT = 0;
+    public static final int TAB_ACTIVITY = 1;
 
     private ViewPager viewPager;
     private TabLayout tabs;
@@ -48,8 +52,12 @@ public class SyncActivity extends AppActivity {
     public void onStart() {
         super.onStart();
 
-        List<Fragment> fragments = new ArrayList<Fragment>();
+        List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
+
+        Fragment fExport = ExportActivityFragment.newInstance();
+        fragments.add(fExport);
+        titles.add(this.getString(R.string.tab_title_export));
 
         Fragment fActivity = StatsFragment.newInstance();
         fragments.add(fActivity);

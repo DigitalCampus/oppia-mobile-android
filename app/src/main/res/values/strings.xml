@@ -348,6 +348,8 @@
     <string name="open_digest.activity_completed">Activity completed</string>
     <string name="menu_sync">Synchronise</string>
     <string name="title_sync">Synchronise</string>
+    <string name="export_activity.text">Export latest activity and quiz trackers to an external file</string>
+    <string name="tab_title_export">Export</string>
 
 
 </resources>
