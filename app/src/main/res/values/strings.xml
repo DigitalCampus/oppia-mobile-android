@@ -350,6 +350,8 @@
     <string name="title_sync">Synchronise</string>
     <string name="export_activity.text">Export latest activity and quiz trackers to an external file</string>
     <string name="tab_title_export">Export</string>
+    <string name="export_task_completed">Export completed</string>
+    <string name="export_task_completed_text">A file named \'%1$s\' has been placed on the device filesystem</string>
 
 
 </resources>

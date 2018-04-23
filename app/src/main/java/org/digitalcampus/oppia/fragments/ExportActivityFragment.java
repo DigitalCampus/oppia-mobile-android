@@ -20,10 +20,14 @@ package org.digitalcampus.oppia.fragments;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
+import org.digitalcampus.oppia.task.ExportActivityTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
+import org.digitalcampus.oppia.utils.UIUtils;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,13 +36,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ExportActivityFragment extends Fragment {
 
     public static final String TAG = ExportActivityFragment.class.getSimpleName();
     private TextView sentTV;
     private TextView unsentTV;
-    private Button sendBtn;
+    private FloatingActionButton sendBtn;
 
     public static ExportActivityFragment newInstance() {
         return new ExportActivityFragment();
@@ -53,8 +58,12 @@ public class ExportActivityFragment extends Fragment {
         View vv = inflater.inflate(R.layout.fragment_export_activity, null);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         vv.setLayoutParams(lp);
+
+        sendBtn = (FloatingActionButton) vv.findViewById(R.id.export_btn);
         return vv;
+
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -65,11 +74,27 @@ public class ExportActivityFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExportActivityTask task = new ExportActivityTask(ExportActivityFragment.this.getActivity());
+                task.setListener(new ExportActivityListener() {
+                    @Override
+                    public void onExportComplete(String filename) {
+                        if (filename != null){
+                            UIUtils.showAlert(ExportActivityFragment.this.getActivity(),
+                                    R.string.export_task_completed,
+                                    ExportActivityFragment.this.getString(R.string.export_task_completed_text, filename)
+                                    );
+                        }
+
+                    }
+                });
+                task.execute();
+            }
+        });
     }
 
-    protected void onSendClick(){
-
-    }
 
 
 }

@@ -12,7 +12,7 @@
         android:padding="@dimen/padding_large">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+            android:id="@+id/export_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
