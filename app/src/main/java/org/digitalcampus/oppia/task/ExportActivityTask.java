@@ -10,6 +10,7 @@ import android.util.Log;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
+import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -53,16 +54,18 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
         ArrayList<String> userResults = new ArrayList<>();
         for (User u: users) {
             Collection<TrackerLog> userTrackers = db.getUnexportedTrackers(u.getUserId());
+            Collection<QuizAttempt> userQuizzes = new ArrayList<>();
 
             String userJSON = "{ \"username\":\"" + u.getUsername() + "\",";
-            userJSON += "\"trackers\":" + TrackerLog.asJSONCollectionString(userTrackers);
+            userJSON += "\"trackers\":" + TrackerLog.asJSONCollectionString(userTrackers) + ", ";
+            userJSON += "\"quizresponses\":[" + TextUtils.join(",", userQuizzes) + "], ";
+            userJSON += "\"points\":[]";
             userJSON += "}";
             userResults.add(userJSON);
         }
 
         String json = "{\"export_date\":\"" + new Date().toString() + "\", ";
         json += "\"server\":\"" + prefs.getString(PrefsActivity.PREF_SERVER, "") + "\", ";
-        json += "\"points\":[" + TextUtils.join(",", userResults) + "], ";
         json += "\"users\":[" + TextUtils.join(",", userResults) + "]}";
         Log.d(TAG, json);
         File destDir = new File(Storage.getActivityPath(ctx));
