@@ -3,9 +3,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
-    maven {
-        url "https://mint.splunk.com/gradle/"
-    }
+    maven { url "https://mint.splunk.com/gradle/" }
 }
 
 android {
@@ -45,19 +43,18 @@ android {
     runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))
 
     def oppiaPropsFile = rootProject.file('custom.properties')
-    if (oppiaPropsFile.canRead()){
+    if (oppiaPropsFile.canRead()) {
         logger.info('Fetching properties from external file')
         runtimeProps.load(new FileInputStream(oppiaPropsFile))
-    }
-    else{
+    } else {
         logger.error('No properties file found. Using default values.')
     }
 
     buildTypes {
 
-        all{
+        all {
             //Define all the constant values that depend on the config properties
-            buildConfigField "String", "MINT_API_KEY", "\"" + runtimeProps['MINT_API_KEY'] +"\""
+            buildConfigField "String", "MINT_API_KEY", "\"" + runtimeProps['MINT_API_KEY'] + "\""
             buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", runtimeProps['ADMIN_PROTECT_SETTINGS']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_DELETE", runtimeProps['ADMIN_PROTECT_COURSE_DELETE']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_RESET", runtimeProps['ADMIN_PROTECT_COURSE_RESET']
@@ -77,7 +74,7 @@ android {
             resValue "string", "oppiaServerHost", runtimeProps['OPPIA_SERVER_HOST']
         }
 
-        debug{
+        debug {
             testCoverageEnabled = true
         }
 
@@ -93,9 +90,9 @@ android {
     }
 
     productFlavors {
-        normal { }
+        normal {}
 
-        admin { }
+        admin {}
     }
 
 
@@ -116,6 +113,7 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
     //JUnit Dependencies
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.3.1'
     androidTestCompile 'com.android.support.test:runner:0.5'
@@ -124,7 +122,7 @@ dependencies {
 
     //Espresso Dependencies
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2'){
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
         exclude module: 'support-v13'
@@ -148,14 +146,14 @@ dependencies {
 
 apply plugin: 'com.google.gms.google-services'
 
-task grantPermissions (type: Exec, dependsOn: 'installDebug'){
+task grantPermissions(type: Exec, dependsOn: 'installDebug') {
     group = 'test'
     description = 'Grant permissions for testing.'
 
     def adb = android.getAdbExe().toString()
     if (!System.getProperty('os.name').toLowerCase().contains('windows')) {
         println "Granting permissions for a non windows os"
-    }else{
+    } else {
         println "Granting permissions for a windows os"
     }
     commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE --stacktrace".split(" ")
@@ -165,9 +163,9 @@ task grantPermissions (type: Exec, dependsOn: 'installDebug'){
 afterEvaluate {
     tasks.each { task ->
         if (task.name.contentEquals('connectedAndroidTest') ||
-            task.name.contentEquals('connectedDebugAndroidTest') ||
-            task.name.contentEquals('assembleDebugAndroidTest') ||
-            task.name.contentEquals('assembleAndroidTest')) {
+                task.name.contentEquals('connectedDebugAndroidTest') ||
+                task.name.contentEquals('assembleDebugAndroidTest') ||
+                task.name.contentEquals('assembleAndroidTest')) {
             task.dependsOn grantPermissions
         }
     }
