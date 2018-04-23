@@ -113,7 +113,7 @@ public class OppiaMobileActivity
 
         initializeDagger();
 
-        PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
+
         prefs.registerOnSharedPreferenceChangeListener(this);
 
 		// set preferred lang to the default lang

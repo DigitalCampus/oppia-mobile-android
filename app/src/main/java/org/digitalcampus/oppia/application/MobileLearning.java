@@ -132,6 +132,7 @@ public class MobileLearning extends Application {
 		);
 
         Context ctx = getApplicationContext();
+		PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
 
