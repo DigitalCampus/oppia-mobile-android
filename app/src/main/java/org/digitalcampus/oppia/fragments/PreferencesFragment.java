@@ -7,7 +7,6 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
@@ -68,42 +67,10 @@ public class PreferencesFragment extends PreferenceFragment {
         connTimeout.setOnPreferenceChangeListener(maxIntListener);
         responseTimeout.setOnPreferenceChangeListener(maxIntListener);
 
-            final CheckBoxPreference adminEnabled = (CheckBoxPreference) findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
-            final EditTextPreference adminPassword = (EditTextPreference) findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);
-
-            adminEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                    final boolean enableProtection = (Boolean) newValue;
-                    if (enableProtection) {
-                        //If we are going to re-enable the preference, there is no need to prompt for the previous password
-                        return true;
-                    }
-                    AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
-                        @Override
-                        public void onPermissionGranted() {
-                            Log.d(TAG, "Updating admin protect to " + (enableProtection ? "true" : "false"));
-                            adminEnabled.setChecked(enableProtection);
-                            preference.getEditor().putBoolean(preference.getKey(), enableProtection);
-                        }
-                    });
-                    return false;
-                }
-            });
-
-            adminPassword.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                    AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
-                        @Override
-                        public void onPermissionGranted() {
-                            adminPassword.setText((String) newValue);
-                            preference.getEditor().putString(preference.getKey(), (String) newValue);
-                        }
-                    });
-                    return false;
-                }
-            });
+        if (!MobileLearning.ADMIN_PROTECT_SETTINGS){
+            // If the whole settings activity is not protected by password, we need to protect admin settings
+            protectAdminPreferences();
+        }
 
         Bundle bundle = getArguments();
         ArrayList<Lang> langs = new ArrayList<>();
@@ -193,7 +160,44 @@ public class PreferencesFragment extends PreferenceFragment {
         else{
             getPreferenceScreen().removePreference(langsList);
         }
+    }
 
+    private void protectAdminPreferences(){
+        final CheckBoxPreference adminEnabled = (CheckBoxPreference) findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
+        final EditTextPreference adminPassword = (EditTextPreference) findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);
+
+        adminEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                final boolean enableProtection = (Boolean) newValue;
+                if (enableProtection) {
+                    //If we are going to re-enable the preference, there is no need to prompt for the previous password
+                    return true;
+                }
+                AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        adminEnabled.setChecked(enableProtection);
+                        preference.getEditor().putBoolean(preference.getKey(), enableProtection);
+                    }
+                });
+                return false;
+            }
+        });
+
+        adminPassword.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        adminPassword.setText((String) newValue);
+                        preference.getEditor().putString(preference.getKey(), (String) newValue);
+                    }
+                });
+                return false;
+            }
+        });
     }
 
     public class MaxIntOnStringPreferenceListener implements Preference.OnPreferenceChangeListener{
