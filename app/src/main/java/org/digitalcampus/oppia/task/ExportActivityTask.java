@@ -3,18 +3,15 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
@@ -55,15 +52,12 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
         ArrayList<String> userResults = new ArrayList<>();
         for (User u: users) {
-            Payload payload = db.getUnsentTrackers(u.getUserId());
+            Collection<TrackerLog> userTrackers = db.getUnexportedTrackers(u.getUserId());
 
-            @SuppressWarnings("unchecked")
-            Collection<TrackerLog> userTrackers = (Collection<TrackerLog>) payload.getData();
             String userJSON = "{ \"username\":\"" + u.getUsername() + "\",";
             userJSON += "\"trackers\":" + TrackerLog.asJSONCollectionString(userTrackers);
             userJSON += "}";
             userResults.add(userJSON);
-
         }
 
         String json = "{\"export_date\":\"" + new Date().toString() + "\", ";
@@ -88,6 +82,7 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        db.markLogsExported();
 
         return filename;
     }
