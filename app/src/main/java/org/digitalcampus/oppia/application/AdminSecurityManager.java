@@ -42,17 +42,19 @@ public class AdminSecurityManager {
     }
 
     public static void checkAdminPermission(Activity ctx, int actionId, AdminSecurityManager.AuthListener authListener){
-
-        boolean adminPasswordRequired = AdminSecurityManager.isActionProtected(ctx, actionId);
-        if (adminPasswordRequired) {
-            PasswordDialogFragment passDialog = new PasswordDialogFragment();
-            passDialog.setListener(authListener);
-            passDialog.show(ctx.getFragmentManager(), TAG);
+        if (AdminSecurityManager.isActionProtected(ctx, actionId)) {
+            promptAdminPassword(ctx, authListener);
         }
         else{
             //If the admin password is not needed, we simply call the listener method
             authListener.onPermissionGranted();
         }
+    }
+
+    public static void promptAdminPassword(Activity ctx, AdminSecurityManager.AuthListener authListener){
+        PasswordDialogFragment passDialog = new PasswordDialogFragment();
+        passDialog.setListener(authListener);
+        passDialog.show(ctx.getFragmentManager(), TAG);
     }
 
     public static boolean isActionProtected(Context ctx, int actionId) {

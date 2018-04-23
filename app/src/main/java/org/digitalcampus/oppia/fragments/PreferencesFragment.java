@@ -2,15 +2,19 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.util.Log;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
@@ -21,6 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class PreferencesFragment extends PreferenceFragment {
+
+    public static final String TAG = PrefsActivity.class.getSimpleName();
 
     private ListPreference storagePref;
     private EditTextPreference serverPref;
@@ -61,6 +67,43 @@ public class PreferencesFragment extends PreferenceFragment {
         Preference responseTimeout = findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP);
         connTimeout.setOnPreferenceChangeListener(maxIntListener);
         responseTimeout.setOnPreferenceChangeListener(maxIntListener);
+
+            final CheckBoxPreference adminEnabled = (CheckBoxPreference) findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
+            final EditTextPreference adminPassword = (EditTextPreference) findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);
+
+            adminEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                    final boolean enableProtection = (Boolean) newValue;
+                    if (enableProtection) {
+                        //If we are going to re-enable the preference, there is no need to prompt for the previous password
+                        return true;
+                    }
+                    AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                            Log.d(TAG, "Updating admin protect to " + (enableProtection ? "true" : "false"));
+                            adminEnabled.setChecked(enableProtection);
+                            preference.getEditor().putBoolean(preference.getKey(), enableProtection);
+                        }
+                    });
+                    return false;
+                }
+            });
+
+            adminPassword.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                    AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                            adminPassword.setText((String) newValue);
+                            preference.getEditor().putString(preference.getKey(), (String) newValue);
+                        }
+                    });
+                    return false;
+                }
+            });
 
         Bundle bundle = getArguments();
         ArrayList<Lang> langs = new ArrayList<>();
