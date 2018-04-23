@@ -41,6 +41,7 @@ import org.digitalcampus.oppia.activity.MonitorActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
+import org.digitalcampus.oppia.activity.SyncActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -163,6 +164,8 @@ public class DrawerMenuManager {
                     launchIntentForActivity(SearchActivity.class);
                 } else if (itemId == R.id.menu_settings) {
                     launchIntentForActivity(PrefsActivity.class);
+                } else if (itemId == R.id.menu_sync) {
+                    launchIntentForActivity(SyncActivity.class);
                 }else if (itemId == R.id.menu_logout) {
                     logout();
                 }

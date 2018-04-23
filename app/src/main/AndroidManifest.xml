@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="org.digitalcampus.mobile.learning" >
+          package="org.digitalcampus.mobile.learning">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -70,13 +70,13 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
             android:configChanges="keyboardHidden"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:label="@string/title_tag_select_activity">
+            android:label="@string/title_tag_select_activity"
+            android:theme="@style/Oppia.ToolbarTheme">
         </activity>
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:label="@string/title_prefs"/>
+            android:label="@string/title_prefs"
+            android:theme="@style/Oppia.ToolbarTheme"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.AboutActivity"
             android:label="@string/title_about"
@@ -94,40 +94,48 @@
             android:label="@string/title_course_meta"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.DownloadMediaActivity"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:label="@string/title_download_media"/>
+            android:label="@string/title_download_media"
+            android:theme="@style/Oppia.ToolbarTheme"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.ScorecardActivity"
             android:label="@string/title_scorecard"
             android:theme="@style/Oppia.ToolbarTheme"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.SearchActivity"
-            android:theme="@style/Oppia.ToolbarTheme"
-            android:label="@string/search.activity_title" />
-         <activity
+            android:label="@string/search.activity_title"
+            android:theme="@style/Oppia.ToolbarTheme"/>
+        <activity
             android:name="org.digitalcampus.oppia.activity.AppActivity"
             android:label="@string/app_name"/>
         <activity
             android:name="org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity"
             android:label="@string/media_player_description"
             android:screenOrientation="landscape"
-            android:theme="@style/Oppia.Fullscreen" />
+            android:theme="@style/Oppia.Fullscreen"/>
+        <activity
+            android:name="org.digitalcampus.oppia.activity.SyncActivity"
+            android:theme="@style/Oppia.ToolbarTheme"
+            android:label="@string/title_sync" />
 
-        <activity android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
+        <activity
+            android:name="org.digitalcampus.oppia.activity.ViewDigestActivity"
             android:theme="@style/Oppia.ToolbarTheme.Dark">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
-                      android:host="@string/oppiaServerHost"
-                      android:pathPrefix="/view" />
-                <data android:scheme="https"
-                      android:host="@string/oppiaServerHost"
-                      android:pathPrefix="/view" />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="@string/oppiaServerHost"
+                    android:pathPrefix="/view"
+                    android:scheme="http"/>
+                <data
+                    android:host="@string/oppiaServerHost"
+                    android:pathPrefix="/view"
+                    android:scheme="https"/>
             </intent-filter>
         </activity>
-
 
         <service
             android:name="org.digitalcampus.oppia.service.TrackerService"
@@ -189,8 +197,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
+                android:resource="@xml/filepaths"/>
         </provider>
-</application>
+
+
+    </application>
 
 </manifest>

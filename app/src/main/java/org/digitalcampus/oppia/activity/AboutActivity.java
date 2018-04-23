@@ -46,7 +46,6 @@ public class AboutActivity extends AppActivity {
 	public static final int TAB_ABOUT = 0;
 	public static final int TAB_HELP = 1;
 	public static final int TAB_PRIVACY = 2;
-	public static final int TAB_STATS = 3;
 
 	private ViewPager viewPager;
     private TabLayout tabs;
@@ -90,10 +89,6 @@ public class AboutActivity extends AppActivity {
 		Fragment fPrivacy = OppiaWebViewFragment.newInstance(TAB_PRIVACY, url);
 		fragments.add(fPrivacy);
         titles.add(this.getString(R.string.tab_title_privacy));
-		
-		Fragment fStats = StatsFragment.newInstance();
-		fragments.add(fStats);
-        titles.add(this.getString(R.string.tab_title_activity));
 
 		ActivityPagerAdapter adapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
 		viewPager.setAdapter(adapter);
