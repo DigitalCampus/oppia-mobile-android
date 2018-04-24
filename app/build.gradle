@@ -61,6 +61,7 @@ android {
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_RESET", runtimeProps['ADMIN_PROTECT_COURSE_RESET']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_INSTALL", runtimeProps['ADMIN_PROTECT_COURSE_INSTALL']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_UPDATE", runtimeProps['ADMIN_PROTECT_COURSE_UPDATE']
+
             buildConfigField "boolean", "MENU_ALLOW_LOGOUT", runtimeProps['MENU_ALLOW_LOGOUT']
             buildConfigField "boolean", "MENU_ALLOW_MONITOR", runtimeProps['MENU_ALLOW_MONITOR']
             buildConfigField "boolean", "MENU_ALLOW_SETTINGS", runtimeProps['MENU_ALLOW_SETTINGS']
@@ -73,6 +74,7 @@ android {
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
             resValue "string", "oppiaServerHost", runtimeProps['OPPIA_SERVER_HOST']
+            resValue "string", "prefAdminPasswordDefault", runtimeProps['ADMIN_PROTECT_INITIAL_PASSWORD']
         }
 
         debug {

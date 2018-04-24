@@ -76,8 +76,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
 	public static final String PREF_METADATA = "prefMetadata";
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
-	
-	/*
+    public static final String PREF_APPLICATION_FIRST_RUN = "prefFirstRun";
+
+    /*
 	 * Start personal prefs - move these to UserProps table
 	 */
 	public static final String PREF_PHONE_NO = "prefPhoneNo";
