@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 26;
+	private static final int DB_VERSION = 27;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -113,6 +114,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZATTEMPTS_C_MAXSCORE = "maxscore";
 	private static final String QUIZATTEMPTS_C_PASSED = "passed";
 	private static final String QUIZATTEMPTS_C_ACTIVITY_DIGEST = "actdigest";
+	private static final String QUIZATTEMPTS_C_EXPORTED = "exported";
 
 	private static final String SEARCH_TABLE = "search";
 	private static final String SEARCH_C_TEXT = "fulltext";
@@ -235,7 +237,8 @@ public class DbHelper extends SQLiteOpenHelper {
 							QUIZATTEMPTS_C_USERID + " integer default 0, " +
 							QUIZATTEMPTS_C_SCORE + " real default 0, " +
 							QUIZATTEMPTS_C_MAXSCORE + " real default 0, " +
-							QUIZATTEMPTS_C_PASSED + " integer default 0)";
+							QUIZATTEMPTS_C_PASSED + " integer default 0, " +
+							QUIZATTEMPTS_C_EXPORTED + " integer default 0)";
 		db.execSQL(sql);
 	}
 	
@@ -435,6 +438,12 @@ public class DbHelper extends SQLiteOpenHelper {
 		if(oldVersion <= 25 && newVersion >= 26){
 			// add field "exported" to Tracker table
 			String sql1 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_EXPORTED + " integer default 0;";
+			db.execSQL(sql1);
+		}
+
+		if(oldVersion <= 26 && newVersion >= 27){
+			// add field "exported" to Tracker table
+			String sql1 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_EXPORTED + " integer default 0;";
 			db.execSQL(sql1);
 		}
 	}
@@ -1168,6 +1177,30 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return quizAttempts;
 	}
+
+	public ArrayList<QuizAttempt> getUnexportedQuizAttempts(long userId) {
+		String s = QUIZATTEMPTS_C_SENT + "=? AND " + QUIZATTEMPTS_C_EXPORTED + "=? AND " + QUIZATTEMPTS_C_USERID + "=? ";
+		String[] args = new String[] { "0", "0", String.valueOf(userId) };
+		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
+		c.moveToFirst();
+		ArrayList<QuizAttempt> quizAttempts = new ArrayList<QuizAttempt>();
+		while (c.isAfterLast() == false) {
+			try {
+				QuizAttempt qa = new QuizAttempt();
+				qa.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
+				qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
+				qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
+				User u = this.getUser(qa.getUserId());
+				qa.setUser(u);
+				quizAttempts.add(qa);
+			} catch (UserNotFoundException unfe){
+				// do nothing
+			}
+			c.moveToNext();
+		}
+		c.close();
+		return quizAttempts;
+	}
 	
 	public int markQuizSubmitted(long rowId){
 		ContentValues values = new ContentValues();
@@ -1651,4 +1684,6 @@ public class DbHelper extends SQLiteOpenHelper {
         c.close();
         return prefValue;
     }
+
+
 }

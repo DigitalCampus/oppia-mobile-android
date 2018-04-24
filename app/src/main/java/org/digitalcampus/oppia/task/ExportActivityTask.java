@@ -54,11 +54,11 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
         ArrayList<String> userResults = new ArrayList<>();
         for (User u: users) {
             Collection<TrackerLog> userTrackers = db.getUnexportedTrackers(u.getUserId());
-            Collection<QuizAttempt> userQuizzes = new ArrayList<>();
+            Collection<QuizAttempt> userQuizzes = db.getUnexportedQuizAttempts(u.getUserId());
 
             String userJSON = "{ \"username\":\"" + u.getUsername() + "\",";
             userJSON += "\"trackers\":" + TrackerLog.asJSONCollectionString(userTrackers) + ", ";
-            userJSON += "\"quizresponses\":[" + TextUtils.join(",", userQuizzes) + "], ";
+            userJSON += "\"quizresponses\":" + QuizAttempt.asJSONCollectionString(userQuizzes) + ", ";
             userJSON += "\"points\":[]";
             userJSON += "}";
             userResults.add(userJSON);
