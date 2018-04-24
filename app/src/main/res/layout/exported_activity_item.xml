@@ -55,7 +55,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:background="@android:color/transparent"
-        android:tint="@color/background_dark"
+        android:tint="@color/highlight_secondary"
         app:srcCompat="@android:drawable/ic_menu_share"/>
 
 

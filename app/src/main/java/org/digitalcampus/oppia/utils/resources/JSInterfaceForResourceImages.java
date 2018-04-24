@@ -2,20 +2,13 @@ package org.digitalcampus.oppia.utils.resources;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
-import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.storage.Storage;
 
-import java.io.File; 
-
-import static android.support.v4.content.FileProvider.getUriForFile;
+import java.io.File;
 
 public class JSInterfaceForResourceImages {
 
@@ -65,13 +58,9 @@ public class JSInterfaceForResourceImages {
 
     @JavascriptInterface   // must be added for API 17 or higher
     public void openFile(String relativeFilePath) {
-        String fileUrl = resourcesLocation + relativeFilePath;
-        Log.d(TAG, "File to open externally: " + fileUrl);
-        Uri targetUri = getUriForFile(_ctx, BuildConfig.APPLICATION_ID  + ".provider", new File(fileUrl));
-        String filetype = FileUtils.getMimeType(fileUrl);
-        Log.d(TAG, "URI: " + targetUri.toString());
-
-        Intent intent = ExternalResourceOpener.getIntentToOpenResource(_ctx, targetUri, filetype);
+        File fileToOpen = new File(resourcesLocation + relativeFilePath);
+        Log.d(TAG, "File to open externally: " + fileToOpen.getPath());
+        Intent intent = ExternalResourceOpener.getIntentToOpenResource(_ctx, fileToOpen);
         if(intent != null){
             _ctx.startActivity(intent);
         } else {

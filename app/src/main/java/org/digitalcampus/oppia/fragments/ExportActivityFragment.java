@@ -17,33 +17,27 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.listener.ExportActivityListener;
-import org.digitalcampus.oppia.listener.TrackerServiceListener;
-import org.digitalcampus.oppia.task.ExportActivityTask;
-import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.storage.StorageUtils;
-
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
+import org.digitalcampus.oppia.listener.ExportActivityListener;
+import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
+import org.digitalcampus.oppia.task.ExportActivityTask;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,9 +47,8 @@ public class ExportActivityFragment extends Fragment {
     public static final String TAG = ExportActivityFragment.class.getSimpleName();
 
     private FloatingActionButton exportBtn;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView exportedFilesRecyclerView;
+    private RecyclerView.Adapter filesAdapter;
     private ArrayList<File> files = new ArrayList<>();
 
     public static ExportActivityFragment newInstance() {
@@ -72,7 +65,7 @@ public class ExportActivityFragment extends Fragment {
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         vv.setLayoutParams(lp);
 
-        mRecyclerView = (RecyclerView) vv.findViewById(R.id.exported_files_list);
+        exportedFilesRecyclerView = (RecyclerView) vv.findViewById(R.id.exported_files_list);
         exportBtn = (FloatingActionButton) vv.findViewById(R.id.export_btn);
         return vv;
 
@@ -109,33 +102,34 @@ public class ExportActivityFragment extends Fragment {
             }
         });
 
-
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this.getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ExportedTrackersFileAdapter(files);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(
+        exportedFilesRecyclerView.setHasFixedSize(true);
+        exportedFilesRecyclerView.setLayoutManager( new LinearLayoutManager(this.getContext()));
+        filesAdapter = new ExportedTrackersFileAdapter(files, new ListInnerBtnOnClickListener() {
+            @Override
+            public void onClick(int position) {
+                Context ctx = ExportActivityFragment.this.getActivity().getApplicationContext();
+                File toShare = files.get(position);
+                Intent share = ExternalResourceOpener.constructShareFileIntent(ctx, toShare);
+                ctx.startActivity(share);
+            }
+        });
+        exportedFilesRecyclerView.setAdapter(filesAdapter);
+        exportedFilesRecyclerView.addItemDecoration(
                 new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
         refreshFileList();
     }
 
     private void refreshFileList(){
         File activityFolder = new File(Storage.getActivityPath(this.getContext()));
-        files.clear();
         if (activityFolder.exists()){
+            files.clear();
             String[] children = activityFolder.list();
             for (String dirFiles : children) {
                 File exportedActivity = new File(activityFolder, dirFiles);
                 files.add(exportedActivity);
             }
         }
-        mAdapter.notifyDataSetChanged();
+        filesAdapter.notifyDataSetChanged();
 
     }
 
