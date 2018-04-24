@@ -72,6 +72,7 @@ public class MobileLearning extends Application {
     public static final boolean ADMIN_PROTECT_COURSE_RESET = BuildConfig.ADMIN_PROTECT_COURSE_RESET;
     public static final boolean ADMIN_PROTECT_COURSE_INSTALL = BuildConfig.ADMIN_PROTECT_COURSE_INSTALL;
     public static final boolean ADMIN_PROTECT_COURSE_UPDATE = BuildConfig.ADMIN_PROTECT_COURSE_UPDATE;
+    public static final boolean ADMIN_PROTECT_ACTIVITY_SYNC = BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC;
 
 	// general other settings
 	public static final String MINT_API_KEY = BuildConfig.MINT_API_KEY;
@@ -132,7 +133,9 @@ public class MobileLearning extends Application {
 		);
 
         Context ctx = getApplicationContext();
+		PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        checkAdminProtectionOnFirstRun(prefs);
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
 
         if (storageOption.trim().equals("")){
@@ -154,6 +157,19 @@ public class MobileLearning extends Application {
         Log.d(TAG, "Storage option set: " + storageOption);
     }
 
+    private void checkAdminProtectionOnFirstRun(SharedPreferences prefs){
+		if (prefs.getBoolean(PrefsActivity.PREF_APPLICATION_FIRST_RUN, true)) {
+			Log.d(TAG, "First run! Checking if default admin password");
+			if (!prefs.getString(PrefsActivity.PREF_ADMIN_PASSWORD, "").isEmpty()){
+				//If the initial Admin password protection is set, enable de admin protection
+				prefs.edit().putBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, true).apply();
+				Log.d(TAG, "Admin password protection enabled");
+			}
+
+			prefs.edit().putBoolean(PrefsActivity.PREF_APPLICATION_FIRST_RUN, false).apply();
+		}
+	}
+
     private boolean setStorageOption(Context ctx, SharedPreferences prefs, String storageOption){
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PrefsActivity.PREF_STORAGE_OPTION, storageOption).apply();
@@ -163,6 +179,7 @@ public class MobileLearning extends Application {
         if (success) Storage.setStorageStrategy(strategy);
         return success;
     }
+
 
 	public AppComponent getComponent(){
 		if(appComponent == null){

@@ -102,7 +102,8 @@
     <string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
     <string name="prefServer">Server</string>
     <string name="prefServer_errorTitle">Invalid URL</string>
-    <string name="prefServer_errorDescription">Please, enter a well-formed URL corresponding to your &appName; server endpoint</string>
+    <string name="prefServer_errorDescription">Please, enter a well-formed URL corresponding to your &appName;
+        server endpoint</string>
     <string name="prefServerTimeoutConnection">Connection timeout</string>
     <string name="prefServerTimeoutResponse">Response timeout</string>
     <string name="prefInt_errorTitle">Invalid value</string>
@@ -228,7 +229,8 @@
 
     <string name="error_connection">Error connecting to server. Please check you have an active internet connection and try again.</string>
     <string name="error_connection_required">You need an active internet connection to access this page. Please turn on wifi or mobile internet connection and try again.</string>
-    <string name="error_connection_ssl">Error connecting to server due to SSL problems. Please, ensure that the host in your &appName; server setting is correct, and that your device has the right time/date</string>
+    <string name="error_connection_ssl">Error connecting to server due to SSL problems. Please, ensure that the host in your &appName;
+        server setting is correct, and that your device has the right time/date</string>
     <string name="error_installing_course">%1$s: failed to install</string>
     <string name="error_latest_already_installed">%1$s: latest version already installed</string>
     <string name="error_login">Invalid username/password\nPlease try again</string>
@@ -324,15 +326,17 @@
     <string name="sequencing.course.message">You must complete all the previous activities in the course before this one becomes available to you.</string>
     <string name="empty_state_courses">There aren\'t any courses currently available to you on this server.</string>
     <string name="empty_state_media">Great! You now have all the media content for your courses downloaded onto your device.</string>
-	<string name="empty_state_scorecard">You don\'t have any courses installed yet. \nOnce you install a course, you will see your progress here.</string>
-	
-    <string name="permissions.title">&appName; needs the following permissions to function properly:</string>
+    <string name="empty_state_scorecard">You don\'t have any courses installed yet. \nOnce you install a course, you will see your progress here.</string>
+
+    <string name="permissions.title">&appName;
+        needs the following permissions to function properly:</string>
     <string name="permissions.storage.title">read and modify contents of the SD card</string>
     <string name="permissions.storage.description">&appName; needs access to the SD card to be able to store the downloaded media contents for the courses</string>
     <string name="permissions.phone_state.title">read phone state and identity</string>
     <string name="permissions.phone_state.description">&appName; needs access to the phone identity to get information about your device model and Android version</string>
     <string name="permissions.allow_btn_text">Allow permissions</string>
-    <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> &appName; > Permissions to grant access to these permissions</string>
+    <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> &appName;
+        > Permissions to grant access to these permissions</string>
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
     <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
 
@@ -342,6 +346,14 @@
     <string name="open_digest.description">&appName; has the functionality to open activities based in its URL (opened from an SMS, for example)</string>
     <string name="open_digest.btn_action">Open activity</string>
     <string name="open_digest.activity_completed">Activity completed</string>
+    <string name="menu_sync">Synchronise</string>
+    <string name="title_sync">Synchronise</string>
+    <string name="export_activity.text">Export latest activity and quiz trackers to an external file</string>
+    <string name="tab_title_export">Export</string>
+    <string name="export_task_completed">Export completed</string>
+    <string name="export_task_completed_text">A file named \'%1$s\' has been placed on the device filesystem</string>
+    <string name="exported_activities.title">Activity exported trackers</string>
+    <string name="export_task_no_activities">There were no new activities or quizzes to export.</string>
 
 
 </resources>

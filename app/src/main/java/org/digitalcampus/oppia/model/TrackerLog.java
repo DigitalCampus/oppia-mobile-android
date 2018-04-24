@@ -17,8 +17,17 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.text.TextUtils;
+
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.Tracker;
 import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.stream.Collectors.mapping;
 
 public class TrackerLog {
 
@@ -91,6 +100,14 @@ public class TrackerLog {
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
+
+	@Override
+	public String toString(){
+		return this.content;
+	}
 	
-	
+	public static String asJSONCollectionString(Collection<TrackerLog> trackerLogs){
+		return "[" +  TextUtils.join(",", trackerLogs) + "]";
+
+	}
 }

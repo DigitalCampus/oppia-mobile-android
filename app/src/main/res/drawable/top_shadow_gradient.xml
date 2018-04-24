@@ -4,7 +4,7 @@
         android:type="linear"
         android:angle="90"
         android:startColor="@android:color/transparent"
-        android:centerColor="@android:color/transparent"
+        android:centerColor="@color/cardview_shadow_end_color"
         android:centerY="0.75"
-        android:endColor="@color/highlight_mid" />
+        android:endColor="@color/cardview_shadow_start_color" />
 </shape>

@@ -24,6 +24,7 @@ public class Storage {
     public static final String APP_COURSES_DIR_NAME = "modules";
     public static final String APP_DOWNLOAD_DIR_NAME = "download";
     public static final String APP_MEDIA_DIR_NAME = "media";
+    public static final String APP_ACTIVITY_DIR_NAME = "activity";
 
     private static StorageAccessStrategy storageStrategy;
     public static void setStorageStrategy(StorageAccessStrategy strategy){
@@ -47,6 +48,10 @@ public class Storage {
 
     public static String getMediaPath(Context ctx){
         return getStorageLocationRoot(ctx) + File.separator + APP_MEDIA_DIR_NAME + File.separator;
+    }
+
+    public static String getActivityPath(Context ctx){
+        return getStorageLocationRoot(ctx) + File.separator + APP_ACTIVITY_DIR_NAME + File.separator;
     }
 
     public static boolean createFolderStructure(Context ctx) {

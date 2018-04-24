@@ -708,10 +708,9 @@ public class QuizWidget extends WidgetFactory {
 			if(!file.exists()){
 				Toast.makeText(this.ctx,this.ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
 				return;
-			} 
-			Uri targetUri = Uri.fromFile(file);
+			}
 			// check there is actually an app installed to open this filetype
-			Intent intent = ExternalResourceOpener.getIntentToOpenResource(ctx, targetUri, type);
+			Intent intent = ExternalResourceOpener.getIntentToOpenResource(ctx, file);
 			if(intent != null){
 				this.ctx.startActivity(intent);
 			} else {
