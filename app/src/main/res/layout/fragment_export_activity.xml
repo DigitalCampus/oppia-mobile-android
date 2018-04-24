@@ -11,13 +11,28 @@
         android:orientation="horizontal"
         android:padding="@dimen/padding_large">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/export_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            app:srcCompat="@android:drawable/stat_sys_download"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            >
+
+            <ProgressBar
+                android:id="@+id/loading_spinner"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="@dimen/course_actionbar_icon_size"
+                android:layout_height="@dimen/course_actionbar_icon_size"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/export_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@android:drawable/stat_sys_download"/>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/textView19"

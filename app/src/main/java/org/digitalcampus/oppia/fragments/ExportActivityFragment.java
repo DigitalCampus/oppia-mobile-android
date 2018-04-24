@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
@@ -48,6 +49,8 @@ public class ExportActivityFragment extends Fragment {
     public static final String TAG = ExportActivityFragment.class.getSimpleName();
 
     private FloatingActionButton exportBtn;
+    private ProgressBar loadingSpinner;
+
     private RecyclerView exportedFilesRecyclerView;
     private RecyclerView.Adapter filesAdapter;
     private ArrayList<File> files = new ArrayList<>();
@@ -68,6 +71,7 @@ public class ExportActivityFragment extends Fragment {
 
         exportedFilesRecyclerView = (RecyclerView) vv.findViewById(R.id.exported_files_list);
         exportBtn = (FloatingActionButton) vv.findViewById(R.id.export_btn);
+        loadingSpinner = (ProgressBar) vv.findViewById(R.id.loading_spinner);
         return vv;
 
     }
@@ -94,14 +98,19 @@ public class ExportActivityFragment extends Fragment {
                                     R.string.export_task_completed,
                                     ExportActivityFragment.this.getString(R.string.export_task_completed_text, filename)
                                     );
+
                             refreshFileList();
                         }
                         else{
                             Toast.makeText(ExportActivityFragment.this.getContext(), R.string.export_task_no_activities, Toast.LENGTH_LONG).show();
                         }
+                        loadingSpinner.setVisibility(View.GONE);
+                        exportBtn.setVisibility(View.VISIBLE);
 
                     }
                 });
+                loadingSpinner.setVisibility(View.VISIBLE);
+                exportBtn.setVisibility(View.GONE);
                 task.execute();
             }
         });
