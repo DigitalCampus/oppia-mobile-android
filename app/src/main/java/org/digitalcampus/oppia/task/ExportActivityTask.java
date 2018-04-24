@@ -51,10 +51,14 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
         DbHelper db = DbHelper.getInstance(ctx);
         ArrayList<User> users = db.getAllUsers();
 
+        int trackersCount = 0;
         ArrayList<String> userResults = new ArrayList<>();
         for (User u: users) {
             Collection<TrackerLog> userTrackers = db.getUnexportedTrackers(u.getUserId());
             Collection<QuizAttempt> userQuizzes = db.getUnexportedQuizAttempts(u.getUserId());
+
+            trackersCount+= userTrackers.size();
+            trackersCount+= userQuizzes.size();
 
             String userJSON = "{ \"username\":\"" + u.getUsername() + "\",";
             userJSON += "\"trackers\":" + TrackerLog.asJSONCollectionString(userTrackers) + ", ";
@@ -62,6 +66,11 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             userJSON += "\"points\":[]";
             userJSON += "}";
             userResults.add(userJSON);
+        }
+
+        if (trackersCount <= 0){
+            //We didn't have any new tracker!
+            return null;
         }
 
         String json = "{\"export_date\":\"" + new Date().toString() + "\", ";
@@ -86,7 +95,8 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        db.markLogsExported();
+
+        db.markLogsAndQuizzesExported();
 
         return filename;
     }

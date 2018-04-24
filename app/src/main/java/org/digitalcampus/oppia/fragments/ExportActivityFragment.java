@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
@@ -94,6 +95,9 @@ public class ExportActivityFragment extends Fragment {
                                     ExportActivityFragment.this.getString(R.string.export_task_completed_text, filename)
                                     );
                             refreshFileList();
+                        }
+                        else{
+                            Toast.makeText(ExportActivityFragment.this.getContext(), R.string.export_task_no_activities, Toast.LENGTH_LONG).show();
                         }
 
                     }

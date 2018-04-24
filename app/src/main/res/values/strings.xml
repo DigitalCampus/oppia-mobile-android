@@ -353,6 +353,7 @@
     <string name="export_task_completed">Export completed</string>
     <string name="export_task_completed_text">A file named \'%1$s\' has been placed on the device filesystem</string>
     <string name="exported_activities.title">Activity exported trackers</string>
+    <string name="export_task_no_activities">There were no new activities or quizzes to export.</string>
 
 
 </resources>

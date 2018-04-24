@@ -1098,11 +1098,14 @@ public class DbHelper extends SQLiteOpenHelper {
 		return trackers;
 	}
 
-	public int markLogsExported(){
-		ContentValues values = new ContentValues();
-		values.put(TRACKER_LOG_C_EXPORTED, 1);
+	public void markLogsAndQuizzesExported(){
+		ContentValues trackerValues = new ContentValues();
+		trackerValues.put(TRACKER_LOG_C_EXPORTED, 1);
+		db.update(TRACKER_LOG_TABLE, trackerValues, null, null);
 
-		return db.update(TRACKER_LOG_TABLE, values, null, null);
+		ContentValues quizValues = new ContentValues();
+		quizValues.put(QUIZATTEMPTS_C_EXPORTED, 1);
+		db.update(QUIZATTEMPTS_TABLE, quizValues, null, null);
 	}
 	
 	public int markLogSubmitted(long rowId){
