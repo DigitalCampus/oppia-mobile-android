@@ -268,4 +268,9 @@ public class Course implements Serializable {
     public void setMultiLangInfo(MultiLangInfo multiLangInfo) {
         this.multiLangInfo = multiLangInfo;
     }
+
+
+	public static String getLocalFilename(String shortname, Double versionID){
+		return shortname+"-"+String.format("%.0f",versionID)+".zip";
+	}
 }

@@ -19,12 +19,11 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.service.CourseIntallerService;
+import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -110,7 +110,7 @@
             android:exported="false"/>
 
         <service
-            android:name="org.digitalcampus.oppia.service.CourseIntallerService"
+            android:name="org.digitalcampus.oppia.service.courseinstall.CourseIntallerService"
             android:icon="@drawable/dc_logo"
             android:exported="false"/>
 
