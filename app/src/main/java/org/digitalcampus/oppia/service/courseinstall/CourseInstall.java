@@ -21,6 +21,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 public class CourseInstall {
@@ -138,7 +139,7 @@ public class CourseInstall {
         listener.onInstallProgress(90);
 
         // delete zip file from download dir
-        copyBackupCourse(zipFile, c);
+        copyBackupCourse(ctx, zipFile, c);
         FileUtils.deleteFile(zipFile);
 
         long estimatedTime = System.currentTimeMillis() - startTime;
@@ -149,10 +150,41 @@ public class CourseInstall {
     }
 
 
-    private static void copyBackupCourse(File zipFile, CompleteCourse c) {
+    private static void copyBackupCourse(Context ctx, File zipFile, CompleteCourse c) {
         String shortname = c.getShortname();
-        String version = c.getVersionId().toString();
+        String version = "" + c.getVersionId().intValue();
+        String filename = shortname + "_" + version + ".zip";
+        File destination = new File(Storage.getCourseBackupPath(ctx), filename);
 
+        try {
+            //Look for previous backup files
+            File backupDir = new File(Storage.getCourseBackupPath(ctx));
+            backupDir.mkdirs();
+
+            File previousBackup = null;
+            String[] backups = backupDir.list();
+            if (backups.length > 0){
+                for (String backup : backups) {
+
+                    String backup_shortname = backup.substring(0, backup.lastIndexOf("_"));
+                    Log.d(TAG, "checking " + backup + " - shortname: " + backup_shortname);
+                    if (backup_shortname.equalsIgnoreCase(shortname)){
+                        previousBackup = new File(Storage.getCourseBackupPath(ctx), backup);
+                    }
+                }
+            }
+
+            // Copy new course zip file
+            Log.d(TAG, "Copying new backup file " + filename);
+            org.apache.commons.io.FileUtils.copyFile(zipFile, destination);
+            if (previousBackup != null){
+                Log.d(TAG, "Deleting previous backup file " + previousBackup.getPath());
+                FileUtils.deleteFile(previousBackup);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
