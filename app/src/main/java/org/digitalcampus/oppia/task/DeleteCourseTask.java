@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import java.io.File;
@@ -34,8 +35,13 @@ public class DeleteCourseTask extends AsyncTask<Payload, String, Payload> {
             // remove files
             String courseLocation = course.getLocation();
             File f = new File(courseLocation);
-
             boolean success = FileUtils.deleteDir(f);
+
+            File courseBackup = CourseInstall.savedBackupCourse(ctx, course.getShortname());
+            if (success && courseBackup != null){
+                FileUtils.deleteFile(courseBackup);
+            }
+
             payload.setResult(success);
         }catch(NullPointerException npe){
             payload.setResult(false);
