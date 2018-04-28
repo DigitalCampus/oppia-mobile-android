@@ -171,7 +171,7 @@ public class CourseInstall {
 
     private static void copyBackupCourse(Context ctx, File zipFile, CompleteCourse c) {
         String shortname = c.getShortname();
-        String version = "" + c.getVersionId().intValue();
+        String version = "" + Math.round(c.getVersionId());
         String filename = shortname + "_" + version + ".zip";
         File destination = new File(Storage.getCourseBackupPath(ctx), filename);
 
