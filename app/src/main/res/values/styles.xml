@@ -14,6 +14,12 @@
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
+    <style name="SubheaderText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="fontPath">fonts/lato.ttf</item>
+    </style>
+
     <style name="ButtonText">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">normal</item>

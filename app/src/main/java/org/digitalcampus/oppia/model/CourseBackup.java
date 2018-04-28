@@ -1,10 +1,21 @@
 package org.digitalcampus.oppia.model;
 
 public class CourseBackup {
+
+
+    private String title;
     private String shortname;
     private Double versionId;
     private String filename;
-    private double fileSize;
+    private long fileSize;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getShortname() {
         return shortname;
@@ -30,11 +41,11 @@ public class CourseBackup {
         this.filename = filename;
     }
 
-    public double getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(double fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 
