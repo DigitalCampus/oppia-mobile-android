@@ -95,6 +95,7 @@ public class CourseInstall {
         listener.onInstallProgress(20);
 
         boolean success = false;
+        boolean latestVersion = false;
 
         DbHelper db = DbHelper.getInstance(ctx);
         long courseId = db.addOrUpdateCourse(c);
@@ -124,6 +125,7 @@ public class CourseInstall {
                 return;
             }
         }  else {
+            latestVersion = true;
             listener.onFail(ctx.getString(R.string.error_latest_already_installed, title) );
         }
         // add schedule
@@ -138,8 +140,10 @@ public class CourseInstall {
         FileUtils.deleteDir(tempdir);
         listener.onInstallProgress(90);
 
+        if (success && !latestVersion){
+            copyBackupCourse(ctx, zipFile, c);
+        }
         // delete zip file from download dir
-        copyBackupCourse(ctx, zipFile, c);
         FileUtils.deleteFile(zipFile);
 
         long estimatedTime = System.currentTimeMillis() - startTime;
@@ -170,6 +174,7 @@ public class CourseInstall {
 
 
     private static void copyBackupCourse(Context ctx, File zipFile, CompleteCourse c) {
+        //TODO: Add a BuildConfig to control if we want this functionality or not
         String shortname = c.getShortname();
         String version = "" + Math.round(c.getVersionId());
         String filename = shortname + "_" + version + ".zip";
