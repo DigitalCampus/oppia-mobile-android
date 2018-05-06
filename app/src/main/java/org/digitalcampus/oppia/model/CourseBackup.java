@@ -1,7 +1,10 @@
 package org.digitalcampus.oppia.model;
 
-public class CourseBackup {
+import java.io.Serializable;
 
+public class CourseBackup implements Serializable {
+
+    static final long serialVersionUID = 123456789123456789L;
 
     private String title;
     private String shortname;

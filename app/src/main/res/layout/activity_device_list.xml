@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingBottom="@dimen/activity_horizontal_margin"
+      android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth.select_device"
+        />
+
+    <TextView
+        android:id="@+id/paired_devices_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/stroke"
+        android:paddingBottom="@dimen/padding_medium"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/paired_devices"
+        android:visibility="gone"
+        />
+
+    <ListView
+        android:id="@+id/paired_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:stackFromBottom="true"
+        />
+
+    <TextView
+        android:id="@+id/new_devices_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/stroke"
+        android:paddingBottom="@dimen/padding_medium"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/padding_medium"
+        android:text="@string/other_devices"
+        android:visibility="gone"
+        />
+
+    <ListView
+        android:id="@+id/new_devices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:stackFromBottom="true"
+        />
+
+    <Button
+        android:id="@+id/button_scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth.button_scan"
+        />
+</LinearLayout>
