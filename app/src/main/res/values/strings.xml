@@ -355,6 +355,19 @@
     <string name="exported_activities.title">Activity exported trackers</string>
     <string name="export_task_no_activities">There were no new activities or quizzes to export.</string>
     <string name="tab_title_transfer">Transfer</string>
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled</string>
+    <string name="paired_devices">Paired devices</string>
+    <string name="other_devices">Other devices</string>
+    <string name="bluetooth.button_scan">Scan</string>
+    <string name="bluetooth.none_paired">No devices paired yet</string>
+    <string name="bluetooth.scanning">Scanning...</string>
+    <string name="bluetooth.no_devices_found">No devices found</string>
+    <string name="bluetooth.no_device_connected">No connected device</string>
+    <string name="bluetooth.select_device">Select device to connect</string>
+    <string name="bluetooth.title_connecting">Connecting to device...</string>
+    <string name="bluetooth.title_not_connected">Not connected</string>
+    <string name="bluetooth.title_connected_to">Connected</string>
+    <string name="course_transferring">Course transferring in progress...</string>
 
 
 </resources>
