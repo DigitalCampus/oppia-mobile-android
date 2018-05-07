@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:paddingBottom="@dimen/activity_horizontal_margin"
-      android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/padding_medium"
         android:text="@string/bluetooth.select_device"
-        />
+        android:textAppearance="@style/Oppia.ActionBar.TitleTextStyle"
+        android:theme="@style/Header"/>
 
     <TextView
         android:id="@+id/paired_devices_title"
@@ -57,6 +59,8 @@
         android:id="@+id/button_scan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/bluetooth.button_scan"
-        />
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/padding_medium"
+        android:gravity="center_horizontal"
+        android:text="@string/bluetooth.button_scan"/>
 </LinearLayout>
