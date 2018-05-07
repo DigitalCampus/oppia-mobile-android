@@ -27,10 +27,10 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DeviceListActivity;
 import org.digitalcampus.oppia.adapter.TransferCourseListAdapter;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
-import org.digitalcampus.oppia.model.CourseBackup;
+import org.digitalcampus.oppia.model.CourseTransferableFile;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
-import org.digitalcampus.oppia.task.FetchCourseBackupsTask;
+import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -51,11 +51,12 @@ public class TransferFragment extends Fragment {
     private RecyclerView.Adapter coursesAdapter;
     private ImageButton bluetoothBtn;
     private ImageButton discoverBtn;
-    private ArrayList<CourseBackup> courses = new ArrayList<>();
+    private ArrayList<CourseTransferableFile> courses = new ArrayList<>();
 
     private BluetoothAdapter bluetoothAdapter = null;
     private BluetoothTransferService bluetoothService = null;
     private ProgressDialog progressDialog;
+    private View notConnectedInfo;
 
     private TextView statusTitle;
     private TextView statusSubtitle;
@@ -130,6 +131,7 @@ public class TransferFragment extends Fragment {
         discoverBtn = (ImageButton) vv.findViewById(R.id.discover_btn);
         statusTitle = (TextView) vv.findViewById(R.id.status_title);
         statusSubtitle = (TextView) vv.findViewById(R.id.status_subtitle);
+        notConnectedInfo = vv.findViewById(R.id.not_connected_info);
         return vv;
     }
 
@@ -143,18 +145,11 @@ public class TransferFragment extends Fragment {
             @Override
             public void onClick(int position) {
                 Context ctx = TransferFragment.this.getActivity().getApplicationContext();
-                CourseBackup toShare = courses.get(position);
+                final CourseTransferableFile toShare = courses.get(position);
                 if (bluetoothService.getState() == BluetoothTransferService.STATE_CONNECTED){
-                    final File backup = CourseInstall.savedBackupCourse(ctx, toShare.getShortname());
-                    progressDialog = new ProgressDialog(TransferFragment.this.getActivity(), R.style.Oppia_AlertDialogStyle);
-                    progressDialog.setMessage(getString(R.string.course_transferring));
-                    progressDialog.setCancelable(false);
-                    progressDialog.setCanceledOnTouchOutside(false);
-                    progressDialog.show();
-
                     new Thread(new Runnable() {
                         public void run() {
-                            bluetoothService.sendFile(backup);
+                            bluetoothService.sendFile(toShare);
                         }
                     }).start();
 
@@ -202,9 +197,13 @@ public class TransferFragment extends Fragment {
         statusTitle.setText(status_title);
         if (connectedDevice == null){
             statusSubtitle.setText(R.string.bluetooth_no_device_connected);
+            notConnectedInfo.setVisibility(View.VISIBLE);
+            coursesRecyclerView.setVisibility(View.GONE);
         }
         else{
             statusSubtitle.setText(connectedDevice);
+            notConnectedInfo.setVisibility(View.GONE);
+            coursesRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -258,10 +257,10 @@ public class TransferFragment extends Fragment {
 
 
     private void refreshFileList(){
-        FetchCourseBackupsTask task = new FetchCourseBackupsTask(this.getActivity());
-        task.setListener(new FetchCourseBackupsTask.FetchBackupsListener() {
+        FetchCourseTransferableFilesTask task = new FetchCourseTransferableFilesTask(this.getActivity());
+        task.setListener(new FetchCourseTransferableFilesTask.FetchBackupsListener() {
             @Override
-            public void onFetchComplete(List<CourseBackup> backups) {
+            public void onFetchComplete(List<CourseTransferableFile> backups) {
                 courses.clear();
                 courses.addAll(backups);
                 coursesAdapter.notifyDataSetChanged();
@@ -286,6 +285,8 @@ public class TransferFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             TransferFragment self = fragment.get();
+            ProgressDialog pd;
+
             if (self != null) {
                 FragmentActivity ctx = self.getActivity();
                 switch (msg.what) {
@@ -326,10 +327,21 @@ public class TransferFragment extends Fragment {
                         Log.d(TAG, "Course backup! " + courseShortname);
                         break;
 
+                    case BluetoothTransferService.UI_MESSAGE_COURSE_START_TRANSFER:
+                        Log.d(TAG, "Course transferring! ");
+                        pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
+                        self.progressDialog = pd;
+                        pd.setMessage(self.getString(R.string.course_transferring));
+                        pd.setIndeterminate(true);
+                        pd.setCancelable(false);
+                        pd.setCanceledOnTouchOutside(false);
+                        pd.show();
+                        break;
+
                     case BluetoothTransferService.UI_MESSAGE_COURSE_TRANSFERRING:
                         int total = msg.arg1;
                         Log.d(TAG, "Course transferring! ");
-                        ProgressDialog pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
+                        pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
                         self.progressDialog = pd;
                         pd.setMessage(self.getString(R.string.course_transferring));
                         pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

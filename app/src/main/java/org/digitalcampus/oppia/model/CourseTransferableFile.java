@@ -1,16 +1,22 @@
 package org.digitalcampus.oppia.model;
 
+import java.io.File;
 import java.io.Serializable;
 
-public class CourseBackup implements Serializable {
+public class CourseTransferableFile implements Serializable {
 
     static final long serialVersionUID = 123456789123456789L;
+
+    public static final String TYPE_COURSE_BACKUP = "backup";
+    public static final String TYPE_COURSE_MEDIA = "media";
 
     private String title;
     private String shortname;
     private Double versionId;
+    private String type = TYPE_COURSE_BACKUP;
     private String filename;
     private long fileSize;
+    private File file;
 
     public String getTitle() {
         return title;
@@ -52,5 +58,19 @@ public class CourseBackup implements Serializable {
         this.fileSize = fileSize;
     }
 
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
 }

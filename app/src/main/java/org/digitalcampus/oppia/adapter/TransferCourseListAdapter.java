@@ -10,14 +10,13 @@ import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
-import org.digitalcampus.oppia.model.CourseBackup;
+import org.digitalcampus.oppia.model.CourseTransferableFile;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCourseListAdapter.ViewHolder> {
 
-    private ArrayList<CourseBackup> courses;
+    private ArrayList<CourseTransferableFile> courses;
     private final ListInnerBtnOnClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -49,7 +48,7 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
     }
 
 
-    public TransferCourseListAdapter(ArrayList<CourseBackup> courses, ListInnerBtnOnClickListener listener){
+    public TransferCourseListAdapter(ArrayList<CourseTransferableFile> courses, ListInnerBtnOnClickListener listener){
         this.courses = courses;
         this.listener = listener;
     }
@@ -64,7 +63,7 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        CourseBackup current = courses.get(position);
+        CourseTransferableFile current = courses.get(position);
         holder.courseTitle.setText(current.getTitle());
         holder.courseDescription.setText(current.getFilename());
 

@@ -12,9 +12,7 @@ import android.os.Message;
 import android.util.Log;
 
 
-import org.apache.commons.io.IOUtils;
-import org.digitalcampus.oppia.model.CourseBackup;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.model.CourseTransferableFile;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.BufferedInputStream;
@@ -25,10 +23,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.util.UUID;
 
 /**
@@ -52,9 +48,10 @@ public class BluetoothTransferService {
     public static final int UI_MESSAGE_DEVICE_NAME = 2;
     public static final int UI_MESSAGE_TOAST = 3;
     public static final int UI_MESSAGE_COURSE_BACKUP = 4;
-    public static final int UI_MESSAGE_COURSE_TRANSFERRING = 5;
-    public static final int UI_MESSAGE_TRANSFER_COMPLETE = 6;
-    public static final int UI_MESSAGE_TRANSFER_PROGRESS = 7;
+    public static final int UI_MESSAGE_COURSE_START_TRANSFER = 5;
+    public static final int UI_MESSAGE_COURSE_TRANSFERRING = 6;
+    public static final int UI_MESSAGE_TRANSFER_COMPLETE = 7;
+    public static final int UI_MESSAGE_TRANSFER_PROGRESS = 8;
 
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -257,10 +254,10 @@ public class BluetoothTransferService {
     /**
      * Write to the ConnectedThread in an unsynchronized manner
      *
-     * @param file The file to write
-     * @see ConnectedThread#sendFile(File)
+     * @param trFile The file to transfer
+     * @see ConnectedThread#sendFile(CourseTransferableFile)
      */
-    public void sendFile(File file) {
+    public void sendFile(CourseTransferableFile trFile) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -269,7 +266,7 @@ public class BluetoothTransferService {
             r = connectedThread;
         }
         // Perform the write unsynchronized
-        r.sendFile(file);
+        r.sendFile(trFile);
     }
 
     /**
@@ -505,6 +502,7 @@ public class BluetoothTransferService {
                     DataInputStream d = new DataInputStream(in);
 
                     String fileName = d.readUTF();
+                    String type = d.readUTF();
                     long fileSize = d.readLong();
                     Log.d(TAG, fileName + ": " + fileSize);
 
@@ -521,7 +519,7 @@ public class BluetoothTransferService {
                     int totalBytes = 0;
                     try {
                         byte[] buf = new byte[4096];
-                        int bytesRead = 0;
+                        int bytesRead;
 
                         while((bytesRead = d.read(buf)) != -1) {
                             totalBytes += bytesRead;
@@ -553,14 +551,18 @@ public class BluetoothTransferService {
             }
         }
 
-        public void sendFile(File file){
+        public void sendFile(CourseTransferableFile trFile){
 
             try {
                 DataOutputStream d = new DataOutputStream(mmOutStream);
 
+                File file = trFile.getFile();
                 d.writeUTF(file.getName());
+                d.writeUTF(trFile.getType());
                 d.writeLong(file.length());
+
                 Log.d(TAG, "Sending " + file.getName() + " over bluetooth...");
+                uiHandler.obtainMessage(UI_MESSAGE_COURSE_START_TRANSFER, newState, -1).sendToTarget();
 
                 int totalBytes = 0;
                 FileInputStream fis = new FileInputStream(file);
