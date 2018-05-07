@@ -99,9 +99,7 @@ public class BluetoothTransferService {
      */
     private synchronized void updateUserInterfaceTitle() {
         state = getState();
-        Log.d(TAG, "updateUserInterfaceTitle() " + newState + " -> " + state);
         newState = state;
-
         // Give the new state to the Handler so the UI Activity can update
         uiHandler.obtainMessage(UI_MESSAGE_STATE_CHANGE, newState, -1).sendToTarget();
     }
@@ -221,9 +219,7 @@ public class BluetoothTransferService {
         updateUserInterfaceTitle();
     }
 
-    /**
-     * Stop all threads
-     */
+
     public synchronized void stop() {
         Log.d(TAG, "stop");
 
@@ -247,7 +243,6 @@ public class BluetoothTransferService {
             insecureAcceptThread = null;
         }
         state = STATE_NONE;
-        // Update UI title
         updateUserInterfaceTitle();
     }
 
@@ -281,7 +276,6 @@ public class BluetoothTransferService {
         uiHandler.sendMessage(msg);
 
         state = STATE_NONE;
-        // Update UI title
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
@@ -300,7 +294,6 @@ public class BluetoothTransferService {
         uiHandler.sendMessage(msg);
 
         state = STATE_NONE;
-        // Update UI title
         updateUserInterfaceTitle();
 
         // Start the service over to restart listening mode
@@ -510,10 +503,14 @@ public class BluetoothTransferService {
                     uiHandler.obtainMessage(UI_MESSAGE_COURSE_TRANSFERRING, (int) fileSize, -1, null)
                             .sendToTarget();
 
-                    File backupDir = new File(Storage.getDownloadPath(ctx));
-                    backupDir.mkdirs();
-
-                    File file = new File(backupDir, fileName);
+                    File destinationDir = (CourseTransferableFile
+                                    .TYPE_COURSE_BACKUP.equals(type)) ?
+                                    new File(Storage.getDownloadPath(ctx)) :
+                                    new File(Storage.getMediaPath(ctx));
+                    if (!destinationDir.exists()){
+                        destinationDir.mkdirs();
+                    }
+                    File file = new File(destinationDir, fileName);
                     FileOutputStream output = new FileOutputStream(file);
 
                     int totalBytes = 0;
