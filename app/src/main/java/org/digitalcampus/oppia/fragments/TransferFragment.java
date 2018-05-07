@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DeviceListActivity;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.adapter.TransferCourseListAdapter;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.CourseBackup;
@@ -34,9 +33,7 @@ import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
 import org.digitalcampus.oppia.task.FetchCourseBackupsTask;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +55,6 @@ public class TransferFragment extends Fragment {
 
     private BluetoothAdapter bluetoothAdapter = null;
     private BluetoothTransferService bluetoothService = null;
-    private Handler uiHandler;
     private ProgressDialog progressDialog;
 
     private TextView statusTitle;
@@ -199,85 +195,6 @@ public class TransferFragment extends Fragment {
 
     private void setupBluetoothConnection() {
         Log.d(TAG, "setting up connection");
-        uiHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                FragmentActivity activity = getActivity();
-                switch (msg.what) {
-                    case BluetoothTransferService.UI_MESSAGE_STATE_CHANGE:
-                        switch (msg.arg1) {
-                            case BluetoothTransferService.STATE_CONNECTED:
-                                setStatus(R.string.bluetooth_title_connected_to, connectedDeviceName);
-                                break;
-                            case BluetoothTransferService.STATE_CONNECTING:
-                                setStatus(R.string.bluetooth_title_connecting, null);
-                                break;
-                            case BluetoothTransferService.STATE_LISTEN:
-                            case BluetoothTransferService.STATE_NONE:
-                                setStatus(R.string.bluetooth_title_not_connected, null);
-                                break;
-                        }
-                        break;
-
-                    case BluetoothTransferService.UI_MESSAGE_DEVICE_NAME:
-                        // save the connected device's name
-                        connectedDeviceName = msg.getData().getString(BluetoothTransferService.DEVICE_NAME);
-                        if (null != activity) {
-                            Toast.makeText(activity, "Connected to "
-                                    + connectedDeviceName, Toast.LENGTH_SHORT).show();
-                            setStatus(R.string.bluetooth_title_connected_to, connectedDeviceName);
-                        }
-                        break;
-
-                    case BluetoothTransferService.UI_MESSAGE_TOAST:
-                        if (null != activity) {
-                            Toast.makeText(activity, msg.getData().getString(BluetoothTransferService.TOAST),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-
-                    case BluetoothTransferService.UI_MESSAGE_COURSE_BACKUP:
-                        String courseShortname = msg.getData().getString(BluetoothTransferService.COURSE_BACKUP);
-                        Log.d(TAG, "Course backup! " + courseShortname);
-                        break;
-
-                    case BluetoothTransferService.UI_MESSAGE_COURSE_TRANSFERRING:
-                        int total = msg.arg1;
-                        Log.d(TAG, "Course transferring! ");
-                        progressDialog = new ProgressDialog(TransferFragment.this.getActivity(), R.style.Oppia_AlertDialogStyle);
-                        progressDialog.setMessage(getString(R.string.course_transferring));
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                        progressDialog.setMax(total);
-                        progressDialog.setProgress(0);
-                        progressDialog.setIndeterminate(false);
-                        progressDialog.setCancelable(false);
-                        progressDialog.setCanceledOnTouchOutside(false);
-                        progressDialog.show();
-                        break;
-
-                    case BluetoothTransferService.UI_MESSAGE_TRANSFER_PROGRESS:
-                        int progress = msg.arg1;
-                        if (progressDialog != null){
-                            progressDialog.setProgress(progress);
-
-                            Log.d(TAG, "progress");
-                        }
-                        break;
-
-                    case BluetoothTransferService.UI_MESSAGE_TRANSFER_COMPLETE:
-
-                        Toast.makeText(getActivity(), "Transfer complete",
-                                Toast.LENGTH_SHORT).show();
-
-                        Log.d(TAG, "Course transferring! ");
-                        if (progressDialog != null){
-                            progressDialog.hide();
-                            progressDialog = null;
-                        }
-                        break;
-                }
-            }
-        };
         bluetoothService = new BluetoothTransferService(getActivity(), uiHandler);
     }
 
@@ -353,6 +270,101 @@ public class TransferFragment extends Fragment {
         task.execute();
 
     }
+
+
+    private final BluetoothTransferHandler uiHandler = new BluetoothTransferHandler(this);
+
+    //static inner class doesn't hold an implicit reference to the outer class
+    private static class BluetoothTransferHandler extends Handler {
+        //Using a weak reference means you won't prevent garbage collection
+        private final WeakReference<TransferFragment> fragment;
+
+        BluetoothTransferHandler(TransferFragment fragmentInstance) {
+            fragment = new WeakReference<>(fragmentInstance);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            TransferFragment self = fragment.get();
+            if (self != null) {
+                FragmentActivity ctx = self.getActivity();
+                switch (msg.what) {
+                    case BluetoothTransferService.UI_MESSAGE_STATE_CHANGE:
+                        switch (msg.arg1) {
+                            case BluetoothTransferService.STATE_CONNECTED:
+                                self.setStatus(R.string.bluetooth_title_connected_to, self.connectedDeviceName);
+                                break;
+                            case BluetoothTransferService.STATE_CONNECTING:
+                                self.setStatus(R.string.bluetooth_title_connecting, null);
+                                break;
+                            case BluetoothTransferService.STATE_LISTEN:
+                            case BluetoothTransferService.STATE_NONE:
+                                self.setStatus(R.string.bluetooth_title_not_connected, null);
+                                break;
+                        }
+                        break;
+
+                    case BluetoothTransferService.UI_MESSAGE_DEVICE_NAME:
+                        // save the connected device's name
+                        self.connectedDeviceName = msg.getData().getString(BluetoothTransferService.DEVICE_NAME);
+                        if (null != ctx) {
+                            Toast.makeText(ctx, "Connected to "
+                                    + self.connectedDeviceName, Toast.LENGTH_SHORT).show();
+                            self.setStatus(R.string.bluetooth_title_connected_to, self.connectedDeviceName);
+                        }
+                        break;
+
+                    case BluetoothTransferService.UI_MESSAGE_TOAST:
+                        if (null != ctx) {
+                            Toast.makeText(ctx, msg.getData().getString(BluetoothTransferService.TOAST),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                    case BluetoothTransferService.UI_MESSAGE_COURSE_BACKUP:
+                        String courseShortname = msg.getData().getString(BluetoothTransferService.COURSE_BACKUP);
+                        Log.d(TAG, "Course backup! " + courseShortname);
+                        break;
+
+                    case BluetoothTransferService.UI_MESSAGE_COURSE_TRANSFERRING:
+                        int total = msg.arg1;
+                        Log.d(TAG, "Course transferring! ");
+                        ProgressDialog pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
+                        self.progressDialog = pd;
+                        pd.setMessage(self.getString(R.string.course_transferring));
+                        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        pd.setMax(total);
+                        pd.setProgress(0);
+                        pd.setIndeterminate(false);
+                        pd.setCancelable(false);
+                        pd.setCanceledOnTouchOutside(false);
+                        pd.show();
+                        break;
+
+                    case BluetoothTransferService.UI_MESSAGE_TRANSFER_PROGRESS:
+                        int progress = msg.arg1;
+                        if (self.progressDialog != null) {
+                            self.progressDialog.setProgress(progress);
+                            Log.d(TAG, "progress");
+                        }
+                        break;
+
+                    case BluetoothTransferService.UI_MESSAGE_TRANSFER_COMPLETE:
+
+                        Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
+
+                        Log.d(TAG, "Course transferring! ");
+                        if (self.progressDialog != null) {
+                            self.progressDialog.hide();
+                            self.progressDialog = null;
+                        }
+                        break;
+                }
+            }
+
+        }
+    }
+
 
 
 }
