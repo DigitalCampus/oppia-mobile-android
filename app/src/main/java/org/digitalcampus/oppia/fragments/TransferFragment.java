@@ -364,13 +364,13 @@ public class TransferFragment extends Fragment {
                     case BluetoothTransferService.UI_MESSAGE_TRANSFER_COMPLETE:
 
                         Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
-
-                        Log.d(TAG, "Course transferring! ");
                         if (self.progressDialog != null) {
                             self.progressDialog.hide();
                             self.progressDialog = null;
                         }
+                        self.refreshFileList();
                         break;
+
                 }
             }
 

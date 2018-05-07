@@ -10,6 +10,7 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,12 +53,31 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, String,
                 courseBackup.setFile(backup);
 
                 long filesize = backup.length();
-                courseBackup.setFileSize(filesize);
+
                 if (filesize > 0){
+                    courseBackup.setFileSize(filesize);
                     transferableFiles.add(courseBackup);
                 }
             }
         }
+
+        File mediaPath = new File(Storage.getMediaPath(ctx));
+        String[] mediaFiles = mediaPath.list();
+        if (mediaFiles.length > 0){
+            for (String mediaFile : mediaFiles) {
+                File file = new File(mediaPath, mediaFile);
+                CourseTransferableFile media = new CourseTransferableFile();
+                media.setFilename(file.getName());
+                media.setType(CourseTransferableFile.TYPE_COURSE_MEDIA);
+                media.setShortname("");
+                long filesize = file.length();
+                if (filesize > 0){
+                    media.setFileSize(filesize);
+                    transferableFiles.add(media);
+                }
+            }
+        }
+
         return transferableFiles;
     }
 

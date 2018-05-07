@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
         TextView courseFilesize;
         TextView courseDescription;
         ImageButton actionBtn;
-        ProgressBar actionProgress;
+        ImageView icon;
 
         public ListInnerBtnOnClickListener listener;
 
@@ -35,6 +36,7 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
             courseFilesize = (TextView) v.findViewById(R.id.course_filesize);
             courseDescription = (TextView) v.findViewById(R.id.course_description);
             actionBtn = (ImageButton) v.findViewById(R.id.download_course_btn);
+            icon = (ImageView) v.findViewById(R.id.elem_icon);
 
             actionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,8 +66,19 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         CourseTransferableFile current = courses.get(position);
-        holder.courseTitle.setText(current.getTitle());
+
+        if (current.getTitle() != null){
+            holder.courseTitle.setVisibility(View.VISIBLE);
+            holder.courseTitle.setText(current.getTitle());
+        }
+        else{
+            holder.courseTitle.setVisibility(View.GONE);
+        }
+
         holder.courseDescription.setText(current.getFilename());
+        holder.icon.setImageResource(
+                current.getType().equals(CourseTransferableFile.TYPE_COURSE_BACKUP)?
+                        R.drawable.ic_notification : R.drawable.default_icon_video);
 
         holder.courseFilesize.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.getFileSize()));
         if (listener!=null){
