@@ -13,6 +13,7 @@ import org.digitalcampus.oppia.fragments.AboutFragment;
 import org.digitalcampus.oppia.fragments.ExportActivityFragment;
 import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
 import org.digitalcampus.oppia.fragments.StatsFragment;
+import org.digitalcampus.oppia.fragments.TransferFragment;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.ArrayList;
@@ -54,6 +55,10 @@ public class SyncActivity extends AppActivity {
 
         List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
+
+        Fragment fTransfer = TransferFragment.newInstance();
+        fragments.add(fTransfer);
+        titles.add(this.getString(R.string.tab_title_transfer));
 
         Fragment fExport = ExportActivityFragment.newInstance();
         fragments.add(fExport);

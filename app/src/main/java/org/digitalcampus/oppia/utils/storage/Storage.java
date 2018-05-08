@@ -25,6 +25,7 @@ public class Storage {
     public static final String APP_DOWNLOAD_DIR_NAME = "download";
     public static final String APP_MEDIA_DIR_NAME = "media";
     public static final String APP_ACTIVITY_DIR_NAME = "activity";
+    public static final String APP_BACKUP_DIR_NAME = "backup";
 
     private static StorageAccessStrategy storageStrategy;
     public static void setStorageStrategy(StorageAccessStrategy strategy){
@@ -52,6 +53,10 @@ public class Storage {
 
     public static String getActivityPath(Context ctx){
         return getStorageLocationRoot(ctx) + File.separator + APP_ACTIVITY_DIR_NAME + File.separator;
+    }
+
+    public static String getCourseBackupPath(Context ctx){
+        return getStorageLocationRoot(ctx) + File.separator + APP_BACKUP_DIR_NAME + File.separator;
     }
 
     public static boolean createFolderStructure(Context ctx) {

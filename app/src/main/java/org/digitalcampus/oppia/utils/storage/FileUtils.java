@@ -214,6 +214,13 @@ public class FileUtils {
 		return stringBuilder.toString();
 	}
 
+	public static void deleteFile(File file){
+		if ((file != null) && file.exists() && !file.isDirectory()){
+			boolean deleted = file.delete();
+			Log.d(TAG, file.getName() + (deleted? " deleted succesfully.": " deletion failed!"));
+		}
+	}
+
 	public static String getMimeType(String url) {
 		String type = null;
 		int lastIndex = url.lastIndexOf('.');
