@@ -68,6 +68,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, String,
                 File file = new File(mediaPath, mediaFile);
                 CourseTransferableFile media = new CourseTransferableFile();
                 media.setFilename(file.getName());
+                media.setFile(file);
                 media.setType(CourseTransferableFile.TYPE_COURSE_MEDIA);
                 media.setShortname("");
                 long filesize = file.length();
