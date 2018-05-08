@@ -301,6 +301,10 @@ public class TransferFragment extends Fragment {
                             case BluetoothTransferService.STATE_LISTEN:
                             case BluetoothTransferService.STATE_NONE:
                                 self.setStatus(R.string.bluetooth_title_not_connected, null);
+                                if (self.progressDialog != null){
+                                    self.progressDialog.hide();
+                                    self.progressDialog = null;
+                                }
                                 break;
                         }
                         break;
