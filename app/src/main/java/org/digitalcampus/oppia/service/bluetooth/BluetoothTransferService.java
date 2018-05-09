@@ -52,6 +52,7 @@ public class BluetoothTransferService {
     public static final int UI_MESSAGE_COURSE_TRANSFERRING = 6;
     public static final int UI_MESSAGE_TRANSFER_COMPLETE = 7;
     public static final int UI_MESSAGE_TRANSFER_PROGRESS = 8;
+    public static final int UI_MESSAGE_COURSE_COMPLETE = 9;
 
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
@@ -531,7 +532,11 @@ public class BluetoothTransferService {
                     }
 
                     // Notify the UI that a course is transferring
-                    uiHandler.obtainMessage(UI_MESSAGE_TRANSFER_COMPLETE, -1, -1, null)
+                    uiHandler.obtainMessage(
+                            CourseTransferableFile
+                                    .TYPE_COURSE_BACKUP.equals(type) ?
+                                    UI_MESSAGE_COURSE_COMPLETE
+                                    : UI_MESSAGE_TRANSFER_COMPLETE, -1, -1, null)
                             .sendToTarget();
 
                     Message msg = uiHandler.obtainMessage(UI_MESSAGE_COURSE_BACKUP);

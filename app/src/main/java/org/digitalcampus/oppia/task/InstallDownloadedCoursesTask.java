@@ -41,7 +41,7 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 	@Override
 	protected Payload doInBackground(Payload... params) {
 
-		final Payload payload = params[0];
+		final Payload payload = params[0] == null ? new Payload() : params[0];
 
 		File dir = new File(Storage.getDownloadPath(ctx));
 		String[] children = dir.list();
