@@ -114,6 +114,7 @@ public class DrawerMenuManager {
         MenuItem itemMonitor = drawerMenu.findItem(R.id.menu_monitor);
         MenuItem itemCourseDownload = drawerMenu.findItem(R.id.menu_download);
         MenuItem itemLanguageDialog = drawerMenu.findItem(R.id.menu_language);
+        MenuItem itemSync = drawerMenu.findItem(R.id.menu_sync);
 
         if (currentOption != null){
             MenuItem current = drawerMenu.findItem(currentOption);
@@ -129,6 +130,7 @@ public class DrawerMenuManager {
         itemMonitor.setVisible(MobileLearning.MENU_ALLOW_MONITOR);
         itemCourseDownload.setVisible(MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD);
         itemLanguageDialog.setVisible(customOptions.containsKey(R.id.menu_language));
+        itemSync.setVisible(MobileLearning.MENU_ALLOW_SYNC);
     }
 
     public void onPostCreate(Bundle savedInstanceState){
