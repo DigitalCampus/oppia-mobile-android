@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,19 +25,21 @@ import android.widget.Toast;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DeviceListActivity;
 import org.digitalcampus.oppia.adapter.TransferCourseListAdapter;
+import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
+import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService;
-import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
 import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
+import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
+import org.digitalcampus.oppia.task.Payload;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class TransferFragment extends Fragment {
+public class TransferFragment extends Fragment implements InstallCourseListener {
 
     public static final String TAG = TransferFragment.class.getSimpleName();
 
@@ -144,7 +145,6 @@ public class TransferFragment extends Fragment {
         coursesAdapter = new TransferCourseListAdapter(courses, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
-                Context ctx = TransferFragment.this.getActivity().getApplicationContext();
                 final CourseTransferableFile toShare = courses.get(position);
                 if (bluetoothService.getState() == BluetoothTransferService.STATE_CONNECTED){
                     new Thread(new Runnable() {
@@ -152,8 +152,6 @@ public class TransferFragment extends Fragment {
                             bluetoothService.sendFile(toShare);
                         }
                     }).start();
-
-
                 }
             }
         });
@@ -273,6 +271,39 @@ public class TransferFragment extends Fragment {
 
     private final BluetoothTransferHandler uiHandler = new BluetoothTransferHandler(this);
 
+    @Override
+    public void downloadComplete(Payload p) { }
+
+    @Override
+    public void downloadProgressUpdate(DownloadProgress dp) { }
+
+    @Override
+    public void installComplete(Payload p) {
+        Log.d(TAG, "Course completed installing!");
+        if (progressDialog != null){
+            progressDialog.hide();
+            progressDialog = null;
+        }
+        refreshFileList();
+        Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void installProgressUpdate(DownloadProgress dp) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this.getActivity(), R.style.Oppia_AlertDialogStyle);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setIndeterminate(false);
+            progressDialog.setMessage(dp.getMessage());
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+            Log.d(TAG, "progress");
+        }
+        progressDialog.setProgress(dp.getProgress());
+        progressDialog.setMessage(dp.getMessage());
+    }
+
     //static inner class doesn't hold an implicit reference to the outer class
     private static class BluetoothTransferHandler extends Handler {
         //Using a weak reference means you won't prevent garbage collection
@@ -373,6 +404,18 @@ public class TransferFragment extends Fragment {
                             self.progressDialog = null;
                         }
                         self.refreshFileList();
+                        break;
+
+
+                    case BluetoothTransferService.UI_MESSAGE_COURSE_COMPLETE:
+                        if (self.progressDialog != null) {
+                            self.progressDialog.hide();
+                            self.progressDialog = null;
+                        }
+                        Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
+                        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(ctx);
+                        imTask.setInstallerListener(self);
+                        imTask.execute(new Payload());
                         break;
 
                 }
