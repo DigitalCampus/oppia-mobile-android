@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public class ExportActivityFragment extends Fragment {
 
     public static final String TAG = ExportActivityFragment.class.getSimpleName();
 
-    private FloatingActionButton exportBtn;
+    private Button exportBtn;
     private ProgressBar loadingSpinner;
 
     private RecyclerView exportedFilesRecyclerView;
@@ -70,7 +71,7 @@ public class ExportActivityFragment extends Fragment {
         vv.setLayoutParams(lp);
 
         exportedFilesRecyclerView = (RecyclerView) vv.findViewById(R.id.exported_files_list);
-        exportBtn = (FloatingActionButton) vv.findViewById(R.id.export_btn);
+        exportBtn = (Button) vv.findViewById(R.id.export_btn);
         loadingSpinner = (ProgressBar) vv.findViewById(R.id.loading_spinner);
         return vv;
 
