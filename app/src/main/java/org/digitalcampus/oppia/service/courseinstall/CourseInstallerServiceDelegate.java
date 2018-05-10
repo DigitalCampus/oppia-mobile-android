@@ -1,10 +1,8 @@
-package org.digitalcampus.oppia.service;
+package org.digitalcampus.oppia.service.courseinstall;
 
 import android.content.Context;
 import android.content.Intent;
 
-import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.model.Course;
 
 public class CourseInstallerServiceDelegate {

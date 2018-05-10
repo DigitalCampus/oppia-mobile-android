@@ -6,18 +6,24 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.widget.Toast;
+import android.support.v4.content.FileProvider;
 
-import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.learning.BuildConfig;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 
+import java.io.File;
 import java.util.List;
 
-/**
- * Created by Joseba on 28/01/2015.
- */
+import static android.support.v4.content.FileProvider.getUriForFile;
+
 public class ExternalResourceOpener {
 
-    public static Intent getIntentToOpenResource(Context ctx, Uri resourceUri, String resourceMimeType){
+    public static String FILEPROVIDER_AUTHORITY = BuildConfig.APPLICATION_ID  + ".provider";
+
+    public static Intent getIntentToOpenResource(Context ctx, File resourceFile){
+
+        Uri resourceUri = getUriForFile(ctx, FILEPROVIDER_AUTHORITY, resourceFile);
+        String resourceMimeType = FileUtils.getMimeType(resourceFile.getName());
 
         // check there is actually an app installed to open this filetype
         Intent intent = new Intent();
@@ -40,7 +46,18 @@ public class ExternalResourceOpener {
         //In case there is a valid filter, we return the intent, otherwise null
         return (appFound? intent : null);
 
+    }
 
+    public static Intent constructShareFileIntent(Context ctx, File filteToShare){
 
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        share.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        share.setType("audio/*");
+
+        Uri targetUri = FileProvider.getUriForFile(ctx, FILEPROVIDER_AUTHORITY, filteToShare);
+        share.putExtra(Intent.EXTRA_STREAM, targetUri);
+
+        return share;
     }
 }

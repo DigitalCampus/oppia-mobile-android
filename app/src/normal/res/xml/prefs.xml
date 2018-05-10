@@ -69,7 +69,7 @@
         android:title="@string/prefAdminProtection" />
 
     <EditTextPreference
-        android:defaultValue=""
+        android:defaultValue="@string/prefAdminPasswordDefault"
         android:key="prefAdminPassword"
         android:title="@string/prefAdminPassword"
         android:inputType="textPassword"

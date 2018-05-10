@@ -15,7 +15,7 @@
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.digitalcampus.oppia.service;
+package org.digitalcampus.oppia.service.courseinstall;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
+import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
 
 public class InstallerBroadcastReceiver extends BroadcastReceiver {
 

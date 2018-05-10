@@ -324,10 +324,8 @@ public class ResourceWidget extends WidgetFactory {
 			if(!exists){
 				Toast.makeText(_ctx, _ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
 				return;
-			} 
-			Uri targetUri = Uri.fromFile(file);
-
-            Intent intent = ExternalResourceOpener.getIntentToOpenResource(_ctx, targetUri, type);
+			}
+            Intent intent = ExternalResourceOpener.getIntentToOpenResource(_ctx, file);
             if(intent != null){
                 ResourceWidget.this.setResourceViewing(true);
                 ResourceWidget.this.setResourceStartTime(System.currentTimeMillis()/1000);

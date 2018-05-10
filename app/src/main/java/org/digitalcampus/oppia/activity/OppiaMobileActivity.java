@@ -26,9 +26,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -57,8 +55,8 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.service.CourseIntallerService;
-import org.digitalcampus.oppia.service.InstallerBroadcastReceiver;
+import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
+import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
@@ -113,7 +111,7 @@ public class OppiaMobileActivity
 
         initializeDagger();
 
-        PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
+
         prefs.registerOnSharedPreferenceChangeListener(this);
 
 		// set preferred lang to the default lang
