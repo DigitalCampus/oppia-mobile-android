@@ -9,8 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_medium"
-        android:background="@color/highlight_separator">
+        android:background="@color/stroke"
+        android:padding="@dimen/padding_medium">
 
         <TextView
             android:id="@+id/status_title"
