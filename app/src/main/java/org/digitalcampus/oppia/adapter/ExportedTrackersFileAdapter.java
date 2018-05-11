@@ -60,6 +60,7 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
     public void onBindViewHolder(ViewHolder holder, int position) {
         File current = fileList.get(position);
         holder.file_name.setText(current.getName());
+        holder.file_size.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));
         if (listener!=null){
             holder.listener = this.listener;
         }
