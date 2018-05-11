@@ -65,6 +65,7 @@ android {
             buildConfigField "boolean", "MENU_ALLOW_LOGOUT", runtimeProps['MENU_ALLOW_LOGOUT']
             buildConfigField "boolean", "MENU_ALLOW_MONITOR", runtimeProps['MENU_ALLOW_MONITOR']
             buildConfigField "boolean", "MENU_ALLOW_SETTINGS", runtimeProps['MENU_ALLOW_SETTINGS']
+            buildConfigField "boolean", "MENU_ALLOW_SYNC", runtimeProps['MENU_ALLOW_SYNC']
             buildConfigField "boolean", "MENU_ALLOW_COURSE_DOWNLOAD", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
             buildConfigField "boolean", "DEVICEADMIN_ENABLED", runtimeProps['DEVICEADMIN_ENABLED']
             buildConfigField "boolean", "SESSION_EXPIRATION_ENABLED", runtimeProps['SESSION_EXPIRATION_ENABLED']

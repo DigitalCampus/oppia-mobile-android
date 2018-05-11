@@ -19,4 +19,6 @@
     <dimen name="tool_bar_top_padding">0dp</dimen>
     <dimen name="toolbar_tab_width">130dp</dimen>
 
+    <dimen name="listitem_icon_size">32dp</dimen>
+
 </resources>

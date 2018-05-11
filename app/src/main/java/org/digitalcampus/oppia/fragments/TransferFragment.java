@@ -90,7 +90,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
         super.onStart();
         // If BT is not on, request that it be enabled.
         // setupChat() will then be called during onActivityResult
-        if (!bluetoothAdapter.isEnabled()) {
+        if ((bluetoothAdapter != null) && !bluetoothAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
             // Otherwise, setup the chat session
@@ -114,7 +114,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (bluetoothService != null) {
+        if ((bluetoothAdapter != null) && (bluetoothService != null)) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (bluetoothService.getState() == BluetoothTransferService.STATE_NONE) {
                 bluetoothService.start();
@@ -167,14 +167,12 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                 scanForDevices();
             }
         });
-
         discoverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ensureDiscoverable();
             }
         });
-
 
     }
 
