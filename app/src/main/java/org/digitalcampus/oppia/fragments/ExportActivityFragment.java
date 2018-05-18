@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +37,12 @@ import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
+import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.task.ExportActivityTask;
+import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -45,12 +50,14 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ExportActivityFragment extends Fragment {
+public class ExportActivityFragment extends Fragment implements TrackerServiceListener, ExportActivityListener {
 
     public static final String TAG = ExportActivityFragment.class.getSimpleName();
 
     private Button exportBtn;
-    private ProgressBar loadingSpinner;
+    private Button submitBtn;
+    private View progressContainer;
+    private View actionsContainer;
 
     private RecyclerView exportedFilesRecyclerView;
     private RecyclerView.Adapter filesAdapter;
@@ -72,7 +79,9 @@ public class ExportActivityFragment extends Fragment {
 
         exportedFilesRecyclerView = (RecyclerView) vv.findViewById(R.id.exported_files_list);
         exportBtn = (Button) vv.findViewById(R.id.export_btn);
-        loadingSpinner = (ProgressBar) vv.findViewById(R.id.loading_spinner);
+        submitBtn = (Button) vv.findViewById(R.id.submit_btn);
+        progressContainer = vv.findViewById(R.id.progress_container);
+        actionsContainer = vv.findViewById(R.id.export_actions);
         return vv;
 
     }
@@ -87,31 +96,27 @@ public class ExportActivityFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity parent = ExportActivityFragment.this.getActivity();
+                MobileLearning app = (MobileLearning) parent.getApplication();
+                if(app.omSubmitTrackerMultipleTask == null){
+                    Log.d(TAG,"Sumitting trackers multiple task");
+                    updateActions(false);
+                    app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(parent);
+                    app.omSubmitTrackerMultipleTask.setTrackerServiceListener(ExportActivityFragment.this);
+                    app.omSubmitTrackerMultipleTask.execute();
+                }
+            }
+        });
+
         exportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ExportActivityTask task = new ExportActivityTask(ExportActivityFragment.this.getActivity());
-                task.setListener(new ExportActivityListener() {
-                    @Override
-                    public void onExportComplete(String filename) {
-                        if (filename != null){
-                            UIUtils.showAlert(ExportActivityFragment.this.getActivity(),
-                                    R.string.export_task_completed,
-                                    ExportActivityFragment.this.getString(R.string.export_task_completed_text, filename)
-                                    );
-
-                            refreshFileList();
-                        }
-                        else{
-                            Toast.makeText(ExportActivityFragment.this.getContext(), R.string.export_task_no_activities, Toast.LENGTH_LONG).show();
-                        }
-                        loadingSpinner.setVisibility(View.GONE);
-                        exportBtn.setVisibility(View.VISIBLE);
-
-                    }
-                });
-                loadingSpinner.setVisibility(View.VISIBLE);
-                exportBtn.setVisibility(View.GONE);
+                task.setListener(ExportActivityFragment.this);
+                updateActions(false);
                 task.execute();
             }
         });
@@ -130,7 +135,25 @@ public class ExportActivityFragment extends Fragment {
         exportedFilesRecyclerView.setAdapter(filesAdapter);
         exportedFilesRecyclerView.addItemDecoration(
                 new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
-        refreshFileList();
+
+        updateActions(true);
+    }
+
+    private void updateActions(boolean enable){
+        if (enable){
+            progressContainer.setVisibility(View.GONE);
+            actionsContainer.setVisibility(View.VISIBLE);
+            refreshStats();
+            refreshFileList();
+        }
+        else{
+            progressContainer.setVisibility(View.VISIBLE);
+            actionsContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void refreshStats() {
+
     }
 
     private void refreshFileList(){
@@ -147,4 +170,29 @@ public class ExportActivityFragment extends Fragment {
 
     }
 
+    @Override
+    public void trackerComplete() {
+        updateActions(true);
+    }
+
+    @Override
+    public void trackerProgressUpdate() {
+
+    }
+
+    @Override
+    public void onExportComplete(String filename) {
+        if (filename != null){
+            UIUtils.showAlert(getActivity(),
+                R.string.export_task_completed,
+                getString(R.string.export_task_completed_text, filename)
+            );
+        }
+        else{
+            Toast.makeText(getContext(),
+                    R.string.export_task_no_activities,
+                    Toast.LENGTH_LONG).show();
+        }
+        updateActions(true);
+    }
 }
