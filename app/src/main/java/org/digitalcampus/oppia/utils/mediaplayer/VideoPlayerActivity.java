@@ -120,9 +120,11 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 		// track that the video has been played (or at least clicked on)
 		Tracker t = new Tracker(this);
 		// digest should be that of the video not the page
+        Log.d(TAG, "Attempting to save media tracker. Time: " + timeTaken);
 		for (Media m : this.activity.getMedia()) {
+		    Log.d(TAG, mediaFileName + "/" + m.getFilename());
 			if (m.getFilename().equals(mediaFileName)) {
-				Log.d(TAG,"saving tracker...");
+				Log.d(TAG,"saving tracker... " + m.getLength());
 				boolean completed = false;
 				if (timeTaken >= m.getLength()) {
 					completed = true;

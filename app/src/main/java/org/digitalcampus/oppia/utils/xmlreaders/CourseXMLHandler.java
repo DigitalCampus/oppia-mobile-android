@@ -27,7 +27,6 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Section;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -66,13 +65,13 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     private String courseIcon;
     private String courseSequencingMode;
     private int coursePriority;
-    private ArrayList<Lang> courseDescriptions = new ArrayList<Lang>();
-    private ArrayList<Lang> courseTitles = new ArrayList<Lang>();
-    private ArrayList<Lang> courseLangs = new ArrayList<Lang>();
-    private ArrayList<Activity> courseBaseline = new ArrayList<Activity>();
-    private ArrayList<Media> courseMedia = new ArrayList<Media>();
-    private ArrayList<Section> sections = new ArrayList<Section>();
-    private ArrayList<CourseMetaPage> courseMetaPages = new ArrayList<CourseMetaPage>();
+    private ArrayList<Lang> courseDescriptions = new ArrayList<>();
+    private ArrayList<Lang> courseTitles = new ArrayList<>();
+    private ArrayList<Lang> courseLangs = new ArrayList<>();
+    private ArrayList<Activity> courseBaseline = new ArrayList<>();
+    private ArrayList<Media> courseMedia = new ArrayList<>();
+    private ArrayList<Section> sections = new ArrayList<>();
+    private ArrayList<CourseMetaPage> courseMetaPages = new ArrayList<>();
 
     public CourseXMLHandler(long courseId, long userId, DbHelper db){
         this.courseId = courseId;
@@ -86,7 +85,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     }
 
     //Vars for traversing the tree
-    private Stack<String> parentElements = new Stack<String>();
+    private Stack<String> parentElements = new Stack<>();
 
     //Temporary vars
     private Section currentSection;
@@ -104,13 +103,15 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     private ArrayList<Lang> actDescriptions;
     private ArrayList<Media> actMedia;
 
+    private ArrayList<Media> currentMedia = new ArrayList<>();
+
     @Override
-    public void startElement(String aUri, String aLocalName,String aQName, Attributes aAttributes) throws SAXException {
+    public void startElement(String aUri, String aLocalName,String aQName, Attributes aAttributes) {
         chars.setLength(0);
 
         if (NODE_SECTION.equals(aQName)) {
             currentSection = new Section();
-            sectTitles = new ArrayList<Lang>();
+            sectTitles = new ArrayList<>();
             currentSection.setOrder(Integer.parseInt(aAttributes.getValue(NODE_ORDER)));
             parentElements.push(NODE_SECTION);
         }
@@ -120,11 +121,11 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             currentActivity.setDigest(aAttributes.getValue(NODE_DIGEST));
             currentActivity.setActType(aAttributes.getValue(NODE_TYPE));
             currentActivity.setActId(Integer.parseInt(aAttributes.getValue(NODE_ORDER)));
-            actTitles = new ArrayList<Lang>();
-            actLocations = new ArrayList<Lang>();
-            actContents = new ArrayList<Lang>();
-            actDescriptions = new ArrayList<Lang>();
-            actMedia = new ArrayList<Media>();
+            actTitles = new ArrayList<>();
+            actLocations = new ArrayList<>();
+            actContents = new ArrayList<>();
+            actDescriptions = new ArrayList<>();
+            actMedia = new ArrayList<>();
             parentElements.push(NODE_ACTIVITY);
 
         }
@@ -156,21 +157,15 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             //}
         }
         else if (NODE_FILE.equals(aQName)) {
-            Media mediaObject = new Media();
-            mediaObject.setFilename(aAttributes.getValue(NODE_FILENAME));
-            mediaObject.setDownloadUrl(aAttributes.getValue(NODE_DOWNLOAD_URL));
-            mediaObject.setDigest(aAttributes.getValue(NODE_DIGEST));
+            Media m = new Media();
+            m.setFilename(aAttributes.getValue(NODE_FILENAME));
+            m.setDownloadUrl(aAttributes.getValue(NODE_DOWNLOAD_URL));
+            m.setDigest(aAttributes.getValue(NODE_DIGEST));
             String mediaLength = aAttributes.getValue(NODE_LENGTH);
             String mediaFilesize = aAttributes.getValue(NODE_FILESIZE);
-            mediaObject.setLength(mediaLength==null?0:Integer.parseInt(mediaLength));
-            mediaObject.setFileSize(mediaFilesize == null ? 0 : Double.parseDouble(mediaFilesize));
-
-            if (NODE_ACTIVITY.equals(parentElements.peek())){
-                actMedia.add(mediaObject);
-            }
-            else if (NODE_MEDIA.equals(parentElements.peek())){
-                courseMedia.add(mediaObject);
-            }
+            m.setLength(mediaLength==null?0:Integer.parseInt(mediaLength));
+            m.setFileSize(mediaFilesize == null ? 0 : Double.parseDouble(mediaFilesize));
+            currentMedia.add(m);
         }
         else if (NODE_META.equals(aQName)){
             parentElements.push(NODE_META);
@@ -180,15 +175,15 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         }
         else if (NODE_PAGE.equals(aQName)){
             currentPage = new CourseMetaPage();
-            pageTitles = new ArrayList<Lang>();
-            pageLocations = new ArrayList<Lang>();
+            pageTitles = new ArrayList<>();
+            pageLocations = new ArrayList<>();
             currentPage.setId(Integer.parseInt(aAttributes.getValue(NODE_ID)));
             parentElements.push(NODE_PAGE);
         }
     }
 
     @Override
-    public void endElement(String aUri, String aLocalName, String aQName) throws SAXException {
+    public void endElement(String aUri, String aLocalName, String aQName) {
 
         if (NODE_SECTION.equals(aQName)){
             currentSection.getMultiLangInfo().setTitles(sectTitles);
@@ -274,7 +269,18 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
                 courseBaseline.add(currentActivity);
             }
         }
-        else if (NODE_META.equals(aQName) || NODE_MEDIA.equals(aQName)){
+        else if (NODE_MEDIA.equals(aQName)){
+            parentElements.pop();
+            if (!parentElements.empty() && NODE_ACTIVITY.equals(parentElements.peek())){
+                actMedia = new ArrayList<>();
+                actMedia.addAll(currentMedia);
+            }
+            else{
+                courseMedia.addAll(currentMedia);
+            }
+            currentMedia.clear();
+        }
+        else if (NODE_META.equals(aQName)){
             parentElements.pop();
         }
         else if (NODE_LANG.equals(aQName)){
@@ -304,6 +310,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         c.getMultiLangInfo().setLangs(courseLangs);
         c.getMultiLangInfo().setDescriptions(courseDescriptions);
         c.setBaselineActivities(courseBaseline);
+        c.setMedia(courseMedia);
         c.setMetaPages(courseMetaPages);
         c.setSections(sections);
 
