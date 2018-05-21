@@ -60,7 +60,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 27;
+	private static final int DB_VERSION = 28;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -78,7 +78,13 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String COURSE_C_LANGS = "langs";
 	private static final String COURSE_C_ORDER_PRIORITY = "orderpriority";
     private static final String COURSE_C_SEQUENCING = "sequencing";
-	
+
+    private static final String COURSE_GAME_TABLE = "CourseGamification";
+    private static final String COURSE_GAME_C_ID = BaseColumns._ID;
+    private static final String COURSE_GAME_C_COURSEID = "courseid"; // reference to COURSE_C_ID
+    private static final String COURSE_GAME_C_EVENT = "event";
+    private static final String COURSE_GAME_C_POINTS = "points";
+
 	private static final String ACTIVITY_TABLE = "Activity";
 	private static final String ACTIVITY_C_ID = BaseColumns._ID;
 	private static final String ACTIVITY_C_COURSEID = "modid"; // reference to COURSE_C_ID
@@ -89,6 +95,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String ACTIVITY_C_STARTDATE = "startdate";
 	private static final String ACTIVITY_C_ENDDATE = "enddate";
 	private static final String ACTIVITY_C_TITLE = "title";
+
+    private static final String ACTIVITY_GAME_TABLE = "ActivityGamification";
+    private static final String ACTIVITY_GAME_C_ID = BaseColumns._ID;
+    private static final String ACTIVITY_GAME_C_COURSEID = "activityid"; // reference to ACTIVITY_C_ID
+    private static final String ACTIVITY_GAME_C_EVENT = "event";
+    private static final String ACTIVITY_GAME_C_POINTS = "points";
 
 	private static final String TRACKER_LOG_TABLE = "TrackerLog";
 	private static final String TRACKER_LOG_C_ID = BaseColumns._ID;
@@ -102,6 +114,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String TRACKER_LOG_C_USERID = "userid";
 	private static final String TRACKER_LOG_C_TYPE = "type";
 	private static final String TRACKER_LOG_C_EXPORTED = "exported";
+    private static final String TRACKER_LOG_C_EVENT = "event";
+    private static final String TRACKER_LOG_C_POINTS = "points";
 	
 	private static final String QUIZATTEMPTS_TABLE = "results";
 	private static final String QUIZATTEMPTS_C_ID = BaseColumns._ID;
@@ -115,6 +129,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String QUIZATTEMPTS_C_PASSED = "passed";
 	private static final String QUIZATTEMPTS_C_ACTIVITY_DIGEST = "actdigest";
 	private static final String QUIZATTEMPTS_C_EXPORTED = "exported";
+    private static final String QUIZATTEMPTS_C_EVENT = "event";
+    private static final String QUIZATTEMPTS_C_POINTS = "points";
 
 	private static final String SEARCH_TABLE = "search";
 	private static final String SEARCH_C_TEXT = "fulltext";
@@ -171,6 +187,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		createSearchTable(db);
 		createUserTable(db);
         createUserPrefsTable(db);
+        createCourseGamificationTable(db);
+		createActivityGamificationTable(db);
 	}
 
     public void beginTransaction(){
@@ -221,7 +239,9 @@ public class DbHelper extends SQLiteOpenHelper {
 				TRACKER_LOG_C_COMPLETED + " integer default 0, " + 
 				TRACKER_LOG_C_USERID + " integer default 0, " +
 				TRACKER_LOG_C_TYPE + " text, " +
-				TRACKER_LOG_C_EXPORTED + " integer default 0 " +
+				TRACKER_LOG_C_EXPORTED + " integer default 0, " +
+                TRACKER_LOG_C_EVENT + " text, " +
+                TRACKER_LOG_C_POINTS + " integer default 0 " +
 				")";
 		db.execSQL(l_sql);
 	}
@@ -238,7 +258,9 @@ public class DbHelper extends SQLiteOpenHelper {
 							QUIZATTEMPTS_C_SCORE + " real default 0, " +
 							QUIZATTEMPTS_C_MAXSCORE + " real default 0, " +
 							QUIZATTEMPTS_C_PASSED + " integer default 0, " +
-							QUIZATTEMPTS_C_EXPORTED + " integer default 0)";
+							QUIZATTEMPTS_C_EXPORTED + " integer default 0," +
+                            QUIZATTEMPTS_C_EVENT + " text, " +
+                            QUIZATTEMPTS_C_POINTS + " integer default 0 )";
 		db.execSQL(sql);
 	}
 	
@@ -277,6 +299,24 @@ public class DbHelper extends SQLiteOpenHelper {
                 +  ")";
         db.execSQL(m_sql);
     }
+
+    public void createCourseGamificationTable(SQLiteDatabase db){
+        String m_sql = "create table " + COURSE_GAME_TABLE + " ("
+                + COURSE_GAME_C_ID + " integer primary key autoincrement, "
+                + COURSE_GAME_C_COURSEID + " integer,"
+                + COURSE_GAME_C_EVENT + " text,"
+                + COURSE_GAME_C_POINTS + " integer default 0 )";
+        db.execSQL(m_sql);
+    }
+
+	public void createActivityGamificationTable(SQLiteDatabase db){
+		String m_sql = "create table " + ACTIVITY_GAME_TABLE + " ("
+				+ ACTIVITY_GAME_C_ID + " integer primary key autoincrement, "
+				+ ACTIVITY_GAME_C_COURSEID + " integer,"
+				+ ACTIVITY_GAME_C_EVENT + " text,"
+				+ ACTIVITY_GAME_C_POINTS + " integer default 0 )";
+		db.execSQL(m_sql);
+	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -446,6 +486,23 @@ public class DbHelper extends SQLiteOpenHelper {
 			String sql1 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_EXPORTED + " integer default 0;";
 			db.execSQL(sql1);
 		}
+
+        if(oldVersion <= 27 && newVersion >= 28){
+		    createCourseGamificationTable(db);
+            createActivityGamificationTable(db);
+
+            // update tracker table
+            String sql1 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_POINTS + " integer default 0;";
+            String sql2 = "ALTER TABLE " + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_EVENT  + " text null;";
+            db.execSQL(sql1);
+            db.execSQL(sql2);
+
+            // update quizattempt table
+            String sql3 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_POINTS + " integer default 0;";
+            String sql4 = "ALTER TABLE " + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_EVENT  + " text null;";
+            db.execSQL(sql3);
+            db.execSQL(sql4);
+        }
 	}
 
 	public void updateV43(long userId){
