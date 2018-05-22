@@ -198,7 +198,7 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
 
         if (success){
             Toast.makeText(getContext(),
-                    R.string.export_task_no_activities,
+                    R.string.submit_trackers_success,
                     Toast.LENGTH_LONG).show();
         }
         else {
