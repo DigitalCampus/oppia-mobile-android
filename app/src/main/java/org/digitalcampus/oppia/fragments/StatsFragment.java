@@ -102,7 +102,7 @@ public class StatsFragment extends Fragment implements TrackerServiceListener {
 		unsentTV.setText(String.valueOf(db.getUnsentTrackersCount()));
 	}
 
-	public void trackerComplete() {
+	public void trackerComplete(boolean success) {
 		this.updateSent();
 		this.updateUnsent();
 		sendBtn.setEnabled(true);
