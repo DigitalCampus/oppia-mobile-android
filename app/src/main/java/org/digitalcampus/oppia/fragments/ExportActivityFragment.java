@@ -33,10 +33,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
@@ -48,7 +50,9 @@ import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ExportActivityFragment extends Fragment implements TrackerServiceListener, ExportActivityListener {
 
@@ -58,6 +62,10 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     private Button submitBtn;
     private View progressContainer;
     private View actionsContainer;
+
+    private TextView unsentTrackers;
+    private TextView submittedTrackers;
+    private TextView unexportedTrackers;
 
     private RecyclerView exportedFilesRecyclerView;
     private RecyclerView.Adapter filesAdapter;
@@ -82,6 +90,11 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
         submitBtn = (Button) vv.findViewById(R.id.submit_btn);
         progressContainer = vv.findViewById(R.id.progress_container);
         actionsContainer = vv.findViewById(R.id.export_actions);
+
+        unsentTrackers = (TextView) vv.findViewById(R.id.highlight_to_submit);
+        unexportedTrackers = (TextView) vv.findViewById(R.id.highlight_to_export);
+        submittedTrackers = (TextView) vv.findViewById(R.id.highlight_submitted);
+
         return vv;
 
     }
@@ -153,6 +166,16 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     }
 
     private void refreshStats() {
+
+        DbHelper db = DbHelper.getInstance(this.getActivity());
+        int unsent = db.getUnsentTrackersCount();
+        int unexported = db.getUnexportedTrackersCount();
+        unexportedTrackers.setText(NumberFormat.getNumberInstance().format(unexported));
+        unsentTrackers.setText(NumberFormat.getNumberInstance().format(unsent));
+        submittedTrackers.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
+
+        submitBtn.setEnabled( (unsent > 0) );
+        exportBtn.setEnabled( (unexported > 0) );
 
     }
 
