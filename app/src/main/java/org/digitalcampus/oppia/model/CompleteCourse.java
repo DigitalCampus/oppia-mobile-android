@@ -29,6 +29,7 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
 
     private ArrayList<Activity> baseline = new ArrayList<>();
     private ArrayList<Section> sections = new ArrayList<>();
+    private ArrayList<GamificationEvent> gamification = new ArrayList<>();
     private ArrayList<CourseMetaPage> metaPages = new ArrayList<>();
 
     public CompleteCourse(){
@@ -47,6 +48,8 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
 
 
     public void setSections(ArrayList<Section> sections) { this.sections = sections; }
+    public void setGamification(ArrayList<GamificationEvent> gamification) { this.gamification = gamification; }
+
     public ArrayList<Section> getSections() {
         return sections;
     }

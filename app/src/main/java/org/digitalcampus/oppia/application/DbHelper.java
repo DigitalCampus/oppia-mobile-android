@@ -548,6 +548,11 @@ public class DbHelper extends SQLiteOpenHelper {
 				String s = ACTIVITY_C_COURSEID + "=?";
 				String[] args = new String[] { String.valueOf(toUpdate) };
 				db.delete(ACTIVITY_TABLE, s, args);
+
+				// TODO_GAMIFICATION
+				// remove coursegamification
+				// remove activitygamification
+
 				return toUpdate;
 			}
 		} 
