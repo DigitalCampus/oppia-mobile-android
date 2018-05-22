@@ -327,108 +327,112 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
         public void handleMessage(Message msg) {
             TransferFragment self = fragment.get();
             ProgressDialog pd;
+            if (self == null) return;
+            FragmentActivity ctx = self.getActivity();
+            if (ctx == null) return;
 
-            if (self != null) {
-                FragmentActivity ctx = self.getActivity();
-                switch (msg.what) {
-                    case BluetoothTransferService.UI_MESSAGE_STATE_CHANGE:
-                        switch (msg.arg1) {
-                            case BluetoothTransferService.STATE_CONNECTED:
-                                self.setStatus(R.string.bluetooth_title_connected_to, self.connectedDeviceName);
-                                break;
-                            case BluetoothTransferService.STATE_CONNECTING:
-                                self.setStatus(R.string.bluetooth_title_connecting, null);
-                                break;
-                            case BluetoothTransferService.STATE_LISTEN:
-                            case BluetoothTransferService.STATE_NONE:
-                                self.setStatus(R.string.bluetooth_title_not_connected, null);
-                                if (self.progressDialog != null){
-                                    self.progressDialog.hide();
-                                    self.progressDialog = null;
-                                }
-                                break;
-                        }
-                        break;
-
-                    case BluetoothTransferService.UI_MESSAGE_DEVICE_NAME:
-                        // save the connected device's name
-                        self.connectedDeviceName = msg.getData().getString(BluetoothTransferService.DEVICE_NAME);
-                        if (null != ctx) {
-                            Toast.makeText(ctx, "Connected to "
-                                    + self.connectedDeviceName, Toast.LENGTH_SHORT).show();
+            switch (msg.what) {
+                case BluetoothTransferService.UI_MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothTransferService.STATE_CONNECTED:
                             self.setStatus(R.string.bluetooth_title_connected_to, self.connectedDeviceName);
-                        }
-                        break;
+                            break;
+                        case BluetoothTransferService.STATE_CONNECTING:
+                            self.setStatus(R.string.bluetooth_title_connecting, null);
+                            break;
+                        case BluetoothTransferService.STATE_LISTEN:
+                        case BluetoothTransferService.STATE_NONE:
+                            self.setStatus(R.string.bluetooth_title_not_connected, null);
+                            if (self.progressDialog != null){
+                                self.progressDialog.hide();
+                                self.progressDialog = null;
+                            }
+                            break;
+                    }
+                    break;
 
-                    case BluetoothTransferService.UI_MESSAGE_TOAST:
-                        if (null != ctx) {
-                            Toast.makeText(ctx, msg.getData().getString(BluetoothTransferService.TOAST),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        break;
+                case BluetoothTransferService.UI_MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    self.connectedDeviceName = msg.getData().getString(BluetoothTransferService.DEVICE_NAME);
+                    if (null != ctx) {
+                        Toast.makeText(ctx, "Connected to "
+                                + self.connectedDeviceName, Toast.LENGTH_SHORT).show();
+                        self.setStatus(R.string.bluetooth_title_connected_to, self.connectedDeviceName);
+                    }
+                    break;
 
-                    case BluetoothTransferService.UI_MESSAGE_COURSE_BACKUP:
-                        String courseShortname = msg.getData().getString(BluetoothTransferService.COURSE_BACKUP);
-                        Log.d(TAG, "Course backup! " + courseShortname);
-                        break;
+                case BluetoothTransferService.UI_MESSAGE_TOAST:
+                    if (null != ctx) {
+                        Toast.makeText(ctx, msg.getData().getString(BluetoothTransferService.TOAST),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    break;
 
-                    case BluetoothTransferService.UI_MESSAGE_COURSE_START_TRANSFER:
-                        Log.d(TAG, "Course transferring! ");
+                case BluetoothTransferService.UI_MESSAGE_COURSE_BACKUP:
+                    String courseShortname = msg.getData().getString(BluetoothTransferService.COURSE_BACKUP);
+                    Log.d(TAG, "Course backup! " + courseShortname);
+                    break;
+
+                case BluetoothTransferService.UI_MESSAGE_COURSE_START_TRANSFER:
+                    Log.d(TAG, "Course transferring! ");
+                    if (self.progressDialog != null){
+                        self.progressDialog.hide();
                         pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
                         self.progressDialog = pd;
-                        pd.setMessage(self.getString(R.string.course_transferring));
-                        pd.setIndeterminate(true);
-                        pd.setCancelable(false);
-                        pd.setCanceledOnTouchOutside(false);
-                        pd.show();
-                        break;
+                    }
 
-                    case BluetoothTransferService.UI_MESSAGE_COURSE_TRANSFERRING:
-                        int total = msg.arg1;
-                        Log.d(TAG, "Course transferring! ");
-                        pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
-                        self.progressDialog = pd;
-                        pd.setMessage(self.getString(R.string.course_transferring));
-                        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                        pd.setMax(total);
-                        pd.setProgress(0);
-                        pd.setIndeterminate(false);
-                        pd.setCancelable(false);
-                        pd.setCanceledOnTouchOutside(false);
-                        pd.show();
-                        break;
+                    pd.setMessage(self.getString(R.string.course_transferring));
+                    pd.setIndeterminate(true);
+                    pd.setCancelable(false);
+                    pd.setCanceledOnTouchOutside(false);
+                    pd.show();
+                    break;
 
-                    case BluetoothTransferService.UI_MESSAGE_TRANSFER_PROGRESS:
-                        int progress = msg.arg1;
-                        if (self.progressDialog != null) {
-                            self.progressDialog.setProgress(progress);
-                            Log.d(TAG, "progress");
-                        }
-                        break;
+                case BluetoothTransferService.UI_MESSAGE_COURSE_TRANSFERRING:
+                    int total = msg.arg1;
+                    Log.d(TAG, "Course transferring! ");
+                    pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
+                    self.progressDialog = pd;
+                    pd.setMessage(self.getString(R.string.course_transferring));
+                    pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    pd.setMax(total);
+                    pd.setProgress(0);
+                    pd.setIndeterminate(false);
+                    pd.setCancelable(false);
+                    pd.setCanceledOnTouchOutside(false);
+                    pd.show();
+                    break;
 
-                    case BluetoothTransferService.UI_MESSAGE_TRANSFER_COMPLETE:
+                case BluetoothTransferService.UI_MESSAGE_TRANSFER_PROGRESS:
+                    int progress = msg.arg1;
+                    if (self.progressDialog != null) {
+                        self.progressDialog.setProgress(progress);
+                        Log.d(TAG, "progress");
+                    }
+                    break;
 
-                        Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
-                        if (self.progressDialog != null) {
-                            self.progressDialog.hide();
-                            self.progressDialog = null;
-                        }
-                        self.refreshFileList();
-                        break;
+                case BluetoothTransferService.UI_MESSAGE_TRANSFER_COMPLETE:
+
+                    Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
+                    if (self.progressDialog != null) {
+                        self.progressDialog.hide();
+                        self.progressDialog = null;
+                    }
+                    self.refreshFileList();
+                    break;
 
 
-                    case BluetoothTransferService.UI_MESSAGE_COURSE_COMPLETE:
-                        if (self.progressDialog != null) {
-                            self.progressDialog.hide();
-                            self.progressDialog = null;
-                        }
-                        Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
-                        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(ctx);
-                        imTask.setInstallerListener(self);
-                        imTask.execute(new Payload());
-                        break;
+                case BluetoothTransferService.UI_MESSAGE_COURSE_COMPLETE:
+                    if (self.progressDialog != null) {
+                        self.progressDialog.hide();
+                        self.progressDialog = null;
+                    }
+                    Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
+                    InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(ctx);
+                    imTask.setInstallerListener(self);
+                    imTask.execute(new Payload());
+                    break;
 
-                }
             }
 
         }
