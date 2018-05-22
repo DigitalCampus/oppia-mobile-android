@@ -50,7 +50,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:src="@android:drawable/stat_sys_data_bluetooth"
+            android:src="@drawable/ic_bluetooth"
             android:tint="@color/text_dark"/>
     </RelativeLayout>
 

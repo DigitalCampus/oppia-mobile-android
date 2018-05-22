@@ -103,7 +103,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
     public void onDestroy() {
         super.onDestroy();
         if (bluetoothService != null) {
-            bluetoothService.stop();
+            bluetoothService.disconnect();
         }
     }
 
@@ -164,7 +164,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
         bluetoothBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanForDevices();
+                manageBluetoothConnection();
             }
         });
         discoverBtn.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +179,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
     private void connectDevice(Intent data, boolean secure) {
         // Get the device MAC address
         String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
         bluetoothService.connect(device, secure);
     }
@@ -195,11 +194,15 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
             statusSubtitle.setText(R.string.bluetooth_no_device_connected);
             notConnectedInfo.setVisibility(View.VISIBLE);
             coursesRecyclerView.setVisibility(View.GONE);
+            discoverBtn.setVisibility(View.VISIBLE);
+            bluetoothBtn.setImageResource(R.drawable.ic_bluetooth);
         }
         else{
             statusSubtitle.setText(connectedDevice);
             notConnectedInfo.setVisibility(View.GONE);
             coursesRecyclerView.setVisibility(View.VISIBLE);
+            discoverBtn.setVisibility(View.GONE);
+            bluetoothBtn.setImageResource(R.drawable.ic_bluetooth_disabled);
         }
     }
 
@@ -216,10 +219,19 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
         }
     }
 
-    private void scanForDevices(){
-        // Launch the DeviceListActivity to see devices and do scan
-        Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
-        startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
+    private void manageBluetoothConnection(){
+        Log.d(TAG, "state: " + bluetoothService.getState());
+        //If we are not connected, we attempt to make new connection
+        if (bluetoothService.getState() == BluetoothTransferService.STATE_CONNECTED){
+            //If we are currently connected, stop the connection
+            bluetoothService.disconnect();
+        }
+        else{
+            // Launch the DeviceListActivity to see devices and do scan
+            Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
+            startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
+        }
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
