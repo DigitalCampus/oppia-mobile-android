@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -110,11 +111,14 @@ public class Media implements Serializable{
 	}
 
 	public static void resetMediaScan(SharedPreferences prefs){
+    	Log.d(TAG, "Resetting last media scan");
 		prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0).apply();
 	}
 
 	public static void updateMediaScan(SharedPreferences prefs){
-		prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0).apply();
+		Log.d(TAG, "Updating last media scan to now");
+		long now = System.currentTimeMillis()/1000;
+		prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, now).apply();
 	}
 }
 
