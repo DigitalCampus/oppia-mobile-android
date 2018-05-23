@@ -37,7 +37,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
@@ -127,10 +129,16 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
         exportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportActivityTask task = new ExportActivityTask(ExportActivityFragment.this.getActivity());
-                task.setListener(ExportActivityFragment.this);
-                updateActions(false);
-                task.execute();
+                //Check the user has permissions to export activity data
+                AdminSecurityManager.checkAdminPermission(getActivity(), R.id.action_export_activity, new AdminSecurityManager.AuthListener() {
+                    public void onPermissionGranted() {
+                        ExportActivityTask task = new ExportActivityTask(ExportActivityFragment.this.getActivity());
+                        task.setListener(ExportActivityFragment.this);
+                        updateActions(false);
+                        task.execute();
+                    }
+                });
+
             }
         });
 
