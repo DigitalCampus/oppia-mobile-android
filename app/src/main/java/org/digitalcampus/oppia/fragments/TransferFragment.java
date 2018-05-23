@@ -100,6 +100,14 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (bluetoothService != null) {
@@ -291,7 +299,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
     public void installComplete(Payload p) {
         Log.d(TAG, "Course completed installing!");
         if (progressDialog != null){
-            progressDialog.hide();
+            progressDialog.dismiss();
             progressDialog = null;
         }
         refreshFileList();
@@ -344,7 +352,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                         case BluetoothTransferService.STATE_NONE:
                             self.setStatus(R.string.bluetooth_title_not_connected, null);
                             if (self.progressDialog != null){
-                                self.progressDialog.hide();
+                                self.progressDialog.dismiss();
                                 self.progressDialog = null;
                             }
                             break;
@@ -354,18 +362,14 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                 case BluetoothTransferService.UI_MESSAGE_DEVICE_NAME:
                     // save the connected device's name
                     self.connectedDeviceName = msg.getData().getString(BluetoothTransferService.DEVICE_NAME);
-                    if (null != ctx) {
-                        Toast.makeText(ctx, "Connected to "
-                                + self.connectedDeviceName, Toast.LENGTH_SHORT).show();
-                        self.setStatus(R.string.bluetooth_title_connected_to, self.connectedDeviceName);
-                    }
+                    Toast.makeText(ctx, "Connected to "
+                            + self.connectedDeviceName, Toast.LENGTH_SHORT).show();
+                    self.setStatus(R.string.bluetooth_title_connected_to, self.connectedDeviceName);
                     break;
 
                 case BluetoothTransferService.UI_MESSAGE_TOAST:
-                    if (null != ctx) {
-                        Toast.makeText(ctx, msg.getData().getString(BluetoothTransferService.TOAST),
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(ctx, msg.getData().getString(BluetoothTransferService.TOAST),
+                            Toast.LENGTH_SHORT).show();
                     break;
 
                 case BluetoothTransferService.UI_MESSAGE_COURSE_BACKUP:
@@ -376,8 +380,8 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                 case BluetoothTransferService.UI_MESSAGE_COURSE_START_TRANSFER:
                     Log.d(TAG, "Course transferring! ");
                     if (self.progressDialog != null){
-                        self.progressDialog.hide();
-
+                        self.progressDialog.dismiss();
+                        self.progressDialog = null;
                     }
                     pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
                     self.progressDialog = pd;
@@ -401,6 +405,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                     pd.setCancelable(false);
                     pd.setCanceledOnTouchOutside(false);
                     pd.show();
+
                     break;
 
                 case BluetoothTransferService.UI_MESSAGE_TRANSFER_PROGRESS:
@@ -415,7 +420,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
 
                     Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
                     if (self.progressDialog != null) {
-                        self.progressDialog.hide();
+                        self.progressDialog.dismiss();
                         self.progressDialog = null;
                     }
                     self.refreshFileList();
@@ -424,7 +429,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
 
                 case BluetoothTransferService.UI_MESSAGE_COURSE_COMPLETE:
                     if (self.progressDialog != null) {
-                        self.progressDialog.hide();
+                        self.progressDialog.dismiss();
                         self.progressDialog = null;
                     }
                     Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
