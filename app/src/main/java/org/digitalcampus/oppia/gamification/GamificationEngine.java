@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.gamification;
 
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
 
 
@@ -29,11 +31,20 @@ public class GamificationEngine {
     if not, does the course have custom points for this event? - if yes, use these
     if not, use the app level defaults
      */
-    private GamificationEvent getEventFromHierarchy(){
+    private GamificationEvent getEventFromHierarchy(String event, Course course, Activity activity){
+        // check if the activity has custom points for this event
+
+        // check if the course has custom points for this event
+
+        // else use the the app level defaults
+
 
 
     }
 
+    /*
+    App level points/event only - shouldn't be added as custom points at activity or course level
+     */
     public GamificationEvent processEventRegister(){
         return DefaultGamification.GAMIFICATION_REGISTER;
     }
