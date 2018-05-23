@@ -377,10 +377,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                     Log.d(TAG, "Course transferring! ");
                     if (self.progressDialog != null){
                         self.progressDialog.hide();
-                        pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
-                        self.progressDialog = pd;
-                    }
 
+                    }
+                    pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
+                    self.progressDialog = pd;
                     pd.setMessage(self.getString(R.string.course_transferring));
                     pd.setIndeterminate(true);
                     pd.setCancelable(false);
