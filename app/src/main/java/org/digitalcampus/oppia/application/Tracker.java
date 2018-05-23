@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import java.util.UUID;
 
-import org.digitalcampus.oppia.gamification.DefaultGamification;
+import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
@@ -65,7 +65,7 @@ public class Tracker {
 			searchData.put("query", searchTerm);
 			searchData.put("results_count", count);
 
-			saveTracker(0, "", searchData, SEARCH_TYPE, true, DefaultGamification.GAMIFICATION_SEARCH_PERFORMED);
+			saveTracker(0, "", searchData, SEARCH_TYPE, true, Gamification.GAMIFICATION_SEARCH_PERFORMED);
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -78,7 +78,7 @@ public class Tracker {
 			JSONObject missingMedia = new JSONObject();
 			missingMedia = new MetaDataUtils(ctx).getMetaData(missingMedia);
 			missingMedia.put("filename", filename);
-			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true, DefaultGamification.GAMIFICATION_MEDIA_MISSING);
+			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true, Gamification.GAMIFICATION_MEDIA_MISSING);
 
 		} catch (JSONException e) {
 			e.printStackTrace();

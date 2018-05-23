@@ -150,7 +150,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 				} catch (JSONException e) {
 					// Do nothing
 				}
-                GamificationEngine gamificationEngine = new GamificationEngine();
+                GamificationEngine gamificationEngine = new GamificationEngine(this);
 				GamificationEvent gamificationEvent = gamificationEngine.processEventMediaPlayed(this.course, this.activity, timeTaken);
 
 				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed, gamificationEvent);

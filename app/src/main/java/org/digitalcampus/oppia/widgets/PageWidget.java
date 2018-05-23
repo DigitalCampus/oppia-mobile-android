@@ -204,7 +204,7 @@ public class PageWidget extends WidgetFactory {
 			obj.put("lang", lang);
 			obj.put("readaloud", readAloud);
 
-			GamificationEngine gamificationEngine = new GamificationEngine();
+			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
 			GamificationEvent gamificationEvent = gamificationEngine.processEventActivityCompleted(this.course, this.activity);
 
 			// if it's a baseline activity then assume completed

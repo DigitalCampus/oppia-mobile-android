@@ -630,7 +630,7 @@ public class QuizWidget extends WidgetFactory {
 			obj.put("instance_id", quiz.getInstanceID());
 			obj.put("score", this.getPercent());
 
-			GamificationEngine gamificationEngine = new GamificationEngine();
+			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
 			GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, quiz, this.getPercent());
 
 			// if it's a baseline activity then assume completed

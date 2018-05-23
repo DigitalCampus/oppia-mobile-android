@@ -215,7 +215,7 @@ public class ResourceWidget extends WidgetFactory {
 				// Do nothing
 			}
 
-			GamificationEngine gamificationEngine = new GamificationEngine();
+			GamificationEngine gamificationEngine = new GamificationEngine( getActivity());
 			GamificationEvent gamificationEvent = gamificationEngine.processEventResourceStoppedActivity(this.course, this.activity);
 
 			t.saveTracker(course.getCourseId(), activity.getDigest(), data, true, gamificationEvent);
@@ -246,7 +246,7 @@ public class ResourceWidget extends WidgetFactory {
 			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 
-            GamificationEngine gamificationEngine = new GamificationEngine();
+            GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
             GamificationEvent gamificationEvent = gamificationEngine.processEventResourceActivity(this.course, this.activity);
 			// if it's a baseline activity then assume completed
 			if(this.isBaseline){

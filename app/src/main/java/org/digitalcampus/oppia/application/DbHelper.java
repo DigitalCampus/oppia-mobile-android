@@ -17,8 +17,10 @@
 
 package org.digitalcampus.oppia.application;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1343,7 +1345,46 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { String.valueOf(courseId), String.valueOf(userId) };
 		db.delete(QUIZATTEMPTS_TABLE, s, args);
 	}
-	
+
+	public boolean isQuizFirstAttempt(String digest){
+        //get current user id
+        long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+
+        String s = QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=? AND " + QUIZATTEMPTS_C_USERID + "=? ";
+        String[] args = new String[] { digest, String.valueOf(userId) };
+        Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
+        int count = c.getCount();
+        c.close();
+        if (count > 0){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isQuizFirstAttemptToday(String digest){
+        //get current user id
+        long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+
+        String todayString = ( new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ) ).format( today.getTime() );
+
+        String s = QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=? AND " + QUIZATTEMPTS_C_USERID + "=? " + QUIZATTEMPTS_C_DATETIME + ">=?";
+        String[] args = new String[] { digest, String.valueOf(userId), todayString };
+        Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
+        int count = c.getCount();
+        c.close();
+        if (count > 0){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 	public void deleteTrackers(long courseId, long userId){
 		// delete any trackers
 		String s = TRACKER_LOG_C_COURSEID + "=? AND " + TRACKER_LOG_C_USERID + "=? ";

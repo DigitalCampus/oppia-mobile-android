@@ -22,7 +22,7 @@ import org.digitalcampus.oppia.model.GamificationEvent;
 
 import java.util.ArrayList;
 
-public class DefaultGamification {
+public class Gamification {
 
     private ArrayList<GamificationEvent> events = new ArrayList<GamificationEvent>();
     // event names
@@ -59,7 +59,7 @@ public class DefaultGamification {
     public static final String EVENT_NAME_UNDEFINED = "undefined";
     public static final GamificationEvent GAMIFICATION_UNDEFINED =  new GamificationEvent(EVENT_NAME_UNDEFINED,0);
 
-    public DefaultGamification(){
+    public Gamification(){
         events.add(GAMIFICATION_REGISTER);
         events.add(GAMIFICATION_QUIZ_FIRST_ATTEMPT);
         events.add(GAMIFICATION_QUIZ_ATTEMPT);

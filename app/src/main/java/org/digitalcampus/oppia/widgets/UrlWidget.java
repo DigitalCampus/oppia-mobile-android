@@ -133,7 +133,7 @@ public class UrlWidget extends WidgetFactory {
 			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
 
-			GamificationEngine gamificationEngine = new GamificationEngine();
+			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
 			GamificationEvent gamificationEvent = gamificationEngine.processEventURLActivity(this.course, this.activity);
 
 			// if it's a baseline activity then assume completed

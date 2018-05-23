@@ -17,7 +17,10 @@
 
 package org.digitalcampus.oppia.gamification;
 
+import android.content.Context;
+
 import org.digitalcampus.mobile.quiz.Quiz;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -27,6 +30,12 @@ import org.digitalcampus.oppia.model.GamificationEvent;
 /* This holds all the rules for allocating points */
 public class GamificationEngine {
 
+    public static final String TAG = GamificationEngine.class.getSimpleName();
+    private final Context ctx;
+
+    public GamificationEngine(Context context){
+        this.ctx = context;
+    }
     /*
     This finds the level of points for the event that should be used, basic logic:
     does the activity have custom points for this event? - if yes, use these
@@ -51,7 +60,7 @@ public class GamificationEngine {
         }
 
         // else use the the app level defaults
-        DefaultGamification defaultGamification = new DefaultGamification();
+        Gamification defaultGamification = new Gamification();
         return defaultGamification.getEvent(event);
 
     }
@@ -60,61 +69,95 @@ public class GamificationEngine {
     App level points/event only - shouldn't be added as custom points at activity or course level
      */
     public GamificationEvent processEventRegister(){
-        return DefaultGamification.GAMIFICATION_REGISTER;
+        return Gamification.GAMIFICATION_REGISTER;
     }
 
     public GamificationEvent processEventQuizAttempt(Course course, Activity activity, Quiz quiz, float scorePercent){
         // TODO_GAMIFICATION
-        return DefaultGamification.GAMIFICATION_UNDEFINED;
+        int totalPoints = 0;
+        DbHelper db = DbHelper.getInstance(this.ctx);
+
+        // is it the first attempt at this quiz?
+        if(db.isQuizFirstAttempt(activity.getDigest())){
+            try {
+                totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_QUIZ_FIRST_ATTEMPT).getPoints();
+            } catch (GamificationEventNotFound gnef){
+                // do nothing
+            }
+
+            // on first attempt add the percent points
+            if (scorePercent > 0) {
+                totalPoints += Math.round(scorePercent);
+            }
+
+            // add bonus
+            try {
+                if (Math.round(scorePercent) >= this.getEventFromHierarchy(course,activity,Gamification.EVENT_NAME_QUIZ_FIRST_THRESHOLD).getPoints()){
+                    totalPoints += this.getEventFromHierarchy(course,activity,Gamification.EVENT_NAME_QUIZ_FIRST_BONUS).getPoints();
+                }
+            } catch (GamificationEventNotFound gnef){
+                // do nothing
+            }
+        } else if (db.isQuizFirstAttemptToday(activity.getDigest())){
+            try {
+                totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_QUIZ_ATTEMPT).getPoints();
+            } catch (GamificationEventNotFound gnef){
+                // do nothing
+            }
+        }
+
+        GamificationEvent gamificationEvent = new GamificationEvent(Gamification.EVENT_NAME_QUIZ_ATTEMPT, totalPoints);
+
+        return gamificationEvent;
     }
 
     public GamificationEvent processEventActivityCompleted(Course course, Activity activity){
         try{
-            return this.getEventFromHierarchy(course, activity, DefaultGamification.EVENT_NAME_ACTIVITY_COMPLETED);
+            return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
-            return DefaultGamification.GAMIFICATION_UNDEFINED;
+            return Gamification.GAMIFICATION_UNDEFINED;
         }
     }
 
     public GamificationEvent processEventMediaPlayed(Course course, Activity activity, long timeTaken){
         // TODO_GAMIFICATION
-        return DefaultGamification.GAMIFICATION_UNDEFINED;
+        return Gamification.GAMIFICATION_UNDEFINED;
     }
 
     public GamificationEvent processEventCourseDownloaded(){
         // TODO_GAMIFICATION
-        return DefaultGamification.GAMIFICATION_UNDEFINED;
+        return Gamification.GAMIFICATION_UNDEFINED;
     }
 
     public GamificationEvent processEventResourceActivity(Course course, Activity activity){
         // TODO_GAMIFICATION - add specific event for this - now just using default activity completed
         try{
-            return this.getEventFromHierarchy(course, activity, DefaultGamification.EVENT_NAME_ACTIVITY_COMPLETED);
+            return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
-            return DefaultGamification.GAMIFICATION_UNDEFINED;
+            return Gamification.GAMIFICATION_UNDEFINED;
         }
     }
 
     public GamificationEvent processEventResourceStoppedActivity(Course course, Activity activity){
         // TODO_GAMIFICATION - add specific event for this - eg using time taken
-        return DefaultGamification.GAMIFICATION_UNDEFINED;
+        return Gamification.GAMIFICATION_UNDEFINED;
     }
 
     public GamificationEvent processEventFeedbackActivity(Course course, Activity activity){
         // TODO_GAMIFICATION - add specific event for this - now just using default activity completed
         try{
-            return this.getEventFromHierarchy(course, activity, DefaultGamification.EVENT_NAME_ACTIVITY_COMPLETED);
+            return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
-            return DefaultGamification.GAMIFICATION_UNDEFINED;
+            return Gamification.GAMIFICATION_UNDEFINED;
         }
     }
 
     public GamificationEvent processEventURLActivity(Course course, Activity activity){
         // TODO_GAMIFICATION - add specific event for this - now just using default activity completed
         try{
-            return this.getEventFromHierarchy(course, activity, DefaultGamification.EVENT_NAME_ACTIVITY_COMPLETED);
+            return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
-            return DefaultGamification.GAMIFICATION_UNDEFINED;
+            return Gamification.GAMIFICATION_UNDEFINED;
         }
     }
 

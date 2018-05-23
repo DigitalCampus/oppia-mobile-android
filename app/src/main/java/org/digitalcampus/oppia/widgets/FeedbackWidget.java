@@ -332,7 +332,7 @@ public class FeedbackWidget extends WidgetFactory {
 			obj.put("quiz_id", feedback.getID());
 			obj.put("instance_id", feedback.getInstanceID());
 
-			GamificationEngine gamificationEngine = new GamificationEngine();
+			GamificationEngine gamificationEngine = new GamificationEngine( getActivity());
 			GamificationEvent gamificationEvent = gamificationEngine.processEventFeedbackActivity(this.course, this.activity);
 
 			t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
