@@ -40,7 +40,9 @@ public class QuizAttempt {
 	private float maxscore;
 	private boolean passed;
 	private User user;
-	
+	private String event;
+    private int points;
+
 	public DateTime getDatetime() {
 		return datetime;
 	}
@@ -146,5 +148,21 @@ public class QuizAttempt {
 		return "[" +  TextUtils.join(",", jsonQuizAttempts) + "]";
 
 	}
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 	
 }

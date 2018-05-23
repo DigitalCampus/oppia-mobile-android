@@ -18,13 +18,27 @@
 package org.digitalcampus.oppia.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class CourseGamification implements Serializable {
 
 
-    private long courseId;
+    private ArrayList<GamificationEvent> gamificationEvents;
 
 
     public CourseGamification(){
+    }
+
+    public void setGamificationEvents(ArrayList<GamificationEvent> gamificationEvents){
+        this.gamificationEvents = gamificationEvents;
+    }
+
+    public GamificationEvent getGamificationEvent(String event){
+        for (GamificationEvent ge: gamificationEvents){
+            if(ge.getEvent().equals(event)){
+                return ge;
+            }
+        }
+        return null;
     }
 }

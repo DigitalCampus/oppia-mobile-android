@@ -32,6 +32,8 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CourseGamification;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.model.SearchResult;
@@ -98,7 +100,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String ACTIVITY_GAME_TABLE = "ActivityGamification";
     private static final String ACTIVITY_GAME_C_ID = BaseColumns._ID;
-    private static final String ACTIVITY_GAME_C_COURSEID = "activityid"; // reference to ACTIVITY_C_ID
+    private static final String ACTIVITY_GAME_C_ACTIVITYID = "activityid"; // reference to ACTIVITY_C_ID
     private static final String ACTIVITY_GAME_C_EVENT = "event";
     private static final String ACTIVITY_GAME_C_POINTS = "points";
 
@@ -312,7 +314,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	public void createActivityGamificationTable(SQLiteDatabase db){
 		String m_sql = "create table " + ACTIVITY_GAME_TABLE + " ("
 				+ ACTIVITY_GAME_C_ID + " integer primary key autoincrement, "
-				+ ACTIVITY_GAME_C_COURSEID + " integer,"
+				+ ACTIVITY_GAME_C_ACTIVITYID + " integer,"
 				+ ACTIVITY_GAME_C_EVENT + " text,"
 				+ ACTIVITY_GAME_C_POINTS + " integer default 0 )";
 		db.execSQL(m_sql);
@@ -558,6 +560,34 @@ public class DbHelper extends SQLiteOpenHelper {
 		} 
 		return -1;
 	}
+
+	public void insertActivityGamification(long activityId, ArrayList<GamificationEvent> gamificationEvents){
+
+        beginTransaction();
+		for (GamificationEvent event : gamificationEvents) {
+            ContentValues values = new ContentValues();
+            values.put(ACTIVITY_GAME_C_ACTIVITYID, activityId);
+            values.put(ACTIVITY_GAME_C_EVENT, event.getEvent());
+            values.put(ACTIVITY_GAME_C_POINTS, event.getPoints());
+            db.insertOrThrow(ACTIVITY_GAME_TABLE, null, values);
+        }
+        endTransaction(true);
+    }
+
+    public void insertCourseGamification(long courseId, ArrayList<GamificationEvent> gamificationEvents){
+
+        beginTransaction();
+        for (GamificationEvent event : gamificationEvents) {
+            ContentValues values = new ContentValues();
+            values.put(COURSE_GAME_C_COURSEID, courseId);
+            values.put(COURSE_GAME_C_EVENT, event.getEvent());
+            values.put(COURSE_GAME_C_POINTS, event.getPoints());
+            db.insertOrThrow(COURSE_GAME_TABLE, null, values);
+        }
+        endTransaction(true);
+    }
+
+
 
 	// returns id of the row
 	public long addOrUpdateUser(User user) {
@@ -816,6 +846,23 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return activities;
 	}
+
+    public ArrayList<GamificationEvent> getCourseGamification(long courseId){
+        ArrayList<GamificationEvent> events = new  ArrayList<GamificationEvent>();
+        String s = COURSE_GAME_C_COURSEID + "=?";
+        String[] args = new String[] { String.valueOf(courseId) };
+        Cursor c = db.query(COURSE_GAME_TABLE, null, s, args, null, null, null);
+        c.moveToFirst();
+        while (c.isAfterLast() == false) {
+            GamificationEvent event = new GamificationEvent();
+            event.setEvent(c.getString(c.getColumnIndex(COURSE_GAME_C_EVENT)));
+            event.setPoints(c.getInt(c.getColumnIndex(COURSE_GAME_C_POINTS)));
+            events.add(event);
+            c.moveToNext();
+        }
+        c.close();
+        return events;
+    }
 	
 	public ArrayList<Activity> getCourseQuizzes(long courseId){
 		ArrayList<Activity> quizzes = new  ArrayList<Activity>();
@@ -864,7 +911,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		return qs;
 	}
-	public void insertTracker(int courseId, String digest, String data, String type, boolean completed){
+
+	public void insertTracker(int courseId, String digest, String data, String type, boolean completed, String event, int points){
 		//get current user id
 		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		
@@ -875,6 +923,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(TRACKER_LOG_C_COMPLETED, completed);
 		values.put(TRACKER_LOG_C_USERID, userId);
 		values.put(TRACKER_LOG_C_TYPE, type);
+		values.put(TRACKER_LOG_C_EVENT,event);
+		values.put(TRACKER_LOG_C_POINTS, points);
 		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 	}
 	
@@ -1074,8 +1124,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return count;
 	}
-	
-	
+
 	public Payload getUnsentTrackers(long userId){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
 		String[] args = new String[] { "0", String.valueOf(userId) };
@@ -1095,6 +1144,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				json.put("tracker_date", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
 				json.put("completed", c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
 				json.put("digest", (digest!=null) ? digest : "");
+                json.put("event", c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
+                json.put("points", c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
 				Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 				if (m != null){
 					json.put("course", m.getShortname());
@@ -1138,6 +1189,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				json.put("tracker_date", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
 				json.put("completed", c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
 				json.put("digest", (digest!=null) ? digest : "");
+                json.put("event", c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
+                json.put("points", c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
 				Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 				if (m != null){
 					json.put("course", m.getShortname());
@@ -1176,7 +1229,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		return db.update(TRACKER_LOG_TABLE, values, TRACKER_LOG_C_ID + "=" + rowId, null);
 	}
-	
+
 	public long insertQuizAttempt(QuizAttempt qa){
 		ContentValues values = new ContentValues();
 		values.put(QUIZATTEMPTS_C_DATA, qa.getData());
@@ -1186,9 +1239,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(QUIZATTEMPTS_C_SCORE, qa.getScore());
 		values.put(QUIZATTEMPTS_C_PASSED, qa.isPassed());
 		values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
+        values.put(QUIZATTEMPTS_C_EVENT, qa.getEvent());
+        values.put(QUIZATTEMPTS_C_POINTS, qa.getPoints());
 		return db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
 	}
-	
+
 	public void updateQuizAttempt(QuizAttempt qa){
 		ContentValues values = new ContentValues();
 		values.put(QUIZATTEMPTS_C_DATA, qa.getData());
@@ -1198,9 +1253,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(QUIZATTEMPTS_C_SCORE, qa.getScore());
 		values.put(QUIZATTEMPTS_C_PASSED, qa.isPassed());
 		values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
+        values.put(QUIZATTEMPTS_C_EVENT, qa.getEvent());
+        values.put(QUIZATTEMPTS_C_POINTS, qa.getPoints());
 		db.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + qa.getId(), null);
 	}
-	
+
 	public void insertQuizAttempts(ArrayList<QuizAttempt> quizAttempts){
         beginTransaction();
         for (QuizAttempt qa : quizAttempts) {
@@ -1214,11 +1271,13 @@ public class DbHelper extends SQLiteOpenHelper {
             values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
             values.put(QUIZATTEMPTS_C_SENT, qa.isSent());
             values.put(QUIZATTEMPTS_C_DATETIME, qa.getDateTimeString());
+            values.put(QUIZATTEMPTS_C_EVENT, qa.getEvent());
+            values.put(QUIZATTEMPTS_C_POINTS, qa.getPoints());
             db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
         }
         endTransaction(true);
 	}
-	
+
 	public ArrayList<QuizAttempt>  getUnsentQuizAttempts(){
 		String s = QUIZATTEMPTS_C_SENT + "=? ";
 		String[] args = new String[] { "0" };
@@ -1231,6 +1290,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				qa.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
 				qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
 				qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
+                qa.setEvent(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_EVENT)));
+                qa.setPoints(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
 				User u = this.getUser(qa.getUserId());
 				qa.setUser(u);
 				quizAttempts.add(qa);
@@ -1255,6 +1316,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				qa.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
 				qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
 				qa.setUserId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_USERID)));
+                qa.setEvent(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_EVENT)));
+                qa.setPoints(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
 				User u = this.getUser(qa.getUserId());
 				qa.setUser(u);
 				quizAttempts.add(qa);

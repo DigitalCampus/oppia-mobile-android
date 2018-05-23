@@ -101,6 +101,8 @@ public class TrackerLog {
 		this.userId = userId;
 	}
 
+	// TODO_GAMIFICATION - add points & events
+
 	@Override
 	public String toString(){
 		return this.content;
