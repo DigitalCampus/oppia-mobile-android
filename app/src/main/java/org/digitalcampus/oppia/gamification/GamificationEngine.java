@@ -65,6 +65,22 @@ public class GamificationEngine {
 
     }
 
+    private GamificationEvent getEventFromCourseHierarchy(Course course, String event) throws GamificationEventNotFound{
+
+        // check if the course has custom points for this event
+        try{
+            GamificationEvent ge = course.findGamificationEvent(event);
+            return ge;
+        } catch (GamificationEventNotFound genf){
+            // do nothing
+        }
+
+        // else use the the app level defaults
+        Gamification defaultGamification = new Gamification();
+        return defaultGamification.getEvent(event);
+
+    }
+
     /*
     App level points/event only - shouldn't be added as custom points at activity or course level
      */
@@ -73,7 +89,6 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventQuizAttempt(Course course, Activity activity, Quiz quiz, float scorePercent){
-        // TODO_GAMIFICATION
         int totalPoints = 0;
         DbHelper db = DbHelper.getInstance(this.ctx);
 
@@ -124,9 +139,16 @@ public class GamificationEngine {
         return Gamification.GAMIFICATION_UNDEFINED;
     }
 
+    // TODO_GAMIFICATION - allow adding specific points for particular course
     public GamificationEvent processEventCourseDownloaded(){
-        // TODO_GAMIFICATION
-        return Gamification.GAMIFICATION_UNDEFINED;
+        return Gamification.GAMIFICATION_COURSE_DOWNLOADED;
+        /*
+        try{
+            return this.getEventFromCourseHierarchy(course, Gamification.EVENT_NAME_COURSE_DOWNLOADED);
+        } catch (GamificationEventNotFound genf) {
+            return Gamification.GAMIFICATION_UNDEFINED;
+        }
+        */
     }
 
     public GamificationEvent processEventResourceActivity(Course course, Activity activity){
