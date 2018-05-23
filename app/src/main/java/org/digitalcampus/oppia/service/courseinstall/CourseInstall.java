@@ -12,7 +12,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.CompleteCourse;
-import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -146,6 +146,10 @@ public class CourseInstall {
         }
 
         listener.onInstallProgress(90);
+
+        //We reset the media scan
+        Media.resetMediaScan(prefs);
+
         // delete temp directory
         FileUtils.deleteDir(tempdir);
         // delete zip file from download dir
