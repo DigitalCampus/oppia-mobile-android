@@ -15,30 +15,9 @@
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.digitalcampus.oppia.model;
+package org.digitalcampus.oppia.exception;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+public class GamificationEventNotFound extends Exception {
 
-public class CourseGamification implements Serializable {
-
-
-    private ArrayList<GamificationEvent> gamificationEvents;
-
-
-    public CourseGamification(){
-    }
-
-    public void setGamificationEvents(ArrayList<GamificationEvent> gamificationEvents){
-        this.gamificationEvents = gamificationEvents;
-    }
-
-    public GamificationEvent getGamificationEvent(String event){
-        for (GamificationEvent ge: gamificationEvents){
-            if(ge.getEvent().equals(event)){
-                return ge;
-            }
-        }
-        return null;
-    }
+    public static final String TAG = GamificationEventNotFound.class.getSimpleName();
 }

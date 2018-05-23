@@ -37,8 +37,10 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -148,7 +150,10 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 				} catch (JSONException e) {
 					// Do nothing
 				}
-				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed);
+                GamificationEngine gamificationEngine = new GamificationEngine();
+				GamificationEvent gamificationEvent = gamificationEngine.processEventMediaPlayed(this.course, this.activity, timeTaken);
+
+				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed, gamificationEvent);
 			}
 		}
 	}

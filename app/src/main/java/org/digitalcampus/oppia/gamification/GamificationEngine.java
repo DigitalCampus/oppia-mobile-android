@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.gamification;
 
+import org.digitalcampus.mobile.quiz.Quiz;
+import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
@@ -31,14 +33,26 @@ public class GamificationEngine {
     if not, does the course have custom points for this event? - if yes, use these
     if not, use the app level defaults
      */
-    private GamificationEvent getEventFromHierarchy(String event, Course course, Activity activity){
+    private GamificationEvent getEventFromHierarchy(Course course, Activity activity, String event) throws GamificationEventNotFound{
         // check if the activity has custom points for this event
+        try{
+            GamificationEvent ge = activity.findGamificationEvent(event);
+            return ge;
+        } catch (GamificationEventNotFound genf){
+            // do nothing
+        }
 
         // check if the course has custom points for this event
+        try{
+            GamificationEvent ge = course.findGamificationEvent(event);
+            return ge;
+        } catch (GamificationEventNotFound genf){
+            // do nothing
+        }
 
         // else use the the app level defaults
-
-
+        DefaultGamification defaultGamification = new DefaultGamification();
+        return defaultGamification.getEvent(event);
 
     }
 
@@ -49,28 +63,59 @@ public class GamificationEngine {
         return DefaultGamification.GAMIFICATION_REGISTER;
     }
 
-    public GamificationEvent processEventQuizAttempt(){
-        GamificationEvent ge = new GamificationEvent();
+    public GamificationEvent processEventQuizAttempt(Course course, Activity activity, Quiz quiz, float scorePercent){
         // TODO_GAMIFICATION
-        return ge;
+        return DefaultGamification.GAMIFICATION_UNDEFINED;
     }
 
-    public GamificationEvent processEventActivityCompleted(){
-        GamificationEvent ge = new GamificationEvent();
-        // TODO_GAMIFICATION
-        return ge;
+    public GamificationEvent processEventActivityCompleted(Course course, Activity activity){
+        try{
+            return this.getEventFromHierarchy(course, activity, DefaultGamification.EVENT_NAME_ACTIVITY_COMPLETED);
+        } catch (GamificationEventNotFound genf) {
+            return DefaultGamification.GAMIFICATION_UNDEFINED;
+        }
     }
 
-    public GamificationEvent processEventMediaPlayed(){
-        GamificationEvent ge = new GamificationEvent();
+    public GamificationEvent processEventMediaPlayed(Course course, Activity activity, long timeTaken){
         // TODO_GAMIFICATION
-        return ge;
+        return DefaultGamification.GAMIFICATION_UNDEFINED;
     }
 
     public GamificationEvent processEventCourseDownloaded(){
-        GamificationEvent ge = new GamificationEvent();
         // TODO_GAMIFICATION
-        return ge;
+        return DefaultGamification.GAMIFICATION_UNDEFINED;
+    }
+
+    public GamificationEvent processEventResourceActivity(Course course, Activity activity){
+        // TODO_GAMIFICATION - add specific event for this - now just using default activity completed
+        try{
+            return this.getEventFromHierarchy(course, activity, DefaultGamification.EVENT_NAME_ACTIVITY_COMPLETED);
+        } catch (GamificationEventNotFound genf) {
+            return DefaultGamification.GAMIFICATION_UNDEFINED;
+        }
+    }
+
+    public GamificationEvent processEventResourceStoppedActivity(Course course, Activity activity){
+        // TODO_GAMIFICATION - add specific event for this - eg using time taken
+        return DefaultGamification.GAMIFICATION_UNDEFINED;
+    }
+
+    public GamificationEvent processEventFeedbackActivity(Course course, Activity activity){
+        // TODO_GAMIFICATION - add specific event for this - now just using default activity completed
+        try{
+            return this.getEventFromHierarchy(course, activity, DefaultGamification.EVENT_NAME_ACTIVITY_COMPLETED);
+        } catch (GamificationEventNotFound genf) {
+            return DefaultGamification.GAMIFICATION_UNDEFINED;
+        }
+    }
+
+    public GamificationEvent processEventURLActivity(Course course, Activity activity){
+        // TODO_GAMIFICATION - add specific event for this - now just using default activity completed
+        try{
+            return this.getEventFromHierarchy(course, activity, DefaultGamification.EVENT_NAME_ACTIVITY_COMPLETED);
+        } catch (GamificationEventNotFound genf) {
+            return DefaultGamification.GAMIFICATION_UNDEFINED;
+        }
     }
 
 

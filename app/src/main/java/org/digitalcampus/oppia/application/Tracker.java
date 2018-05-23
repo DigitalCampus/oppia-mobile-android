@@ -19,6 +19,8 @@ package org.digitalcampus.oppia.application;
 
 import java.util.UUID;
 
+import org.digitalcampus.oppia.gamification.DefaultGamification;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +39,7 @@ public class Tracker {
 		this.ctx = context;
 	}
 
-	private void saveTracker(int courseId, String digest, JSONObject data, String type, boolean completed, String event, int points){
+	private void saveTracker(int courseId, String digest, JSONObject data, String type, boolean completed, GamificationEvent gamificationEvent){
 		// add tracker UUID
 		UUID guid = java.util.UUID.randomUUID();
 		try {
@@ -47,15 +49,15 @@ public class Tracker {
 		}
 		DbHelper db = DbHelper.getInstance(this.ctx);
 
-		db.insertTracker(courseId, digest, data.toString(), type, completed, event, points);
+		db.insertTracker(courseId, digest, data.toString(), type, completed, gamificationEvent.getEvent(), gamificationEvent.getPoints());
 
 	}
 
-	public void saveTracker(int courseId, String digest, JSONObject data, boolean completed, String event, int points){
-		saveTracker(courseId, digest, data, "", completed, event, points);
+	public void saveTracker(int courseId, String digest, JSONObject data, boolean completed, GamificationEvent gamificationEvent){
+		saveTracker(courseId, digest, data, "", completed, gamificationEvent);
 	}
 
-    public void saveSearchTracker(String searchTerm, int count, String event, int points){
+    public void saveSearchTracker(String searchTerm, int count){
 
 		try {
 			JSONObject searchData = new JSONObject();
@@ -63,7 +65,7 @@ public class Tracker {
 			searchData.put("query", searchTerm);
 			searchData.put("results_count", count);
 
-			saveTracker(0, "", searchData, SEARCH_TYPE, true, event, points);
+			saveTracker(0, "", searchData, SEARCH_TYPE, true, DefaultGamification.GAMIFICATION_SEARCH_PERFORMED);
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -76,7 +78,7 @@ public class Tracker {
 			JSONObject missingMedia = new JSONObject();
 			missingMedia = new MetaDataUtils(ctx).getMetaData(missingMedia);
 			missingMedia.put("filename", filename);
-			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true,MISSING_MEDIA_TYPE,0);
+			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true, DefaultGamification.GAMIFICATION_MEDIA_MISSING);
 
 		} catch (JSONException e) {
 			e.printStackTrace();

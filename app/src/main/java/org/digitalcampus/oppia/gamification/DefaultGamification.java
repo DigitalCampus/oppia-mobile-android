@@ -17,10 +17,14 @@
 
 package org.digitalcampus.oppia.gamification;
 
+import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.GamificationEvent;
+
+import java.util.ArrayList;
 
 public class DefaultGamification {
 
+    private ArrayList<GamificationEvent> events = new ArrayList<GamificationEvent>();
     // event names
     public static final String EVENT_NAME_REGISTER = "register";
     public static final String EVENT_NAME_QUIZ_FIRST_ATTEMPT = "quiz_first_attempt";
@@ -33,7 +37,8 @@ public class DefaultGamification {
     public static final String EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL = "media_playing_points_per_interval";
     public static final String EVENT_NAME_MEDIA_MAX_POINTS = "media_max_points";
     public static final String EVENT_NAME_COURSE_DOWNLOADED = "course_downloaded";
-
+    public static final String EVENT_NAME_SEARCH_PERFORMED = "search_performed";
+    public static final String EVENT_NAME_MEDIA_MISSING = "media_missing";
 
     // default points for gamification
     public static final GamificationEvent GAMIFICATION_REGISTER = new GamificationEvent(EVENT_NAME_REGISTER,100);
@@ -47,4 +52,35 @@ public class DefaultGamification {
     public static final GamificationEvent GAMIFICATION_MEDIA_PLAYING_POINTS_PER_INTERVAL =  new GamificationEvent(EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL,10);
     public static final GamificationEvent GAMIFICATION_MEDIA_MAX_POINTS =  new GamificationEvent(EVENT_NAME_MEDIA_MAX_POINTS,200);
     public static final GamificationEvent GAMIFICATION_COURSE_DOWNLOADED =  new GamificationEvent(EVENT_NAME_COURSE_DOWNLOADED,50);
+    public static final GamificationEvent GAMIFICATION_SEARCH_PERFORMED =  new GamificationEvent(EVENT_NAME_SEARCH_PERFORMED,0);
+    public static final GamificationEvent GAMIFICATION_MEDIA_MISSING =  new GamificationEvent(EVENT_NAME_MEDIA_MISSING,0);
+
+    //fallback option
+    public static final String EVENT_NAME_UNDEFINED = "undefined";
+    public static final GamificationEvent GAMIFICATION_UNDEFINED =  new GamificationEvent(EVENT_NAME_UNDEFINED,0);
+
+    public DefaultGamification(){
+        events.add(GAMIFICATION_REGISTER);
+        events.add(GAMIFICATION_QUIZ_FIRST_ATTEMPT);
+        events.add(GAMIFICATION_QUIZ_ATTEMPT);
+        events.add(GAMIFICATION_QUIZ_FIRST_ATTEMPT_THRESHOLD);
+        events.add(GAMIFICATION_QUIZ_FIRST_ATTEMPT_BONUS);
+        events.add(GAMIFICATION_ACTIVITY_COMPLETED);
+        events.add(GAMIFICATION_MEDIA_STARTED);
+        events.add(GAMIFICATION_MEDIA_PLAYING_INTERVAL);
+        events.add(GAMIFICATION_MEDIA_PLAYING_POINTS_PER_INTERVAL);
+        events.add(GAMIFICATION_MEDIA_MAX_POINTS);
+        events.add(GAMIFICATION_COURSE_DOWNLOADED);
+        events.add(GAMIFICATION_SEARCH_PERFORMED);
+        events.add(GAMIFICATION_MEDIA_MISSING);
+    }
+
+    public GamificationEvent getEvent(String event) throws GamificationEventNotFound {
+        for(GamificationEvent ge: events){
+            if(ge.getEvent().equals(event)){
+                return ge;
+            }
+        }
+        throw new GamificationEventNotFound();
+    }
 }

@@ -37,8 +37,10 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
@@ -329,7 +331,11 @@ public class FeedbackWidget extends WidgetFactory {
 			obj.put("lang", lang);
 			obj.put("quiz_id", feedback.getID());
 			obj.put("instance_id", feedback.getInstanceID());
-			t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
+
+			GamificationEngine gamificationEngine = new GamificationEngine();
+			GamificationEvent gamificationEvent = gamificationEngine.processEventFeedbackActivity(this.course, this.activity);
+
+			t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
 		} catch (JSONException e) {
 			// Do nothing
 		} catch (NullPointerException npe){

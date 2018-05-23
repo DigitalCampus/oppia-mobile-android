@@ -60,8 +60,10 @@ import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizFeedback;
 import org.digitalcampus.oppia.model.QuizStats;
@@ -627,11 +629,15 @@ public class QuizWidget extends WidgetFactory {
 			obj.put("quiz_id", quiz.getID());
 			obj.put("instance_id", quiz.getInstanceID());
 			obj.put("score", this.getPercent());
+
+			GamificationEngine gamificationEngine = new GamificationEngine();
+			GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, quiz, this.getPercent());
+
 			// if it's a baseline activity then assume completed
 			if (this.isBaseline) {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
 			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
 			}
 		} catch (JSONException e) {
 			// Do nothing
