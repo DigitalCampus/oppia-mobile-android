@@ -127,6 +127,8 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventActivityCompleted(Course course, Activity activity){
+        // TODO_GAMIFICATION - check if first activity today & if completed
+
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
