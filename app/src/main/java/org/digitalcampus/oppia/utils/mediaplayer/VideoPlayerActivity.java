@@ -151,7 +151,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 					// Do nothing
 				}
                 GamificationEngine gamificationEngine = new GamificationEngine(this);
-				GamificationEvent gamificationEvent = gamificationEngine.processEventMediaPlayed(this.course, this.activity, timeTaken);
+				GamificationEvent gamificationEvent = gamificationEngine.processEventMediaPlayed(this.course, this.activity, mediaFileName, timeTaken);
 
 				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed, gamificationEvent);
 			}

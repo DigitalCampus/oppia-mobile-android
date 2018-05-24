@@ -25,6 +25,7 @@ import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.model.Media;
 
 
 /* This holds all the rules for allocating points */
@@ -127,21 +128,59 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventActivityCompleted(Course course, Activity activity){
-        // TODO_GAMIFICATION - check if first activity today & if completed
+        int totalPoints = 0;
+        DbHelper db = DbHelper.getInstance(this.ctx);
 
-        try{
-            return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
-        } catch (GamificationEventNotFound genf) {
-            return Gamification.GAMIFICATION_UNDEFINED;
+        if(db.isActivityFirstAttemptToday(activity.getDigest())){
+            try{
+                totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED).getPoints();
+            } catch (GamificationEventNotFound genf) {
+                //do nothing
+            }
         }
+
+        GamificationEvent gamificationEvent = new GamificationEvent(Gamification.EVENT_NAME_ACTIVITY_COMPLETED, totalPoints);
+        return gamificationEvent;
     }
 
-    public GamificationEvent processEventMediaPlayed(Course course, Activity activity, long timeTaken){
+    public GamificationEvent processEventMediaPlayed(Course course, Activity activity, String mediaFileName, long timeTaken){
         // TODO_GAMIFICATION
-        return Gamification.GAMIFICATION_UNDEFINED;
+        int totalPoints = 0;
+        DbHelper db = DbHelper.getInstance(this.ctx);
+
+        for (Media m : activity.getMedia()) {
+            if (m.getFilename().equals(mediaFileName)) {
+                // add points if first attempt today
+                if (db.isActivityFirstAttemptToday(m.getDigest())){
+                    try {
+                        totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
+                    } catch (GamificationEventNotFound genf) {
+                        //do nothing
+                    }
+                }
+                // add points for length of time the media has been playing
+                try {
+                    totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor(timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
+                } catch (GamificationEventNotFound genf) {
+                    //do nothing
+                }
+
+                // make sure can't exceed max points
+                try {
+                    if (totalPoints >= this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints()){
+                        totalPoints = this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints();
+                    }
+                } catch (GamificationEventNotFound genf) {
+                    //do nothing
+                }
+            }
+        }
+        GamificationEvent gamificationEvent = new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints);
+        return gamificationEvent;
     }
 
     // TODO_GAMIFICATION - allow adding specific points for particular course
+    // needs to be able to access the course object at the point the tracker is triggered
     public GamificationEvent processEventCourseDownloaded(){
         return Gamification.GAMIFICATION_COURSE_DOWNLOADED;
         /*

@@ -33,6 +33,7 @@ public class Gamification {
     public static final String EVENT_NAME_QUIZ_FIRST_BONUS = "quiz_first_attempt_bonus";
     public static final String EVENT_NAME_ACTIVITY_COMPLETED = "activity_completed";
     public static final String EVENT_NAME_MEDIA_STARTED = "media_started";
+    public static final String EVENT_NAME_MEDIA_PLAYED = "media_played";
     public static final String EVENT_NAME_MEDIA_PLAYING_INTERVAL = "media_playing_interval";
     public static final String EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL = "media_playing_points_per_interval";
     public static final String EVENT_NAME_MEDIA_MAX_POINTS = "media_max_points";
