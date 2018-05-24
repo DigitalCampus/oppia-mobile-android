@@ -221,7 +221,7 @@ public class BluetoothTransferService {
     }
 
 
-    public synchronized void stop() {
+    public synchronized void disconnect() {
         Log.d(TAG, "stop");
 
         if (connectThread != null) {

@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.application;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -863,7 +864,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.close();
         return events;
     }
-	
+
 	public ArrayList<Activity> getCourseQuizzes(long courseId){
 		ArrayList<Activity> quizzes = new  ArrayList<Activity>();
 		String s = ACTIVITY_C_COURSEID + "=? AND " + ACTIVITY_C_ACTTYPE +"=? AND " + ACTIVITY_C_SECTIONID+">0";
@@ -1065,7 +1066,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(USER_TABLE, values, s ,args);
 	}
 	*/
-	
+
 	public void updateUserBadges(String userName, int badges){
 		ContentValues values = new ContentValues();
 		values.put(USER_C_BADGES, badges);
@@ -1132,6 +1133,17 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return count;
 	}
+
+	public int getUnexportedTrackersCount(){
+		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_EXPORTED + "=? ";
+		String[] args = new String[] { "0",  "0" };
+		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return count;
+	}
+
+	
 
 	public Payload getUnsentTrackers(long userId){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
