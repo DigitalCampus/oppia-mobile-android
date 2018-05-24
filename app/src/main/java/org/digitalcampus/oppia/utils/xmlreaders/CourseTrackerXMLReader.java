@@ -28,6 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.joda.time.DateTime;
@@ -49,7 +50,9 @@ public class CourseTrackerXMLReader {
     private static final String NODE_SCORE = "score";
     private static final String NODE_MAXSCORE = "maxscore";
     private static final String NODE_PASSED = "passed";
-    
+	private static final String NODE_EVENT = "event";
+	private static final String NODE_POINTS = "points";
+
 	private Document document;
 	
 	public CourseTrackerXMLReader(String filename) throws InvalidXMLException {
@@ -99,6 +102,20 @@ public class CourseTrackerXMLReader {
 			} catch (NullPointerException npe) {
 				type = null;
 			}
+
+            String event;
+            try {
+                event = attrs.getNamedItem(NODE_EVENT).getTextContent();
+            } catch (NullPointerException npe) {
+                event = Gamification.EVENT_NAME_UNDEFINED;
+            }
+
+            int points;
+            try {
+                points = Integer.parseInt(attrs.getNamedItem(NODE_POINTS).getTextContent());
+            } catch (NullPointerException npe) {
+                points = 0;
+            }
 			
 			TrackerLog t = new TrackerLog();
 			t.setDigest(digest);
@@ -108,6 +125,8 @@ public class CourseTrackerXMLReader {
 			t.setType(type);
 			t.setCourseId(courseId);
 			t.setUserId(userId);
+			t.setEvent(event);
+			t.setPoints(points);
 			trackers.add(t);
 		}
 		return trackers;
@@ -136,6 +155,9 @@ public class CourseTrackerXMLReader {
 					NamedNodeMap quizAttrs = quizNodes.item(j).getAttributes();
 					float maxscore = Float.parseFloat(quizAttrs.getNamedItem(NODE_MAXSCORE).getTextContent());
 					float score = Float.parseFloat(quizAttrs.getNamedItem(NODE_SCORE).getTextContent());
+                    String event = quizAttrs.getNamedItem(NODE_EVENT).getTextContent();
+					int points = Integer.parseInt(quizAttrs.getNamedItem(NODE_POINTS).getTextContent());
+
 					String submittedDateString = quizAttrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
 					DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
 					
@@ -155,6 +177,8 @@ public class CourseTrackerXMLReader {
 					qa.setPassed(passed);
 					qa.setSent(true);
 					qa.setDatetime(sdt);
+					qa.setEvent(event);
+					qa.setPoints(points);
 					quizAttempts.add(qa);
 				}
 			}

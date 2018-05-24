@@ -282,7 +282,7 @@ public class CourseIntallerService extends IntentService {
             Response response = client.newCall(request).execute();
 
             long fileLength = response.body().contentLength();
-            Log.d(TAG, "Content-lenght: " + fileLength);
+            Log.d(TAG, "Content-length: " + fileLength);
             long availableStorage = Storage.getAvailableStorageSize(this);
 
             if (fileLength >= availableStorage){

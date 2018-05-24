@@ -40,6 +40,8 @@ public class TrackerLog {
 	private boolean completed;
 	private long courseId;
 	private long userId;
+	private String event;
+	private int points;
 	
 	public long getId() {
 		return id;
@@ -99,6 +101,22 @@ public class TrackerLog {
 	}
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public String getEvent() {
+		return event;
+	}
+
+	public void setEvent(String event) {
+		this.event = event;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
 	}
 
 	@Override
