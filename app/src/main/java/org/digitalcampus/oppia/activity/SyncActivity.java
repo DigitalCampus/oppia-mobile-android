@@ -9,16 +9,11 @@ import android.support.v4.view.ViewPager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
-import org.digitalcampus.oppia.fragments.AboutFragment;
 import org.digitalcampus.oppia.fragments.ExportActivityFragment;
-import org.digitalcampus.oppia.fragments.OppiaWebViewFragment;
-import org.digitalcampus.oppia.fragments.StatsFragment;
 import org.digitalcampus.oppia.fragments.TransferFragment;
-import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SyncActivity extends AppActivity {
 
@@ -62,10 +57,6 @@ public class SyncActivity extends AppActivity {
 
         Fragment fExport = ExportActivityFragment.newInstance();
         fragments.add(fExport);
-        titles.add(this.getString(R.string.tab_title_export));
-
-        Fragment fActivity = StatsFragment.newInstance();
-        fragments.add(fActivity);
         titles.add(this.getString(R.string.tab_title_activity));
 
         ActivityPagerAdapter adapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);

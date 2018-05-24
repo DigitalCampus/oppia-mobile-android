@@ -17,6 +17,12 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -97,5 +103,22 @@ public class Media implements Serializable{
 
     public int getProgress() { return progress; }
     public void setProgress(int progress) { this.progress = progress; }
+
+    public static boolean shouldScanMedia(SharedPreferences prefs){
+		long now = System.currentTimeMillis()/1000;
+		long lastScan = prefs.getLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0);
+		return (lastScan + MobileLearning.MEDIA_SCAN_TIME_LIMIT <= now);
+	}
+
+	public static void resetMediaScan(SharedPreferences prefs){
+    	Log.d(TAG, "Resetting last media scan");
+		prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0).apply();
+	}
+
+	public static void updateMediaScan(SharedPreferences prefs){
+		Log.d(TAG, "Updating last media scan to now");
+		long now = System.currentTimeMillis()/1000;
+		prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, now).apply();
+	}
 }
 

@@ -11,8 +11,8 @@ android {
     buildToolsVersion "25.0.3"
 
     defaultConfig {
-        versionCode 64
-        versionName "6.4.0"
+        versionCode 65
+        versionName "6.5.0"
 
         applicationId "org.digitalcampus.mobile.learning"
         minSdkVersion 14
@@ -57,6 +57,7 @@ android {
             buildConfigField "String", "MINT_API_KEY", "\"" + runtimeProps['MINT_API_KEY'] + "\""
             buildConfigField "boolean", "ADMIN_PROTECT_SETTINGS", runtimeProps['ADMIN_PROTECT_SETTINGS']
             buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_SYNC", runtimeProps['ADMIN_PROTECT_ACTIVITY_SYNC']
+            buildConfigField "boolean", "ADMIN_PROTECT_ACTIVITY_EXPORT", runtimeProps['ADMIN_PROTECT_ACTIVITY_EXPORT']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_DELETE", runtimeProps['ADMIN_PROTECT_COURSE_DELETE']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_RESET", runtimeProps['ADMIN_PROTECT_COURSE_RESET']
             buildConfigField "boolean", "ADMIN_PROTECT_COURSE_INSTALL", runtimeProps['ADMIN_PROTECT_COURSE_INSTALL']
