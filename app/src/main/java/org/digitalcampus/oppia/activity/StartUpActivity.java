@@ -40,6 +40,7 @@ import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.GCMRegistrationService;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -214,7 +215,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 
 	public void installComplete(Payload p) {
 		if(p.getResponseData().size()>0){
-            prefs.edit().putLong(PrefsActivity.PREF_LAST_MEDIA_SCAN, 0).apply();
+            Media.resetMediaScan(prefs);
 		}
 		preloadAccounts();
 	}

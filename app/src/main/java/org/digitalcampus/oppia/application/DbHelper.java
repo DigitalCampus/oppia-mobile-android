@@ -1069,6 +1069,15 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return count;
 	}
+
+	public int getUnexportedTrackersCount(){
+		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_EXPORTED + "=? ";
+		String[] args = new String[] { "0",  "0" };
+		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return count;
+	}
 	
 	
 	public Payload getUnsentTrackers(long userId){

@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,31 +26,48 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
+import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.task.ExportActivityTask;
+import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class ExportActivityFragment extends Fragment {
+public class ExportActivityFragment extends Fragment implements TrackerServiceListener, ExportActivityListener {
 
     public static final String TAG = ExportActivityFragment.class.getSimpleName();
 
-    private FloatingActionButton exportBtn;
-    private ProgressBar loadingSpinner;
+    private Button exportBtn;
+    private Button submitBtn;
+    private View progressContainer;
+    private View actionsContainer;
+
+    private TextView unsentTrackers;
+    private TextView submittedTrackers;
+    private TextView unexportedTrackers;
 
     private RecyclerView exportedFilesRecyclerView;
     private RecyclerView.Adapter filesAdapter;
@@ -70,8 +88,15 @@ public class ExportActivityFragment extends Fragment {
         vv.setLayoutParams(lp);
 
         exportedFilesRecyclerView = (RecyclerView) vv.findViewById(R.id.exported_files_list);
-        exportBtn = (FloatingActionButton) vv.findViewById(R.id.export_btn);
-        loadingSpinner = (ProgressBar) vv.findViewById(R.id.loading_spinner);
+        exportBtn = (Button) vv.findViewById(R.id.export_btn);
+        submitBtn = (Button) vv.findViewById(R.id.submit_btn);
+        progressContainer = vv.findViewById(R.id.progress_container);
+        actionsContainer = vv.findViewById(R.id.export_actions);
+
+        unsentTrackers = (TextView) vv.findViewById(R.id.highlight_to_submit);
+        unexportedTrackers = (TextView) vv.findViewById(R.id.highlight_to_export);
+        submittedTrackers = (TextView) vv.findViewById(R.id.highlight_submitted);
+
         return vv;
 
     }
@@ -86,32 +111,34 @@ public class ExportActivityFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity parent = ExportActivityFragment.this.getActivity();
+                MobileLearning app = (MobileLearning) parent.getApplication();
+                if(app.omSubmitTrackerMultipleTask == null){
+                    Log.d(TAG,"Sumitting trackers multiple task");
+                    updateActions(false);
+                    app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(parent);
+                    app.omSubmitTrackerMultipleTask.setTrackerServiceListener(ExportActivityFragment.this);
+                    app.omSubmitTrackerMultipleTask.execute();
+                }
+            }
+        });
+
         exportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportActivityTask task = new ExportActivityTask(ExportActivityFragment.this.getActivity());
-                task.setListener(new ExportActivityListener() {
-                    @Override
-                    public void onExportComplete(String filename) {
-                        if (filename != null){
-                            UIUtils.showAlert(ExportActivityFragment.this.getActivity(),
-                                    R.string.export_task_completed,
-                                    ExportActivityFragment.this.getString(R.string.export_task_completed_text, filename)
-                                    );
-
-                            refreshFileList();
-                        }
-                        else{
-                            Toast.makeText(ExportActivityFragment.this.getContext(), R.string.export_task_no_activities, Toast.LENGTH_LONG).show();
-                        }
-                        loadingSpinner.setVisibility(View.GONE);
-                        exportBtn.setVisibility(View.VISIBLE);
-
+                //Check the user has permissions to export activity data
+                AdminSecurityManager.checkAdminPermission(getActivity(), R.id.action_export_activity, new AdminSecurityManager.AuthListener() {
+                    public void onPermissionGranted() {
+                        ExportActivityTask task = new ExportActivityTask(ExportActivityFragment.this.getActivity());
+                        task.setListener(ExportActivityFragment.this);
+                        updateActions(false);
+                        task.execute();
                     }
                 });
-                loadingSpinner.setVisibility(View.VISIBLE);
-                exportBtn.setVisibility(View.GONE);
-                task.execute();
+
             }
         });
 
@@ -129,7 +156,35 @@ public class ExportActivityFragment extends Fragment {
         exportedFilesRecyclerView.setAdapter(filesAdapter);
         exportedFilesRecyclerView.addItemDecoration(
                 new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
-        refreshFileList();
+
+        updateActions(true);
+    }
+
+    private void updateActions(boolean enable){
+        if (enable){
+            progressContainer.setVisibility(View.GONE);
+            actionsContainer.setVisibility(View.VISIBLE);
+            refreshStats();
+            refreshFileList();
+        }
+        else{
+            progressContainer.setVisibility(View.VISIBLE);
+            actionsContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void refreshStats() {
+
+        DbHelper db = DbHelper.getInstance(this.getActivity());
+        int unsent = db.getUnsentTrackersCount();
+        int unexported = db.getUnexportedTrackersCount();
+        unexportedTrackers.setText(NumberFormat.getNumberInstance().format(unexported));
+        unsentTrackers.setText(NumberFormat.getNumberInstance().format(unsent));
+        submittedTrackers.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
+
+        submitBtn.setEnabled( (unsent > 0) );
+        exportBtn.setEnabled( (unexported > 0) );
+
     }
 
     private void refreshFileList(){
@@ -146,4 +201,41 @@ public class ExportActivityFragment extends Fragment {
 
     }
 
+    @Override
+    public void trackerComplete(boolean success) {
+
+        if (success){
+            Toast.makeText(getContext(),
+                    R.string.submit_trackers_success,
+                    Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(getContext(),
+                    R.string.error_connection,
+                    Toast.LENGTH_LONG).show();
+
+        }
+        updateActions(true);
+    }
+
+    @Override
+    public void trackerProgressUpdate() {
+
+    }
+
+    @Override
+    public void onExportComplete(String filename) {
+        if (filename != null){
+            UIUtils.showAlert(getActivity(),
+                R.string.export_task_completed,
+                getString(R.string.export_task_completed_text, filename)
+            );
+        }
+        else{
+            Toast.makeText(getContext(),
+                    R.string.export_task_no_activities,
+                    Toast.LENGTH_LONG).show();
+        }
+        updateActions(true);
+    }
 }
