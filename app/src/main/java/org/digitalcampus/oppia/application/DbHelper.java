@@ -1016,7 +1016,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+            // TODO_GAMIFICATION - remove commented lines
+			//u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
 			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			c.moveToNext();
@@ -1041,7 +1042,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+            // TODO_GAMIFICATION - remove commented lines
+			//u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
 			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			c.moveToNext();
@@ -1052,7 +1054,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		return u;
 	}
-	
+
+    // TODO_GAMIFICATION - remove commented lines
+	/*
 	public void updateUserPoints(String userName, int points){
 		ContentValues values = new ContentValues();
 		values.put(USER_C_POINTS, points);
@@ -1060,6 +1064,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { userName };
 		db.update(USER_TABLE, values, s ,args);
 	}
+	*/
 	
 	public void updateUserBadges(String userName, int badges){
 		ContentValues values = new ContentValues();
@@ -1068,7 +1073,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { userName };
 		db.update(USER_TABLE, values, s ,args);
 	}
-	
+
+    // TODO_GAMIFICATION - remove commented lines
+	/*
 	public void updateUserPoints(long userId, int points){
 		ContentValues values = new ContentValues();
 		values.put(USER_C_POINTS, points);
@@ -1076,7 +1083,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { String.valueOf(userId) };
 		db.update(USER_TABLE, values, s ,args);
 	}
-	
+    */
+
 	public void updateUserBadges(long userId, int badges){
 		ContentValues values = new ContentValues();
 		values.put(USER_C_BADGES, badges);
@@ -1097,7 +1105,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			//u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
 			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			users.add(u);
@@ -1373,7 +1381,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String todayString = ( new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ) ).format( today.getTime() );
 
-        String s = QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=? AND " + QUIZATTEMPTS_C_USERID + "=? " + QUIZATTEMPTS_C_DATETIME + ">=?";
+        String s = QUIZATTEMPTS_C_ACTIVITY_DIGEST + "=? AND " + QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_DATETIME + ">=?";
         String[] args = new String[] { digest, String.valueOf(userId), todayString };
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
@@ -1396,7 +1404,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		String todayString = ( new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ) ).format( today.getTime() );
 
-		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_USERID + "=? " + TRACKER_LOG_C_DATETIME + ">=?";
+		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_USERID + "=? AND " + TRACKER_LOG_C_DATETIME + ">=?";
 		String[] args = new String[] { digest, String.valueOf(userId), todayString };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		int count = c.getCount();

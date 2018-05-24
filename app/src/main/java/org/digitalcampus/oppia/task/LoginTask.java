@@ -97,10 +97,11 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
                 u.setFirstname(jsonResp.getString("first_name"));
                 u.setLastname(jsonResp.getString("last_name"));
                 try {
-                    u.setPoints(jsonResp.getInt("points"));
+                    // TODO_GAMIFICATION - remove commented lines
+                    //u.setPoints(jsonResp.getInt("points"));
                     u.setBadges(jsonResp.getInt("badges"));
                 } catch (JSONException e){
-                    u.setPoints(0);
+                    //u.setPoints(0);
                     u.setBadges(0);
                 }
                 try {

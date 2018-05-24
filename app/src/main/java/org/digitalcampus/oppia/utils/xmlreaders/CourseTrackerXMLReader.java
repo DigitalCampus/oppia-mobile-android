@@ -115,6 +115,8 @@ public class CourseTrackerXMLReader {
                 points = Integer.parseInt(attrs.getNamedItem(NODE_POINTS).getTextContent());
             } catch (NullPointerException npe) {
                 points = 0;
+            } catch (NumberFormatException nfe){
+                points = 0;
             }
 			
 			TrackerLog t = new TrackerLog();
@@ -156,8 +158,13 @@ public class CourseTrackerXMLReader {
 					float maxscore = Float.parseFloat(quizAttrs.getNamedItem(NODE_MAXSCORE).getTextContent());
 					float score = Float.parseFloat(quizAttrs.getNamedItem(NODE_SCORE).getTextContent());
                     String event = quizAttrs.getNamedItem(NODE_EVENT).getTextContent();
-					int points = Integer.parseInt(quizAttrs.getNamedItem(NODE_POINTS).getTextContent());
 
+                    int points = 0;
+                    try {
+                        points = Integer.parseInt(quizAttrs.getNamedItem(NODE_POINTS).getTextContent());
+                    } catch (NumberFormatException nfe){
+                        // do nothing
+                    }
 					String submittedDateString = quizAttrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
 					DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
 					
