@@ -24,7 +24,10 @@ import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.listener.SubmitListener;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
@@ -114,6 +117,13 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		if (response.isResult()) {
 			User user = (User) response.getData().get(0);
             SessionManager.loginUser(getActivity(), user);
+
+			// registration gamification
+			GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
+			GamificationEvent gamificationEvent = gamificationEngine.processEventRegister();
+
+            //Save the search tracker
+            new Tracker(super.getActivity()).saveRegisterTracker();
 
 	    	startActivity(new Intent(getActivity(), OppiaMobileActivity.class));
 	    	super.getActivity().finish();

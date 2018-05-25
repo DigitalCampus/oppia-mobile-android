@@ -927,6 +927,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(TRACKER_LOG_C_EVENT,event);
 		values.put(TRACKER_LOG_C_POINTS, points);
 		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
+
+		// TODO_GAMIFICATION
+		// increment the users points
+        this.incrementUserPoints(userId, points);
+
 	}
 	
 	public void resetCourse(long courseId, long userId){
@@ -1017,8 +1022,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-            // TODO_GAMIFICATION - remove commented lines
-			//u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
 			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			c.moveToNext();
@@ -1043,8 +1047,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-            // TODO_GAMIFICATION - remove commented lines
-			//u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
 			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			c.moveToNext();
@@ -1066,6 +1069,26 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(USER_TABLE, values, s ,args);
 	}
 	*/
+
+    public void incrementUserPoints(long userId, int pointsToAdd) {
+
+        int currentPoints = 0;
+        String s = USER_C_ID + "=? ";
+        String[] args = new String[] { String.valueOf(userId) };
+        Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+        c.moveToFirst();
+        while (c.isAfterLast() == false) {
+            currentPoints = c.getInt(c.getColumnIndex(USER_C_POINTS));
+            c.moveToNext();
+        }
+        c.close();
+
+        ContentValues values = new ContentValues();
+        values.put(USER_C_POINTS, currentPoints+pointsToAdd);
+        s = USER_C_ID + "=? ";
+        args = new String[] { String.valueOf(userId) };
+        db.update(USER_TABLE, values, s, args);
+    }
 
 	public void updateUserBadges(String userName, int badges){
 		ContentValues values = new ContentValues();
@@ -1106,7 +1129,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
 			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
 			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			//u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
 			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 			users.add(u);

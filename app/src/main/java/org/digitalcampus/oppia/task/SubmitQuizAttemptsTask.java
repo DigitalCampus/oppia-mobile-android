@@ -107,6 +107,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 		Editor editor = prefs.edit();
 		long now = System.currentTimeMillis()/1000;
 		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
+
 		return payload;
 	}
 

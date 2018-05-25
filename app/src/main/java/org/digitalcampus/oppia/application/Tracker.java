@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.application;
 
 import java.util.UUID;
 
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
@@ -26,6 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class Tracker {
 
@@ -51,6 +54,9 @@ public class Tracker {
 
 		db.insertTracker(courseId, digest, data.toString(), type, completed, gamificationEvent.getEvent(), gamificationEvent.getPoints());
 
+		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this.ctx).edit();
+        long now = System.currentTimeMillis()/1000;
+        editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
 	}
 
 	public void saveTracker(int courseId, String digest, JSONObject data, boolean completed, GamificationEvent gamificationEvent){
@@ -79,6 +85,19 @@ public class Tracker {
 			missingMedia = new MetaDataUtils(ctx).getMetaData(missingMedia);
 			missingMedia.put("filename", filename);
 			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true, Gamification.GAMIFICATION_MEDIA_MISSING);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void saveRegisterTracker(){
+
+		try {
+			JSONObject registerData = new JSONObject();
+            registerData = new MetaDataUtils(ctx).getMetaData(registerData);
+
+			saveTracker(0, "", registerData, Gamification.EVENT_NAME_REGISTER, true, Gamification.GAMIFICATION_REGISTER);
 
 		} catch (JSONException e) {
 			e.printStackTrace();
