@@ -484,16 +484,17 @@ public class QuizWidget extends WidgetFactory {
 		// log the activity as complete
 		isOnResultsPage = true;
 		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-		// save results ready to send back to the quiz server
-		String data = quiz.getResultObject().toString();
-		Log.d(TAG,data);
-		
+
 		DbHelper db = DbHelper.getInstance(super.getActivity());
 		long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 
         GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
         GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, quiz, this.getPercent());
         Log.d(this.TAG,"quiz points:" + String.valueOf(gamificationEvent.getPoints()));
+
+        // save results ready to send back to the quiz server
+        String data = quiz.getResultObject(gamificationEvent).toString();
+        Log.d(TAG,data);
 
 		QuizAttempt qa = new QuizAttempt();
 		qa.setCourseId(course.getCourseId());

@@ -37,6 +37,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -254,7 +255,7 @@ public class FeedbackWidget extends WidgetFactory {
             this.saveTracker();
 
             // save results ready to send back to the quiz server
-            String data = feedback.getResultObject().toString();
+            String data = feedback.getResultObject(Gamification.GAMIFICATION_UNDEFINED).toString();
             DbHelper db = DbHelper.getInstance(super.getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
     		
