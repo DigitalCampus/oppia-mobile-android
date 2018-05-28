@@ -53,8 +53,17 @@ public class CourseInstall {
             listener.onError(ctx.getString(R.string.error_installing_course, shortname));
             return;
         }
-        String courseDir = tempdir.list()[0]; // use this to get the course name
 
+        String courseDir;
+        try {
+            courseDir = tempdir.list()[0]; // use this to get the course name
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
+            aioobe.printStackTrace();
+            Log.d(TAG, "Error: " + aioobe.getMessage());
+            listener.onError(ctx.getString(R.string.error_installing_course));
+            return;
+        }
         listener.onInstallProgress(10);
 
         String courseXMLPath;
