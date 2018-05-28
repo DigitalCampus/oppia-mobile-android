@@ -44,7 +44,8 @@ public class Gamification {
     // default points for gamification
     public static final GamificationEvent GAMIFICATION_REGISTER = new GamificationEvent(EVENT_NAME_REGISTER,100);
     public static final GamificationEvent GAMIFICATION_QUIZ_FIRST_ATTEMPT =  new GamificationEvent(EVENT_NAME_QUIZ_FIRST_ATTEMPT,20);
-    public static final GamificationEvent GAMIFICATION_QUIZ_ATTEMPT =  new GamificationEvent(EVENT_NAME_QUIZ_ATTEMPT,10);
+    public static final GamificationEvent GAMIFICATION_QUIZ_FIRST_ATTEMPT_TODAY =  new GamificationEvent(EVENT_NAME_QUIZ_ATTEMPT,10);
+    public static final GamificationEvent GAMIFICATION_QUIZ_ATTEMPT =  new GamificationEvent(EVENT_NAME_QUIZ_ATTEMPT,0);
     public static final GamificationEvent GAMIFICATION_QUIZ_FIRST_ATTEMPT_THRESHOLD =  new GamificationEvent(EVENT_NAME_QUIZ_FIRST_THRESHOLD,100);
     public static final GamificationEvent GAMIFICATION_QUIZ_FIRST_ATTEMPT_BONUS =  new GamificationEvent(EVENT_NAME_QUIZ_FIRST_BONUS,50);
     public static final GamificationEvent GAMIFICATION_ACTIVITY_COMPLETED =  new GamificationEvent(EVENT_NAME_ACTIVITY_COMPLETED,10);
@@ -63,6 +64,7 @@ public class Gamification {
     public Gamification(){
         events.add(GAMIFICATION_REGISTER);
         events.add(GAMIFICATION_QUIZ_FIRST_ATTEMPT);
+        events.add(GAMIFICATION_QUIZ_FIRST_ATTEMPT_TODAY);
         events.add(GAMIFICATION_QUIZ_ATTEMPT);
         events.add(GAMIFICATION_QUIZ_FIRST_ATTEMPT_THRESHOLD);
         events.add(GAMIFICATION_QUIZ_FIRST_ATTEMPT_BONUS);

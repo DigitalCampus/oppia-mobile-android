@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.widgets;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -60,6 +61,7 @@ import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
@@ -488,7 +490,11 @@ public class QuizWidget extends WidgetFactory {
 		
 		DbHelper db = DbHelper.getInstance(super.getActivity());
 		long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-		
+
+        GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
+        GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, quiz, this.getPercent());
+        Log.d(this.TAG,"quiz points:" + String.valueOf(gamificationEvent.getPoints()));
+
 		QuizAttempt qa = new QuizAttempt();
 		qa.setCourseId(course.getCourseId());
 		qa.setUserId(userId);
@@ -499,7 +505,13 @@ public class QuizWidget extends WidgetFactory {
 		qa.setMaxscore(quiz.getMaxscore());
 		qa.setPassed(this.getActivityCompleted());
 		qa.setSent(false);
+		qa.setEvent(gamificationEvent.getEvent());
+		qa.setPoints(gamificationEvent.getPoints());
 		db.insertQuizAttempt(qa);
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(super.getActivity()).edit();
+        long now = System.currentTimeMillis()/1000;
+        editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
 		
 		//Check if quiz results layout is already loaded
         View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
@@ -616,9 +628,11 @@ public class QuizWidget extends WidgetFactory {
 		long timetaken = this.getSpentTime();
 		Tracker t = new Tracker(super.getActivity());
 		JSONObject obj = new JSONObject();
+        Log.d(this.TAG," saving quiz tracker1");
 		if(!isOnResultsPage){
 			return;
 		}
+        Log.d(this.TAG," saving quiz tracker2");
 		// add in extra meta-data
 		try {
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
@@ -630,9 +644,7 @@ public class QuizWidget extends WidgetFactory {
 			obj.put("instance_id", quiz.getInstanceID());
 			obj.put("score", this.getPercent());
 
-			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
-			GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, quiz, this.getPercent());
-
+            GamificationEvent gamificationEvent = Gamification.GAMIFICATION_QUIZ_ATTEMPT;
 			// if it's a baseline activity then assume completed
 			if (this.isBaseline) {
 				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
@@ -640,9 +652,9 @@ public class QuizWidget extends WidgetFactory {
 				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
 			}
 		} catch (JSONException e) {
-			// Do nothing
+			Log.d(this.TAG," saving quiz json error");
 		} catch (NullPointerException npe){
-			//do nothing
+			Log.d(this.TAG," saving quiz null pointer");
 		}
 		
 	}

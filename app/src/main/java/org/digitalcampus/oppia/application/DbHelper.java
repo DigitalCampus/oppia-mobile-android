@@ -928,7 +928,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(TRACKER_LOG_C_POINTS, points);
 		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 
-		// TODO_GAMIFICATION
 		// increment the users points
         this.incrementUserPoints(userId, points);
 
@@ -1284,7 +1283,11 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(QUIZATTEMPTS_C_ACTIVITY_DIGEST, qa.getActivityDigest());
         values.put(QUIZATTEMPTS_C_EVENT, qa.getEvent());
         values.put(QUIZATTEMPTS_C_POINTS, qa.getPoints());
-		return db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
+		long result = db.insertOrThrow(QUIZATTEMPTS_TABLE, null, values);
+
+        // increment the users points
+        this.incrementUserPoints(qa.getUserId(), qa.getPoints());
+        return result;
 	}
 
 	public void updateQuizAttempt(QuizAttempt qa){
@@ -1397,6 +1400,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[] { digest, String.valueOf(userId) };
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
+        Log.d(this.TAG, "isQuizFirstAttempt returned " + String.valueOf(count) + " rows");
         c.close();
         if (count > 0){
             return false;
@@ -1420,6 +1424,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[] { digest, String.valueOf(userId), todayString };
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
+		Log.d(this.TAG, "isQuizFirstAttemptToday returned " + String.valueOf(count) + " rows");
         c.close();
         if (count > 0){
             return false;

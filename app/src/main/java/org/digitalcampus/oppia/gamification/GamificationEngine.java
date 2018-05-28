@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.gamification;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -98,7 +99,7 @@ public class GamificationEngine {
             try {
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_QUIZ_FIRST_ATTEMPT).getPoints();
             } catch (GamificationEventNotFound gnef){
-                // do nothing
+                Log.d(this.TAG,"EVENT_NAME_QUIZ_FIRST_ATTEMPT - event not found");
             }
 
             // on first attempt add the percent points
@@ -112,14 +113,16 @@ public class GamificationEngine {
                     totalPoints += this.getEventFromHierarchy(course,activity,Gamification.EVENT_NAME_QUIZ_FIRST_BONUS).getPoints();
                 }
             } catch (GamificationEventNotFound gnef){
-                // do nothing
+                Log.d(this.TAG,"EVENT_NAME_QUIZ_FIRST_THRESHOLD or EVENT_NAME_QUIZ_FIRST_THRESHOLD - event not found");
             }
         } else if (db.isQuizFirstAttemptToday(activity.getDigest())){
             try {
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_QUIZ_ATTEMPT).getPoints();
             } catch (GamificationEventNotFound gnef){
-                // do nothing
+                Log.d(this.TAG,"EVENT_NAME_QUIZ_ATTEMPT - event not found");
             }
+        } else {
+            Log.d(this.TAG,"Not first attempt, nor first attempt today");
         }
 
         GamificationEvent gamificationEvent = new GamificationEvent(Gamification.EVENT_NAME_QUIZ_ATTEMPT, totalPoints);
