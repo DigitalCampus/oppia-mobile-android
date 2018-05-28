@@ -35,15 +35,19 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCourseListAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -220,6 +224,15 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 			try {
 				json = new JSONObject(response.getResultResponse());
 				refreshCourseList();
+
+				// add to tracker
+                GamificationEngine gamificationEngine = new GamificationEngine(this);
+                GamificationEvent gamificationEvent = gamificationEngine.processEventCourseDownloaded();
+                MetaDataUtils mdu = new MetaDataUtils(this);
+                JSONObject obj = new JSONObject();
+                Tracker t = new Tracker(this);
+                t.saveTracker(0, "", mdu.getMetaData(obj), true, gamificationEvent);
+
 			} catch (JSONException e) {
 				Mint.logException(e);
 				e.printStackTrace();

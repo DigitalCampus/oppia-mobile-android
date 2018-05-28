@@ -441,7 +441,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		int points = prefs.getInt(UpgradeManagerTask.PREF_POINTS, 0);
 		int badges = prefs.getInt(UpgradeManagerTask.PREF_BADGES, 0);
 		Log.d(TAG, "points: " + points);
-		db.updateUserPoints(userId, points);
+		//db.updateUserPoints(userId, points);
 		db.updateUserBadges(userId, badges);
 	}
 	

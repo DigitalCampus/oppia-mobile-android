@@ -70,6 +70,7 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
         if (trackersCount <= 0){
             //We didn't have any new tracker!
+            Log.d(TAG, "There are no new trackers to export...");
             return null;
         }
 

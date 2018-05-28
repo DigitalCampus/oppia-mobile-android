@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -58,6 +59,7 @@ public class Activity implements Serializable{
 	private DateTime startDate;
 	private DateTime endDate;
 	private String mimeType;
+	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<GamificationEvent>();
 
 	public Activity(){
 	}
@@ -246,7 +248,21 @@ public class Activity implements Serializable{
 	}
 
     public MultiLangInfo getMultiLangInfo() { return multiLangInfo; }
+
     public void setMultiLangInfo(MultiLangInfo multiLangInfo) {
         this.multiLangInfo = multiLangInfo;
+    }
+
+    public void addGamificationEvent(GamificationEvent ge){
+        gamificationEvents.add(ge);
+    }
+
+    public GamificationEvent findGamificationEvent(String event) throws GamificationEventNotFound {
+        for(GamificationEvent ge: gamificationEvents){
+            if(ge.getEvent().equals(event)){
+                return ge;
+            }
+        }
+        throw new GamificationEventNotFound();
     }
 }

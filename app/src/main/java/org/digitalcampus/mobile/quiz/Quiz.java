@@ -37,6 +37,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -375,7 +376,7 @@ public class Quiz implements Serializable {
         return noQs;
     }
 
-    public JSONObject getResultObject() {
+    public JSONObject getResultObject(GamificationEvent ge) {
         JSONObject json = new JSONObject();
         try {
             json.put("quiz_id", this.getID());
@@ -385,6 +386,8 @@ public class Quiz implements Serializable {
             json.put("score", this.getUserscore());
             json.put("maxscore", this.getMaxscore());
             json.put("instance_id",this.getInstanceID());
+            json.put("points",ge.getPoints());
+            json.put("event",ge.getEvent());
             JSONArray responses = new JSONArray();
             for(QuizQuestion q: questions){
                 if(!(q instanceof Description)){

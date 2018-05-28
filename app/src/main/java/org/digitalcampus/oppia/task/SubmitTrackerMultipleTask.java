@@ -105,7 +105,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                         p.setResult(true);
                         // update points
                         JSONObject jsonResp = new JSONObject(response.body().string());
-                        db.updateUserPoints(user.getUserId(), jsonResp.getInt("points"));
+                        //db.updateUserPoints(user.getUserId(), jsonResp.getInt("points"));
                         db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
 
                         Editor editor = prefs.edit();
@@ -168,7 +168,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
     protected void onPostExecute(Payload p) {
 		synchronized (this) {
             if (trackerServiceListener != null) {
-            	trackerServiceListener.trackerComplete();
+            	trackerServiceListener.trackerComplete(p.isResult());
             }
         }
 		// reset submittask back to null after completion - so next call can run properly

@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.widgets;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -60,8 +61,11 @@ import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.Gamification;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizFeedback;
 import org.digitalcampus.oppia.model.QuizStats;
@@ -480,13 +484,18 @@ public class QuizWidget extends WidgetFactory {
 		// log the activity as complete
 		isOnResultsPage = true;
 		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-		// save results ready to send back to the quiz server
-		String data = quiz.getResultObject().toString();
-		Log.d(TAG,data);
-		
+
 		DbHelper db = DbHelper.getInstance(super.getActivity());
 		long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-		
+
+        GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
+        GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, quiz, this.getPercent());
+        Log.d(this.TAG,"quiz points:" + String.valueOf(gamificationEvent.getPoints()));
+
+        // save results ready to send back to the quiz server
+        String data = quiz.getResultObject(gamificationEvent).toString();
+        Log.d(TAG,data);
+
 		QuizAttempt qa = new QuizAttempt();
 		qa.setCourseId(course.getCourseId());
 		qa.setUserId(userId);
@@ -497,7 +506,13 @@ public class QuizWidget extends WidgetFactory {
 		qa.setMaxscore(quiz.getMaxscore());
 		qa.setPassed(this.getActivityCompleted());
 		qa.setSent(false);
+		qa.setEvent(gamificationEvent.getEvent());
+		qa.setPoints(gamificationEvent.getPoints());
 		db.insertQuizAttempt(qa);
+
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(super.getActivity()).edit();
+        long now = System.currentTimeMillis()/1000;
+        editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
 		
 		//Check if quiz results layout is already loaded
         View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
@@ -614,9 +629,11 @@ public class QuizWidget extends WidgetFactory {
 		long timetaken = this.getSpentTime();
 		Tracker t = new Tracker(super.getActivity());
 		JSONObject obj = new JSONObject();
+        Log.d(this.TAG," saving quiz tracker1");
 		if(!isOnResultsPage){
 			return;
 		}
+        Log.d(this.TAG," saving quiz tracker2");
 		// add in extra meta-data
 		try {
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
@@ -627,16 +644,18 @@ public class QuizWidget extends WidgetFactory {
 			obj.put("quiz_id", quiz.getID());
 			obj.put("instance_id", quiz.getInstanceID());
 			obj.put("score", this.getPercent());
+
+            GamificationEvent gamificationEvent = Gamification.GAMIFICATION_QUIZ_ATTEMPT;
 			// if it's a baseline activity then assume completed
 			if (this.isBaseline) {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
 			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
 			}
 		} catch (JSONException e) {
-			// Do nothing
+			Log.d(this.TAG," saving quiz json error");
 		} catch (NullPointerException npe){
-			//do nothing
+			Log.d(this.TAG," saving quiz null pointer");
 		}
 		
 	}

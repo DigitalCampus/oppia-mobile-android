@@ -25,8 +25,10 @@ import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -130,11 +132,15 @@ public class UrlWidget extends WidgetFactory {
 			obj = mdu.getMetaData(obj);
 			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
+
+			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
+			GamificationEvent gamificationEvent = gamificationEngine.processEventURLActivity(this.course, this.activity);
+
 			// if it's a baseline activity then assume completed
 			if(this.isBaseline){
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
 			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
 			}
 		} catch (JSONException e) {
 			// Do nothing

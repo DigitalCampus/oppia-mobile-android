@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.model;
 
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
+import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
@@ -56,6 +57,7 @@ public class Course implements Serializable {
 	private int noActivitiesCompleted = 0;
 	private int noActivitiesStarted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
+	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<GamificationEvent>();
 
 	private String root;
 	
@@ -273,4 +275,17 @@ public class Course implements Serializable {
 	public static String getLocalFilename(String shortname, Double versionID){
 		return shortname+"-"+String.format("%.0f",versionID)+".zip";
 	}
+
+	public void addGamificationEvent(GamificationEvent ge){
+	    gamificationEvents.add(ge);
+    }
+
+    public GamificationEvent findGamificationEvent(String event) throws GamificationEventNotFound {
+        for(GamificationEvent ge: gamificationEvents){
+            if(ge.getEvent().equals(event)){
+                return ge;
+            }
+        }
+        throw new GamificationEventNotFound();
+    }
 }
