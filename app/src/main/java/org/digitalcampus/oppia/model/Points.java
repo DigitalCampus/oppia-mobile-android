@@ -23,7 +23,8 @@ import org.joda.time.DateTime;
 public class Points {
 
 	private DateTime datetime;
-	private String description;
+	private String event;
+    private String description;
 	private int points;
 	
 	public String getDateAsString() {
@@ -37,14 +38,26 @@ public class Points {
 	public void setDateTime(String date) {
 		this.datetime = MobileLearning.DATETIME_FORMAT.parseDateTime(date);;
 	}
-	
-	public String getDescription() {
-		return description;
+
+	public DateTime getDateTime() {
+		return datetime;
+	}
+
+	public String getEvent() {
+		return event;
 	}
 	
-	public void setDescription(String description) {
-		this.description = description;
+	public void setEvent(String event) {
+		this.event = event;
 	}
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 	
 	public int getPoints() {
 		return points;

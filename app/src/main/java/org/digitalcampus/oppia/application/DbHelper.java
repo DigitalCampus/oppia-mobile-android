@@ -22,19 +22,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.gamification.Gamification;
+import org.digitalcampus.oppia.gamification.PointsComparator;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.model.SearchResult;
@@ -68,6 +74,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static DbHelper instance;
 	private SQLiteDatabase db;
 	private SharedPreferences prefs;
+	private Context ctx;
 	
 	private static final String COURSE_TABLE = "Module";
 	private static final String COURSE_C_ID = BaseColumns._ID;
@@ -163,6 +170,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		super(ctx, DB_NAME, null, DB_VERSION);
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         db = this.getWritableDatabase();
+        this.ctx = ctx;
 	}
 
     public static synchronized DbHelper getInstance(Context ctx){
@@ -1058,17 +1066,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		return u;
 	}
 
-    // TODO_GAMIFICATION - remove commented lines
-	/*
-	public void updateUserPoints(String userName, int points){
-		ContentValues values = new ContentValues();
-		values.put(USER_C_POINTS, points);
-		String s = USER_C_USERNAME + "=? ";
-		String[] args = new String[] { userName };
-		db.update(USER_TABLE, values, s ,args);
-	}
-	*/
-
     public void incrementUserPoints(long userId, int pointsToAdd) {
 
         int currentPoints = 0;
@@ -1089,6 +1086,90 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(USER_TABLE, values, s, args);
     }
 
+    // TODO  - move getting description strings into the points model class?
+	public ArrayList<Points> getUserPoints(long userId) {
+        ArrayList<Points> points = new ArrayList<Points>();
+
+        // Points from Tracker
+        String s = TRACKER_LOG_C_USERID + "=? AND " + TRACKER_LOG_C_POINTS + "!=0";
+        String[] args = new String[] { String.valueOf(userId) };
+        Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+        c.moveToFirst();
+        while (c.isAfterLast() == false) {
+            Points p = new Points();
+            p.setDateTime(c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
+            p.setPoints(c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
+            p.setEvent(c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
+
+            // get course and activity title
+            String description = c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT));
+            if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_ACTIVITY_COMPLETED)){
+                Activity activity = this.getActivityByDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+                Course course = this.getCourse(activity.getCourseId(), userId);
+                description = this.ctx.getString(R.string.points_event_activity_completed,
+                        activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
+                        course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+            } else if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_MEDIA_PLAYED)){
+                String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
+                try {
+                    JSONObject jsonObj = new JSONObject(data);
+                    String mediaFileName = jsonObj.getString("mediafile");
+                    Course course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+                    description = this.ctx.getString(R.string.points_event_media_played,
+                            mediaFileName,
+                            course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+                } catch (JSONException jsone){
+
+                }
+
+            } else if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_COURSE_DOWNLOADED)){
+                description = this.ctx.getString(R.string.points_event_course_downloaded);
+            }
+
+            p.setDescription(description);
+
+            points.add(p);
+            c.moveToNext();
+        }
+        c.close();
+
+        // Points from QuizAttempts
+        String qa = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_POINTS + "!=0";
+        String[] qaargs = new String[] { String.valueOf(userId) };
+        Cursor qac = db.query(QUIZATTEMPTS_TABLE, null, qa, qaargs, null, null, null);
+        qac.moveToFirst();
+        while (qac.isAfterLast() == false) {
+            Points p = new Points();
+            p.setDateTime(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
+            p.setPoints(qac.getInt(qac.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
+            p.setEvent(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_EVENT)));
+
+            // get course and activity title
+            String description;
+            try {
+                Activity activity = this.getActivityByDigest(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
+                Course course = this.getCourse(activity.getCourseId(), userId);
+                description = this.ctx.getString(R.string.points_event_quiz_attempt,
+                        activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
+                        course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+            } catch (NullPointerException npe){
+                description = qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_EVENT));
+            }
+
+            p.setDescription(description);
+
+            points.add(p);
+            qac.moveToNext();
+        }
+        qac.close();
+
+        // Re-order by date time with latest date first
+        Collections.sort(points, new PointsComparator());
+        Collections.reverse(points);
+
+        return points;
+	}
+
 	public void updateUserBadges(String userName, int badges){
 		ContentValues values = new ContentValues();
 		values.put(USER_C_BADGES, badges);
@@ -1096,17 +1177,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { userName };
 		db.update(USER_TABLE, values, s ,args);
 	}
-
-    // TODO_GAMIFICATION - remove commented lines
-	/*
-	public void updateUserPoints(long userId, int points){
-		ContentValues values = new ContentValues();
-		values.put(USER_C_POINTS, points);
-		String s = USER_C_ID + "=? ";
-		String[] args = new String[] { String.valueOf(userId) };
-		db.update(USER_TABLE, values, s ,args);
-	}
-    */
 
 	public void updateUserBadges(long userId, int badges){
 		ContentValues values = new ContentValues();
@@ -1568,7 +1638,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return a;
 	}
-	
+
+	// TODO - remove this function as not used
 	public Activity getActivityByActId(int actId){
 		String sql = "SELECT * FROM  "+ ACTIVITY_TABLE + " a " +
 					" WHERE " + ACTIVITY_C_ACTID + "="+ actId;
