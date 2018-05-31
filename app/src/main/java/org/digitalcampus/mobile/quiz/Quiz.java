@@ -72,7 +72,13 @@ public class Quiz implements Serializable {
     public static final String JSON_PROPERTY_QUESTION = "question";
     public static final String JSON_PROPERTY_QUESTION_ID = "question_id";
     public static final String JSON_PROPERTY_SCORE = "score";
+    public static final String JSON_PROPERTY_MAXSCORE = "maxscore";
     public static final String JSON_PROPERTY_TEXT = "text";
+    public static final String JSON_PROPERTY_FEEDBACK = "feedback";
+    public static final String JSON_PROPERTY_CORRECTFEEDBACK = "correctfeedback";
+    public static final String JSON_PROPERTY_INCORRECTFEEDBACK = "incorrectfeedback";
+    public static final String JSON_PROPERTY_PARTIALLYCORRECTFEEDBACK = "partiallycorrectfeedback";
+    public static final String JSON_PROPERTY_REQUIRED = "required";
 
     private static final long serialVersionUID = -2416034891439585524L;
     private int id;
@@ -122,7 +128,7 @@ public class Quiz implements Serializable {
                 this.setTitleForLang(this.defaultLang, "unknown");
             }
             this.propsSerialized = json.get(JSON_PROPERTY_PROPS).toString();
-            this.maxscore = propsSerializedGetInt("maxscore",0);
+            this.maxscore = propsSerializedGetInt(JSON_PROPERTY_MAXSCORE,0);
             this.maxattempts = propsSerializedGetInt("maxattempts", -1);
             int randomSelect = propsSerializedGetInt("randomselect",0);
 
@@ -135,8 +141,8 @@ public class Quiz implements Serializable {
                     this.addQuestion((JSONObject) questionsJSON.get(i));
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error loading quiz",jsone);
             return false;
         }
         return true;

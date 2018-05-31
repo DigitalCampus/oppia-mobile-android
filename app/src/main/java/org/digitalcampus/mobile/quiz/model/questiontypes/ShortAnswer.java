@@ -76,7 +76,7 @@ public class ShortAnswer implements Serializable, QuizQuestion {
                 }
             }
         }
-        int maxscore = Integer.parseInt(this.getProp("maxscore"));
+        int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
         if (total > maxscore){
             userscore = maxscore;
         } else {
@@ -160,7 +160,7 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 
     @Override
     public int getMaxScore() {
-        return Integer.parseInt(this.getProp("maxscore"));
+        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override
@@ -192,8 +192,8 @@ public class ShortAnswer implements Serializable, QuizQuestion {
 
     @Override
     public boolean responseExpected() {
-        if (this.props.containsKey("required")){
-            return Boolean.parseBoolean(this.getProp("required"));
+        if (this.props.containsKey(Quiz.JSON_PROPERTY_REQUIRED)){
+            return Boolean.parseBoolean(this.getProp(Quiz.JSON_PROPERTY_REQUIRED));
         }
         return true;
     }

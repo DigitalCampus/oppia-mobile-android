@@ -123,7 +123,7 @@ public class Essay implements Serializable, QuizQuestion {
 
     @Override
     public int getMaxScore() {
-        return Integer.parseInt(this.getProp("maxscore"));
+        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override
@@ -155,8 +155,8 @@ public class Essay implements Serializable, QuizQuestion {
 
     @Override
     public boolean responseExpected() {
-        if (this.props.containsKey("required")){
-            return Boolean.parseBoolean(this.getProp("required"));
+        if (this.props.containsKey(Quiz.JSON_PROPERTY_REQUIRED)){
+            return Boolean.parseBoolean(this.getProp(Quiz.JSON_PROPERTY_REQUIRED));
         }
         return true;
     }

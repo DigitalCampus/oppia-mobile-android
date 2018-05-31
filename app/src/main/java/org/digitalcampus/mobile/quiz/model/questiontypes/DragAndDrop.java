@@ -95,8 +95,8 @@ public class DragAndDrop implements Serializable, QuizQuestion {
         if (!passed){
             userscore = 0;
         }
-        else if(this.getProp("maxscore") != null){
-            userscore = Integer.parseInt(this.getProp("maxscore"));
+        else if(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE) != null){
+            userscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
         }
         else{
             userscore = 1;
@@ -173,7 +173,7 @@ public class DragAndDrop implements Serializable, QuizQuestion {
 
     @Override
     public int getMaxScore() {
-        return Integer.parseInt(this.getProp("maxscore"));
+        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override
@@ -204,8 +204,8 @@ public class DragAndDrop implements Serializable, QuizQuestion {
 
     @Override
     public boolean responseExpected() {
-        if (this.props.containsKey("required")){
-            return Boolean.parseBoolean(this.getProp("required"));
+        if (this.props.containsKey(Quiz.JSON_PROPERTY_REQUIRED)){
+            return Boolean.parseBoolean(this.getProp(Quiz.JSON_PROPERTY_REQUIRED));
         }
         return true;
     }

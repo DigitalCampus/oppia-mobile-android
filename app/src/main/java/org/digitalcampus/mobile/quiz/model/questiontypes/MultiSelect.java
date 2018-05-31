@@ -80,7 +80,7 @@ public class MultiSelect implements Serializable, QuizQuestion {
                 }
             }
         }
-        int maxscore = Integer.parseInt(this.getProp("maxscore"));
+        int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
         if (total > maxscore){
             userscore = maxscore;
         } else {
@@ -158,7 +158,7 @@ public class MultiSelect implements Serializable, QuizQuestion {
 
     @Override
     public int getMaxScore() {
-        return Integer.parseInt(this.getProp("maxscore"));
+        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override

@@ -73,7 +73,7 @@ public class Matching implements Serializable, QuizQuestion {
                 }
             }
         }
-        int maxscore = Integer.parseInt(this.getProp("maxscore"));
+        int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
         if (total > maxscore) {
             userscore = maxscore;
         } else {
@@ -137,16 +137,16 @@ public class Matching implements Serializable, QuizQuestion {
         this.feedback = "";
         this.mark(lang);
         if(this.getScoreAsPercent() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD
-                && this.getProp("correctfeedback") != null
-                && !this.getProp("correctfeedback").equals("")){
-            return this.getFeedback(lang,"correctfeedback");
+                && this.getProp(Quiz.JSON_PROPERTY_CORRECTFEEDBACK) != null
+                && !this.getProp(Quiz.JSON_PROPERTY_CORRECTFEEDBACK).equals("")){
+            return this.getFeedback(lang,Quiz.JSON_PROPERTY_CORRECTFEEDBACK);
         } else if(this.getScoreAsPercent() == 0
-                && this.getProp("incorrectfeedback") != null
-                && !this.getProp("incorrectfeedback").equals("")){
-            return this.getFeedback(lang,"incorrectfeedback");
-        } else if (this.getProp("partiallycorrectfeedback") != null
-                && !this.getProp("partiallycorrectfeedback").equals("")){
-            return this.getFeedback(lang,"partiallycorrectfeedback");
+                && this.getProp(Quiz.JSON_PROPERTY_INCORRECTFEEDBACK) != null
+                && !this.getProp(Quiz.JSON_PROPERTY_INCORRECTFEEDBACK).equals("")){
+            return this.getFeedback(lang,Quiz.JSON_PROPERTY_INCORRECTFEEDBACK);
+        } else if (this.getProp(Quiz.JSON_PROPERTY_PARTIALLYCORRECTFEEDBACK) != null
+                && !this.getProp(Quiz.JSON_PROPERTY_PARTIALLYCORRECTFEEDBACK).equals("")){
+            return this.getFeedback(lang,Quiz.JSON_PROPERTY_PARTIALLYCORRECTFEEDBACK);
         } else {
             return this.feedback;
         }
@@ -171,7 +171,7 @@ public class Matching implements Serializable, QuizQuestion {
     }
 
     public int getMaxScore() {
-        return Integer.parseInt(this.getProp("maxscore"));
+        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     public JSONObject responsesToJSON() {

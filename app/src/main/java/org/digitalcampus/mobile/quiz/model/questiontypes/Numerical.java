@@ -98,14 +98,14 @@ public class Numerical implements Serializable, QuizQuestion {
         if (score == 0){
             for (Response r : responseOptions){
                 if (r.getTitle(lang).toLowerCase().equals("*")){
-                    if(r.getProp("feedback") != null && !(r.getProp("feedback").equals(""))){
-                        this.feedback = r.getProp("feedback");
+                    if(r.getProp(Quiz.JSON_PROPERTY_FEEDBACK) != null && !(r.getProp(Quiz.JSON_PROPERTY_FEEDBACK).equals(""))){
+                        this.feedback = r.getProp(Quiz.JSON_PROPERTY_FEEDBACK);
                     }
                 }
             }
         }
 
-        int maxscore = Integer.parseInt(this.getProp("maxscore"));
+        int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
         if (score > maxscore) {
             this.userscore = maxscore;
         } else {
@@ -178,7 +178,7 @@ public class Numerical implements Serializable, QuizQuestion {
 
     @Override
     public int getMaxScore() {
-        return Integer.parseInt(this.getProp("maxscore"));
+        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override
