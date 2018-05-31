@@ -60,19 +60,23 @@ public class Quiz implements Serializable {
     public static final int SHOW_FEEDBACK_NEVER = 0;
     public static final int SHOW_FEEDBACK_ATEND = 2;
 
+    private static final String JSON_PROPERTY_TITLE = "title";
+    private static final String JSON_PROPERTY_ID = "id";
+    private static final String JSON_PROPERTY_PROPS = "props";
+
     public static final int QUIZ_DEFAULT_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
     public static final int QUIZ_QUESTION_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
 
     private static final long serialVersionUID = -2416034891439585524L;
     private int id;
-    private HashMap<String,String> title = new HashMap<String,String>();
+    private HashMap<String,String> title = new HashMap<>();
     private String url;
     private float maxscore;
     private boolean checked;
     private int currentq = 0;
     private int maxattempts;
     private float userscore;
-    private List<QuizQuestion> questions = new ArrayList<QuizQuestion>();
+    private List<QuizQuestion> questions = new ArrayList<>();
     private String instanceID;
     private String propsSerialized;
     private String defaultLang;
@@ -94,23 +98,23 @@ public class Quiz implements Serializable {
         this.defaultLang = defaultLang;
         try {
             JSONObject json = new JSONObject(quiz);
-            this.id = json.getInt("id");
+            this.id = json.getInt(JSON_PROPERTY_ID);
 
-            if (json.get("title") instanceof JSONObject){
-                JSONObject titleLangs = json.getJSONObject("title");
+            if (json.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
+                JSONObject titleLangs = json.getJSONObject(JSON_PROPERTY_TITLE);
                 Iterator<?> keys = titleLangs.keys();
 
                 while( keys.hasNext() ){
                     String key = (String) keys.next();
                     this.setTitleForLang(key, titleLangs.getString(key));
                 }
-            } else if (json.get("title") instanceof String) {
-                this.setTitleForLang(this.defaultLang, json.getString("title"));
+            } else if (json.get(JSON_PROPERTY_TITLE) instanceof String) {
+                this.setTitleForLang(this.defaultLang, json.getString(JSON_PROPERTY_TITLE));
             } else {
                 //fallback
                 this.setTitleForLang(this.defaultLang, "unknown");
             }
-            this.propsSerialized = json.get("props").toString();
+            this.propsSerialized = json.get(JSON_PROPERTY_PROPS).toString();
             this.maxscore = propsSerializedGetInt("maxscore",0);
             this.maxattempts = propsSerializedGetInt("maxattempts", -1);
             int randomSelect = propsSerializedGetInt("randomselect",0);
@@ -140,7 +144,7 @@ public class Quiz implements Serializable {
             try {
                 quizquestion = (JSONObject) questionChoices.get(randomNum);
                 JSONObject q = quizquestion.getJSONObject("question");
-                int qid = q.getInt("id");
+                int qid = q.getInt(JSON_PROPERTY_ID);
                 for(int i=0; i < this.questions.size(); i++){
                     if (qid == this.questions.get(i).getID()){
                         found = true;
@@ -191,25 +195,25 @@ public class Quiz implements Serializable {
                 return false;
             }
 
-            question.setID(q.getInt("id"));
+            question.setID(q.getInt(JSON_PROPERTY_ID));
 
-            if (q.get("title") instanceof JSONObject){
-                JSONObject titleLangs = q.getJSONObject("title");
+            if (q.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
+                JSONObject titleLangs = q.getJSONObject(JSON_PROPERTY_TITLE);
                 Iterator<?> keys = titleLangs.keys();
 
                 while( keys.hasNext() ){
                     String key = (String) keys.next();
                     question.setTitleForLang(key, titleLangs.getString(key));
                 }
-            } else if (q.get("title") instanceof Integer){
-                question.setTitleForLang(this.defaultLang, String.valueOf(q.getInt("title")));
+            } else if (q.get(JSON_PROPERTY_TITLE) instanceof Integer){
+                question.setTitleForLang(this.defaultLang, String.valueOf(q.getInt(JSON_PROPERTY_TITLE)));
             } else {
-                question.setTitleForLang(this.defaultLang, q.getString("title"));
+                question.setTitleForLang(this.defaultLang, q.getString(JSON_PROPERTY_TITLE));
             }
 
-            JSONObject questionProps = (JSONObject) q.get("props");
+            JSONObject questionProps = (JSONObject) q.get(JSON_PROPERTY_PROPS);
 
-            HashMap<String, String> qProps = new HashMap<String, String>();
+            HashMap<String, String> qProps = new HashMap<>();
             if (questionProps.names() != null){
                 for (int k = 0; k < questionProps.names().length(); k++) {
                     qProps.put(questionProps.names().getString(k),
@@ -225,8 +229,8 @@ public class Quiz implements Serializable {
                 JSONObject r = (JSONObject) responses.get(j);
                 Response responseOption = new Response();
 
-                if (r.get("title") instanceof JSONObject){
-                    JSONObject titleLangs = r.getJSONObject("title");
+                if (r.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
+                    JSONObject titleLangs = r.getJSONObject(JSON_PROPERTY_TITLE);
                     Iterator<?> keys = titleLangs.keys();
 
                     while( keys.hasNext() ){
@@ -237,15 +241,15 @@ public class Quiz implements Serializable {
                             responseOption.setTitleForLang(key, titleLangs.getString(key));
                         }
                     }
-                } else if (r.get("title") instanceof Integer){
-                    responseOption.setTitleForLang(this.defaultLang, String.valueOf(r.getInt("title")));
+                } else if (r.get(JSON_PROPERTY_TITLE) instanceof Integer){
+                    responseOption.setTitleForLang(this.defaultLang, String.valueOf(r.getInt(JSON_PROPERTY_TITLE)));
                 } else {
-                    responseOption.setTitleForLang(this.defaultLang, r.getString("title"));
+                    responseOption.setTitleForLang(this.defaultLang, r.getString(JSON_PROPERTY_TITLE));
                 }
 
                 responseOption.setScore(Float.parseFloat((String) r.get("score")));
-                JSONObject responseProps = (JSONObject) r.get("props");
-                HashMap<String, String> rProps = new HashMap<String, String>();
+                JSONObject responseProps = (JSONObject) r.get(JSON_PROPERTY_PROPS);
+                HashMap<String, String> rProps = new HashMap<>();
                 if (responseProps.names() != null) {
                     for (int m = 0; m < responseProps.names().length(); m++) {
                         rProps.put(responseProps.names().getString(m),
