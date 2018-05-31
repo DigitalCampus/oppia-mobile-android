@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -46,7 +47,7 @@ import android.util.Log;
 
 public class Quiz implements Serializable {
 
-    public static final String TAG = "Quiz";
+    public static final String TAG = Quiz.class.getSimpleName();
 
     public static final String RESPONSE_SEPARATOR = "||";
     public static final String MATCHING_SEPARATOR = "|";
@@ -63,6 +64,8 @@ public class Quiz implements Serializable {
     private static final String JSON_PROPERTY_TITLE = "title";
     private static final String JSON_PROPERTY_ID = "id";
     private static final String JSON_PROPERTY_PROPS = "props";
+    private static final String JSON_PROPERTY_QUESTIONS = "questions";
+    private static final String JSON_PROPERTY_QUESTION = "question";
 
     public static final int QUIZ_DEFAULT_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
     public static final int QUIZ_QUESTION_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
@@ -120,12 +123,12 @@ public class Quiz implements Serializable {
             int randomSelect = propsSerializedGetInt("randomselect",0);
 
             // add questions
-            JSONArray questions = (JSONArray) json.get("questions");
+            JSONArray questionsJSON = (JSONArray) json.get(JSON_PROPERTY_QUESTIONS);
             if (randomSelect > 0){
-                this.generateQuestionSet(questions, randomSelect);
+                this.generateQuestionSet(questionsJSON, randomSelect);
             } else {
-                for (int i = 0; i < questions.length(); i++) {
-                    this.addQuestion((JSONObject) questions.get(i));
+                for (int i = 0; i < questionsJSON.length(); i++) {
+                    this.addQuestion((JSONObject) questionsJSON.get(i));
                 }
             }
         } catch (JSONException e) {
@@ -143,7 +146,7 @@ public class Quiz implements Serializable {
             JSONObject quizquestion;
             try {
                 quizquestion = (JSONObject) questionChoices.get(randomNum);
-                JSONObject q = quizquestion.getJSONObject("question");
+                JSONObject q = quizquestion.getJSONObject(JSON_PROPERTY_QUESTION);
                 int qid = q.getInt(JSON_PROPERTY_ID);
                 for(int i=0; i < this.questions.size(); i++){
                     if (qid == this.questions.get(i).getID()){
@@ -153,8 +156,8 @@ public class Quiz implements Serializable {
                 if(!found){
                     this.addQuestion(quizquestion);
                 }
-            } catch (JSONException e) {
-
+            } catch (JSONException jsone) {
+                Log.d(TAG,"Error parsing question set", jsone);
             }
         }
 
@@ -174,21 +177,21 @@ public class Quiz implements Serializable {
         try {
             JSONObject q = qObj.getJSONObject("question");
             qtype = (String) q.get("type");
-            if (qtype.toLowerCase().equals(Essay.TAG.toLowerCase())) {
+            if (qtype.equalsIgnoreCase(Essay.TAG)) {
                 question = new Essay();
-            } else if (qtype.toLowerCase().equals(MultiChoice.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(MultiChoice.TAG)) {
                 question = new MultiChoice();
-            } else if (qtype.toLowerCase().equals(Numerical.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(Numerical.TAG)) {
                 question = new Numerical();
-            } else if (qtype.toLowerCase().equals(Matching.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(Matching.TAG)) {
                 question = new Matching();
-            } else if (qtype.toLowerCase().equals(ShortAnswer.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(ShortAnswer.TAG)) {
                 question = new ShortAnswer();
-            } else if (qtype.toLowerCase().equals(MultiSelect.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(MultiSelect.TAG)) {
                 question = new MultiSelect();
-            } else if (qtype.toLowerCase().equals(Description.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(Description.TAG)) {
                 question = new Description();
-            } else if (qtype.toLowerCase().equals(DragAndDrop.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(DragAndDrop.TAG)) {
             question = new DragAndDrop();
             } else {
                 Log.d(TAG, "Question type " + qtype + " is not yet supported");
@@ -262,7 +265,7 @@ public class Quiz implements Serializable {
             }
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(TAG,"Error parsing question & responses",e);
             return false;
         }
         return true;
@@ -313,8 +316,8 @@ public class Quiz implements Serializable {
         if(title.containsKey(lang)){
             return title.get(lang);
         } else {
-            for (String key : title.keySet()) {
-                return title.get(key);
+            for (Map.Entry entry : title.entrySet()) {
+                return title.get(entry.getKey());
             }
             return "";
         }
