@@ -1105,21 +1105,27 @@ public class DbHelper extends SQLiteOpenHelper {
             String description = c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT));
             if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_ACTIVITY_COMPLETED)){
                 Activity activity = this.getActivityByDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
-                Course course = this.getCourse(activity.getCourseId(), userId);
-                description = this.ctx.getString(R.string.points_event_activity_completed,
-                        activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
-                        course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+                if (activity != null) {
+					Course course = this.getCourse(activity.getCourseId(), userId);
+					if (course != null) {
+                        description = this.ctx.getString(R.string.points_event_activity_completed,
+                                activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
+                                course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+                    }
+				}
             } else if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_MEDIA_PLAYED)){
                 String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
                 try {
                     JSONObject jsonObj = new JSONObject(data);
                     String mediaFileName = jsonObj.getString("mediafile");
                     Course course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
-                    description = this.ctx.getString(R.string.points_event_media_played,
-                            mediaFileName,
-                            course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+                        if (course != null) {
+                            description = this.ctx.getString(R.string.points_event_media_played,
+                                    mediaFileName,
+                                    course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+                    }
                 } catch (JSONException jsone){
-
+					System.out.print(jsone.getStackTrace());
                 }
 
             } else if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_COURSE_DOWNLOADED)){
@@ -1145,15 +1151,20 @@ public class DbHelper extends SQLiteOpenHelper {
             p.setEvent(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_EVENT)));
 
             // get course and activity title
-            String description;
+            String description = qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_EVENT));
             try {
                 Activity activity = this.getActivityByDigest(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
-                Course course = this.getCourse(activity.getCourseId(), userId);
-                description = this.ctx.getString(R.string.points_event_quiz_attempt,
-                        activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
-                        course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+
+                if (activity != null) {
+                    Course course = this.getCourse(activity.getCourseId(), userId);
+                    if (course != null) {
+                        description = this.ctx.getString(R.string.points_event_quiz_attempt,
+                                activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
+                                course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+                    }
+                }
             } catch (NullPointerException npe){
-                description = qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_EVENT));
+                System.out.print(npe.getStackTrace());
             }
 
             p.setDescription(description);
