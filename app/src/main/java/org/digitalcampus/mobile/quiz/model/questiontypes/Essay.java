@@ -17,11 +17,14 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.json.JSONException;
@@ -29,11 +32,8 @@ import org.json.JSONObject;
 
 public class Essay implements Serializable, QuizQuestion {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1531985882092686497L;
-    public static final String TAG = "Essay";
+    public static final String TAG = Essay.class.getSimpleName();
     private int id;
     private HashMap<String,String> title = new HashMap<>();
     private float userscore = 0;
@@ -132,22 +132,22 @@ public class Essay implements Serializable, QuizQuestion {
 
         if(userResponses.size() == 0){
             try {
-                jo.put("question_id", this.id);
-                jo.put("score",userscore);
-                jo.put("text", "");
-            } catch (JSONException e) {
-                e.printStackTrace();
+                jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
+                jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
+                jo.put(Quiz.JSON_PROPERTY_TEXT, "");
+            } catch (JSONException jsone) {
+                Log.d(TAG,"Error creating json object", jsone);
             }
             return jo;
         }
 
         for(String ur: userResponses ){
             try {
-                jo.put("question_id", this.id);
-                jo.put("score",userscore);
+                jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
+                jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
                 jo.put("text", ur);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException jsone) {
+                Log.d(TAG,"Error creating json object", jsone);
             }
         }
         return jo;

@@ -38,6 +38,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,14 +62,17 @@ public class Quiz implements Serializable {
     public static final int SHOW_FEEDBACK_NEVER = 0;
     public static final int SHOW_FEEDBACK_ATEND = 2;
 
-    private static final String JSON_PROPERTY_TITLE = "title";
-    private static final String JSON_PROPERTY_ID = "id";
-    private static final String JSON_PROPERTY_PROPS = "props";
-    private static final String JSON_PROPERTY_QUESTIONS = "questions";
-    private static final String JSON_PROPERTY_QUESTION = "question";
-
     public static final int QUIZ_DEFAULT_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
     public static final int QUIZ_QUESTION_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
+
+    public static final String JSON_PROPERTY_TITLE = "title";
+    public static final String JSON_PROPERTY_ID = "id";
+    public static final String JSON_PROPERTY_PROPS = "props";
+    public static final String JSON_PROPERTY_QUESTIONS = "questions";
+    public static final String JSON_PROPERTY_QUESTION = "question";
+    public static final String JSON_PROPERTY_QUESTION_ID = "question_id";
+    public static final String JSON_PROPERTY_SCORE = "score";
+    public static final String JSON_PROPERTY_TEXT = "text";
 
     private static final long serialVersionUID = -2416034891439585524L;
     private int id;
@@ -175,7 +179,7 @@ public class Quiz implements Serializable {
         QuizQuestion question;
         String qtype;
         try {
-            JSONObject q = qObj.getJSONObject("question");
+            JSONObject q = qObj.getJSONObject(JSON_PROPERTY_QUESTION);
             qtype = (String) q.get("type");
             if (qtype.equalsIgnoreCase(Essay.TAG)) {
                 question = new Essay();
@@ -250,7 +254,7 @@ public class Quiz implements Serializable {
                     responseOption.setTitleForLang(this.defaultLang, r.getString(JSON_PROPERTY_TITLE));
                 }
 
-                responseOption.setScore(Float.parseFloat((String) r.get("score")));
+                responseOption.setScore(Float.parseFloat((String) r.get(Quiz.JSON_PROPERTY_SCORE)));
                 JSONObject responseProps = (JSONObject) r.get(JSON_PROPERTY_PROPS);
                 HashMap<String, String> rProps = new HashMap<>();
                 if (responseProps.names() != null) {
@@ -264,8 +268,8 @@ public class Quiz implements Serializable {
                 question.addResponseOption(responseOption);
             }
 
-        } catch (JSONException e) {
-            Log.d(TAG,"Error parsing question & responses",e);
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error parsing question & responses",jsone);
             return false;
         }
         return true;
@@ -388,9 +392,9 @@ public class Quiz implements Serializable {
         try {
             json.put("quiz_id", this.getID());
             Date now = new Date();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(MobileLearning.DATETIME_FORMAT.toString());
             json.put("attempt_date", simpleDateFormat.format(now));
-            json.put("score", this.getUserscore());
+            json.put(JSON_PROPERTY_SCORE, this.getUserscore());
             json.put("maxscore", this.getMaxscore());
             json.put("instance_id",this.getInstanceID());
             json.put("points",ge.getPoints());
@@ -403,8 +407,8 @@ public class Quiz implements Serializable {
                 }
             }
             json.put("responses", responses);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error creating json result object",jsone);
         }
         return json;
     }
@@ -433,8 +437,8 @@ public class Quiz implements Serializable {
         try {
             JSONObject json = new JSONObject(propsSerialized);
             return json.getInt(key);
-        } catch (JSONException e) {
-            // do nothing
+        } catch (JSONException jsone) {
+            Log.d(TAG, "Error getting int from propsSerialized", jsone);
         }
         return defaultValue;
     }
@@ -443,8 +447,8 @@ public class Quiz implements Serializable {
         try {
             JSONObject json = new JSONObject(propsSerialized);
             return json.getBoolean(key);
-        } catch (JSONException e) {
-            // do nothing
+        } catch (JSONException jsone) {
+            Log.d(TAG, "Error getting boolean from propsSerialized", jsone);
         }
         return defaultValue;
     }

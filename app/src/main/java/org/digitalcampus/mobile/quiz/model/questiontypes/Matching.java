@@ -17,6 +17,8 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ import org.json.JSONObject;
 public class Matching implements Serializable, QuizQuestion {
 
     private static final long serialVersionUID = -7500128521011492086L;
-    public static final String TAG = "Matching";
+    public static final String TAG = Matching.class.getSimpleName();
     private int id;
     private HashMap<String,String> title = new HashMap<>();
     private List<Response> responseOptions = new ArrayList<>();
@@ -175,15 +177,15 @@ public class Matching implements Serializable, QuizQuestion {
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
         try {
-            jo.put("question_id", this.id);
-            jo.put("score", this.getUserscore());
+            jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
+            jo.put(Quiz.JSON_PROPERTY_SCORE, this.getUserscore());
             String qrtext = "";
             for (String ur : userResponses) {
                 qrtext += ur + Quiz.RESPONSE_SEPARATOR;
             }
-            jo.put("text", qrtext);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            jo.put(Quiz.JSON_PROPERTY_TEXT, qrtext);
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error creating json object", jsone);
         }
         return jo;
     }

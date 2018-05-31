@@ -17,6 +17,9 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
+import android.util.Log;
+
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.json.JSONException;
@@ -30,13 +33,13 @@ import java.util.List;
 public class Numerical implements Serializable, QuizQuestion {
 
     private static final long serialVersionUID = 808485823168202643L;
-    public static final String TAG = "Numerical";
-    private HashMap<String,String> title = new HashMap<String,String>();
+    public static final String TAG = Numerical.class.getSimpleName();
+    private HashMap<String,String> title = new HashMap<>();
     private int id;
-    private List<Response> responseOptions = new ArrayList<Response>();
+    private List<Response> responseOptions = new ArrayList<>();
     private float userscore = 0;
-    private List<String> userResponses = new ArrayList<String>();
-    private HashMap<String, String> props = new HashMap<String, String>();
+    private List<String> userResponses = new ArrayList<>();
+    private HashMap<String, String> props = new HashMap<>();
     private String feedback = "";
     private boolean feedbackDisplayed = false;
 
@@ -182,13 +185,13 @@ public class Numerical implements Serializable, QuizQuestion {
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
         try {
-            jo.put("question_id", this.id);
-            jo.put("score", userscore);
+            jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
+            jo.put(Quiz.JSON_PROPERTY_SCORE, userscore);
             for (String ur : userResponses) {
-                jo.put("text", ur);
+                jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error creating json object", jsone);
         }
         return jo;
     }

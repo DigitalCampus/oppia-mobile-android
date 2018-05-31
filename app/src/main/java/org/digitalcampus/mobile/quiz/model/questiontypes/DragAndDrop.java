@@ -17,6 +17,8 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
+import android.util.Log;
+
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
@@ -31,13 +33,13 @@ import java.util.List;
 public class DragAndDrop implements Serializable, QuizQuestion {
 
     private static final long serialVersionUID = 8250801428572869330L;
-    public static final String TAG = "DragAndDrop";
+    public static final String TAG = DragAndDrop.class.getSimpleName();
     private int id;
-    private HashMap<String,String> title = new HashMap<String,String>();
-    private List<Response> responseOptions = new ArrayList<Response>();
+    private HashMap<String,String> title = new HashMap<>();
+    private List<Response> responseOptions = new ArrayList<>();
     private float userscore = 0;
-    private List<String> userResponses = new ArrayList<String>();
-    private HashMap<String,String> props = new HashMap<String,String>();
+    private List<String> userResponses = new ArrayList<>();
+    private HashMap<String,String> props = new HashMap<>();
     private String feedback = "";
     private boolean feedbackDisplayed = false;
 
@@ -179,22 +181,22 @@ public class DragAndDrop implements Serializable, QuizQuestion {
         JSONObject jo = new JSONObject();
         if(userResponses.size() == 0){
             try {
-                jo.put("question_id", this.id);
-                jo.put("score",userscore);
-                jo.put("text", "");
-            } catch (JSONException e) {
-                e.printStackTrace();
+                jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
+                jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
+                jo.put(Quiz.JSON_PROPERTY_TEXT, "");
+            } catch (JSONException jsone) {
+                Log.d(TAG,"Error creating json object", jsone);
             }
             return jo;
         }
 
         for(String ur: userResponses ){
             try {
-                jo.put("question_id", this.id);
-                jo.put("score",userscore);
-                jo.put("text", ur);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
+                jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
+                jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
+            } catch (JSONException jsone) {
+                Log.d(TAG,"Error creating json object", jsone);
             }
         }
         return jo;

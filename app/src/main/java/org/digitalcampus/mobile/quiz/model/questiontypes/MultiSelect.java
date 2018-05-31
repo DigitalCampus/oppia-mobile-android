@@ -17,6 +17,8 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,13 +33,13 @@ import org.json.JSONObject;
 public class MultiSelect implements Serializable, QuizQuestion {
 
     private static final long serialVersionUID = 936284577467681053L;
-    public static final String TAG = "MultiSelect";
+    public static final String TAG = MultiSelect.class.getSimpleName();
     private int id;
-    private HashMap<String,String> title = new HashMap<String,String>();
-    private List<Response> responseOptions = new ArrayList<Response>();
+    private HashMap<String,String> title = new HashMap<>();
+    private List<Response> responseOptions = new ArrayList<>();
     private float userscore = 0;
-    private List<String> userResponses = new ArrayList<String>();
-    private HashMap<String,String> props = new HashMap<String,String>();
+    private List<String> userResponses = new ArrayList<>();
+    private HashMap<String,String> props = new HashMap<>();
     private String feedback = "";
     private boolean feedbackDisplayed = false;
 
@@ -163,15 +165,15 @@ public class MultiSelect implements Serializable, QuizQuestion {
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
         try {
-            jo.put("question_id", this.id);
-            jo.put("score",userscore);
+            jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
+            jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
             String qrtext = "";
             for(String ur: userResponses ){
                 qrtext += ur + Quiz.RESPONSE_SEPARATOR;
             }
-            jo.put("text", qrtext);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            jo.put(Quiz.JSON_PROPERTY_TEXT, qrtext);
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error creating json object", jsone);
         }
         return jo;
     }
