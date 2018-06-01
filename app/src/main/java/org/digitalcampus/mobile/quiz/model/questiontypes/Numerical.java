@@ -66,6 +66,7 @@ public class Numerical implements Serializable, QuizQuestion {
             try {
                 userAnswer = Float.parseFloat(a);
             } catch (NumberFormatException nfe) {
+                Log.d(TAG, "Response given is not recognised as a number", nfe);
             }
         }
         float score = 0;
@@ -76,8 +77,8 @@ public class Numerical implements Serializable, QuizQuestion {
                 try {
                     Float respNumber = Float.parseFloat(r.getTitle(lang));
                     Float tolerance = (float) 0.0;
-                    if(r.getProp("tolerance") != null){
-                        tolerance = Float.parseFloat(r.getProp("tolerance"));
+                    if(r.getProp(Quiz.JSON_PROPERTY_TOLERANCE) != null){
+                        tolerance = Float.parseFloat(r.getProp(Quiz.JSON_PROPERTY_TOLERANCE));
                     }
 
                     if ((respNumber - tolerance <= userAnswer) && (userAnswer <= respNumber + tolerance)) {
@@ -90,14 +91,14 @@ public class Numerical implements Serializable, QuizQuestion {
                         }
                     }
                 } catch (NumberFormatException nfe) {
-                    // do nothing - just skip over this particular response option
+                   Log.d(TAG, "Response option is not recognised as a number", nfe);
                 }
             }
         }
 
         if (score == 0){
             for (Response r : responseOptions){
-                if (r.getTitle(lang).toLowerCase().equals("*")){
+                if (r.getTitle(lang).equalsIgnoreCase("*")){
                     if(r.getProp(Quiz.JSON_PROPERTY_FEEDBACK) != null && !(r.getProp(Quiz.JSON_PROPERTY_FEEDBACK).equals(""))){
                         this.feedback = r.getProp(Quiz.JSON_PROPERTY_FEEDBACK);
                     }

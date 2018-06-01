@@ -21,13 +21,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Response implements Serializable{
 
     private static final long serialVersionUID = 5970350772982572264L;
-    public static final String TAG = "Response";
+    public static final String TAG = Response.class.getSimpleName();
     private HashMap<String,String> title = new HashMap<>();
     private float score;
     private HashMap<String,String> props = new HashMap<>();
@@ -65,8 +66,8 @@ public class Response implements Serializable{
     }
 
     public void setFeedback(String defaultLang){
-        if (this.props.containsKey("feedback")) try {
-            JSONObject feedbackLangs = new JSONObject(this.getProp("feedback"));
+        if (this.props.containsKey(Quiz.JSON_PROPERTY_FEEDBACK)) try {
+            JSONObject feedbackLangs = new JSONObject(this.getProp(Quiz.JSON_PROPERTY_FEEDBACK));
             Iterator<?> keys = feedbackLangs.keys();
 
             while (keys.hasNext()) {
@@ -74,7 +75,7 @@ public class Response implements Serializable{
                 this.setFeedbackForLang(key, feedbackLangs.getString(key));
             }
         } catch (JSONException e) {
-            this.setFeedbackForLang(defaultLang, this.getProp("feedback"));
+            this.setFeedbackForLang(defaultLang, this.getProp(Quiz.JSON_PROPERTY_FEEDBACK));
         }
     }
 

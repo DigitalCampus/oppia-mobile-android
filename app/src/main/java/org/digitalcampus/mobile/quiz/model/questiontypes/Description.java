@@ -17,14 +17,11 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -45,29 +42,24 @@ public class Description implements QuizQuestion {
 
     @Override
     public void addResponseOption(Response r) {
-        //do nothing
     }
 
     @Override
     public List<Response> getResponseOptions() {
-        // nothing
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public void setUserResponses(List<String> str) {
-        // nothing
     }
 
     @Override
     public List<String> getUserResponses() {
-        // nothing
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public void setResponseOptions(List<Response> responses) {
-        // nothing
 
     }
 

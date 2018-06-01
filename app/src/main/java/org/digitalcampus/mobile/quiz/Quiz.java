@@ -70,15 +70,21 @@ public class Quiz implements Serializable {
     public static final String JSON_PROPERTY_PROPS = "props";
     public static final String JSON_PROPERTY_QUESTIONS = "questions";
     public static final String JSON_PROPERTY_QUESTION = "question";
+    public static final String JSON_PROPERTY_RESPONSE = "response";
+    public static final String JSON_PROPERTY_RESPONSES = "responses";
+    public static final String JSON_PROPERTY_TYPE = "type";
     public static final String JSON_PROPERTY_QUESTION_ID = "question_id";
     public static final String JSON_PROPERTY_SCORE = "score";
     public static final String JSON_PROPERTY_MAXSCORE = "maxscore";
     public static final String JSON_PROPERTY_TEXT = "text";
+    public static final String JSON_PROPERTY_TOLERANCE = "tolerance";
     public static final String JSON_PROPERTY_FEEDBACK = "feedback";
     public static final String JSON_PROPERTY_CORRECTFEEDBACK = "correctfeedback";
     public static final String JSON_PROPERTY_INCORRECTFEEDBACK = "incorrectfeedback";
     public static final String JSON_PROPERTY_PARTIALLYCORRECTFEEDBACK = "partiallycorrectfeedback";
     public static final String JSON_PROPERTY_REQUIRED = "required";
+    public static final String JSON_PROPERTY_MAXATTEMPTS = "maxattempts";
+    public static final String JSON_PROPERTY_RANDOMSELECT = "randomselect";
 
     private static final long serialVersionUID = -2416034891439585524L;
     private int id;
@@ -129,8 +135,8 @@ public class Quiz implements Serializable {
             }
             this.propsSerialized = json.get(JSON_PROPERTY_PROPS).toString();
             this.maxscore = propsSerializedGetInt(JSON_PROPERTY_MAXSCORE,0);
-            this.maxattempts = propsSerializedGetInt("maxattempts", -1);
-            int randomSelect = propsSerializedGetInt("randomselect",0);
+            this.maxattempts = propsSerializedGetInt(JSON_PROPERTY_MAXATTEMPTS, -1);
+            int randomSelect = propsSerializedGetInt(JSON_PROPERTY_RANDOMSELECT,0);
 
             // add questions
             JSONArray questionsJSON = (JSONArray) json.get(JSON_PROPERTY_QUESTIONS);
@@ -186,7 +192,7 @@ public class Quiz implements Serializable {
         String qtype;
         try {
             JSONObject q = qObj.getJSONObject(JSON_PROPERTY_QUESTION);
-            qtype = (String) q.get("type");
+            qtype = (String) q.get(JSON_PROPERTY_TYPE);
             if (qtype.equalsIgnoreCase(Essay.TAG)) {
                 question = new Essay();
             } else if (qtype.equalsIgnoreCase(MultiChoice.TAG)) {
@@ -237,7 +243,7 @@ public class Quiz implements Serializable {
             this.questions.add(question);
 
             // now add response options for this question
-            JSONArray responses = (JSONArray) q.get("responses");
+            JSONArray responses = (JSONArray) q.get(JSON_PROPERTY_RESPONSES);
             for (int j = 0; j < responses.length(); j++) {
                 JSONObject r = (JSONObject) responses.get(j);
                 Response responseOption = new Response();
@@ -401,7 +407,7 @@ public class Quiz implements Serializable {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(MobileLearning.DATETIME_FORMAT.toString());
             json.put("attempt_date", simpleDateFormat.format(now));
             json.put(JSON_PROPERTY_SCORE, this.getUserscore());
-            json.put("maxscore", this.getMaxscore());
+            json.put(JSON_PROPERTY_MAXSCORE, this.getMaxscore());
             json.put("instance_id",this.getInstanceID());
             json.put("points",ge.getPoints());
             json.put("event",ge.getEvent());
@@ -412,7 +418,7 @@ public class Quiz implements Serializable {
                     responses.put(r);
                 }
             }
-            json.put("responses", responses);
+            json.put(JSON_PROPERTY_RESPONSES, responses);
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json result object",jsone);
         }

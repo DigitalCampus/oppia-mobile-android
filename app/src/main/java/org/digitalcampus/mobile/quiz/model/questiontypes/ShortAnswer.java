@@ -59,7 +59,7 @@ public class ShortAnswer implements Serializable, QuizQuestion {
             Iterator<String> itr = this.userResponses.iterator();
             while(itr.hasNext()) {
                 String a = itr.next();
-                if (r.getTitle(lang).toLowerCase().equals(a.toLowerCase())){
+                if (r.getTitle(lang).equalsIgnoreCase(a.toLowerCase())){
                     total += r.getScore();
                     if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
                         this.feedback = r.getFeedback(lang);
@@ -69,7 +69,7 @@ public class ShortAnswer implements Serializable, QuizQuestion {
         }
         if (total == 0){
             for (Response r : responseOptions){
-                if (r.getTitle(lang).toLowerCase().equals("*")){
+                if (r.getTitle(lang).equalsIgnoreCase("*")){
                     if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
                         this.feedback = r.getFeedback(lang);
                     }
@@ -166,7 +166,7 @@ public class ShortAnswer implements Serializable, QuizQuestion {
     @Override
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
-        if(userResponses.size() == 0){
+        if(userResponses.isEmpty()){
             try {
                 jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
                 jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);

@@ -155,7 +155,7 @@ public class MultiChoice implements Serializable, QuizQuestion {
     @Override
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
-        if(userResponses.size() == 0){
+        if(userResponses.isEmpty()){
             try {
                 jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
                 jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
