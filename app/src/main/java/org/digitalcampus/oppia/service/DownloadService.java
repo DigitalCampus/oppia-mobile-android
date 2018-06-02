@@ -190,6 +190,7 @@ public class DownloadService extends IntentService {
     private void downloadFile(String fileUrl, String filename, String fileDigest){
 
         File downloadedFile = null;
+        FileOutputStream f = null;
 
         try {
             URL url = new URL(fileUrl);
@@ -209,7 +210,7 @@ public class DownloadService extends IntentService {
                 return;
             }
 
-            FileOutputStream f = new FileOutputStream(downloadedFile);
+            f = new FileOutputStream(downloadedFile);
             InputStream in = response.body().byteStream();
 
             MessageDigest mDigest = MessageDigest.getInstance("MD5");
@@ -239,7 +240,6 @@ public class DownloadService extends IntentService {
                 }
                 f.write(buffer, 0, len1);
             }
-            f.close();
             in.close();
             if (fileDigest != null){
                 // check the file digest matches, otherwise delete the file
@@ -259,9 +259,11 @@ public class DownloadService extends IntentService {
             }
 
         } catch (MalformedURLException e) {
+            Mint.logException(e);
             logAndNotifyError(fileUrl, e);
             return;
         } catch (IOException e) {
+            Mint.logException(e);
             this.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
             return;
@@ -269,15 +271,22 @@ public class DownloadService extends IntentService {
             Mint.logException(e);
             logAndNotifyError(fileUrl, e);
             return;
+        } finally {
+            if (f != null){
+               try {
+                    f.close();
+               } catch (IOException ioe) {
+                   Log.d(TAG, "couldn't close FileOutputStream object", ioe);
+               }
+            }
         }
 
-        Log.d(TAG, fileUrl + " succesfully downloaded");
+        Log.d(TAG, fileUrl + " successfully downloaded");
         removeDownloading(fileUrl);
         sendBroadcast(fileUrl, ACTION_COMPLETE, null);
     }
 
     private void logAndNotifyError(String fileUrl, Exception e){
-        e.printStackTrace();
         Log.d(TAG, "Error: " + e.getMessage());
         sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
         removeDownloading(fileUrl);

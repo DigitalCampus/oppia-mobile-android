@@ -104,6 +104,7 @@ public class CourseIntallerService extends IntentService {
     public CourseIntallerService() {
         this(new RemoteApiEndpoint());
     }
+
     public CourseIntallerService(ApiEndpoint api) {
         super(TAG);
         apiEndpoint = api;
@@ -206,8 +207,7 @@ public class CourseIntallerService extends IntentService {
     }
 
     private void logAndNotifyError(String fileUrl, Exception e){
-        e.printStackTrace();
-        Log.d(TAG, "Error: " + e.getMessage());
+        Log.d(TAG, "Error: " + e.getMessage(), e);
         sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
         removeDownloading(fileUrl);
     }
@@ -270,6 +270,8 @@ public class CourseIntallerService extends IntentService {
 
         long startTime = System.currentTimeMillis();
         File downloadedFile = null;
+        FileOutputStream f = null;
+
         try {
         	DbHelper db = DbHelper.getInstance(this);
         	User u = db.getUser(SessionManager.getUsername(this));
@@ -293,7 +295,7 @@ public class CourseIntallerService extends IntentService {
 
             String localFileName = Course.getLocalFilename(shortname, versionID);
             downloadedFile = new File(Storage.getDownloadPath(this),localFileName);
-            FileOutputStream f = new FileOutputStream(downloadedFile);
+            f = new FileOutputStream(downloadedFile);
             InputStream in = response.body().byteStream();
 
             byte[] buffer = new byte[8192];
@@ -320,8 +322,6 @@ public class CourseIntallerService extends IntentService {
             }
             in.close();
             f.flush();
-            f.close();
-
         } catch (MalformedURLException e) {
             logAndNotifyError(fileUrl, e);
             return false;
@@ -336,7 +336,15 @@ public class CourseIntallerService extends IntentService {
         } catch (UserNotFoundException unfe) {
             logAndNotifyError(fileUrl, unfe);
             return false;
-		}
+		} finally {
+            if (f != null){
+                try {
+                    f.close();
+                } catch (IOException ioe) {
+                    Log.d(TAG, "couldn't close FileOutputStream object", ioe);
+                }
+            }
+        }
 
         Log.d(TAG, fileUrl + " succesfully downloaded");
         removeDownloading(fileUrl);
@@ -416,7 +424,7 @@ public class CourseIntallerService extends IntentService {
             removeDownloading(scheduleUrl);
         }
 
-        Log.d(TAG, scheduleUrl + " succesfully downloaded");
+        Log.d(TAG, scheduleUrl + " successfully downloaded");
         removeDownloading(scheduleUrl);
         sendBroadcast(scheduleUrl, ACTION_COMPLETE, null);
         return true;

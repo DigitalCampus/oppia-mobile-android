@@ -95,7 +95,6 @@ public class RegisterDeviceRemoteAdminTask extends APIRequestTask<Payload, Void,
             }
 
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
             Log.d(TAG, e.toString());
         } catch (IOException | JSONException e) {
             e.printStackTrace();

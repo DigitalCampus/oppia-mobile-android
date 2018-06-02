@@ -30,6 +30,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.splunk.mint.Mint;
 
@@ -84,9 +85,9 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 						}
 					}
 				}
-			} catch (InvalidXMLException e) {
-				e.printStackTrace();
-                Mint.logException(e);
+			} catch (InvalidXMLException ixmle) {
+				Log.d(TAG,"Invalid course XML", ixmle);
+                Mint.logException(ixmle);
 				payload.setResult(false);
 			}
 			
