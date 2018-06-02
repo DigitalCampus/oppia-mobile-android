@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.splunk.mint.Mint;
 
+import org.apache.commons.io.output.TaggedOutputStream;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadMediaListAdapter;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
@@ -323,6 +324,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             UIUtils.showAlert(this, R.string.prefStorageLocation, this.getString(R.string.download_via_pc_extenal_storage));
             return;
         }
+        FileOutputStream f = null;
+        Writer out = null;
         try {
             String filename = "oppia-media.html";
             String path = ExternalStorageStrategy.getInternalBasePath(this);
@@ -344,22 +347,37 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             html = html.replace("##download_files##", downloadData);
 
 		    File file = new File(Environment.getExternalStorageDirectory(),filename);
-			FileOutputStream f = new FileOutputStream(file);
-			Writer out = new OutputStreamWriter(new FileOutputStream(file));
+			f = new FileOutputStream(file);
+			out = new OutputStreamWriter(new FileOutputStream(file));
 			out.write(html);
 			out.close();
 			f.close();
 			UIUtils.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message,filename));
-		} catch (FileNotFoundException e) {
-			Mint.logException(e);
-			e.printStackTrace();
-		} catch (IOException e) {
-			Mint.logException(e);
-			e.printStackTrace();
-		}
+		} catch (FileNotFoundException fnfe) {
+			Mint.logException(fnfe);
+            Log.d(TAG, "File not found", fnfe);
+		} catch (IOException ioe) {
+			Mint.logException(ioe);
+            Log.d(TAG, "IOException", ioe);
+		} finally {
+            if(out != null){
+                try {
+                    out.close();
+                } catch (IOException ioe) {
+                    Log.d(TAG, "couldn't close Writer object", ioe);
+                }
+            }
+            if(f != null){
+                try {
+                    f.close();
+                } catch (IOException ioe) {
+                    Log.d(TAG, "couldn't close FileOutputStream object", ioe);
+                }
+            }
+        }
 	}
 
-    // Override
+    @Override
     public void onDownloadProgress(String fileUrl, int progress) {
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
@@ -368,7 +386,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         }
     }
 
-    // Override
+    @Override
     public void onDownloadFailed(String fileUrl, String message) {
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
@@ -380,7 +398,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         }
     }
 
-    // Override
+    @Override
     public void onDownloadComplete(String fileUrl) {
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null){
