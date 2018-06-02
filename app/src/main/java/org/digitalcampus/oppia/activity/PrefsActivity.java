@@ -154,8 +154,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 			case android.R.id.home:
 				this.finish();
 				return true;
+            default:
+                return false;
 		}
-		return true;
 	}
 
     @Override

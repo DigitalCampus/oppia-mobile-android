@@ -59,11 +59,12 @@ public class RegisterDeviceRemoteAdminTask extends APIRequestTask<Payload, Void,
         String token = prefs.getString(PrefsActivity.GCM_TOKEN_ID, "");
         String deviceModel = android.os.Build.BRAND + " " + android.os.Build.MODEL;
         String deviceID = Settings.Secure.getString(ctx.getContentResolver(), Settings.Secure.ANDROID_ID);
-        User user = null;
+        User user;
         try {
             user = DbHelper.getInstance(ctx).getUser(username);
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
+        } catch (UserNotFoundException unfe) {
+            Log.d(TAG,"User not found", unfe);
+            return false;
         }
 
         Log.d(TAG, "Registering device in remote admin list");

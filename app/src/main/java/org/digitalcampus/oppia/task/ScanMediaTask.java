@@ -42,7 +42,8 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	public ScanMediaTask(Context ctx) {
 		this.ctx = ctx;
 	}
-	
+
+	@Override
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
