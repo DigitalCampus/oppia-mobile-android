@@ -145,7 +145,7 @@ public class Essay implements Serializable, QuizQuestion {
             try {
                 jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
                 jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);
-                jo.put("text", ur);
+                jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error creating json object", jsone);
             }

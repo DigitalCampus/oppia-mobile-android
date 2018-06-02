@@ -196,7 +196,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                             }
                         }
                         return true;
-                    default: return true;
+                    default:
+                        return false;
                 }
             }
 

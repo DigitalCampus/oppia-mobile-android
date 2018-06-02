@@ -131,8 +131,8 @@ public class ScorecardActivity extends AppActivity {
 			case android.R.id.home:
 				this.finish();
 				return true;
+			default:
+				return false;
 		}
-		return true;
 	}
-
 }

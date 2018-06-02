@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,7 +142,6 @@ public class PageWidget extends WidgetFactory {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
 					String mediaFileName = url.substring(startPos, url.length());
-
 					PageWidget.super.startMediaPlayerWithFile(mediaFileName);
                     return true;
 					
@@ -152,14 +152,12 @@ public class PageWidget extends WidgetFactory {
 						Uri data = Uri.parse(url);
 						intent.setData(data);
 						PageWidget.super.getActivity().startActivity(intent);
+						return true;
 					} catch (ActivityNotFoundException anfe) {
-						// do nothing
+						Log.d(TAG,"Activity not found", anfe);
 					}
-					// launch action in mobile browser - not the webview
-					// return true so doesn't follow link within webview
-					return true;
+					return false;
 				}
-
 			}
 		});
 	}

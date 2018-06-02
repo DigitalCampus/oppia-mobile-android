@@ -1569,7 +1569,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
 
             if (mStartEdge != null && mEndEdge != null) {
-                needsInvalidate = mStartEdge.onRelease() | mEndEdge.onRelease();
+                needsInvalidate = mStartEdge.onRelease() || mEndEdge.onRelease();
             }
 
             recycleVelocityTracker();
@@ -1720,7 +1720,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             setPressed(false);
 
             if (mStartEdge != null && mEndEdge != null) {
-                needsInvalidate |= mStartEdge.onRelease() | mEndEdge.onRelease();
+                needsInvalidate |= mStartEdge.onRelease() || mEndEdge.onRelease();
             }
 
             recycleVelocityTracker();

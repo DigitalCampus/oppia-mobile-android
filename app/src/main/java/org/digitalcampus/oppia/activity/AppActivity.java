@@ -69,8 +69,9 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 			case android.R.id.home:
 				this.finish();
 				return true;
+            default:
+			    return false;
 		}
-		return true;
 	}
 
     @Override

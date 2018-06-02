@@ -97,12 +97,12 @@ public class AboutActivity extends AppActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				this.finish();
 				return true;
+			default:
+				return false;
 		}
-		return true;
 	}
 }
