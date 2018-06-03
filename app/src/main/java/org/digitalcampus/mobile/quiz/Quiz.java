@@ -40,11 +40,14 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 public class Quiz implements Serializable {
 
@@ -332,10 +335,11 @@ public class Quiz implements Serializable {
         if(title.containsKey(lang)){
             return title.get(lang);
         } else {
-            for (Map.Entry entry : title.entrySet()) {
-                return title.get(entry.getKey());
+            if (title.entrySet().isEmpty()){
+                return "";
+            } else {
+                return title.entrySet().iterator().next().getKey();
             }
-            return "";
         }
     }
 
@@ -403,9 +407,8 @@ public class Quiz implements Serializable {
         JSONObject json = new JSONObject();
         try {
             json.put("quiz_id", this.getID());
-            Date now = new Date();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(MobileLearning.DATETIME_FORMAT.toString());
-            json.put("attempt_date", simpleDateFormat.format(now));
+            DateTime now = new DateTime();
+            json.put("attempt_date", MobileLearning.DATETIME_FORMAT.print(now));
             json.put(JSON_PROPERTY_SCORE, this.getUserscore());
             json.put(JSON_PROPERTY_MAXSCORE, this.getMaxscore());
             json.put("instance_id",this.getInstanceID());
@@ -421,6 +424,7 @@ public class Quiz implements Serializable {
             json.put(JSON_PROPERTY_RESPONSES, responses);
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json result object",jsone);
+            Mint.logException(jsone);
         }
         return json;
     }
