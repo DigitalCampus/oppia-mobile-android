@@ -71,10 +71,8 @@ public class ShortAnswer implements Serializable, QuizQuestion {
         }
         if (total == 0){
             for (Response r : responseOptions){
-                if (r.getTitle(lang).equalsIgnoreCase("*")){
-                    if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
-                        this.feedback = r.getFeedback(lang);
-                    }
+                if (r.getTitle(lang).equalsIgnoreCase("*") && r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
+                    this.feedback = r.getFeedback(lang);
                 }
             }
         }

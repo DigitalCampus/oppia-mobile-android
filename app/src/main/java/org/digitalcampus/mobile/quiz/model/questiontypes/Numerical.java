@@ -69,6 +69,7 @@ public class Numerical implements Serializable, QuizQuestion {
                 userAnswer = Float.parseFloat(a);
             } catch (NumberFormatException nfe) {
                 Log.d(TAG, "Response given is not recognised as a number", nfe);
+                Mint.logException(nfe);
             }
         }
         float score = 0;
@@ -83,27 +84,24 @@ public class Numerical implements Serializable, QuizQuestion {
                         tolerance = Float.parseFloat(r.getProp(Quiz.JSON_PROPERTY_TOLERANCE));
                     }
 
-                    if ((respNumber - tolerance <= userAnswer) && (userAnswer <= respNumber + tolerance)) {
-                        if (r.getScore() > currMax) {
-                            score = r.getScore();
-                            currMax = r.getScore();
-                            if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
-                                this.feedback = r.getFeedback(lang);
-                            }
+                    if ((respNumber - tolerance <= userAnswer) && (userAnswer <= respNumber + tolerance) && (r.getScore() > currMax)) {
+                        score = r.getScore();
+                        currMax = r.getScore();
+                        if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))) {
+                            this.feedback = r.getFeedback(lang);
                         }
                     }
                 } catch (NumberFormatException nfe) {
-                   Log.d(TAG, "Response option is not recognised as a number", nfe);
+                    Log.d(TAG, "Response option is not recognised as a number", nfe);
+                    Mint.logException(nfe);
                 }
             }
         }
 
         if (score == 0){
             for (Response r : responseOptions){
-                if (r.getTitle(lang).equalsIgnoreCase("*")){
-                    if(r.getProp(Quiz.JSON_PROPERTY_FEEDBACK) != null && !(r.getProp(Quiz.JSON_PROPERTY_FEEDBACK).equals(""))){
-                        this.feedback = r.getProp(Quiz.JSON_PROPERTY_FEEDBACK);
-                    }
+                if (r.getTitle(lang).equalsIgnoreCase("*") && r.getProp(Quiz.JSON_PROPERTY_FEEDBACK) != null && !(r.getProp(Quiz.JSON_PROPERTY_FEEDBACK).equals(""))){
+                    this.feedback = r.getProp(Quiz.JSON_PROPERTY_FEEDBACK);
                 }
             }
         }
