@@ -338,7 +338,7 @@ public class Quiz implements Serializable {
         if(title.containsKey(lang)){
             return title.get(lang);
         } else if (!title.entrySet().isEmpty()){
-            return title.entrySet().iterator().next().getKey();
+            return title.entrySet().iterator().next().getValue();
         } else {
             return "";
         }

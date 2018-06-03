@@ -106,8 +106,7 @@ public class MultiSelect implements Serializable, QuizQuestion {
             return title.get(lang);
         } else if (!title.isEmpty()){
             return title.entrySet().iterator().next().getValue();
-        }
-        else{
+        } else{
             return "";
         }
     }

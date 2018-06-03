@@ -95,10 +95,9 @@ public class MultiChoice implements Serializable, QuizQuestion {
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
             return title.get(lang);
+        } else if (!title.entrySet().isEmpty()){
+            return title.entrySet().iterator().next().getValue();
         } else {
-            for (String key : title.keySet()) {
-                return title.get(key);
-            }
             return "";
         }
     }

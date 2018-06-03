@@ -37,10 +37,9 @@ public class Response implements Serializable{
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
             return title.get(lang);
+        } else if (!title.entrySet().isEmpty()){
+            return title.entrySet().iterator().next().getValue();
         } else {
-            for (String key : title.keySet()) {
-                return title.get(key);
-            }
             return "";
         }
     }
@@ -86,10 +85,9 @@ public class Response implements Serializable{
     public String getFeedback(String lang) {
         if(feedback.containsKey(lang)){
             return feedback.get(lang);
+        } else if (!feedback.entrySet().isEmpty()){
+            return feedback.entrySet().iterator().next().getValue();
         } else {
-            for (String key : feedback.keySet()) {
-                return feedback.get(key);
-            }
             return "";
         }
     }
