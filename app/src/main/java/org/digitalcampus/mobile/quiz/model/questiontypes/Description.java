@@ -19,6 +19,8 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +44,7 @@ public class Description implements QuizQuestion {
 
     @Override
     public void addResponseOption(Response r) {
+        // description question will not have any response options
     }
 
     @Override
@@ -51,6 +54,7 @@ public class Description implements QuizQuestion {
 
     @Override
     public void setUserResponses(List<String> str) {
+        // description question will not have any response options
     }
 
     @Override
@@ -60,7 +64,7 @@ public class Description implements QuizQuestion {
 
     @Override
     public void setResponseOptions(List<Response> responses) {
-
+        // description question will not have any response options
     }
 
     @Override
@@ -129,6 +133,7 @@ public class Description implements QuizQuestion {
             jo.put(Quiz.JSON_PROPERTY_TEXT, null);
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
+            Mint.logException(jsone);
         }
         return jo;
     }

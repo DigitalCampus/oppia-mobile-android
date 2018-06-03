@@ -19,6 +19,8 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -137,6 +139,7 @@ public class Essay implements Serializable, QuizQuestion {
                 jo.put(Quiz.JSON_PROPERTY_TEXT, "");
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error creating json object", jsone);
+                Mint.logException(jsone);
             }
             return jo;
         }
@@ -148,6 +151,7 @@ public class Essay implements Serializable, QuizQuestion {
                 jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error creating json object", jsone);
+                Mint.logException(jsone);
             }
         }
         return jo;

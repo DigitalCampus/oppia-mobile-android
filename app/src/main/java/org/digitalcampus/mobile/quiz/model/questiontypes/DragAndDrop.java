@@ -19,6 +19,8 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
@@ -186,6 +188,7 @@ public class DragAndDrop implements Serializable, QuizQuestion {
                 jo.put(Quiz.JSON_PROPERTY_TEXT, "");
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error creating json object", jsone);
+                Mint.logException(jsone);
             }
             return jo;
         }
@@ -197,6 +200,7 @@ public class DragAndDrop implements Serializable, QuizQuestion {
                 jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error creating json object", jsone);
+                Mint.logException(jsone);
             }
         }
         return jo;

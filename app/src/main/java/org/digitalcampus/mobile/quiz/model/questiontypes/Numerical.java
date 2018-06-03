@@ -19,6 +19,8 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
@@ -193,6 +195,7 @@ public class Numerical implements Serializable, QuizQuestion {
             }
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
+            Mint.logException(jsone);
         }
         return jo;
     }
