@@ -152,6 +152,7 @@ public class Quiz implements Serializable {
             }
         } catch (JSONException jsone) {
             Log.d(TAG,"Error loading quiz",jsone);
+            Mint.logException(jsone);
             return false;
         }
         return true;
@@ -177,6 +178,7 @@ public class Quiz implements Serializable {
                 }
             } catch (JSONException jsone) {
                 Log.d(TAG,"Error parsing question set", jsone);
+                Mint.logException(jsone);
             }
         }
 
@@ -285,6 +287,7 @@ public class Quiz implements Serializable {
 
         } catch (JSONException jsone) {
             Log.d(TAG,"Error parsing question & responses",jsone);
+            Mint.logException(jsone);
             return false;
         }
         return true;
@@ -334,12 +337,10 @@ public class Quiz implements Serializable {
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
             return title.get(lang);
+        } else if (!title.entrySet().isEmpty()){
+            return title.entrySet().iterator().next().getKey();
         } else {
-            if (title.entrySet().isEmpty()){
-                return "";
-            } else {
-                return title.entrySet().iterator().next().getKey();
-            }
+            return "";
         }
     }
 
@@ -377,6 +378,7 @@ public class Quiz implements Serializable {
         try {
             return questions.get(this.currentq);
         } catch (IndexOutOfBoundsException e ){
+            Mint.logException(e);
             throw new InvalidQuizException(e);
         }
     }
@@ -455,6 +457,7 @@ public class Quiz implements Serializable {
             return json.getInt(key);
         } catch (JSONException jsone) {
             Log.d(TAG, "Error getting int from propsSerialized", jsone);
+            Mint.logException(jsone);
         }
         return defaultValue;
     }
@@ -465,6 +468,7 @@ public class Quiz implements Serializable {
             return json.getBoolean(key);
         } catch (JSONException jsone) {
             Log.d(TAG, "Error getting boolean from propsSerialized", jsone);
+            Mint.logException(jsone);
         }
         return defaultValue;
     }
