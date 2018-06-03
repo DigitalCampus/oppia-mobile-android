@@ -85,16 +85,31 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
         }
 
         File file = new File(destDir, filename);
+        FileOutputStream f = null;
+        Writer out = null;
         try {
-            FileOutputStream f = new FileOutputStream(file);
-            Writer out = new OutputStreamWriter(f);
+            f = new FileOutputStream(file);
+            out = new OutputStreamWriter(f);
             out.write(json);
-            out.close();
-            f.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (out != null){
+                try {
+                    out.close();
+                } catch (IOException ioe) {
+                    Log.d(TAG, "couldn't close OutputStreamWriter object", ioe);
+                }
+            }
+            if (f != null){
+                try {
+                    f.close();
+                } catch (IOException ioe) {
+                    Log.d(TAG, "couldn't close FileOutputStream object", ioe);
+                }
+            }
         }
 
         db.markLogsAndQuizzesExported();

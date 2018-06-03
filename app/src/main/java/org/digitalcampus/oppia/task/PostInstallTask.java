@@ -29,6 +29,7 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
@@ -44,44 +45,91 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 	protected Payload doInBackground(Payload... params) {
 		Payload payload = params[0];
 		
-		String[] directory;
+		String[] courseDirectory = null;
 		
 		// copy over any courses not already installed
-		try {
-			directory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_COURSES_DIR);
-            for (String file : directory) {
-                if (file.endsWith(".zip")) {
-                    FileOutputStream f = new FileOutputStream(new File(Storage.getDownloadPath(ctx), file));
-                    InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_COURSES_DIR + File.separator + file);
-                    byte[] buffer = new byte[1024];
-                    int len = 0;
-                    while ((len = is.read(buffer)) > 0) {
-                        f.write(buffer, 0, len);
-                    }
-                    f.close();
-                }
-            }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}   
+        try {
+            courseDirectory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_COURSES_DIR);
+        } catch (IOException e) {
+            Log.d(TAG,"couldn't open pre-install course directory", e);
+        }
 
-	    // copy over any media not already installed
-		try {
-			directory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_MEDIA_DIR);
-            for (String file : directory) {
-                if (!file.endsWith(".txt")) {
-                    FileOutputStream f = new FileOutputStream(new File(Storage.getMediaPath(ctx), file));
-                    InputStream is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_MEDIA_DIR + File.separator + file);
-                    byte[] buffer = new byte[1024];
-                    int len = 0;
-                    while ((len = is.read(buffer)) > 0) {
-                        f.write(buffer, 0, len);
+        if( courseDirectory!=null){
+            for (String file : courseDirectory) {
+                if (file.endsWith(".zip")) {
+                    FileOutputStream f = null;
+                    InputStream is = null;
+                    try {
+                        f = new FileOutputStream(new File(Storage.getDownloadPath(ctx), file));
+                        is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_COURSES_DIR + File.separator + file);
+                        byte[] buffer = new byte[1024];
+                        int len = 0;
+                        while ((len = is.read(buffer)) > 0) {
+                            f.write(buffer, 0, len);
+                        }
+                    } catch (IOException e) {
+                        Log.d(TAG,"couldn't open course file", e);
+                    } finally {
+                        if (is != null){
+                            try {
+                                is.close();
+                            } catch (IOException ioe) {
+                                Log.d(TAG, "couldn't close InputStream object", ioe);
+                            }
+                        }
+                        if (f != null){
+                            try {
+                                f.close();
+                            } catch (IOException ioe) {
+                                Log.d(TAG, "couldn't close FileOutputStream object", ioe);
+                            }
+                        }
                     }
-                    f.close();
                 }
             }
-		} catch (IOException e) {
-			e.printStackTrace();
+		}
+
+        String[] mediaDirectory = null;
+
+        try {
+            mediaDirectory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_MEDIA_DIR);
+        } catch (IOException e) {
+            Log.d(TAG,"couldn't open pre-install media directory", e);
+        }
+	    // copy over any media not already installed
+        if( mediaDirectory!=null){
+            for (String file : mediaDirectory) {
+                if (!file.endsWith(".txt")) {
+                    FileOutputStream f = null;
+                    InputStream is = null;
+                    try {
+                        f = new FileOutputStream(new File(Storage.getMediaPath(ctx), file));
+                        is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_MEDIA_DIR + File.separator + file);
+                        byte[] buffer = new byte[1024];
+                        int len = 0;
+                        while ((len = is.read(buffer)) > 0) {
+                            f.write(buffer, 0, len);
+                        }
+                    } catch (IOException e) {
+                        Log.d(TAG,"couldn't open course file", e);
+                    } finally {
+                        if (is != null){
+                            try {
+                                is.close();
+                            } catch (IOException ioe) {
+                                Log.d(TAG, "couldn't close InputStream object", ioe);
+                            }
+                        }
+                        if (f != null){
+                            try {
+                                f.close();
+                            } catch (IOException ioe) {
+                                Log.d(TAG, "couldn't close FileOutputStream object", ioe);
+                            }
+                        }
+                    }
+                }
+            }
 		}
 		
 		return payload;

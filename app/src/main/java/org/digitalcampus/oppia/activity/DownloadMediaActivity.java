@@ -364,7 +364,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 try {
                     out.close();
                 } catch (IOException ioe) {
-                    Log.d(TAG, "couldn't close Writer object", ioe);
+                    Log.d(TAG, "couldn't close OutputStreamWriter object", ioe);
                 }
             }
             if(f != null){
