@@ -60,7 +60,7 @@ public class UrlWidget extends WidgetFactory {
 	}
 
 	public UrlWidget() {
-
+		// Required empty public constructor
 	}
 	
 	@SuppressWarnings("unchecked")

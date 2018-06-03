@@ -72,6 +72,7 @@ import android.widget.Toast;
 public class FeedbackWidget extends WidgetFactory {
 
 	public static final String TAG = FeedbackWidget.class.getSimpleName();
+
 	private ViewGroup container;
 	private Quiz feedback;
 	private String feedbackContent;
@@ -95,7 +96,7 @@ public class FeedbackWidget extends WidgetFactory {
 	}
 	
 	public FeedbackWidget() {
-
+        // Required empty public constructor
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -113,8 +114,8 @@ public class FeedbackWidget extends WidgetFactory {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		vv.setId(activity.getActId());
-		if ((savedInstanceState != null) && (savedInstanceState.getSerializable("widget_config") != null)){
-			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
+		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
+			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));
 		}
 		return vv;
 	}
@@ -122,7 +123,7 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable("widget_config", getWidgetConfig());
+		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, getWidgetConfig());
 	}
 	
 	@Override
@@ -360,23 +361,23 @@ public class FeedbackWidget extends WidgetFactory {
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
-		HashMap<String, Object> config = new HashMap<String, Object>();
-		config.put("feedback", this.feedback);
-		config.put("Activity_StartTime", this.getStartTime());
-		config.put("OnResultsPage", this.isOnResultsPage);
+		HashMap<String, Object> config = new HashMap<>();
+		config.put(WidgetFactory.PROPERTY_FEEDBACK, this.feedback);
+		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
+		config.put(WidgetFactory.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
 		return config;
 	}
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
-		if (config.containsKey("feedback")) {
-			this.feedback = (Quiz) config.get("feedback");
+		if (config.containsKey(WidgetFactory.PROPERTY_FEEDBACK)) {
+			this.feedback = (Quiz) config.get(WidgetFactory.PROPERTY_FEEDBACK);
 		}
-		if (config.containsKey("Activity_StartTime")) {
-			this.setStartTime((Long) config.get("Activity_StartTime"));
+		if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME)) {
+			this.setStartTime((Long) config.get(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME));
 		}
-		if (config.containsKey("OnResultsPage")) {
-			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
+		if (config.containsKey(WidgetFactory.PROPERTY_ON_RESULTS_PAGE)) {
+			this.isOnResultsPage = (Boolean) config.get(WidgetFactory.PROPERTY_ON_RESULTS_PAGE);
 		}		
 	}
 

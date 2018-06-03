@@ -35,6 +35,14 @@ import android.widget.Toast;
 public abstract class WidgetFactory extends Fragment {
 	
 	public final static String TAG = WidgetFactory.class.getSimpleName();
+
+    protected static final String WIDGET_CONFIG = "widget_config";
+    protected static final String PROPERTY_FEEDBACK = "feedback";
+    protected static final String PROPERTY_ACTIVITY_STARTTIME = "Activity_StartTime";
+    protected static final String PROPERTY_ON_RESULTS_PAGE = "OnResultsPage";
+    protected static final String PROPERTY_COURSE = "Course";
+    protected static final String PROPERTY_ACTIVITY = "Activity";
+
 	protected Activity activity = null;
 	protected Course course = null;
 	protected SharedPreferences prefs;

@@ -61,7 +61,13 @@ import android.widget.Toast;
 
 public class ResourceWidget extends WidgetFactory {
 
-	public static final String TAG = ResourceWidget.class.getSimpleName();	
+	public static final String TAG = ResourceWidget.class.getSimpleName();
+
+
+	private static final String PROPERTY_RESOURCE_VIEWING = "Resource_Viewing";
+    private static final String PROPERTY_RESOURCE_STARTTIME = "Resource_StartTime";
+    private static final String PROPERTY_RESOURCE_FILENAME = "Resource_FileName";
+
 	private boolean resourceViewing = false;
 	private long resourceStartTime;
 	private String resourceFileName;
@@ -79,7 +85,7 @@ public class ResourceWidget extends WidgetFactory {
 	}
 
 	public ResourceWidget() {
-
+		// Required empty public constructor
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -93,8 +99,8 @@ public class ResourceWidget extends WidgetFactory {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		vv.setId(activity.getActId());
-		if ((savedInstanceState != null) && (savedInstanceState.getSerializable("widget_config") != null)){
-			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
+		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
+			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));
 		}
 		return vv;
 	}
@@ -102,7 +108,7 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable("widget_config", this.getWidgetConfig());
+		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, this.getWidgetConfig());
 	}
 	
 	@Override
@@ -264,26 +270,26 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
-		config.put("Activity_StartTime", this.getStartTime());
-		config.put("Resource_Viewing", this.isResourceViewing());
-		config.put("Resource_StartTime", this.getResourceStartTime());
-		config.put("Resource_FileName", this.getResourceFileName());
+		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
+		config.put(PROPERTY_RESOURCE_VIEWING, this.isResourceViewing());
+		config.put(PROPERTY_RESOURCE_STARTTIME, this.getResourceStartTime());
+		config.put(PROPERTY_RESOURCE_FILENAME, this.getResourceFileName());
 		return config;
 	}
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
-		if (config.containsKey("Activity_StartTime")){
-			this.setStartTime((Long) config.get("Activity_StartTime"));
+		if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME)){
+			this.setStartTime((Long) config.get(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME));
 		}
-		if (config.containsKey("Resource_Viewing")){
-			this.setResourceViewing((Boolean) config.get("Resource_Viewing"));
+		if (config.containsKey(PROPERTY_RESOURCE_VIEWING)){
+			this.setResourceViewing((Boolean) config.get(PROPERTY_RESOURCE_VIEWING));
 		}
-		if (config.containsKey("Resource_StartTime")){
-			this.setResourceStartTime((Long) config.get("Resource_StartTime"));
+		if (config.containsKey(PROPERTY_RESOURCE_STARTTIME)){
+			this.setResourceStartTime((Long) config.get(PROPERTY_RESOURCE_STARTTIME));
 		}
-		if (config.containsKey("Resource_FileName")){
-			this.setResourceFileName((String) config.get("Resource_FileName"));
+		if (config.containsKey(PROPERTY_RESOURCE_FILENAME)){
+			this.setResourceFileName((String) config.get(PROPERTY_RESOURCE_FILENAME));
 		}
 	}
 	

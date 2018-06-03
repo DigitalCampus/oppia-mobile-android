@@ -124,7 +124,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	public QuizWidget() {
-
+		// Required empty public constructor
 	}
 
 	@SuppressWarnings("unchecked")
@@ -142,8 +142,8 @@ public class QuizWidget extends WidgetFactory {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		vv.setId(activity.getActId());
-		if ((savedInstanceState != null) && (savedInstanceState.getSerializable("widget_config") != null)){
-			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
+		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
+			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));
 		}
 
 		return vv;
@@ -152,7 +152,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable("widget_config", getWidgetConfig());
+		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, getWidgetConfig());
 
 	}
 	
@@ -665,8 +665,8 @@ public class QuizWidget extends WidgetFactory {
 		HashMap<String, Object> config = new HashMap<String, Object>();
 		// this.saveAnswer();
 		config.put("quiz", this.quiz);
-		config.put("Activity_StartTime", this.getStartTime());
-		config.put("OnResultsPage", this.isOnResultsPage);
+		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
+		config.put(WidgetFactory.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
 		return config;
 	}
 
@@ -675,11 +675,11 @@ public class QuizWidget extends WidgetFactory {
 		if (config.containsKey("quiz")) {
 			this.quiz = (Quiz) config.get("quiz");
 		}
-		if (config.containsKey("Activity_StartTime")) {
-			this.setStartTime((Long) config.get("Activity_StartTime"));
+		if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME)) {
+			this.setStartTime((Long) config.get(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME));
 		}
-		if (config.containsKey("OnResultsPage")) {
-			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
+		if (config.containsKey(WidgetFactory.PROPERTY_ON_RESULTS_PAGE)) {
+			this.isOnResultsPage = (Boolean) config.get(WidgetFactory.PROPERTY_ON_RESULTS_PAGE);
 		}
 	}
 
