@@ -357,8 +357,14 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                         CourseActivity.this.ttsRunning = false;
                         myTTS = null;
                     }
-                    @Override public void onError(String utteranceId){ }
-                    @Override public void onStart(String utteranceId){ }
+                    @Override
+                    public void onError(String utteranceId){
+                        // does not need completing
+                    }
+                    @Override
+                    public void onStart(String utteranceId){
+                        // does not need completing
+                    }
                 });
             }
         } else {
