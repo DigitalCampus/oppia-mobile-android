@@ -58,10 +58,14 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	private SharedPreferences prefs;
 	private UpgradeListener mUpgradeListener;
 	
-	private static final String PREF_API_KEY = "prefApiKey";
-	private static final String PREF_BADGES = "prefBadges";
-	private static final String PREF_POINTS = "prefPoints";
-	
+	private final static String PREF_API_KEY = "prefApiKey";
+	private final static String PREF_BADGES = "prefBadges";
+	private final static String PREF_POINTS = "prefPoints";
+
+	private final static String MSG_DELETE_FAIL = "failed to delete: ";
+	private final static String MSG_COMPLETED = "completed";
+	private final static String MSG_FAILED = "failed";
+
 	public UpgradeManagerTask(Context ctx){
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -248,55 +252,41 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	    	try {
 				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + Storage.APP_DOWNLOAD_DIR_NAME ));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				Log.d(TAG,"failed to delete: " + destination + File.separator + Storage.APP_DOWNLOAD_DIR_NAME );
-				e.printStackTrace();
+				Log.d(TAG,MSG_DELETE_FAIL + destination + File.separator + Storage.APP_DOWNLOAD_DIR_NAME, e );
             }
 			
 			try {
 				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + Storage.APP_MEDIA_DIR_NAME ));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				Log.d(TAG,"failed to delete: " + destination + File.separator + Storage.APP_MEDIA_DIR_NAME );
-				e.printStackTrace();
+				Log.d(TAG,MSG_DELETE_FAIL + destination + File.separator + Storage.APP_MEDIA_DIR_NAME, e );
             }
 			
 			try {
 				org.apache.commons.io.FileUtils.forceDelete(new File (destination + File.separator + Storage.APP_COURSES_DIR_NAME ));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				Log.d(TAG,"failed to delete: " + destination + File.separator + Storage.APP_COURSES_DIR_NAME );
-				e.printStackTrace();
+				Log.d(TAG,MSG_DELETE_FAIL + destination + File.separator + Storage.APP_COURSES_DIR_NAME, e );
             }
 
 			// now copy over 
 			try {
-				
 				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(downloadSource,new File(destination),true);
-				Log.d(TAG,"completed");
+				Log.d(TAG, MSG_COMPLETED);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				Log.d(TAG,"failed");
-				e.printStackTrace();
+				Log.d(TAG, MSG_FAILED, e);
             }
 
 			try {
 				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(mediaSource,new File(destination),true);
-				Log.d(TAG,"completed");
+				Log.d(TAG, MSG_COMPLETED);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				Log.d(TAG,"failed");
-				e.printStackTrace();
+                Log.d(TAG, MSG_FAILED, e);
             }
 			
 			try {
 				org.apache.commons.io.FileUtils.moveDirectoryToDirectory(courseSource,new File(destination),true);
-				Log.d(TAG,"completed");
-
+				Log.d(TAG, MSG_COMPLETED);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				Log.d(TAG,"failed");
-				e.printStackTrace();
+                Log.d(TAG, MSG_FAILED, e);
             }
 			
 			Editor editor = prefs.edit();
@@ -307,9 +297,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			try {
 				org.apache.commons.io.FileUtils.forceDelete(new File(source));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				Log.d(TAG,"failed to delete original file");
+				Log.d(TAG,"failed to delete original file", e);
 			}
     	}
 	}
@@ -340,9 +328,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 							q.digest = quizJson.getJSONObject("props").getString("digest");
 							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
 							quizzes.add(q);
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						} catch (JSONException jsone) {
+                            Log.d(TAG,"failed to read json object", jsone);
 						}
 					}
 				}
@@ -359,15 +346,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 							q.digest = quizJson.getJSONObject("props").getString("digest");
 							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
 							quizzes.add(q);
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+                        } catch (JSONException jsone) {
+                            Log.d(TAG,"failed to read json object", jsone);
+                        }
 					}
 				}
-			} catch (InvalidXMLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (InvalidXMLException ixmle) {
+                Log.d(TAG,"failed to read XML ", ixmle);
 			}			
 		}
 		
@@ -407,9 +392,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				qa.setUserId(userId);
 				db.updateQuizAttempt(qa);
 				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (JSONException jsone) {
+                Log.d(TAG,"failed to read json object", jsone);
 			}
 			
 			
@@ -441,7 +425,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		int points = prefs.getInt(UpgradeManagerTask.PREF_POINTS, 0);
 		int badges = prefs.getInt(UpgradeManagerTask.PREF_BADGES, 0);
 		Log.d(TAG, "points: " + points);
-		//db.updateUserPoints(userId, points);
 		db.updateUserBadges(userId, badges);
 	}
 	
