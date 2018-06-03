@@ -40,7 +40,6 @@ import android.widget.Toast;
 
 import com.splunk.mint.Mint;
 
-import org.apache.commons.io.output.TaggedOutputStream;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DownloadMediaListAdapter;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;

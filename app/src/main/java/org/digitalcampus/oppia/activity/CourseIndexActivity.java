@@ -85,21 +85,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 		prefs.registerOnSharedPreferenceChangeListener(this);
         loadingCourseView =  findViewById(R.id.loading_course);
 
-        /*
-        ----- CollapsingToolbar layout
-        FloatingActionButton myFab = (FloatingActionButton)  findViewById(R.id.scorecard_fab);
-        if (myFab != null) {
-            myFab.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent(CourseIndexActivity.this, ScorecardActivity.class);
-                    Bundle tb = new Bundle();
-                    tb.putSerializable(Course.TAG, course);
-                    i.putExtras(tb);
-                    startActivityForResult(i, 1);
-                }
-            });
-        }*/
-
         Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
 			course = (Course) bundle.getSerializable(Course.TAG);
@@ -138,21 +123,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     @Override
 	public void onStart() {
 		super.onStart();
-		// set image
-		if (course.getImageFile() != null) {
-			BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(),
-					R.drawable.dc_logo);
-            /*
-            ----- CollapsingToolbar layout
-            ImageView backdrop = (ImageView) findViewById(R.id.appbar_backdrop);
-            TextView description = (TextView) findViewById(R.id.appbar_description);
-            if (backdrop != null) {
-                backdrop.setImageDrawable(bm);
-            }
-            if (description != null) {
-                description.setText(course.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-            }*/
-        }
     }
 
     @Override

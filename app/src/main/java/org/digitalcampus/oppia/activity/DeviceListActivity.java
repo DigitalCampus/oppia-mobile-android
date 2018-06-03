@@ -1,5 +1,3 @@
-package org.digitalcampus.oppia.activity;
-
 /*
  * Copyright (C) 2014 The Android Open Source Project
  *
@@ -15,6 +13,9 @@ package org.digitalcampus.oppia.activity;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
+package org.digitalcampus.oppia.activity;
 
 
 import android.app.Activity;

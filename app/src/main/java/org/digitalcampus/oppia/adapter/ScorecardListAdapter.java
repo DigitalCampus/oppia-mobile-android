@@ -25,7 +25,6 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
-import org.w3c.dom.Text;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -33,9 +32,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +40,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
-import com.androidplot.pie.PieRenderer;
-import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
 
 public class ScorecardListAdapter extends ArrayAdapter<Course> {
@@ -79,11 +74,6 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         TextView activitiesCompleted;
         TextView activitiesTotal;
         ScorecardPieChart pieChart;
-        //PieChart pie;
-        //Segment segmentCompleted;
-        //Segment segmentStarted;
-        //Segment segmentNotStarted;
-        //PieSegmentsAnimator animatorListener;
     }
 
 	@Override
@@ -92,7 +82,6 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 		ScorecardViewHolder viewHolder;
 
 		Course course = courseList.get(position);
-		//Log.i(TAG, course.getMultiLangInfo().getTitle("en") + ": " + position);
 		
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -104,15 +93,6 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
             viewHolder.pieChart.configureChart(0, 0.79f, false);
             viewHolder.activitiesCompleted = (TextView) convertView.findViewById(R.id.scorecard_activities_completed);
             viewHolder.activitiesTotal = (TextView) convertView.findViewById(R.id.scorecard_activities_total);
-            //viewHolder.pie =
-            //viewHolder.pie.setPlotMargins(0, 0, 0, 0);
-            //viewHolder.pie.getBorderPaint().setColor(Color.TRANSPARENT);
-            //viewHolder.pie.getBackgroundPaint().setColor(Color.TRANSPARENT);
-
-            //viewHolder.segmentCompleted = new Segment("",0);
-            //viewHolder.segmentStarted = new Segment("",0);
-            //viewHolder.segmentNotStarted = new Segment("",0);
-            //viewHolder.animatorListener = new PieSegmentsAnimator(viewHolder);
 
             convertView.setTag(viewHolder);
         } else {
@@ -120,33 +100,11 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         }
 
         viewHolder.courseTitle.setText(course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-        //viewHolder.pie.clear();
-
 
         int numCompleted = course.getNoActivitiesCompleted();
-        /*if (numCompleted != 0){
-            Segment segmentCompleted = viewHolder.segmentCompleted;
-            segmentCompleted.setTitle("Completed (" + numCompleted + ")");
-            segmentCompleted.setValue(numCompleted);
-            viewHolder.pie.addSeries(segmentCompleted, sfCompleted);
-        }*/
-
         int numStarted = course.getNoActivitiesStarted();
-        /*if (numStarted != 0){
-            Segment segmentStarted = viewHolder.segmentStarted;
-            segmentStarted.setTitle("Started (" + numStarted + ")");
-            segmentStarted.setValue(numStarted);
-            viewHolder.pie.addSeries(segmentStarted, sfStarted);
-        }*/
-
         int numNotStarted = course.getNoActivitiesNotStarted();
-        /*Segment segmentNotStarted = viewHolder.segmentNotStarted;
-        segmentNotStarted.setTitle( (numNotStarted != 0)? "Not Started (" + numNotStarted + ")" : "");
-        segmentNotStarted.setValue(numNotStarted);
-        viewHolder.pie.addSeries(segmentNotStarted, sfNotStarted);
-        */
-        //createAnimator(viewHolder.animatorListener, numCompleted, numStarted, numNotStarted);
-        //viewHolder.pie.getRenderer(PieRenderer.class).setDonutSize(60/100f, PieRenderer.DonutMode.PERCENT);
+
         viewHolder.activitiesCompleted.setText(""+numCompleted);
         viewHolder.activitiesTotal.setText(""+course.getNoActivities());
 	    viewHolder.pieChart.animate(numCompleted, numStarted, numNotStarted, false);
@@ -179,11 +137,7 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
         
         //@Override
         public void onAnimationUpdate(ValueAnimator animator) {
-
-            //viewHolder.segmentCompleted.setValue((Float)animator.getAnimatedValue("completed"));
-            //viewHolder.segmentStarted.setValue((Float) animator.getAnimatedValue("started"));
-            //viewHolder.segmentNotStarted.setValue((Float)animator.getAnimatedValue("notStarted"));
-            //viewHolder.pie.invalidate();
+            // no need to update animation
         }
     }
 }

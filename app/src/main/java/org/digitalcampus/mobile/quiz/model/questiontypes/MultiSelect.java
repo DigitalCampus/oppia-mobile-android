@@ -67,7 +67,7 @@ public class MultiSelect implements Serializable, QuizQuestion {
                 if (ur.equals(r.getTitle(lang))) {
                     total += r.getScore();
                     if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
-                        this.feedback += ur + ": " + r.getFeedback(lang) + "\n\n";;
+                        this.feedback += ur + ": " + r.getFeedback(lang) + "\n\n";
                     }
                 }
             }

@@ -3,7 +3,6 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.APIUserRequestTask;

@@ -109,7 +109,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 actionBar.setDisplayShowHomeEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setDisplayShowTitleEnabled(true);
-                //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
             }
         }
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
@@ -237,7 +236,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                     preTestTitle : isBaseline ? getString(R.string.title_baseline): "");
         }
 
-        //actionBar.removeAllTabs();
         List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
