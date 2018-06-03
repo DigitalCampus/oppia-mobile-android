@@ -79,8 +79,6 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
 	    return myFragment;
 	}
 
-	public CourseScorecardFragment(){ }
-
     @Override
     public void onCreate( Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -209,7 +207,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
 
     //@Override
     public void onParseError() {
-
+        // no need to do anything
     }
 
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

@@ -54,7 +54,9 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
     public static GlobalScorecardFragment newInstance() {
         return new GlobalScorecardFragment();
     }
-    public GlobalScorecardFragment(){ }
+    public GlobalScorecardFragment(){
+        // Required empty public constructor
+    }
 
     private void initializeDagger() {
         MobileLearning app = (MobileLearning) getActivity().getApplication();

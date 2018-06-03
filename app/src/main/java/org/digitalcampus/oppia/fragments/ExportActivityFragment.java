@@ -78,7 +78,7 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     }
 
     public ExportActivityFragment(){
-
+        // Required empty public constructor
     }
 
     @Override
@@ -220,7 +220,7 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
 
     @Override
     public void trackerProgressUpdate() {
-
+        // no need to show progress update in this activity
     }
 
     @Override

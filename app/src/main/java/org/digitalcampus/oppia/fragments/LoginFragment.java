@@ -54,10 +54,6 @@ public class LoginFragment extends AppFragment implements SubmitListener {
         return new LoginFragment();
 	}
 
-	public LoginFragment(){
-		
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_login, null);

@@ -57,8 +57,6 @@ public class PointsFragment extends AppFragment {
         return new PointsFragment();
 	}
 
-	public PointsFragment(){ }
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_points, null);

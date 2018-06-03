@@ -50,7 +50,7 @@ public class OppiaWebViewFragment extends Fragment{
 	}
 
 	public OppiaWebViewFragment(){
-		
+		// Required empty public constructor
 	}
 
 	@Override

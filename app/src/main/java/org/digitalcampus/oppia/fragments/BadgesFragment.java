@@ -58,7 +58,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 	}
 
 	public BadgesFragment(){
-		
+		// Required empty public constructor
 	}
 
 	@Override

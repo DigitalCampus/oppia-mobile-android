@@ -72,7 +72,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 	}
 
 	public RegisterFragment(){
-		
+		// Required empty public constructor
 	}
 
 	@Override

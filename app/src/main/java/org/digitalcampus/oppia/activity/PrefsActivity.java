@@ -342,7 +342,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     }
 
     //@Override
-    public void moveStorageProgressUpdate(String s) { }
+    public void moveStorageProgressUpdate(String s) {
+        // no need to show storage progress in this activity
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

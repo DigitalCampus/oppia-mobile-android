@@ -34,7 +34,9 @@ public class PreferencesFragment extends PreferenceFragment {
         return new PreferencesFragment();
     }
 
-    public PreferencesFragment(){ }
+    public PreferencesFragment(){
+        // Required empty public constructor
+    }
 
     @Override
     public void onCreate(Bundle savedInstance) {

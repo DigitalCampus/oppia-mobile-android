@@ -210,8 +210,13 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 		this.installCourses();
 	}
 
-	public void downloadComplete(Payload p) { }
-	public void downloadProgressUpdate(DownloadProgress dp) { }
+	public void downloadComplete(Payload p) {
+        // no need to show download complete in this activity
+    }
+
+	public void downloadProgressUpdate(DownloadProgress dp) {
+        // no need to show download progress in this activity
+    }
 
 	public void installComplete(Payload p) {
 		if(p.getResponseData().size()>0){

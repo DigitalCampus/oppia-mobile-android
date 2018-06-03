@@ -478,12 +478,24 @@ public class OppiaMobileActivity
         Toast.makeText(this, this.getString(R.string.install_complete), Toast.LENGTH_LONG).show();
         displayCourses();
     }
-    public void onDownloadProgress(String fileUrl, int progress) {}
-    public void onInstallProgress(String fileUrl, int progress) {}
-    public void onInstallFailed(String fileUrl, String message) {}
+
+    public void onDownloadProgress(String fileUrl, int progress) {
+        // no need to show download progress in this activity
+    }
+
+    public void onInstallProgress(String fileUrl, int progress) {
+        // no need to show install progress in this activity
+    }
+
+    public void onInstallFailed(String fileUrl, String message) {
+        // no need to show install failed in this activity
+    }
 
     /* UpdateActivityListener implementation */
-    public void updateActivityProgressUpdate(DownloadProgress dp) { }
+    public void updateActivityProgressUpdate(DownloadProgress dp) {
+        // no need to show download progress in this activity
+    }
+
 	public void updateActivityComplete(Payload response) {
         Course course = (Course) response.getData().get(0);
         if (progressDialog != null){

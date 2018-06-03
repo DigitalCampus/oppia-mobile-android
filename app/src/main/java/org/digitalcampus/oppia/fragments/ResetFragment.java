@@ -50,7 +50,7 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 	}
 
 	public ResetFragment(){
-		
+		// Required empty public constructor
 	}
 
 	@Override
