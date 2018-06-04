@@ -144,7 +144,7 @@ public class SearchActivity extends AppActivity {
         if (summary.getVisibility() == View.VISIBLE){
             savedInstanceState.putString("summaryMsg", summary.getText().toString());
         }
-        if (results.size() > 0){
+        if (!results.isEmpty()){
             savedInstanceState.putSerializable("searchResults", results);
         }
     }
@@ -158,7 +158,7 @@ public class SearchActivity extends AppActivity {
             summary.setText(summaryMsg);
         }
         ArrayList<SearchResult> searchResults = (ArrayList<SearchResult>) savedInstanceState.getSerializable("searchResults");
-        if ((searchResults != null) && searchResults.size() > 0){
+        if ((searchResults != null) && !searchResults.isEmpty()){
             results.clear();
             results.addAll(searchResults);
             srla.notifyDataSetChanged();
@@ -212,7 +212,7 @@ public class SearchActivity extends AppActivity {
             loadingSpinner.setVisibility(View.GONE);
             searchButton.setEnabled(true);
 
-            summary.setText(results.size() > 0 ?
+            summary.setText(!results.isEmpty() ?
                     getString(R.string.search_result_summary, results.size(), currentSearch) :
                     getString(R.string.search_message_no_results, currentSearch));
         }

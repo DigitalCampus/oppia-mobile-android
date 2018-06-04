@@ -91,8 +91,8 @@ public class DeviceListActivity extends Activity {
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
         ArrayAdapter<String> pairedDevicesArrayAdapter =
-                new ArrayAdapter<String>(this, R.layout.device_row);
-        mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_row);
+                new ArrayAdapter<>(this, R.layout.device_row);
+        mNewDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.device_row);
 
         // Find and set up the ListView for paired devices
         ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
@@ -119,7 +119,7 @@ public class DeviceListActivity extends Activity {
         Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
 
         // If there are paired devices, add each one to the ArrayAdapter
-        if (pairedDevices.size() > 0) {
+        if (!pairedDevices.isEmpty()) {
             findViewById(R.id.paired_devices_title).setVisibility(View.VISIBLE);
             for (BluetoothDevice device : pairedDevices) {
                 pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());

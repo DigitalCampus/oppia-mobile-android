@@ -250,7 +250,7 @@ public class OppiaMobileActivity
         noCoursesView.setVisibility(View.VISIBLE);
 
         TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
-        tv.setText((courses.size() > 0)? R.string.more_courses : R.string.no_courses);
+        tv.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
 
         Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
         manageBtn.setOnClickListener(new View.OnClickListener() {
@@ -428,7 +428,7 @@ public class OppiaMobileActivity
 	}
 
 	public void scanComplete(Payload response) {
-		if (response.getResponseData().size() > 0) {
+		if (!response.getResponseData().isEmpty()) {
             if (messageContainer.getVisibility() != View.VISIBLE){
                 messageContainer.setVisibility(View.VISIBLE);
                 messageButton.setOnClickListener(new OnClickListener() {

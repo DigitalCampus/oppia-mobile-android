@@ -50,7 +50,7 @@ public class Essay implements Serializable, QuizQuestion {
 
     @Override
     public List<Response> getResponseOptions() {
-        return new ArrayList<Response>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -132,7 +132,7 @@ public class Essay implements Serializable, QuizQuestion {
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
 
-        if(userResponses.size() == 0){
+        if(userResponses.isEmpty()){
             try {
                 jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
                 jo.put(Quiz.JSON_PROPERTY_SCORE,userscore);

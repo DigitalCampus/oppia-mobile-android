@@ -70,7 +70,7 @@ public class AboutActivity extends AppActivity {
 		super.onStart();
 
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-		List<Fragment> fragments = new ArrayList<Fragment>();
+		List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 		
 		Fragment fAbout = AboutFragment.newInstance();

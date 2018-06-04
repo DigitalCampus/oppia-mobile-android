@@ -123,7 +123,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		if(json == null){
             // The JSON download task has not started or been completed yet
 			getCourseList();
-		} else if ((courses != null) && courses.size()>0) {
+		} else if ((courses != null) && !courses.isEmpty()) {
             // We already have loaded JSON and courses (coming from orientationchange)
             dla.notifyDataSetChanged();
         }
@@ -199,7 +199,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             courseInstallRepository.refreshCourseList(this, courses, json, storage, showUpdatesOnly);
 
             dla.notifyDataSetChanged();
-            findViewById(R.id.empty_state).setVisibility((courses.size()==0) ? View.VISIBLE : View.GONE);
+            findViewById(R.id.empty_state).setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (Exception e) {
 			Mint.logException(e);
@@ -288,7 +288,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     }
 
     private CourseIntallViewAdapter findCourse(String fileUrl){
-        if ( courses.size()>0){
+        if (!courses.isEmpty()){
             for (CourseIntallViewAdapter course : courses){
                 if (course.getDownloadUrl().equals(fileUrl)){
                     return course;
