@@ -1873,7 +1873,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	/*
 	 * 
 	 */
-	public boolean isPreviousSectionActivitiesCompleted(Course course, Activity activity, long userId){
+	public boolean isPreviousSectionActivitiesCompleted(Activity activity, long userId){
 		// get this activity
 		
 		Log.d(TAG,"this digest = " + activity.getDigest());
@@ -1916,7 +1916,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	/*
 	 * 
 	 */
-	public boolean isPreviousCourseActivitiesCompleted(Course course, Activity activity, long userId){
+	public boolean isPreviousCourseActivitiesCompleted(Activity activity, long userId){
 		
 		Log.d(TAG,"this digest = " + activity.getDigest());
 		Log.d(TAG,"this actid = " + activity.getActId());

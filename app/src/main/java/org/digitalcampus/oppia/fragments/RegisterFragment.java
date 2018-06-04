@@ -107,7 +107,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				onRegisterClick(v);
+				onRegisterClick();
 			}
 		});
 	}
@@ -140,7 +140,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		}
 	}
 
-	public void onRegisterClick(View view) {
+	public void onRegisterClick() {
 		// get form fields
 		String username = usernameField.getText().toString().trim();
 		String email = emailField.getText().toString();
@@ -163,9 +163,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_username_spaces);
 			return;
 		}
-		
-		// TODO check valid email address format
-		// android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+
 		if (email.length() == 0) {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_email);
 			return;

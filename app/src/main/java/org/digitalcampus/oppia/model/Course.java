@@ -169,7 +169,6 @@ public class Course implements Serializable {
 	}
 
 	public String getCourseXMLLocation(){
-		//String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
 	}
 	

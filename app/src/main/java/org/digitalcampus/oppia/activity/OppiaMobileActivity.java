@@ -129,7 +129,7 @@ public class OppiaMobileActivity
         courseList = (ListView) findViewById(R.id.course_list);
         courseList.setAdapter(courseListAdapter);
 
-        // the alternative of registerForContextMenu;
+        // the alternative of register For Context Menu;
         CourseContextMenuCustom courseMenu = new CourseContextMenuCustom(this);
         courseMenu.registerForContextMenu(courseList, this);
 

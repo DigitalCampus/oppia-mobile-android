@@ -103,9 +103,8 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                             db.markLogSubmitted(tl.getId());
                         }
                         p.setResult(true);
-                        // update points
+
                         JSONObject jsonResp = new JSONObject(response.body().string());
-                        //db.updateUserPoints(user.getUserId(), jsonResp.getInt("points"));
                         db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
 
                         Editor editor = prefs.edit();

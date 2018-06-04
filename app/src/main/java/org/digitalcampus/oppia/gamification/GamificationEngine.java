@@ -20,6 +20,8 @@ package org.digitalcampus.oppia.gamification;
 import android.content.Context;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
@@ -33,7 +35,9 @@ import org.digitalcampus.oppia.model.Media;
 public class GamificationEngine {
 
     public static final String TAG = GamificationEngine.class.getSimpleName();
-    private final Context ctx;
+    private static final String LOG_EVENT_NOT_FOUND ="Cannot find gamification event: ";
+
+    private Context ctx;
 
     public GamificationEngine(Context context){
         this.ctx = context;
@@ -50,7 +54,7 @@ public class GamificationEngine {
             GamificationEvent ge = activity.findGamificationEvent(event);
             return ge;
         } catch (GamificationEventNotFound genf){
-            // do nothing
+            Log.d(TAG, event + ": not found at activity level");
         }
 
         // check if the course has custom points for this event
@@ -58,11 +62,12 @@ public class GamificationEngine {
             GamificationEvent ge = course.findGamificationEvent(event);
             return ge;
         } catch (GamificationEventNotFound genf){
-            // do nothing
+            Log.d(TAG, event + ": not found at course level");
         }
 
         // else use the the app level defaults
         Gamification defaultGamification = new Gamification();
+        Log.d(TAG, event + ": using global event definition");
         return defaultGamification.getEvent(event);
 
     }
@@ -74,11 +79,12 @@ public class GamificationEngine {
             GamificationEvent ge = course.findGamificationEvent(event);
             return ge;
         } catch (GamificationEventNotFound genf){
-            // do nothing
+            Log.d(TAG, event + ": not found at course level");
         }
 
         // else use the the app level defaults
         Gamification defaultGamification = new Gamification();
+        Log.d(TAG, event + ": using global event definition");
         return defaultGamification.getEvent(event);
 
     }
@@ -90,7 +96,7 @@ public class GamificationEngine {
         return Gamification.GAMIFICATION_REGISTER;
     }
 
-    public GamificationEvent processEventQuizAttempt(Course course, Activity activity, Quiz quiz, float scorePercent){
+    public GamificationEvent processEventQuizAttempt(Course course, Activity activity, float scorePercent){
         int totalPoints = 0;
         DbHelper db = DbHelper.getInstance(this.ctx);
 
@@ -98,8 +104,9 @@ public class GamificationEngine {
         if(db.isQuizFirstAttempt(activity.getDigest())){
             try {
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_QUIZ_FIRST_ATTEMPT).getPoints();
-            } catch (GamificationEventNotFound gnef){
-                Log.d(this.TAG,"EVENT_NAME_QUIZ_FIRST_ATTEMPT - event not found");
+            } catch (GamificationEventNotFound genf){
+                Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_QUIZ_FIRST_ATTEMPT, genf);
+                Mint.logException(genf);
             }
 
             // on first attempt add the percent points
@@ -112,14 +119,16 @@ public class GamificationEngine {
                 if (Math.round(scorePercent) >= this.getEventFromHierarchy(course,activity,Gamification.EVENT_NAME_QUIZ_FIRST_THRESHOLD).getPoints()){
                     totalPoints += this.getEventFromHierarchy(course,activity,Gamification.EVENT_NAME_QUIZ_FIRST_BONUS).getPoints();
                 }
-            } catch (GamificationEventNotFound gnef){
-                Log.d(this.TAG,"EVENT_NAME_QUIZ_FIRST_THRESHOLD or EVENT_NAME_QUIZ_FIRST_THRESHOLD - event not found");
+            } catch (GamificationEventNotFound genf){
+                Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_QUIZ_FIRST_THRESHOLD + " or " + Gamification.EVENT_NAME_QUIZ_FIRST_BONUS, genf);
+                Mint.logException(genf);
             }
         } else if (db.isQuizFirstAttemptToday(activity.getDigest())){
             try {
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_QUIZ_ATTEMPT).getPoints();
-            } catch (GamificationEventNotFound gnef){
-                Log.d(this.TAG,"EVENT_NAME_QUIZ_ATTEMPT - event not found");
+            } catch (GamificationEventNotFound genf){
+                Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_QUIZ_ATTEMPT, genf);
+                Mint.logException(genf);
             }
         } else {
             Log.d(this.TAG,"Not first attempt, nor first attempt today");
@@ -138,7 +147,8 @@ public class GamificationEngine {
             try{
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED).getPoints();
             } catch (GamificationEventNotFound genf) {
-                //do nothing
+                Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_ACTIVITY_COMPLETED, genf);
+                Mint.logException(genf);
             }
         }
 
@@ -147,7 +157,6 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventMediaPlayed(Course course, Activity activity, String mediaFileName, long timeTaken){
-        // TODO_GAMIFICATION
         int totalPoints = 0;
         DbHelper db = DbHelper.getInstance(this.ctx);
 
@@ -158,14 +167,16 @@ public class GamificationEngine {
                     try {
                         totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
                     } catch (GamificationEventNotFound genf) {
-                        //do nothing
+                        Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_MEDIA_STARTED, genf);
+                        Mint.logException(genf);
                     }
                 }
                 // add points for length of time the media has been playing
                 try {
                     totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor(timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
                 } catch (GamificationEventNotFound genf) {
-                    //do nothing
+                    Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL, genf);
+                    Mint.logException(genf);
                 }
 
                 // make sure can't exceed max points
@@ -174,7 +185,8 @@ public class GamificationEngine {
                         totalPoints = this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints();
                     }
                 } catch (GamificationEventNotFound genf) {
-                    //do nothing
+                    Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_MEDIA_MAX_POINTS, genf);
+                    Mint.logException(genf);
                 }
             }
         }
@@ -182,21 +194,14 @@ public class GamificationEngine {
         return gamificationEvent;
     }
 
-    // TODO_GAMIFICATION - allow adding specific points for particular course
+    // TODO GAMIFICATION - allow adding specific points for particular course
     // needs to be able to access the course object at the point the tracker is triggered
     public GamificationEvent processEventCourseDownloaded(){
         return Gamification.GAMIFICATION_COURSE_DOWNLOADED;
-        /*
-        try{
-            return this.getEventFromCourseHierarchy(course, Gamification.EVENT_NAME_COURSE_DOWNLOADED);
-        } catch (GamificationEventNotFound genf) {
-            return Gamification.GAMIFICATION_UNDEFINED;
-        }
-        */
     }
 
     public GamificationEvent processEventResourceActivity(Course course, Activity activity){
-        // TODO_GAMIFICATION - add specific event for this - now just using default activity completed
+        // TODO GAMIFICATION - add specific event for this - now just using default activity completed
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
@@ -205,12 +210,12 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventResourceStoppedActivity(Course course, Activity activity){
-        // TODO_GAMIFICATION - add specific event for this - eg using time taken
+        // TODO GAMIFICATION - add specific event for this - eg using time taken
         return Gamification.GAMIFICATION_UNDEFINED;
     }
 
     public GamificationEvent processEventFeedbackActivity(Course course, Activity activity){
-        // TODO_GAMIFICATION - add specific event for this - now just using default activity completed
+        // TODO GAMIFICATION - add specific event for this - now just using default activity completed
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
@@ -219,7 +224,7 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventURLActivity(Course course, Activity activity){
-        // TODO_GAMIFICATION - add specific event for this - now just using default activity completed
+        // TODO GAMIFICATION - add specific event for this - now just using default activity completed
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {

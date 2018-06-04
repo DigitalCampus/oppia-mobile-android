@@ -235,7 +235,7 @@ public class QuizWidget extends WidgetFactory {
             if (db == null) db = DbHelper.getInstance(getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 
-            if( db.isPreviousSectionActivitiesCompleted(course, activity, userId) )
+            if( db.isPreviousSectionActivitiesCompleted(activity, userId) )
                 return QUIZ_AVAILABLE;
             else
                 return R.string.widget_quiz_unavailable_section;
@@ -244,7 +244,7 @@ public class QuizWidget extends WidgetFactory {
             // check to see if all previous course activities have been completed
             if (db == null) db = DbHelper.getInstance(getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-            if (db.isPreviousCourseActivitiesCompleted(course, activity, userId))
+            if (db.isPreviousCourseActivitiesCompleted(activity, userId))
                 return QUIZ_AVAILABLE;
             else
                 return R.string.widget_quiz_unavailable_course;
@@ -273,7 +273,6 @@ public class QuizWidget extends WidgetFactory {
 			questionImage.setVisibility(View.GONE);
 		} else {
 			String fileUrl = course.getLocation() + q.getProp("image");
-			// File file = new File(fileUrl);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
 			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
@@ -306,7 +305,7 @@ public class QuizWidget extends WidgetFactory {
 		} else if (q instanceof Numerical) {
 			qw = new NumericalWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Description) {
-			qw = new DescriptionWidget(super.getActivity(), getView(), container);
+			qw = new DescriptionWidget(getView());
 		} else if (q instanceof DragAndDrop) {
 			qw = new DragAndDropWidget(super.getActivity(), getView(), container, q, course.getLocation());
 		}	else {
@@ -489,7 +488,7 @@ public class QuizWidget extends WidgetFactory {
 		long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 
         GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
-        GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, quiz, this.getPercent());
+        GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, this.getPercent());
         Log.d(this.TAG,"quiz points:" + String.valueOf(gamificationEvent.getPoints()));
 
         // save results ready to send back to the quiz server
@@ -663,7 +662,6 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
-		// this.saveAnswer();
 		config.put("quiz", this.quiz);
 		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
 		config.put(WidgetFactory.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);

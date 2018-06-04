@@ -104,9 +104,8 @@ public class DownloadService extends IntentService {
                     //If the file URL and the action are not present, we can't identify it
                     return;
                 }
-                String fileUrl = intent.getStringExtra(DownloadService.SERVICE_URL);
                 String action = intent.getStringExtra(DownloadService.SERVICE_ACTION);
-                DownloadService.this.notifyDownloads(action, fileUrl);
+                DownloadService.this.notifyDownloads(action);
             }
         };
 
@@ -117,7 +116,7 @@ public class DownloadService extends IntentService {
 
     }
 
-    private void notifyDownloads(String action, String fileUrl) {
+    private void notifyDownloads(String action) {
         //If there are no more pending downloads after the completion of this one, send a Notification
         if (action.equals(ACTION_COMPLETE) && (tasksDownloading==null || tasksDownloading.size() == 0)){
             Log.d(TAG, "Sending notification from Service for the completion of all pending media downloads");

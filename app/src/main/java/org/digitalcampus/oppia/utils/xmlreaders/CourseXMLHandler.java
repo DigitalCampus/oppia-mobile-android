@@ -158,9 +158,6 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             else if (NODE_META.equals(parentElements.peek())){
                 courseIcon = aAttributes.getValue(NODE_FILENAME);
             }
-            //else if (NODE_PAGE.equals(parentElements.peek())){
-            //Add metapage icon (there is no method?)
-            //}
         }
         else if (NODE_FILE.equals(aQName)) {
             Media m = new Media();

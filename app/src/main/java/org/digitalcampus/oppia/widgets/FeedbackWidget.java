@@ -172,7 +172,6 @@ public class FeedbackWidget extends WidgetFactory {
 			questionImage.setVisibility(View.GONE);
 		} else {
 			String fileUrl = course.getLocation() + q.getProp("image");
-			// File file = new File(fileUrl);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
 			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
