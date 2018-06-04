@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.utils.xmlreaders;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -157,14 +159,23 @@ public class CourseTrackerXMLReader {
 					NamedNodeMap quizAttrs = quizNodes.item(j).getAttributes();
 					float maxscore = Float.parseFloat(quizAttrs.getNamedItem(NODE_MAXSCORE).getTextContent());
 					float score = Float.parseFloat(quizAttrs.getNamedItem(NODE_SCORE).getTextContent());
-                    String event = quizAttrs.getNamedItem(NODE_EVENT).getTextContent();
+
+					String event = "";
+					try {
+						event = quizAttrs.getNamedItem(NODE_EVENT).getTextContent();
+					} catch (NullPointerException npe){
+                    	Log.d(TAG,"Event node not found", npe);
+					}
 
                     int points = 0;
                     try {
                         points = Integer.parseInt(quizAttrs.getNamedItem(NODE_POINTS).getTextContent());
                     } catch (NumberFormatException nfe){
-                        // do nothing
+                        Log.d(TAG,"Points node not an integer", nfe);
+                    } catch (NullPointerException npe){
+                        Log.d(TAG,"Points node not found", npe);
                     }
+
 					String submittedDateString = quizAttrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
 					DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
 					

@@ -26,6 +26,7 @@ public class SyncActivity extends AppActivity {
     private ViewPager viewPager;
     private TabLayout tabs;
     private int currentTab = 0;
+    private SharedPreferences prefs;
 
 
     @Override
