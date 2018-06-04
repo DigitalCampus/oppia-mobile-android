@@ -50,7 +50,7 @@ public class Essay implements Serializable, QuizQuestion {
 
     @Override
     public List<Response> getResponseOptions() {
-        return null;
+        return new ArrayList<Response>();
     }
 
     @Override

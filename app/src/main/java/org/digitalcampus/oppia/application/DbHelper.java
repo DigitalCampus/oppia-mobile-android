@@ -1125,7 +1125,8 @@ public class DbHelper extends SQLiteOpenHelper {
                                     course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
                     }
                 } catch (JSONException jsone){
-					System.out.print(jsone.getStackTrace());
+					Log.d(TAG, "cannot read tracker log data as JSON object", jsone);
+					Mint.logException(jsone);
                 }
 
             } else if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_COURSE_DOWNLOADED)){
@@ -1152,21 +1153,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
             // get course and activity title
             String description = qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_EVENT));
-            try {
-                Activity activity = this.getActivityByDigest(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
-
-                if (activity != null) {
-                    Course course = this.getCourse(activity.getCourseId(), userId);
-                    if (course != null) {
-                        description = this.ctx.getString(R.string.points_event_quiz_attempt,
-                                activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
-                                course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-                    }
+            Activity activity = this.getActivityByDigest(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
+            if (activity != null) {
+                Course course = this.getCourse(activity.getCourseId(), userId);
+                if (course != null) {
+                    description = this.ctx.getString(R.string.points_event_quiz_attempt,
+                            activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
+                            course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
                 }
-            } catch (NullPointerException npe){
-                System.out.print(npe.getStackTrace());
             }
-
             p.setDescription(description);
 
             points.add(p);
@@ -1888,9 +1883,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		Log.d(TAG, "sql: " + sql);
 		Cursor c = db.rawQuery(sql,null);
-	    if(c !=null && c.getCount()>0){
+        boolean completed = true;
+	    if(c.getCount()>0){
 	    	c.moveToFirst();
-	    	boolean completed = true;
 	    	// check if each activity has been completed or not
 	    	while (c.isAfterLast() == false) {
 	    		String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
@@ -1905,12 +1900,11 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		c2.close();
 	    		c.moveToNext();
 	    	}
-	    	c.close();
-	    	return completed;
 	    } else {
-	    	c.close();
-	    	return true;
+	    	completed = true;
 	    }
+        c.close();
+        return completed;
 	}
 	
 	/*
@@ -1932,9 +1926,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		Log.d(TAG,"sql: " + sql);
 		Cursor c = db.rawQuery(sql,null);
-	    if(c !=null && c.getCount()>0){
+        boolean completed = true;
+	    if(c.getCount()>0){
 	    	c.moveToFirst();
-	    	boolean completed = true;
 	    	// check if each activity has been completed or not
 	    	while (c.isAfterLast() == false) {
 	    		String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
@@ -1949,12 +1943,11 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		c2.close();
 	    		c.moveToNext();
 	    	}
-	    	c.close();
-	    	return completed;
 	    } else {
-	    	c.close();
-	    	return true;
+	    	completed = true;
 	    }
+	    c.close();
+	    return completed;
 	}
 
     public void insertUserPreferences(String username, List<Pair<String, String>> preferences){
@@ -1970,7 +1963,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<Pair<String, String>> getUserPreferences(String username){
-        ArrayList<Pair<String, String>> prefs = new ArrayList<>();
+        ArrayList<Pair<String, String>> localPrefs = new ArrayList<>();
         String whereClause = USER_PREFS_C_USERNAME + "=? ";
         String[] args = new String[] { username };
 
@@ -1981,13 +1974,13 @@ public class DbHelper extends SQLiteOpenHelper {
             String prefKey = c.getString(c.getColumnIndex(USER_PREFS_C_PREFKEY));
             String prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
             Pair<String, String> pref = new Pair<>(prefKey, prefValue);
-            prefs.add(pref);
+            localPrefs.add(pref);
 
             c.moveToNext();
         }
         c.close();
 
-        return prefs;
+        return localPrefs;
     }
 
     public String getUserPreference(String username, String preferenceKey){

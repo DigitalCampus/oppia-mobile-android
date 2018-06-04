@@ -85,7 +85,7 @@ public class DownloadService extends IntentService {
                 return currentInstance.tasksDownloading;
             }
         }
-        return null;
+        return new ArrayList<String>();
     }
 
 

@@ -199,9 +199,9 @@ public class QuizWidget extends WidgetFactory {
             this.showQuestion();
         }
         else{
-            View container = getView();
-            if (container != null){
-                ViewGroup vg = (ViewGroup) container.findViewById(activity.getActId());
+            View localContainer = getView();
+            if (localContainer != null){
+                ViewGroup vg = (ViewGroup) localContainer.findViewById(activity.getActId());
                 if (vg!=null){
                     vg.removeAllViews();
                     vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));

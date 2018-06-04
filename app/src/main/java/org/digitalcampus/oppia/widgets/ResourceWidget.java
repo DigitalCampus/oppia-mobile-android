@@ -222,7 +222,7 @@ public class ResourceWidget extends WidgetFactory {
 			}
 
 			GamificationEngine gamificationEngine = new GamificationEngine( getActivity());
-			GamificationEvent gamificationEvent = gamificationEngine.processEventResourceStoppedActivity(this.course, this.activity);
+			GamificationEvent gamificationEvent = gamificationEngine.processEventResourceStoppedActivity();
 
 			t.saveTracker(course.getCourseId(), activity.getDigest(), data, true, gamificationEvent);
 

@@ -209,7 +209,7 @@ public class GamificationEngine {
         }
     }
 
-    public GamificationEvent processEventResourceStoppedActivity(Course course, Activity activity){
+    public GamificationEvent processEventResourceStoppedActivity(){
         // TODO GAMIFICATION - add specific event for this - eg using time taken
         return Gamification.GAMIFICATION_UNDEFINED;
     }

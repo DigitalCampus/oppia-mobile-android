@@ -211,7 +211,6 @@ public class PreferencesFragment extends PreferenceFragment {
             try{
                 String intValue = (String) newValue;
                 valid = (intValue.length() <= 9); //it'll be bigger than int's max value
-                int value = Integer.parseInt(intValue);
             }
             catch (NumberFormatException e){
                 valid = false;

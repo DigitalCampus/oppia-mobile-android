@@ -124,7 +124,7 @@ public class MatchingWidget extends QuestionWidget {
 			}
 		}
 		if(userResponses.size() == 0){
-			return null;
+			return new ArrayList<>();
 		}
     	return userResponses;
 	}

@@ -89,16 +89,18 @@ public class CourseIntallerService extends IntentService {
     private ApiEndpoint apiEndpoint;
 
     private static CourseIntallerService currentInstance;
+
     private static void setInstance(CourseIntallerService instance){
         currentInstance = instance;
     }
+
     public static ArrayList<String> getTasksDownloading(){
         if (currentInstance != null){
             synchronized (currentInstance){
                 return currentInstance.tasksDownloading;
             }
         }
-        return null;
+        return new ArrayList<String>();
     }
 
     public CourseIntallerService() {

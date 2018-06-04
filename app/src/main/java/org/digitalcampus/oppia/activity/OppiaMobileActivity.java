@@ -205,8 +205,8 @@ public class OppiaMobileActivity
 		if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS, false)){
 			DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS, "2"));
-			long userId = db.getUserId(SessionManager.getUsername(this));
-			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
+			long sessionUserId = db.getUserId(SessionManager.getUsername(this));
+			ArrayList<Activity> activities = db.getActivitiesDue(max, sessionUserId);
 
 			this.drawReminders(activities);
 		} else {

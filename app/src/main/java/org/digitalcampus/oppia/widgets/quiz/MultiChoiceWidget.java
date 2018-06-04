@@ -85,7 +85,7 @@ public class MultiChoiceWidget extends QuestionWidget{
 			response.add(responses.get(idx).getTitle(currentUserLang));
     		return response;
     	}
-    	return null;
+		return new ArrayList<>();
 	}
 
 }

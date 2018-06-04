@@ -120,7 +120,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 
 			// registration gamification
 			GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
-			GamificationEvent gamificationEvent = gamificationEngine.processEventRegister();
+			gamificationEngine.processEventRegister();
 
             //Save the search tracker
             new Tracker(super.getActivity()).saveRegisterTracker();

@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.widgets.quiz;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
@@ -44,8 +45,7 @@ public class DescriptionWidget extends QuestionWidget{
 
 	@Override
 	public List<String> getQuestionResponses(List<Response> responses) {
-		// do nothing
-		return null;
+		return new ArrayList<>();
 	}
 
 }

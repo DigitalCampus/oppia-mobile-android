@@ -80,7 +80,7 @@ public class MultiSelectWidget extends QuestionWidget {
 		}
 
 		if(response.size() == 0){
-			return null;
+			return new ArrayList<>();
 		} else {
 			return response;
 		}
