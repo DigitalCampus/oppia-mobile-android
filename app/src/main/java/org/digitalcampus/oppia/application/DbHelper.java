@@ -1042,6 +1042,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public User getUser(String userName) throws UserNotFoundException {
+	    Log.d(TAG,"getting username: " + userName);
 		String s = USER_C_USERNAME + "=? ";
 		String[] args = new String[] { userName };
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
