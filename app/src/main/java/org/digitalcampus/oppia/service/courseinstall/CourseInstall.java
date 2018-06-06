@@ -92,8 +92,8 @@ public class CourseInstall {
             cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
             c = cxr.getParsedCourse();
 
-            csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-            ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+            csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
+            ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
         } catch (InvalidXMLException e) {
             listener.onError(e.getMessage());
             return;
