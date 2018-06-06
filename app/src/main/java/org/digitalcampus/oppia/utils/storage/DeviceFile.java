@@ -28,7 +28,6 @@ public class DeviceFile{
 	
     private File mFile;
     private WeakReference<DeviceFile[]> mChildren = null;
-    private Integer mChildCount = null;
     private boolean bGrandPeeked = false;
 
     public DeviceFile(String path) {
@@ -122,7 +121,6 @@ public class DeviceFile{
             bGrandPeeked = true;
         }
 
-        mChildCount = mChildren2.length;
         this.mChildren = new WeakReference<DeviceFile[]>(mChildren2);
 
         return mChildren2;

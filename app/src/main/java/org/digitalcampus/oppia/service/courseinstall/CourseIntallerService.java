@@ -85,7 +85,6 @@ public class CourseIntallerService extends IntentService {
 
     private ArrayList<String> tasksCancelled;
     private ArrayList<String> tasksDownloading;
-    private SharedPreferences prefs;
     private ApiEndpoint apiEndpoint;
 
     private static CourseIntallerService currentInstance;
@@ -115,7 +114,6 @@ public class CourseIntallerService extends IntentService {
     @Override
     public void onCreate(){
         super.onCreate();
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         CourseIntallerService.setInstance(this);
 
     }

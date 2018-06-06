@@ -19,6 +19,9 @@ package org.digitalcampus.oppia.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -61,8 +64,9 @@ public class ParseCourseXMLTask extends AsyncTask<Course, Object, CompleteCourse
                 parsedCourse = cxr.getParsedCourse();
             }
 
-        } catch (InvalidXMLException e) {
-            e.printStackTrace();
+        } catch (InvalidXMLException ixmle) {
+            Log.d(TAG,"Invalid course xml error",ixmle);
+            Mint.logException(ixmle);
         }
         return parsedCourse;
     }

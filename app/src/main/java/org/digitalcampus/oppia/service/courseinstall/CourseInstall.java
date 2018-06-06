@@ -225,7 +225,6 @@ public class CourseInstall {
         // Copy new course zip file
         Log.d(TAG, "Copying new backup file " + filename);
         FileUtils.zipFileAtPath(courseFolder, destination);
-        //org.apache.commons.io.FileUtils.copyFile(zipFile, destination);
 
         if (previousBackup != null){
             Log.d(TAG, "Deleting previous backup file " + previousBackup.getPath());

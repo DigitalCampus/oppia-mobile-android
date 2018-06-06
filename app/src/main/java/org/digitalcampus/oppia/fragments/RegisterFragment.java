@@ -52,9 +52,9 @@ import android.widget.LinearLayout.LayoutParams;
 
 public class RegisterFragment extends AppFragment implements SubmitListener {
 
-
 	public static final String TAG = RegisterFragment.class.getSimpleName();
-	private SharedPreferences prefs;
+
+
 	private EditText usernameField;
 	private EditText emailField;
 	private EditText passwordField;
@@ -77,7 +77,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_register, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);

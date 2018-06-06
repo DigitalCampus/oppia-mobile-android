@@ -69,7 +69,6 @@ public class DownloadService extends IntentService {
 
     private ArrayList<String> tasksCancelled;
     private ArrayList<String> tasksDownloading;
-    private SharedPreferences prefs;
 
     private static DownloadService currentInstance;
     private BroadcastReceiver alternativeNotifier;
@@ -94,7 +93,6 @@ public class DownloadService extends IntentService {
     @Override
     public void onCreate(){
         super.onCreate();
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         DownloadService.setInstance(this);
 
         alternativeNotifier = new BroadcastReceiver() {

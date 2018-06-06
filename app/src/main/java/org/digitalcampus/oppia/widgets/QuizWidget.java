@@ -279,7 +279,7 @@ public class QuizWidget extends WidgetFactory {
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
 			if (q.getProp("media") == null){
-				OnImageClickListener oicl = new OnImageClickListener(super.getActivity(), "image/*");
+				OnImageClickListener oicl = new OnImageClickListener(super.getActivity());
 				iv.setOnClickListener(oicl);
 				TextView tv = (TextView) getView().findViewById(R.id.question_image_caption);
 				tv.setText(R.string.widget_quiz_image_caption);
@@ -712,11 +712,9 @@ public class QuizWidget extends WidgetFactory {
 	private class OnImageClickListener implements OnClickListener{
 
 		private Context ctx;
-		private String type;
 		
-		public OnImageClickListener(Context ctx, String type){
+		public OnImageClickListener(Context ctx){
 			this.ctx = ctx;
-			this.type = type;
 		}
 
 		public void onClick(View v) {

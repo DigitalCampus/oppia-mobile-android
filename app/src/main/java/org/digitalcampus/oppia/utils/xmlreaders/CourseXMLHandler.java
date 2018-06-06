@@ -303,7 +303,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             parentElements.pop();
         }
         else if (NODE_GAMIFICATION.equals(aQName)){
-            // TODO_GAMIFICATION
+            // TODO GAMIFICATION
         }
     }
 
