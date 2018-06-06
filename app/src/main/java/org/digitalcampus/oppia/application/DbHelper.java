@@ -366,26 +366,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			String sql2 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
 			String sql3 = "ALTER TABLE " + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SCHEDULE + " int null;";
 			String sql4 = "ALTER TABLE " + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE  + " text null;";
-			try {
-				db.execSQL(sql1);
-			} catch (Exception e){
-				
-			}
-			try {
-				db.execSQL(sql2);
-			} catch (Exception e){
-				
-			}
-			try {
-				db.execSQL(sql3);
-			} catch (Exception e){
-				
-			}
-			try {
-				db.execSQL(sql4);
-			} catch (Exception e){
-				
-			}
+
+			db.execSQL(sql1);
+			db.execSQL(sql2);
+			db.execSQL(sql3);
+			db.execSQL(sql4);
 		}
 		
 		if(oldVersion <= 11 && newVersion >= 12){

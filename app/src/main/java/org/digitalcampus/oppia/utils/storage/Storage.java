@@ -143,8 +143,10 @@ public class Storage {
             InputStream stream = act.getAssets().open(filePath);
             stream.close();
             return "file:///android_asset/" + filePath;
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        } catch (FileNotFoundException fnfe) {
+            Log.d(TAG,"file not found for:"+ filePath, fnfe);
+        } catch (IOException ioe) {
+            Log.d(TAG,"Error reading file: "+ filePath, ioe);
         }
 
         String localeFilePath = "www" + File.separator + Locale.getDefault().getLanguage() + File.separator + fileName;
@@ -152,8 +154,10 @@ public class Storage {
             InputStream stream = act.getAssets().open(localeFilePath);
             stream.close();
             return "file:///android_asset/" + localeFilePath;
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        } catch (FileNotFoundException fnfe) {
+            Log.d(TAG,"file not found for:"+ localeFilePath, fnfe);
+        } catch (IOException ioe) {
+            Log.d(TAG,"Error reading file: "+ localeFilePath, ioe);
         }
 
         String defaultFilePath = "www" + File.separator + MobileLearning.DEFAULT_LANG + File.separator + fileName;
@@ -161,8 +165,10 @@ public class Storage {
             InputStream stream = act.getAssets().open(defaultFilePath);
             stream.close();
             return "file:///android_asset/" + defaultFilePath;
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        } catch (FileNotFoundException fnfe) {
+            Log.d(TAG,"file not found for:"+ defaultFilePath, fnfe);
+        } catch (IOException ioe) {
+            Log.d(TAG,"Error reading file: "+ defaultFilePath, ioe);
         }
         return "";
 
