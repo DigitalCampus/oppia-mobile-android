@@ -57,17 +57,14 @@ public class CourseTrackerXMLReader {
 
 	private Document document;
 	
-	public CourseTrackerXMLReader(String filename) throws InvalidXMLException {
-        File courseXML = new File(filename);
+	public CourseTrackerXMLReader(File courseXML) throws InvalidXMLException {
 		if (courseXML.exists()) {
 
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
 			try {
 				builder = factory.newDocumentBuilder();
 				document = builder.parse(courseXML);
-
 			} catch (ParserConfigurationException e) {
 				throw new InvalidXMLException(e);
 			} catch (SAXException e) {
@@ -78,9 +75,27 @@ public class CourseTrackerXMLReader {
 		}
 	}
 
+	public CourseTrackerXMLReader(String xmlContent) throws InvalidXMLException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+
+		try {
+			builder = factory.newDocumentBuilder();
+			InputSource is = new InputSource(new StringReader(xmlContent));
+			document = builder.parse(is);
+		} catch (ParserConfigurationException e) {
+			throw new InvalidXMLException(e);
+		} catch (SAXException e) {
+			throw new InvalidXMLException(e);
+		} catch (IOException e) {
+			throw new InvalidXMLException(e);
+		}
+
+	}
+
 	
 	public ArrayList<TrackerLog> getTrackers(long courseId, long userId){
-		ArrayList<TrackerLog> trackers = new ArrayList<TrackerLog>();
+		ArrayList<TrackerLog> trackers = new ArrayList<>();
 		if (this.document == null){
 			return trackers;
 		}
@@ -137,7 +152,7 @@ public class CourseTrackerXMLReader {
 	}
 	
 	public ArrayList<QuizAttempt> getQuizAttempts(long courseId, long userId){
-		ArrayList<QuizAttempt> quizAttempts = new ArrayList<QuizAttempt>();
+		ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
 		if (this.document == null){
 			return quizAttempts;
 		}

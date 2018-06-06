@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.utils.xmlreaders;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,6 +34,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class CourseScheduleXMLReader {
@@ -40,12 +42,10 @@ public class CourseScheduleXMLReader {
 	public static final String TAG = CourseScheduleXMLReader.class.getSimpleName();
 	private Document document;
 	
-	public CourseScheduleXMLReader(String filename) throws InvalidXMLException {
-		File courseXML = new File(filename);
+	public CourseScheduleXMLReader(File courseXML) throws InvalidXMLException {
 		if (courseXML.exists()) {
 
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
 			try {
 				builder = factory.newDocumentBuilder();
@@ -59,6 +59,24 @@ public class CourseScheduleXMLReader {
 			}
 		}
 	}
+
+	public CourseScheduleXMLReader(String xmlContent) throws InvalidXMLException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+
+		try {
+			builder = factory.newDocumentBuilder();
+			InputSource is = new InputSource(new StringReader(xmlContent));
+			document = builder.parse(is);
+		} catch (ParserConfigurationException e) {
+			throw new InvalidXMLException(e);
+		} catch (SAXException e) {
+			throw new InvalidXMLException(e);
+		} catch (IOException e) {
+			throw new InvalidXMLException(e);
+		}
+
+	}
 	
 	public long getScheduleVersion(){
 		if (this.document == null){
@@ -66,12 +84,11 @@ public class CourseScheduleXMLReader {
 		}
 		Node schedule = document.getDocumentElement();
 		NamedNodeMap attrs = schedule.getAttributes();
-		long version = Long.parseLong(attrs.getNamedItem("version").getTextContent());
-		return version;
+		return Long.parseLong(attrs.getNamedItem("version").getTextContent());
 	}
 	
 	public ArrayList<ActivitySchedule> getSchedule(){
-		ArrayList<ActivitySchedule> schedule = new ArrayList<ActivitySchedule>();
+		ArrayList<ActivitySchedule> schedule = new ArrayList<>();
 		if (this.document == null){
 			return schedule;
 		}

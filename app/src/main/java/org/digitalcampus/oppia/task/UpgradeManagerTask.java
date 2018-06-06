@@ -181,8 +181,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
 					c = cxr.getParsedCourse();
 
-                    csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-                    ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+                    csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
+                    ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
                 } catch (InvalidXMLException e) {
                     e.printStackTrace();
                     break;

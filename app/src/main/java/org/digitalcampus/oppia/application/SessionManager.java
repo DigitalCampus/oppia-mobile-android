@@ -72,6 +72,10 @@ public class SessionManager {
         return getUsernameFromPrefs(prefs);
     }
 
+    public static long getUserId(Context ctx){
+        return DbHelper.getInstance(ctx).getUserId(getUsername(ctx));
+    }
+
     public static void loginUser(Context ctx, User user){
 
         //To ensure that userPrefs get saved, we force the logout of the current user

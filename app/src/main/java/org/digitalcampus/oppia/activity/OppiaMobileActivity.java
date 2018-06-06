@@ -87,7 +87,6 @@ public class OppiaMobileActivity
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private ArrayList<Course> courses;
 	private Course tempCourse;
-	private long userId = 0;
     private int initialCourseListPadding = 0;
 
     private TextView messageText;
@@ -332,7 +331,7 @@ public class OppiaMobileActivity
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
-                db.resetCourse(tempCourse.getCourseId(), OppiaMobileActivity.this.userId);
+                db.resetCourse(tempCourse.getCourseId(), SessionManager.getUserId(OppiaMobileActivity.this));
                 displayCourses();
             }
         });
@@ -345,7 +344,7 @@ public class OppiaMobileActivity
 	}
 	
 	private void confirmCourseUpdateActivity(){
-        UpdateCourseActivityTask task = new UpdateCourseActivityTask(OppiaMobileActivity.this, this.userId);
+        UpdateCourseActivityTask task = new UpdateCourseActivityTask(OppiaMobileActivity.this, SessionManager.getUserId(this));
         ArrayList<Object> payloadData = new ArrayList<>();
         payloadData.add(tempCourse);
         Payload p = new Payload(payloadData);
@@ -390,7 +389,6 @@ public class OppiaMobileActivity
         else{
             hideScanMediaMessage();
         }
-
     }
 
 
