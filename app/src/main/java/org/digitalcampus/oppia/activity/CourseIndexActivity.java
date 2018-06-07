@@ -277,7 +277,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private boolean isBaselineCompleted() {
         ArrayList<Activity> baselineActs = parsedCourse.getBaselineActivities();
-        // TODO how to handle if more than one baseline activity
         for (Activity a : baselineActs) {
             if (!a.isAttempted()) {
                 this.baselineActivity = a;

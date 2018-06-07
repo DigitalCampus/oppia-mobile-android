@@ -1834,7 +1834,6 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         switch (action) {
         case AccessibilityNodeInfo.ACTION_SCROLL_FORWARD:
             if (isEnabled() && getLastVisiblePosition() < getCount() - 1) {
-                // TODO: Use some form of smooth scroll instead
                 scrollListItemsBy(getAvailableSize());
                 return true;
             }
@@ -1842,7 +1841,6 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         case AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD:
             if (isEnabled() && mFirstPosition > 0) {
-                // TODO: Use some form of smooth scroll instead
                 scrollListItemsBy(-getAvailableSize());
                 return true;
             }

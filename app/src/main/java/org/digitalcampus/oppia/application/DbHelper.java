@@ -907,7 +907,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 
 	public void insertTracker(int courseId, String digest, String data, String type, boolean completed, String event, int points){
-		//get current user id
 		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
 		
 		ContentValues values = new ContentValues();
@@ -921,7 +920,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(TRACKER_LOG_C_POINTS, points);
 		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 
-		// increment the users points
         this.incrementUserPoints(userId, points);
 
 	}
@@ -1072,7 +1070,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(USER_TABLE, values, s, args);
     }
 
-    // TODO  - move getting description strings into the points model class?
 	public ArrayList<Points> getUserPoints(long userId) {
         ArrayList<Points> points = new ArrayList<>();
 
@@ -1630,28 +1627,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return a;
 	}
-
-	// TODO - remove this function as not used
-	public Activity getActivityByActId(int actId){
-		String sql = "SELECT * FROM  "+ ACTIVITY_TABLE + " a " +
-					" WHERE " + ACTIVITY_C_ACTID + "="+ actId;
-		Cursor c = db.rawQuery(sql,null);
-		c.moveToFirst();
-		Activity a = new Activity();
-		while (!c.isAfterLast()) {
-			
-			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
-				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
-				a.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
-				a.getMultiLangInfo().setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
-				a.setSectionId(c.getInt(c.getColumnIndex(ACTIVITY_C_SECTIONID)));
-			}
-			c.moveToNext();
-		}
-		c.close();
-		return a;
-	}
-	
 	
 	public ArrayList<Activity> getActivitiesDue(int max, long userId){
 		
@@ -1814,9 +1789,9 @@ public class DbHelper extends SQLiteOpenHelper {
                         fetchedXMLCourses.put(courseId, parsed);
                         result.setSection(parsed.getSection(sectionOrderId));
                         results.add(result);
-                    } catch (InvalidXMLException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    } catch (InvalidXMLException ixmle) {
+                        Log.d(TAG,"Invalid course xml file", ixmle);
+                        Mint.logException(ixmle);
                     }
                 }
                 else{

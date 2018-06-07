@@ -207,7 +207,6 @@ public class CourseInstall {
 
 
     private static void copyBackupCourse(Context ctx, File tempDir, CompleteCourse c) {
-        //TODO: Add a BuildConfig to control if we want this functionality or not
 
         File courseFolder = new File(tempDir, tempDir.list()[0]);
 
