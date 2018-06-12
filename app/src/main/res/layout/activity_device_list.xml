@@ -55,6 +55,32 @@
         android:stackFromBottom="true"
         />
 
+    <LinearLayout
+        android:id="@+id/scanning_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar4"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"/>
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_medium"
+            android:layout_weight="0"
+            android:text="@string/bluetooth_device_scanning"/>
+    </LinearLayout>
+
     <Button
         android:id="@+id/button_scan"
         android:layout_width="match_parent"
