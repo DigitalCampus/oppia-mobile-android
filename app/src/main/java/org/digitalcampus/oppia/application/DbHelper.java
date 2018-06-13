@@ -703,7 +703,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
@@ -724,7 +724,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
 		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			QuizAttempt qa = new QuizAttempt();
 			qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
 			qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
@@ -747,7 +747,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
 		c.moveToFirst();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			
 			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
@@ -773,7 +773,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { String.valueOf(courseId) };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
             course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
@@ -829,7 +829,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { String.valueOf(courseId) };
 		Cursor c = db.query(ACTIVITY_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			Activity activity = new Activity();
 			activity.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
 			activity.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
@@ -847,7 +847,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[] { String.valueOf(courseId) };
         Cursor c = db.query(COURSE_GAME_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
-        while (c.isAfterLast()) {
+        while (!c.isAfterLast()) {
             GamificationEvent event = new GamificationEvent();
             event.setEvent(c.getString(c.getColumnIndex(COURSE_GAME_C_EVENT)));
             event.setPoints(c.getInt(c.getColumnIndex(COURSE_GAME_C_POINTS)));
@@ -864,7 +864,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[] { String.valueOf(courseId), "quiz" };
 		Cursor c = db.query(ACTIVITY_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			Activity quiz = new Activity();
 			quiz.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
 			quiz.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
@@ -889,7 +889,7 @@ public class DbHelper extends SQLiteOpenHelper {
         qs.setNumAttempts(c1.getCount());
 		if (c1.getCount() == 0){ return qs; }
 		c1.moveToFirst();
-		while (c1.isAfterLast()) {
+		while (!c1.isAfterLast()) {
 			float userScore = c1.getFloat(c1.getColumnIndex(QUIZATTEMPTS_C_SCORE));
 			if (userScore > qs.getUserScore()){
 				qs.setUserScore(userScore);
@@ -991,7 +991,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		long userId = -1;
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			userId = c.getLong(c.getColumnIndex(USER_C_ID));
 			c.moveToNext();
 		}
@@ -1005,7 +1005,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		User u = null;
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			u = new User();
 			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
 			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
@@ -1031,7 +1031,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		User u = null;
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			u = new User();
 			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
 			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
@@ -1057,7 +1057,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[] { String.valueOf(userId) };
         Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
-        while (c.isAfterLast()) {
+        while (!c.isAfterLast()) {
             currentPoints = c.getInt(c.getColumnIndex(USER_C_POINTS));
             c.moveToNext();
         }
@@ -1078,7 +1078,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[] { String.valueOf(userId) };
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
-        while (c.isAfterLast()) {
+        while (!c.isAfterLast()) {
             Points p = new Points();
             p.setDateTime(c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
             p.setPoints(c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
@@ -1128,7 +1128,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] qaargs = new String[] { String.valueOf(userId) };
         Cursor qac = db.query(QUIZATTEMPTS_TABLE, null, qa, qaargs, null, null, null);
         qac.moveToFirst();
-        while (qac.isAfterLast()) {
+        while (!qac.isAfterLast()) {
             Points p = new Points();
             p.setDateTime(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
             p.setPoints(qac.getInt(qac.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
@@ -1180,7 +1180,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.moveToFirst();
 		
 		ArrayList<User> users = new ArrayList<>();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			User u = new User();
 			u.setUserId(c.getInt(c.getColumnIndex(USER_C_ID)));
 			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
@@ -1389,7 +1389,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			try {
 				QuizAttempt qa = new QuizAttempt();
 				qa.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
@@ -1415,7 +1415,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
 		c.moveToFirst();
 		ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			try {
 				QuizAttempt qa = new QuizAttempt();
 				qa.setId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
@@ -1645,7 +1645,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		Cursor c = db.rawQuery(sql,null);
 		c.moveToFirst();
-		while (c.isAfterLast()) {
+		while (!c.isAfterLast()) {
 			Activity a = new Activity();
 			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
 				a.getMultiLangInfo().setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
@@ -1668,7 +1668,7 @@ public class DbHelper extends SQLiteOpenHelper {
 					" LIMIT " + (max-c.getCount());
 			Cursor c2 = db.rawQuery(sql2,null);
 			c2.moveToFirst();
-			while (c2.isAfterLast()) {
+			while (!c2.isAfterLast()) {
 				Activity a = new Activity();
 				if(c2.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
 					a.getMultiLangInfo().setTitlesFromJSONString(c2.getString(c2.getColumnIndex(ACTIVITY_C_TITLE)));
@@ -1848,7 +1848,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	    if(c.getCount()>0){
 	    	c.moveToFirst();
 	    	// check if each activity has been completed or not
-	    	while (c.isAfterLast()) {
+	    	while (!c.isAfterLast()) {
 	    		String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
 						" WHERE " + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
 						" AND " + TRACKER_LOG_C_COMPLETED + " =1" +
@@ -1891,7 +1891,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	    if(c.getCount()>0){
 	    	c.moveToFirst();
 	    	// check if each activity has been completed or not
-	    	while (c.isAfterLast()) {
+	    	while (!c.isAfterLast()) {
 	    		String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
 	    										" WHERE " + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
 	    										" AND " + TRACKER_LOG_C_COMPLETED + " =1" +
