@@ -111,7 +111,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
     public void onDestroy() {
         super.onDestroy();
         if (bluetoothService != null) {
-            bluetoothService.disconnect();
+            bluetoothService.disconnect(false);
         }
     }
 
@@ -122,9 +122,14 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
+       startBluetooth();
+    }
+
+    private void startBluetooth(){
         if ((bluetoothAdapter != null) && (bluetoothService != null)) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
             if (bluetoothService.getState() == BluetoothTransferService.STATE_NONE) {
+                Log.d(TAG, "Starting Bluetooth service");
                 bluetoothService.start();
             }
         }
@@ -232,7 +237,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
         //If we are not connected, we attempt to make new connection
         if (bluetoothService.getState() == BluetoothTransferService.STATE_CONNECTED){
             //If we are currently connected, stop the connection
-            bluetoothService.disconnect();
+            bluetoothService.disconnect(true);
         }
         else{
             // Launch the DeviceListActivity to see devices and do scan
@@ -355,6 +360,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                                 self.progressDialog.dismiss();
                                 self.progressDialog = null;
                             }
+                            self.startBluetooth();
                             break;
                     }
                     break;
