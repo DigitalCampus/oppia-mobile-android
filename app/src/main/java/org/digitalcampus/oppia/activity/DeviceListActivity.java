@@ -47,24 +47,14 @@ import java.util.Set;
  */
 public class DeviceListActivity extends Activity {
 
-    /**
-     * Tag for Log
-     */
     private static final String TAG = "DeviceListActivity";
 
-    /**
-     * Return Intent extra
-     */
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
 
-    /**
-     * Member fields
-     */
-    private BluetoothAdapter mBtAdapter;
+    private Button scanButton;
+    private View scanningMessage;
 
-    /**
-     * Newly discovered devices
-     */
+    private BluetoothAdapter mBtAdapter;
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
 
     @Override
@@ -78,12 +68,13 @@ public class DeviceListActivity extends Activity {
         // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
+        scanningMessage = findViewById(R.id.scanning_message);
         // Initialize the button to perform device discovery
-        Button scanButton = (Button) findViewById(R.id.button_scan);
+        scanButton = (Button) findViewById(R.id.button_scan);
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                scanButton.setVisibility(View.GONE);
                 doDiscovery();
-                v.setVisibility(View.GONE);
             }
         });
 
@@ -151,6 +142,7 @@ public class DeviceListActivity extends Activity {
         // Indicate scanning in the title
         setProgressBarIndeterminateVisibility(true);
         setTitle(R.string.bluetooth_scanning);
+        scanningMessage.setVisibility(View.VISIBLE);
 
         // Turn on sub-title for new devices
         findViewById(R.id.new_devices_title).setVisibility(View.VISIBLE);
@@ -212,7 +204,9 @@ public class DeviceListActivity extends Activity {
                     String noDevices = getResources().getText(R.string.bluetooth_no_devices_found).toString();
                     mNewDevicesArrayAdapter.add(noDevices);
                 }
+                scanningMessage.setVisibility(View.GONE);
             }
+
         }
     };
 

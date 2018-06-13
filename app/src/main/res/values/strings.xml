@@ -371,6 +371,7 @@
     <string name="course_transferring">Course transferring in progress...</string>
     <string name="bluetooth.info_connect">Connect to other device using bluetooth to start transfer</string>
     <string name="bluetooth.transferable_type">Transferable type</string>
+    <string name="bluetooth_device_scanning">Scanning for new devices...</string>
 
 
 </resources>
