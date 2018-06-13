@@ -28,35 +28,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class DragAndDrop implements Serializable, QuizQuestion {
+public class DragAndDrop extends QuizQuestion implements Serializable {
 
     private static final long serialVersionUID = 8250801428572869330L;
     public static final String TAG = DragAndDrop.class.getSimpleName();
-    private int id;
-    private HashMap<String,String> title = new HashMap<>();
-    private List<Response> responseOptions = new ArrayList<>();
-    private float userscore = 0;
-    private List<String> userResponses = new ArrayList<>();
-    private HashMap<String,String> props = new HashMap<>();
-    private String feedback = "";
-    private boolean feedbackDisplayed = false;
 
     public static final String TYPE_DROPZONE = "dropzone";
     public static final String TYPE_DRAGGABLE = "drag";
-
-    @Override
-    public void addResponseOption(Response r){
-        responseOptions.add(r);
-    }
-
-    @Override
-    public List<Response> getResponseOptions(){
-        return responseOptions;
-    }
 
     @Override
     public void mark(String lang){
@@ -103,57 +83,6 @@ public class DragAndDrop implements Serializable, QuizQuestion {
         else{
             userscore = 1;
         }
-    }
-
-    @Override
-    public int getID() {
-        return this.id;
-    }
-
-    @Override
-    public void setID(int id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getTitle(String lang) {
-        if(title.containsKey(lang)){
-            return title.get(lang);
-        } else if (!title.entrySet().isEmpty()){
-            return title.entrySet().iterator().next().getValue();
-        } else {
-            return "";
-        }
-    }
-
-    @Override
-    public void setTitleForLang(String lang, String title) {
-        this.title.put(lang, title);
-    }
-
-    @Override
-    public void setResponseOptions(List<Response> responses) {
-        this.responseOptions = responses;
-    }
-
-    @Override
-    public float getUserscore() {
-        return this.userscore;
-    }
-
-    @Override
-    public List<String> getUserResponses() {
-        return this.userResponses;
-    }
-
-    @Override
-    public void setProps(HashMap<String,String> props) {
-        this.props = props;
-    }
-
-    @Override
-    public String getProp(String key) {
-        return props.get(key);
     }
 
     @Override
@@ -212,25 +141,4 @@ public class DragAndDrop implements Serializable, QuizQuestion {
         }
         return true;
     }
-
-    @Override
-    public int getScoreAsPercent() {
-        if (this.getMaxScore() > 0){
-            return (int) (100 * this.getUserscore()) / this.getMaxScore();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public void setFeedbackDisplayed(boolean feedbackDisplayed) {
-        this.feedbackDisplayed = feedbackDisplayed;
-
-    }
-
-    @Override
-    public boolean getFeedbackDisplayed() {
-        return feedbackDisplayed;
-    }
-
 }
