@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -61,7 +62,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
 		try {	
 			DbHelper db = DbHelper.getInstance(ctx);
-			ArrayList<User> users = db.getAllUsers();
+			List<User> users = db.getAllUsers();
 			
 			for (User u: users) {
                 payload = db.getUnsentTrackers(u.getUserId());

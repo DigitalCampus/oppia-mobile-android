@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
@@ -49,7 +50,7 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
         String filename = "activity_" +  new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".json";
 
         DbHelper db = DbHelper.getInstance(ctx);
-        ArrayList<User> users = db.getAllUsers();
+        List<User> users = db.getAllUsers();
 
         int trackersCount = 0;
         ArrayList<String> userResults = new ArrayList<>();

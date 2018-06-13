@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.task;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -305,10 +306,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	// update all the current quiz results for the score/maxscore etc
 	protected void upgradeV54(){
 		DbHelper db = DbHelper.getInstance(ctx);
-		ArrayList<QuizAttempt> quizAttempts = db.getAllQuizAttempts();
+		List<QuizAttempt> quizAttempts = db.getAllQuizAttempts();
 		long userId = db.getUserId(SessionManager.getUsername(ctx));
 		
-		ArrayList<Course> courses = db.getAllCourses();
+		List<Course> courses = db.getAllCourses();
 		ArrayList<v54UpgradeQuizObj> quizzes = new ArrayList<>();
 		
 		for (Course c: courses){
@@ -399,7 +400,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			
 		}
 		
-		ArrayList<QuizAttempt> checkQuizAttempts = db.getAllQuizAttempts();
+		List<QuizAttempt> checkQuizAttempts = db.getAllQuizAttempts();
 		for (QuizAttempt qa: checkQuizAttempts){
 			// display current data
 			Log.d(TAG, "data: " + qa.getData());

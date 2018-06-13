@@ -18,10 +18,12 @@
 package org.digitalcampus.oppia.application;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.adapter.ScheduleReminderListAdapter;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 
 import android.content.Context;
@@ -50,7 +52,7 @@ public class ScheduleReminders extends LinearLayout {
 		this.ctx = context;
 	}
 
-	public void initSheduleReminders(ArrayList<org.digitalcampus.oppia.model.Activity> activities) {
+	public void initSheduleReminders(List<Activity> activities) {
 		setOrientation(VERTICAL);
 		LinearLayout ll = (LinearLayout) findViewById(R.id.schedule_reminders);
 		ll.removeAllViews();

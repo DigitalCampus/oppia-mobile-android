@@ -1688,7 +1688,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	 */
 	
 	public void searchIndexRemoveCourse(long courseId){
-		ArrayList<Activity> activities = this.getCourseActivities(courseId);
+		List<Activity> activities = this.getCourseActivities(courseId);
 		Log.d(TAG, "deleting course from index: " + courseId);
 		for(Activity a: activities){
 			this.deleteSearchRow(a.getDbId());

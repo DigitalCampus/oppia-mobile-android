@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
@@ -37,6 +38,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.UIUtils;
 
@@ -49,7 +51,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     /**
 	 * @param activities: list of activities to show on the ScheduleReminders section
 	 */
-	public void drawReminders(ArrayList<org.digitalcampus.oppia.model.Activity> activities){
+	public void drawReminders(List<Activity> activities){
         ScheduleReminders reminders = (ScheduleReminders) findViewById(R.id.schedule_reminders);
         if (reminders != null){
             reminders.initSheduleReminders(activities);

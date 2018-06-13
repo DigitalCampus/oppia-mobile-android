@@ -68,6 +68,7 @@ import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -204,7 +205,7 @@ public class OppiaMobileActivity
 			DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS, "2"));
 			long sessionUserId = db.getUserId(SessionManager.getUsername(this));
-			ArrayList<Activity> activities = db.getActivitiesDue(max, sessionUserId);
+			List<Activity> activities = db.getActivitiesDue(max, sessionUserId);
 
 			this.drawReminders(activities);
 		} else {

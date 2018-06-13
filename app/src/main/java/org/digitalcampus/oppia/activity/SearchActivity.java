@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
@@ -187,13 +188,13 @@ public class SearchActivity extends AppActivity {
         }
     }
 
-    private class SearchTask extends AsyncTask<String, Object, ArrayList<SearchResult>> implements DBListener{
+    private class SearchTask extends AsyncTask<String, Object, List<SearchResult>> implements DBListener{
 
         @Override
-        protected ArrayList<SearchResult> doInBackground(String... urls) {
+        protected List<SearchResult> doInBackground(String... urls) {
             Log.d(TAG, "Starting search...");
             DbHelper db = DbHelper.getInstance(SearchActivity.this);
-            ArrayList<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this, this);
+            List<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this, this);
 
             //Save the search tracker
             new Tracker(SearchActivity.this)
@@ -203,7 +204,7 @@ public class SearchActivity extends AppActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<SearchResult> searchResults) {
+        protected void onPostExecute(List<SearchResult> searchResults) {
             results.clear();
             results.addAll(searchResults);
             srla.notifyDataSetChanged();

@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
@@ -47,14 +48,14 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 	public static final String TAG = ScorecardListAdapter.class.getSimpleName();
 
 	private final Activity ctx;
-	private final ArrayList<Course> courseList;
+	private final List<Course> courseList;
 	private SharedPreferences prefs;
 
     private SegmentFormatter sfCompleted;
     private SegmentFormatter sfStarted;
     private SegmentFormatter sfNotStarted;
     
-	public ScorecardListAdapter(Activity context, ArrayList<Course> courseList) {
+	public ScorecardListAdapter(Activity context, List<Course> courseList) {
 		super(context, R.layout.scorecard_list_row, courseList);
 		this.ctx = context;
 		this.courseList = courseList;

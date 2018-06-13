@@ -39,7 +39,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -82,7 +82,7 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
         initializeDagger();
 
 
-        ArrayList<Course> courses = coursesRepository.getCourses(getActivity());
+        List<Course> courses = coursesRepository.getCourses(getActivity());
 
         GridView scorecardList = (GridView) super.getActivity().findViewById(R.id.scorecards_list);
         View emptyState = this.getActivity().findViewById(R.id.empty_state);
