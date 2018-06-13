@@ -46,7 +46,6 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
         return baseline;
     }
 
-
     public void setSections(ArrayList<Section> sections) { this.sections = sections; }
     public void setGamification(ArrayList<GamificationEvent> gamification) { this.gamification = gamification; }
 
@@ -59,6 +58,10 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
             if (section.getOrder() == order) return section;
         }
         return null;
+    }
+
+    public ArrayList<GamificationEvent> getGamification() {
+        return gamification;
     }
 
     public void updateCourseActivity(Context ctx){

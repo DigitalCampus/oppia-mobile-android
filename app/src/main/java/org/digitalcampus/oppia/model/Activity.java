@@ -59,7 +59,7 @@ public class Activity implements Serializable{
 	private DateTime startDate;
 	private DateTime endDate;
 	private String mimeType;
-	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<GamificationEvent>();
+	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<>();
 
 	public Activity(){
 	}
@@ -253,9 +253,13 @@ public class Activity implements Serializable{
         this.multiLangInfo = multiLangInfo;
     }
 
-    public void addGamificationEvent(GamificationEvent ge){
-        gamificationEvents.add(ge);
+    public void addGamificationEvent(GamificationEvent event){
+        gamificationEvents.add(event);
     }
+
+	public void setGamificationEvents(ArrayList<GamificationEvent> events){
+		gamificationEvents = events;
+	}
 
     public GamificationEvent findGamificationEvent(String event) throws GamificationEventNotFound {
         for(GamificationEvent ge: gamificationEvents){

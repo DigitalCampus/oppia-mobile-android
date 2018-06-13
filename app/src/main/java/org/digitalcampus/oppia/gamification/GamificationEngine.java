@@ -47,16 +47,14 @@ public class GamificationEngine {
     private GamificationEvent getEventFromHierarchy(Course course, Activity activity, String event) throws GamificationEventNotFound{
         // check if the activity has custom points for this event
         try{
-            GamificationEvent ge = activity.findGamificationEvent(event);
-            return ge;
+            return activity.findGamificationEvent(event);
         } catch (GamificationEventNotFound genf){
             // do nothing
         }
 
         // check if the course has custom points for this event
         try{
-            GamificationEvent ge = course.findGamificationEvent(event);
-            return ge;
+            return course.findGamificationEvent(event);
         } catch (GamificationEventNotFound genf){
             // do nothing
         }

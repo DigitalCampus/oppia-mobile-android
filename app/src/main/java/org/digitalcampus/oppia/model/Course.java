@@ -47,8 +47,8 @@ public class Course implements Serializable {
 	private boolean toUpdateSchedule;
 	private String downloadUrl;
 	private String imageFile;
-	private ArrayList<Media> media = new ArrayList<Media>();
-	private ArrayList<CourseMetaPage> metaPages = new ArrayList<CourseMetaPage>();
+	private ArrayList<Media> media = new ArrayList<>();
+	private ArrayList<CourseMetaPage> metaPages = new ArrayList<>();
 	private Double scheduleVersionID;
 	private String scheduleURI;
 	private boolean isDraft = false;
@@ -279,6 +279,10 @@ public class Course implements Serializable {
 	public void addGamificationEvent(GamificationEvent ge){
 	    gamificationEvents.add(ge);
     }
+
+	public void setGamificationEvents(ArrayList<GamificationEvent> events){
+		gamificationEvents = events;
+	}
 
     public GamificationEvent findGamificationEvent(String event) throws GamificationEventNotFound {
         for(GamificationEvent ge: gamificationEvents){

@@ -17,7 +17,11 @@
 
 package org.digitalcampus.oppia.model;
 
-public class GamificationEvent {
+import java.io.Serializable;
+
+public class GamificationEvent implements Serializable{
+
+    private static final long serialVersionUID = 3649466060301114481L;
 
     private String event;
     private int points;
