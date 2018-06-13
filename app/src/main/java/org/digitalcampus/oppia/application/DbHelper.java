@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.application;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -213,7 +212,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 	public void createCourseTable(SQLiteDatabase db){
-		String m_sql = "create table " + COURSE_TABLE + " (" + COURSE_C_ID + " integer primary key autoincrement, "
+		String mSql = "create table " + COURSE_TABLE + " (" + COURSE_C_ID + " integer primary key autoincrement, "
 				+ COURSE_C_VERSIONID + " int, " + COURSE_C_TITLE + " text, " + COURSE_C_LOCATION + " text, "
 				+ COURSE_C_SHORTNAME + " text," + COURSE_C_SCHEDULE + " int,"
 				+ COURSE_C_IMAGE + " text,"
@@ -221,11 +220,11 @@ public class DbHelper extends SQLiteOpenHelper {
 				+ COURSE_C_ORDER_PRIORITY + " integer default 0, " 
 				+ COURSE_C_LANGS + " text, "
                 + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "' )";
-		db.execSQL(m_sql);
+		db.execSQL(mSql);
 	}
 	
 	public void createActivityTable(SQLiteDatabase db){
-		String a_sql = "create table " + ACTIVITY_TABLE + " (" + 
+		String aSql = "create table " + ACTIVITY_TABLE + " (" +
 									ACTIVITY_C_ID + " integer primary key autoincrement, " + 
 									ACTIVITY_C_COURSEID + " int, " + 
 									ACTIVITY_C_SECTIONID + " int, " + 
@@ -235,11 +234,11 @@ public class DbHelper extends SQLiteOpenHelper {
 									ACTIVITY_C_ENDDATE + " datetime null, " + 
 									ACTIVITY_C_ACTIVITYDIGEST + " text, "+
 									ACTIVITY_C_TITLE + " text)";
-		db.execSQL(a_sql);
+		db.execSQL(aSql);
 	}
 	
 	public void createLogTable(SQLiteDatabase db){
-		String l_sql = "create table " + TRACKER_LOG_TABLE + " (" + 
+		String lSql = "create table " + TRACKER_LOG_TABLE + " (" +
 				TRACKER_LOG_C_ID + " integer primary key autoincrement, " + 
 				TRACKER_LOG_C_COURSEID + " integer, " + 
 				TRACKER_LOG_C_DATETIME + " datetime default current_timestamp, " + 
@@ -254,7 +253,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 TRACKER_LOG_C_EVENT + " text, " +
                 TRACKER_LOG_C_POINTS + " integer default 0 " +
 				")";
-		db.execSQL(l_sql);
+		db.execSQL(lSql);
 	}
 
 	public void createQuizAttemptsTable(SQLiteDatabase db){
@@ -302,31 +301,31 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 
     public void createUserPrefsTable(SQLiteDatabase db){
-        String m_sql = "create table " + USER_PREFS_TABLE + " ("
+        String mSql = "create table " + USER_PREFS_TABLE + " ("
                 + USER_PREFS_C_USERNAME + " text not null, "
                 + USER_PREFS_C_PREFKEY + " text not null, "
                 + USER_PREFS_C_PREFVALUE + " text, "
                 + "primary key (" + USER_PREFS_C_USERNAME + ", " + USER_PREFS_C_PREFKEY + ") "
                 +  ")";
-        db.execSQL(m_sql);
+        db.execSQL(mSql);
     }
 
     public void createCourseGamificationTable(SQLiteDatabase db){
-        String m_sql = "create table " + COURSE_GAME_TABLE + " ("
+        String mSql = "create table " + COURSE_GAME_TABLE + " ("
                 + COURSE_GAME_C_ID + " integer primary key autoincrement, "
                 + COURSE_GAME_C_COURSEID + " integer,"
                 + COURSE_GAME_C_EVENT + " text,"
                 + COURSE_GAME_C_POINTS + " integer default 0 )";
-        db.execSQL(m_sql);
+        db.execSQL(mSql);
     }
 
 	public void createActivityGamificationTable(SQLiteDatabase db){
-		String m_sql = "create table " + ACTIVITY_GAME_TABLE + " ("
+		String mSql = "create table " + ACTIVITY_GAME_TABLE + " ("
 				+ ACTIVITY_GAME_C_ID + " integer primary key autoincrement, "
 				+ ACTIVITY_GAME_C_ACTIVITYID + " integer,"
 				+ ACTIVITY_GAME_C_EVENT + " text,"
 				+ ACTIVITY_GAME_C_POINTS + " integer default 0 )";
-		db.execSQL(m_sql);
+		db.execSQL(mSql);
 	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -545,7 +544,6 @@ public class DbHelper extends SQLiteOpenHelper {
 				String[] args = new String[] { String.valueOf(toUpdate) };
 				db.delete(ACTIVITY_TABLE, s, args);
 
-				// TODO_GAMIFICATION
 				// remove coursegamification
 				// remove activitygamification
 
@@ -555,7 +553,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return -1;
 	}
 
-	public void insertActivityGamification(long activityId, ArrayList<GamificationEvent> gamificationEvents){
+	public void insertActivityGamification(long activityId, List<GamificationEvent> gamificationEvents){
 
         beginTransaction();
 		for (GamificationEvent event : gamificationEvents) {
@@ -568,7 +566,7 @@ public class DbHelper extends SQLiteOpenHelper {
         endTransaction(true);
     }
 
-    public void insertCourseGamification(long courseId, ArrayList<GamificationEvent> gamificationEvents){
+    public void insertCourseGamification(long courseId, List<GamificationEvent> gamificationEvents){
 
         beginTransaction();
         for (GamificationEvent event : gamificationEvents) {
@@ -648,7 +646,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + courseId, null);
 	}
 	
-	public void insertActivities(ArrayList<Activity> acts) {
+	public void insertActivities(List<Activity> acts) {
 
         beginTransaction();
 		for (Activity a : acts) {
@@ -664,7 +662,7 @@ public class DbHelper extends SQLiteOpenHelper {
         endTransaction(true);
 	}
 
-	public void insertSchedule(ArrayList<ActivitySchedule> actsched) {
+	public void insertSchedule(List<ActivitySchedule> actsched) {
 
         beginTransaction();
 		for (ActivitySchedule as : actsched) {
@@ -676,7 +674,7 @@ public class DbHelper extends SQLiteOpenHelper {
         endTransaction(true);
 	}
 	
-	public void insertTrackers(ArrayList<TrackerLog> trackers) {
+	public void insertTrackers(List<TrackerLog> trackers) {
         beginTransaction();
 		for (TrackerLog t : trackers) {
 			ContentValues values = new ContentValues();
@@ -698,7 +696,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(ACTIVITY_TABLE, values, ACTIVITY_C_COURSEID + "=" + courseId, null);
 	}
 	
-	public ArrayList<Course> getAllCourses() {
+	public List<Course> getAllCourses() {
 		ArrayList<Course> courses = new ArrayList<>();
 		String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
@@ -720,7 +718,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return courses;
 	}
 	
-	public ArrayList<QuizAttempt> getAllQuizAttempts() {
+	public List<QuizAttempt> getAllQuizAttempts() {
 		ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
 		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();
@@ -742,7 +740,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return quizAttempts;
 	}
 	
-	public ArrayList<Course> getCourses(long userId) {
+	public List<Course> getCourses(long userId) {
 		ArrayList<Course> courses = new ArrayList<>();
 		String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
 		Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
@@ -823,7 +821,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return course;
 	}
 	
-	public ArrayList<Activity> getCourseActivities(long courseId){
+	public List<Activity> getCourseActivities(long courseId){
 		ArrayList<Activity> activities = new  ArrayList<>();
 		String s = ACTIVITY_C_COURSEID + "=?";
 		String[] args = new String[] { String.valueOf(courseId) };
@@ -841,7 +839,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return activities;
 	}
 
-    public ArrayList<GamificationEvent> getCourseGamification(long courseId){
+    public List<GamificationEvent> getCourseGamification(long courseId){
         ArrayList<GamificationEvent> events = new  ArrayList<>();
         String s = COURSE_GAME_C_COURSEID + "=?";
         String[] args = new String[] { String.valueOf(courseId) };
@@ -1070,7 +1068,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(USER_TABLE, values, s, args);
     }
 
-	public ArrayList<Points> getUserPoints(long userId) {
+	public List<Points> getUserPoints(long userId) {
         ArrayList<Points> points = new ArrayList<>();
 
         // Points from Tracker
@@ -1175,7 +1173,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(USER_TABLE, values, s ,args);
 	}
 	
-	public ArrayList<User> getAllUsers(){
+	public List<User> getAllUsers(){
 		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();
 		
@@ -1256,9 +1254,9 @@ public class DbHelper extends SQLiteOpenHelper {
 					json.put("type",trackerType);
 				}
 				content = json.toString();
-			} catch (JSONException e) {
-				Mint.logException(e);
-				e.printStackTrace();
+			} catch (JSONException jsone) {
+				Mint.logException(jsone);
+				Log.d(TAG,"error creating unsent trackers", jsone);
 			}
 			
 			so.setContent(content);
@@ -1301,9 +1299,9 @@ public class DbHelper extends SQLiteOpenHelper {
 					json.put("type",trackerType);
 				}
 				content = json.toString();
-			} catch (JSONException e) {
-				Mint.logException(e);
-				e.printStackTrace();
+			} catch (JSONException jsone) {
+				Mint.logException(jsone);
+                Log.d(TAG,"error creating unexported trackers", jsone);
 			}
 
 			tracker.setContent(content);
@@ -1363,7 +1361,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(QUIZATTEMPTS_TABLE, values, QUIZATTEMPTS_C_ID + "=" + qa.getId(), null);
 	}
 
-	public void insertQuizAttempts(ArrayList<QuizAttempt> quizAttempts){
+	public void insertQuizAttempts(List<QuizAttempt> quizAttempts){
         beginTransaction();
         for (QuizAttempt qa : quizAttempts) {
             ContentValues values = new ContentValues();
@@ -1383,7 +1381,7 @@ public class DbHelper extends SQLiteOpenHelper {
         endTransaction(true);
 	}
 
-	public ArrayList<QuizAttempt>  getUnsentQuizAttempts(){
+	public List<QuizAttempt>  getUnsentQuizAttempts(){
 		String s = QUIZATTEMPTS_C_SENT + "=? ";
 		String[] args = new String[] { "0" };
 		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
@@ -1409,7 +1407,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return quizAttempts;
 	}
 
-	public ArrayList<QuizAttempt> getUnexportedQuizAttempts(long userId) {
+	public List<QuizAttempt> getUnexportedQuizAttempts(long userId) {
 		String s = QUIZATTEMPTS_C_SENT + "=? AND " + QUIZATTEMPTS_C_EXPORTED + "=? AND " + QUIZATTEMPTS_C_USERID + "=? ";
 		String[] args = new String[] { "0", "0", String.valueOf(userId) };
 		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
@@ -1553,7 +1551,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 
-    public void getCourseQuizResults(ArrayList<QuizStats> stats, int courseId, long userId){
+    public void getCourseQuizResults(List<QuizStats> stats, int courseId, long userId){
 
         String quizResultsWhereClause = QUIZATTEMPTS_C_COURSEID+" =? AND " + QUIZATTEMPTS_C_USERID + "=?";
         String[] quizResultsArgs = new String[] { String.valueOf(courseId), String.valueOf(userId) };
@@ -1628,7 +1626,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		return a;
 	}
 	
-	public ArrayList<Activity> getActivitiesDue(int max, long userId){
+	public List<Activity> getActivitiesDue(int max, long userId){
 		
 		ArrayList<Activity> activities = new ArrayList<>();
 		DateTime now = new DateTime();
@@ -1713,7 +1711,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	/*
 	 * Perform a search
 	 */
-	public ArrayList<SearchResult> search(String searchText, int limit, long userId, Context ctx, DBListener listener){
+	public List<SearchResult> search(String searchText, int limit, long userId, Context ctx, DBListener listener){
 		ArrayList<SearchResult> results = new ArrayList<>();
 		String sqlSeachFullText = String.format("SELECT c.%s AS courseid, a.%s as activitydigest, a.%s as sectionid, 1 AS ranking FROM %s ft " +
 									" INNER JOIN %s a ON a.%s = ft.docid" +

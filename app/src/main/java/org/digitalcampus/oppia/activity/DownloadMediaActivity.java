@@ -525,19 +525,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     private class DownloadMediaListener implements ListInnerBtnOnClickListener {
     	
-    	public final String TAG = DownloadMediaListener.class.getSimpleName();
-    	
         //@Override
         public void onClick(int position) {
-
-            Log.d(TAG, "Clicked " + position);
+            Log.d(DownloadMediaListener.class.getSimpleName(), "Clicked " + position);
             Media mediaToDownload = missingMedia.get(position);
 
         	downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
-
         }
-
-
     }
-
 }
