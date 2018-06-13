@@ -357,6 +357,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 CheckBoxPreference adminPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_REMOTE_ADMIN);
                 adminPref.setChecked(adminEnabled);
                 return;
+            default:
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

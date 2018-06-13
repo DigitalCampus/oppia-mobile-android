@@ -13,19 +13,19 @@ import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTrackersFileAdapter.ViewHolder> {
+public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTrackersFileAdapter.etfaViewHolder> {
 
     private ArrayList<File> fileList;
     private final ListInnerBtnOnClickListener listener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class etfaViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         TextView file_name;
         TextView file_size;
         ImageButton btn_share;
         public ListInnerBtnOnClickListener listener;
 
-        public ViewHolder(View v) {
+        public etfaViewHolder(View v) {
             super(v);
             file_name = (TextView) v.findViewById(R.id.file_name);
             file_size = (TextView) v.findViewById(R.id.file_size);
@@ -49,15 +49,15 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public etfaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.exported_activity_item, parent, false);
-        return new ViewHolder(v);
+        return new etfaViewHolder(v);
 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(etfaViewHolder holder, int position) {
         File current = fileList.get(position);
         holder.file_name.setText(current.getName());
         holder.file_size.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));
