@@ -14,12 +14,13 @@ import org.digitalcampus.oppia.model.CourseTransferableFile;
 
 import java.util.ArrayList;
 
-public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCourseListAdapter.ViewHolder> {
+public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCourseListAdapter.tclaViewHolder> {
 
+    public static final String TAG = TransferCourseListAdapter.class.getSimpleName();
     private ArrayList<CourseTransferableFile> courses;
     private final ListInnerBtnOnClickListener listener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class tclaViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         TextView courseTitle;
         TextView courseFilesize;
@@ -29,7 +30,7 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
 
         public ListInnerBtnOnClickListener listener;
 
-        public ViewHolder(View v) {
+        public tclaViewHolder(View v) {
             super(v);
             courseTitle = (TextView) v.findViewById(R.id.course_title);
             courseFilesize = (TextView) v.findViewById(R.id.course_filesize);
@@ -55,15 +56,15 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public tclaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.course_transfer_row, parent, false);
-        return new ViewHolder(v);
+        return new tclaViewHolder(v);
 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(tclaViewHolder holder, int position) {
         CourseTransferableFile current = courses.get(position);
 
         if (current.getTitle() != null){

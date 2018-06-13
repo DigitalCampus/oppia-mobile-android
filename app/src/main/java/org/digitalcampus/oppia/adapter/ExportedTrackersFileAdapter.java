@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTrackersFileAdapter.etfaViewHolder> {
 
+    public static final String TAG = ExportedTrackersFileAdapter.class.getSimpleName();
     private ArrayList<File> fileList;
     private final ListInnerBtnOnClickListener listener;
 
