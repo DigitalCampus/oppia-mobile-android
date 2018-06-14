@@ -82,7 +82,7 @@ public class PermissionsManager {
         }
 
         ViewGroup container = (ViewGroup) act.findViewById(R.id.permissions_explanation);
-        if (permissionsToAsk.size() > 0){
+        if (!permissionsToAsk.isEmpty()){
             //Show the permissions informative view
             LayoutInflater layoutInflater = (LayoutInflater)act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             container.removeAllViews();
@@ -116,7 +116,7 @@ public class PermissionsManager {
             container.setVisibility(View.GONE);
         }
 
-        return (permissionsToAsk.size() == 0);
+        return (!permissionsToAsk.isEmpty());
 
     }
 

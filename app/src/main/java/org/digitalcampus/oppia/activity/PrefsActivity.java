@@ -275,19 +275,17 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 disableAdminProtection(sharedPreferences);
             }
         }
-        else if (key.equalsIgnoreCase(PREF_REMOTE_ADMIN)){
-            if (BuildConfig.FLAVOR.equals("admin")) {
-                boolean adminEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
-                ComponentName adminReceiver = new ComponentName(this, AdminReceiver.class);
-                if (adminEnabled) {
-                    // Activate device administration
-                    Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                    intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminReceiver);
-                    startActivityForResult(intent, ADMIN_ACTIVATION_REQUEST);
-                } else {
-                    DevicePolicyManager dpm = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
-                    dpm.removeActiveAdmin(adminReceiver);
-                }
+        else if (key.equalsIgnoreCase(PREF_REMOTE_ADMIN) && BuildConfig.FLAVOR.equals("admin")) {
+            boolean adminEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
+            ComponentName adminReceiver = new ComponentName(this, AdminReceiver.class);
+            if (adminEnabled) {
+                // Activate device administration
+                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminReceiver);
+                startActivityForResult(intent, ADMIN_ACTIVATION_REQUEST);
+            } else {
+                DevicePolicyManager dpm = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
+                dpm.removeActiveAdmin(adminReceiver);
             }
         }
     }

@@ -56,7 +56,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
     private boolean firstTimeOpened = true;
     private GridView quizzesGrid;
     private PieChart scorecardPieChart;
-    private ArrayList<QuizStats> quizStats = new ArrayList<QuizStats>();
+    private ArrayList<QuizStats> quizStats = new ArrayList<>();
     private CourseQuizzesGridAdapter quizzesAdapter;
     ParseCourseXMLTask xmlTask;
 
@@ -114,11 +114,6 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
         loadingSpinner.setVisibility(View.VISIBLE);
 		return vv;
 	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -170,7 +165,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
         
         quizStats.clear();
         quizStats.addAll(quizzes);
-        if (quizStats.size() == 0){
+        if (quizStats.isEmpty()){
             quizzesContainer.setVisibility(View.GONE);
             return;
         }

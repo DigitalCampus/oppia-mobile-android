@@ -12,27 +12,28 @@ import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
-public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTrackersFileAdapter.etfaViewHolder> {
+public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTrackersFileAdapter.EtfaViewHolder> {
 
     public static final String TAG = ExportedTrackersFileAdapter.class.getSimpleName();
-    private ArrayList<File> fileList;
+    private List<File> fileList;
     private final ListInnerBtnOnClickListener listener;
 
-    public static class etfaViewHolder extends RecyclerView.ViewHolder {
+    public static class EtfaViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        TextView file_name;
-        TextView file_size;
-        ImageButton btn_share;
+        TextView fileName;
+        TextView fileSize;
+        ImageButton btnShare;
         public ListInnerBtnOnClickListener listener;
 
-        public etfaViewHolder(View v) {
+        public EtfaViewHolder(View v) {
             super(v);
-            file_name = (TextView) v.findViewById(R.id.file_name);
-            file_size = (TextView) v.findViewById(R.id.file_size);
-            btn_share = (ImageButton) v.findViewById(R.id.share_btn);
+            fileName = (TextView) v.findViewById(R.id.file_name);
+            fileSize = (TextView) v.findViewById(R.id.file_size);
+            btnShare = (ImageButton) v.findViewById(R.id.share_btn);
 
-            btn_share.setOnClickListener(new View.OnClickListener() {
+            btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null){
@@ -44,24 +45,24 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
     }
 
 
-    public ExportedTrackersFileAdapter(ArrayList<File> fileList, ListInnerBtnOnClickListener listener){
+    public ExportedTrackersFileAdapter(List<File> fileList, ListInnerBtnOnClickListener listener){
         this.fileList = fileList;
         this.listener = listener;
     }
 
     @Override
-    public etfaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EtfaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.exported_activity_item, parent, false);
-        return new etfaViewHolder(v);
+        return new EtfaViewHolder(v);
 
     }
 
     @Override
-    public void onBindViewHolder(etfaViewHolder holder, int position) {
+    public void onBindViewHolder(EtfaViewHolder holder, int position) {
         File current = fileList.get(position);
-        holder.file_name.setText(current.getName());
-        holder.file_size.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));
+        holder.fileName.setText(current.getName());
+        holder.fileSize.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));
         if (listener!=null){
             holder.listener = this.listener;
         }

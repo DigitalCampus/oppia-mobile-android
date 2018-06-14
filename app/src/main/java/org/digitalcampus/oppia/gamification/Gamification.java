@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class Gamification {
 
-    private ArrayList<GamificationEvent> events = new ArrayList<GamificationEvent>();
+    private ArrayList<GamificationEvent> events = new ArrayList<>();
     // event names
     public static final String EVENT_NAME_REGISTER = "register";
     public static final String EVENT_NAME_QUIZ_FIRST_ATTEMPT = "quiz_first_attempt";

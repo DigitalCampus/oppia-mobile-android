@@ -82,11 +82,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		vv.setLayoutParams(lp);
 		return vv;
 	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -204,7 +199,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		pDialog.setCancelable(true);
 		pDialog.show();
 
-		ArrayList<Object> users = new ArrayList<Object>();
+		ArrayList<Object> users = new ArrayList<>();
     	User u = new User();
 		u.setUsername(username);
 		u.setPassword(password);

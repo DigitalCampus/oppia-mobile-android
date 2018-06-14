@@ -47,8 +47,8 @@ public class Course implements Serializable {
 	private boolean toUpdateSchedule;
 	private String downloadUrl;
 	private String imageFile;
-	private ArrayList<Media> media = new ArrayList<Media>();
-	private ArrayList<CourseMetaPage> metaPages = new ArrayList<CourseMetaPage>();
+	private ArrayList<Media> media = new ArrayList<>();
+	private ArrayList<CourseMetaPage> metaPages = new ArrayList<>();
 	private Double scheduleVersionID;
 	private String scheduleURI;
 	private boolean isDraft = false;
@@ -57,7 +57,7 @@ public class Course implements Serializable {
 	private int noActivitiesCompleted = 0;
 	private int noActivitiesStarted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
-	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<GamificationEvent>();
+	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<>();
 
 	private String root;
 	

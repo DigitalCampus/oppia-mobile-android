@@ -58,7 +58,7 @@ public class ScheduleReminders extends LinearLayout {
 		ll.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.schedule_reminder, this);
-		if (activities.size() > 0){
+		if (!activities.isEmpty()){
 			ScheduleReminders.this.setVisibility(VISIBLE);
 		} else {
 			ScheduleReminders.this.setVisibility(GONE);

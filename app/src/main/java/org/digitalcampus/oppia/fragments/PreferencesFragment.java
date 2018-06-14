@@ -155,7 +155,7 @@ public class PreferencesFragment extends PreferenceFragment {
         }
 
         ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE);
-        if (entryValues.size() > 0){
+        if (!entryValues.isEmpty()){
             langsList.setEntries( entries.toArray(new CharSequence[entries.size()]) );
             langsList.setEntryValues( entryValues.toArray(new CharSequence[entryValues.size()]) );
         }

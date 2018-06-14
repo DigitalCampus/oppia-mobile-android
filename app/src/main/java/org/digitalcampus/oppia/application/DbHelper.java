@@ -1457,7 +1457,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[] { digest, String.valueOf(userId) };
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
-        Log.d(this.TAG, "isQuizFirstAttempt returned " + String.valueOf(count) + " rows");
+        Log.d(this.TAG, "isQuizFirstAttempt returned " + count + " rows");
         c.close();
         if (count > 0){
             return false;
@@ -1481,7 +1481,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[] { digest, String.valueOf(userId), todayString };
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s, args, null, null, null);
         int count = c.getCount();
-		Log.d(this.TAG, "isQuizFirstAttemptToday returned " + String.valueOf(count) + " rows");
+		Log.d(this.TAG, "isQuizFirstAttemptToday returned " + count + " rows");
         c.close();
         if (count > 0){
             return false;

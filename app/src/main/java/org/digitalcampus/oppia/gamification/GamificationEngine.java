@@ -51,16 +51,14 @@ public class GamificationEngine {
     private GamificationEvent getEventFromHierarchy(Course course, Activity activity, String event) throws GamificationEventNotFound{
         // check if the activity has custom points for this event
         try{
-            GamificationEvent ge = activity.findGamificationEvent(event);
-            return ge;
+            return activity.findGamificationEvent(event);
         } catch (GamificationEventNotFound genf){
             Log.d(TAG, event + ": not found at activity level");
         }
 
         // check if the course has custom points for this event
         try{
-            GamificationEvent ge = course.findGamificationEvent(event);
-            return ge;
+            return course.findGamificationEvent(event);
         } catch (GamificationEventNotFound genf){
             Log.d(TAG, event + ": not found at course level");
         }
@@ -76,8 +74,7 @@ public class GamificationEngine {
 
         // check if the course has custom points for this event
         try{
-            GamificationEvent ge = course.findGamificationEvent(event);
-            return ge;
+            return course.findGamificationEvent(event);
         } catch (GamificationEventNotFound genf){
             Log.d(TAG, event + ": not found at course level");
         }
@@ -134,9 +131,7 @@ public class GamificationEngine {
             Log.d(this.TAG,"Not first attempt, nor first attempt today");
         }
 
-        GamificationEvent gamificationEvent = new GamificationEvent(Gamification.EVENT_NAME_QUIZ_ATTEMPT, totalPoints);
-
-        return gamificationEvent;
+        return new GamificationEvent(Gamification.EVENT_NAME_QUIZ_ATTEMPT, totalPoints);
     }
 
     public GamificationEvent processEventActivityCompleted(Course course, Activity activity){
@@ -151,9 +146,7 @@ public class GamificationEngine {
                 Mint.logException(genf);
             }
         }
-
-        GamificationEvent gamificationEvent = new GamificationEvent(Gamification.EVENT_NAME_ACTIVITY_COMPLETED, totalPoints);
-        return gamificationEvent;
+        return new GamificationEvent(Gamification.EVENT_NAME_ACTIVITY_COMPLETED, totalPoints);
     }
 
     public GamificationEvent processEventMediaPlayed(Course course, Activity activity, String mediaFileName, long timeTaken){
@@ -190,8 +183,7 @@ public class GamificationEngine {
                 }
             }
         }
-        GamificationEvent gamificationEvent = new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints);
-        return gamificationEvent;
+        return new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints);
     }
 
     // TODO GAMIFICATION - allow adding specific points for particular course

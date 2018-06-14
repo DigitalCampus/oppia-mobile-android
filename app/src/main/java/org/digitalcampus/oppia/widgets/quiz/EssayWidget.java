@@ -54,7 +54,7 @@ public class EssayWidget extends TextInputQuizWidget{
 		if(et.getText().toString().equals("")){
 			return new ArrayList<>();
 		} else {
-			List<String> response = new ArrayList<String>();
+			List<String> response = new ArrayList<>();
 			response.add(et.getText().toString());
 			return response;
 		}

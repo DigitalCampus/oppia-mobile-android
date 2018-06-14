@@ -84,7 +84,7 @@ public class DownloadService extends IntentService {
                 return currentInstance.tasksDownloading;
             }
         }
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
 
@@ -192,7 +192,7 @@ public class DownloadService extends IntentService {
         try {
             URL url = new URL(fileUrl);
             //If no filename was passed, we set the filename based on the URL
-            if (filename == null){ filename = url.getPath().substring(url.getPath().lastIndexOf("/")+1); }
+            if (filename == null){ filename = url.getPath().substring(url.getPath().lastIndexOf('/')+1); }
             downloadedFile = new File(Storage.getMediaPath(this), filename);
 
             OkHttpClient client = HTTPClientUtils.getClient(this);
@@ -308,7 +308,7 @@ public class DownloadService extends IntentService {
 
     private void addCancelledTask(String fileUrl){
         if (tasksCancelled == null){
-            tasksCancelled = new ArrayList<String>();
+            tasksCancelled = new ArrayList<>();
         }
         if (!tasksCancelled.contains(fileUrl)){
             tasksCancelled.add(fileUrl);
@@ -325,7 +325,7 @@ public class DownloadService extends IntentService {
 
     private void addDownloadingTask(String fileUrl){
         if (tasksDownloading == null){
-            tasksDownloading = new ArrayList<String>();
+            tasksDownloading = new ArrayList<>();
         }
         if (!tasksDownloading.contains(fileUrl)){
             synchronized (this){

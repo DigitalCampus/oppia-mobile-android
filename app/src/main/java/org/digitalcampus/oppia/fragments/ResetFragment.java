@@ -60,11 +60,6 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 		vv.setLayoutParams(lp);
 		return vv;
 	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

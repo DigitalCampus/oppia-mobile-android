@@ -25,7 +25,7 @@ public class Payload {
 	private List<? extends Object> data;
 	private boolean result = false;
 	private String resultResponse;
-	private ArrayList<Object> responseData = new ArrayList<Object>();
+	private ArrayList<Object> responseData = new ArrayList<>();
 	private String url;
 
 	public Payload(){

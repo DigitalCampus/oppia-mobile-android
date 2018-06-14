@@ -63,11 +63,6 @@ public class OppiaWebViewFragment extends Fragment{
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		return vv;
 	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -77,7 +72,7 @@ public class OppiaWebViewFragment extends Fragment{
 		webView.getSettings().setJavaScriptEnabled(true);
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		webView.getSettings().setDefaultFontSize(defaultFontSize);
-		url = (String) getArguments().getString(OppiaWebViewFragment.TAG);
+		url = getArguments().getString(OppiaWebViewFragment.TAG);
 		webView.loadUrl(url);
 
 	}

@@ -158,7 +158,7 @@ public class SessionManager {
         }
 
         //If there were prefKeys not previously saved, we clear them from the SharedPreferences
-        if (prefsToSave.size()>0){
+        if (!prefsToSave.isEmpty()){
             for (String pref : prefsToSave) prefsEditor.remove(pref);
             //Then we set the default values again (only empty values, will not overwrite the others)
             PreferenceManager.setDefaultValues(ctx, R.xml.prefs, true);

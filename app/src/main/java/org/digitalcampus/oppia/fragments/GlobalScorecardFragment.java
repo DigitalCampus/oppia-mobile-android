@@ -72,11 +72,6 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initializeDagger();
@@ -87,7 +82,7 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
         GridView scorecardList = (GridView) super.getActivity().findViewById(R.id.scorecards_list);
         View emptyState = this.getActivity().findViewById(R.id.empty_state);
 
-        if (courses.size() == 0){
+        if (courses.isEmpty()){
             //If there are now courses, display the empty state
             scorecardList.setVisibility(View.GONE);
             emptyState.setVisibility(View.VISIBLE);

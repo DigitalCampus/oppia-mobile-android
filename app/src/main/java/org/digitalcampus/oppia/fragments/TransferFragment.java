@@ -126,12 +126,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
     }
 
     private void startBluetooth(){
-        if ((bluetoothAdapter != null) && (bluetoothService != null)) {
-            // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (bluetoothService.getState() == BluetoothTransferService.STATE_NONE) {
-                Log.d(TAG, "Starting Bluetooth service");
-                bluetoothService.start();
-            }
+        // Only if the state is STATE_NONE, do we know that we haven't started already
+        if ((bluetoothAdapter != null) && (bluetoothService != null) && (bluetoothService.getState() == BluetoothTransferService.STATE_NONE)) {
+            Log.d(TAG, "Starting Bluetooth service");
+            bluetoothService.start();
         }
     }
 
