@@ -45,20 +45,23 @@ public class GamificationEngine {
     if not, use the app level defaults
      */
     private GamificationEvent getEventFromHierarchy(Course course, Activity activity, String event) throws GamificationEventNotFound{
-        // check if the activity has custom points for this event
-        try{
-            return activity.findGamificationEvent(event);
-        } catch (GamificationEventNotFound genf){
-            // do nothing
-        }
 
-        // check if the course has custom points for this event
-        try{
-            return course.findGamificationEvent(event);
-        } catch (GamificationEventNotFound genf){
-            // do nothing
+        if (activity != null){
+            // check if the activity has custom points for this event
+            try{
+                return activity.findGamificationEvent(event);
+            } catch (GamificationEventNotFound genf){
+                // do nothing
+            }
         }
-
+        if (course != null){
+            // check if the course has custom points for this event
+            try{
+                return course.findGamificationEvent(event);
+            } catch (GamificationEventNotFound genf){
+                // do nothing
+            }
+        }
         // else use the the app level defaults
         Gamification defaultGamification = new Gamification();
         return defaultGamification.getEvent(event);
@@ -67,12 +70,13 @@ public class GamificationEngine {
 
     private GamificationEvent getEventFromCourseHierarchy(Course course, String event) throws GamificationEventNotFound{
 
-        // check if the course has custom points for this event
-        try{
-            GamificationEvent ge = course.findGamificationEvent(event);
-            return ge;
-        } catch (GamificationEventNotFound genf){
-            // do nothing
+        if (course != null){
+            // check if the course has custom points for this event
+            try{
+                return course.findGamificationEvent(event);
+            } catch (GamificationEventNotFound genf){
+                // do nothing
+            }
         }
 
         // else use the the app level defaults
@@ -191,6 +195,19 @@ public class GamificationEngine {
             return Gamification.GAMIFICATION_UNDEFINED;
         }
         */
+    }
+
+    public GamificationEvent processEventCourseDownloaded(Course course){
+        int totalPoints = 0;
+        DbHelper db = DbHelper.getInstance(this.ctx);
+
+        try{
+            totalPoints = this.getEventFromCourseHierarchy(course, Gamification.EVENT_NAME_COURSE_DOWNLOADED).getPoints();
+        } catch (GamificationEventNotFound genf) {
+            //do nothing
+        }
+
+        return new GamificationEvent(Gamification.EVENT_NAME_COURSE_DOWNLOADED, totalPoints);
     }
 
     public GamificationEvent processEventResourceActivity(Course course, Activity activity){

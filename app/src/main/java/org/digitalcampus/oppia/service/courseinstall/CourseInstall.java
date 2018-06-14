@@ -10,15 +10,21 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -164,9 +170,23 @@ public class CourseInstall {
         // delete zip file from download dir
         FileUtils.deleteFile(zipFile);
 
+        listener.onInstallProgress(95);
+
+        // add to tracker
+        GamificationEngine gamificationEngine = new GamificationEngine(ctx);
+        GamificationEvent gamificationEvent = gamificationEngine.processEventCourseDownloaded(c);
+
+        try {
+            MetaDataUtils mdu = new MetaDataUtils(ctx);
+            JSONObject obj = new JSONObject();
+            Tracker t = new Tracker(ctx);
+            t.saveTracker((int)courseId, "", mdu.getMetaData(obj), true, gamificationEvent);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         long estimatedTime = System.currentTimeMillis() - startTime;
         Log.d(TAG, "MeasureTime - " + c.getShortname() + ": " + estimatedTime + "ms");
-
         Log.d(TAG, shortname + " succesfully downloaded");
         listener.onComplete();
     }

@@ -225,14 +225,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 				json = new JSONObject(response.getResultResponse());
 				refreshCourseList();
 
-				// add to tracker
-                GamificationEngine gamificationEngine = new GamificationEngine(this);
-                GamificationEvent gamificationEvent = gamificationEngine.processEventCourseDownloaded();
-                MetaDataUtils mdu = new MetaDataUtils(this);
-                JSONObject obj = new JSONObject();
-                Tracker t = new Tracker(this);
-                t.saveTracker(0, "", mdu.getMetaData(obj), true, gamificationEvent);
-
 			} catch (JSONException e) {
 				Mint.logException(e);
 				e.printStackTrace();
