@@ -203,13 +203,16 @@ public class PageWidget extends WidgetFactory {
 			obj.put("readaloud", readAloud);
 
 			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
-			GamificationEvent gamificationEvent = gamificationEngine.processEventActivityCompleted(this.course, this.activity);
+			GamificationEvent event = gamificationEngine.processEventActivityCompleted(this.course, this.activity);
+			if (event.getPoints() > 0){
+				gamificationEngine.notifyEvent(this.getView(), event, this.course, this.activity);
+			}
 
 			// if it's a baseline activity then assume completed
 			if (this.isBaseline) {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, event);
 			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), event);
 			}
 		} catch (JSONException e) {
 			// Do nothing

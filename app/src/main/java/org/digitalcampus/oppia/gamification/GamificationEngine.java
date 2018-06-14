@@ -18,7 +18,10 @@
 package org.digitalcampus.oppia.gamification;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -27,6 +30,8 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
+
+import java.util.Locale;
 
 
 /* This holds all the rules for allocating points */
@@ -242,5 +247,20 @@ public class GamificationEngine {
         }
     }
 
+    private String getEventMessage(GamificationEvent event, Course c, Activity a){
+        String prefLang = Locale.getDefault().getLanguage();
+        int resId = ctx.getResources().getIdentifier("points_event_" + event.getEvent(), "string", ctx.getPackageName());
 
+        return ctx.getString(resId,
+                (c == null) ? "" : c.getMultiLangInfo().getTitle(prefLang),
+                (a == null) ? "" : a.getMultiLangInfo().getTitle(prefLang) );
+    }
+
+    public void notifyEvent(View view, GamificationEvent event, Course c) {
+        Snackbar.make(view, getEventMessage(event, c, null), Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void notifyEvent(View view, GamificationEvent event, Course c, Activity a) {
+        Snackbar.make(view, getEventMessage(event, c, a), Snackbar.LENGTH_SHORT).show();
+    }
 }
