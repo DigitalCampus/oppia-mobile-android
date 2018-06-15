@@ -166,7 +166,7 @@ public class GamificationEngine {
                 }
                 // add points for length of time the media has been playing
                 try {
-                    totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor(timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
+                    totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * (timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
                 } catch (GamificationEventNotFound genf) {
                     Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL, genf);
                     Mint.logException(genf);
