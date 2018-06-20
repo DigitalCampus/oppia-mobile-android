@@ -6,11 +6,15 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +27,7 @@ public class GamificationService  extends IntentService {
     public static final String BROADCAST_ACTION = "com.digitalcampus.oppia.GAMIFICATIONSERVICE";
 
     public static final String SERVICE_COURSE = "course";
+    public static final String SERVICE_QUIZ = "quiz";
     public static final String SERVICE_ACTIVITY = "activity";
     public static final String SERVICE_EVENT = "event";
     public static final String SERVICE_MESSAGE = "message";
@@ -30,7 +35,10 @@ public class GamificationService  extends IntentService {
 
     public static final String SERVICE_EVENT_ACTIVITY = "activity_completed";
     public static final String SERVICE_EVENT_QUIZ = "quiz_attempt";
+    public static final String SERVICE_EVENT_RESOURCE = "resource_completed";
+    public static final String SERVICE_EVENT_FEEDBACK = "feedback";
     public static final String SERVICE_QUIZ_SCORE = "quiz_score";
+
 
     public static final String EVENTDATA_IS_BASELINE = "data_is_baseline";
     public static final String EVENTDATA_IS_COMPLETED = "data_is_completed";
@@ -60,6 +68,9 @@ public class GamificationService  extends IntentService {
 
             if (intent.hasExtra (SERVICE_EVENT)) {
                 String eventName = intent.getStringExtra(SERVICE_EVENT);
+                boolean isCompleted = intent.getBooleanExtra(EVENTDATA_IS_COMPLETED, false);
+                boolean isBaseline = intent.getBooleanExtra(EVENTDATA_IS_BASELINE, false);
+
                 JSONObject eventData = new JSONObject();
 
                 MetaDataUtils mdu = new MetaDataUtils(this);
@@ -82,20 +93,60 @@ public class GamificationService  extends IntentService {
                 else if (SERVICE_EVENT_QUIZ.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                    Quiz quiz = (Quiz) intent.getSerializableExtra(SERVICE_QUIZ);
                     float score = intent.getFloatExtra(SERVICE_QUIZ_SCORE, 0f);
-                    event = gEngine.processEventQuizAttempt(c, act, null, score);
+                    event = gEngine.processEventQuizAttempt(c, act, quiz, score);
+
+                    DbHelper db = DbHelper.getInstance(this);
+                    long userId = db.getUserId(SessionManager.getUsername(this));
+
+                    Log.d(TAG,"quiz points:" + String.valueOf(event.getPoints()));
+                    // save results ready to send back to the quiz server
+                    String data = quiz.getResultObject(event).toString();
+                    Log.d(TAG,data);
+
+                    QuizAttempt qa = new QuizAttempt();
+                    qa.setCourseId(c.getCourseId());
+                    qa.setUserId(userId);
+                    qa.setData(data);
+                    qa.setActivityDigest(act.getDigest());
+                    qa.setScore(quiz.getUserscore());
+                    qa.setMaxscore(quiz.getMaxscore());
+                    qa.setPassed(isCompleted);
+                    qa.setSent(false);
+                    qa.setEvent(event.getEvent());
+                    //don't save points twice
+                    //qa.setPoints(event.getPoints());
+                    db.insertQuizAttempt(qa);
+
+                    long now = System.currentTimeMillis()/1000;
+                    prefs.edit().putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
+
+                    eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                    eventData.put("quiz_id", quiz.getID());
+                    eventData.put("instance_id", quiz.getInstanceID());
+                    eventData.put("score", score);
+
+                }
+                else if (SERVICE_EVENT_RESOURCE.equals(eventName)){
+                    act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
+                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                    event = gEngine.processEventResourceActivity(c, act);
+
+                    eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                }
+                else if (SERVICE_EVENT_FEEDBACK.equals(eventName)){
+                    act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
+                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                    event = gEngine.processEventFeedbackActivity(c, act);
 
                     eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
                     eventData.put("quiz_id", intent.getIntExtra(EVENTDATA_QUIZID, 0));
                     eventData.put("instance_id", intent.getStringExtra(EVENTDATA_INSTANCEID));
-                    eventData.put("score", score);
                 }
 
                 if (event == null)
                     return;
-
-                boolean isCompleted = intent.getBooleanExtra(EVENTDATA_IS_COMPLETED, false);
-                boolean isBaseline = intent.getBooleanExtra(EVENTDATA_IS_BASELINE, false);
 
                 Tracker t = new Tracker(this);
                 t.saveTracker(c.getCourseId(), act.getDigest(), eventData, isCompleted || isBaseline, event);

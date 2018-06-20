@@ -28,6 +28,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
@@ -241,30 +242,10 @@ public class ResourceWidget extends WidgetFactory {
 		if (timetaken < MobileLearning.RESOURCE_READ_TIME) {
 			return;
 		}
-		Tracker t = new Tracker(super.getActivity());
-		JSONObject obj = new JSONObject();
-		
-		// add in extra meta-data
-		try {
-			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
-			obj.put("timetaken", timetaken);
-			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
 
-            GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
-            GamificationEvent gamificationEvent = gamificationEngine.processEventResourceActivity(this.course, this.activity);
-			// if it's a baseline activity then assume completed
-			if(this.isBaseline){
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
-			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
-			}
-		} catch (JSONException e) {
-			// Do nothing
-		} catch (NullPointerException npe){
-			//do nothing
-		}
+		new GamificationServiceDelegate(getActivity())
+				.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
+				.registerResourceEvent(timetaken);
 	}
 
 	@Override

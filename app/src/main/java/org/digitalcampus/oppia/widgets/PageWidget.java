@@ -193,9 +193,9 @@ public class PageWidget extends WidgetFactory {
 			return;
 		}
 
-		Intent mServiceIntent = new Intent(getActivity(), GamificationService.class);
-		GamificationServiceDelegate delegate = new GamificationServiceDelegate();
-		delegate.registerPageActivityEvent(getActivity(), mServiceIntent, course, activity, timetaken, readAloud);
+		new GamificationServiceDelegate(getActivity())
+			.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
+			.registerPageActivityEvent(timetaken, readAloud);
 	}
 
 	@Override

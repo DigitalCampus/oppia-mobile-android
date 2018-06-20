@@ -1108,11 +1108,15 @@ public class DbHelper extends SQLiteOpenHelper {
 			String event = c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT));
             String description = event;
             Log.d(TAG, event);
+
+			Activity activity;
+			Course course;
+
 			switch (event) {
 				case Gamification.EVENT_NAME_ACTIVITY_COMPLETED:
-					Activity activity = this.getActivityByDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
 					if (activity != null) {
-						Course course = this.getCourse(activity.getCourseId(), userId);
+						course = this.getCourse(activity.getCourseId(), userId);
 						if (course != null) {
 							description = this.ctx.getString(R.string.points_event_activity_completed,
 									activity.getMultiLangInfo().getTitle(prefLang),
@@ -1126,7 +1130,7 @@ public class DbHelper extends SQLiteOpenHelper {
 					try {
 						JSONObject jsonObj = new JSONObject(data);
 						String mediaFileName = jsonObj.getString("mediafile");
-						Course course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+						course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 						if (course != null) {
 							description = this.ctx.getString(R.string.points_event_media_played,
 									mediaFileName,
@@ -1138,9 +1142,20 @@ public class DbHelper extends SQLiteOpenHelper {
 
 					break;
 
+				case Gamification.EVENT_NAME_QUIZ_ATTEMPT:
+					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+					course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+					if (course != null) {
+                        description = this.ctx.getString(R.string.points_event_quiz_attempt,
+								activity.getMultiLangInfo().getTitle(prefLang),
+                                course.getMultiLangInfo().getTitle(prefLang));
+                    }
+
+					break;
+
 				case Gamification.EVENT_NAME_COURSE_DOWNLOADED:
 					Log.d(TAG, "id: " + c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)));
-					Course course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+					course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 					description = this.ctx.getString(R.string.points_event_course_downloaded,
 							course == null ? "" : course.getMultiLangInfo().getTitle(prefLang));
 					break;
