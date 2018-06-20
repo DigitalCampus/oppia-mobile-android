@@ -645,12 +645,17 @@ public class QuizWidget extends WidgetFactory {
 			obj.put("instance_id", quiz.getInstanceID());
 			obj.put("score", this.getPercent());
 
-            GamificationEvent gamificationEvent = Gamification.GAMIFICATION_QUIZ_ATTEMPT;
-			// if it's a baseline activity then assume completed
+			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
+            GamificationEvent event = Gamification.GAMIFICATION_QUIZ_ATTEMPT;
+			if (event.getPoints() > 0){
+				gamificationEngine.notifyEvent(this.getView(), event, this.course, this.activity);
+			}
+
+            // if it's a baseline activity then assume completed
 			if (this.isBaseline) {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, event);
 			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), event);
 			}
 		} catch (JSONException e) {
 			Log.d(this.TAG," saving quiz json error");

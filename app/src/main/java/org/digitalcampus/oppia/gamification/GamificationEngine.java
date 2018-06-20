@@ -247,18 +247,22 @@ public class GamificationEngine {
         }
     }
 
-    private String getEventMessage(GamificationEvent event, Course c, Activity a){
+    public String getEventMessage(GamificationEvent event, Course c, Activity a){
         String prefLang = Locale.getDefault().getLanguage();
         int resId = ctx.getResources().getIdentifier("points_event_" + event.getEvent(), "string", ctx.getPackageName());
 
-        return ctx.getString(resId,
+        if (a != null){
+            return ctx.getString(resId,
                 (c == null) ? "" : c.getMultiLangInfo().getTitle(prefLang),
-                (a == null) ? "" : a.getMultiLangInfo().getTitle(prefLang) );
+                a.getMultiLangInfo().getTitle(prefLang) );
+        }
+        else{
+            return ctx.getString(resId,
+                (c == null) ? "" : c.getMultiLangInfo().getTitle(prefLang));
+        }
+
     }
 
-    public void notifyEvent(View view, GamificationEvent event, Course c) {
-        Snackbar.make(view, getEventMessage(event, c, null), Snackbar.LENGTH_SHORT).show();
-    }
 
     public void notifyEvent(View view, GamificationEvent event, Course c, Activity a) {
         Snackbar.make(view, getEventMessage(event, c, a), Snackbar.LENGTH_SHORT).show();

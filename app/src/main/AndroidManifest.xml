@@ -160,6 +160,10 @@
             android:name="org.digitalcampus.oppia.service.courseinstall.CourseIntallerService"
             android:exported="false"
             android:icon="@drawable/dc_logo"/>
+        <service
+            android:name="org.digitalcampus.oppia.gamification.GamificationService"
+            android:exported="false"
+            android:icon="@drawable/dc_logo"/>
 
         <receiver android:name="org.digitalcampus.oppia.service.TrackerScheduleReceiver">
             <intent-filter>

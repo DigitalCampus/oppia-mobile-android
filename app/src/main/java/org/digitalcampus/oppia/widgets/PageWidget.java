@@ -38,10 +38,12 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -190,36 +192,10 @@ public class PageWidget extends WidgetFactory {
 		if (timetaken < MobileLearning.PAGE_READ_TIME) {
 			return;
 		}
-		Tracker t = new Tracker(super.getActivity());
-		JSONObject obj = new JSONObject();
-		
-		// add in extra meta-data
-		try {
-			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
-			obj.put("timetaken", timetaken);
-			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
-			obj.put("readaloud", readAloud);
 
-			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
-			GamificationEvent event = gamificationEngine.processEventActivityCompleted(this.course, this.activity);
-			if (event.getPoints() > 0){
-				gamificationEngine.notifyEvent(this.getView(), event, this.course, this.activity);
-			}
-
-			// if it's a baseline activity then assume completed
-			if (this.isBaseline) {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, event);
-			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), event);
-			}
-		} catch (JSONException e) {
-			// Do nothing
-			// sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly
-		} catch (NullPointerException npe){
-			Log.d(TAG, "error", npe);
-		}
+		Intent mServiceIntent = new Intent(getActivity(), GamificationService.class);
+		GamificationServiceDelegate delegate = new GamificationServiceDelegate();
+		delegate.registerPageActivityEvent(getActivity(), mServiceIntent, course, activity, timetaken, readAloud);
 	}
 
 	@Override
