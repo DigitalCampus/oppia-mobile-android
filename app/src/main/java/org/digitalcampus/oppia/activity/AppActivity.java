@@ -30,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -182,7 +183,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     public void onEvent(String message, int points) {
-	    View rootView = getWindow().getDecorView().getRootView();
+        final View rootView =  ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
     }
 }

@@ -35,6 +35,7 @@ public class GamificationService  extends IntentService {
 
     public static final String SERVICE_EVENT_ACTIVITY = "activity_completed";
     public static final String SERVICE_EVENT_QUIZ = "quiz_attempt";
+    public static final String SERVICE_EVENT_DOWNLOAD = "course_downloaded";
     public static final String SERVICE_EVENT_RESOURCE = "resource_completed";
     public static final String SERVICE_EVENT_FEEDBACK = "feedback";
     public static final String SERVICE_QUIZ_SCORE = "quiz_score";
@@ -82,7 +83,12 @@ public class GamificationService  extends IntentService {
                 Course c = null;
                 Activity act = null;
 
-                if (SERVICE_EVENT_ACTIVITY.equals(eventName)){
+                if (SERVICE_EVENT_DOWNLOAD.equals(eventName)){
+                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                    event = gEngine.processEventCourseDownloaded(c);
+                    isCompleted = true;
+                }
+                else if (SERVICE_EVENT_ACTIVITY.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     event = gEngine.processEventActivityCompleted(c, act);
@@ -149,7 +155,7 @@ public class GamificationService  extends IntentService {
                     return;
 
                 Tracker t = new Tracker(this);
-                t.saveTracker(c.getCourseId(), act.getDigest(), eventData, isCompleted || isBaseline, event);
+                t.saveTracker(c.getCourseId(), act!=null ? act.getDigest() : "", eventData, isCompleted || isBaseline, event);
 
                 if (event.getPoints() > 0){
                     broadcastEvent(event, act, c);

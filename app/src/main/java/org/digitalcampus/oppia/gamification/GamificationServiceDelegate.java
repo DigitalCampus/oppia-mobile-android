@@ -16,6 +16,7 @@ public class GamificationServiceDelegate {
         this.ctx = ctx;
     }
 
+
     public GamificationServiceDelegate createActivityIntent(
                                      Course c,
                                      Activity act,
@@ -41,6 +42,15 @@ public class GamificationServiceDelegate {
         ctx.startService(serviceIntent);
 
         serviceIntent = null;
+    }
+
+    public void registerCourseDownloadEvent(Course c){
+
+        serviceIntent = new Intent(ctx, GamificationService.class);
+        serviceIntent.putExtra(GamificationService.SERVICE_EVENT, GamificationService.SERVICE_EVENT_DOWNLOAD);
+        serviceIntent.putExtra(GamificationService.SERVICE_COURSE, c);
+        ctx.startService(serviceIntent);
+
     }
 
     public void registerQuizAttemptEvent(long timetaken, Quiz quiz, float score){

@@ -13,6 +13,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
@@ -172,18 +173,10 @@ public class CourseInstall {
 
         listener.onInstallProgress(95);
 
-        // add to tracker
-        GamificationEngine gamificationEngine = new GamificationEngine(ctx);
-        GamificationEvent gamificationEvent = gamificationEngine.processEventCourseDownloaded(c);
-
-        try {
-            MetaDataUtils mdu = new MetaDataUtils(ctx);
-            JSONObject obj = new JSONObject();
-            Tracker t = new Tracker(ctx);
-            t.saveTracker((int)courseId, "", mdu.getMetaData(obj), true, gamificationEvent);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        // add event
+        c.setCourseId((int)courseId);
+        new GamificationServiceDelegate(ctx)
+                .registerCourseDownloadEvent(c);
 
         long estimatedTime = System.currentTimeMillis() - startTime;
         Log.d(TAG, "MeasureTime - " + c.getShortname() + ": " + estimatedTime + "ms");
