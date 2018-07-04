@@ -1,5 +1,8 @@
 package org.digitalcampus.oppia.adapter;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,28 +22,36 @@ import java.util.Locale;
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
 
     private List<LeaderboardPosition> leaderboard;
+    private int highlightBgColor;
+    private int normalBgColor;
+    private int highlightTextColor;
+    private int normalTextColor;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView points;
         TextView pos;
         TextView username;
         TextView fullname;
+        CardView userCard;
 
-        public ViewHolder(View v) {
+
+        ViewHolder(View v) {
             super(v);
             points = (TextView) v.findViewById(R.id.leaderboard_points);
             pos = (TextView) v.findViewById(R.id.leaderboard_position);
             username = (TextView) v.findViewById(R.id.leaderboard_username);
             fullname = (TextView) v.findViewById(R.id.leaderboard_fullname);
-
+            userCard = (CardView) v.findViewById(R.id.user_card);
         }
     }
 
 
-    public LeaderboardAdapter(List<LeaderboardPosition> leaderboard){
+    public LeaderboardAdapter(Context ctx, List<LeaderboardPosition> leaderboard){
         this.leaderboard = leaderboard;
-
+        normalBgColor = ContextCompat.getColor(ctx, R.color.text_light);
+        highlightBgColor = ContextCompat.getColor(ctx, R.color.highlight_mid);
+        normalTextColor = ContextCompat.getColor(ctx, R.color.text_dark);
+        highlightTextColor = ContextCompat.getColor(ctx, R.color.text_light);
     }
 
     @Override
@@ -58,6 +69,15 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         holder.username.setText(pos.getUsername());
         holder.points.setText(String.format(Locale.getDefault(), "%d", pos.getPoints()));
         holder.pos.setText(String.format(Locale.getDefault(), "%d", (position + 1)));
+
+        if (pos.isUser()){
+            holder.userCard.setCardBackgroundColor(highlightBgColor);
+            holder.fullname.setTextColor(highlightTextColor);
+        }
+        else{
+            holder.userCard.setCardBackgroundColor(normalBgColor);
+            holder.fullname.setTextColor(normalTextColor);
+        }
     }
 
     @Override

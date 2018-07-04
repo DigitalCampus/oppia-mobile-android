@@ -56,7 +56,7 @@ public class LeaderboardFragment extends Fragment {
 
         leaderboard = new ArrayList<>();
 
-        adapter = new LeaderboardAdapter(leaderboard);
+        adapter = new LeaderboardAdapter(this.getContext(), leaderboard);
         leaderboard_view.setLayoutManager( new LinearLayoutManager(this.getContext()));
         leaderboard_view.setAdapter(adapter);
 

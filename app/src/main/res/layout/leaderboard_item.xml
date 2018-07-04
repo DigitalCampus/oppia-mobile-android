@@ -19,6 +19,7 @@
         android:textColor="@color/highlight_light"/>
 
     <android.support.v7.widget.CardView
+        android:id="@+id/user_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
@@ -28,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:padding="@dimen/padding_medium">
+            android:padding="@dimen/padding_medium"
+            android:paddingRight="@dimen/activity_horizontal_margin">
 
             <TextView
                 android:id="@+id/leaderboard_fullname"
