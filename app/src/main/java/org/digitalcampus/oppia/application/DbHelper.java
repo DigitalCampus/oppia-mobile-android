@@ -2007,5 +2007,35 @@ public class DbHelper extends SQLiteOpenHelper {
         return prefValue;
     }
 
+    public boolean insertOrUpdateUserLeaderboard(String username, String fullname, int points, DateTime lastUpdate){
+		String whereClause = LEADERBOARD_C_USERNAME + "=? ";
+		String[] args = new String[] { username };
+		boolean updated;
+		String lastUpdateStr = MobileLearning.DATETIME_FORMAT.print(lastUpdate);
+
+		ContentValues values = new ContentValues();
+		values.put(LEADERBOARD_C_FULLNAME, fullname);
+		values.put(LEADERBOARD_C_USERNAME, username);
+		values.put(LEADERBOARD_C_POINTS, points);
+		values.put(LEADERBOARD_C_LASTUPDATE, lastUpdateStr);
+
+		Cursor c = db.query(LEADERBOARD_TABLE, null, whereClause, args, null, null, null);
+		if (c.getCount() > 0){
+			c.close();
+			//Update table only if the last update value is smaller than the current one
+			String s = LEADERBOARD_C_USERNAME + "=? AND " + LEADERBOARD_C_LASTUPDATE + "<=? ";
+			args = new String[] { username, lastUpdateStr };
+			int affectedRows = db.update(LEADERBOARD_TABLE, values, s, args);
+
+			updated = (affectedRows > 0);
+		}
+		else{
+			db.insertOrThrow(LEADERBOARD_TABLE, null, values);
+			updated = true;
+		}
+
+		return updated;
+	}
+
 
 }
