@@ -12,9 +12,15 @@ import android.widget.TextView;
 
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.adapter.LeaderboardAdapter;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.LeaderboardPosition;
+import org.digitalcampus.oppia.task.LoginTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.UpdateLeaderboardFromServerTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class LeaderboardFragment extends Fragment {
+public class LeaderboardFragment extends Fragment implements SubmitListener {
 
     public static LeaderboardFragment newInstance() {
         return new LeaderboardFragment();
@@ -60,20 +66,21 @@ public class LeaderboardFragment extends Fragment {
         leaderboard_view.setLayoutManager( new LinearLayoutManager(this.getContext()));
         leaderboard_view.setAdapter(adapter);
 
-        updateLeaderboard();
+        Payload p = new Payload();
+        UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity());
+        task.seListener(this);
+        task.execute(p);
+
+
     }
 
     private void updateLeaderboard(){
 
         leaderboard.clear();
 
-        leaderboard.add(new LeaderboardPosition("aaa", "Nombre usuario", 2235));
-        leaderboard.add(new LeaderboardPosition("aaaaaa", "Nombre usuario2", 535));
-        leaderboard.add(new LeaderboardPosition("bbbb", "Nombre usuario3", 35));
-        leaderboard.add(new LeaderboardPosition("jjoseba", "Joseba S.", 195));
-        leaderboard.add(new LeaderboardPosition("bbbb", "Nombre usuario3", 535));
-        leaderboard.add(new LeaderboardPosition("bbbb", "Nombre usuario3", 2));
-        leaderboard.add(new LeaderboardPosition("bbbb", "Nombre usuario3", 0));
+        DbHelper db = DbHelper.getInstance(getActivity());
+        leaderboard.addAll(db.getLeaderboard());
+
         String username = SessionManager.getUsername(this.getContext());
         Collections.sort(leaderboard);
 
@@ -88,7 +95,7 @@ public class LeaderboardFragment extends Fragment {
             }
         }
 
-        if ( userPos!= null){
+        if ( userPos != null){
             rankingPosition.setText(String.format(Locale.getDefault(), "%dº", (i+1)));
             totalPoints.setText(getString(R.string.leaderboard_points, String.format(Locale.getDefault(), "%d", userPos.getPoints())));
         }
@@ -97,5 +104,15 @@ public class LeaderboardFragment extends Fragment {
 
         loadingSpinner.setVisibility(View.GONE);
         leaderboard_view.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void submitComplete(Payload response) {
+        updateLeaderboard();
+    }
+
+    @Override
+    public void apiKeyInvalidated() {
+        ((AppActivity)this.getActivity()).apiKeyInvalidated();
     }
 }

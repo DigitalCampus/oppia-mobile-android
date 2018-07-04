@@ -39,6 +39,7 @@ import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.model.LeaderboardPosition;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
@@ -2036,6 +2037,24 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		return updated;
 	}
+
+	public List<LeaderboardPosition> getLeaderboard(){
+        ArrayList<LeaderboardPosition> leaderboard = new ArrayList<>();
+        String order = LEADERBOARD_C_POINTS + " DESC ";
+        Cursor c = db.query(LEADERBOARD_TABLE, null, null, null, null, null, order);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            LeaderboardPosition pos = new LeaderboardPosition();
+            pos.setUsername(c.getString(c.getColumnIndex(LEADERBOARD_C_USERNAME)));
+            pos.setFullname(c.getString(c.getColumnIndex(LEADERBOARD_C_FULLNAME)));
+            pos.setPoints(c.getInt(c.getColumnIndex(LEADERBOARD_C_POINTS)));
+            leaderboard.add(pos);
+            c.moveToNext();
+        }
+
+        c.close();
+        return leaderboard;
+    }
 
 
 }

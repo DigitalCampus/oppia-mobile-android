@@ -9,6 +9,10 @@ public class LeaderboardPosition implements Comparable<LeaderboardPosition>{
     private boolean isUser;
 
 
+    public LeaderboardPosition(){
+
+    }
+
     public LeaderboardPosition(String username, String fullname, int points){
         this.username = username;
         this.fullname = fullname;
