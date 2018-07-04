@@ -32,6 +32,7 @@ import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.CourseScorecardFragment;
 import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
+import org.digitalcampus.oppia.fragments.LeaderboardFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.ImageUtils;
@@ -97,6 +98,10 @@ public class ScorecardActivity extends AppActivity {
 			Fragment fPoints = PointsFragment.newInstance();
 			fragments.add(fPoints);
             tabTitles.add(this.getString(R.string.tab_title_points));
+
+			Fragment fLeaderboard = LeaderboardFragment.newInstance();
+			fragments.add(fLeaderboard);
+			tabTitles.add(getString(R.string.tab_title_leaderboard));
         }
 
 		boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
@@ -105,6 +110,8 @@ public class ScorecardActivity extends AppActivity {
 			fragments.add(fBadges);
             tabTitles.add(this.getString(R.string.tab_title_badges));
         }
+
+
 
 		ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
 		viewPager.setAdapter(apAdapter);
@@ -122,6 +129,7 @@ public class ScorecardActivity extends AppActivity {
         }
 		viewPager.setCurrentItem(currentTab);
         viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+		tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
 	}
 
 	@Override

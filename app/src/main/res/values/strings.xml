@@ -377,5 +377,8 @@
     <string name="points_event_media_played">Media played \'%1$s - %2$s\'</string>
     <string name="points_event_quiz_attempt">Quiz attempt \'%1$s - %2$s\'</string>
     <string name="points_event_course_downloaded">Course \'%1$s\' downloaded</string>
+    <string name="tab_title_leaderboard">Leaderboard</string>
+    <string name="leaderboard_position">Your position</string>
+    <string name="leaderboard_points">%1$s points</string>
 </resources>
 
