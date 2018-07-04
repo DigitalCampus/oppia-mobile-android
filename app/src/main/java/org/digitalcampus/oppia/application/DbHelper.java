@@ -68,7 +68,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 28;
+	private static final int DB_VERSION = 29;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -164,6 +164,12 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String USER_PREFS_C_PREFKEY = "preference";
     private static final String USER_PREFS_C_PREFVALUE = "value";
 
+	private static final String LEADERBOARD_TABLE = "leaderboard";
+	private static final String LEADERBOARD_C_USERNAME = "username";
+	private static final String LEADERBOARD_C_FULLNAME = "fullname";
+	private static final String LEADERBOARD_C_POINTS = "points";
+	private static final String LEADERBOARD_C_LASTUPDATE = "lastupdate";
+
 	// Constructor
 	private DbHelper(Context ctx) { //
 		super(ctx, DB_NAME, null, DB_VERSION);
@@ -199,6 +205,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createUserPrefsTable(db);
         createCourseGamificationTable(db);
 		createActivityGamificationTable(db);
+		createLeaderboardTable(db);
 	}
 
     public void beginTransaction(){
@@ -211,7 +218,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.endTransaction();
     }
 
-	public void createCourseTable(SQLiteDatabase db){
+	private void createCourseTable(SQLiteDatabase db){
 		String mSql = "create table " + COURSE_TABLE + " (" + COURSE_C_ID + " integer primary key autoincrement, "
 				+ COURSE_C_VERSIONID + " int, " + COURSE_C_TITLE + " text, " + COURSE_C_LOCATION + " text, "
 				+ COURSE_C_SHORTNAME + " text," + COURSE_C_SCHEDULE + " int,"
@@ -223,7 +230,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(mSql);
 	}
 	
-	public void createActivityTable(SQLiteDatabase db){
+	private void createActivityTable(SQLiteDatabase db){
 		String aSql = "create table " + ACTIVITY_TABLE + " (" +
 									ACTIVITY_C_ID + " integer primary key autoincrement, " + 
 									ACTIVITY_C_COURSEID + " int, " + 
@@ -237,7 +244,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(aSql);
 	}
 	
-	public void createLogTable(SQLiteDatabase db){
+	private void createLogTable(SQLiteDatabase db){
 		String lSql = "create table " + TRACKER_LOG_TABLE + " (" +
 				TRACKER_LOG_C_ID + " integer primary key autoincrement, " + 
 				TRACKER_LOG_C_COURSEID + " integer, " + 
@@ -256,7 +263,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(lSql);
 	}
 
-	public void createQuizAttemptsTable(SQLiteDatabase db){
+	private void createQuizAttemptsTable(SQLiteDatabase db){
 		String sql = "create table " + QUIZATTEMPTS_TABLE + " (" + 
 							QUIZATTEMPTS_C_ID + " integer primary key autoincrement, " + 
 							QUIZATTEMPTS_C_DATETIME + " datetime default current_timestamp, " + 
@@ -274,7 +281,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(sql);
 	}
 	
-	public void createSearchTable(SQLiteDatabase db){
+	private void createSearchTable(SQLiteDatabase db){
 		String sql = "CREATE VIRTUAL TABLE "+SEARCH_TABLE+" USING FTS3 (" +
                 SEARCH_C_TEXT + " text, " +
                 SEARCH_C_COURSETITLE + " text, " +
@@ -284,7 +291,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(sql);
 	}
 	
-	public void createUserTable(SQLiteDatabase db){
+	private void createUserTable(SQLiteDatabase db){
 		String sql = "CREATE TABLE ["+USER_TABLE+"] (" +
                 "["+USER_C_ID+"]" + " integer primary key autoincrement, " +
                 "["+USER_C_USERNAME +"]" + " TEXT, "+
@@ -319,13 +326,22 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(mSql);
     }
 
-	public void createActivityGamificationTable(SQLiteDatabase db){
+	private void createActivityGamificationTable(SQLiteDatabase db){
 		String mSql = "create table " + ACTIVITY_GAME_TABLE + " ("
 				+ ACTIVITY_GAME_C_ID + " integer primary key autoincrement, "
 				+ ACTIVITY_GAME_C_ACTIVITYID + " integer,"
 				+ ACTIVITY_GAME_C_EVENT + " text,"
 				+ ACTIVITY_GAME_C_POINTS + " integer default 0 )";
 		db.execSQL(mSql);
+	}
+
+	private void createLeaderboardTable(SQLiteDatabase db){
+		String sql = "create table " + LEADERBOARD_TABLE + " (" +
+				LEADERBOARD_C_USERNAME + " text, " +
+				LEADERBOARD_C_FULLNAME + " text, " +
+				LEADERBOARD_C_POINTS + " integer default 0, " +
+				LEADERBOARD_C_LASTUPDATE + " datetime default current_timestamp )";
+		db.execSQL(sql);
 	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -498,6 +514,12 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL(sql3);
             db.execSQL(sql4);
         }
+
+		if(oldVersion <= 28 && newVersion >= 29){
+			// add leaderboard table
+			db.execSQL("drop table if exists " + LEADERBOARD_TABLE);
+			createLeaderboardTable(db);
+		}
 	}
 
 	public void updateV43(long userId){
