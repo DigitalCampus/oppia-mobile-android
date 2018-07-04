@@ -140,11 +140,4 @@ public class LoginFragment extends AppFragment implements SubmitListener {
             }
 		}
 	}
-	
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
-
-
 }

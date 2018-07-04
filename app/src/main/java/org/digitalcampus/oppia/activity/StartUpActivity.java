@@ -219,7 +219,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     }
 
 	public void installComplete(Payload p) {
-		if(p.getResponseData().size()>0){
+		if(!p.getResponseData().isEmpty()){
             Media.resetMediaScan(prefs);
 		}
 		preloadAccounts();

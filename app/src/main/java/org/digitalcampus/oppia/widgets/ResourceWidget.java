@@ -131,7 +131,7 @@ public class ResourceWidget extends WidgetFactory {
 		
 		File file = new File(fileUrl);
 		setResourceFileName(file.getName());
-		OnResourceClickListener orcl = new OnResourceClickListener(super.getActivity(),activity.getMimeType());
+		OnResourceClickListener orcl = new OnResourceClickListener(super.getActivity());
 		// show image files
 		if (activity.getMimeType().equals("image/jpeg") || activity.getMimeType().equals("image/png")){
 			ImageView iv = new ImageView(super.getActivity());
@@ -223,7 +223,7 @@ public class ResourceWidget extends WidgetFactory {
 			}
 
 			GamificationEngine gamificationEngine = new GamificationEngine( getActivity());
-			GamificationEvent gamificationEvent = gamificationEngine.processEventResourceStoppedActivity(this.course, this.activity);
+			GamificationEvent gamificationEvent = gamificationEngine.processEventResourceStoppedActivity();
 
 			t.saveTracker(course.getCourseId(), activity.getDigest(), data, true, gamificationEvent);
 
@@ -305,30 +305,28 @@ public class ResourceWidget extends WidgetFactory {
 	
 	private class OnResourceClickListener implements OnClickListener{
 
-		private Context _ctx;
-		private String type;
+		private Context ctx;
 		
-		public OnResourceClickListener(Context ctx, String type){
-			this._ctx = ctx;
-			this.type = type;
+		public OnResourceClickListener(Context ctx){
+			this.ctx = ctx;
 		}
 
 		public void onClick(View v) {
 			File file = (File) v.getTag();
 			// check the file is on the file system (should be but just in case)
-			boolean exists = Storage.mediaFileExists(_ctx, file.getName());
+			boolean exists = Storage.mediaFileExists(ctx, file.getName());
 			if(!exists){
-				Toast.makeText(_ctx, _ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
+				Toast.makeText(ctx, ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
 				return;
 			}
-            Intent intent = ExternalResourceOpener.getIntentToOpenResource(_ctx, file);
+            Intent intent = ExternalResourceOpener.getIntentToOpenResource(ctx, file);
             if(intent != null){
                 ResourceWidget.this.setResourceViewing(true);
                 ResourceWidget.this.setResourceStartTime(System.currentTimeMillis()/1000);
-                _ctx.startActivity(intent);
+                ctx.startActivity(intent);
             } else {
-                Toast.makeText(_ctx,
-                        _ctx.getString(R.string.error_resource_app_not_found, file.getName()),
+                Toast.makeText(ctx,
+                        ctx.getString(R.string.error_resource_app_not_found, file.getName()),
                         Toast.LENGTH_LONG).show();
             }
 		}

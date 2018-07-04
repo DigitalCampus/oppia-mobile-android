@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.utils.storage;
 
+import android.util.Log;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 
@@ -26,7 +28,6 @@ public class DeviceFile{
 	
     private File mFile;
     private WeakReference<DeviceFile[]> mChildren = null;
-    private Integer mChildCount = null;
     private boolean bGrandPeeked = false;
 
     public DeviceFile(String path) {
@@ -96,10 +97,8 @@ public class DeviceFile{
     public DeviceFile[] listFiles(boolean grandPeek) {
         if(mChildren != null && mChildren.get() != null && mChildren.get().length > 0)
             return mChildren.get();
-        File[] realFiles = null;
-        try {
-            realFiles = mFile.listFiles();
-        } catch(Throwable e) { }
+        File[] realFiles = mFile.listFiles();
+
         DeviceFile[] mChildren2 = getOpenPaths(realFiles);
 
         if ((mChildren2 == null || mChildren2.length == 0) && !isDirectory()
@@ -115,13 +114,13 @@ public class DeviceFile{
                     if (!mChildren2[i].isDirectory())
                         continue;
                     mChildren2[i].list();
-                } catch (ArrayIndexOutOfBoundsException e) {
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
+                    Log.d(TAG, "mChildren2 cannot find item in index no", aioobe);
                 }
             }
             bGrandPeeked = true;
         }
 
-        mChildCount = mChildren2.length;
         this.mChildren = new WeakReference<DeviceFile[]>(mChildren2);
 
         return mChildren2;

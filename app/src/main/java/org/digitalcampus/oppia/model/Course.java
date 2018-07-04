@@ -57,7 +57,7 @@ public class Course implements Serializable {
 	private int noActivitiesCompleted = 0;
 	private int noActivitiesStarted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
-	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<GamificationEvent>();
+	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<>();
 
 	private String root;
 	
@@ -169,7 +169,6 @@ public class Course implements Serializable {
 	}
 
 	public String getCourseXMLLocation(){
-		//String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
 	}
 	

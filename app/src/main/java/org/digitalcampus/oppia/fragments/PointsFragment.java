@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.PointsListAdapter;
@@ -50,7 +51,8 @@ public class PointsFragment extends AppFragment {
 	public static final String TAG = PointsFragment.class.getSimpleName();
 
     private JSONObject json;
-    @Inject ArrayList<Points> points;
+    @Inject
+	ArrayList<Points> points;
 	private PointsListAdapter pointsAdapter;
 
 	public static PointsFragment newInstance() {
@@ -63,11 +65,6 @@ public class PointsFragment extends AppFragment {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
 	}
 	
 	@Override
@@ -89,7 +86,7 @@ public class PointsFragment extends AppFragment {
 	private void getPoints(){
 		DbHelper db = DbHelper.getInstance(super.getActivity());
 		long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-		points = db.getUserPoints(userId);
+		points = (ArrayList) db.getUserPoints(userId);
         TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_points_title);
         tv.setVisibility(View.GONE);
 	}

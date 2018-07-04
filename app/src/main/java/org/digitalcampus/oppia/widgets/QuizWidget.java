@@ -201,9 +201,9 @@ public class QuizWidget extends WidgetFactory {
             this.showQuestion();
         }
         else{
-            View container = getView();
-            if (container != null){
-                ViewGroup vg = (ViewGroup) container.findViewById(activity.getActId());
+            View localContainer = getView();
+            if (localContainer != null){
+                ViewGroup vg = (ViewGroup) localContainer.findViewById(activity.getActId());
                 if (vg!=null){
                     vg.removeAllViews();
                     vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
@@ -237,7 +237,7 @@ public class QuizWidget extends WidgetFactory {
             if (db == null) db = DbHelper.getInstance(getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 
-            if( db.isPreviousSectionActivitiesCompleted(course, activity, userId) )
+            if( db.isPreviousSectionActivitiesCompleted(activity, userId) )
                 return QUIZ_AVAILABLE;
             else
                 return R.string.widget_quiz_unavailable_section;
@@ -246,7 +246,7 @@ public class QuizWidget extends WidgetFactory {
             // check to see if all previous course activities have been completed
             if (db == null) db = DbHelper.getInstance(getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-            if (db.isPreviousCourseActivitiesCompleted(course, activity, userId))
+            if (db.isPreviousCourseActivitiesCompleted(activity, userId))
                 return QUIZ_AVAILABLE;
             else
                 return R.string.widget_quiz_unavailable_course;
@@ -275,14 +275,13 @@ public class QuizWidget extends WidgetFactory {
 			questionImage.setVisibility(View.GONE);
 		} else {
 			String fileUrl = course.getLocation() + q.getProp("image");
-			// File file = new File(fileUrl);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
 			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
 			if (q.getProp("media") == null){
-				OnImageClickListener oicl = new OnImageClickListener(super.getActivity(), "image/*");
+				OnImageClickListener oicl = new OnImageClickListener(super.getActivity());
 				iv.setOnClickListener(oicl);
 				TextView tv = (TextView) getView().findViewById(R.id.question_image_caption);
 				tv.setText(R.string.widget_quiz_image_caption);
@@ -308,7 +307,7 @@ public class QuizWidget extends WidgetFactory {
 		} else if (q instanceof Numerical) {
 			qw = new NumericalWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Description) {
-			qw = new DescriptionWidget(super.getActivity(), getView(), container);
+			qw = new DescriptionWidget(getView());
 		} else if (q instanceof DragAndDrop) {
 			qw = new DragAndDropWidget(super.getActivity(), getView(), container, q, course.getLocation());
 		}	else {
@@ -506,9 +505,7 @@ public class QuizWidget extends WidgetFactory {
 			TextView baselineExtro = (TextView) getView().findViewById(R.id.quiz_results_baseline);
 			baselineExtro.setVisibility(View.VISIBLE);
 			baselineExtro.setText(super.getActivity().getString(R.string.widget_quiz_baseline_completed));
-		} 
-		
-		// TODO add TextView here to give overall feedback if it's in the quiz
+		}
 		
 		// Show the detail of which questions were right/wrong
 		if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ATEND){
@@ -614,7 +611,6 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
-		// this.saveAnswer();
 		config.put("quiz", this.quiz);
 		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
 		config.put(WidgetFactory.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
@@ -667,7 +663,7 @@ public class QuizWidget extends WidgetFactory {
 		private Context ctx;
 		private String type;
 		
-		public OnImageClickListener(Context ctx, String type){
+		public OnImageClickListener(Context ctx){
 			this.ctx = ctx;
 			this.type = type;
 		}

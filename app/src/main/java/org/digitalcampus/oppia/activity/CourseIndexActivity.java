@@ -157,7 +157,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         }
         editor.apply();
 
-        if ((parsedCourse != null) && (sections != null) && (sections.size()>0)){
+        if ((parsedCourse != null) && (sections != null) && (!sections.isEmpty())){
             parsedCourse.setCourseId(course.getCourseId());
             parsedCourse.updateCourseActivity(this);
             sla.notifyDataSetChanged();
@@ -277,7 +277,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private boolean isBaselineCompleted() {
         ArrayList<Activity> baselineActs = parsedCourse.getBaselineActivities();
-        // TODO how to handle if more than one baseline activity
         for (Activity a : baselineActs) {
             if (!a.isAttempted()) {
                 this.baselineActivity = a;
@@ -393,11 +392,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if(resultCode == RESULT_JUMPTO){
-                String digest = data.getStringExtra(JUMPTO_TAG);
-                startCourseActivityByDigest(digest);
-            }
+        if (requestCode == 1 && resultCode == RESULT_JUMPTO){
+            String digest = data.getStringExtra(JUMPTO_TAG);
+            startCourseActivityByDigest(digest);
         }
     }
 }

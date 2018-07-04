@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
@@ -62,7 +63,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     /**
 	 * @param activities: list of activities to show on the ScheduleReminders section
 	 */
-	public void drawReminders(ArrayList<org.digitalcampus.oppia.model.Activity> activities){
+	public void drawReminders(List<org.digitalcampus.oppia.model.Activity> activities){
         ScheduleReminders reminders = (ScheduleReminders) findViewById(R.id.schedule_reminders);
         if (reminders != null){
             reminders.initSheduleReminders(activities);

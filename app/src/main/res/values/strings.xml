@@ -16,7 +16,6 @@
     <string name="menu_font_decrease">Decrease text size</string>
     <string name="menu_help">Help</string>
     <string name="menu_logout">Logout</string>
-    <string name="menu_monitor">Monitor</string>
     <string name="menu_read_aloud">Read aloud</string>
     <string name="menu_return_to_courses">Return to courses</string>
     <string name="menu_scorecard">Scorecard</string>
@@ -53,7 +52,6 @@
     <string name="title_activity_course_index">Course Index</string>
     <string name="title_activity_course">Activity</string>
     <string name="title_course_meta">About</string>
-    <string name="title_monitor">Monitor</string>
     <string name="title_stats_submitted">No activities submitted to server</string>
     <string name="title_stats_unsubmitted">No activities waiting to submit</string>
     <string name="title_prefs">Settings</string>
@@ -371,6 +369,7 @@
     <string name="course_transferring">Course transferring in progress...</string>
     <string name="bluetooth.info_connect">Connect to other device using bluetooth to start transfer</string>
     <string name="bluetooth.transferable_type">Transferable type</string>
+    <string name="bluetooth_device_scanning">Scanning for new devices...</string>
 
     <!-- Strings for point events -->
     <string name="points_event_activity_completed">Activity completed \'%1$s - %2$s\'</string>

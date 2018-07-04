@@ -91,7 +91,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		// Get tags list
 		if(this.json == null){
 			this.getTagList();
-        } else if ((tags != null) && tags.size()>0) {
+        } else if ((tags != null) && !tags.isEmpty()) {
             //We already have loaded JSON and tags (coming from orientationchange)
             tla.notifyDataSetChanged();
         }
@@ -151,7 +151,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			tagRepository.refreshTagList(tags, json);
 
             tla.notifyDataSetChanged();
-            findViewById(R.id.empty_state).setVisibility((tags.size()==0) ? View.VISIBLE : View.GONE);
+            findViewById(R.id.empty_state).setVisibility((tags.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (JSONException e) {
 			e.printStackTrace();

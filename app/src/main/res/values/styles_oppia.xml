@@ -57,6 +57,12 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <style name="Oppia.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/highlight_light</item>
+        <item name="colorPrimaryDark">@color/highlight_shadow</item>
+        <item name="colorAccent">@color/highlight_secondary</item>
+    </style>
+
     <style name="Oppia.ToolbarTheme.Dark" parent="@style/Oppia.ToolbarTheme">
         <item name="android:windowBackground">@color/background_dark</item>
     </style>

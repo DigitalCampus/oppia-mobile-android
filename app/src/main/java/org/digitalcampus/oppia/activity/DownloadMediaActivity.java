@@ -230,7 +230,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 	@Override
 	public void onResume(){
 		super.onResume();
-        if ((missingMedia != null) && missingMedia.size()>0) {
+        if ((missingMedia != null) && !missingMedia.isEmpty()) {
             //We already have loaded media (coming from orientationchange)
             dmla.sortByFilename();
             isSortByCourse = false;
@@ -277,12 +277,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         getMenuInflater().inflate(R.menu.missing_media_sortby, menu);
         MenuItem selectAll = menu.findItem(R.id.menu_select_all);
         if(selectAll != null) {
-            selectAll.setVisible(missingMedia.size() != 0);
+            selectAll.setVisible(!missingMedia.isEmpty());
         }
 
         MenuItem sortBy = menu.findItem(R.id.menu_sort_by);
         if(sortBy != null){
-            sortBy.setVisible(missingMedia.size() != 0);
+            sortBy.setVisible(!missingMedia.isEmpty());
             sortBy.setTitle(isSortByCourse ? getString(R.string.menu_sort_by_filename)
                     : getString(R.string.menu_sort_by_course));
         }
@@ -405,14 +405,14 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
             missingMedia.remove(mediaFile);
             dmla.notifyDataSetChanged();
-            emptyState.setVisibility((missingMedia.size()==0) ? View.VISIBLE : View.GONE);
-            downloadViaPCBtn.setVisibility((missingMedia.size()==0) ? View.GONE : View.VISIBLE);
+            emptyState.setVisibility((missingMedia.isEmpty()) ? View.VISIBLE : View.GONE);
+            downloadViaPCBtn.setVisibility((missingMedia.isEmpty()) ? View.GONE : View.VISIBLE);
             invalidateOptionsMenu();
         }
     }
 
     private Media findMedia(String fileUrl){
-        if ( missingMedia.size()>0){
+        if (!missingMedia.isEmpty()){
             for (Media mediaFile : missingMedia){
                 if (mediaFile.getDownloadUrl().equals(fileUrl)){
                     return mediaFile;
@@ -525,19 +525,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     private class DownloadMediaListener implements ListInnerBtnOnClickListener {
     	
-    	public final String TAG = DownloadMediaListener.class.getSimpleName();
-    	
         //@Override
         public void onClick(int position) {
-
-            Log.d(TAG, "Clicked " + position);
+            Log.d(DownloadMediaListener.class.getSimpleName(), "Clicked " + position);
             Media mediaToDownload = missingMedia.get(position);
 
         	downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
-
         }
-
-
     }
-
 }

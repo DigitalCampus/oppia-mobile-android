@@ -33,6 +33,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SearchUtils {
 
@@ -100,7 +101,7 @@ public class SearchUtils {
 			Payload payload = params[0];
 			DbHelper db = DbHelper.getInstance(ctx);
 			db.deleteSearchIndex();
-			ArrayList<Course> courses  = db.getAllCourses();
+			List<Course> courses  = db.getAllCourses();
 			for (Course c : courses){
 				Log.d(TAG,"indexing: "+ c.getMultiLangInfo().getTitle("en"));
 				SearchUtils.indexAddCourse(ctx,c);

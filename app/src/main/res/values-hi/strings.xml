@@ -13,7 +13,6 @@
     <string name="menu_about">प्रोग्राम के बारे में जाने</string>
     <string name="menu_help">मदद</string>
     <string name="menu_logout">लॉग आउट</string>
-    <string name="menu_monitor">निगरानी करें</string>
     <string name="menu_read_aloud">ज़ोर से पढ़े</string>
     <string name="menu_return_to_courses">कोर्स लिस्ट पर वापस जायें</string>
     <string name="menu_scorecard">स्कोरकार्ड</string>
@@ -45,7 +44,6 @@
     <string name="title_activity_course_index">Course Index</string>
     <string name="title_activity_course">Activity</string>
     <string name="title_course_meta">प्रोग्राम के बारे में जाने</string>
-    <string name="title_monitor">निगरानी करें</string>
     <string name="title_prefs">सेटिंग</string>
     <string name="title_scorecard">स्कोरकार्ड</string>
     <string name="search.activity_title">खोज</string>

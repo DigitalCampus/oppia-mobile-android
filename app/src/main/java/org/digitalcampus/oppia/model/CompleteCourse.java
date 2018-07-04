@@ -30,7 +30,6 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
     private ArrayList<Activity> baseline = new ArrayList<>();
     private ArrayList<Section> sections = new ArrayList<>();
     private ArrayList<GamificationEvent> gamification = new ArrayList<>();
-    private ArrayList<CourseMetaPage> metaPages = new ArrayList<>();
 
     public CompleteCourse(){
         super("");

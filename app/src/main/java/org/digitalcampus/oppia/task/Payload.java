@@ -18,13 +18,14 @@
 package org.digitalcampus.oppia.task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Payload {
 	
-	private ArrayList<? extends Object> data;
+	private List<? extends Object> data;
 	private boolean result = false;
 	private String resultResponse;
-	private ArrayList<Object> responseData = new ArrayList<Object>();
+	private ArrayList<Object> responseData = new ArrayList<>();
 	private String url;
 
 	public Payload(){
@@ -35,11 +36,11 @@ public class Payload {
 		this.setUrl(url);		
 	}
 	
-	public Payload(ArrayList<? extends Object> data) {
+	public Payload(List<? extends Object> data) {
 		this.data = data;
 	}
 
-	public ArrayList<? extends Object> getData() {
+	public List<? extends Object> getData() {
 		return data;
 	}
 

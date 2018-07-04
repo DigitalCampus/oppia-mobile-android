@@ -58,12 +58,6 @@ public class SessionManager {
         DbHelper db = DbHelper.getInstance(ctx);
         try {
             User u = db.getUser(username);
-            /*
-            //To test fast the apiKey expired case, uncomment this lines
-            ////////////////////////
-            u.setApiKey("xxxxxxx"); //to invalidate apiKey
-            db.addOrUpdateUser(u);
-             */
             return u.getDisplayName();
 
         } catch (UserNotFoundException e) {
@@ -76,6 +70,10 @@ public class SessionManager {
     public static String getUsername(Context ctx){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         return getUsernameFromPrefs(prefs);
+    }
+
+    public static long getUserId(Context ctx){
+        return DbHelper.getInstance(ctx).getUserId(getUsername(ctx));
     }
 
     public static void loginUser(Context ctx, User user){
@@ -160,7 +158,7 @@ public class SessionManager {
         }
 
         //If there were prefKeys not previously saved, we clear them from the SharedPreferences
-        if (prefsToSave.size()>0){
+        if (!prefsToSave.isEmpty()){
             for (String pref : prefsToSave) prefsEditor.remove(pref);
             //Then we set the default values again (only empty values, will not overwrite the others)
             PreferenceManager.setDefaultValues(ctx, R.xml.prefs, true);
