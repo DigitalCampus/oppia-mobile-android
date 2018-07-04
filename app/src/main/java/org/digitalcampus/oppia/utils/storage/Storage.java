@@ -26,6 +26,7 @@ public class Storage {
     public static final String APP_MEDIA_DIR_NAME = "media";
     public static final String APP_ACTIVITY_DIR_NAME = "activity";
     public static final String APP_BACKUP_DIR_NAME = "backup";
+    public static final String APP_LEADERBOARD_DIR_NAME = "leaderboard";
 
     private static StorageAccessStrategy storageStrategy;
     public static void setStorageStrategy(StorageAccessStrategy strategy){
@@ -59,6 +60,10 @@ public class Storage {
         return getStorageLocationRoot(ctx) + File.separator + APP_BACKUP_DIR_NAME + File.separator;
     }
 
+    public static String getLeaderboardImportPath(Context ctx){
+        return getStorageLocationRoot(ctx) + File.separator + APP_LEADERBOARD_DIR_NAME + File.separator;
+    }
+
     public static boolean createFolderStructure(Context ctx) {
 
         if (!storageStrategy.isStorageAvailable(ctx)){
@@ -68,7 +73,11 @@ public class Storage {
 
         //BUFFER_SIZE_CONFIG = 21;
 
-        String[] dirs = { Storage.getCoursesPath(ctx), Storage.getMediaPath(ctx), Storage.getDownloadPath(ctx) };
+        String[] dirs = {
+                Storage.getCoursesPath(ctx),
+                Storage.getMediaPath(ctx),
+                Storage.getDownloadPath(ctx),
+                Storage.getLeaderboardImportPath(ctx) };
 
         for (String dirName : dirs) {
             File dir = new File(dirName);

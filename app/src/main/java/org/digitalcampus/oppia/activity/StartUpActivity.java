@@ -42,6 +42,7 @@ import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.GCMRegistrationService;
+import org.digitalcampus.oppia.task.ImportLeaderboardsTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
@@ -52,7 +53,7 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.File;
 import java.util.ArrayList;
 
-public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener, PreloadAccountsListener {
+public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener, PreloadAccountsListener, ImportLeaderboardsTask.ImportLeaderboardListener {
 
 	public final static String TAG = StartUpActivity.class.getSimpleName();
 	private TextView tvProgress;
@@ -234,6 +235,14 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         if ((payload!=null) && payload.isResult()){
             Toast.makeText(this, payload.getResultResponse(), Toast.LENGTH_LONG).show();
         }
+        ImportLeaderboardsTask imTask = new ImportLeaderboardsTask(this);
+        imTask.setListener(this);
+        imTask.execute(payload);
+
+    }
+
+    @Override
+    public void onComplete(Boolean success, String message) {
         endStartUpScreen();
     }
 }
