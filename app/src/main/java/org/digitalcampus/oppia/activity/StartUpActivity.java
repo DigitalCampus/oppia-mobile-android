@@ -242,7 +242,12 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     }
 
     @Override
-    public void onComplete(Boolean success, String message) {
+    public void onLeaderboardImportProgress(String message) {
+
+    }
+
+    @Override
+    public void onLeaderboardImportComplete(Boolean success, String message) {
         endStartUpScreen();
     }
 }
