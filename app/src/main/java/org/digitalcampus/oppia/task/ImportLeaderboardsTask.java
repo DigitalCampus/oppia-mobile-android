@@ -73,6 +73,8 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                     } catch (WrongServerException e) {
                         e.printStackTrace();
                     }
+
+                    FileUtils.deleteFile(json_file);
                 }
             }
         }
