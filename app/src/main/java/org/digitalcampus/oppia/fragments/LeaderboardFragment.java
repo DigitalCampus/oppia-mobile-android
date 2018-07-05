@@ -96,7 +96,7 @@ public class LeaderboardFragment extends Fragment implements SubmitListener {
         }
 
         if ( userPos != null){
-            rankingPosition.setText(String.format(Locale.getDefault(), "%dº", (i+1)));
+            rankingPosition.setText(String.format(Locale.getDefault(), "%d", (i+1)));
             totalPoints.setText(getString(R.string.leaderboard_points, String.format(Locale.getDefault(), "%d", userPos.getPoints())));
         }
 
