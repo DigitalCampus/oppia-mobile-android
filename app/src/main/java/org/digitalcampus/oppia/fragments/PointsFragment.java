@@ -52,7 +52,7 @@ public class PointsFragment extends AppFragment {
 
     private JSONObject json;
     @Inject
-	ArrayList<Points> points;
+	List<Points> points;
 	private PointsListAdapter pointsAdapter;
 
 	public static PointsFragment newInstance() {
@@ -86,7 +86,7 @@ public class PointsFragment extends AppFragment {
 	private void getPoints(){
 		DbHelper db = DbHelper.getInstance(super.getActivity());
 		long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-		points = (ArrayList) db.getUserPoints(userId);
+		points = db.getUserPoints(userId);
         TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_points_title);
         tv.setVisibility(View.GONE);
 	}

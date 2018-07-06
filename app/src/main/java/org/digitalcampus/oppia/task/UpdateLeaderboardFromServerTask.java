@@ -9,12 +9,16 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.WrongServerException;
+import org.digitalcampus.oppia.gamification.Leaderboard;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -40,44 +44,38 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
 
         try {
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
-            Request request = new Request.Builder()
-                    .url(apiEndpoint.getFullURL(ctx, MobileLearning.LEADERBOARD_PATH))
-                    .get()
-                    .build();
-
-            Response response = null;
-            response = client.newCall(request).execute();
+            Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, MobileLearning.LEADERBOARD_PATH));
+            Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
-                JSONObject jsonResp = new JSONObject(response.body().string());
-                String lastUpdateStr = jsonResp.getString("generated_date");
-                String server = jsonResp.getString("server");
-
-                if (!prefs.getString(PrefsActivity.PREF_SERVER, "").equals(server)){
+                String json = response.body().string();
+                int updatedPositions = 0;
+                try {
+                    updatedPositions += Leaderboard.importLeaderboardJSON(ctx, json);
+                    payload.setResult(true);
+                    payload.setResultResponse(updatedPositions + " updated.");
+                } catch (ParseException e) {
+                    e.printStackTrace();
                     payload.setResult(false);
-                    payload.setResultResponse("Not matching server");
-                    Log.d(TAG, "Leaderboard server doesn't match with current one");
-
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    payload.setResult(false);
+                } catch (WrongServerException e) {
+                    e.printStackTrace();
+                    payload.setResult(false);
                 }
-                Log.d(TAG, lastUpdateStr);
-                payload.setResult(true);
             }
             else{
                 if (response.code() == 404){
                     payload.setResultResponse("Your server version is old and does not support leaderboard export.");
                 }
                 payload.setResult(false);
+                response.body().close();
             }
-
 
         } catch (IOException e) {
             e.printStackTrace();
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_required));
-        } catch (JSONException e) {
-            Mint.logException(e);
-            e.printStackTrace();
-            payload.setResult(false);
-            payload.setResultResponse(ctx.getString(R.string.error_processing_response));
         }
 
         return payload;

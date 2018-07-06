@@ -31,11 +31,15 @@ public class Leaderboard {
 
         JSONObject leaderboard = new JSONObject(json);
         String server = leaderboard.getString("server");
+        if(!server.endsWith("/")) {
+            server = server + "/";
+        }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         if (!prefs.getString(PrefsActivity.PREF_SERVER, "").equals(server)){
 
-            Log.d(TAG, "Leaderboard server doesn't match with current one");
+            Log.d(TAG, "Leaderboard server doesn't match with current one: " +
+                    prefs.getString(PrefsActivity.PREF_SERVER, "") + " - " + server);
             throw new WrongServerException(server);
         }
 

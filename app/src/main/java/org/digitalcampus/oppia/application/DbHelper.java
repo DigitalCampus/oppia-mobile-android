@@ -1128,7 +1128,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 			switch (event) {
 				case Gamification.EVENT_NAME_ACTIVITY_COMPLETED:
-					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 					if (activity != null) {
 						course = this.getCourse(activity.getCourseId(), userId);
 						if (course != null) {
@@ -1157,9 +1157,10 @@ public class DbHelper extends SQLiteOpenHelper {
 					break;
 
 				case Gamification.EVENT_NAME_QUIZ_ATTEMPT:
-					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
+					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
+					Log.d(TAG, "quizid " + c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 					course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
-					if (course != null) {
+					if ((course != null) && (activity!=null)) {
                         description = this.ctx.getString(R.string.points_event_quiz_attempt,
 								activity.getMultiLangInfo().getTitle(prefLang),
                                 course.getMultiLangInfo().getTitle(prefLang));

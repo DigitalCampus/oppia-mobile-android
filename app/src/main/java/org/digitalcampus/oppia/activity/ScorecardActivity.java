@@ -99,9 +99,12 @@ public class ScorecardActivity extends AppActivity {
 			fragments.add(fPoints);
             tabTitles.add(this.getString(R.string.tab_title_points));
 
-			Fragment fLeaderboard = LeaderboardFragment.newInstance();
-			fragments.add(fLeaderboard);
-			tabTitles.add(getString(R.string.tab_title_leaderboard));
+            if (course == null){
+				Fragment fLeaderboard = LeaderboardFragment.newInstance();
+				fragments.add(fLeaderboard);
+				tabTitles.add(getString(R.string.tab_title_leaderboard));
+			}
+
         }
 
 		boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
