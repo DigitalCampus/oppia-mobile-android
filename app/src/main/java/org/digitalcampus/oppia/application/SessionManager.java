@@ -68,6 +68,9 @@ public class SessionManager {
     }
 
     public static String getUsername(Context ctx){
+        if (ctx == null){
+            return "";
+        }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         return getUsernameFromPrefs(prefs);
     }

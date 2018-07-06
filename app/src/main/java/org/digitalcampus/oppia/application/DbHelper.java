@@ -623,13 +623,16 @@ public class DbHelper extends SQLiteOpenHelper {
 		long userId = this.isUser(user.getUsername());
 		if (userId == -1) {
 			Log.v(TAG, "Record added");
-			return db.insertOrThrow(USER_TABLE, null, values);
+			userId = db.insertOrThrow(USER_TABLE, null, values);
+			this.insertOrUpdateUserLeaderboard(user.getUsername(), user.getDisplayName(), user.getPoints(), new DateTime());
+
 		} else {
 			String s = USER_C_ID + "=?";
 			String[] args = new String[] { String.valueOf(userId) };
 			db.update(USER_TABLE, values, s, args);
-			return userId;
-		} 
+
+		}
+		return userId;
 	}
 	
 	public long isUser(String username){
