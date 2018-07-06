@@ -9,6 +9,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.task.Payload;
 import org.joda.time.DateTime;
@@ -44,7 +45,7 @@ public class Leaderboard {
         }
 
         String lastUpdateStr = leaderboard.getString("generated_date");
-        Date sdt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX").parse(lastUpdateStr);
+        Date sdt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(lastUpdateStr);
         JSONArray positions = leaderboard.getJSONArray("leaderboard");
         DateTime lastUpdate = new DateTime(sdt);
 
@@ -63,5 +64,18 @@ public class Leaderboard {
         Log.d(TAG, "leaderboard added:" + updatedPositions);
 
         return updatedPositions;
+    }
+
+    public static boolean shouldFetchLeaderboard(SharedPreferences prefs){
+        long now = System.currentTimeMillis()/1000;
+        long lastScan = prefs.getLong(PrefsActivity.PREF_LAST_LEADERBOARD_FETCH, 0);
+        return (lastScan + MobileLearning.LEADERBOARD_FETCH_EXPIRATION <= now);
+    }
+
+
+    public static void updateLeaderboardFetchTime(SharedPreferences prefs){
+        Log.d(TAG, "Updating last media scan to now");
+        long now = System.currentTimeMillis()/1000;
+        prefs.edit().putLong(PrefsActivity.PREF_LAST_LEADERBOARD_FETCH, now).apply();
     }
 }

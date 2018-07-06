@@ -84,6 +84,8 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
 
     @Override
     protected void onPostExecute(Payload response) {
+
+        Leaderboard.updateLeaderboardFetchTime(prefs);
         synchronized (this) {
             if (listener != null) {
                 listener.submitComplete(response);

@@ -1,6 +1,8 @@
 package org.digitalcampus.oppia.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,7 @@ import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.adapter.LeaderboardAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.gamification.Leaderboard;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.LeaderboardPosition;
 import org.digitalcampus.oppia.task.LoginTask;
@@ -65,12 +68,17 @@ public class LeaderboardFragment extends Fragment implements SubmitListener {
         adapter = new LeaderboardAdapter(this.getContext(), leaderboard);
         leaderboard_view.setLayoutManager( new LinearLayoutManager(this.getContext()));
         leaderboard_view.setAdapter(adapter);
-
-        Payload p = new Payload();
-        UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity());
-        task.seListener(this);
-        task.execute(p);
-
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (Leaderboard.shouldFetchLeaderboard(prefs)){
+            Payload p = new Payload();
+            UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity());
+            task.seListener(this);
+            task.execute(p);
+        }
+        else {
+            updateLeaderboard();
+        }
 
     }
 
