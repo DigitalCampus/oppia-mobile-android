@@ -47,8 +47,8 @@ public class Course implements Serializable {
 	private boolean toUpdateSchedule;
 	private String downloadUrl;
 	private String imageFile;
-	private ArrayList<Media> media = new ArrayList<Media>();
-	private ArrayList<CourseMetaPage> metaPages = new ArrayList<CourseMetaPage>();
+	private ArrayList<Media> media = new ArrayList<>();
+	private ArrayList<CourseMetaPage> metaPages = new ArrayList<>();
 	private Double scheduleVersionID;
 	private String scheduleURI;
 	private boolean isDraft = false;
@@ -57,7 +57,7 @@ public class Course implements Serializable {
 	private int noActivitiesCompleted = 0;
 	private int noActivitiesStarted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
-	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<GamificationEvent>();
+	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<>();
 
 	private String root;
 	
@@ -169,7 +169,6 @@ public class Course implements Serializable {
 	}
 
 	public String getCourseXMLLocation(){
-		//String root = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
 		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
 	}
 	
@@ -279,6 +278,10 @@ public class Course implements Serializable {
 	public void addGamificationEvent(GamificationEvent ge){
 	    gamificationEvents.add(ge);
     }
+
+	public void setGamificationEvents(ArrayList<GamificationEvent> events){
+		gamificationEvents = events;
+	}
 
     public GamificationEvent findGamificationEvent(String event) throws GamificationEventNotFound {
         for(GamificationEvent ge: gamificationEvents){

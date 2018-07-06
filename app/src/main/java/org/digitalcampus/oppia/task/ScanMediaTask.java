@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.task;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
@@ -51,7 +52,7 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
         ArrayList<Object> currentMedia = payload.getResponseData();
         ArrayList<String> downloadingMedia = DownloadService.getTasksDownloading();
 
-        ArrayList<?> courseObjs = payload.getData();
+        List<?> courseObjs = payload.getData();
 		for (int i=0; i<courseObjs.size(); i++){
 			Course course = (Course) courseObjs.get(i);
             File courseXML = new File(course.getCourseXMLLocation());

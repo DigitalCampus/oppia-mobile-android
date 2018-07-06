@@ -250,8 +250,8 @@ public class UIUtils {
 	 * @param funct
 	 */
 	public static void createLanguageDialog(Context ctx, ArrayList<Lang> langs, final SharedPreferences prefs, final Callable<Boolean> funct) {
-        ArrayList<String> langStringList = new ArrayList<String>();
-        final ArrayList<Lang> languagesList = new ArrayList<Lang>();
+        ArrayList<String> langStringList = new ArrayList<>();
+        final ArrayList<Lang> languagesList = new ArrayList<>();
 		
 		// make sure there aren't any duplicates
 		for(Lang lang: langs){
@@ -281,7 +281,7 @@ public class UIUtils {
 		
 		// only show if at least one language
 		if (i > 0) {
-			ArrayAdapter<String> arr = new ArrayAdapter<String>(ctx, android.R.layout.select_dialog_singlechoice,langStringList);
+			ArrayAdapter<String> arr = new ArrayAdapter<>(ctx, android.R.layout.select_dialog_singlechoice,langStringList);
 			AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
 					.setSingleChoiceItems(arr, prefLangPosition, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {

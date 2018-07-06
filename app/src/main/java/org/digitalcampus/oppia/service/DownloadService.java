@@ -69,7 +69,6 @@ public class DownloadService extends IntentService {
 
     private ArrayList<String> tasksCancelled;
     private ArrayList<String> tasksDownloading;
-    private SharedPreferences prefs;
 
     private static DownloadService currentInstance;
     private BroadcastReceiver alternativeNotifier;
@@ -85,7 +84,7 @@ public class DownloadService extends IntentService {
                 return currentInstance.tasksDownloading;
             }
         }
-        return null;
+        return new ArrayList<>();
     }
 
 
@@ -94,7 +93,6 @@ public class DownloadService extends IntentService {
     @Override
     public void onCreate(){
         super.onCreate();
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         DownloadService.setInstance(this);
 
         alternativeNotifier = new BroadcastReceiver() {
@@ -104,9 +102,8 @@ public class DownloadService extends IntentService {
                     //If the file URL and the action are not present, we can't identify it
                     return;
                 }
-                String fileUrl = intent.getStringExtra(DownloadService.SERVICE_URL);
                 String action = intent.getStringExtra(DownloadService.SERVICE_ACTION);
-                DownloadService.this.notifyDownloads(action, fileUrl);
+                DownloadService.this.notifyDownloads(action);
             }
         };
 
@@ -117,7 +114,7 @@ public class DownloadService extends IntentService {
 
     }
 
-    private void notifyDownloads(String action, String fileUrl) {
+    private void notifyDownloads(String action) {
         //If there are no more pending downloads after the completion of this one, send a Notification
         if (action.equals(ACTION_COMPLETE) && (tasksDownloading==null || tasksDownloading.size() == 0)){
             Log.d(TAG, "Sending notification from Service for the completion of all pending media downloads");
@@ -195,7 +192,7 @@ public class DownloadService extends IntentService {
         try {
             URL url = new URL(fileUrl);
             //If no filename was passed, we set the filename based on the URL
-            if (filename == null){ filename = url.getPath().substring(url.getPath().lastIndexOf("/")+1); }
+            if (filename == null){ filename = url.getPath().substring(url.getPath().lastIndexOf('/')+1); }
             downloadedFile = new File(Storage.getMediaPath(this), filename);
 
             OkHttpClient client = HTTPClientUtils.getClient(this);
@@ -311,7 +308,7 @@ public class DownloadService extends IntentService {
 
     private void addCancelledTask(String fileUrl){
         if (tasksCancelled == null){
-            tasksCancelled = new ArrayList<String>();
+            tasksCancelled = new ArrayList<>();
         }
         if (!tasksCancelled.contains(fileUrl)){
             tasksCancelled.add(fileUrl);
@@ -328,7 +325,7 @@ public class DownloadService extends IntentService {
 
     private void addDownloadingTask(String fileUrl){
         if (tasksDownloading == null){
-            tasksDownloading = new ArrayList<String>();
+            tasksDownloading = new ArrayList<>();
         }
         if (!tasksDownloading.contains(fileUrl)){
             synchronized (this){

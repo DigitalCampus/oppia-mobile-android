@@ -19,7 +19,6 @@
     <string name="menu_font_decrease">لکھلئ چھوٹی کریں</string>
     <string name="menu_help">مدد</string>
     <string name="menu_logout">لاگ آؤٹ</string>
-    <string name="menu_monitor">نگرانی کریں</string>
     <string name="menu_read_aloud">زور سے پڑہیں</string>
     <string name="menu_return_to_courses">کورس فہرست پر واپس جائیں</string>
     <string name="menu_scorecard">سكوركارڈ</string>
@@ -52,7 +51,6 @@
     <string name="title_activity_course_index">کورس کی فہرست</string>
     <string name="title_activity_course">سرگرمی</string>
     <string name="title_course_meta">پروگرام کے بارے میں معالومات</string>
-    <string name="title_monitor">نگرانی کریں</string>
     <string name="title_stats_submitted">No activities submitted to server</string>
     <string name="title_stats_unsubmitted">No activities waiting to submit</string>
     <string name="title_prefs">سیٹنگز</string>

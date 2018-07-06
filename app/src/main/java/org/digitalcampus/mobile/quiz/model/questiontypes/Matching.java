@@ -22,8 +22,6 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,27 +31,12 @@ import org.digitalcampus.mobile.quiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Matching implements Serializable, QuizQuestion {
+public class Matching extends QuizQuestion implements Serializable {
 
     private static final long serialVersionUID = -7500128521011492086L;
     public static final String TAG = Matching.class.getSimpleName();
-    private int id;
-    private HashMap<String,String> title = new HashMap<>();
-    private List<Response> responseOptions = new ArrayList<>();
-    private float userscore = 0;
-    private List<String> userResponses = new ArrayList<>();
-    private HashMap<String, String> props = new HashMap<>();
-    private String feedback = "";
-    private boolean feedbackDisplayed = false;
 
-    public void addResponseOption(Response r) {
-        responseOptions.add(r);
-    }
-
-    public List<Response> getResponseOptions() {
-        return responseOptions;
-    }
-
+    @Override
     public void mark(String lang) {
         // loop through the responses
         // find whichever are set as selected and add up the responses
@@ -83,38 +66,7 @@ public class Matching implements Serializable, QuizQuestion {
         }
     }
 
-    public int getID() {
-        return this.id;
-    }
-
-    public void setID(int id) {
-        this.id = id;
-    }
-
     @Override
-    public String getTitle(String lang) {
-        if(title.containsKey(lang)){
-            return title.get(lang);
-        } else if (!title.entrySet().isEmpty()){
-            return title.entrySet().iterator().next().getValue();
-        } else {
-            return "";
-        }
-    }
-
-    @Override
-    public void setTitleForLang(String lang, String title) {
-        this.title.put(lang, title);
-    }
-
-    public void setResponseOptions(List<Response> responses) {
-        this.responseOptions = responses;
-    }
-
-    public float getUserscore() {
-        return this.userscore;
-    }
-
     public void setUserResponses(List<String> str) {
         if (!str.equals(this.userResponses)){
             this.setFeedbackDisplayed(false);
@@ -122,18 +74,8 @@ public class Matching implements Serializable, QuizQuestion {
         this.userResponses = str;
     }
 
-    public void setProps(HashMap<String, String> props) {
-        this.props = props;
-    }
 
-    public String getProp(String key) {
-        return props.get(key);
-    }
-
-    public List<String> getUserResponses() {
-        return this.userResponses;
-    }
-
+    @Override
     public String getFeedback(String lang) {
         this.feedback = "";
         this.mark(lang);
@@ -171,10 +113,12 @@ public class Matching implements Serializable, QuizQuestion {
         }
     }
 
+    @Override
     public int getMaxScore() {
         return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
+    @Override
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
         try {
@@ -196,25 +140,4 @@ public class Matching implements Serializable, QuizQuestion {
     public boolean responseExpected() {
         return true;
     }
-
-    @Override
-    public int getScoreAsPercent() {
-        if (this.getMaxScore() > 0){
-            return (int) (100 * this.getUserscore()) / this.getMaxScore();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public void setFeedbackDisplayed(boolean feedbackDisplayed) {
-        this.feedbackDisplayed = feedbackDisplayed;
-
-    }
-
-    @Override
-    public boolean getFeedbackDisplayed() {
-        return feedbackDisplayed;
-    }
-
 }

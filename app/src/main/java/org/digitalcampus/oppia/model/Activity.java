@@ -48,18 +48,18 @@ public class Activity implements Serializable{
 	private int dbId;
 	private String actType;
     private MultiLangInfo multiLangInfo = new MultiLangInfo();
-	private ArrayList<Lang> locations = new ArrayList<Lang>();
-	private ArrayList<Lang> contents = new ArrayList<Lang>();
+	private ArrayList<Lang> locations = new ArrayList<>();
+	private ArrayList<Lang> contents = new ArrayList<>();
 	private String digest;
 	private String imageFile;
-	private ArrayList<Media> media = new ArrayList<Media>();
+	private ArrayList<Media> media = new ArrayList<>();
 	private boolean completed = false;
 	private boolean attempted = false;
 	private boolean customImage = false;
 	private DateTime startDate;
 	private DateTime endDate;
 	private String mimeType;
-	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<GamificationEvent>();
+	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<>();
 
 	public Activity(){
 	}
@@ -253,9 +253,13 @@ public class Activity implements Serializable{
         this.multiLangInfo = multiLangInfo;
     }
 
-    public void addGamificationEvent(GamificationEvent ge){
-        gamificationEvents.add(ge);
+    public void addGamificationEvent(GamificationEvent event){
+        gamificationEvents.add(event);
     }
+
+	public void setGamificationEvents(ArrayList<GamificationEvent> events){
+		gamificationEvents = events;
+	}
 
     public GamificationEvent findGamificationEvent(String event) throws GamificationEventNotFound {
         for(GamificationEvent ge: gamificationEvents){

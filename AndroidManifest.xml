@@ -74,10 +74,6 @@
             android:theme="@style/Oppia.ToolbarTheme"
             android:label="@string/title_welcome" />
          <activity
-            android:name="org.digitalcampus.oppia.activity.MonitorActivity"
-            android:label="@string/title_monitor"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout" />
-         <activity
             android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"
             android:label="@string/title_course_meta" />
          <activity

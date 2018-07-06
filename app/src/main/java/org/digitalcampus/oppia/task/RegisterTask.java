@@ -83,10 +83,8 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
                 JSONObject jsonResp = new JSONObject(response.body().string());
                 u.setApiKey(jsonResp.getString("api_key"));
                 try {
-                    //u.setPoints(jsonResp.getInt("points"));
                     u.setBadges(jsonResp.getInt("badges"));
                 } catch (JSONException e){
-                    //u.setPoints(0);
                     u.setBadges(0);
                 }
 

@@ -12,7 +12,6 @@
     <string name="menu_about">Acerca de</string>
     <string name="menu_help">Ayuda</string>
     <string name="menu_logout">Cerrar sesión</string>
-    <string name="menu_monitor">Monitor</string>
     <string name="menu_read_aloud">Leer en voz alta</string>
     <string name="menu_return_to_courses">Volver a tus cursos</string>
     <string name="menu_scorecard">Scorecard</string>
@@ -38,7 +37,6 @@
     <string name="title_about">Acerca de</string>
     <string name="title_baseline">Preliminar</string>
     <string name="title_download_activity">Gestionar cursos</string>
-    <string name="title_monitor">Monitor</string>
     <string name="title_prefs">Ajustes</string>
     <string name="version">Version: %1$s</string>
     <string name="title_download_media">Descarga Media</string>

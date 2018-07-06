@@ -68,6 +68,7 @@ import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -87,7 +88,6 @@ public class OppiaMobileActivity
 	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
 	private ArrayList<Course> courses;
 	private Course tempCourse;
-	private long userId = 0;
     private int initialCourseListPadding = 0;
 
     private TextView messageText;
@@ -129,7 +129,6 @@ public class OppiaMobileActivity
         courseList = (ListView) findViewById(R.id.course_list);
         courseList.setAdapter(courseListAdapter);
 
-        // the alternative of registerForContextMenu;
         CourseContextMenuCustom courseMenu = new CourseContextMenuCustom(this);
         courseMenu.registerForContextMenu(courseList, this);
 
@@ -205,8 +204,8 @@ public class OppiaMobileActivity
 		if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS, false)){
 			DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
 			int max = Integer.valueOf(prefs.getString(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS, "2"));
-			long userId = db.getUserId(SessionManager.getUsername(this));
-			ArrayList<Activity> activities = db.getActivitiesDue(max, userId);
+			long sessionUserId = db.getUserId(SessionManager.getUsername(this));
+			List<Activity> activities = db.getActivitiesDue(max, sessionUserId);
 
 			this.drawReminders(activities);
 		} else {
@@ -250,7 +249,7 @@ public class OppiaMobileActivity
         noCoursesView.setVisibility(View.VISIBLE);
 
         TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
-        tv.setText((courses.size() > 0)? R.string.more_courses : R.string.no_courses);
+        tv.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
 
         Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
         manageBtn.setOnClickListener(new View.OnClickListener() {
@@ -332,7 +331,7 @@ public class OppiaMobileActivity
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
-                db.resetCourse(tempCourse.getCourseId(), OppiaMobileActivity.this.userId);
+                db.resetCourse(tempCourse.getCourseId(), SessionManager.getUserId(OppiaMobileActivity.this));
                 displayCourses();
             }
         });
@@ -345,7 +344,7 @@ public class OppiaMobileActivity
 	}
 	
 	private void confirmCourseUpdateActivity(){
-        UpdateCourseActivityTask task = new UpdateCourseActivityTask(OppiaMobileActivity.this, this.userId);
+        UpdateCourseActivityTask task = new UpdateCourseActivityTask(OppiaMobileActivity.this, SessionManager.getUserId(this));
         ArrayList<Object> payloadData = new ArrayList<>();
         payloadData.add(tempCourse);
         Payload p = new Payload(payloadData);
@@ -390,7 +389,6 @@ public class OppiaMobileActivity
         else{
             hideScanMediaMessage();
         }
-
     }
 
 
@@ -428,7 +426,7 @@ public class OppiaMobileActivity
 	}
 
 	public void scanComplete(Payload response) {
-		if (response.getResponseData().size() > 0) {
+		if (!response.getResponseData().isEmpty()) {
             if (messageContainer.getVisibility() != View.VISIBLE){
                 messageContainer.setVisibility(View.VISIBLE);
                 messageButton.setOnClickListener(new OnClickListener() {

@@ -22,9 +22,6 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -32,28 +29,10 @@ import org.digitalcampus.mobile.quiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MultiSelect implements Serializable, QuizQuestion {
+public class MultiSelect extends QuizQuestion implements Serializable {
 
     private static final long serialVersionUID = 936284577467681053L;
     public static final String TAG = MultiSelect.class.getSimpleName();
-    private int id;
-    private HashMap<String,String> title = new HashMap<>();
-    private List<Response> responseOptions = new ArrayList<>();
-    private float userscore = 0;
-    private List<String> userResponses = new ArrayList<>();
-    private HashMap<String,String> props = new HashMap<>();
-    private String feedback = "";
-    private boolean feedbackDisplayed = false;
-
-    @Override
-    public void addResponseOption(Response r){
-        responseOptions.add(r);
-    }
-
-    @Override
-    public List<Response> getResponseOptions(){
-        return responseOptions;
-    }
 
     @Override
     public void mark(String lang){
@@ -91,65 +70,6 @@ public class MultiSelect implements Serializable, QuizQuestion {
     }
 
     @Override
-    public int getID() {
-        return this.id;
-    }
-
-    @Override
-    public void setID(int id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getTitle(String lang) {
-        if(title.containsKey(lang)){
-            return title.get(lang);
-        } else if (!title.isEmpty()){
-            return title.entrySet().iterator().next().getValue();
-        } else{
-            return "";
-        }
-    }
-
-    @Override
-    public void setTitleForLang(String lang, String title) {
-        this.title.put(lang, title);
-    }
-
-    @Override
-    public void setResponseOptions(List<Response> responses) {
-        this.responseOptions = responses;
-    }
-
-    @Override
-    public float getUserscore() {
-        return this.userscore;
-    }
-
-    @Override
-    public List<String> getUserResponses() {
-        return this.userResponses;
-    }
-
-    @Override
-    public void setProps(HashMap<String,String> props) {
-        this.props = props;
-    }
-
-    @Override
-    public String getProp(String key) {
-        return props.get(key);
-    }
-
-    @Override
-    public void setUserResponses(List<String> str) {
-        if (!str.equals(this.userResponses)){
-            this.setFeedbackDisplayed(false);
-        }
-        this.userResponses = str;
-    }
-
-    @Override
     public String getFeedback(String lang) {
         // reset feedback back to nothing
         this.feedback = "";
@@ -180,28 +100,4 @@ public class MultiSelect implements Serializable, QuizQuestion {
         return jo;
     }
 
-    @Override
-    public boolean responseExpected() {
-        return true;
-    }
-
-    @Override
-    public int getScoreAsPercent() {
-        if (this.getMaxScore() > 0){
-            return (int) (100 * this.getUserscore()) / this.getMaxScore();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public void setFeedbackDisplayed(boolean feedbackDisplayed) {
-        this.feedbackDisplayed = feedbackDisplayed;
-
-    }
-
-    @Override
-    public boolean getFeedbackDisplayed() {
-        return feedbackDisplayed;
-    }
 }

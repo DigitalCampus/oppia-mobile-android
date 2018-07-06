@@ -39,6 +39,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
@@ -172,7 +173,6 @@ public class FeedbackWidget extends WidgetFactory {
 			questionImage.setVisibility(View.GONE);
 		} else {
 			String fileUrl = course.getLocation() + q.getProp("image");
-			// File file = new File(fileUrl);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
 			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
@@ -319,32 +319,13 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public void saveTracker() {
 		long timetaken = this.getSpentTime();
-		Tracker t = new Tracker(super.getActivity());
-		JSONObject obj = new JSONObject();
 		if(!isOnResultsPage){
 			return;
 		}
-		// add in extra meta-data
-		try {
-			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
-			obj.put("timetaken", timetaken);
-			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
-			obj.put("quiz_id", feedback.getID());
-			obj.put("instance_id", feedback.getInstanceID());
 
-			GamificationEngine gamificationEngine = new GamificationEngine( getActivity());
-			GamificationEvent gamificationEvent = gamificationEngine.processEventFeedbackActivity(this.course, this.activity);
-
-			t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
-		} catch (JSONException e) {
-			// Do nothing
-		} catch (NullPointerException npe){
-			//do nothing
-		}
-		
-		
+		new GamificationServiceDelegate(getActivity())
+				.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
+				.registerFeedbackEvent(timetaken, feedback.getID(), feedback.getInstanceID());
 	}
 
 	@Override

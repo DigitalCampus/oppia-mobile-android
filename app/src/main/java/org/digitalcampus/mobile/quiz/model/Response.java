@@ -20,6 +20,7 @@ package org.digitalcampus.mobile.quiz.model;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.json.JSONException;
@@ -29,10 +30,10 @@ public class Response implements Serializable{
 
     private static final long serialVersionUID = 5970350772982572264L;
     public static final String TAG = Response.class.getSimpleName();
-    private HashMap<String,String> title = new HashMap<>();
+    private Map<String,String> title = new HashMap<>();
     private float score;
-    private HashMap<String,String> props = new HashMap<>();
-    private HashMap<String,String> feedback = new HashMap<>();
+    private Map<String,String> props = new HashMap<>();
+    private Map<String,String> feedback = new HashMap<>();
 
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
@@ -56,7 +57,7 @@ public class Response implements Serializable{
         this.score = score;
     }
 
-    public void setProps(HashMap<String,String> props) {
+    public void setProps(Map<String,String> props) {
         this.props = props;
     }
 

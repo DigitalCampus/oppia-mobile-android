@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
@@ -81,7 +82,7 @@ public class SearchActivity extends AppActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Course course = (Course) view.getTag(R.id.TAG_COURSE);
                     String digest = (String) view.getTag(R.id.TAG_ACTIVITY_DIGEST);
-		//TODO: Extract this functionality to common class (used also in ViewDigestActivity)
+
                     Intent i = new Intent(SearchActivity.this, CourseIndexActivity.class);
                     Bundle tb = new Bundle();
                     tb.putSerializable(Course.TAG, course);
@@ -144,7 +145,7 @@ public class SearchActivity extends AppActivity {
         if (summary.getVisibility() == View.VISIBLE){
             savedInstanceState.putString("summaryMsg", summary.getText().toString());
         }
-        if (results.size() > 0){
+        if (!results.isEmpty()){
             savedInstanceState.putSerializable("searchResults", results);
         }
     }
@@ -158,7 +159,7 @@ public class SearchActivity extends AppActivity {
             summary.setText(summaryMsg);
         }
         ArrayList<SearchResult> searchResults = (ArrayList<SearchResult>) savedInstanceState.getSerializable("searchResults");
-        if ((searchResults != null) && searchResults.size() > 0){
+        if ((searchResults != null) && !searchResults.isEmpty()){
             results.clear();
             results.addAll(searchResults);
             srla.notifyDataSetChanged();
@@ -187,13 +188,13 @@ public class SearchActivity extends AppActivity {
         }
     }
 
-    private class SearchTask extends AsyncTask<String, Object, ArrayList<SearchResult>> implements DBListener{
+    private class SearchTask extends AsyncTask<String, Object, List<SearchResult>> implements DBListener{
 
         @Override
-        protected ArrayList<SearchResult> doInBackground(String... urls) {
+        protected List<SearchResult> doInBackground(String... urls) {
             Log.d(TAG, "Starting search...");
             DbHelper db = DbHelper.getInstance(SearchActivity.this);
-            ArrayList<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this, this);
+            List<SearchResult> searchResults = db.search(currentSearch, 100, userId, SearchActivity.this, this);
 
             //Save the search tracker
             new Tracker(SearchActivity.this)
@@ -203,7 +204,7 @@ public class SearchActivity extends AppActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<SearchResult> searchResults) {
+        protected void onPostExecute(List<SearchResult> searchResults) {
             results.clear();
             results.addAll(searchResults);
             srla.notifyDataSetChanged();
@@ -212,7 +213,7 @@ public class SearchActivity extends AppActivity {
             loadingSpinner.setVisibility(View.GONE);
             searchButton.setEnabled(true);
 
-            summary.setText(results.size() > 0 ?
+            summary.setText(!results.isEmpty() ?
                     getString(R.string.search_result_summary, results.size(), currentSearch) :
                     getString(R.string.search_message_no_results, currentSearch));
         }
