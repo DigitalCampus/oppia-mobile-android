@@ -18,7 +18,6 @@ import junit.framework.AssertionFailedError;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
-import org.digitalcampus.oppia.activity.MonitorActivity;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
@@ -566,17 +565,6 @@ public class OppiaMobileActivityUITest {
 
         onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 withId(R.id.activity_scorecard_pager))).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void showsMonitorActivityOnDrawerClickMonitor() throws Exception{
-
-        oppiaMobileActivityTestRule.launchActivity(null);
-
-        openDrawer();
-        performClickDrawerItem(R.id.menu_monitor);
-        checkCorrectActivity(MonitorActivity.class);
-
     }
 
     @Test

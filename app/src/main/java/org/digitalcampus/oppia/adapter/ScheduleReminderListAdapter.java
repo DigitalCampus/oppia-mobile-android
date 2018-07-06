@@ -18,12 +18,14 @@
 package org.digitalcampus.oppia.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 
 import android.content.Context;
@@ -40,10 +42,10 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 	public static final String TAG = ScheduleReminderListAdapter.class.getSimpleName();
 
 	private final Context ctx;
-	private final ArrayList<org.digitalcampus.oppia.model.Activity> activityList;
+	private final List<Activity> activityList;
 	private SharedPreferences prefs;
 	
-	public ScheduleReminderListAdapter(Context context, ArrayList<org.digitalcampus.oppia.model.Activity> activityList) {
+	public ScheduleReminderListAdapter(Context context, List<org.digitalcampus.oppia.model.Activity> activityList) {
 		super(context, R.layout.schedule_reminder_list_row, activityList);
 		this.ctx = context;
 		this.activityList = activityList;

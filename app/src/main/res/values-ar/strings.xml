@@ -18,7 +18,6 @@
     <string name="menu_font_decrease">تصغير حجم النص</string>
     <string name="menu_help">المساعدة</string>
     <string name="menu_logout">تسجيل الخروج</string>
-    <string name="menu_monitor">مراقب</string>
     <string name="menu_read_aloud">القراءة بصوت عال</string>
     <string name="menu_return_to_courses">العودة الى الدروس</string>
     <string name="menu_scorecard">دفتر العلامات</string>
@@ -55,7 +54,6 @@
     <string name="title_activity_course_index">مناهج الدروس</string>
     <string name="title_activity_course">نشاط</string>
     <string name="title_course_meta">عن طبشورة أوبيا</string>
-    <string name="title_monitor">مرقاب</string>
     <string name="title_stats_submitted">لا أنشطة مرسلة الى الخادم</string>
     <string name="title_stats_unsubmitted">لا أنشطة معلقة</string>
     <string name="title_prefs">الإعدادات</string>

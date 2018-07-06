@@ -28,7 +28,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
@@ -45,7 +44,6 @@ import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.util.ArrayList;
 
@@ -56,7 +54,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
     private boolean firstTimeOpened = true;
     private GridView quizzesGrid;
     private PieChart scorecardPieChart;
-    private ArrayList<QuizStats> quizStats = new ArrayList<QuizStats>();
+    private ArrayList<QuizStats> quizStats = new ArrayList<>();
     private CourseQuizzesGridAdapter quizzesAdapter;
     ParseCourseXMLTask xmlTask;
 
@@ -79,8 +77,6 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
 	    return myFragment;
 	}
 
-	public CourseScorecardFragment(){ }
-
     @Override
     public void onCreate( Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -92,7 +88,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecard, null);
+		View vv = inflater.inflate(R.layout.fragment_scorecard, null);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         vv.setLayoutParams(lp);
         // refresh course to get most recent info (otherwise gets the info from when course first opened)
@@ -103,7 +99,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
         quizzesGrid = (GridView) vv.findViewById(R.id.scorecard_grid_quizzes);
         scorecardPieChart = (PieChart) vv.findViewById(R.id.scorecard_pie_chart);
 
-        highlightPretest = (TextView) vv.findViewById(R.id.highlight_pretest);
+        highlightPretest = (TextView) vv.findViewById(R.id.tv_ranking);
         highlightAttempted = (TextView) vv.findViewById(R.id.highlight_attempted);
         highlightPassed = (TextView) vv.findViewById(R.id.highlight_passed);
         quizzesProgressBar = (ProgressBar) vv.findViewById(R.id.progress_quizzes);
@@ -115,11 +111,6 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
         loadingSpinner = (ProgressBar) vv.findViewById(R.id.loading_spinner);
         loadingSpinner.setVisibility(View.VISIBLE);
 		return vv;
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
 	}
 	
 	@Override
@@ -172,7 +163,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
         
         quizStats.clear();
         quizStats.addAll(quizzes);
-        if (quizStats.size() == 0){
+        if (quizStats.isEmpty()){
             quizzesContainer.setVisibility(View.GONE);
             return;
         }
@@ -209,7 +200,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
 
     //@Override
     public void onParseError() {
-
+        // no need to do anything
     }
 
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

@@ -17,43 +17,22 @@
 
 package org.digitalcampus.mobile.quiz.model.questiontypes;
 
+import android.util.Log;
+
+import com.splunk.mint.Mint;
+
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-public class Numerical implements Serializable, QuizQuestion {
+public class Numerical extends QuizQuestion implements Serializable {
 
+    public static final String TAG = Numerical.class.getSimpleName();
     private static final long serialVersionUID = 808485823168202643L;
-    public static final String TAG = "Numerical";
-    private HashMap<String,String> title = new HashMap<String,String>();
-    private int id;
-    private List<Response> responseOptions = new ArrayList<Response>();
-    private float userscore = 0;
-    private List<String> userResponses = new ArrayList<String>();
-    private HashMap<String, String> props = new HashMap<String, String>();
-    private String feedback = "";
-    private boolean feedbackDisplayed = false;
-
-    @Override
-    public void addResponseOption(Response r) {
-        responseOptions.add(r);
-    }
-
-    @Override
-    public List<Response> getResponseOptions() {
-        return responseOptions;
-    }
-
-    @Override
-    public List<String> getUserResponses() {
-        return this.userResponses;
-    }
 
     @Override
     public void mark(String lang) {
@@ -63,6 +42,8 @@ public class Numerical implements Serializable, QuizQuestion {
             try {
                 userAnswer = Float.parseFloat(a);
             } catch (NumberFormatException nfe) {
+                Log.d(TAG, "Response given is not recognised as a number", nfe);
+                Mint.logException(nfe);
             }
         }
         float score = 0;
@@ -73,96 +54,38 @@ public class Numerical implements Serializable, QuizQuestion {
                 try {
                     Float respNumber = Float.parseFloat(r.getTitle(lang));
                     Float tolerance = (float) 0.0;
-                    if(r.getProp("tolerance") != null){
-                        tolerance = Float.parseFloat(r.getProp("tolerance"));
+                    if(r.getProp(Quiz.JSON_PROPERTY_TOLERANCE) != null){
+                        tolerance = Float.parseFloat(r.getProp(Quiz.JSON_PROPERTY_TOLERANCE));
                     }
 
-                    if ((respNumber - tolerance <= userAnswer) && (userAnswer <= respNumber + tolerance)) {
-                        if (r.getScore() > currMax) {
-                            score = r.getScore();
-                            currMax = r.getScore();
-                            if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
-                                this.feedback = r.getFeedback(lang);
-                            }
+                    if ((respNumber - tolerance <= userAnswer) && (userAnswer <= respNumber + tolerance) && (r.getScore() > currMax)) {
+                        score = r.getScore();
+                        currMax = r.getScore();
+                        if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))) {
+                            this.feedback = r.getFeedback(lang);
                         }
                     }
                 } catch (NumberFormatException nfe) {
-                    // do nothing - just skip over this particular response option
+                    Log.d(TAG, "Response option is not recognised as a number", nfe);
+                    Mint.logException(nfe);
                 }
             }
         }
 
         if (score == 0){
             for (Response r : responseOptions){
-                if (r.getTitle(lang).toLowerCase().equals("*")){
-                    if(r.getProp("feedback") != null && !(r.getProp("feedback").equals(""))){
-                        this.feedback = r.getProp("feedback");
-                    }
+                if (r.getTitle(lang).equalsIgnoreCase("*") && r.getProp(Quiz.JSON_PROPERTY_FEEDBACK) != null && !(r.getProp(Quiz.JSON_PROPERTY_FEEDBACK).equals(""))){
+                    this.feedback = r.getProp(Quiz.JSON_PROPERTY_FEEDBACK);
                 }
             }
         }
 
-        int maxscore = Integer.parseInt(this.getProp("maxscore"));
+        int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
         if (score > maxscore) {
             this.userscore = maxscore;
         } else {
             this.userscore = score;
         }
-    }
-
-    @Override
-    public int getID() {
-        return this.id;
-    }
-
-    @Override
-    public void setID(int id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getTitle(String lang) {
-        if(title.containsKey(lang)){
-            return title.get(lang);
-        } else if (!title.isEmpty()){
-            return title.entrySet().iterator().next().getValue();
-        }
-        else{
-            return "";
-        }
-    }
-
-    @Override
-    public void setTitleForLang(String lang, String title) {
-        this.title.put(lang, title);
-    }
-
-    @Override
-    public void setResponseOptions(List<Response> responses) {
-        this.responseOptions = responses;
-    }
-
-    @Override
-    public float getUserscore() {
-        return this.userscore;
-    }
-
-    @Override
-    public void setProps(HashMap<String, String> props) {
-        this.props = props;
-    }
-
-    @Override
-    public String getProp(String key) {
-        return props.get(key);
-    }
-
-    @Override
-    public void setUserResponses(List<String> str) {
-        if (!str.equals(this.userResponses)){
-            this.setFeedbackDisplayed(false);
-        }
-        this.userResponses = str;
     }
 
     @Override
@@ -175,47 +98,22 @@ public class Numerical implements Serializable, QuizQuestion {
 
     @Override
     public int getMaxScore() {
-        return Integer.parseInt(this.getProp("maxscore"));
+        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     @Override
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
         try {
-            jo.put("question_id", this.id);
-            jo.put("score", userscore);
+            jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
+            jo.put(Quiz.JSON_PROPERTY_SCORE, userscore);
             for (String ur : userResponses) {
-                jo.put("text", ur);
+                jo.put(Quiz.JSON_PROPERTY_TEXT, ur);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error creating json object", jsone);
+            Mint.logException(jsone);
         }
         return jo;
     }
-
-    @Override
-    public boolean responseExpected() {
-        return true;
-    }
-
-    @Override
-    public int getScoreAsPercent() {
-        if (this.getMaxScore() > 0){
-            return (int) (100 * this.getUserscore()) / this.getMaxScore();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public void setFeedbackDisplayed(boolean feedbackDisplayed) {
-        this.feedbackDisplayed = feedbackDisplayed;
-
-    }
-
-    @Override
-    public boolean getFeedbackDisplayed() {
-        return feedbackDisplayed;
-    }
-
 }

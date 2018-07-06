@@ -52,9 +52,9 @@ import android.widget.LinearLayout.LayoutParams;
 
 public class RegisterFragment extends AppFragment implements SubmitListener {
 
-
 	public static final String TAG = RegisterFragment.class.getSimpleName();
-	private SharedPreferences prefs;
+
+
 	private EditText usernameField;
 	private EditText emailField;
 	private EditText passwordField;
@@ -72,21 +72,15 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 	}
 
 	public RegisterFragment(){
-		
+		// Required empty public constructor
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_register, null);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
 	}
 	
 	@Override
@@ -107,7 +101,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				onRegisterClick(v);
+				onRegisterClick();
 			}
 		});
 	}
@@ -120,7 +114,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 
 			// registration gamification
 			GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
-			GamificationEvent gamificationEvent = gamificationEngine.processEventRegister();
+			gamificationEngine.processEventRegister();
 
             //Save the search tracker
             new Tracker(super.getActivity()).saveRegisterTracker();
@@ -140,7 +134,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		}
 	}
 
-	public void onRegisterClick(View view) {
+	public void onRegisterClick() {
 		// get form fields
 		String username = usernameField.getText().toString().trim();
 		String email = emailField.getText().toString();
@@ -163,9 +157,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_username_spaces);
 			return;
 		}
-		
-		// TODO check valid email address format
-		// android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+
 		if (email.length() == 0) {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_email);
 			return;
@@ -207,7 +199,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		pDialog.setCancelable(true);
 		pDialog.show();
 
-		ArrayList<Object> users = new ArrayList<Object>();
+		ArrayList<Object> users = new ArrayList<>();
     	User u = new User();
 		u.setUsername(username);
 		u.setPassword(password);

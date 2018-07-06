@@ -20,26 +20,27 @@ package org.digitalcampus.mobile.quiz.model;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Response implements Serializable{
 
     private static final long serialVersionUID = 5970350772982572264L;
-    public static final String TAG = "Response";
-    private HashMap<String,String> title = new HashMap<>();
+    public static final String TAG = Response.class.getSimpleName();
+    private Map<String,String> title = new HashMap<>();
     private float score;
-    private HashMap<String,String> props = new HashMap<>();
-    private HashMap<String,String> feedback = new HashMap<>();
+    private Map<String,String> props = new HashMap<>();
+    private Map<String,String> feedback = new HashMap<>();
 
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
             return title.get(lang);
+        } else if (!title.entrySet().isEmpty()){
+            return title.entrySet().iterator().next().getValue();
         } else {
-            for (String key : title.keySet()) {
-                return title.get(key);
-            }
             return "";
         }
     }
@@ -56,7 +57,7 @@ public class Response implements Serializable{
         this.score = score;
     }
 
-    public void setProps(HashMap<String,String> props) {
+    public void setProps(Map<String,String> props) {
         this.props = props;
     }
 
@@ -65,8 +66,8 @@ public class Response implements Serializable{
     }
 
     public void setFeedback(String defaultLang){
-        if (this.props.containsKey("feedback")) try {
-            JSONObject feedbackLangs = new JSONObject(this.getProp("feedback"));
+        if (this.props.containsKey(Quiz.JSON_PROPERTY_FEEDBACK)) try {
+            JSONObject feedbackLangs = new JSONObject(this.getProp(Quiz.JSON_PROPERTY_FEEDBACK));
             Iterator<?> keys = feedbackLangs.keys();
 
             while (keys.hasNext()) {
@@ -74,7 +75,7 @@ public class Response implements Serializable{
                 this.setFeedbackForLang(key, feedbackLangs.getString(key));
             }
         } catch (JSONException e) {
-            this.setFeedbackForLang(defaultLang, this.getProp("feedback"));
+            this.setFeedbackForLang(defaultLang, this.getProp(Quiz.JSON_PROPERTY_FEEDBACK));
         }
     }
 
@@ -85,10 +86,9 @@ public class Response implements Serializable{
     public String getFeedback(String lang) {
         if(feedback.containsKey(lang)){
             return feedback.get(lang);
+        } else if (!feedback.entrySet().isEmpty()){
+            return feedback.entrySet().iterator().next().getValue();
         } else {
-            for (String key : feedback.keySet()) {
-                return feedback.get(key);
-            }
             return "";
         }
     }

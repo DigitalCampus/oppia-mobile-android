@@ -50,6 +50,7 @@ public class AdminGCMListener extends GcmListenerService {
     private static final String ACTION_DISABLE_CAMERA = "disable_camera";
     private static final String ACTION_ENABLE_CAMERA = "enable_camera";
     private static final String ACTION_PASSWORD_LOCK = "password_lock";
+    private static final String BUILD_FLAVOUR_ADMIN = "admin";
 
     @Override
     public void onMessageReceived(String from, Bundle messageData) {
@@ -61,7 +62,7 @@ public class AdminGCMListener extends GcmListenerService {
             String type = messageData.getString(MESSAGE_TYPE);
             if ((type != null) && (type.equals(TYPE_ADMIN))){
 
-                if (!BuildConfig.FLAVOR.equals("admin")) {
+                if (!BuildConfig.FLAVOR.equals(BUILD_FLAVOUR_ADMIN)) {
                     //Is not the admin-flavor app (we don't have the permission, would produce crash)
                     Log.d(TAG, "Device Administration is disabled :(");
                     return;

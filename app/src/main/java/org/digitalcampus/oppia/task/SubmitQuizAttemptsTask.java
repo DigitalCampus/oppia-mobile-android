@@ -71,7 +71,6 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
                     JSONObject jsonResp = new JSONObject(response.body().string());
 
                     db.markQuizSubmitted(qa.getId());
-                    //db.updateUserPoints(qa.getUser().getUsername(), jsonResp.getInt("points"));
                     db.updateUserBadges(qa.getUser().getUsername(), jsonResp.getInt("badges"));
                     payload.setResult(true);
                 }

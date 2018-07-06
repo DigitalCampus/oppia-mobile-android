@@ -52,9 +52,9 @@ public class EssayWidget extends TextInputQuizWidget{
 	public List<String> getQuestionResponses(List<Response> responses){
 		EditText et = (EditText) view.findViewById(R.id.responsetext);
 		if(et.getText().toString().equals("")){
-			return null;
+			return new ArrayList<>();
 		} else {
-			List<String> response = new ArrayList<String>();
+			List<String> response = new ArrayList<>();
 			response.add(et.getText().toString());
 			return response;
 		}
