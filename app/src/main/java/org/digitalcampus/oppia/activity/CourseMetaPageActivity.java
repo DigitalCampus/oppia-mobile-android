@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBar;
 import android.webkit.WebView;
 import android.widget.TextView;
 

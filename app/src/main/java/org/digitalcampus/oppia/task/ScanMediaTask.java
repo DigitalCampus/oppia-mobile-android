@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.task;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
@@ -30,6 +31,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.splunk.mint.Mint;
 
@@ -42,14 +44,15 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 	public ScanMediaTask(Context ctx) {
 		this.ctx = ctx;
 	}
-	
+
+	@Override
 	protected Payload doInBackground(Payload... params) {
 
 		Payload payload = params[0];
         ArrayList<Object> currentMedia = payload.getResponseData();
         ArrayList<String> downloadingMedia = DownloadService.getTasksDownloading();
 
-        ArrayList<?> courseObjs = payload.getData();
+        List<?> courseObjs = payload.getData();
 		for (int i=0; i<courseObjs.size(); i++){
 			Course course = (Course) courseObjs.get(i);
             File courseXML = new File(course.getCourseXMLLocation());
@@ -83,9 +86,9 @@ public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 						}
 					}
 				}
-			} catch (InvalidXMLException e) {
-				e.printStackTrace();
-                Mint.logException(e);
+			} catch (InvalidXMLException ixmle) {
+				Log.d(TAG,"Invalid course XML", ixmle);
+                Mint.logException(ixmle);
 				payload.setResult(false);
 			}
 			

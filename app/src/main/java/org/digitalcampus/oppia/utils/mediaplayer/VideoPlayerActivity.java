@@ -64,16 +64,12 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private Activity activity;
     private Course course;
     protected SharedPreferences prefs;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
-        SurfaceHolder videoHolder = videoSurface.getHolder();
-        videoHolder.addCallback(this);
-
         player = new MediaPlayer();
         controller = new VideoControllerView(this);
         
@@ -101,13 +97,22 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         }
     }
 
+    protected void onStart(){
+        super.onStart();
+        videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
+        videoSurface.setKeepScreenOn(true); //prevents player going into sleep mode
+        SurfaceHolder videoHolder = videoSurface.getHolder();
+        videoHolder.addCallback(this);
+    }
+
     
     @Override
     protected void onStop(){
+        super.onStop();
+
     	saveTracker();
         controller.setMediaPlayer(null);
-        if (player != null ) player.release();
-    	super.onStop();
+        if (player != null ) player.reset();
     }
     
     @Override
@@ -151,9 +156,11 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 					// Do nothing
 				}
                 GamificationEngine gamificationEngine = new GamificationEngine(this);
-				GamificationEvent gamificationEvent = gamificationEngine.processEventMediaPlayed(this.course, this.activity, mediaFileName, timeTaken);
-
-				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed, gamificationEvent);
+				GamificationEvent event = gamificationEngine.processEventMediaPlayed(this.course, this.activity, mediaFileName, timeTaken);
+                if (event.getPoints() > 0){
+                    gamificationEngine.notifyEvent(this.videoSurface, event, this.course, this.activity);
+                }
+				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed, event);
 			}
 		}
 	}
@@ -249,7 +256,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-        
+
     }
     // End SurfaceHolder.Callback
 

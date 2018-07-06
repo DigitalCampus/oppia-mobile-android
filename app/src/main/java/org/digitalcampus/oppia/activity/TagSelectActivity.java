@@ -27,7 +27,6 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
-import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
@@ -38,7 +37,6 @@ import com.splunk.mint.Mint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -93,7 +91,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		// Get tags list
 		if(this.json == null){
 			this.getTagList();
-        } else if ((tags != null) && tags.size()>0) {
+        } else if ((tags != null) && !tags.isEmpty()) {
             //We already have loaded JSON and tags (coming from orientationchange)
             tla.notifyDataSetChanged();
         }
@@ -153,7 +151,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 			tagRepository.refreshTagList(tags, json);
 
             tla.notifyDataSetChanged();
-            findViewById(R.id.empty_state).setVisibility((tags.size()==0) ? View.VISIBLE : View.GONE);
+            findViewById(R.id.empty_state).setVisibility((tags.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (JSONException e) {
 			e.printStackTrace();

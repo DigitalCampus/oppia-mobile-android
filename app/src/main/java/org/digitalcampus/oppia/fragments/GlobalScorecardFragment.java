@@ -39,7 +39,7 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -54,7 +54,9 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
     public static GlobalScorecardFragment newInstance() {
         return new GlobalScorecardFragment();
     }
-    public GlobalScorecardFragment(){ }
+    public GlobalScorecardFragment(){
+        // Required empty public constructor
+    }
 
     private void initializeDagger() {
         MobileLearning app = (MobileLearning) getActivity().getApplication();
@@ -70,22 +72,17 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initializeDagger();
 
 
-        ArrayList<Course> courses = coursesRepository.getCourses(getActivity());
+        List<Course> courses = coursesRepository.getCourses(getActivity());
 
         GridView scorecardList = (GridView) super.getActivity().findViewById(R.id.scorecards_list);
         View emptyState = this.getActivity().findViewById(R.id.empty_state);
 
-        if (courses.size() == 0){
+        if (courses.isEmpty()){
             //If there are now courses, display the empty state
             scorecardList.setVisibility(View.GONE);
             emptyState.setVisibility(View.VISIBLE);

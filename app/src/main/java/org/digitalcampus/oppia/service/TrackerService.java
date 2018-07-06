@@ -17,7 +17,7 @@
 
 package org.digitalcampus.oppia.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
@@ -106,7 +106,7 @@ public class TrackerService extends Service implements APIRequestListener {
 			if(app.omSubmitQuizAttemptsTask == null){
 				Log.d(TAG,"Submitting quiz task");
 				DbHelper db = DbHelper.getInstance(this);
-				ArrayList<QuizAttempt> unsent = db.getUnsentQuizAttempts();
+				List<QuizAttempt> unsent = db.getUnsentQuizAttempts();
 		
 				if (unsent.size() > 0){
 					p = new Payload(unsent);

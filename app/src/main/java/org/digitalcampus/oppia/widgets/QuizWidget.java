@@ -63,6 +63,8 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationService;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
@@ -124,7 +126,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	public QuizWidget() {
-
+		// Required empty public constructor
 	}
 
 	@SuppressWarnings("unchecked")
@@ -142,8 +144,8 @@ public class QuizWidget extends WidgetFactory {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		vv.setId(activity.getActId());
-		if ((savedInstanceState != null) && (savedInstanceState.getSerializable("widget_config") != null)){
-			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
+		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
+			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));
 		}
 
 		return vv;
@@ -152,7 +154,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable("widget_config", getWidgetConfig());
+		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, getWidgetConfig());
 
 	}
 	
@@ -199,9 +201,9 @@ public class QuizWidget extends WidgetFactory {
             this.showQuestion();
         }
         else{
-            View container = getView();
-            if (container != null){
-                ViewGroup vg = (ViewGroup) container.findViewById(activity.getActId());
+            View localContainer = getView();
+            if (localContainer != null){
+                ViewGroup vg = (ViewGroup) localContainer.findViewById(activity.getActId());
                 if (vg!=null){
                     vg.removeAllViews();
                     vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
@@ -235,7 +237,7 @@ public class QuizWidget extends WidgetFactory {
             if (db == null) db = DbHelper.getInstance(getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 
-            if( db.isPreviousSectionActivitiesCompleted(course, activity, userId) )
+            if( db.isPreviousSectionActivitiesCompleted(activity, userId) )
                 return QUIZ_AVAILABLE;
             else
                 return R.string.widget_quiz_unavailable_section;
@@ -244,7 +246,7 @@ public class QuizWidget extends WidgetFactory {
             // check to see if all previous course activities have been completed
             if (db == null) db = DbHelper.getInstance(getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-            if (db.isPreviousCourseActivitiesCompleted(course, activity, userId))
+            if (db.isPreviousCourseActivitiesCompleted(activity, userId))
                 return QUIZ_AVAILABLE;
             else
                 return R.string.widget_quiz_unavailable_course;
@@ -273,14 +275,13 @@ public class QuizWidget extends WidgetFactory {
 			questionImage.setVisibility(View.GONE);
 		} else {
 			String fileUrl = course.getLocation() + q.getProp("image");
-			// File file = new File(fileUrl);
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
 			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
 			if (q.getProp("media") == null){
-				OnImageClickListener oicl = new OnImageClickListener(super.getActivity(), "image/*");
+				OnImageClickListener oicl = new OnImageClickListener(super.getActivity());
 				iv.setOnClickListener(oicl);
 				TextView tv = (TextView) getView().findViewById(R.id.question_image_caption);
 				tv.setText(R.string.widget_quiz_image_caption);
@@ -306,7 +307,7 @@ public class QuizWidget extends WidgetFactory {
 		} else if (q instanceof Numerical) {
 			qw = new NumericalWidget(super.getActivity(), getView(), container);
 		} else if (q instanceof Description) {
-			qw = new DescriptionWidget(super.getActivity(), getView(), container);
+			qw = new DescriptionWidget(getView());
 		} else if (q instanceof DragAndDrop) {
 			qw = new DragAndDropWidget(super.getActivity(), getView(), container, q, course.getLocation());
 		}	else {
@@ -485,35 +486,6 @@ public class QuizWidget extends WidgetFactory {
 		isOnResultsPage = true;
 		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
-		DbHelper db = DbHelper.getInstance(super.getActivity());
-		long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-
-        GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
-        GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, quiz, this.getPercent());
-        Log.d(this.TAG,"quiz points:" + String.valueOf(gamificationEvent.getPoints()));
-
-        // save results ready to send back to the quiz server
-        String data = quiz.getResultObject(gamificationEvent).toString();
-        Log.d(TAG,data);
-
-		QuizAttempt qa = new QuizAttempt();
-		qa.setCourseId(course.getCourseId());
-		qa.setUserId(userId);
-		qa.setData(data);
-
-		qa.setActivityDigest(activity.getDigest());
-		qa.setScore(quiz.getUserscore());
-		qa.setMaxscore(quiz.getMaxscore());
-		qa.setPassed(this.getActivityCompleted());
-		qa.setSent(false);
-		qa.setEvent(gamificationEvent.getEvent());
-		qa.setPoints(gamificationEvent.getPoints());
-		db.insertQuizAttempt(qa);
-
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(super.getActivity()).edit();
-        long now = System.currentTimeMillis()/1000;
-        editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
-		
 		//Check if quiz results layout is already loaded
         View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
         if (quizResultsLayout == null){
@@ -533,9 +505,7 @@ public class QuizWidget extends WidgetFactory {
 			TextView baselineExtro = (TextView) getView().findViewById(R.id.quiz_results_baseline);
 			baselineExtro.setVisibility(View.VISIBLE);
 			baselineExtro.setText(super.getActivity().getString(R.string.widget_quiz_baseline_completed));
-		} 
-		
-		// TODO add TextView here to give overall feedback if it's in the quiz
+		}
 		
 		// Show the detail of which questions were right/wrong
 		if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ATEND){
@@ -593,6 +563,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void restart() {
+		this.saveTracker();
 		this.setStartTime(System.currentTimeMillis() / 1000);
 		
 		this.quiz = new Quiz();
@@ -627,46 +598,22 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void saveTracker() {
 		long timetaken = this.getSpentTime();
-		Tracker t = new Tracker(super.getActivity());
-		JSONObject obj = new JSONObject();
-        Log.d(this.TAG," saving quiz tracker1");
 		if(!isOnResultsPage){
 			return;
 		}
-        Log.d(this.TAG," saving quiz tracker2");
-		// add in extra meta-data
-		try {
-			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
-			obj.put("timetaken", timetaken);
-			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
-			obj.put("quiz_id", quiz.getID());
-			obj.put("instance_id", quiz.getInstanceID());
-			obj.put("score", this.getPercent());
 
-            GamificationEvent gamificationEvent = Gamification.GAMIFICATION_QUIZ_ATTEMPT;
-			// if it's a baseline activity then assume completed
-			if (this.isBaseline) {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
-			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
-			}
-		} catch (JSONException e) {
-			Log.d(this.TAG," saving quiz json error");
-		} catch (NullPointerException npe){
-			Log.d(this.TAG," saving quiz null pointer");
-		}
-		
+        Log.d(TAG," saving quiz tracker");
+		new GamificationServiceDelegate(getActivity())
+			.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
+			.registerQuizAttemptEvent(timetaken, quiz, this.getPercent());
 	}
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
-		// this.saveAnswer();
 		config.put("quiz", this.quiz);
-		config.put("Activity_StartTime", this.getStartTime());
-		config.put("OnResultsPage", this.isOnResultsPage);
+		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
+		config.put(WidgetFactory.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
 		return config;
 	}
 
@@ -675,11 +622,11 @@ public class QuizWidget extends WidgetFactory {
 		if (config.containsKey("quiz")) {
 			this.quiz = (Quiz) config.get("quiz");
 		}
-		if (config.containsKey("Activity_StartTime")) {
-			this.setStartTime((Long) config.get("Activity_StartTime"));
+		if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME)) {
+			this.setStartTime((Long) config.get(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME));
 		}
-		if (config.containsKey("OnResultsPage")) {
-			this.isOnResultsPage = (Boolean) config.get("OnResultsPage");
+		if (config.containsKey(WidgetFactory.PROPERTY_ON_RESULTS_PAGE)) {
+			this.isOnResultsPage = (Boolean) config.get(WidgetFactory.PROPERTY_ON_RESULTS_PAGE);
 		}
 	}
 
@@ -716,7 +663,7 @@ public class QuizWidget extends WidgetFactory {
 		private Context ctx;
 		private String type;
 		
-		public OnImageClickListener(Context ctx, String type){
+		public OnImageClickListener(Context ctx){
 			this.ctx = ctx;
 			this.type = type;
 		}

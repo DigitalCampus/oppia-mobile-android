@@ -36,7 +36,7 @@ public class Tag implements Serializable{
 	private String icon;
 	private boolean highlight = false;
 	
-	private ArrayList<Course> courses = new ArrayList<Course>();
+	private ArrayList<Course> courses = new ArrayList<>();
 	
 	public String getName() {
 		return name;

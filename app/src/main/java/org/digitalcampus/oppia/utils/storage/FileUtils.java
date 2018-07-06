@@ -276,6 +276,11 @@ public class FileUtils {
         return readFile(fstream);
 	}
 
+	public static String readFile(File file) throws IOException {
+		FileInputStream fstream = new FileInputStream(file);
+		return readFile(fstream);
+	}
+
 	public static String readFile(InputStream fileStream) throws IOException {
 		DataInputStream in = new DataInputStream(fileStream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));

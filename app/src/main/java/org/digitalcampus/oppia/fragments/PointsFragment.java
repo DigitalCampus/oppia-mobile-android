@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.fragments;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.PointsListAdapter;
@@ -50,14 +51,13 @@ public class PointsFragment extends AppFragment {
 	public static final String TAG = PointsFragment.class.getSimpleName();
 
     private JSONObject json;
-    @Inject ArrayList<Points> points;
+    @Inject
+	List<Points> points;
 	private PointsListAdapter pointsAdapter;
 
 	public static PointsFragment newInstance() {
         return new PointsFragment();
 	}
-
-	public PointsFragment(){ }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,11 +65,6 @@ public class PointsFragment extends AppFragment {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
 	}
 	
 	@Override

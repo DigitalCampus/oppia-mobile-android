@@ -20,11 +20,11 @@ package org.digitalcampus.oppia.gamification;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.GamificationEvent;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Gamification {
 
-    private ArrayList<GamificationEvent> events = new ArrayList<GamificationEvent>();
     // event names
     public static final String EVENT_NAME_REGISTER = "register";
     public static final String EVENT_NAME_QUIZ_FIRST_ATTEMPT = "quiz_first_attempt";
@@ -60,6 +60,8 @@ public class Gamification {
     //fallback option
     public static final String EVENT_NAME_UNDEFINED = "undefined";
     public static final GamificationEvent GAMIFICATION_UNDEFINED =  new GamificationEvent(EVENT_NAME_UNDEFINED,0);
+
+    private ArrayList<GamificationEvent> events = new ArrayList<>();
 
     public Gamification(){
         events.add(GAMIFICATION_REGISTER);

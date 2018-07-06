@@ -48,6 +48,17 @@ public class CourseIntallViewAdapter extends Course {
     private String authorUsername;
     private String authorName;
 
+    private static final String JSON_PROPERTY_DESCRIPTION = "description";
+    private static final String JSON_PROPERTY_TITLE = "title";
+    private static final String JSON_PROPERTY_SHORTNAME = "shortname";
+    private static final String JSON_PROPERTY_VERSION = "version";
+    private static final String JSON_PROPERTY_URL = "url";
+    private static final String JSON_PROPERTY_IS_DRAFT = "is_draft";
+    private static final String JSON_PROPERTY_AUTHOR = "author";
+    private static final String JSON_PROPERTY_USERNAME = "username";
+    private static final String JSON_PROPERTY_SCHEDULE_URI = "schedule_uri";
+    private static final String JSON_PROPERTY_SCHEDULE = "schedule";
+
     public boolean isDownloading() {
         return downloading;
     }
@@ -110,7 +121,7 @@ public class CourseIntallViewAdapter extends Course {
             CourseIntallViewAdapter course = new CourseIntallViewAdapter(location);
 
             ArrayList<Lang> titles = new ArrayList<>();
-            JSONObject jsonTitles = json_obj.getJSONObject("title");
+            JSONObject jsonTitles = json_obj.getJSONObject(JSON_PROPERTY_TITLE);
             Iterator<?> keys = jsonTitles.keys();
             while (keys.hasNext()) {
                 String key = (String) keys.next();
@@ -120,9 +131,9 @@ public class CourseIntallViewAdapter extends Course {
             course.getMultiLangInfo().setTitles(titles);
 
             ArrayList<Lang> descriptions = new ArrayList<>();
-            if (json_obj.has("description") && !json_obj.isNull("description")) {
+            if (json_obj.has(JSON_PROPERTY_DESCRIPTION) && !json_obj.isNull(JSON_PROPERTY_DESCRIPTION)) {
                 try {
-                    JSONObject jsonDescriptions = json_obj.getJSONObject("description");
+                    JSONObject jsonDescriptions = json_obj.getJSONObject(JSON_PROPERTY_DESCRIPTION);
                     Iterator<?> dkeys = jsonDescriptions.keys();
                     while (dkeys.hasNext()) {
                         String key = (String) dkeys.next();
@@ -137,27 +148,27 @@ public class CourseIntallViewAdapter extends Course {
                 }
             }
 
-            course.setShortname(json_obj.getString("shortname"));
-            course.setVersionId(json_obj.getDouble("version"));
-            course.setDownloadUrl(json_obj.getString("url"));
+            course.setShortname(json_obj.getString(JSON_PROPERTY_SHORTNAME));
+            course.setVersionId(json_obj.getDouble(JSON_PROPERTY_VERSION));
+            course.setDownloadUrl(json_obj.getString(JSON_PROPERTY_URL));
 
-            if (json_obj.has("is_draft") && !json_obj.isNull("is_draft"))
-                course.setDraft(json_obj.getBoolean("is_draft"));
+            if (json_obj.has(JSON_PROPERTY_IS_DRAFT) && !json_obj.isNull(JSON_PROPERTY_IS_DRAFT))
+                course.setDraft(json_obj.getBoolean(JSON_PROPERTY_IS_DRAFT));
             else
                 course.setDraft(false);
 
-            if (json_obj.has("author") && !json_obj.isNull("author"))
-                course.setAuthorName(json_obj.getString("author"));
+            if (json_obj.has(JSON_PROPERTY_AUTHOR) && !json_obj.isNull(JSON_PROPERTY_AUTHOR))
+                course.setAuthorName(json_obj.getString(JSON_PROPERTY_AUTHOR));
 
-            if (json_obj.has("username") && !json_obj.isNull("username"))
-                course.setAuthorUsername(json_obj.getString("username"));
+            if (json_obj.has(JSON_PROPERTY_USERNAME) && !json_obj.isNull(JSON_PROPERTY_USERNAME))
+                course.setAuthorUsername(json_obj.getString(JSON_PROPERTY_USERNAME));
 
             DbHelper db = DbHelper.getInstance(ctx);
             course.setInstalled(db.isInstalled(course.getShortname()));
             course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
-            if (json_obj.has("schedule_uri")) {
-                course.setScheduleVersionID(json_obj.getDouble("schedule"));
-                course.setScheduleURI(json_obj.getString("schedule_uri"));
+            if (json_obj.has(JSON_PROPERTY_SCHEDULE_URI)) {
+                course.setScheduleVersionID(json_obj.getDouble(JSON_PROPERTY_SCHEDULE));
+                course.setScheduleURI(json_obj.getString(JSON_PROPERTY_SCHEDULE_URI));
                 course.setToUpdateSchedule(
                         db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
             }

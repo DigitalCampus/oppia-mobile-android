@@ -52,7 +52,6 @@ import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -104,6 +103,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
     public static final String PREF_DISABLE_NOTIFICATIONS = "prefDisableNotifications";
 
+    public static final String PREF_LAST_LEADERBOARD_FETCH = "prefLastLeaderboardFetch";
+
     public static final String PREF_STORAGE_OPTION = "prefStorageOption";
     public static final String STORAGE_OPTION_INTERNAL = "internal";
     public static final String STORAGE_OPTION_EXTERNAL = "external";
@@ -154,8 +155,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 			case android.R.id.home:
 				this.finish();
 				return true;
+            default:
+                return false;
 		}
-		return true;
 	}
 
     @Override
@@ -275,19 +277,17 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 disableAdminProtection(sharedPreferences);
             }
         }
-        else if (key.equalsIgnoreCase(PREF_REMOTE_ADMIN)){
-            if (BuildConfig.FLAVOR.equals("admin")) {
-                boolean adminEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
-                ComponentName adminReceiver = new ComponentName(this, AdminReceiver.class);
-                if (adminEnabled) {
-                    // Activate device administration
-                    Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                    intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminReceiver);
-                    startActivityForResult(intent, ADMIN_ACTIVATION_REQUEST);
-                } else {
-                    DevicePolicyManager dpm = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
-                    dpm.removeActiveAdmin(adminReceiver);
-                }
+        else if (key.equalsIgnoreCase(PREF_REMOTE_ADMIN) && BuildConfig.FLAVOR.equals("admin")) {
+            boolean adminEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
+            ComponentName adminReceiver = new ComponentName(this, AdminReceiver.class);
+            if (adminEnabled) {
+                // Activate device administration
+                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminReceiver);
+                startActivityForResult(intent, ADMIN_ACTIVATION_REQUEST);
+            } else {
+                DevicePolicyManager dpm = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
+                dpm.removeActiveAdmin(adminReceiver);
             }
         }
     }
@@ -341,7 +341,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     }
 
     //@Override
-    public void moveStorageProgressUpdate(String s) { }
+    public void moveStorageProgressUpdate(String s) {
+        // no need to show storage progress in this activity
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -355,6 +357,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 CheckBoxPreference adminPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_REMOTE_ADMIN);
                 adminPref.setChecked(adminEnabled);
                 return;
+            default:
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

@@ -30,11 +30,20 @@ public class AboutUITest {
 
 
     @Test
-    public void clickActivityTab() throws Exception {
-        onView(withText(R.string.tab_title_activity))
+    public void clickPrivacyTab() throws Exception {
+        onView(withText(R.string.tab_title_privacy))
                 .perform(click());
+    }
 
-        onView(withId(R.id.submit_stats_btn))
+    @Test
+    public void clickHelpTab() throws Exception {
+        onView(withText(R.string.tab_title_help))
+                .perform(click());
+    }
+
+    @Test
+    public void clickAboutTab() throws Exception {
+        onView(withText(R.string.tab_title_about))
                 .perform(click());
     }
 }

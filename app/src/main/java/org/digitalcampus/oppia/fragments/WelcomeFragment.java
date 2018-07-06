@@ -49,11 +49,6 @@ public class WelcomeFragment extends Fragment {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-	}
-
-	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
         Button loginButton = (Button) super.getActivity().findViewById(R.id.welcome_login);

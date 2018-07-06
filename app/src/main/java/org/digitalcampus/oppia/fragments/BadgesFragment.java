@@ -53,12 +53,11 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 	@Inject ArrayList<Badges> badges;
 	
 	public static BadgesFragment newInstance() {
-		BadgesFragment myFragment = new BadgesFragment();
-	    return myFragment;
+	    return new BadgesFragment();
 	}
 
 	public BadgesFragment(){
-		
+		// Required empty public constructor
 	}
 
 	@Override
@@ -67,11 +66,6 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
 	}
 	
 	@Override

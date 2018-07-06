@@ -132,14 +132,17 @@ public class BluetoothTransferService {
         }
 
         // Start the thread to listen on a BluetoothServerSocket
-        if (secureAcceptThread == null) {
-            secureAcceptThread = new AcceptThread(true);
-            secureAcceptThread.start();
+        if (secureAcceptThread != null) {
+            secureAcceptThread.cancel();
         }
-        if (insecureAcceptThread == null) {
-            insecureAcceptThread = new AcceptThread(false);
-            insecureAcceptThread.start();
+        secureAcceptThread = new AcceptThread(true);
+        secureAcceptThread.start();
+        if (insecureAcceptThread != null) {
+            insecureAcceptThread.cancel();
         }
+        insecureAcceptThread = new AcceptThread(false);
+        insecureAcceptThread.start();
+
         // Update UI title
         updateUserInterfaceTitle();
     }
@@ -221,8 +224,12 @@ public class BluetoothTransferService {
     }
 
 
-    public synchronized void disconnect() {
+    public synchronized void disconnect(boolean notifyHandler) {
         Log.d(TAG, "stop");
+
+        synchronized (BluetoothTransferService.this) {
+            state = STATE_NONE;
+        }
 
         if (connectThread != null) {
             connectThread.cancel();
@@ -243,8 +250,11 @@ public class BluetoothTransferService {
             insecureAcceptThread.cancel();
             insecureAcceptThread = null;
         }
-        state = STATE_NONE;
-        updateUserInterfaceTitle();
+
+        if (notifyHandler){
+            updateUserInterfaceTitle();
+        }
+
     }
 
     /**
@@ -265,6 +275,19 @@ public class BluetoothTransferService {
         r.sendFile(trFile);
     }
 
+    private void resetState(){
+        synchronized (BluetoothTransferService.this) {
+            if (state != STATE_NONE) {
+                state = STATE_NONE;
+                updateUserInterfaceTitle();
+                // Start the service over to restart listening mode
+                BluetoothTransferService.this.start();
+            } else {
+                updateUserInterfaceTitle();
+            }
+        }
+    }
+
     /**
      * Indicate that the connection attempt failed and notify the UI Activity.
      */
@@ -275,12 +298,7 @@ public class BluetoothTransferService {
         bundle.putString(TOAST, "Unable to connect device");
         msg.setData(bundle);
         uiHandler.sendMessage(msg);
-
-        state = STATE_NONE;
-        updateUserInterfaceTitle();
-
-        // Start the service over to restart listening mode
-        BluetoothTransferService.this.start();
+        resetState();
     }
 
     /**
@@ -293,12 +311,7 @@ public class BluetoothTransferService {
         bundle.putString(TOAST, "Device connection was lost");
         msg.setData(bundle);
         uiHandler.sendMessage(msg);
-
-        state = STATE_NONE;
-        updateUserInterfaceTitle();
-
-        // Start the service over to restart listening mode
-        BluetoothTransferService.this.start();
+        resetState();
     }
 
     /**
@@ -331,7 +344,7 @@ public class BluetoothTransferService {
 
         public void run() {
             Log.d(TAG, "Socket Type: " + mSocketType +
-                    "BEGIN mAcceptThread" + this);
+                    " BEGIN mAcceptThread " + this);
             setName("AcceptThread" + mSocketType);
 
             BluetoothSocket socket = null;
@@ -594,17 +607,6 @@ public class BluetoothTransferService {
 
         }
 
-
-        public void writeSerialized(Object obj) {
-                try {
-                    ObjectOutputStream oos = new  ObjectOutputStream(mmSocket.getOutputStream());
-                    oos.writeObject(obj);
-                    oos.close();
-                }catch(Exception e){
-                    Log.e(TAG, "Error ObjectOutputStream: " + e.getLocalizedMessage());
-                }
-
-        }
 
         public void cancel() {
             try {

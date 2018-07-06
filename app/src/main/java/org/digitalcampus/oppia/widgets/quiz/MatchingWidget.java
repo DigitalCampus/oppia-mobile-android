@@ -123,8 +123,8 @@ public class MatchingWidget extends QuestionWidget {
 				userResponses.add(response);
 			}
 		}
-		if(userResponses.size() == 0){
-			return null;
+		if(userResponses.isEmpty()){
+			return new ArrayList<>();
 		}
     	return userResponses;
 	}

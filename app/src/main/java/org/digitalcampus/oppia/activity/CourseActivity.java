@@ -109,7 +109,6 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 actionBar.setDisplayShowHomeEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setDisplayShowTitleEnabled(true);
-                //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
             }
         }
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
@@ -231,13 +230,12 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         if ((actionBarTitle != null) && ( !actionBarTitle.equals(MultiLangInfo.DEFAULT_NOTITLE)) ){
             setTitle(actionBarTitle);
         } else {
-            ArrayList<Activity> activities = section.getActivities();
+            ArrayList<Activity> sectionActivities = section.getActivities();
             String preTestTitle = getString(R.string.alert_pretest);
-            setTitle(!activities.isEmpty() && activities.get(0).getMultiLangInfo().getTitle(currentLang).toUpperCase().equals(preTestTitle.toUpperCase()) ?
+            setTitle(!sectionActivities.isEmpty() && sectionActivities.get(0).getMultiLangInfo().getTitle(currentLang).equalsIgnoreCase(preTestTitle) ?
                     preTestTitle : isBaseline ? getString(R.string.title_baseline): "");
         }
 
-        //actionBar.removeAllTabs();
         List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
@@ -337,8 +335,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         Activity previousActivity = activities.get(newTab - 1);
         //the user can navigate to the activity if its directly preceding one is completed
         DbHelper db = DbHelper.getInstance(this);
-        boolean actCompleted = db.activityCompleted(course.getCourseId(), previousActivity.getDigest(), userID);
-        return actCompleted;
+        return db.activityCompleted(course.getCourseId(), previousActivity.getDigest(), userID);
     }
 
     public void onInit(int status) {
@@ -357,8 +354,14 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                         CourseActivity.this.ttsRunning = false;
                         myTTS = null;
                     }
-                    @Override public void onError(String utteranceId){ }
-                    @Override public void onStart(String utteranceId){ }
+                    @Override
+                    public void onError(String utteranceId){
+                        // does not need completing
+                    }
+                    @Override
+                    public void onStart(String utteranceId){
+                        // does not need completing
+                    }
                 });
             }
         } else {
@@ -369,11 +372,9 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TTS_CHECK) {
-            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                // the user has the necessary data - create the TTS
-                myTTS = new TextToSpeech(this, this);
-            }
+        if (requestCode == TTS_CHECK && resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+            // the user has the necessary data - create the TTS
+            myTTS = new TextToSpeech(this, this);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
