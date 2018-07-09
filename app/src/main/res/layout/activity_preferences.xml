@@ -25,8 +25,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         android:id="@+id/navigation_view"
+        android:theme="@style/Oppia.Theme"
         app:headerLayout="@layout/drawer_header"
-        app:theme="@style/Oppia.Theme"
         app:menu="@menu/drawer_main" />
 
 </android.support.v4.widget.DrawerLayout>
