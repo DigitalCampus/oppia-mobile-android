@@ -18,7 +18,7 @@ public class GamificationBroadcastReceiver extends BroadcastReceiver {
         int points = intent.getIntExtra(GamificationService.SERVICE_POINTS, 0);
 
         if (listener != null){
-            listener.onEvent(message, points);
+            listener.onGamificationEvent(message, points);
         }
 
         abortBroadcast();
