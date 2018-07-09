@@ -379,5 +379,6 @@
     <string name="tab_title_leaderboard">Leaderboard</string>
     <string name="leaderboard_position">Your position</string>
     <string name="leaderboard_points">%1$s points</string>
+    <string name="prefShowGamificationEvents">Show gamification events</string>
 </resources>
 

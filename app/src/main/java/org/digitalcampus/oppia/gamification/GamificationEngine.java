@@ -18,6 +18,8 @@
 package org.digitalcampus.oppia.gamification;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -26,6 +28,7 @@ import android.view.View;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.quiz.Quiz;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
@@ -259,11 +262,15 @@ public class GamificationEngine {
             return ctx.getString(resId,
                 (c == null) ? "" : c.getMultiLangInfo().getTitle(prefLang));
         }
-
     }
 
 
-    public void notifyEvent(View view, GamificationEvent event, Course c, Activity a) {
-        Snackbar.make(view, getEventMessage(event, c, a), Snackbar.LENGTH_SHORT).show();
+    public void notifyEvent(Context ctx, View view, GamificationEvent event, Course c, Activity a) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
+        if(notifEnabled) {
+            Snackbar.make(view, getEventMessage(event, c, a), Snackbar.LENGTH_SHORT).show();
+        }
+
     }
 }

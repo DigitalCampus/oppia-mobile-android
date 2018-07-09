@@ -183,8 +183,12 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     @Override
-    public void onEvent(String message, int points) {
-        final View rootView =  ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
-        Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+    public void onGamificationEvent(String message, int points) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
+        if(notifEnabled) {
+            final View rootView =  ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+            Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+        }
     }
 }
