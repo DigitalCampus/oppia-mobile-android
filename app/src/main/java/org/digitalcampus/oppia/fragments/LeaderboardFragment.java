@@ -68,7 +68,7 @@ public class LeaderboardFragment extends Fragment implements SubmitListener {
         adapter = new LeaderboardAdapter(this.getContext(), leaderboard);
         leaderboard_view.setLayoutManager( new LinearLayoutManager(this.getContext()));
         leaderboard_view.setAdapter(adapter);
-        
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (Leaderboard.shouldFetchLeaderboard(prefs)){
             Payload p = new Payload();

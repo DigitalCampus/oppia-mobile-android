@@ -136,7 +136,7 @@
         android:fitsSystemWindows="true"
         android:id="@+id/navigation_view"
         app:headerLayout="@layout/drawer_header"
-        app:theme="@style/Oppia.Theme"
+        android:theme="@style/Oppia.Theme"
         app:menu="@menu/drawer_main" />
 
     </android.support.v4.widget.DrawerLayout>
