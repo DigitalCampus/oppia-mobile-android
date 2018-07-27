@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/highlight_mid"
-    android:layout_height="180dp">
+    android:layout_height="220dp"
+    android:background="@color/highlight_mid">
 
     <ImageView
         android:id="@+id/imageView8"
@@ -22,28 +22,28 @@
         >
 
         <TextView
+            android:id="@+id/drawer_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/drawer_username"
-            android:gravity="left"
-            android:textSize="14sp"
-            android:textColor="#fff"
             android:layout_above="@+id/drawer_user_fullname"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_alignParentStart="true"
+            android:gravity="left"
+            android:textColor="#fff"
+            android:textSize="14sp"/>
 
         <TextView
+            android:id="@+id/drawer_user_fullname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="#FFF"
-            android:textStyle="bold"
-            android:gravity="left"
-            android:paddingBottom="4dp"
-            android:id="@+id/drawer_user_fullname"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_alignParentStart="true"
+            android:gravity="left"
+            android:paddingBottom="4dp"
+            android:textColor="#FFF"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/drawer_version_name"
@@ -57,12 +57,14 @@
 
         <ImageView
             android:id="@+id/imageView9"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_above="@+id/drawer_username"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/tool_bar_top_padding"
-            android:paddingBottom="20dp"
-            android:src="@drawable/lmh_logo"/>
+            android:adjustViewBounds="true"
+            android:minHeight="90dp"
+            android:paddingBottom="15dp"
+            android:src="@drawable/liberia_logo"/>
     </RelativeLayout>
 </FrameLayout>
