@@ -28,11 +28,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
@@ -122,7 +125,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     @Override
 	public void onStart() {
-		super.onStart();
+		super.onStart(false);
     }
 
     @Override
@@ -240,8 +243,14 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private void initializeCourseIndex(boolean animate){
 
         final ListView listView = (ListView) findViewById(R.id.section_list);
-	if (listView == null) return;        
-	ViewCompat.setNestedScrollingEnabled(listView, true);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View header = inflater.inflate(R.layout.course_title_bar, listView, false);
+        listView.addHeaderView(header, null, false);
+
+        TextView courseTitle = (TextView) header.findViewById(R.id.course_title);
+        courseTitle.setText(course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+        ViewCompat.setNestedScrollingEnabled(listView, true);
         sla = new SectionListAdapter(CourseIndexActivity.this, course, sections, new SectionListAdapter.CourseClickListener() {
             @Override
             public void onActivityClicked(String activityDigest) {

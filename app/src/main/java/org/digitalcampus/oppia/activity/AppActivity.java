@@ -87,8 +87,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 		}
 	}
 
-    @Override
-    protected void onStart() {
+	protected void onStart(boolean overrideTitle){
         super.onStart();
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -104,17 +103,24 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             actionBar.setDisplayShowTitleEnabled(true);
 
             //If we are in a course-related activity, we show its title
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            Bundle bundle = this.getIntent().getExtras();
-            if (bundle != null) {
-                Course course = (Course) bundle.getSerializable(Course.TAG);
-                if (course == null ) return;
-                String title = course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-                setTitle(title);
-                actionBar.setTitle(title);
+            if (overrideTitle){
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                Bundle bundle = this.getIntent().getExtras();
+                if (bundle != null) {
+                    Course course = (Course) bundle.getSerializable(Course.TAG);
+                    if (course == null ) return;
+                    String title = course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+                    setTitle(title);
+                    actionBar.setTitle(title);
+                }
             }
-        }
 
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        onStart(true);
     }
 
     @Override
