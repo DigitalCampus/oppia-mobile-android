@@ -121,6 +121,11 @@
             android:defaultValue="@string/MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE"
             android:key="prefDownloadEnabled"
             android:title="@string/prefDownloadEnabled" />
+
+        <CheckBoxPreference
+            android:defaultValue="@string/MENU_ALLOW_LANGUAGE_DEFAULT_VALUE"
+            android:key="prefChangeLanguageEnabled"
+            android:title="@string/prefChangeLanguageEnabled" />
         
         <CheckBoxPreference
         	android:defaultValue="true"
