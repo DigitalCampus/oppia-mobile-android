@@ -528,6 +528,7 @@ public class QuizWidget extends WidgetFactory {
 		
 		// Show restart or continue button
 		Button restartBtn = (Button) getView().findViewById(R.id.quiz_results_button);
+		Button exitBtn = (Button) getView().findViewById(R.id.quiz_exit_button);
 
         int quizAvailability = checkQuizAvailability();
         boolean quizAvailable = quizAvailability == QUIZ_AVAILABLE;
@@ -538,6 +539,11 @@ public class QuizWidget extends WidgetFactory {
             availabilityMsg.setVisibility(View.VISIBLE);
         }
 
+		exitBtn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				QuizWidget.this.getActivity().finish();
+			}
+		});
 		if (this.isBaseline) {
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_baseline_goto_course));
 			restartBtn.setOnClickListener(new View.OnClickListener() {
@@ -545,13 +551,9 @@ public class QuizWidget extends WidgetFactory {
 					QuizWidget.this.getActivity().finish();
 				}
 			});
+			exitBtn.setVisibility(View.GONE);
 		} else if (this.getActivityCompleted() || !quizAvailable){
-            restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_continue));
-            restartBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    QuizWidget.this.getActivity().finish();
-                }
-            });
+			restartBtn.setVisibility(View.GONE);
         } else{
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_results_restart));
 			restartBtn.setOnClickListener(new View.OnClickListener() {
