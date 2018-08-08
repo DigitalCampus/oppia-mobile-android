@@ -125,8 +125,8 @@ public class DrawerMenuManager {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(drawerAct);
         itemLogout.setVisible(prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT));
         itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS);
-        itemCourseDownload.setVisible(MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD);
         itemLanguageDialog.setVisible(customOptions.containsKey(R.id.menu_language));
+        itemCourseDownload.setVisible(prefs.getBoolean(PrefsActivity.PREF_DOWNLOAD_ENABLED, MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD));
         itemSync.setVisible(MobileLearning.MENU_ALLOW_SYNC);
     }
 
