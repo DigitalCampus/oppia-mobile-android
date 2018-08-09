@@ -380,5 +380,7 @@
     <string name="leaderboard_position">Your position</string>
     <string name="leaderboard_points">%1$s points</string>
     <string name="prefShowGamificationEvents">Show gamification events</string>
+    <string name="prefDownloadEnabled">Enable course downloading from homepage</string>
+    <string name="prefChangeLanguageEnabled">Enable changing language from homepage</string>
 </resources>
 

@@ -83,18 +83,21 @@ public class GamificationService  extends IntentService {
                 Course c = null;
                 Activity act = null;
 
+
                 if (SERVICE_EVENT_DOWNLOAD.equals(eventName)){
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     event = gEngine.processEventCourseDownloaded(c);
                     isCompleted = true;
                 }
                 else if (SERVICE_EVENT_ACTIVITY.equals(eventName)){
-                    act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
-                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
-                    event = gEngine.processEventActivityCompleted(c, act);
+                    if (isCompleted){
+                        act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
+                        c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                        event = gEngine.processEventActivityCompleted(c, act);
 
-                    eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
-                    eventData.put("readaloud", intent.getBooleanExtra(EVENTDATA_READALOUD, false));
+                        eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                        eventData.put("readaloud", intent.getBooleanExtra(EVENTDATA_READALOUD, false));
+                    }
                 }
                 else if (SERVICE_EVENT_QUIZ.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
@@ -135,11 +138,13 @@ public class GamificationService  extends IntentService {
 
                 }
                 else if (SERVICE_EVENT_RESOURCE.equals(eventName)){
-                    act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
-                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
-                    event = gEngine.processEventResourceActivity(c, act);
+                    if (isCompleted){
+                        act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
+                        c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                        event = gEngine.processEventResourceActivity(c, act);
 
-                    eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                        eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                    }
                 }
                 else if (SERVICE_EVENT_FEEDBACK.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
