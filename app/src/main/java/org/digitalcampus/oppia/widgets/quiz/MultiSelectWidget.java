@@ -79,8 +79,8 @@ public class MultiSelectWidget extends QuestionWidget {
 			}
 		}
 
-		if(response.size() == 0){
-			return null;
+		if(response.isEmpty()){
+			return new ArrayList<>();
 		} else {
 			return response;
 		}

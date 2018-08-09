@@ -23,6 +23,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.Section;
@@ -56,6 +57,9 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     private static final String NODE_SECTION = "section";
     private static final String NODE_META = "meta";
     private static final String NODE_SEQUENCING = "sequencing";
+    private static final String NODE_GAMIFICATION = "gamification";
+    private static final String NODE_EVENT = "event";
+    private static final String ATTR_NAME = "name";
 
     private long courseId;
     private long userId;
@@ -67,6 +71,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     private int coursePriority;
     private ArrayList<Lang> courseDescriptions = new ArrayList<>();
     private ArrayList<Lang> courseTitles = new ArrayList<>();
+    private ArrayList<GamificationEvent> courseGamification = new ArrayList<>();
     private ArrayList<Lang> courseLangs = new ArrayList<>();
     private ArrayList<Activity> courseBaseline = new ArrayList<>();
     private ArrayList<Media> courseMedia = new ArrayList<>();
@@ -90,6 +95,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     //Temporary vars
     private Section currentSection;
     private String currentLang;
+    private String currentGamifEvent;
     private Activity currentActivity;
     private ArrayList<Lang> sectTitles;
 
@@ -102,7 +108,9 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     private ArrayList<Lang> actContents;
     private ArrayList<Lang> actDescriptions;
     private ArrayList<Media> actMedia;
+    private ArrayList<GamificationEvent> actGamification;
 
+    private ArrayList<GamificationEvent> currentGamification = new ArrayList<>();
     private ArrayList<Media> currentMedia = new ArrayList<>();
 
     @Override
@@ -126,6 +134,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             actContents = new ArrayList<>();
             actDescriptions = new ArrayList<>();
             actMedia = new ArrayList<>();
+            actGamification = new ArrayList<>();
             parentElements.push(NODE_ACTIVITY);
 
         }
@@ -152,9 +161,6 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             else if (NODE_META.equals(parentElements.peek())){
                 courseIcon = aAttributes.getValue(NODE_FILENAME);
             }
-            //else if (NODE_PAGE.equals(parentElements.peek())){
-            //Add metapage icon (there is no method?)
-            //}
         }
         else if (NODE_FILE.equals(aQName)) {
             Media m = new Media();
@@ -173,12 +179,18 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         else if (NODE_MEDIA.equals(aQName)){
             parentElements.push(NODE_MEDIA);
         }
-        else if (NODE_PAGE.equals(aQName)){
+        else if (NODE_PAGE.equals(aQName)) {
             currentPage = new CourseMetaPage();
             pageTitles = new ArrayList<>();
             pageLocations = new ArrayList<>();
             currentPage.setId(Integer.parseInt(aAttributes.getValue(NODE_ID)));
             parentElements.push(NODE_PAGE);
+        }
+        else if (NODE_GAMIFICATION.equals(aQName)){
+            parentElements.push(NODE_GAMIFICATION);
+        }
+        else if (NODE_EVENT.equals(aQName)){
+            currentGamifEvent = aAttributes.getValue(ATTR_NAME);
         }
     }
 
@@ -256,6 +268,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             currentActivity.setLocations(actLocations);
             currentActivity.setContents(actContents);
             currentActivity.setMedia(actMedia);
+            currentActivity.setGamificationEvents(actGamification);
             parentElements.pop();
 
             if (NODE_SECTION.equals(parentElements.peek())){
@@ -299,6 +312,26 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             courseMetaPages.add(currentPage);
             parentElements.pop();
         }
+        else if (NODE_GAMIFICATION.equals(aQName)){
+            parentElements.pop();
+            if (NODE_ACTIVITY.equals(parentElements.peek())){
+                actGamification = new ArrayList<>();
+                actGamification.addAll(currentGamification);
+            }
+            else{
+                courseGamification.addAll(currentGamification);
+            }
+            currentGamification.clear();
+        }
+        else if (NODE_EVENT.equals(aQName)){
+            if (chars.length() <= 0) return;
+
+            int points = Integer.parseInt(chars.toString());
+            GamificationEvent event = new GamificationEvent();
+            event.setEvent(currentGamifEvent);
+            event.setPoints(points);
+            currentGamification.add(event);
+        }
     }
 
     public CompleteCourse getCourse(String root) {
@@ -313,6 +346,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         c.setMedia(courseMedia);
         c.setMetaPages(courseMetaPages);
         c.setSections(sections);
+        c.setGamification(courseGamification);
 
         if ((courseSequencingMode!=null) && (courseSequencingMode.equals(Course.SEQUENCING_MODE_COURSE) ||
                 courseSequencingMode.equals(Course.SEQUENCING_MODE_SECTION) || courseSequencingMode.equals(Course.SEQUENCING_MODE_NONE))){

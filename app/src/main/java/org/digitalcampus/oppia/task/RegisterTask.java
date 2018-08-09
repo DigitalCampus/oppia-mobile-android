@@ -83,12 +83,11 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
                 JSONObject jsonResp = new JSONObject(response.body().string());
                 u.setApiKey(jsonResp.getString("api_key"));
                 try {
-                    u.setPoints(jsonResp.getInt("points"));
                     u.setBadges(jsonResp.getInt("badges"));
                 } catch (JSONException e){
-                    u.setPoints(0);
                     u.setBadges(0);
                 }
+
                 try {
                     u.setScoringEnabled(jsonResp.getBoolean("scoring"));
                     u.setBadgingEnabled(jsonResp.getBoolean("badging"));
@@ -96,6 +95,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
                     u.setScoringEnabled(true);
                     u.setBadgingEnabled(true);
                 }
+
                 try {
                     JSONObject metadata = jsonResp.getJSONObject("metadata");
                     MetaDataUtils mu = new MetaDataUtils(ctx);
@@ -103,6 +103,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
                 u.setFirstname(jsonResp.getString("first_name"));
                 u.setLastname(jsonResp.getString("last_name"));
 

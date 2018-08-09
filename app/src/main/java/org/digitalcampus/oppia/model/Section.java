@@ -43,7 +43,7 @@ public class Section implements Serializable  {
 	}
 
 	public Section(){
-		activities = new ArrayList<Activity>();
+		activities = new ArrayList<>();
 	}
 
 	public int getOrder() {

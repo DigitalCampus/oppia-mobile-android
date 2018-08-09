@@ -90,7 +90,7 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                     }
                 }
 
-                if (usernameColumn == -1 | apikeyColumn == -1 | passwordColumn == -1){
+                if (usernameColumn == -1 || apikeyColumn == -1 || passwordColumn == -1){
                     payload.setResult(true);
                     payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
                 }

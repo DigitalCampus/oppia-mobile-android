@@ -18,9 +18,7 @@
 package org.digitalcampus.mobile.quiz;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,15 +35,20 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.GamificationEvent;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 public class Quiz implements Serializable {
 
-    public static final String TAG = "Quiz";
+    public static final String TAG = Quiz.class.getSimpleName();
 
     public static final String RESPONSE_SEPARATOR = "||";
     public static final String MATCHING_SEPARATOR = "|";
@@ -62,16 +65,37 @@ public class Quiz implements Serializable {
     public static final int QUIZ_DEFAULT_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
     public static final int QUIZ_QUESTION_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
 
+    public static final String JSON_PROPERTY_TITLE = "title";
+    public static final String JSON_PROPERTY_ID = "id";
+    public static final String JSON_PROPERTY_PROPS = "props";
+    public static final String JSON_PROPERTY_QUESTIONS = "questions";
+    public static final String JSON_PROPERTY_QUESTION = "question";
+    public static final String JSON_PROPERTY_RESPONSE = "response";
+    public static final String JSON_PROPERTY_RESPONSES = "responses";
+    public static final String JSON_PROPERTY_TYPE = "type";
+    public static final String JSON_PROPERTY_QUESTION_ID = "question_id";
+    public static final String JSON_PROPERTY_SCORE = "score";
+    public static final String JSON_PROPERTY_MAXSCORE = "maxscore";
+    public static final String JSON_PROPERTY_TEXT = "text";
+    public static final String JSON_PROPERTY_TOLERANCE = "tolerance";
+    public static final String JSON_PROPERTY_FEEDBACK = "feedback";
+    public static final String JSON_PROPERTY_CORRECTFEEDBACK = "correctfeedback";
+    public static final String JSON_PROPERTY_INCORRECTFEEDBACK = "incorrectfeedback";
+    public static final String JSON_PROPERTY_PARTIALLYCORRECTFEEDBACK = "partiallycorrectfeedback";
+    public static final String JSON_PROPERTY_REQUIRED = "required";
+    public static final String JSON_PROPERTY_MAXATTEMPTS = "maxattempts";
+    public static final String JSON_PROPERTY_RANDOMSELECT = "randomselect";
+
     private static final long serialVersionUID = -2416034891439585524L;
     private int id;
-    private HashMap<String,String> title = new HashMap<String,String>();
+    private HashMap<String,String> title = new HashMap<>();
     private String url;
     private float maxscore;
     private boolean checked;
     private int currentq = 0;
     private int maxattempts;
     private float userscore;
-    private List<QuizQuestion> questions = new ArrayList<QuizQuestion>();
+    private List<QuizQuestion> questions = new ArrayList<>();
     private String instanceID;
     private String propsSerialized;
     private String defaultLang;
@@ -93,38 +117,39 @@ public class Quiz implements Serializable {
         this.defaultLang = defaultLang;
         try {
             JSONObject json = new JSONObject(quiz);
-            this.id = json.getInt("id");
+            this.id = json.getInt(JSON_PROPERTY_ID);
 
-            if (json.get("title") instanceof JSONObject){
-                JSONObject titleLangs = json.getJSONObject("title");
+            if (json.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
+                JSONObject titleLangs = json.getJSONObject(JSON_PROPERTY_TITLE);
                 Iterator<?> keys = titleLangs.keys();
 
                 while( keys.hasNext() ){
                     String key = (String) keys.next();
                     this.setTitleForLang(key, titleLangs.getString(key));
                 }
-            } else if (json.get("title") instanceof String) {
-                this.setTitleForLang(this.defaultLang, json.getString("title"));
+            } else if (json.get(JSON_PROPERTY_TITLE) instanceof String) {
+                this.setTitleForLang(this.defaultLang, json.getString(JSON_PROPERTY_TITLE));
             } else {
                 //fallback
                 this.setTitleForLang(this.defaultLang, "unknown");
             }
-            this.propsSerialized = json.get("props").toString();
-            this.maxscore = propsSerializedGetInt("maxscore",0);
-            this.maxattempts = propsSerializedGetInt("maxattempts", -1);
-            int randomSelect = propsSerializedGetInt("randomselect",0);
+            this.propsSerialized = json.get(JSON_PROPERTY_PROPS).toString();
+            this.maxscore = propsSerializedGetInt(JSON_PROPERTY_MAXSCORE,0);
+            this.maxattempts = propsSerializedGetInt(JSON_PROPERTY_MAXATTEMPTS, -1);
+            int randomSelect = propsSerializedGetInt(JSON_PROPERTY_RANDOMSELECT,0);
 
             // add questions
-            JSONArray questions = (JSONArray) json.get("questions");
+            JSONArray questionsJSON = (JSONArray) json.get(JSON_PROPERTY_QUESTIONS);
             if (randomSelect > 0){
-                this.generateQuestionSet(questions, randomSelect);
+                this.generateQuestionSet(questionsJSON, randomSelect);
             } else {
-                for (int i = 0; i < questions.length(); i++) {
-                    this.addQuestion((JSONObject) questions.get(i));
+                for (int i = 0; i < questionsJSON.length(); i++) {
+                    this.addQuestion((JSONObject) questionsJSON.get(i));
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error loading quiz",jsone);
+            Mint.logException(jsone);
             return false;
         }
         return true;
@@ -138,8 +163,8 @@ public class Quiz implements Serializable {
             JSONObject quizquestion;
             try {
                 quizquestion = (JSONObject) questionChoices.get(randomNum);
-                JSONObject q = quizquestion.getJSONObject("question");
-                int qid = q.getInt("id");
+                JSONObject q = quizquestion.getJSONObject(JSON_PROPERTY_QUESTION);
+                int qid = q.getInt(JSON_PROPERTY_ID);
                 for(int i=0; i < this.questions.size(); i++){
                     if (qid == this.questions.get(i).getID()){
                         found = true;
@@ -148,8 +173,9 @@ public class Quiz implements Serializable {
                 if(!found){
                     this.addQuestion(quizquestion);
                 }
-            } catch (JSONException e) {
-
+            } catch (JSONException jsone) {
+                Log.d(TAG,"Error parsing question set", jsone);
+                Mint.logException(jsone);
             }
         }
 
@@ -167,48 +193,48 @@ public class Quiz implements Serializable {
         QuizQuestion question;
         String qtype;
         try {
-            JSONObject q = qObj.getJSONObject("question");
-            qtype = (String) q.get("type");
-            if (qtype.toLowerCase().equals(Essay.TAG.toLowerCase())) {
+            JSONObject q = qObj.getJSONObject(JSON_PROPERTY_QUESTION);
+            qtype = (String) q.get(JSON_PROPERTY_TYPE);
+            if (qtype.equalsIgnoreCase(Essay.TAG)) {
                 question = new Essay();
-            } else if (qtype.toLowerCase().equals(MultiChoice.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(MultiChoice.TAG)) {
                 question = new MultiChoice();
-            } else if (qtype.toLowerCase().equals(Numerical.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(Numerical.TAG)) {
                 question = new Numerical();
-            } else if (qtype.toLowerCase().equals(Matching.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(Matching.TAG)) {
                 question = new Matching();
-            } else if (qtype.toLowerCase().equals(ShortAnswer.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(ShortAnswer.TAG)) {
                 question = new ShortAnswer();
-            } else if (qtype.toLowerCase().equals(MultiSelect.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(MultiSelect.TAG)) {
                 question = new MultiSelect();
-            } else if (qtype.toLowerCase().equals(Description.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(Description.TAG)) {
                 question = new Description();
-            } else if (qtype.toLowerCase().equals(DragAndDrop.TAG.toLowerCase())) {
+            } else if (qtype.equalsIgnoreCase(DragAndDrop.TAG)) {
             question = new DragAndDrop();
             } else {
                 Log.d(TAG, "Question type " + qtype + " is not yet supported");
                 return false;
             }
 
-            question.setID(q.getInt("id"));
+            question.setID(q.getInt(JSON_PROPERTY_ID));
 
-            if (q.get("title") instanceof JSONObject){
-                JSONObject titleLangs = q.getJSONObject("title");
+            if (q.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
+                JSONObject titleLangs = q.getJSONObject(JSON_PROPERTY_TITLE);
                 Iterator<?> keys = titleLangs.keys();
 
                 while( keys.hasNext() ){
                     String key = (String) keys.next();
                     question.setTitleForLang(key, titleLangs.getString(key));
                 }
-            } else if (q.get("title") instanceof Integer){
-                question.setTitleForLang(this.defaultLang, String.valueOf(q.getInt("title")));
+            } else if (q.get(JSON_PROPERTY_TITLE) instanceof Integer){
+                question.setTitleForLang(this.defaultLang, String.valueOf(q.getInt(JSON_PROPERTY_TITLE)));
             } else {
-                question.setTitleForLang(this.defaultLang, q.getString("title"));
+                question.setTitleForLang(this.defaultLang, q.getString(JSON_PROPERTY_TITLE));
             }
 
-            JSONObject questionProps = (JSONObject) q.get("props");
+            JSONObject questionProps = (JSONObject) q.get(JSON_PROPERTY_PROPS);
 
-            HashMap<String, String> qProps = new HashMap<String, String>();
+            HashMap<String, String> qProps = new HashMap<>();
             if (questionProps.names() != null){
                 for (int k = 0; k < questionProps.names().length(); k++) {
                     qProps.put(questionProps.names().getString(k),
@@ -219,13 +245,13 @@ public class Quiz implements Serializable {
             this.questions.add(question);
 
             // now add response options for this question
-            JSONArray responses = (JSONArray) q.get("responses");
+            JSONArray responses = (JSONArray) q.get(JSON_PROPERTY_RESPONSES);
             for (int j = 0; j < responses.length(); j++) {
                 JSONObject r = (JSONObject) responses.get(j);
                 Response responseOption = new Response();
 
-                if (r.get("title") instanceof JSONObject){
-                    JSONObject titleLangs = r.getJSONObject("title");
+                if (r.get(JSON_PROPERTY_TITLE) instanceof JSONObject){
+                    JSONObject titleLangs = r.getJSONObject(JSON_PROPERTY_TITLE);
                     Iterator<?> keys = titleLangs.keys();
 
                     while( keys.hasNext() ){
@@ -236,15 +262,15 @@ public class Quiz implements Serializable {
                             responseOption.setTitleForLang(key, titleLangs.getString(key));
                         }
                     }
-                } else if (r.get("title") instanceof Integer){
-                    responseOption.setTitleForLang(this.defaultLang, String.valueOf(r.getInt("title")));
+                } else if (r.get(JSON_PROPERTY_TITLE) instanceof Integer){
+                    responseOption.setTitleForLang(this.defaultLang, String.valueOf(r.getInt(JSON_PROPERTY_TITLE)));
                 } else {
-                    responseOption.setTitleForLang(this.defaultLang, r.getString("title"));
+                    responseOption.setTitleForLang(this.defaultLang, r.getString(JSON_PROPERTY_TITLE));
                 }
 
-                responseOption.setScore(Float.parseFloat((String) r.get("score")));
-                JSONObject responseProps = (JSONObject) r.get("props");
-                HashMap<String, String> rProps = new HashMap<String, String>();
+                responseOption.setScore(Float.parseFloat((String) r.get(Quiz.JSON_PROPERTY_SCORE)));
+                JSONObject responseProps = (JSONObject) r.get(JSON_PROPERTY_PROPS);
+                HashMap<String, String> rProps = new HashMap<>();
                 if (responseProps.names() != null) {
                     for (int m = 0; m < responseProps.names().length(); m++) {
                         rProps.put(responseProps.names().getString(m),
@@ -256,8 +282,9 @@ public class Quiz implements Serializable {
                 question.addResponseOption(responseOption);
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error parsing question & responses",jsone);
+            Mint.logException(jsone);
             return false;
         }
         return true;
@@ -307,10 +334,9 @@ public class Quiz implements Serializable {
     public String getTitle(String lang) {
         if(title.containsKey(lang)){
             return title.get(lang);
+        } else if (!title.entrySet().isEmpty()){
+            return title.entrySet().iterator().next().getValue();
         } else {
-            for (String key : title.keySet()) {
-                return title.get(key);
-            }
             return "";
         }
     }
@@ -349,6 +375,7 @@ public class Quiz implements Serializable {
         try {
             return questions.get(this.currentq);
         } catch (IndexOutOfBoundsException e ){
+            Mint.logException(e);
             throw new InvalidQuizException(e);
         }
     }
@@ -375,16 +402,17 @@ public class Quiz implements Serializable {
         return noQs;
     }
 
-    public JSONObject getResultObject() {
+    public JSONObject getResultObject(GamificationEvent ge) {
         JSONObject json = new JSONObject();
         try {
             json.put("quiz_id", this.getID());
-            Date now = new Date();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            json.put("attempt_date", simpleDateFormat.format(now));
-            json.put("score", this.getUserscore());
-            json.put("maxscore", this.getMaxscore());
+            DateTime now = new DateTime();
+            json.put("attempt_date", MobileLearning.DATETIME_FORMAT.print(now));
+            json.put(JSON_PROPERTY_SCORE, this.getUserscore());
+            json.put(JSON_PROPERTY_MAXSCORE, this.getMaxscore());
             json.put("instance_id",this.getInstanceID());
+            json.put("points",ge.getPoints());
+            json.put("event",ge.getEvent());
             JSONArray responses = new JSONArray();
             for(QuizQuestion q: questions){
                 if(!(q instanceof Description)){
@@ -392,9 +420,10 @@ public class Quiz implements Serializable {
                     responses.put(r);
                 }
             }
-            json.put("responses", responses);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            json.put(JSON_PROPERTY_RESPONSES, responses);
+        } catch (JSONException jsone) {
+            Log.d(TAG,"Error creating json result object",jsone);
+            Mint.logException(jsone);
         }
         return json;
     }
@@ -423,8 +452,9 @@ public class Quiz implements Serializable {
         try {
             JSONObject json = new JSONObject(propsSerialized);
             return json.getInt(key);
-        } catch (JSONException e) {
-            // do nothing
+        } catch (JSONException jsone) {
+            Log.d(TAG, "Error getting int from propsSerialized", jsone);
+            Mint.logException(jsone);
         }
         return defaultValue;
     }
@@ -433,8 +463,9 @@ public class Quiz implements Serializable {
         try {
             JSONObject json = new JSONObject(propsSerialized);
             return json.getBoolean(key);
-        } catch (JSONException e) {
-            // do nothing
+        } catch (JSONException jsone) {
+            Log.d(TAG, "Error getting boolean from propsSerialized", jsone);
+            Mint.logException(jsone);
         }
         return defaultValue;
     }

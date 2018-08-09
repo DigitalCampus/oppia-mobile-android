@@ -28,17 +28,9 @@ public class OppiaNotificationUtils {
 
         //Notification styles changed since Lollipop
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int color;
-            //We have to check the M version for the deprecation of the method getColor()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                color = ctx.getResources().getColor(R.color.highlight_light);
-            }
-            else{
-                color = ctx.getResources().getColor(R.color.highlight_light);
-            }
+            int color = ctx.getResources().getColor(R.color.highlight_light);
             notifBuilder.setColor(color);
-        }
-        else{
+        } else {
             //in older versions, we show the App logo
             notifBuilder.setLargeIcon(BitmapFactory.decodeResource(ctx.getResources(), MobileLearning.APP_LOGO));
         }

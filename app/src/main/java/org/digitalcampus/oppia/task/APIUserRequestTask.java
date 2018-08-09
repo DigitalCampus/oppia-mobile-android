@@ -51,15 +51,8 @@ public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>
 		Payload payload = params[0];
 		try {
 
-			DbHelper db = DbHelper.getInstance(ctx);
-        	User u = db.getUser(SessionManager.getUsername(ctx));
-
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
-            Request request = new Request.Builder()
-                    .url(apiEndpoint.getFullURL(ctx, payload.getUrl()))
-                    .addHeader(HTTPClientUtils.HEADER_AUTH,
-                            HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
-                    .build();
+            Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, payload.getUrl()));
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
@@ -80,11 +73,7 @@ public class APIUserRequestTask extends APIRequestTask<Payload, Object, Payload>
                 }
             }
 
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
-		} catch (IOException e) {
+		}  catch (IOException e) {
 			e.printStackTrace();
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));

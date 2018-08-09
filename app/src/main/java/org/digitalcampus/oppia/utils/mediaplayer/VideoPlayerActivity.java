@@ -37,8 +37,10 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -62,16 +64,12 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private Activity activity;
     private Course course;
     protected SharedPreferences prefs;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
-        SurfaceHolder videoHolder = videoSurface.getHolder();
-        videoHolder.addCallback(this);
-
         player = new MediaPlayer();
         controller = new VideoControllerView(this);
         
@@ -99,13 +97,22 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         }
     }
 
+    protected void onStart(){
+        super.onStart();
+        videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
+        videoSurface.setKeepScreenOn(true); //prevents player going into sleep mode
+        SurfaceHolder videoHolder = videoSurface.getHolder();
+        videoHolder.addCallback(this);
+    }
+
     
     @Override
     protected void onStop(){
+        super.onStop();
+
     	saveTracker();
         controller.setMediaPlayer(null);
-        if (player != null ) player.release();
-    	super.onStop();
+        if (player != null ) player.reset();
     }
     
     @Override
@@ -148,7 +155,12 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 				} catch (JSONException e) {
 					// Do nothing
 				}
-				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed);
+                GamificationEngine gamificationEngine = new GamificationEngine(this);
+				GamificationEvent event = gamificationEngine.processEventMediaPlayed(this.course, this.activity, mediaFileName, timeTaken);
+                if (event.getPoints() > 0){
+                    gamificationEngine.notifyEvent(this, this.videoSurface, event, this.course, this.activity);
+                }
+				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed, event);
 			}
 		}
 	}
@@ -244,7 +256,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-        
+
     }
     // End SurfaceHolder.Callback
 

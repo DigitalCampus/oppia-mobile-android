@@ -34,7 +34,9 @@ public class PreferencesFragment extends PreferenceFragment {
         return new PreferencesFragment();
     }
 
-    public PreferencesFragment(){ }
+    public PreferencesFragment(){
+        // Required empty public constructor
+    }
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -153,7 +155,7 @@ public class PreferencesFragment extends PreferenceFragment {
         }
 
         ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE);
-        if (entryValues.size() > 0){
+        if (!entryValues.isEmpty()){
             langsList.setEntries( entries.toArray(new CharSequence[entries.size()]) );
             langsList.setEntryValues( entryValues.toArray(new CharSequence[entryValues.size()]) );
         }
@@ -209,7 +211,6 @@ public class PreferencesFragment extends PreferenceFragment {
             try{
                 String intValue = (String) newValue;
                 valid = (intValue.length() <= 9); //it'll be bigger than int's max value
-                int value = Integer.parseInt(intValue);
             }
             catch (NumberFormatException e){
                 valid = false;

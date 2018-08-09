@@ -44,12 +44,11 @@ public class AboutFragment extends Fragment{
 	private SharedPreferences prefs;
 	
 	public static AboutFragment newInstance() {
-		AboutFragment myFragment = new AboutFragment();
-	    return myFragment;
+	    return new AboutFragment();
 	}
 
 	public AboutFragment(){
-		
+		// Required empty public constructor
 	}
 
 	@Override
@@ -59,11 +58,6 @@ public class AboutFragment extends Fragment{
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
 	}
 	
 	@Override

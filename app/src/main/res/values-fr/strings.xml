@@ -6,11 +6,6 @@
     <string name="app_name">&appName;</string>
     <string name="app_logo_alt">&companyName; Logo</string>
 
-
-    <!-- Dont need to define gcm values here anymore, as they are defined in google-services.json
-    <string name="gcm_defaultSenderId">1:1075863350964:android:e457f5046c8376a5</string>
-    string name="gcm_defaultSenderId">admin-api-cc4ba</string -->
-
     <string name="about_logged_in">Connecté en tant que %1$s</string>
     <string name="about_not_logged_in">Non connecté in</string>
 
@@ -22,7 +17,6 @@
     <string name="menu_font_decrease">Réduire la taille du texte</string>
     <string name="menu_help">Aide</string>
     <string name="menu_logout">Déconnection</string>
-    <string name="menu_monitor">Moniteur</string>
     <string name="menu_read_aloud">Lire à voix haute</string>
     <string name="menu_return_to_courses">Revenir aux cours</string>
     <string name="menu_scorecard">Carnet de notes</string>
@@ -59,7 +53,6 @@
     <string name="title_activity_course_index">Catalogue des cours</string>
     <string name="title_activity_course">Activité</string>
     <string name="title_course_meta">À propos</string>
-    <string name="title_monitor">Moniteur</string>
     <string name="title_stats_submitted">Pas d\'activités envoyées au serveur</string>
     <string name="title_stats_unsubmitted">Pas d\'activités en attente</string>
     <string name="title_prefs">Paramètres</string>

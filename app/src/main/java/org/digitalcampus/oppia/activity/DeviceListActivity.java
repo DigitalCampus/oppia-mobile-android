@@ -1,5 +1,3 @@
-package org.digitalcampus.oppia.activity;
-
 /*
  * Copyright (C) 2014 The Android Open Source Project
  *
@@ -17,6 +15,10 @@ package org.digitalcampus.oppia.activity;
  */
 
 
+package org.digitalcampus.oppia.activity;
+
+
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -34,10 +36,14 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.PermissionsManager;
+import org.digitalcampus.oppia.utils.UIUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and
@@ -50,6 +56,11 @@ public class DeviceListActivity extends Activity {
     private static final String TAG = "DeviceListActivity";
 
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
+    private static final List<String> BLUETOOTH_PERMISSIONS = Arrays.asList(
+            //Remember to update this when the Manifest permisssions change!
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    );
 
     private Button scanButton;
     private View scanningMessage;
@@ -73,16 +84,45 @@ public class DeviceListActivity extends Activity {
         scanButton = (Button) findViewById(R.id.button_scan);
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                scanButton.setVisibility(View.GONE);
-                doDiscovery();
+
+                final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
+                if (notGrantedPerms.size() > 0){
+                    if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)){
+                        UIUtils.showAlert(
+                                DeviceListActivity.this,
+                                R.string.permissions_simple_title,
+                                R.string.permissions_bluetooth_message,
+                                R.string.permissions_allow_btn_text,
+                                new Callable<Boolean>() {
+                                    @Override
+                                    public Boolean call() {
+                                        PermissionsManager.requestPermissions(
+                                                DeviceListActivity.this, notGrantedPerms);
+                                        return true;
+                                    }
+                                }
+                            );
+                    }
+                    else{
+                        UIUtils.showAlert(
+                                DeviceListActivity.this,
+                                R.string.permissions_simple_title,
+                                R.string.permissions_not_askable_message );
+                    }
+                }
+                else {
+                    scanButton.setVisibility(View.GONE);
+                    doDiscovery();
+                }
+
             }
         });
 
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
         ArrayAdapter<String> pairedDevicesArrayAdapter =
-                new ArrayAdapter<String>(this, R.layout.device_row);
-        mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_row);
+                new ArrayAdapter<>(this, R.layout.device_row);
+        mNewDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.device_row);
 
         // Find and set up the ListView for paired devices
         ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
@@ -109,7 +149,7 @@ public class DeviceListActivity extends Activity {
         Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
 
         // If there are paired devices, add each one to the ArrayAdapter
-        if (pairedDevices.size() > 0) {
+        if (!pairedDevices.isEmpty()) {
             findViewById(R.id.paired_devices_title).setVisibility(View.VISIBLE);
             for (BluetoothDevice device : pairedDevices) {
                 pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
@@ -209,5 +249,13 @@ public class DeviceListActivity extends Activity {
 
         }
     };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults)){
+            doDiscovery();
+        }
+    }
 
 }

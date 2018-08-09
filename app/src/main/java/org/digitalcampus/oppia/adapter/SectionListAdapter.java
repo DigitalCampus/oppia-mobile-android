@@ -205,7 +205,6 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
             viewHolder.activityTitle.setTextColor(highlightActivity ? highlightColor : normalColor );
             viewHolder.activityTitle.setBackgroundResource(highlightActivity ? R.drawable.completed_background_gradient : 0);
             viewHolder.completedBadge.setVisibility(highlightActivity ? View.VISIBLE : View.GONE);
-            //viewHolder.activityContainer.setBackgroundResource(highlightActivity ? R.drawable.activity_background_completed : 0);
 
             return convertView;
         }

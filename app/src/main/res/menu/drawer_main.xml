@@ -18,10 +18,6 @@
             android:id="@+id/menu_scorecard"
             android:icon="@drawable/ic_scorecard"
             android:title="@string/menu_scorecard"/>
-        <item
-            android:id="@+id/menu_monitor"
-            android:icon="@drawable/default_icon_quiz"
-            android:title="@string/menu_monitor"/>
 
     </group>
 

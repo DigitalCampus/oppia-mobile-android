@@ -50,7 +50,7 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 	}
 
 	public ResetFragment(){
-		
+		// Required empty public constructor
 	}
 
 	@Override
@@ -59,11 +59,6 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
 		return vv;
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
 	}
 	
 	@Override
@@ -76,7 +71,7 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 		resetButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
-				onResetClick(v);
+				onResetClick();
 			}
 		});
 	}
@@ -98,7 +93,7 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 		}
 	}
 
-	public void onResetClick(View view) {
+	public void onResetClick() {
 		// get form fields
 		String username = usernameField.getText().toString();
 
@@ -115,7 +110,7 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 		pDialog.setCancelable(true);
 		pDialog.show();
 
-		ArrayList<Object> users = new ArrayList<Object>();
+		ArrayList<Object> users = new ArrayList<>();
     	User u = new User();
 		u.setUsername(username);
 		users.add(u);

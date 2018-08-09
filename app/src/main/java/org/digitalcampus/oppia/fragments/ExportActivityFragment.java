@@ -78,7 +78,7 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     }
 
     public ExportActivityFragment(){
-
+        // Required empty public constructor
     }
 
     @Override
@@ -99,12 +99,6 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
 
         return vv;
 
-    }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -220,7 +214,7 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
 
     @Override
     public void trackerProgressUpdate() {
-
+        // no need to show progress update in this activity
     }
 
     @Override

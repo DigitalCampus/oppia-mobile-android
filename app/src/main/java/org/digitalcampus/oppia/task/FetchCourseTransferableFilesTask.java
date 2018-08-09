@@ -36,7 +36,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, String,
 
         DbHelper db = DbHelper.getInstance(ctx);
         ArrayList<CourseTransferableFile> transferableFiles = new ArrayList<>();
-        ArrayList<Course> courses = db.getAllCourses();
+        List<Course> courses = db.getAllCourses();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());

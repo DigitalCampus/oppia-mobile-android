@@ -19,17 +19,21 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
@@ -37,20 +41,29 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.gamification.GamificationBroadcastReceiver;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
+import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
+import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class AppActivity extends AppCompatActivity implements APIKeyRequestListener {
+public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
+
+	GamificationBroadcastReceiver gamificationReceiver;
+
 
     /**
 	 * @param activities: list of activities to show on the ScheduleReminders section
 	 */
-	public void drawReminders(ArrayList<org.digitalcampus.oppia.model.Activity> activities){
+	public void drawReminders(List<org.digitalcampus.oppia.model.Activity> activities){
         ScheduleReminders reminders = (ScheduleReminders) findViewById(R.id.schedule_reminders);
         if (reminders != null){
             reminders.initSheduleReminders(activities);
@@ -69,8 +82,9 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 			case android.R.id.home:
 				this.finish();
 				return true;
+            default:
+			    return false;
 		}
-		return true;
 	}
 
     @Override
@@ -100,6 +114,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 actionBar.setTitle(title);
             }
         }
+
     }
 
     @Override
@@ -110,6 +125,13 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         if (!apiKeyValid){
             apiKeyInvalidated();
         }
+
+        // Register the receiver for gamification events
+        gamificationReceiver = new GamificationBroadcastReceiver();
+        gamificationReceiver.setGamificationEventListener(this);
+        IntentFilter broadcastFilter = new IntentFilter(GamificationService.BROADCAST_ACTION);
+        broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        registerReceiver(gamificationReceiver, broadcastFilter);
 
         //We check if the user session time has expired to log him out
         if (MobileLearning.SESSION_EXPIRATION_ENABLED){
@@ -135,6 +157,8 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 .getDefaultSharedPreferences(this).edit()
                 .putLong(PrefsActivity.LAST_ACTIVE_TIME, now).apply();
         }
+
+        unregisterReceiver(gamificationReceiver);
     }
 
     public void logoutAndRestartApp(){
@@ -156,5 +180,15 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onGamificationEvent(String message, int points) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
+        if(notifEnabled) {
+            final View rootView =  ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+            Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+        }
     }
 }

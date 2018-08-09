@@ -16,7 +16,6 @@
     <string name="menu_font_decrease">Decrease text size</string>
     <string name="menu_help">Help</string>
     <string name="menu_logout">Logout</string>
-    <string name="menu_monitor">Monitor</string>
     <string name="menu_read_aloud">Read aloud</string>
     <string name="menu_return_to_courses">Return to courses</string>
     <string name="menu_scorecard">Scorecard</string>
@@ -53,7 +52,6 @@
     <string name="title_activity_course_index">Course Index</string>
     <string name="title_activity_course">Activity</string>
     <string name="title_course_meta">About</string>
-    <string name="title_monitor">Monitor</string>
     <string name="title_stats_submitted">No activities submitted to server</string>
     <string name="title_stats_unsubmitted">No activities waiting to submit</string>
     <string name="title_prefs">Settings</string>
@@ -331,13 +329,14 @@
     <string name="permissions.title">&appName;
         needs the following permissions to function properly:</string>
     <string name="permissions.storage.title">read and modify contents of the SD card</string>
+    <string name="permissions.simple.title">Permissions needed</string>
     <string name="permissions.storage.description">&appName; needs access to the SD card to be able to store the downloaded media contents for the courses</string>
     <string name="permissions.phone_state.title">read phone state and identity</string>
     <string name="permissions.phone_state.description">&appName; needs access to the phone identity to get information about your device model and Android version</string>
     <string name="permissions.allow_btn_text">Allow permissions</string>
-    <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings \> Apps \> &appName;
-        > Permissions to grant access to these permissions</string>
+    <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings | Apps | &appName; | Permissions to grant access to these permissions</string>
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
+    <string name="permissions.bluetooth.message">The app needs some additional permissions to scan for Bluetooth devices.</string>
     <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
 
     <string name="open_digest.errors.invalid_param">The \"digest\" parameter is either misconfigured or missing. Please, check that the link is valid.</string>
@@ -373,6 +372,14 @@
     <string name="bluetooth.transferable_type">Transferable type</string>
     <string name="bluetooth_device_scanning">Scanning for new devices...</string>
 
-
+    <!-- Strings for point events -->
+    <string name="points_event_activity_completed">Activity completed \'%1$s - %2$s\'</string>
+    <string name="points_event_media_played">Media played \'%1$s - %2$s\'</string>
+    <string name="points_event_quiz_attempt">Quiz attempt \'%1$s - %2$s\'</string>
+    <string name="points_event_course_downloaded">Course \'%1$s\' downloaded</string>
+    <string name="tab_title_leaderboard">Leaderboard</string>
+    <string name="leaderboard_position">Your position</string>
+    <string name="leaderboard_points">%1$s points</string>
+    <string name="prefShowGamificationEvents">Show gamification events</string>
 </resources>
 

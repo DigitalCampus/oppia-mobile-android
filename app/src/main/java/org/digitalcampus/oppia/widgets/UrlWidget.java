@@ -25,14 +25,17 @@ import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +43,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+
+import com.splunk.mint.Mint;
 
 public class UrlWidget extends WidgetFactory {
 
@@ -58,7 +63,7 @@ public class UrlWidget extends WidgetFactory {
 	}
 
 	public UrlWidget() {
-
+		// Required empty public constructor
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -110,7 +115,6 @@ public class UrlWidget extends WidgetFactory {
 	
 	@Override
 	public boolean getActivityCompleted() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -130,35 +134,37 @@ public class UrlWidget extends WidgetFactory {
 			obj = mdu.getMetaData(obj);
 			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 			obj.put("lang", lang);
+
+			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
+			GamificationEvent gamificationEvent = gamificationEngine.processEventURLActivity(this.course, this.activity);
+
 			// if it's a baseline activity then assume completed
 			if(this.isBaseline){
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true);
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
 			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
+				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
 			}
-		} catch (JSONException e) {
-			// Do nothing
+		} catch (JSONException jsone) {
+			Log.d(TAG,"Error generating json for url widget", jsone);
+			Mint.logException(jsone);
 		} catch (NullPointerException npe){
-			//do nothing
+			Log.d(TAG,"Null pointer in generating json for url widget", npe);
+			Mint.logException(npe);
 		}
 	}
 
 	@Override
 	public String getContentToRead() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

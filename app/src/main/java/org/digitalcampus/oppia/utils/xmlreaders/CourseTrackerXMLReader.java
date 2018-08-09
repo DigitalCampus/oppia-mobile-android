@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.utils.xmlreaders;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -28,6 +30,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.joda.time.DateTime;
@@ -49,20 +52,19 @@ public class CourseTrackerXMLReader {
     private static final String NODE_SCORE = "score";
     private static final String NODE_MAXSCORE = "maxscore";
     private static final String NODE_PASSED = "passed";
-    
+	private static final String NODE_EVENT = "event";
+	private static final String NODE_POINTS = "points";
+
 	private Document document;
 	
-	public CourseTrackerXMLReader(String filename) throws InvalidXMLException {
-        File courseXML = new File(filename);
+	public CourseTrackerXMLReader(File courseXML) throws InvalidXMLException {
 		if (courseXML.exists()) {
 
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
 			try {
 				builder = factory.newDocumentBuilder();
 				document = builder.parse(courseXML);
-
 			} catch (ParserConfigurationException e) {
 				throw new InvalidXMLException(e);
 			} catch (SAXException e) {
@@ -73,9 +75,27 @@ public class CourseTrackerXMLReader {
 		}
 	}
 
+	public CourseTrackerXMLReader(String xmlContent) throws InvalidXMLException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+
+		try {
+			builder = factory.newDocumentBuilder();
+			InputSource is = new InputSource(new StringReader(xmlContent));
+			document = builder.parse(is);
+		} catch (ParserConfigurationException e) {
+			throw new InvalidXMLException(e);
+		} catch (SAXException e) {
+			throw new InvalidXMLException(e);
+		} catch (IOException e) {
+			throw new InvalidXMLException(e);
+		}
+
+	}
+
 	
 	public ArrayList<TrackerLog> getTrackers(long courseId, long userId){
-		ArrayList<TrackerLog> trackers = new ArrayList<TrackerLog>();
+		ArrayList<TrackerLog> trackers = new ArrayList<>();
 		if (this.document == null){
 			return trackers;
 		}
@@ -99,6 +119,22 @@ public class CourseTrackerXMLReader {
 			} catch (NullPointerException npe) {
 				type = null;
 			}
+
+            String event;
+            try {
+                event = attrs.getNamedItem(NODE_EVENT).getTextContent();
+            } catch (NullPointerException npe) {
+                event = Gamification.EVENT_NAME_UNDEFINED;
+            }
+
+            int points;
+            try {
+                points = Integer.parseInt(attrs.getNamedItem(NODE_POINTS).getTextContent());
+            } catch (NullPointerException npe) {
+                points = 0;
+            } catch (NumberFormatException nfe){
+                points = 0;
+            }
 			
 			TrackerLog t = new TrackerLog();
 			t.setDigest(digest);
@@ -108,13 +144,15 @@ public class CourseTrackerXMLReader {
 			t.setType(type);
 			t.setCourseId(courseId);
 			t.setUserId(userId);
+			t.setEvent(event);
+			t.setPoints(points);
 			trackers.add(t);
 		}
 		return trackers;
 	}
 	
 	public ArrayList<QuizAttempt> getQuizAttempts(long courseId, long userId){
-		ArrayList<QuizAttempt> quizAttempts = new ArrayList<QuizAttempt>();
+		ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
 		if (this.document == null){
 			return quizAttempts;
 		}
@@ -136,6 +174,23 @@ public class CourseTrackerXMLReader {
 					NamedNodeMap quizAttrs = quizNodes.item(j).getAttributes();
 					float maxscore = Float.parseFloat(quizAttrs.getNamedItem(NODE_MAXSCORE).getTextContent());
 					float score = Float.parseFloat(quizAttrs.getNamedItem(NODE_SCORE).getTextContent());
+
+					String event = "";
+					try {
+						event = quizAttrs.getNamedItem(NODE_EVENT).getTextContent();
+					} catch (NullPointerException npe){
+                    	Log.d(TAG,"Event node not found", npe);
+					}
+
+                    int points = 0;
+                    try {
+                        points = Integer.parseInt(quizAttrs.getNamedItem(NODE_POINTS).getTextContent());
+                    } catch (NumberFormatException nfe){
+                        Log.d(TAG,"Points node not an integer", nfe);
+                    } catch (NullPointerException npe){
+                        Log.d(TAG,"Points node not found", npe);
+                    }
+
 					String submittedDateString = quizAttrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
 					DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
 					
@@ -155,6 +210,8 @@ public class CourseTrackerXMLReader {
 					qa.setPassed(passed);
 					qa.setSent(true);
 					qa.setDatetime(sdt);
+					qa.setEvent(event);
+					qa.setPoints(points);
 					quizAttempts.add(qa);
 				}
 			}

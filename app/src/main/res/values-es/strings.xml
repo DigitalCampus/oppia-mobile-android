@@ -12,7 +12,6 @@
     <string name="menu_about">Acerca de</string>
     <string name="menu_help">Ayuda</string>
     <string name="menu_logout">Cerrar sesión</string>
-    <string name="menu_monitor">Monitor</string>
     <string name="menu_read_aloud">Leer en voz alta</string>
     <string name="menu_return_to_courses">Volver a tus cursos</string>
     <string name="menu_scorecard">Scorecard</string>
@@ -38,7 +37,6 @@
     <string name="title_about">Acerca de</string>
     <string name="title_baseline">Preliminar</string>
     <string name="title_download_activity">Gestionar cursos</string>
-    <string name="title_monitor">Monitor</string>
     <string name="title_prefs">Ajustes</string>
     <string name="version">Version: %1$s</string>
     <string name="title_download_media">Descarga Media</string>
@@ -299,7 +297,7 @@
     <string name="notification.remote_admin.title">&appName;: Administración Remota </string>
     <string name="permissions.allow_btn_text">Conceder permisos</string>
     <string name="permissions.not_askable.info">Estás viendo este mensaje porque se han solicitado permisos previamente y los denegaste marcando la casilla "No preguntar de nuevo"</string>
-    <string name="permissions.not_askable.message"><![CDATA[La app no tiene los permisos necesarios para funcionar. Por favor, ve a Configuración \> Aplicaciones \> &appname; \> Permisos para conceder estos permisos]]></string>
+    <string name="permissions.not_askable.message">La app no tiene los permisos necesarios para funcionar. Por favor, ve a Configuración \> Aplicaciones \> &appName; \> Permisos para conceder estos permisos</string>
     <string name="permissions.storage.description">&appName; necesita acceso a la tarjeta SD para poder guardar los contenidos multimedia descargados para los cursos</string>
     <string name="permissions.storage.title">leer y modificar contenidos de la tarjeta SD</string>
     <string name="permissions.title">&appName; necesita los siguientes permisos para funcionar correctamente:</string>

@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
@@ -49,7 +50,7 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
         String filename = "activity_" +  new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".json";
 
         DbHelper db = DbHelper.getInstance(ctx);
-        ArrayList<User> users = db.getAllUsers();
+        List<User> users = db.getAllUsers();
 
         int trackersCount = 0;
         ArrayList<String> userResults = new ArrayList<>();
@@ -85,16 +86,31 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
         }
 
         File file = new File(destDir, filename);
+        FileOutputStream f = null;
+        Writer out = null;
         try {
-            FileOutputStream f = new FileOutputStream(file);
-            Writer out = new OutputStreamWriter(f);
+            f = new FileOutputStream(file);
+            out = new OutputStreamWriter(f);
             out.write(json);
-            out.close();
-            f.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (out != null){
+                try {
+                    out.close();
+                } catch (IOException ioe) {
+                    Log.d(TAG, "couldn't close OutputStreamWriter object", ioe);
+                }
+            }
+            if (f != null){
+                try {
+                    f.close();
+                } catch (IOException ioe) {
+                    Log.d(TAG, "couldn't close FileOutputStream object", ioe);
+                }
+            }
         }
 
         db.markLogsAndQuizzesExported();

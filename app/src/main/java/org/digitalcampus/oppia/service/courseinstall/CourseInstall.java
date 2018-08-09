@@ -1,3 +1,20 @@
+/*
+ * This file is part of OppiaMobile - https://digital-campus.org/
+ *
+ * OppiaMobile is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * OppiaMobile is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.digitalcampus.oppia.service.courseinstall;
 
 import android.content.Context;
@@ -10,15 +27,22 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,8 +77,17 @@ public class CourseInstall {
             listener.onError(ctx.getString(R.string.error_installing_course, shortname));
             return;
         }
-        String courseDir = tempdir.list()[0]; // use this to get the course name
 
+        String courseDir;
+        try {
+            courseDir = tempdir.list()[0]; // use this to get the course name
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
+            aioobe.printStackTrace();
+            Log.d(TAG, "Error: " + aioobe.getMessage());
+            listener.onError(ctx.getString(R.string.error_installing_course));
+            return;
+        }
         listener.onInstallProgress(10);
 
         String courseXMLPath;
@@ -83,8 +116,8 @@ public class CourseInstall {
             cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
             c = cxr.getParsedCourse();
 
-            csxr = new CourseScheduleXMLReader(courseScheduleXMLPath);
-            ctxr = new CourseTrackerXMLReader(courseTrackerXMLPath);
+            csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
+            ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
         } catch (InvalidXMLException e) {
             listener.onError(e.getMessage());
             return;
@@ -95,7 +128,6 @@ public class CourseInstall {
         listener.onInstallProgress(20);
 
         boolean success = false;
-        boolean latestVersion = false;
 
         DbHelper db = DbHelper.getInstance(ctx);
         long courseId = db.addOrUpdateCourse(c);
@@ -128,7 +160,6 @@ public class CourseInstall {
             }
 
         }  else {
-            latestVersion = true;
             listener.onFail(ctx.getString(R.string.error_latest_already_installed, title) );
         }
         // add schedule
@@ -141,7 +172,7 @@ public class CourseInstall {
 
         listener.onInstallProgress(80);
 
-        if (success && !latestVersion){
+        if (success){
             copyBackupCourse(ctx, tempdir, c);
         }
 
@@ -155,9 +186,15 @@ public class CourseInstall {
         // delete zip file from download dir
         FileUtils.deleteFile(zipFile);
 
+        listener.onInstallProgress(95);
+
+        // add event
+        c.setCourseId((int)courseId);
+        new GamificationServiceDelegate(ctx)
+                .registerCourseDownloadEvent(c);
+
         long estimatedTime = System.currentTimeMillis() - startTime;
         Log.d(TAG, "MeasureTime - " + c.getShortname() + ": " + estimatedTime + "ms");
-
         Log.d(TAG, shortname + " succesfully downloaded");
         listener.onComplete();
     }
@@ -183,7 +220,6 @@ public class CourseInstall {
 
 
     private static void copyBackupCourse(Context ctx, File tempDir, CompleteCourse c) {
-        //TODO: Add a BuildConfig to control if we want this functionality or not
 
         File courseFolder = new File(tempDir, tempDir.list()[0]);
 
@@ -201,7 +237,6 @@ public class CourseInstall {
         // Copy new course zip file
         Log.d(TAG, "Copying new backup file " + filename);
         FileUtils.zipFileAtPath(courseFolder, destination);
-        //org.apache.commons.io.FileUtils.copyFile(zipFile, destination);
 
         if (previousBackup != null){
             Log.d(TAG, "Deleting previous backup file " + previousBackup.getPath());

@@ -26,15 +26,12 @@ public class SyncActivity extends AppActivity {
     private ViewPager viewPager;
     private TabLayout tabs;
     private int currentTab = 0;
-    private SharedPreferences prefs;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_sync);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         viewPager = (ViewPager) findViewById(R.id.activity_sync_pager);
         tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
 

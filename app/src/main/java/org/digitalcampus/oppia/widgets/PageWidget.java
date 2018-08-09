@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +37,13 @@ import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.resources.JSInterfaceForResourceImages;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -71,7 +76,7 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	public PageWidget(){
-		
+        // Required empty public constructor
 	}
 
 
@@ -86,8 +91,8 @@ public class PageWidget extends WidgetFactory {
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		isBaseline = getArguments().getBoolean(CourseActivity.BASELINE_TAG);
 		vv.setId(activity.getActId());
-		if ((savedInstanceState != null) && (savedInstanceState.getSerializable("widget_config") != null)){
-			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
+		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
+			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));
 		}
 		return vv;
 	}
@@ -95,7 +100,7 @@ public class PageWidget extends WidgetFactory {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable("widget_config", getWidgetConfig());
+		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, getWidgetConfig());
 	}
 	
 	@Override
@@ -139,7 +144,6 @@ public class PageWidget extends WidgetFactory {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
 					String mediaFileName = url.substring(startPos, url.length());
-
 					PageWidget.super.startMediaPlayerWithFile(mediaFileName);
                     return true;
 					
@@ -150,14 +154,12 @@ public class PageWidget extends WidgetFactory {
 						Uri data = Uri.parse(url);
 						intent.setData(data);
 						PageWidget.super.getActivity().startActivity(intent);
+						return true;
 					} catch (ActivityNotFoundException anfe) {
-						// do nothing
+						Log.d(TAG,"Activity not found", anfe);
 					}
-					// launch action in mobile browser - not the webview
-					// return true so doesn't follow link within webview
-					return true;
+					return false;
 				}
-
 			}
 		});
 	}
@@ -190,50 +192,31 @@ public class PageWidget extends WidgetFactory {
 		if (timetaken < MobileLearning.PAGE_READ_TIME) {
 			return;
 		}
-		Tracker t = new Tracker(super.getActivity());
-		JSONObject obj = new JSONObject();
-		
-		// add in extra meta-data
-		try {
-			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
-			obj.put("timetaken", timetaken);
-			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
-			obj.put("readaloud", readAloud);
-			// if it's a baseline activity then assume completed
-			if (this.isBaseline) {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true);
-			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted());
-			}
-		} catch (JSONException e) {
-			// Do nothing
-			// sometimes get null pointer exception for the MetaDataUtils if the screen is rotated rapidly
-		} catch (NullPointerException npe){
-			//do nothing
-		}
+
+		new GamificationServiceDelegate(getActivity())
+			.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
+			.registerPageActivityEvent(timetaken, readAloud);
 	}
 
 	@Override
 	public void setWidgetConfig(HashMap<String, Object> config) {
-		if (config.containsKey("Activity_StartTime")) {
-			this.setStartTime((Long) config.get("Activity_StartTime"));
+		if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME)) {
+			this.setStartTime((Long) config.get(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME));
 		}
-		if (config.containsKey("Activity")) {
-			activity = (Activity) config.get("Activity");
+		if (config.containsKey(WidgetFactory.PROPERTY_ACTIVITY)) {
+			activity = (Activity) config.get(WidgetFactory.PROPERTY_ACTIVITY);
 		}
-		if (config.containsKey("Course")) {
-			course = (Course) config.get("Course");
+		if (config.containsKey(WidgetFactory.PROPERTY_COURSE)) {
+			course = (Course) config.get(WidgetFactory.PROPERTY_COURSE);
 		}
 	}
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
 		HashMap<String, Object> config = new HashMap<String, Object>();
-		config.put("Activity_StartTime", this.getStartTime());
-		config.put("Activity", this.activity);
-		config.put("Course", this.course);
+		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
+		config.put(WidgetFactory.PROPERTY_ACTIVITY, this.activity);
+		config.put(WidgetFactory.PROPERTY_COURSE, this.course);
 		return config;
 	}
 

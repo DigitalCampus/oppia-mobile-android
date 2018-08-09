@@ -70,7 +70,7 @@ public class AboutActivity extends AppActivity {
 		super.onStart();
 
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-		List<Fragment> fragments = new ArrayList<Fragment>();
+		List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 		
 		Fragment fAbout = AboutFragment.newInstance();
@@ -97,12 +97,12 @@ public class AboutActivity extends AppActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				this.finish();
 				return true;
+			default:
+				return false;
 		}
-		return true;
 	}
 }
