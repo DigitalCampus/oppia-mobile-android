@@ -53,6 +53,7 @@ public class BluetoothTransferService {
     public static final int UI_MESSAGE_TRANSFER_COMPLETE = 7;
     public static final int UI_MESSAGE_TRANSFER_PROGRESS = 8;
     public static final int UI_MESSAGE_COURSE_COMPLETE = 9;
+    public static final int UI_MESSAGE_TRANSFER_ERROR = 10;
 
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";

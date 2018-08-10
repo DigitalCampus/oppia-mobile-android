@@ -421,7 +421,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                     break;
 
                 case BluetoothTransferService.UI_MESSAGE_TRANSFER_COMPLETE:
-
                     Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
                     if (self.progressDialog != null) {
                         self.progressDialog.dismiss();
@@ -429,7 +428,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                     }
                     self.refreshFileList();
                     break;
-
 
                 case BluetoothTransferService.UI_MESSAGE_COURSE_COMPLETE:
                     if (self.progressDialog != null) {
@@ -442,6 +440,13 @@ public class TransferFragment extends Fragment implements InstallCourseListener 
                     imTask.execute(new Payload());
                     break;
 
+                case BluetoothTransferService.UI_MESSAGE_TRANSFER_ERROR:
+                    if (self.progressDialog != null) {
+                        self.progressDialog.dismiss();
+                        self.progressDialog = null;
+                    }
+                    Toast.makeText(ctx, "Error transferring file", Toast.LENGTH_SHORT).show();
+                    break;
             }
 
         }
