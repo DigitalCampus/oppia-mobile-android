@@ -124,6 +124,15 @@ public class BluetoothTransferService extends Service {
             @Override
             public void onTransferComplete(CourseTransferableFile file) {
 
+                if (tasksDownloading.size() == 0){
+                    NotificationCompat.Builder mBuilder  = OppiaNotificationUtils.getBaseBuilder(BluetoothTransferService.this, true);
+                    mBuilder.setContentTitle(getString(R.string.app_name))
+                            .setContentText(getString(R.string.bluetooth_communication_closed))
+                            .build();
+                    OppiaNotificationUtils.sendNotification(BluetoothTransferService.this, 0, mBuilder.build());
+                }
+
+
             }
 
             @Override
@@ -171,13 +180,12 @@ public class BluetoothTransferService extends Service {
                 if (!tasksDownloading.contains(file)){
                     tasksDownloading.add(file);
                 }
-
-                sendHandler.post(new Runnable() {
+                sendHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         sendFile(file);
                     }
-                });
+                }, 100);
             }
         }
 
@@ -331,13 +339,13 @@ public class BluetoothTransferService extends Service {
     private void listenAndReceiveFiles(){
         Log.i(TAG, "BEGIN receiving thread");
 
+        // Read from the InputStream
+        BufferedInputStream in = new BufferedInputStream(input);
+        DataInputStream d = new DataInputStream(in);
+
         // Keep listening to the InputStream while connected
         while (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED) {
             try {
-                // Read from the InputStream
-                BufferedInputStream in = new BufferedInputStream(input);
-                DataInputStream d = new DataInputStream(in);
-
                 String fileName = d.readUTF();
                 Log.d(TAG, "Receiving file! " + fileName);
                 String type = d.readUTF();
@@ -367,23 +375,35 @@ public class BluetoothTransferService extends Service {
                 FileOutputStream output = new FileOutputStream(file);
 
                 int totalBytes = 0;
+                int prevProgress = 0;
                 try {
                     byte[] buf = new byte[BUFFER_SIZE];
                     int bytesRead;
 
-                    while((bytesRead = d.read(buf)) != -1) {
+                    while ((bytesRead = d.read(buf, 0, Math.min(BUFFER_SIZE, (int) fileSize - totalBytes))) != -1) {
                         totalBytes += bytesRead;
                         output.write(buf, 0, bytesRead);
-                        if (totalBytes >= fileSize) break;
+                        if (totalBytes >= fileSize) {
+                            Log.d(TAG, "Total bytes read: " + totalBytes + "/" + fileSize);
+                            break;
+                        }
 
-                        localIntent = new Intent(BROADCAST_ACTION);
-                        localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_RECEIVE_PROGRESS);
-                        localIntent.putExtra(SERVICE_FILE, trFile);
-                        localIntent.putExtra(SERVICE_PROGRESS, totalBytes);
-                        // Broadcasts the Intent to receivers in this app.
-                        sendOrderedBroadcast(localIntent, null);
+                        int currentProgress = totalBytes * 100 / (int)fileSize;
+                        if (currentProgress > prevProgress){
+                            //Only send broadcast if progress advanced
+                            prevProgress = currentProgress;
+
+                            localIntent = new Intent(BROADCAST_ACTION);
+                            localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_RECEIVE_PROGRESS);
+                            localIntent.putExtra(SERVICE_FILE, trFile);
+                            localIntent.putExtra(SERVICE_PROGRESS, totalBytes);
+                            // Broadcasts the Intent to receivers in this app.
+                            sendOrderedBroadcast(localIntent, null);
+                        }
 
                     }
+                } catch (IOException e){
+                    Log.e(TAG,"Error receiving file", e);
                 } finally {
                     output.close();
                 }

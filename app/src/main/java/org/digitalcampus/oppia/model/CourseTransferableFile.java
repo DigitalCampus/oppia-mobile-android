@@ -2,6 +2,8 @@ package org.digitalcampus.oppia.model;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseTransferableFile implements Serializable {
 
@@ -17,6 +19,20 @@ public class CourseTransferableFile implements Serializable {
     private String filename;
     private long fileSize;
     private File file;
+    private List<String> relatedMedia;
+
+
+    public List<String> getRelatedMedia() {
+
+        return (relatedMedia != null) ?
+                relatedMedia
+                : new ArrayList<String>();
+    }
+
+    public void setRelatedMedia(List<String> relatedMedia) {
+        this.relatedMedia = relatedMedia;
+    }
+
 
     public String getTitle() {
         return title;

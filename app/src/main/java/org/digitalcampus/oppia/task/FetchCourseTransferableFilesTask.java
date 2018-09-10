@@ -4,13 +4,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -64,6 +70,24 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
                     courseBackup.setFileSize(filesize);
                     transferableFiles.add(courseBackup);
                 }
+
+                List<String> courseRelatedMedia = new ArrayList<>();
+                File courseXML = new File(course.getCourseXMLLocation());
+                if (!courseXML.exists()){ continue; }
+
+                CourseXMLReader cxr;
+                try {
+                    cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
+                    cxr.parse(CourseXMLReader.ParseMode.ONLY_MEDIA);
+                    ArrayList<Media> media = cxr.getMediaResponses().getCourseMedia();
+                    for(Media m: media){
+                        courseRelatedMedia.add(m.getFilename());
+                    }
+                } catch (InvalidXMLException ixmle) {
+                    Mint.logException(ixmle);
+                }
+
+                courseBackup.setRelatedMedia(courseRelatedMedia);
             }
         }
 

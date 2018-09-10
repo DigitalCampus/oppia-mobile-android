@@ -35,7 +35,6 @@ import org.digitalcampus.oppia.service.bluetooth.BluetoothBroadcastReceiver;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothConnectionManager;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferServiceDelegate;
-import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
 import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -57,7 +56,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private RecyclerView.Adapter coursesAdapter;
     private ImageButton bluetoothBtn;
     private ImageButton discoverBtn;
-    private ArrayList<CourseTransferableFile> courses = new ArrayList<>();
+    private ArrayList<CourseTransferableFile> transferableFiles = new ArrayList<>();
 
     private BluetoothAdapter bluetoothAdapter = null;
     private BluetoothConnectionManager bluetoothManager = null;
@@ -105,6 +104,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             // Otherwise, setup the chat session
         } else if (bluetoothManager == null) {
             setupBluetoothConnection();
+            updateStatus();
         }
     }
 
@@ -179,12 +179,18 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
         coursesRecyclerView.setHasFixedSize(true);
         coursesRecyclerView.setLayoutManager( new LinearLayoutManager(this.getContext()));
-        coursesAdapter = new TransferCourseListAdapter(courses, new ListInnerBtnOnClickListener() {
+        coursesAdapter = new TransferCourseListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
-                final CourseTransferableFile toShare = courses.get(position);
+                final CourseTransferableFile toShare = transferableFiles.get(position);
                 if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
                     btServiceDelegate.sendFile(toShare);
+
+                    for (CourseTransferableFile file : transferableFiles){
+                        if (toShare.getRelatedMedia().contains(file.getFilename())){
+                            btServiceDelegate.sendFile(file);
+                        }
+                    }
                 }
             }
         });
@@ -332,8 +338,8 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
             @Override
             public void onFetchComplete(List<CourseTransferableFile> backups) {
-                courses.clear();
-                courses.addAll(backups);
+                transferableFiles.clear();
+                transferableFiles.addAll(backups);
                 coursesAdapter.notifyDataSetChanged();
             }
         });
