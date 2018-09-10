@@ -324,4 +324,15 @@ public class FileUtils {
         return false;
 	}
 
+    public static void moveFileToDir(File file, File mediaDir, boolean deleteOnError) {
+		try {
+			org.apache.commons.io.FileUtils.moveFileToDirectory(file, mediaDir, true);
+		}catch (IOException e) {
+			e.printStackTrace();
+			Log.d(TAG, "Moving file failed");
+			if (deleteOnError){
+				FileUtils.deleteFile(file);
+			}
+		}
+	}
 }

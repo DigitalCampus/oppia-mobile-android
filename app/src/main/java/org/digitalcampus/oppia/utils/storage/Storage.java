@@ -26,6 +26,7 @@ public class Storage {
     public static final String APP_MEDIA_DIR_NAME = "media";
     public static final String APP_ACTIVITY_DIR_NAME = "activity";
     public static final String APP_BACKUP_DIR_NAME = "backup";
+    public static final String APP_TMP_TRANSFER_DIR_NAME = "tmpbt";
     public static final String APP_LEADERBOARD_DIR_NAME = "leaderboard";
 
     private static StorageAccessStrategy storageStrategy;
@@ -58,6 +59,10 @@ public class Storage {
 
     public static String getCourseBackupPath(Context ctx){
         return getStorageLocationRoot(ctx) + File.separator + APP_BACKUP_DIR_NAME + File.separator;
+    }
+
+    public static String getBluetoothTransferTempPath(Context ctx){
+        return getStorageLocationRoot(ctx) + File.separator + APP_TMP_TRANSFER_DIR_NAME + File.separator;
     }
 
     public static String getLeaderboardImportPath(Context ctx){
