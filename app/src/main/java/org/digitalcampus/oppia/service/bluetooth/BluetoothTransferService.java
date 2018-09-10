@@ -58,6 +58,8 @@ public class BluetoothTransferService extends Service {
     public static final String MESSAGE_TRANSFER_FAIL = "transferfailed";
     public static final String MESSAGE_TRANSFER_COMPLETE = "transfercomplete";
 
+    private static final int BUFFER_SIZE = 4096;
+
     private ArrayList<CourseTransferableFile> tasksDownloading;
     private static BluetoothTransferService currentInstance;
 
@@ -287,7 +289,7 @@ public class BluetoothTransferService extends Service {
             FileInputStream fis = new FileInputStream(file);
 
             try {
-                byte[] buf = new byte[4096];
+                byte[] buf = new byte[BUFFER_SIZE];
                 int bytesRead;
 
                 while((bytesRead = fis.read(buf)) != -1) {
@@ -300,8 +302,8 @@ public class BluetoothTransferService extends Service {
                     localIntent.putExtra(SERVICE_PROGRESS, totalBytes);
                     // Broadcasts the Intent to receivers in this app.
                     sendOrderedBroadcast(localIntent, null);
-
                 }
+                d.flush();
             }catch (IOException e){
                 Log.e(TAG, e.getMessage(), e);
             }
@@ -337,6 +339,7 @@ public class BluetoothTransferService extends Service {
                 DataInputStream d = new DataInputStream(in);
 
                 String fileName = d.readUTF();
+                Log.d(TAG, "Receiving file! " + fileName);
                 String type = d.readUTF();
                 long fileSize = d.readLong();
 
@@ -346,7 +349,6 @@ public class BluetoothTransferService extends Service {
                 trFile.setFilename(fileName);
 
                 Log.d(TAG, fileName + ": " + fileSize);
-                Log.d(TAG, "Receiving file! " + fileName);
 
                 // Notify the UI that a course is transferring
                 Intent localIntent = new Intent(BROADCAST_ACTION);
@@ -366,7 +368,7 @@ public class BluetoothTransferService extends Service {
 
                 int totalBytes = 0;
                 try {
-                    byte[] buf = new byte[4096];
+                    byte[] buf = new byte[BUFFER_SIZE];
                     int bytesRead;
 
                     while((bytesRead = d.read(buf)) != -1) {
@@ -390,8 +392,8 @@ public class BluetoothTransferService extends Service {
                     FileUtils.deleteFile(file);
                 }
                 else if (type.equals(CourseTransferableFile.TYPE_COURSE_MEDIA)){
-                    File mediaDir = new File(Storage.getMediaPath(BluetoothTransferService.this));
-                    org.apache.commons.io.FileUtils.moveFileToDirectory(file, mediaDir, true);
+                        File mediaDir = new File(Storage.getMediaPath(BluetoothTransferService.this));
+                        FileUtils.moveFileToDir(file, mediaDir, true);
                 }
 
                 localIntent = new Intent(BROADCAST_ACTION);
