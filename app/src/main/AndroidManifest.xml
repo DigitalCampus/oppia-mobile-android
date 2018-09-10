@@ -161,6 +161,10 @@
             android:exported="false"
             android:icon="@drawable/dc_logo"/>
         <service
+            android:name="org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService"
+            android:exported="false"
+            android:icon="@drawable/dc_logo"/>
+        <service
             android:name="org.digitalcampus.oppia.gamification.GamificationService"
             android:exported="false"
             android:icon="@drawable/dc_logo"/>

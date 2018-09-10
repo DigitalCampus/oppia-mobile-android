@@ -90,6 +90,7 @@ android {
 
         debug {
             testCoverageEnabled = true
+            debuggable = true
         }
 
 

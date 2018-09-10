@@ -1,19 +1,22 @@
 package org.digitalcampus.oppia.service.bluetooth;
 
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
+import android.app.Service;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.os.Bundle;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
-import android.os.Message;
+import android.os.HandlerThread;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -23,9 +26,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -33,588 +36,401 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothTransferService {
+public class BluetoothTransferService extends Service {
     // Debugging
-    private static final String TAG = BluetoothTransferService.class.getSimpleName();;
+    private static final String TAG = BluetoothTransferService.class.getSimpleName();
+    public static final String BROADCAST_ACTION = "com.digitalcampus.oppia.BLUETOOTHSERVICE";
 
+    public static final String SERVICE_ACTION = "action"; //field for providing action
+    public static final String SERVICE_MESSAGE = "message";
+    public static final String SERVICE_FILE = "file";
+    public static final String SERVICE_ERROR = "error";
+    public static final String SERVICE_PROGRESS = "progress";
 
-    // Constants that indicate the current connection state
-    public static final int STATE_NONE = 0;       // we're doing nothing
-    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
+    public static final String ACTION_RECEIVE = "receive";
+    public static final String ACTION_SENDFILE = "sendfile";
+    public static final String ACTION_DISCONNECT = "disconnect";
 
-    public static final int UI_MESSAGE_STATE_CHANGE = 1;
-    public static final int UI_MESSAGE_DEVICE_NAME = 2;
-    public static final int UI_MESSAGE_TOAST = 3;
-    public static final int UI_MESSAGE_COURSE_BACKUP = 4;
-    public static final int UI_MESSAGE_COURSE_START_TRANSFER = 5;
-    public static final int UI_MESSAGE_COURSE_TRANSFERRING = 6;
-    public static final int UI_MESSAGE_TRANSFER_COMPLETE = 7;
-    public static final int UI_MESSAGE_TRANSFER_PROGRESS = 8;
-    public static final int UI_MESSAGE_COURSE_COMPLETE = 9;
-    public static final int UI_MESSAGE_TRANSFER_ERROR = 10;
+    public static final String MESSAGE_DISCONNECT = "disconnect";
+    public static final String MESSAGE_START_TRANSFER = "starttransfer";
+    public static final String MESSAGE_SEND_PROGRESS = "sendprogress";
+    public static final String MESSAGE_RECEIVE_PROGRESS = "receiveprogress";
+    public static final String MESSAGE_TRANSFER_FAIL = "transferfailed";
+    public static final String MESSAGE_TRANSFER_COMPLETE = "transfercomplete";
 
-    public static final String DEVICE_NAME = "device_name";
-    public static final String TOAST = "toast";
-    public static final String COURSE_BACKUP = "course_backup";
+    private static final int BUFFER_SIZE = 4096;
 
+    private ArrayList<CourseTransferableFile> tasksDownloading;
+    private static BluetoothTransferService currentInstance;
 
-    // Name for the SDP record when creating server socket
-    private static final String NAME_SECURE = "BluetoothTransferSecure";
-    private static final String NAME_INSECURE = "BluetoothTransferInsecure";
+    InputStream input = null;
+    OutputStream output = null;
 
-    // Unique UUID for this application
-    private static final UUID MY_UUID_SECURE =
-            UUID.fromString("f03ecf10-1ed0-49e6-96a6-d9b198148f81");
-    private static final UUID MY_UUID_INSECURE =
-            UUID.fromString("b7940299-f991-4207-810d-8d3a9f3ac71d");
-
-    // Member fields
-    private final BluetoothAdapter mAdapter;
-    private final Handler uiHandler;
-    private final Context ctx;
-    private AcceptThread secureAcceptThread;
-    private AcceptThread insecureAcceptThread;
-    private ConnectThread connectThread;
-    private ConnectedThread connectedThread;
-    private int state;
-    private int newState;
-
-
-    /**
-     * Constructor. Prepares a new BluetoothChat session.
-     *
-     * @param context The UI Activity Context
-     * @param handler A Handler to send messages back to the UI Activity
-     */
-    public BluetoothTransferService(Context context, Handler handler) {
-        ctx = context;
-        mAdapter = BluetoothAdapter.getDefaultAdapter();
-        state = STATE_NONE;
-        newState = state;
-        uiHandler = handler;
+    private static void setInstance(BluetoothTransferService instance){
+        currentInstance = instance;
     }
 
-    /**
-     * Update UI title according to the current state of the chat connection
-     */
-    private synchronized void updateUserInterfaceTitle() {
-        state = getState();
-        newState = state;
-        // Give the new state to the Handler so the UI Activity can update
-        uiHandler.obtainMessage(UI_MESSAGE_STATE_CHANGE, newState, -1).sendToTarget();
+
+    private static BluetoothSocket socket;
+    public static synchronized void setSocket(BluetoothSocket socket){
+        BluetoothTransferService.socket = socket;
     }
 
-    /**
-     * Return the current connection state.
-     */
-    public synchronized int getState() {
-        return state;
+    private volatile HandlerThread receiveHandlerThread;
+    private volatile HandlerThread sendHandlerThread;
+    private Handler receiveHandler;
+    private Handler sendHandler;
+    private BluetoothBroadcastReceiver alternateNotifier;
+
+    public static List<CourseTransferableFile> getTasksDownloading(){
+        if (currentInstance != null){
+            synchronized (currentInstance){
+                return currentInstance.tasksDownloading;
+            }
+        }
+        return new ArrayList<>();
     }
 
-    /**
-     * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume()
-     */
-    public synchronized void start() {
-        Log.d(TAG, "start");
+    // Fires when a service is first initialized
+    public void onCreate() {
+        super.onCreate();
 
-        // Cancel any thread attempting to make a connection
-        if (connectThread != null) {
-            connectThread.cancel();
-            connectThread = null;
-        }
+        BluetoothTransferService.setInstance(this);
+        Log.d(TAG, "Created Bluetooth service!");
+        tasksDownloading = new ArrayList<>();
 
-        // Cancel any thread currently running a connection
-        if (connectedThread != null) {
-            connectedThread.cancel();
-            connectedThread = null;
-        }
+        alternateNotifier = new BluetoothBroadcastReceiver();
+        alternateNotifier.setListener(new BluetoothBroadcastReceiver.BluetoothTransferListener() {
+            @Override
+            public void onFail(CourseTransferableFile file, String error) {
 
-        // Start the thread to listen on a BluetoothServerSocket
-        if (secureAcceptThread != null) {
-            secureAcceptThread.cancel();
-        }
-        secureAcceptThread = new AcceptThread(true);
-        secureAcceptThread.start();
-        if (insecureAcceptThread != null) {
-            insecureAcceptThread.cancel();
-        }
-        insecureAcceptThread = new AcceptThread(false);
-        insecureAcceptThread.start();
+            }
 
-        // Update UI title
-        updateUserInterfaceTitle();
+            @Override
+            public void onStartTransfer(CourseTransferableFile file) {
+
+            }
+
+            @Override
+            public void onSendProgress(CourseTransferableFile file, int progress) {
+                //Do nothing
+            }
+
+            @Override
+            public void onReceiveProgress(CourseTransferableFile file, int progress) {
+                //Do nothing
+            }
+
+            @Override
+            public void onTransferComplete(CourseTransferableFile file) {
+
+                if (tasksDownloading.size() == 0){
+                    NotificationCompat.Builder mBuilder  = OppiaNotificationUtils.getBaseBuilder(BluetoothTransferService.this, true);
+                    mBuilder.setContentTitle(getString(R.string.app_name))
+                            .setContentText(getString(R.string.bluetooth_communication_closed))
+                            .build();
+                    OppiaNotificationUtils.sendNotification(BluetoothTransferService.this, 0, mBuilder.build());
+                }
+
+
+            }
+
+            @Override
+            public void onCommunicationClosed(String error) {
+                NotificationCompat.Builder mBuilder  = OppiaNotificationUtils.getBaseBuilder(BluetoothTransferService.this, true);
+                mBuilder.setContentTitle(getString(R.string.app_name))
+                        .setContentText(getString(R.string.bluetooth_communication_closed))
+                        .build();
+
+                OppiaNotificationUtils.sendNotification(BluetoothTransferService.this, 0, mBuilder.build());
+            }
+        });
+
+        //We register the alternative notifier for sending notifications when no other BroadcasReceiver is set
+        IntentFilter broadcastFilter = new IntentFilter(BluetoothTransferService.BROADCAST_ACTION);
+        broadcastFilter.setPriority(IntentFilter.SYSTEM_LOW_PRIORITY);
+        registerReceiver(alternateNotifier, broadcastFilter);
+
     }
 
-    /**
-     * Start the ConnectThread to initiate a connection to a remote device.
-     *
-     * @param device The BluetoothDevice to connect
-     * @param secure Socket Security type - Secure (true) , Insecure (false)
-     */
-    public synchronized void connect(BluetoothDevice device, boolean secure) {
-        Log.d(TAG, "connect to: " + device);
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
-        // Cancel any thread attempting to make a connection
-        if (state == STATE_CONNECTING) {
-            if (connectThread != null) {
-                connectThread.cancel();
-                connectThread = null;
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (intent != null && intent.hasExtra(SERVICE_ACTION)) {
+
+            String action = intent.getStringExtra(SERVICE_ACTION);
+            if (ACTION_RECEIVE.equals(action) && BluetoothConnectionManager.isConnected()){
+                Log.d(TAG, "Start transferring commmand received");
+                startTransferThreads();
+            }
+            else if (ACTION_DISCONNECT.equals(action)){
+                Log.d(TAG, "Disconnect commmand received");
+                closeConnection();
+            }
+            else if (ACTION_SENDFILE.equals(action) && BluetoothConnectionManager.isConnected()){
+                Log.d(TAG, "File send commmand received");
+                final CourseTransferableFile file = (CourseTransferableFile) intent.getSerializableExtra(SERVICE_FILE);
+
+                if (!tasksDownloading.contains(file)){
+                    tasksDownloading.add(file);
+                }
+                sendHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendFile(file);
+                    }
+                }, 100);
             }
         }
 
-        // Cancel any thread currently running a connection
-        if (connectedThread != null) {
-            connectedThread.cancel();
-            connectedThread = null;
-        }
-
-        // Start the thread to connect with the given device
-        connectThread = new ConnectThread(device, secure);
-        connectThread.start();
-        // Update UI title
-        updateUserInterfaceTitle();
+        // Keep service around "sticky"
+        return START_STICKY;
     }
 
-    /**
-     * Start the ConnectedThread to begin managing a Bluetooth connection
-     *
-     * @param socket The BluetoothSocket on which the connection was made
-     * @param device The BluetoothDevice that has been connected
-     */
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice
-            device, final String socketType) {
-        Log.d(TAG, "connected, Socket Type:" + socketType);
-
-        // Cancel the thread that completed the connection
-        if (connectThread != null) {
-            connectThread.cancel();
-            connectThread = null;
-        }
-
-        // Cancel any thread currently running a connection
-        if (connectedThread != null) {
-            connectedThread.cancel();
-            connectedThread = null;
-        }
-
-        // Cancel the accept thread because we only want to connect to one device
-        if (secureAcceptThread != null) {
-            secureAcceptThread.cancel();
-            secureAcceptThread = null;
-        }
-        if (insecureAcceptThread != null) {
-            insecureAcceptThread.cancel();
-            insecureAcceptThread = null;
-        }
-
-        // Start the thread to manage the connection and perform transmissions
-        connectedThread = new ConnectedThread(socket, socketType);
-        connectedThread.start();
-
-        // Send the name of the connected device back to the UI Activity
-        Message msg = uiHandler.obtainMessage(UI_MESSAGE_DEVICE_NAME);
-        Bundle bundle = new Bundle();
-        bundle.putString(DEVICE_NAME, device.getName());
-        msg.setData(bundle);
-        uiHandler.sendMessage(msg);
-        // Update UI title
-        updateUserInterfaceTitle();
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        BluetoothTransferService.setInstance(null);
+        unregisterReceiver(alternateNotifier);
     }
 
+    private void startTransferThreads(){
 
-    public synchronized void disconnect(boolean notifyHandler) {
-        Log.d(TAG, "stop");
+        receiveHandlerThread = new HandlerThread("BluetoothTransfer.ReceiveHandlerThread");
+        receiveHandlerThread.start();
+        receiveHandler = new Handler(receiveHandlerThread.getLooper());
 
-        synchronized (BluetoothTransferService.this) {
-            state = STATE_NONE;
+        sendHandlerThread = new HandlerThread("BluetoothTransfer.SendHandlerThread");
+        sendHandlerThread.start();
+        sendHandler = new Handler(sendHandlerThread.getLooper());
+
+        InputStream tmpIn;
+        OutputStream tmpOut;
+
+        // Get the BluetoothSocket input and output streams
+        try {
+            tmpIn = socket.getInputStream();
+            tmpOut = socket.getOutputStream();
+        } catch (IOException e) {
+            Log.e(TAG, "temp sockets not created", e);
+            closeConnection();
+            return;
         }
 
-        if (connectThread != null) {
-            connectThread.cancel();
-            connectThread = null;
-        }
+        input = tmpIn;
+        output = tmpOut;
 
-        if (connectedThread != null) {
-            connectedThread.cancel();
-            connectedThread = null;
-        }
-
-        if (secureAcceptThread != null) {
-            secureAcceptThread.cancel();
-            secureAcceptThread = null;
-        }
-
-        if (insecureAcceptThread != null) {
-            insecureAcceptThread.cancel();
-            insecureAcceptThread = null;
-        }
-
-        if (notifyHandler){
-            updateUserInterfaceTitle();
-        }
-
-    }
-
-    /**
-     * Write to the ConnectedThread in an unsynchronized manner
-     *
-     * @param trFile The file to transfer
-     * @see ConnectedThread#sendFile(CourseTransferableFile)
-     */
-    public void sendFile(CourseTransferableFile trFile) {
-        // Create temporary object
-        ConnectedThread r;
-        // Synchronize a copy of the ConnectedThread
-        synchronized (this) {
-            if (state != STATE_CONNECTED) return;
-            r = connectedThread;
-        }
-        // Perform the write unsynchronized
-        r.sendFile(trFile);
-    }
-
-    private void resetState(){
-        synchronized (BluetoothTransferService.this) {
-            if (state != STATE_NONE) {
-                state = STATE_NONE;
-                updateUserInterfaceTitle();
-                // Start the service over to restart listening mode
-                BluetoothTransferService.this.start();
-            } else {
-                updateUserInterfaceTitle();
+        Log.d(TAG, "Socket streams created, starting receive thread");
+        receiveHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                listenAndReceiveFiles();
             }
-        }
+        });
     }
 
-    /**
-     * Indicate that the connection attempt failed and notify the UI Activity.
-     */
-    private void connectionFailed() {
-        // Send a failure message back to the Activity
-        Message msg = uiHandler.obtainMessage(UI_MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString(TOAST, "Unable to connect device");
-        msg.setData(bundle);
-        uiHandler.sendMessage(msg);
-        resetState();
+
+    private void closeConnection(){
+        try {
+            if (BluetoothTransferService.socket != null){
+                BluetoothTransferService.socket.close();
+                BluetoothTransferService.socket = null;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "close() of connect socket failed", e);
+        }
+        BluetoothConnectionManager.notifySocketDisconnected();
+        if (receiveHandlerThread != null){
+            receiveHandlerThread.quit();
+            receiveHandlerThread = null;
+            receiveHandler = null;
+        }
+        if (sendHandlerThread != null){
+            sendHandlerThread.quit();
+            sendHandlerThread = null;
+            sendHandler = null;
+        }
+        tasksDownloading.clear();
+
     }
+
 
     /**
      * Indicate that the connection was lost and notify the UI Activity.
      */
-    private void connectionLost() {
+    private void connectionLost(Exception e) {
         // Send a failure message back to the Activity
-        Message msg = uiHandler.obtainMessage(UI_MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString(TOAST, "Device connection was lost");
-        msg.setData(bundle);
-        uiHandler.sendMessage(msg);
-        resetState();
-    }
+        Intent localIntent = new Intent(BROADCAST_ACTION);
+        localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_DISCONNECT);
+        localIntent.putExtra(SERVICE_ERROR, e.getMessage());
 
-    /**
-     * This thread runs while listening for incoming connections. It behaves
-     * like a server-side client. It runs until a connection is accepted
-     * (or until cancelled).
-     */
-    private class AcceptThread extends Thread {
-        // The local server socket
-        private final BluetoothServerSocket mmServerSocket;
-        private String mSocketType;
-
-        public AcceptThread(boolean secure) {
-            BluetoothServerSocket tmp = null;
-            mSocketType = secure ? "Secure" : "Insecure";
-
-            // Create a new listening server socket
-            try {
-                if (secure) {
-                    tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME_SECURE, MY_UUID_SECURE);
-                } else {
-                    tmp = mAdapter.listenUsingInsecureRfcommWithServiceRecord(NAME_INSECURE, MY_UUID_INSECURE);
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "Socket Type: " + mSocketType + "listen() failed", e);
-            }
-            mmServerSocket = tmp;
-            state = STATE_LISTEN;
-        }
-
-        public void run() {
-            Log.d(TAG, "Socket Type: " + mSocketType +
-                    " BEGIN mAcceptThread " + this);
-            setName("AcceptThread" + mSocketType);
-
-            BluetoothSocket socket = null;
-            // Listen to the server socket if we're not connected
-            while (state != STATE_CONNECTED) {
-                try {
-                    // This is a blocking call and will only return on a
-                    // successful connection or an exception
-                    socket = mmServerSocket.accept();
-                } catch (IOException e) {
-                    Log.e(TAG, "Socket Type: " + mSocketType + "accept() failed", e);
-                    break;
-                }
-
-                // If a connection was accepted
-                if (socket != null) {
-                    synchronized (BluetoothTransferService.this) {
-                        switch (state) {
-                            case STATE_LISTEN:
-                            case STATE_CONNECTING:
-                                // Situation normal. Start the connected thread.
-                                connected(socket, socket.getRemoteDevice(),
-                                        mSocketType);
-                                break;
-                            case STATE_NONE:
-                            case STATE_CONNECTED:
-                                // Either not ready or already connected. Terminate new socket.
-                                try {
-                                    socket.close();
-                                } catch (IOException e) {
-                                    Log.e(TAG, "Could not close unwanted socket", e);
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
-            Log.i(TAG, "END mAcceptThread, socket Type: " + mSocketType);
-
-        }
-
-        public void cancel() {
-            Log.d(TAG, "Socket Type" + mSocketType + "cancel " + this);
-            try {
-                mmServerSocket.close();
-            } catch (IOException e) {
-                Log.e(TAG, "Socket Type" + mSocketType + "close() of server failed", e);
-            }
-        }
+        // Broadcasts the Intent to receivers in this app.
+        Log.d(TAG, "sending connection lost broadcast");
+        sendOrderedBroadcast(localIntent, null);
     }
 
 
-    /**
-     * This thread runs while attempting to make an outgoing connection
-     * with a device. It runs straight through; the connection either
-     * succeeds or fails.
-     */
-    private class ConnectThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final BluetoothDevice mmDevice;
-        private String mSocketType;
+    public void sendFile(CourseTransferableFile trFile){
+        try {
+            DataOutputStream d = new DataOutputStream(output);
 
-        public ConnectThread(BluetoothDevice device, boolean secure) {
-            mmDevice = device;
-            BluetoothSocket tmp = null;
-            mSocketType = secure ? "Secure" : "Insecure";
+            File file = trFile.getFile();
+            long fileLength = file.length();
+            d.writeUTF(file.getName());
+            d.writeUTF(trFile.getType());
+            d.writeLong(fileLength);
 
-            // Get a BluetoothSocket for a connection with the
-            // given BluetoothDevice
+            Log.d(TAG, "Sending " + file.getName() + " over bluetooth...");
+            // Notify the UI that a course is transferring
+            Intent localIntent = new Intent(BROADCAST_ACTION);
+            localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_START_TRANSFER);
+            localIntent.putExtra(SERVICE_FILE, trFile);
+            sendOrderedBroadcast(localIntent, null);
+
+            int totalBytes = 0;
+            FileInputStream fis = new FileInputStream(file);
+
             try {
-                if (secure) {
-                    tmp = device.createRfcommSocketToServiceRecord(MY_UUID_SECURE);
-                } else {
-                    tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID_INSECURE);
+                byte[] buf = new byte[BUFFER_SIZE];
+                int bytesRead;
+
+                while((bytesRead = fis.read(buf)) != -1) {
+                    totalBytes += bytesRead;
+                    d.write(buf, 0, bytesRead);
+
+                    localIntent = new Intent(BROADCAST_ACTION);
+                    localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_SEND_PROGRESS);
+                    localIntent.putExtra(SERVICE_FILE, trFile);
+                    localIntent.putExtra(SERVICE_PROGRESS, totalBytes);
+                    // Broadcasts the Intent to receivers in this app.
+                    sendOrderedBroadcast(localIntent, null);
                 }
-            } catch (IOException e) {
-                Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
+                d.flush();
+            }catch (IOException e){
+                Log.e(TAG, e.getMessage(), e);
             }
-            mmSocket = tmp;
-            state = STATE_CONNECTING;
+            finally {
+                fis.close();
+            }
+
+            Log.d(TAG, totalBytes + " bytes sent via bluetooth.");
+
+            localIntent = new Intent(BROADCAST_ACTION);
+            localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);
+            localIntent.putExtra(SERVICE_FILE, trFile);
+            // Broadcasts the Intent to receivers in this app.
+            sendOrderedBroadcast(localIntent, null);
+
+            tasksDownloading.remove(trFile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        public void run() {
-            Log.i(TAG, "BEGIN connectThread SocketType:" + mSocketType);
-            setName("ConnectThread" + mSocketType);
-
-            // Always cancel discovery because it will slow down a connection
-            mAdapter.cancelDiscovery();
-
-            // Make a connection to the BluetoothSocket
-            try {
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
-                mmSocket.connect();
-            } catch (IOException e) {
-                // Close the socket
-                try {
-                    mmSocket.close();
-                } catch (IOException e2) {
-                    Log.e(TAG, "unable to close() " + mSocketType +
-                            " socket during connection failure", e2);
-                }
-                connectionFailed();
-                return;
-            }
-
-            // Reset the ConnectThread because we're done
-            synchronized (BluetoothTransferService.this) {
-                connectThread = null;
-            }
-
-            // Start the connected thread
-            connected(mmSocket, mmDevice, mSocketType);
-        }
-
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                Log.e(TAG, "close() of connect " + mSocketType + " socket failed", e);
-            }
-        }
     }
 
-    /**
-     * This thread runs during a connection with a remote device.
-     * It handles all incoming and outgoing transmissions.
-     */
-    private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
 
-        public ConnectedThread(BluetoothSocket socket, String socketType) {
-            Log.d(TAG, "create ConnectedThread: " + socketType);
-            mmSocket = socket;
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
+    private void listenAndReceiveFiles(){
+        Log.i(TAG, "BEGIN receiving thread");
 
-            // Get the BluetoothSocket input and output streams
+        // Read from the InputStream
+        BufferedInputStream in = new BufferedInputStream(input);
+        DataInputStream d = new DataInputStream(in);
+
+        // Keep listening to the InputStream while connected
+        while (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED) {
             try {
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
-            } catch (IOException e) {
-                Log.e(TAG, "temp sockets not created", e);
-            }
+                String fileName = d.readUTF();
+                Log.d(TAG, "Receiving file! " + fileName);
+                String type = d.readUTF();
+                long fileSize = d.readLong();
 
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
-            state = STATE_CONNECTED;
-        }
+                CourseTransferableFile trFile = new CourseTransferableFile();
+                trFile.setType(type);
+                trFile.setFileSize(fileSize);
+                trFile.setFilename(fileName);
 
-        public void run() {
-            Log.i(TAG, "BEGIN connectedThread");
-            int bytes;
-
-            // Keep listening to the InputStream while connected
-            while (state == STATE_CONNECTED) {
-                try {
-                    // Read from the InputStream
-                    BufferedInputStream in = new BufferedInputStream(mmInStream);
-                    DataInputStream d = new DataInputStream(in);
-
-                    String fileName = d.readUTF();
-                    String type = d.readUTF();
-                    long fileSize = d.readLong();
-                    Log.d(TAG, fileName + ": " + fileSize);
-
-                    // Notify the UI that a course is transferring
-                    uiHandler.obtainMessage(UI_MESSAGE_COURSE_TRANSFERRING, (int) fileSize, -1, null)
-                            .sendToTarget();
-
-                    File destinationDir = (CourseTransferableFile
-                                    .TYPE_COURSE_BACKUP.equals(type)) ?
-                                    new File(Storage.getDownloadPath(ctx)) :
-                                    new File(Storage.getMediaPath(ctx));
-                    if (!destinationDir.exists()){
-                        destinationDir.mkdirs();
-                    }
-                    File file = new File(destinationDir, fileName);
-                    FileOutputStream output = new FileOutputStream(file);
-
-                    int totalBytes = 0;
-                    try {
-                        byte[] buf = new byte[4096];
-                        int bytesRead;
-
-                        while((bytesRead = d.read(buf)) != -1) {
-                            totalBytes += bytesRead;
-                            output.write(buf, 0, bytesRead);
-                            if (totalBytes >= fileSize) break;
-                            Log.d(TAG, "progress: " + totalBytes);
-                            uiHandler.obtainMessage(UI_MESSAGE_TRANSFER_PROGRESS, totalBytes, -1, null)
-                                    .sendToTarget();
-                        }
-                    } finally {
-                        output.close();
-                    }
-
-                    // Notify the UI that a course is transferring
-                    uiHandler.obtainMessage(
-                            CourseTransferableFile
-                                    .TYPE_COURSE_BACKUP.equals(type) ?
-                                    UI_MESSAGE_COURSE_COMPLETE
-                                    : UI_MESSAGE_TRANSFER_COMPLETE, -1, -1, null)
-                            .sendToTarget();
-
-                    Message msg = uiHandler.obtainMessage(UI_MESSAGE_COURSE_BACKUP);
-                    Bundle bundle = new Bundle();
-                    bundle.putString(COURSE_BACKUP, fileName);
-                    msg.setData(bundle);
-                    uiHandler.sendMessage(msg);
-
-                } catch (IOException e) {
-                    Log.e(TAG, "disconnected", e);
-                    connectionLost();
-                    break;
-                }
-            }
-        }
-
-        public void sendFile(CourseTransferableFile trFile){
-
-            try {
-                DataOutputStream d = new DataOutputStream(mmOutStream);
-
-                File file = trFile.getFile();
-                d.writeUTF(file.getName());
-                d.writeUTF(trFile.getType());
-                d.writeLong(file.length());
-
-                Log.d(TAG, "Sending " + file.getName() + " over bluetooth...");
-                uiHandler.obtainMessage(UI_MESSAGE_COURSE_START_TRANSFER, newState, -1).sendToTarget();
-
-                int totalBytes = 0;
-                FileInputStream fis = new FileInputStream(file);
-
-                try {
-                    byte[] buf = new byte[4096];
-                    int bytesRead = 0;
-
-                    while((bytesRead = fis.read(buf)) != -1) {
-                        totalBytes += bytesRead;
-                        d.write(buf, 0, bytesRead);
-                    }
-                } finally {
-                    fis.close();
-                }
-
-                Log.d(TAG, totalBytes + " bytes sent via bluetooth.");
+                Log.d(TAG, fileName + ": " + fileSize);
 
                 // Notify the UI that a course is transferring
-                uiHandler.obtainMessage(UI_MESSAGE_TRANSFER_COMPLETE, -1, -1, null)
-                        .sendToTarget();
+                Intent localIntent = new Intent(BROADCAST_ACTION);
+                localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_START_TRANSFER);
+                localIntent.putExtra(SERVICE_FILE, trFile);
+                sendOrderedBroadcast(localIntent, null);
+
+                File destinationDir = (CourseTransferableFile
+                        .TYPE_COURSE_BACKUP.equals(type)) ?
+                        new File(Storage.getDownloadPath(BluetoothTransferService.this)) :
+                        new File(Storage.getBluetoothTransferTempPath(BluetoothTransferService.this));
+                if (!destinationDir.exists()){
+                    destinationDir.mkdirs();
+                }
+                File file = new File(destinationDir, fileName);
+                FileOutputStream output = new FileOutputStream(file);
+
+                int totalBytes = 0;
+                int prevProgress = 0;
+                try {
+                    byte[] buf = new byte[BUFFER_SIZE];
+                    int bytesRead;
+
+                    while ((bytesRead = d.read(buf, 0, Math.min(BUFFER_SIZE, (int) fileSize - totalBytes))) != -1) {
+                        totalBytes += bytesRead;
+                        output.write(buf, 0, bytesRead);
+                        if (totalBytes >= fileSize) {
+                            Log.d(TAG, "Total bytes read: " + totalBytes + "/" + fileSize);
+                            break;
+                        }
+
+                        int currentProgress = totalBytes * 100 / (int)fileSize;
+                        if (currentProgress > prevProgress){
+                            //Only send broadcast if progress advanced
+                            prevProgress = currentProgress;
+
+                            localIntent = new Intent(BROADCAST_ACTION);
+                            localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_RECEIVE_PROGRESS);
+                            localIntent.putExtra(SERVICE_FILE, trFile);
+                            localIntent.putExtra(SERVICE_PROGRESS, totalBytes);
+                            // Broadcasts the Intent to receivers in this app.
+                            sendOrderedBroadcast(localIntent, null);
+                        }
+
+                    }
+                } catch (IOException e){
+                    Log.e(TAG,"Error receiving file", e);
+                } finally {
+                    output.close();
+                }
+
+                if (totalBytes < fileSize){
+                    FileUtils.deleteFile(file);
+                }
+                else if (type.equals(CourseTransferableFile.TYPE_COURSE_MEDIA)){
+                        File mediaDir = new File(Storage.getMediaPath(BluetoothTransferService.this));
+                        FileUtils.moveFileToDir(file, mediaDir, true);
+                }
+
+                localIntent = new Intent(BROADCAST_ACTION);
+                localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);
+                localIntent.putExtra(SERVICE_FILE, trFile);
+                // Broadcasts the Intent to receivers in this app.
+                sendOrderedBroadcast(localIntent, null);
 
             } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                Log.e(TAG, "close() of connect socket failed", e);
+                Log.e(TAG, "disconnected", e);
+                closeConnection();
+                connectionLost(e);
+                break;
             }
         }
     }
+
+
+
 }
