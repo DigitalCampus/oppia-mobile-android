@@ -434,7 +434,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         @Override
         public void handleMessage(Message msg) {
             TransferFragment self = fragment.get();
-            ProgressDialog pd;
             if (self == null) return;
             FragmentActivity ctx = self.getActivity();
             if (ctx == null) return;
@@ -453,80 +452,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
                     Toast.makeText(ctx, msg.getData().getString(BluetoothConnectionManager.TOAST),
                             Toast.LENGTH_SHORT).show();
                     break;
-
-                case BluetoothConnectionManager.UI_MESSAGE_COURSE_BACKUP:
-                    String courseShortname = msg.getData().getString(BluetoothConnectionManager.COURSE_BACKUP);
-                    Log.d(TAG, "Course backup! " + courseShortname);
-                    break;
-
-                case BluetoothConnectionManager.UI_MESSAGE_COURSE_START_TRANSFER:
-                    Log.d(TAG, "Course transferring! ");
-                    if (self.progressDialog != null){
-                        self.progressDialog.dismiss();
-                        self.progressDialog = null;
-                    }
-                    pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
-                    self.progressDialog = pd;
-                    pd.setMessage(self.getString(R.string.course_transferring));
-                    pd.setIndeterminate(true);
-                    pd.setCancelable(false);
-                    pd.setCanceledOnTouchOutside(false);
-                    pd.show();
-                    break;
-
-                case BluetoothConnectionManager.UI_MESSAGE_COURSE_TRANSFERRING:
-                    int total = msg.arg1;
-                    Log.d(TAG, "Course transferring! ");
-                    pd = new ProgressDialog(ctx, R.style.Oppia_AlertDialogStyle);
-                    self.progressDialog = pd;
-                    pd.setMessage(self.getString(R.string.course_transferring));
-                    pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    pd.setMax(total);
-                    pd.setProgress(0);
-                    pd.setIndeterminate(false);
-                    pd.setCancelable(false);
-                    pd.setCanceledOnTouchOutside(false);
-                    pd.show();
-
-                    break;
-
-                case BluetoothConnectionManager.UI_MESSAGE_TRANSFER_PROGRESS:
-                    int progress = msg.arg1;
-                    if (self.progressDialog != null) {
-                        self.progressDialog.setProgress(progress);
-                        Log.d(TAG, "progress");
-                    }
-                    break;
-
-                case BluetoothConnectionManager.UI_MESSAGE_TRANSFER_COMPLETE:
-                    Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
-                    if (self.progressDialog != null) {
-                        self.progressDialog.dismiss();
-                        self.progressDialog = null;
-                    }
-                    self.refreshFileList();
-                    break;
-
-                case BluetoothConnectionManager.UI_MESSAGE_COURSE_COMPLETE:
-                    if (self.progressDialog != null) {
-                        self.progressDialog.dismiss();
-                        self.progressDialog = null;
-                    }
-                    Toast.makeText(ctx, "Transfer complete", Toast.LENGTH_SHORT).show();
-                    InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(ctx);
-                    imTask.setInstallerListener(self);
-                    imTask.execute(new Payload());
-                    break;
-
-                case BluetoothConnectionManager.UI_MESSAGE_TRANSFER_ERROR:
-                    if (self.progressDialog != null) {
-                        self.progressDialog.dismiss();
-                        self.progressDialog = null;
-                    }
-                    Toast.makeText(ctx, "Error transferring file", Toast.LENGTH_SHORT).show();
-                    break;
             }
-
         }
     }
 

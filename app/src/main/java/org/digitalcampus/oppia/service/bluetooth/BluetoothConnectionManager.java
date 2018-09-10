@@ -11,31 +11,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-
-import org.digitalcampus.oppia.model.CourseTransferableFile;
-import org.digitalcampus.oppia.utils.storage.Storage;
-
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.UUID;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
  * connections with other devices. It has a thread that listens for
- * incoming connections, a thread for connecting with a device, and a
- * thread for performing data transmissions when connected.
+ * incoming connections and a thread for connecting with a device
  */
 public class BluetoothConnectionManager {
     // Debugging
-    private static final String TAG = BluetoothConnectionManager.class.getSimpleName();;
-
+    private static final String TAG = BluetoothConnectionManager.class.getSimpleName();
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -46,17 +32,8 @@ public class BluetoothConnectionManager {
     public static final int UI_MESSAGE_STATE_CHANGE = 1;
     public static final int UI_MESSAGE_DEVICE_NAME = 2;
     public static final int UI_MESSAGE_TOAST = 3;
-    public static final int UI_MESSAGE_COURSE_BACKUP = 4;
-    public static final int UI_MESSAGE_COURSE_START_TRANSFER = 5;
-    public static final int UI_MESSAGE_COURSE_TRANSFERRING = 6;
-    public static final int UI_MESSAGE_TRANSFER_COMPLETE = 7;
-    public static final int UI_MESSAGE_TRANSFER_PROGRESS = 8;
-    public static final int UI_MESSAGE_COURSE_COMPLETE = 9;
-    public static final int UI_MESSAGE_TRANSFER_ERROR = 10;
 
-    public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
-    public static final String COURSE_BACKUP = "course_backup";
 
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "BluetoothTransferSecure";
@@ -197,7 +174,7 @@ public class BluetoothConnectionManager {
      * @param socket The BluetoothSocket on which the connection was made
      * @param device The BluetoothDevice that has been connected
      */
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
+    private synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
         Log.d(TAG, "connected");
 
         // Cancel the thread that completed the connection
@@ -220,16 +197,9 @@ public class BluetoothConnectionManager {
         BluetoothTransferServiceDelegate del = new BluetoothTransferServiceDelegate(ctx);
         del.startReceiving();
 
-        // Send the name of the connected device back to the UI Activity
-        Message msg = uiHandler.obtainMessage(UI_MESSAGE_DEVICE_NAME);
-        Bundle bundle = new Bundle();
-        bundle.putString(DEVICE_NAME, deviceName);
-        msg.setData(bundle);
-        uiHandler.sendMessage(msg);
         // Update UI title
         updateUserInterfaceTitle();
     }
-
 
     public synchronized void disconnect(boolean notifyHandler) {
         Log.d(TAG, "stop");
@@ -255,8 +225,6 @@ public class BluetoothConnectionManager {
     }
 
 
-
-
     public void resetState(){
         synchronized (BluetoothConnectionManager.this) {
             state = STATE_NONE;
@@ -265,9 +233,6 @@ public class BluetoothConnectionManager {
             BluetoothConnectionManager.this.start();
         }
     }
-
-
-
 
 
     /**
@@ -279,7 +244,7 @@ public class BluetoothConnectionManager {
         // The local server socket
         private final BluetoothServerSocket mmServerSocket;
 
-        public AcceptThread() {
+        AcceptThread() {
             BluetoothServerSocket tmp = null;
 
             // Create a new listening server socket
@@ -297,7 +262,7 @@ public class BluetoothConnectionManager {
             Log.d(TAG, "Socket BEGIN mAcceptThread " + this);
             setName("AcceptThread");
 
-            BluetoothSocket socket = null;
+            BluetoothSocket socket;
             // Listen to the server socket if we're not connected
             while (state != STATE_CONNECTED) {
                 try {
@@ -356,7 +321,7 @@ public class BluetoothConnectionManager {
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
 
-        public ConnectThread(BluetoothDevice device) {
+        ConnectThread(BluetoothDevice device) {
             mmDevice = device;
             BluetoothSocket tmp = null;
 
@@ -423,8 +388,5 @@ public class BluetoothConnectionManager {
             resetState();
         }
     }
-
-
-
 
 }

@@ -22,9 +22,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
-import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
 
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
 

@@ -8,14 +8,12 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
-import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
@@ -44,7 +42,6 @@ public class BluetoothTransferService extends Service {
 
     public static final String SERVICE_ACTION = "action"; //field for providing action
     public static final String SERVICE_MESSAGE = "message";
-    public static final String SERVICE_FILENAME = "filename";
     public static final String SERVICE_FILE = "file";
     public static final String SERVICE_ERROR = "error";
     public static final String SERVICE_PROGRESS = "progress";
@@ -63,7 +60,6 @@ public class BluetoothTransferService extends Service {
     private ArrayList<CourseTransferableFile> tasksDownloading;
     private static BluetoothTransferService currentInstance;
 
-
     InputStream input = null;
     OutputStream output = null;
 
@@ -71,20 +67,17 @@ public class BluetoothTransferService extends Service {
         currentInstance = instance;
     }
 
+
     private static BluetoothSocket socket;
-    public static synchronized BluetoothSocket getSocket(){
-        return socket;
-    }
     public static synchronized void setSocket(BluetoothSocket socket){
         BluetoothTransferService.socket = socket;
     }
 
     private volatile HandlerThread receiveHandlerThread;
     private volatile HandlerThread sendHandlerThread;
-    private ReceiveHandler receiveHandler;
+    private Handler receiveHandler;
     private Handler sendHandler;
     private BluetoothBroadcastReceiver alternateNotifier;
-
 
     public static List<CourseTransferableFile> getTasksDownloading(){
         if (currentInstance != null){
@@ -95,95 +88,13 @@ public class BluetoothTransferService extends Service {
         return new ArrayList<>();
     }
 
-    private final class ReceiveHandler extends Handler{
-        public ReceiveHandler(Looper looper) {
-            super(looper);
-        }
-
-        private void listenAndReceiveFiles(){
-            Log.i(TAG, "BEGIN receiving thread");
-
-            // Keep listening to the InputStream while connected
-            while (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED) {
-                try {
-                    // Read from the InputStream
-                    BufferedInputStream in = new BufferedInputStream(input);
-                    DataInputStream d = new DataInputStream(in);
-
-                    String fileName = d.readUTF();
-                    String type = d.readUTF();
-                    long fileSize = d.readLong();
-
-                    CourseTransferableFile trFile = new CourseTransferableFile();
-                    trFile.setType(type);
-                    trFile.setFileSize(fileSize);
-                    trFile.setFilename(fileName);
-
-                    Log.d(TAG, fileName + ": " + fileSize);
-                    Log.d(TAG, "Receiving file! " + fileName);
-
-                    // Notify the UI that a course is transferring
-                    Intent localIntent = new Intent(BROADCAST_ACTION);
-                    localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_START_TRANSFER);
-                    localIntent.putExtra(SERVICE_FILE, trFile);
-                    sendOrderedBroadcast(localIntent, null);
-
-                    File destinationDir = (CourseTransferableFile
-                            .TYPE_COURSE_BACKUP.equals(type)) ?
-                            new File(Storage.getDownloadPath(BluetoothTransferService.this)) :
-                            new File(Storage.getMediaPath(BluetoothTransferService.this));
-                    if (!destinationDir.exists()){
-                        destinationDir.mkdirs();
-                    }
-                    File file = new File(destinationDir, fileName);
-                    FileOutputStream output = new FileOutputStream(file);
-
-                    int totalBytes = 0;
-                    try {
-                        byte[] buf = new byte[4096];
-                        int bytesRead;
-
-                        while((bytesRead = d.read(buf)) != -1) {
-                            totalBytes += bytesRead;
-                            output.write(buf, 0, bytesRead);
-                            if (totalBytes >= fileSize) break;
-
-                            localIntent = new Intent(BROADCAST_ACTION);
-                            localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_RECEIVE_PROGRESS);
-                            localIntent.putExtra(SERVICE_FILE, trFile);
-                            localIntent.putExtra(SERVICE_PROGRESS, totalBytes);
-                            // Broadcasts the Intent to receivers in this app.
-                            sendOrderedBroadcast(localIntent, null);
-
-                        }
-                    } finally {
-                        output.close();
-                    }
-
-                    localIntent = new Intent(BROADCAST_ACTION);
-                    localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);
-                    localIntent.putExtra(SERVICE_FILE, trFile);
-                    // Broadcasts the Intent to receivers in this app.
-                    sendOrderedBroadcast(localIntent, null);
-
-                } catch (IOException e) {
-                    Log.e(TAG, "disconnected", e);
-                    closeConnection();
-                    connectionLost(e);
-                    break;
-                }
-            }
-        }
-
-    }
-
-
     // Fires when a service is first initialized
     public void onCreate() {
         super.onCreate();
 
         BluetoothTransferService.setInstance(this);
         Log.d(TAG, "Created Bluetooth service!");
+        tasksDownloading = new ArrayList<>();
 
         alternateNotifier = new BluetoothBroadcastReceiver();
         alternateNotifier.setListener(new BluetoothBroadcastReceiver.BluetoothTransferListener() {
@@ -222,6 +133,7 @@ public class BluetoothTransferService extends Service {
                 OppiaNotificationUtils.sendNotification(BluetoothTransferService.this, 0, mBuilder.build());
             }
         });
+
         //We register the alternative notifier for sending notifications when no other BroadcasReceiver is set
         IntentFilter broadcastFilter = new IntentFilter(BluetoothTransferService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_LOW_PRIORITY);
@@ -275,7 +187,7 @@ public class BluetoothTransferService extends Service {
 
         receiveHandlerThread = new HandlerThread("BluetoothTransfer.ReceiveHandlerThread");
         receiveHandlerThread.start();
-        receiveHandler = new ReceiveHandler(receiveHandlerThread.getLooper());
+        receiveHandler = new Handler(receiveHandlerThread.getLooper());
 
         sendHandlerThread = new HandlerThread("BluetoothTransfer.SendHandlerThread");
         sendHandlerThread.start();
@@ -301,10 +213,9 @@ public class BluetoothTransferService extends Service {
         receiveHandler.post(new Runnable() {
             @Override
             public void run() {
-                receiveHandler.listenAndReceiveFiles();
+                listenAndReceiveFiles();
             }
         });
-
 
     }
 
@@ -312,6 +223,7 @@ public class BluetoothTransferService extends Service {
     private void closeConnection(){
         try {
             BluetoothTransferService.socket.close();
+            BluetoothTransferService.socket = null;
         } catch (IOException e) {
             Log.e(TAG, "close() of connect socket failed", e);
         }
@@ -346,7 +258,6 @@ public class BluetoothTransferService extends Service {
 
 
     public void sendFile(CourseTransferableFile trFile){
-
         try {
             DataOutputStream d = new DataOutputStream(output);
 
@@ -397,13 +308,87 @@ public class BluetoothTransferService extends Service {
             // Broadcasts the Intent to receivers in this app.
             sendOrderedBroadcast(localIntent, null);
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
+
+    private void listenAndReceiveFiles(){
+        Log.i(TAG, "BEGIN receiving thread");
+
+        // Keep listening to the InputStream while connected
+        while (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED) {
+            try {
+                // Read from the InputStream
+                BufferedInputStream in = new BufferedInputStream(input);
+                DataInputStream d = new DataInputStream(in);
+
+                String fileName = d.readUTF();
+                String type = d.readUTF();
+                long fileSize = d.readLong();
+
+                CourseTransferableFile trFile = new CourseTransferableFile();
+                trFile.setType(type);
+                trFile.setFileSize(fileSize);
+                trFile.setFilename(fileName);
+
+                Log.d(TAG, fileName + ": " + fileSize);
+                Log.d(TAG, "Receiving file! " + fileName);
+
+                // Notify the UI that a course is transferring
+                Intent localIntent = new Intent(BROADCAST_ACTION);
+                localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_START_TRANSFER);
+                localIntent.putExtra(SERVICE_FILE, trFile);
+                sendOrderedBroadcast(localIntent, null);
+
+                File destinationDir = (CourseTransferableFile
+                        .TYPE_COURSE_BACKUP.equals(type)) ?
+                        new File(Storage.getDownloadPath(BluetoothTransferService.this)) :
+                        new File(Storage.getMediaPath(BluetoothTransferService.this));
+                if (!destinationDir.exists()){
+                    destinationDir.mkdirs();
+                }
+                File file = new File(destinationDir, fileName);
+                FileOutputStream output = new FileOutputStream(file);
+
+                int totalBytes = 0;
+                try {
+                    byte[] buf = new byte[4096];
+                    int bytesRead;
+
+                    while((bytesRead = d.read(buf)) != -1) {
+                        totalBytes += bytesRead;
+                        output.write(buf, 0, bytesRead);
+                        if (totalBytes >= fileSize) break;
+
+                        localIntent = new Intent(BROADCAST_ACTION);
+                        localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_RECEIVE_PROGRESS);
+                        localIntent.putExtra(SERVICE_FILE, trFile);
+                        localIntent.putExtra(SERVICE_PROGRESS, totalBytes);
+                        // Broadcasts the Intent to receivers in this app.
+                        sendOrderedBroadcast(localIntent, null);
+
+                    }
+                } finally {
+                    output.close();
+                }
+
+                localIntent = new Intent(BROADCAST_ACTION);
+                localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);
+                localIntent.putExtra(SERVICE_FILE, trFile);
+                // Broadcasts the Intent to receivers in this app.
+                sendOrderedBroadcast(localIntent, null);
+
+            } catch (IOException e) {
+                Log.e(TAG, "disconnected", e);
+                closeConnection();
+                connectionLost(e);
+                break;
+            }
+        }
+    }
 
 
 
