@@ -389,7 +389,7 @@ public class BluetoothTransferService extends Service {
                 if (totalBytes < fileSize){
                     FileUtils.deleteFile(file);
                 }
-                else{
+                else if (type.equals(CourseTransferableFile.TYPE_COURSE_MEDIA)){
                     File mediaDir = new File(Storage.getMediaPath(BluetoothTransferService.this));
                     org.apache.commons.io.FileUtils.moveFileToDirectory(file, mediaDir, true);
                 }

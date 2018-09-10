@@ -182,6 +182,7 @@
     <string name="update_schedule">Update Schedule</string>
     <string name="installed">Installed</string>
     <string name="install">Install</string>
+    <string name="courses_install_pending">There are transferred courses not installed yet.</string>
 
     <string name="download_starting">Download starting</string>
     <string name="downloading">Downloading &#8230;</string>

@@ -17,9 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, String, List<CourseTransferableFile>> {
+public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean, List<CourseTransferableFile>> {
 
     public interface FetchBackupsListener{
+        void coursesPendingToInstall(boolean pending);
         void onFetchComplete(List<CourseTransferableFile> backups);
     }
 
@@ -40,6 +41,11 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, String,
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+
+        File dir = new File(Storage.getDownloadPath(ctx));
+        String[] children = dir.list();
+
+        publishProgress(children != null && children.length > 0);
 
         for (Course course : courses){
             File backup = CourseInstall.savedBackupCourse(ctx, course.getShortname());
@@ -80,6 +86,16 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, String,
         }
 
         return transferableFiles;
+    }
+
+    @Override
+    protected void onProgressUpdate(Boolean... coursesToInstall){
+        synchronized (this) {
+            if (listener != null) {
+                // update progress
+                listener.coursesPendingToInstall(coursesToInstall[0]);
+            }
+        }
     }
 
     @Override

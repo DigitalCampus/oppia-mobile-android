@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +36,6 @@ import org.digitalcampus.oppia.service.bluetooth.BluetoothConnectionManager;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
-import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -69,6 +69,8 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private TextView statusTitle;
     private TextView statusSubtitle;
 
+    private View pendingCoursesMessage;
+    private Button installCoursesBtn;
 
     public TransferFragment() {
         // Required empty public constructor
@@ -166,6 +168,8 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         statusTitle = (TextView) vv.findViewById(R.id.status_title);
         statusSubtitle = (TextView) vv.findViewById(R.id.status_subtitle);
         notConnectedInfo = vv.findViewById(R.id.not_connected_info);
+        pendingCoursesMessage = vv.findViewById(R.id.home_messages);
+        installCoursesBtn = (Button) vv.findViewById(R.id.message_action_button);
         return vv;
     }
 
@@ -202,7 +206,14 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
                 ensureDiscoverable();
             }
         });
-
+        installCoursesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(getActivity());
+                imTask.setInstallerListener(TransferFragment.this);
+                imTask.execute(new Payload());
+            }
+        });
     }
 
 
@@ -314,6 +325,12 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         FetchCourseTransferableFilesTask task = new FetchCourseTransferableFilesTask(this.getActivity());
         task.setListener(new FetchCourseTransferableFilesTask.FetchBackupsListener() {
             @Override
+            public void coursesPendingToInstall(boolean pending) {
+                Log.d(TAG, "There are courses left to install!");
+                pendingCoursesMessage.setVisibility(pending ? View.VISIBLE : View.GONE);
+            }
+
+            @Override
             public void onFetchComplete(List<CourseTransferableFile> backups) {
                 courses.clear();
                 courses.addAll(backups);
@@ -326,6 +343,18 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
 
     private final BluetoothTransferHandler uiHandler = new BluetoothTransferHandler(this);
+
+
+    private void initializeProgressDialog(){
+        ProgressDialog pd = new ProgressDialog(this.getActivity(), R.style.Oppia_AlertDialogStyle);
+        progressDialog = pd;
+        pd.setMessage(getString(R.string.course_transferring));
+        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        pd.setProgress(0);
+        pd.setIndeterminate(false);
+        pd.setCancelable(false);
+        pd.setCanceledOnTouchOutside(false);
+    }
 
     @Override
     public void downloadComplete(Payload p) { }
@@ -370,17 +399,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     }
 
 
-    private void initializeProgressDialog(){
-        ProgressDialog pd = new ProgressDialog(this.getActivity(), R.style.Oppia_AlertDialogStyle);
-        progressDialog = pd;
-        pd.setMessage(getString(R.string.course_transferring));
-        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        pd.setProgress(0);
-        pd.setIndeterminate(false);
-        pd.setCancelable(false);
-        pd.setCanceledOnTouchOutside(false);
-
-    }
 
     @Override
     public void onStartTransfer(CourseTransferableFile file) {
@@ -424,10 +442,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             progressDialog = null;
         }
         Toast.makeText(getActivity(), "Transfer complete", Toast.LENGTH_SHORT).show();
-
-        //InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(ctx);
-        //imTask.setInstallerListener(this);
-        //imTask.execute(new Payload());
+        refreshFileList();
     }
 
     @Override
