@@ -73,4 +73,13 @@ public class CourseTransferableFile implements Serializable {
     public void setFile(File file) {
         this.file = file;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof CourseTransferableFile){
+            CourseTransferableFile other = (CourseTransferableFile) o;
+            return other.getFilename().equals(this.filename);
+        }
+        return false;
+    }
 }

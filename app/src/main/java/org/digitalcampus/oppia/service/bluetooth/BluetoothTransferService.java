@@ -14,6 +14,7 @@ import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
@@ -153,7 +154,7 @@ public class BluetoothTransferService extends Service {
         if (intent != null && intent.hasExtra(SERVICE_ACTION)) {
 
             String action = intent.getStringExtra(SERVICE_ACTION);
-            if (ACTION_RECEIVE.equals(action)){
+            if (ACTION_RECEIVE.equals(action) && BluetoothConnectionManager.isConnected()){
                 Log.d(TAG, "Start transferring commmand received");
                 startTransferThreads();
             }
@@ -162,7 +163,13 @@ public class BluetoothTransferService extends Service {
                 closeConnection();
             }
             else if (ACTION_SENDFILE.equals(action) && BluetoothConnectionManager.isConnected()){
+                Log.d(TAG, "File send commmand received");
                 final CourseTransferableFile file = (CourseTransferableFile) intent.getSerializableExtra(SERVICE_FILE);
+
+                if (!tasksDownloading.contains(file)){
+                    tasksDownloading.add(file);
+                }
+
                 sendHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -216,14 +223,15 @@ public class BluetoothTransferService extends Service {
                 listenAndReceiveFiles();
             }
         });
-
     }
 
 
     private void closeConnection(){
         try {
-            BluetoothTransferService.socket.close();
-            BluetoothTransferService.socket = null;
+            if (BluetoothTransferService.socket != null){
+                BluetoothTransferService.socket.close();
+                BluetoothTransferService.socket = null;
+            }
         } catch (IOException e) {
             Log.e(TAG, "close() of connect socket failed", e);
         }
@@ -238,6 +246,7 @@ public class BluetoothTransferService extends Service {
             sendHandlerThread = null;
             sendHandler = null;
         }
+        tasksDownloading.clear();
 
     }
 
@@ -308,6 +317,8 @@ public class BluetoothTransferService extends Service {
             // Broadcasts the Intent to receivers in this app.
             sendOrderedBroadcast(localIntent, null);
 
+            tasksDownloading.remove(trFile);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -346,7 +357,7 @@ public class BluetoothTransferService extends Service {
                 File destinationDir = (CourseTransferableFile
                         .TYPE_COURSE_BACKUP.equals(type)) ?
                         new File(Storage.getDownloadPath(BluetoothTransferService.this)) :
-                        new File(Storage.getMediaPath(BluetoothTransferService.this));
+                        new File(Storage.getBluetoothTransferTempPath(BluetoothTransferService.this));
                 if (!destinationDir.exists()){
                     destinationDir.mkdirs();
                 }
@@ -373,6 +384,14 @@ public class BluetoothTransferService extends Service {
                     }
                 } finally {
                     output.close();
+                }
+
+                if (totalBytes < fileSize){
+                    FileUtils.deleteFile(file);
+                }
+                else{
+                    File mediaDir = new File(Storage.getMediaPath(BluetoothTransferService.this));
+                    org.apache.commons.io.FileUtils.moveFileToDirectory(file, mediaDir, true);
                 }
 
                 localIntent = new Intent(BROADCAST_ACTION);

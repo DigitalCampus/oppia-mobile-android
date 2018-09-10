@@ -369,37 +369,51 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         Toast.makeText(getActivity(), "Error transferring file", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onStartTransfer(CourseTransferableFile file) {
-        Log.d(TAG, "Course transferring! ");
+
+    private void initializeProgressDialog(){
         ProgressDialog pd = new ProgressDialog(this.getActivity(), R.style.Oppia_AlertDialogStyle);
         progressDialog = pd;
         pd.setMessage(getString(R.string.course_transferring));
         pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        pd.setMax((int)file.getFileSize());
         pd.setProgress(0);
         pd.setIndeterminate(false);
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
-        pd.show();
+
+    }
+
+    @Override
+    public void onStartTransfer(CourseTransferableFile file) {
+        Log.d(TAG, "Course transferring! ");
+        initializeProgressDialog();
+        progressDialog.setMessage(getString(R.string.course_transferring));
+        progressDialog.setMax((int)file.getFileSize());
+        progressDialog.setProgress(0);
+        progressDialog.show();
     }
 
     @Override
     public void onSendProgress(CourseTransferableFile file, int progress) {
         Log.d(TAG, "Progress! " + progress);
-        if (progressDialog != null) {
-            progressDialog.setProgress(progress);
-            Log.d(TAG, "progress");
+        if (progressDialog == null) {
+            initializeProgressDialog();
+            progressDialog.show();
         }
+        progressDialog.setMax((int)file.getFileSize());
+        progressDialog.setProgress(progress);
+        Log.d(TAG, "progress");
     }
 
     @Override
     public void onReceiveProgress(CourseTransferableFile file, int progress) {
         Log.d(TAG, "Progress! " + progress);
-        if (progressDialog != null) {
-            progressDialog.setProgress(progress);
-            Log.d(TAG, "progress");
+        if (progressDialog == null) {
+            initializeProgressDialog();
+            progressDialog.show();
         }
+        progressDialog.setMax((int)file.getFileSize());
+        progressDialog.setProgress(progress);
+        Log.d(TAG, "progress");
     }
 
     @Override
