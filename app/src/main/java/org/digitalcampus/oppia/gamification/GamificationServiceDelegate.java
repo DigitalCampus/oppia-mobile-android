@@ -91,4 +91,16 @@ public class GamificationServiceDelegate {
         serviceIntent = null;
 
     }
+
+    public void registerMediaPlaybackEvent(long timetaken, String mediaFileName){
+
+        if (serviceIntent == null) return;
+
+        serviceIntent.putExtra(GamificationService.SERVICE_EVENT, GamificationService.SERVICE_EVENT_MEDIAPLAYBACK);
+        serviceIntent.putExtra(GamificationService.EVENTDATA_TIMETAKEN, timetaken);
+        serviceIntent.putExtra(GamificationService.EVENTDATA_MEDIA_FILENAME, mediaFileName);
+        ctx.startService(serviceIntent);
+
+        serviceIntent = null;
+    }
 }
