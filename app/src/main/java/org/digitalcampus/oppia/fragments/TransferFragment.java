@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferServiceDelegat
 import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -69,7 +71,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
     private TextView statusTitle;
     private TextView statusSubtitle;
+    private TextView pendingFiles;
+    private TextView pendingSize;
 
+    private ProgressBar sendTransferProgress;
     private View pendingCoursesMessage;
     private Button installCoursesBtn;
 
@@ -178,6 +183,9 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         notConnectedInfo = vv.findViewById(R.id.not_connected_info);
         pendingCoursesMessage = vv.findViewById(R.id.home_messages);
         installCoursesBtn = (Button) vv.findViewById(R.id.message_action_button);
+        sendTransferProgress = (ProgressBar) vv.findViewById(R.id.send_transfer_progress);
+        pendingFiles = (TextView) vv.findViewById(R.id.transfer_pending_files);
+        pendingSize = (TextView) vv.findViewById(R.id.transfer_pending_size);
         return vv;
     }
 
@@ -248,13 +256,16 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             case BluetoothConnectionManager.STATE_CONNECTED:
                 String deviceName = BluetoothConnectionManager.getDeviceName();
                 setStatus(R.string.bluetooth_title_connected_to, deviceName);
+                sendTransferProgress.setVisibility(View.GONE);
                 break;
             case BluetoothConnectionManager.STATE_CONNECTING:
                 setStatus(R.string.bluetooth_title_connecting, null);
+                sendTransferProgress.setVisibility(View.VISIBLE);
                 break;
             case BluetoothConnectionManager.STATE_LISTEN:
             case BluetoothConnectionManager.STATE_NONE:
                 setStatus(R.string.bluetooth_title_not_connected, null);
+                sendTransferProgress.setVisibility(View.GONE);
                 if (progressDialog != null){
                     progressDialog.dismiss();
                     progressDialog = null;
@@ -419,6 +430,9 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             progressDialog.dismiss();
             progressDialog = null;
         }
+        sendTransferProgress.setVisibility(View.GONE);
+        pendingSize.setVisibility(View.GONE);
+        pendingFiles.setVisibility(View.GONE);
         Toast.makeText(getActivity(), "Error transferring file", Toast.LENGTH_SHORT).show();
     }
 
@@ -426,15 +440,35 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     @Override
     public void onStartTransfer(CourseTransferableFile file) {
         Log.d(TAG, "Course transferring! ");
-        initializeProgressDialog();
+        /*initializeProgressDialog();
         progressDialog.setMessage(getString(R.string.course_transferring));
         progressDialog.setMax((int)file.getFileSize());
         progressDialog.setProgress(0);
-        progressDialog.show();
+        //progressDialog.show();*/
     }
 
     @Override
     public void onSendProgress(CourseTransferableFile file, int progress) {
+
+        List<CourseTransferableFile> pending = BluetoothTransferService.getTasksTransferring();
+        long pendingProgress = 0;
+        for (CourseTransferableFile pendingFile : pending){
+            pendingProgress += pendingFile.getFileSize();
+        }
+        pendingProgress = Math.max(0, pendingProgress - progress);
+        if ((pending.size() == 0) || (pendingProgress == 0)){
+            sendTransferProgress.setVisibility(View.GONE);
+            pendingFiles.setVisibility(View.GONE);
+            pendingSize.setVisibility(View.GONE);
+        }
+        else{
+            sendTransferProgress.setVisibility(View.VISIBLE);
+            pendingFiles.setVisibility(View.VISIBLE);
+            pendingSize.setVisibility(View.VISIBLE);
+            pendingFiles.setText(pending.size() + " files pending");
+            pendingSize.setText(FileUtils.readableFileSize(pendingProgress));
+        }
+
         Log.d(TAG, "Progress! " + progress);
         if (progressDialog == null) {
             initializeProgressDialog();
@@ -459,6 +493,13 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
     @Override
     public void onTransferComplete(CourseTransferableFile file) {
+
+        if (BluetoothTransferService.getTasksTransferring().size() == 0){
+            sendTransferProgress.setVisibility(View.GONE);
+            pendingSize.setVisibility(View.GONE);
+            pendingFiles.setVisibility(View.GONE);
+        }
+
         Log.d(TAG, "Complete! ");
         if (progressDialog != null) {
             progressDialog.dismiss();
@@ -472,6 +513,9 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     public void onCommunicationClosed(String error) {
         Log.d(TAG, "Communication lost!");
         bluetoothManager.resetState();
+        pendingFiles.setVisibility(View.GONE);
+        pendingSize.setVisibility(View.GONE);
+        sendTransferProgress.setVisibility(View.GONE);
     }
 
     //static inner class doesn't hold an implicit reference to the outer class

@@ -74,6 +74,10 @@ public class CourseTransferableFile implements Serializable {
         this.fileSize = fileSize;
     }
 
+    public String getDisplayFileSize(){
+        return org.apache.commons.io.FileUtils.byteCountToDisplaySize(fileSize);
+    }
+
     public String getType() {
         return type;
     }

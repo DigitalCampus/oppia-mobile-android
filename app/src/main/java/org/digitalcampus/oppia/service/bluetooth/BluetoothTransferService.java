@@ -82,7 +82,7 @@ public class BluetoothTransferService extends Service {
     private Handler sendHandler;
     private BluetoothBroadcastReceiver alternateNotifier;
 
-    public static List<CourseTransferableFile> getTasksDownloading(){
+    public static List<CourseTransferableFile> getTasksTransferring(){
         if (currentInstance != null){
             synchronized (currentInstance){
                 return currentInstance.tasksDownloading;
