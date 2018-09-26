@@ -58,6 +58,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private ImageButton bluetoothBtn;
     private ImageButton discoverBtn;
     private ArrayList<CourseTransferableFile> transferableFiles = new ArrayList<>();
+    private ArrayList<CourseTransferableFile> courseFiles = new ArrayList<>();
 
     private BluetoothAdapter bluetoothAdapter = null;
     private BluetoothConnectionManager bluetoothManager = null;
@@ -186,10 +187,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
         coursesRecyclerView.setHasFixedSize(true);
         coursesRecyclerView.setLayoutManager( new LinearLayoutManager(this.getContext()));
-        coursesAdapter = new TransferCourseListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
+        coursesAdapter = new TransferCourseListAdapter(courseFiles, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
-                final CourseTransferableFile toShare = transferableFiles.get(position);
+                final CourseTransferableFile toShare = courseFiles.get(position);
                 if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
                     btServiceDelegate.sendFile(toShare);
 
@@ -347,11 +348,21 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             public void onFetchComplete(List<CourseTransferableFile> backups) {
                 transferableFiles.clear();
                 transferableFiles.addAll(backups);
-                coursesAdapter.notifyDataSetChanged();
+                filterCoursesList();
             }
         });
         task.execute();
 
+    }
+
+    private void filterCoursesList(){
+        courseFiles.clear();
+        for (CourseTransferableFile file : transferableFiles){
+            if (CourseTransferableFile.TYPE_COURSE_BACKUP.equals(file.getType())){
+                courseFiles.add(file);
+            }
+        }
+        coursesAdapter.notifyDataSetChanged();
     }
 
     private void initializeProgressDialog(){
