@@ -35,20 +35,13 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Locale;
 
 public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl {
 
@@ -124,43 +117,18 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private void saveTracker(){
     	long endTime = System.currentTimeMillis() / 1000;
 		long timeTaken = endTime - startTime;
-		// track that the video has been played (or at least clicked on)
-		Tracker t = new Tracker(this);
+
 		// digest should be that of the video not the page
         Log.d(TAG, "Attempting to save media tracker. Time: " + timeTaken);
+
 		for (Media m : this.activity.getMedia()) {
 		    Log.d(TAG, mediaFileName + "/" + m.getFilename());
 			if (m.getFilename().equals(mediaFileName)) {
 				Log.d(TAG,"saving tracker... " + m.getLength());
-				boolean completed = false;
-				if (timeTaken >= m.getLength()) {
-					completed = true;
-				}
-				JSONObject data = new JSONObject();
-				try {
-					data.put("media", "played");
-					data.put("mediafile", mediaFileName);
-					data.put("timetaken", timeTaken);
-					String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
-							.getLanguage());
-					data.put("lang", lang);
-					Log.d(TAG,data.toString());
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				MetaDataUtils mdu = new MetaDataUtils(this);
-				// add in extra meta-data
-				try {
-					data = mdu.getMetaData(data);
-				} catch (JSONException e) {
-					// Do nothing
-				}
-                GamificationEngine gamificationEngine = new GamificationEngine(this);
-				GamificationEvent event = gamificationEngine.processEventMediaPlayed(this.course, this.activity, mediaFileName, timeTaken);
-                if (event.getPoints() > 0){
-                    gamificationEngine.notifyEvent(this, this.videoSurface, event, this.course, this.activity);
-                }
-				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed, event);
+				boolean completed = (timeTaken >= m.getLength());
+                new GamificationServiceDelegate(this)
+                        .createActivityIntent(course, activity, completed, false)
+                        .registerMediaPlaybackEvent(timeTaken, mediaFileName);
 			}
 		}
 	}
