@@ -71,6 +71,9 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private View pendingCoursesMessage;
     private Button installCoursesBtn;
 
+    private final BluetoothTransferHandler uiHandler = new BluetoothTransferHandler(this);
+
+
     public TransferFragment() {
         // Required empty public constructor
     }
@@ -347,10 +350,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
     }
 
-
-    private final BluetoothTransferHandler uiHandler = new BluetoothTransferHandler(this);
-
-
     private void initializeProgressDialog(){
         ProgressDialog pd = new ProgressDialog(this.getActivity(), R.style.Oppia_AlertDialogStyle);
         progressDialog = pd;
@@ -360,6 +359,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         pd.setIndeterminate(false);
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
+    }
+
+    public void onBackPressed() {
+        bluetoothManager.disconnect(true);
     }
 
     @Override
@@ -403,7 +406,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         }
         Toast.makeText(getActivity(), "Error transferring file", Toast.LENGTH_SHORT).show();
     }
-
 
 
     @Override
@@ -488,8 +490,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
                             Toast.LENGTH_SHORT).show();
                     break;
             }
+
         }
     }
+
 
 
 }
