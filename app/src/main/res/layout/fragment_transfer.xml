@@ -171,6 +171,34 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/receiving_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_cover"
+            android:clickable="true"
+            android:visibility="visible"
+            android:focusable="true">
+
+            <ProgressBar
+                android:id="@+id/progressBar6"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="false"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/progressBar6"
+                android:layout_centerHorizontal="true"
+                android:text="@string/transfer_receiving_course"
+                android:textColor="@color/text_light"/>
+        </RelativeLayout>
+
     </FrameLayout>
 </LinearLayout>
 

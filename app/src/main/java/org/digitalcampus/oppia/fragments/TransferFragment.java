@@ -78,6 +78,8 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private View pendingCoursesMessage;
     private Button installCoursesBtn;
 
+    private View receivingCover;
+
     private final BluetoothTransferHandler uiHandler = new BluetoothTransferHandler(this);
 
 
@@ -186,6 +188,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         sendTransferProgress = (ProgressBar) vv.findViewById(R.id.send_transfer_progress);
         pendingFiles = (TextView) vv.findViewById(R.id.transfer_pending_files);
         pendingSize = (TextView) vv.findViewById(R.id.transfer_pending_size);
+        receivingCover = vv.findViewById(R.id.receiving_progress);
         return vv;
     }
 
@@ -426,10 +429,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
     @Override
     public void onFail(CourseTransferableFile file, String error) {
-        if (progressDialog != null) {
+        /*if (progressDialog != null) {
             progressDialog.dismiss();
             progressDialog = null;
-        }
+        }*/
         sendTransferProgress.setVisibility(View.GONE);
         pendingSize.setVisibility(View.GONE);
         pendingFiles.setVisibility(View.GONE);
@@ -470,25 +473,29 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         }
 
         Log.d(TAG, "Progress! " + progress);
-        if (progressDialog == null) {
+        /*if (progressDialog == null) {
             initializeProgressDialog();
             progressDialog.show();
         }
         progressDialog.setMax((int)file.getFileSize());
         progressDialog.setProgress(progress);
         Log.d(TAG, "progress");
+        */
+
+
     }
 
     @Override
     public void onReceiveProgress(CourseTransferableFile file, int progress) {
         Log.d(TAG, "Progress! " + progress);
-        if (progressDialog == null) {
+        receivingCover.setVisibility(View.VISIBLE);
+        /*if (progressDialog == null) {
             initializeProgressDialog();
             progressDialog.show();
         }
         progressDialog.setMax((int)file.getFileSize());
         progressDialog.setProgress(progress);
-        Log.d(TAG, "progress");
+        Log.d(TAG, "progress");*/
     }
 
     @Override
@@ -499,12 +506,13 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             pendingSize.setVisibility(View.GONE);
             pendingFiles.setVisibility(View.GONE);
         }
+        receivingCover.setVisibility(View.GONE);
 
         Log.d(TAG, "Complete! ");
-        if (progressDialog != null) {
+        /*if (progressDialog != null) {
             progressDialog.dismiss();
             progressDialog = null;
-        }
+        }*/
         Toast.makeText(getActivity(), "Transfer complete", Toast.LENGTH_SHORT).show();
         refreshFileList();
     }
