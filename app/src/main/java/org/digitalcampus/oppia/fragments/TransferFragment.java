@@ -55,32 +55,31 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_ENABLE_BT = 3;
 
+    private static final int BLUETOOTH_DISCOVERABLE_TIME = 300;
+
     private RecyclerView coursesRecyclerView;
     private RecyclerView.Adapter coursesAdapter;
-    private ImageButton bluetoothBtn;
-    private ImageButton discoverBtn;
     private ArrayList<CourseTransferableFile> transferableFiles = new ArrayList<>();
     private ArrayList<CourseTransferableFile> courseFiles = new ArrayList<>();
 
-    private BluetoothAdapter bluetoothAdapter = null;
-    private BluetoothConnectionManager bluetoothManager = null;
-    private BluetoothTransferServiceDelegate btServiceDelegate = null;
-    private BluetoothBroadcastReceiver receiver;
     private ProgressDialog progressDialog;
     private View notConnectedInfo;
-
     private TextView statusTitle;
     private TextView statusSubtitle;
     private TextView pendingFiles;
     private TextView pendingSize;
-
+    private ImageButton bluetoothBtn;
+    private ImageButton discoverBtn;
     private ProgressBar sendTransferProgress;
     private View pendingCoursesMessage;
     private Button installCoursesBtn;
-
     private View receivingCover;
 
     private final BluetoothTransferHandler uiHandler = new BluetoothTransferHandler(this);
+    private BluetoothAdapter bluetoothAdapter = null;
+    private BluetoothConnectionManager bluetoothManager = null;
+    private BluetoothTransferServiceDelegate btServiceDelegate = null;
+    private BluetoothBroadcastReceiver receiver;
     private boolean isReceiving = false;
 
 
@@ -96,7 +95,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Prevent activity
+        // Prevent activity from going to sleep
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -289,14 +288,11 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     }
 
 
-    /**
-     * Makes this device discoverable for 300 seconds (5 minutes).
-     */
     private void ensureDiscoverable() {
         if (bluetoothAdapter.getScanMode() !=
                 BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, BLUETOOTH_DISCOVERABLE_TIME);
             startActivity(discoverableIntent);
         }
     }
@@ -341,12 +337,11 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
 
     private void installTransferredCourses(){
-
         if (isReceiving){
             Log.d(TAG, "We are receiving more files, wait until the last one");
         }
         else{
-            Log.d(TAG, "Install transferred courses!");
+            Log.d(TAG, "Installing transferred courses!");
             installCourses();
         }
 
@@ -393,16 +388,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         coursesAdapter.notifyDataSetChanged();
     }
 
-    private void initializeProgressDialog(){
-        ProgressDialog pd = new ProgressDialog(this.getActivity(), R.style.Oppia_AlertDialogStyle);
-        progressDialog = pd;
-        pd.setMessage(getString(R.string.course_transferring));
-        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        pd.setProgress(0);
-        pd.setIndeterminate(false);
-        pd.setCancelable(false);
-        pd.setCanceledOnTouchOutside(false);
-    }
 
     public void onBackPressed() {
         bluetoothManager.disconnect(true);
@@ -477,7 +462,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             sendTransferProgress.setVisibility(View.VISIBLE);
             pendingFiles.setVisibility(View.VISIBLE);
             pendingSize.setVisibility(View.VISIBLE);
-            pendingFiles.setText(pending.size() + " files pending");
+            pendingFiles.setText(getString(R.string.bluetooth_files_pending, pending.size()));
             pendingSize.setText(FileUtils.readableFileSize(pendingProgress));
         }
 
@@ -547,10 +532,8 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
                             Toast.LENGTH_SHORT).show();
                     break;
             }
-
         }
     }
-
 
 
 }

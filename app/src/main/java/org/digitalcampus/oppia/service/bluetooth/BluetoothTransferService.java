@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
@@ -82,11 +81,9 @@ public class BluetoothTransferService extends Service {
     private Handler sendHandler;
     private BluetoothBroadcastReceiver alternateNotifier;
 
-    public static List<CourseTransferableFile> getTasksTransferring(){
+    public synchronized static List<CourseTransferableFile> getTasksTransferring(){
         if (currentInstance != null){
-            synchronized (currentInstance){
-                return currentInstance.tasksDownloading;
-            }
+            return currentInstance.tasksDownloading;
         }
         return new ArrayList<>();
     }
@@ -153,7 +150,6 @@ public class BluetoothTransferService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (intent != null && intent.hasExtra(SERVICE_ACTION)) {
-
             String action = intent.getStringExtra(SERVICE_ACTION);
             if (ACTION_RECEIVE.equals(action) && BluetoothConnectionManager.isConnected()){
                 Log.d(TAG, "Start transferring commmand received");
@@ -322,7 +318,6 @@ public class BluetoothTransferService extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 
@@ -418,8 +413,6 @@ public class BluetoothTransferService extends Service {
                     sendOrderedBroadcast(localIntent, null);
                 }
 
-
-
             } catch (IOException e) {
                 Log.e(TAG, "disconnected", e);
                 closeConnection();
@@ -428,7 +421,5 @@ public class BluetoothTransferService extends Service {
             }
         }
     }
-
-
 
 }
