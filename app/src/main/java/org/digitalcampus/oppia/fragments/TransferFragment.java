@@ -81,6 +81,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private View receivingCover;
 
     private final BluetoothTransferHandler uiHandler = new BluetoothTransferHandler(this);
+    private boolean isReceiving = false;
 
 
     public TransferFragment() {
@@ -119,7 +120,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             // Otherwise, setup the chat session
         } else if (bluetoothManager == null) {
             setupBluetoothConnection();
-            updateStatus();
+            updateStatus(true);
         }
     }
 
@@ -131,13 +132,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (bluetoothManager != null) {
-            //bluetoothManager.disconnect(false);
-        }
-    }
 
     @Override
     public void onResume() {
@@ -154,12 +148,13 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(receiver, broadcastFilter);
 
-        updateStatus();
+        updateStatus(true);
     }
 
     @Override
     public void onPause(){
         super.onPause();
+        isReceiving = false;
         getActivity().unregisterReceiver(receiver);
     }
 
@@ -217,30 +212,27 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         coursesRecyclerView.setAdapter(coursesAdapter);
         coursesRecyclerView.addItemDecoration(
                 new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
-        refreshFileList();
+        refreshFileList(false);
 
         bluetoothBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                manageBluetoothConnection();
-            }
+            public void onClick(View v) { manageBluetoothConnection(); }
         });
         discoverBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ensureDiscoverable();
-            }
+            public void onClick(View v) { ensureDiscoverable(); }
         });
         installCoursesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(getActivity());
-                imTask.setInstallerListener(TransferFragment.this);
-                imTask.execute(new Payload());
-            }
+            public void onClick(View v) { installCourses(); }
         });
     }
 
+    private void installCourses(){
+        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(getActivity());
+        imTask.setInstallerListener(this);
+        imTask.execute(new Payload());
+    }
 
     private void connectDevice(Intent data) {
         // Get the device MAC address
@@ -254,25 +246,24 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         bluetoothManager = new BluetoothConnectionManager(this.getActivity(), uiHandler);
     }
 
-    private void updateStatus(){
+    private void updateStatus(boolean updateTransferProgress){
         switch (BluetoothConnectionManager.getState()){
             case BluetoothConnectionManager.STATE_CONNECTED:
                 String deviceName = BluetoothConnectionManager.getDeviceName();
                 setStatus(R.string.bluetooth_title_connected_to, deviceName);
-                sendTransferProgress.setVisibility(View.GONE);
+                if (updateTransferProgress)
+                    sendTransferProgress.setVisibility(View.GONE);
                 break;
             case BluetoothConnectionManager.STATE_CONNECTING:
                 setStatus(R.string.bluetooth_title_connecting, null);
-                sendTransferProgress.setVisibility(View.VISIBLE);
+                if (updateTransferProgress)
+                    sendTransferProgress.setVisibility(View.VISIBLE);
                 break;
             case BluetoothConnectionManager.STATE_LISTEN:
             case BluetoothConnectionManager.STATE_NONE:
                 setStatus(R.string.bluetooth_title_not_connected, null);
-                sendTransferProgress.setVisibility(View.GONE);
-                if (progressDialog != null){
-                    progressDialog.dismiss();
-                    progressDialog = null;
-                }
+                if (updateTransferProgress)
+                    sendTransferProgress.setVisibility(View.GONE);
                 startBluetooth();
                 break;
         }
@@ -349,13 +340,37 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     }
 
 
-    private void refreshFileList(){
+    private void installTransferredCourses(){
+
+        if (isReceiving){
+            Log.d(TAG, "We are receiving more files, wait until the last one");
+        }
+        else{
+            Log.d(TAG, "Install transferred courses!");
+            installCourses();
+        }
+
+    }
+
+
+    private void refreshFileList(final boolean isAfterTransfer){
         FetchCourseTransferableFilesTask task = new FetchCourseTransferableFilesTask(this.getActivity());
         task.setListener(new FetchCourseTransferableFilesTask.FetchBackupsListener() {
             @Override
             public void coursesPendingToInstall(boolean pending) {
-                Log.d(TAG, "There are courses left to install!");
-                pendingCoursesMessage.setVisibility(pending ? View.VISIBLE : View.GONE);
+                if (isAfterTransfer){
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            installTransferredCourses();
+                        }
+                    }, 150);
+                }
+                else{
+                    Log.d(TAG, "There are courses left to install!");
+                    pendingCoursesMessage.setVisibility(pending ? View.VISIBLE : View.GONE);
+                }
             }
 
             @Override
@@ -366,7 +381,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             }
         });
         task.execute();
-
     }
 
     private void filterCoursesList(){
@@ -407,7 +421,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             progressDialog.dismiss();
             progressDialog = null;
         }
-        refreshFileList();
+        refreshFileList(false);
         Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
     }
 
@@ -429,13 +443,11 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
     @Override
     public void onFail(CourseTransferableFile file, String error) {
-        /*if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }*/
         sendTransferProgress.setVisibility(View.GONE);
         pendingSize.setVisibility(View.GONE);
         pendingFiles.setVisibility(View.GONE);
+        receivingCover.setVisibility(View.GONE);
+        isReceiving = false;
         Toast.makeText(getActivity(), "Error transferring file", Toast.LENGTH_SHORT).show();
     }
 
@@ -443,16 +455,13 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     @Override
     public void onStartTransfer(CourseTransferableFile file) {
         Log.d(TAG, "Course transferring! ");
-        /*initializeProgressDialog();
-        progressDialog.setMessage(getString(R.string.course_transferring));
-        progressDialog.setMax((int)file.getFileSize());
-        progressDialog.setProgress(0);
-        //progressDialog.show();*/
+        updateStatus(false);
     }
 
     @Override
     public void onSendProgress(CourseTransferableFile file, int progress) {
 
+        updateStatus(false);
         List<CourseTransferableFile> pending = BluetoothTransferService.getTasksTransferring();
         long pendingProgress = 0;
         for (CourseTransferableFile pendingFile : pending){
@@ -472,49 +481,30 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             pendingSize.setText(FileUtils.readableFileSize(pendingProgress));
         }
 
-        Log.d(TAG, "Progress! " + progress);
-        /*if (progressDialog == null) {
-            initializeProgressDialog();
-            progressDialog.show();
-        }
-        progressDialog.setMax((int)file.getFileSize());
-        progressDialog.setProgress(progress);
-        Log.d(TAG, "progress");
-        */
-
-
     }
 
     @Override
     public void onReceiveProgress(CourseTransferableFile file, int progress) {
-        Log.d(TAG, "Progress! " + progress);
+        updateStatus(false);
         receivingCover.setVisibility(View.VISIBLE);
-        /*if (progressDialog == null) {
-            initializeProgressDialog();
-            progressDialog.show();
-        }
-        progressDialog.setMax((int)file.getFileSize());
-        progressDialog.setProgress(progress);
-        Log.d(TAG, "progress");*/
+        isReceiving = true;
     }
 
     @Override
     public void onTransferComplete(CourseTransferableFile file) {
-
+        updateStatus(false);
         if (BluetoothTransferService.getTasksTransferring().size() == 0){
             sendTransferProgress.setVisibility(View.GONE);
             pendingSize.setVisibility(View.GONE);
             pendingFiles.setVisibility(View.GONE);
         }
         receivingCover.setVisibility(View.GONE);
+        isReceiving = false;
 
         Log.d(TAG, "Complete! ");
-        /*if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }*/
+
         Toast.makeText(getActivity(), "Transfer complete", Toast.LENGTH_SHORT).show();
-        refreshFileList();
+        refreshFileList(true);
     }
 
     @Override
@@ -544,12 +534,12 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
             switch (msg.what) {
                 case BluetoothConnectionManager.UI_MESSAGE_STATE_CHANGE:
-                    self.updateStatus();
+                    self.updateStatus(true);
                     break;
 
                 case BluetoothConnectionManager.UI_MESSAGE_DEVICE_NAME:
                     // save the connected device's name
-                    self.updateStatus();
+                    self.updateStatus(true);
                     break;
 
                 case BluetoothConnectionManager.UI_MESSAGE_TOAST:
