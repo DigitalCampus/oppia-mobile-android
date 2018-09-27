@@ -177,8 +177,8 @@
             android:layout_height="match_parent"
             android:background="@color/background_cover"
             android:clickable="true"
-            android:visibility="visible"
-            android:focusable="true">
+            android:focusable="true"
+            android:visibility="gone">
 
             <ProgressBar
                 android:id="@+id/progressBar6"
