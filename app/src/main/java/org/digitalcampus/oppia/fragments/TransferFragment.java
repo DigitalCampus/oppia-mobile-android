@@ -512,11 +512,15 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
         @Override
         public void handleMessage(Message msg) {
+
+            Log.d(TAG, "New message" + msg.what);
+
             TransferFragment self = fragment.get();
             if (self == null) return;
             FragmentActivity ctx = self.getActivity();
             if (ctx == null) return;
 
+            Log.d(TAG, "Handle message");
             switch (msg.what) {
                 case BluetoothConnectionManager.UI_MESSAGE_STATE_CHANGE:
                     self.updateStatus(true);

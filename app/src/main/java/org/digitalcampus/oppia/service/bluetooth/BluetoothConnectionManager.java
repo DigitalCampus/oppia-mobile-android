@@ -82,6 +82,7 @@ public class BluetoothConnectionManager {
         state = getState();
         newState = state;
         // Give the new state to the Handler so the UI Activity can update
+        Log.d(TAG, "Updating interface title" + newState);
         uiHandler.obtainMessage(UI_MESSAGE_STATE_CHANGE, newState, -1).sendToTarget();
     }
 

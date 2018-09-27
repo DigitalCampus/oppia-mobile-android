@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
@@ -44,6 +46,17 @@ public class SyncActivity extends AppActivity {
     public void onStart() {
         super.onStart();
 
+        // Make the Toolbar back button call the back press (to close possible bluetooth connection)
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        if (toolbar != null){
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
+
         List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
@@ -62,6 +75,8 @@ public class SyncActivity extends AppActivity {
         viewPager.setCurrentItem(currentTab);
         viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
     }
+
+
 
     @Override
     public void onBackPressed() {
