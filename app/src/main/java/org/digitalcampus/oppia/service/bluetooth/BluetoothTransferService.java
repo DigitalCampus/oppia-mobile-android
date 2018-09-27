@@ -108,7 +108,7 @@ public class BluetoothTransferService extends Service {
 
             @Override
             public void onStartTransfer(CourseTransferableFile file) {
-
+                //Do nothing
             }
 
             @Override
@@ -123,26 +123,16 @@ public class BluetoothTransferService extends Service {
 
             @Override
             public void onTransferComplete(CourseTransferableFile file) {
-
                 if (tasksDownloading.size() == 0){
-                    NotificationCompat.Builder mBuilder  = OppiaNotificationUtils.getBaseBuilder(BluetoothTransferService.this, true);
-                    mBuilder.setContentTitle(getString(R.string.app_name))
-                            .setContentText(getString(R.string.bluetooth_communication_closed))
-                            .build();
-                    OppiaNotificationUtils.sendNotification(BluetoothTransferService.this, 0, mBuilder.build());
+                    OppiaNotificationUtils.sendSimpleMessage(BluetoothTransferService.this, true, 0,
+                            getString(R.string.bluetooth_all_transfers_complete));
                 }
-
-
             }
 
             @Override
             public void onCommunicationClosed(String error) {
-                NotificationCompat.Builder mBuilder  = OppiaNotificationUtils.getBaseBuilder(BluetoothTransferService.this, true);
-                mBuilder.setContentTitle(getString(R.string.app_name))
-                        .setContentText(getString(R.string.bluetooth_communication_closed))
-                        .build();
-
-                OppiaNotificationUtils.sendNotification(BluetoothTransferService.this, 0, mBuilder.build());
+                OppiaNotificationUtils.sendSimpleMessage(BluetoothTransferService.this, true, 0,
+                        getString(R.string.bluetooth_communication_closed));
             }
         });
 
@@ -410,17 +400,25 @@ public class BluetoothTransferService extends Service {
 
                 if (totalBytes < fileSize){
                     FileUtils.deleteFile(file);
+                    localIntent = new Intent(BROADCAST_ACTION);
+                    localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_FAIL);
+                    localIntent.putExtra(SERVICE_FILE, trFile);
+                    // Broadcasts the Intent to receivers in this app.
+                    sendOrderedBroadcast(localIntent, null);
                 }
-                else if (type.equals(CourseTransferableFile.TYPE_COURSE_MEDIA)){
+                else{
+                    if (type.equals(CourseTransferableFile.TYPE_COURSE_MEDIA)){
                         File mediaDir = new File(Storage.getMediaPath(BluetoothTransferService.this));
                         FileUtils.moveFileToDir(file, mediaDir, true);
+                    }
+                    localIntent = new Intent(BROADCAST_ACTION);
+                    localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);
+                    localIntent.putExtra(SERVICE_FILE, trFile);
+                    // Broadcasts the Intent to receivers in this app.
+                    sendOrderedBroadcast(localIntent, null);
                 }
 
-                localIntent = new Intent(BROADCAST_ACTION);
-                localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);
-                localIntent.putExtra(SERVICE_FILE, trFile);
-                // Broadcasts the Intent to receivers in this app.
-                sendOrderedBroadcast(localIntent, null);
+
 
             } catch (IOException e) {
                 Log.e(TAG, "disconnected", e);
