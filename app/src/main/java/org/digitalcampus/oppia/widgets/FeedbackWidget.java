@@ -319,7 +319,7 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public void saveTracker() {
 		long timetaken = this.getSpentTime();
-		if(!isOnResultsPage){
+		if(activity == null || !isOnResultsPage){
 			return;
 		}
 

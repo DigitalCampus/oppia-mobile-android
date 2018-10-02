@@ -85,7 +85,7 @@ public class CourseInstall {
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
             aioobe.printStackTrace();
             Log.d(TAG, "Error: " + aioobe.getMessage());
-            listener.onError(ctx.getString(R.string.error_installing_course));
+            listener.onError(ctx.getString(R.string.error_installing_course, shortname));
             return;
         }
         listener.onInstallProgress(10);

@@ -94,6 +94,7 @@ public class MobileLearning extends Application {
 	public static final boolean DEFAULT_DISPLAY_PROGRESS_BAR = true;
 	
 	public static final boolean MENU_ALLOW_COURSE_DOWNLOAD = BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD;
+	public static final boolean MENU_ALLOW_LANGUAGE = BuildConfig.MENU_ALLOW_LANGUAGE;
 	public static final boolean MENU_ALLOW_SETTINGS = BuildConfig.MENU_ALLOW_SETTINGS;
 	public static final boolean MENU_ALLOW_MONITOR = BuildConfig.MENU_ALLOW_MONITOR;
 	public static final boolean MENU_ALLOW_SYNC = BuildConfig.MENU_ALLOW_SYNC;
