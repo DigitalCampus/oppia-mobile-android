@@ -32,14 +32,14 @@ public class GamificationService  extends IntentService {
     public static final String SERVICE_EVENT = "event";
     public static final String SERVICE_MESSAGE = "message";
     public static final String SERVICE_POINTS = "points";
+    public static final String SERVICE_QUIZ_SCORE = "quiz_score";
 
     public static final String SERVICE_EVENT_ACTIVITY = "activity_completed";
     public static final String SERVICE_EVENT_QUIZ = "quiz_attempt";
     public static final String SERVICE_EVENT_DOWNLOAD = "course_downloaded";
     public static final String SERVICE_EVENT_RESOURCE = "resource_completed";
     public static final String SERVICE_EVENT_FEEDBACK = "feedback";
-    public static final String SERVICE_QUIZ_SCORE = "quiz_score";
-
+    public static final String SERVICE_EVENT_MEDIAPLAYBACK = "media_playback";
 
     public static final String EVENTDATA_IS_BASELINE = "data_is_baseline";
     public static final String EVENTDATA_IS_COMPLETED = "data_is_completed";
@@ -47,6 +47,7 @@ public class GamificationService  extends IntentService {
     public static final String EVENTDATA_READALOUD = "data_readaloud";
     public static final String EVENTDATA_QUIZID = "data_quiz_id";
     public static final String EVENTDATA_INSTANCEID = "data_instance_id";
+    public static final String EVENTDATA_MEDIA_FILENAME = "data_media_filename";
 
     private SharedPreferences prefs;
     private GamificationEngine gEngine;
@@ -83,18 +84,21 @@ public class GamificationService  extends IntentService {
                 Course c = null;
                 Activity act = null;
 
+
                 if (SERVICE_EVENT_DOWNLOAD.equals(eventName)){
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     event = gEngine.processEventCourseDownloaded(c);
                     isCompleted = true;
                 }
                 else if (SERVICE_EVENT_ACTIVITY.equals(eventName)){
-                    act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
-                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
-                    event = gEngine.processEventActivityCompleted(c, act);
+                    if (isCompleted){
+                        act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
+                        c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                        event = gEngine.processEventActivityCompleted(c, act);
 
-                    eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
-                    eventData.put("readaloud", intent.getBooleanExtra(EVENTDATA_READALOUD, false));
+                        eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                        eventData.put("readaloud", intent.getBooleanExtra(EVENTDATA_READALOUD, false));
+                    }
                 }
                 else if (SERVICE_EVENT_QUIZ.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
@@ -135,11 +139,13 @@ public class GamificationService  extends IntentService {
 
                 }
                 else if (SERVICE_EVENT_RESOURCE.equals(eventName)){
-                    act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
-                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
-                    event = gEngine.processEventResourceActivity(c, act);
+                    if (isCompleted){
+                        act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
+                        c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                        event = gEngine.processEventResourceActivity(c, act);
 
-                    eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                        eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+                    }
                 }
                 else if (SERVICE_EVENT_FEEDBACK.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
@@ -149,6 +155,17 @@ public class GamificationService  extends IntentService {
                     eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
                     eventData.put("quiz_id", intent.getIntExtra(EVENTDATA_QUIZID, 0));
                     eventData.put("instance_id", intent.getStringExtra(EVENTDATA_INSTANCEID));
+                }
+                else if (SERVICE_EVENT_MEDIAPLAYBACK.equals(eventName)){
+                    act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
+                    c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
+                    String filename = intent.getStringExtra(EVENTDATA_MEDIA_FILENAME);
+                    long timetaken = intent.getLongExtra(EVENTDATA_TIMETAKEN, 0);
+
+                    event = gEngine.processEventMediaPlayed(c, act, filename, timetaken);
+                    eventData.put("timetaken", timetaken);
+                    eventData.put("mediafile", filename);
+                    eventData.put("media", "played");
                 }
 
                 if (event == null)
