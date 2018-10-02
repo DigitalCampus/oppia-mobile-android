@@ -29,7 +29,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.splunk.mint.Mint;
 
@@ -50,7 +52,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Locale;
 
-public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl {
+public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl, MediaPlayer.OnCompletionListener {
 
 	public static final String TAG = VideoPlayerActivity.class.getSimpleName();
 	public static final String MEDIA_TAG = "mediaFileName";
@@ -63,6 +65,11 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private long startTime = System.currentTimeMillis()/1000;
     private Activity activity;
     private Course course;
+
+    private View endContainer;
+    private ImageButton replayBtn;
+    private ImageButton continueBtn;
+
     protected SharedPreferences prefs;
 
     @Override
@@ -71,6 +78,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         setContentView(R.layout.activity_video_player);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         player = new MediaPlayer();
+
         controller = new VideoControllerView(this);
         
         Bundle bundle = this.getIntent().getExtras();
@@ -100,6 +108,23 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     protected void onStart(){
         super.onStart();
         videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
+        endContainer = findViewById(R.id.end_container);
+        replayBtn = (ImageButton) findViewById(R.id.replay_button);
+        continueBtn = (ImageButton) findViewById(R.id.continue_button);
+
+        replayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start();
+            }
+        });
+        continueBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VideoPlayerActivity.this.finish();
+            }
+        });
+
         videoSurface.setKeepScreenOn(true); //prevents player going into sleep mode
         SurfaceHolder videoHolder = videoSurface.getHolder();
         videoHolder.addCallback(this);
@@ -170,6 +195,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
         player.start();
+        player.setOnCompletionListener(this);
     }
     // End MediaPlayer.OnPreparedListener
 
@@ -212,6 +238,8 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
     public void start() {
         player.start();
+        endContainer.setVisibility(View.GONE);
+        player.setOnCompletionListener(this);
     }
 
     public boolean isFullScreen() {
@@ -257,6 +285,12 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
     public void surfaceDestroyed(SurfaceHolder holder) {
 
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        Log.d(TAG, "Video completed!");
+        endContainer.setVisibility(View.VISIBLE);
     }
     // End SurfaceHolder.Callback
 
