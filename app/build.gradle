@@ -79,6 +79,8 @@ android {
             buildConfigField "boolean", "SESSION_EXPIRATION_ENABLED", runtimeProps['SESSION_EXPIRATION_ENABLED']
             buildConfigField "int", "SESSION_EXPIRATION_TIMEOUT", runtimeProps['SESSION_EXPIRATION_TIMEOUT']
             buildConfigField "int", "DOWNLOAD_COURSES_DISPLAY", runtimeProps['DOWNLOAD_COURSES_DISPLAY']
+            buildConfigField "String", "GAMIFICATION_MEDIA_CRITERIA", "\"" + runtimeProps['GAMIFICATION_MEDIA_CRITERIA'] + "\""
+            buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
 
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
@@ -86,6 +88,7 @@ android {
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
             resValue "string", "oppiaServerHost", runtimeProps['OPPIA_SERVER_HOST']
             resValue "string", "prefAdminPasswordDefault", runtimeProps['ADMIN_PROTECT_INITIAL_PASSWORD']
+
         }
 
         debug {

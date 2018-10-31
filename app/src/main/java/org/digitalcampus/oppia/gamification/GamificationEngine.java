@@ -71,7 +71,15 @@ public class GamificationEngine {
         // else use the the app level defaults
         Gamification defaultGamification = new Gamification();
         return defaultGamification.getEvent(event);
+    }
 
+    private String getMediaCompletionCriteriaFromHierarchy(Course course, Activity activity){
+
+        return Gamification.DEFAULT_MEDIA_CRITERIA;
+    }
+
+    private int getMediaCompletionThresholdFromHierarchy(Course course, Activity activity) {
+        return Gamification.DEFAULT_MEDIA_THRESHOLD;
     }
 
     private GamificationEvent getEventFromCourseHierarchy(Course course, String event) throws GamificationEventNotFound{
@@ -152,21 +160,47 @@ public class GamificationEngine {
 
     public GamificationEvent processEventMediaPlayed(Course course, Activity activity, String mediaFileName, long timeTaken){
         int totalPoints = 0;
+        boolean completed = false;
         DbHelper db = DbHelper.getInstance(this.ctx);
 
         for (Media m : activity.getMedia()) {
             if (m.getFilename().equals(mediaFileName)) {
                 try {
-                    // add points if first attempt today
-                    if (db.isActivityFirstAttemptToday(m.getDigest())){
-                            totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
-                    }
-                    // add points for length of time the media has been playing
-                    totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor(timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
+                    String criteria = getMediaCompletionCriteriaFromHierarchy(course, activity);
+                    Log.d(TAG, "Video criteria: " + criteria);
+                    if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD)){
 
-                    // make sure can't exceed max points
-                    totalPoints = Math.min(totalPoints, getEventFromHierarchy(course,activity,
-                            Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints());
+                        int threshold = getMediaCompletionThresholdFromHierarchy(course, activity);
+                        Log.d(TAG, "Threshold: " + threshold);
+                        if ((timeTaken * 100 / m.getLength()) > threshold){
+                            completed = true;
+                            Log.d(TAG, "Threshold passed!");
+                            if (!db.isMediaPlayed(activity.getDigest())){
+                                Log.d(TAG, "First view --> giving points");
+                                totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
+                            }
+                            else{
+                                Log.d(TAG, "Not first view --> not giving points");
+                            }
+
+                        }
+
+                    }
+                    else{
+                        //Using intervals media criteria
+                        // add points if first attempt today
+                        if (db.isActivityFirstAttemptToday(activity.getDigest())){
+                            totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
+                        }
+                        // add points for length of time the media has been playing
+                        totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor(timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
+
+                        // make sure can't exceed max points
+                        totalPoints = Math.min(totalPoints, getEventFromHierarchy(course,activity,
+                                Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints());
+                    }
+
+
 
                 } catch (GamificationEventNotFound genf) {
                     Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
@@ -174,8 +208,10 @@ public class GamificationEngine {
                 }
             }
         }
-        return new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints);
+        return new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints, completed);
     }
+
+
 
     // TODO GAMIFICATION - allow adding specific points for particular course
     // needs to be able to access the course object at the point the tracker is triggered
