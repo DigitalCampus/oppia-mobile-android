@@ -167,20 +167,29 @@ public class GamificationEngine {
             if (m.getFilename().equals(mediaFileName)) {
                 try {
                     String criteria = getMediaCompletionCriteriaFromHierarchy(course, activity);
+                    Log.d(TAG, "Video criteria: " + criteria);
                     if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD)){
 
                         int threshold = getMediaCompletionThresholdFromHierarchy(course, activity);
+                        Log.d(TAG, "Threshold: " + threshold);
                         if ((timeTaken * 100 / m.getLength()) > threshold){
                             completed = true;
-                            //if (db.isMediaFirstPlay(m.getDigest())){
-                            totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
+                            Log.d(TAG, "Threshold passed!");
+                            if (!db.isMediaPlayed(activity.getDigest())){
+                                Log.d(TAG, "First view --> giving points");
+                                totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
+                            }
+                            else{
+                                Log.d(TAG, "Not first view --> not giving points");
+                            }
+
                         }
 
                     }
                     else{
                         //Using intervals media criteria
                         // add points if first attempt today
-                        if (db.isActivityFirstAttemptToday(m.getDigest())){
+                        if (db.isActivityFirstAttemptToday(activity.getDigest())){
                             totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
                         }
                         // add points for length of time the media has been playing

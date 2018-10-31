@@ -1555,6 +1555,18 @@ public class DbHelper extends SQLiteOpenHelper {
 		return (count == 0);
 	}
 
+	public boolean isMediaPlayed(String digest){
+		//get current user id
+		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+
+		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_USERID + "=? AND " + TRACKER_LOG_C_COMPLETED + "=1";
+		String[] args = new String[] { digest, String.valueOf(userId) };
+		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return (count > 0);
+	}
+
 	public void deleteTrackers(long courseId, long userId){
 		// delete any trackers
 		String s = TRACKER_LOG_C_COURSEID + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
