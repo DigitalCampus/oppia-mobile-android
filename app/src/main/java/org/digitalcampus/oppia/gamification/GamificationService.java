@@ -172,7 +172,7 @@ public class GamificationService  extends IntentService {
                     return;
 
                 Tracker t = new Tracker(this);
-                t.saveTracker(c.getCourseId(), act!=null ? act.getDigest() : "", eventData, isCompleted || isBaseline, event);
+                t.saveTracker(c.getCourseId(), act!=null ? act.getDigest() : "", eventData, event.isCompleted() || isCompleted || isBaseline, event);
 
                 if (event.getPoints() > 0){
                     broadcastEvent(event, act, c);

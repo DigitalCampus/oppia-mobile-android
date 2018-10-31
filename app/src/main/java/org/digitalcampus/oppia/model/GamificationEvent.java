@@ -25,12 +25,20 @@ public class GamificationEvent implements Serializable{
 
     private String event;
     private int points;
+    private boolean completed;
 
     public GamificationEvent(){}
 
     public GamificationEvent(String event, int points){
         this.event = event;
         this.points = points;
+        this.completed = false;
+    }
+
+    public GamificationEvent(String event, int points, boolean completed){
+        this.event = event;
+        this.points = points;
+        this.completed = completed;
     }
 
     public String getEvent() {
@@ -49,4 +57,11 @@ public class GamificationEvent implements Serializable{
         this.points = points;
     }
 
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 }
