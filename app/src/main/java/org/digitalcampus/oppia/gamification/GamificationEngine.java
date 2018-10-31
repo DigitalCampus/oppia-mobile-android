@@ -18,17 +18,11 @@
 package org.digitalcampus.oppia.gamification;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.quiz.Quiz;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;
@@ -113,34 +107,29 @@ public class GamificationEngine {
         if(db.isQuizFirstAttempt(activity.getDigest())){
             try {
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_QUIZ_FIRST_ATTEMPT).getPoints();
-            } catch (GamificationEventNotFound genf){
-                Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_QUIZ_FIRST_ATTEMPT, genf);
-                Mint.logException(genf);
-            }
 
-            // on first attempt add the percent points
-            if (scorePercent > 0) {
-                totalPoints += Math.round(scorePercent);
-            }
-
-            // add bonus
-            try {
+                if (scorePercent > 0) {
+                    totalPoints += Math.round(scorePercent);
+                }
+                // on first attempt add the percent points
                 if (Math.round(scorePercent) >= this.getEventFromHierarchy(course,activity,Gamification.EVENT_NAME_QUIZ_FIRST_THRESHOLD).getPoints()){
                     totalPoints += this.getEventFromHierarchy(course,activity,Gamification.EVENT_NAME_QUIZ_FIRST_BONUS).getPoints();
                 }
+
             } catch (GamificationEventNotFound genf){
-                Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_QUIZ_FIRST_THRESHOLD + " or " + Gamification.EVENT_NAME_QUIZ_FIRST_BONUS, genf);
+                Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
                 Mint.logException(genf);
             }
+
         } else if (db.isQuizFirstAttemptToday(activity.getDigest())){
             try {
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_QUIZ_ATTEMPT).getPoints();
             } catch (GamificationEventNotFound genf){
-                Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_QUIZ_ATTEMPT, genf);
+                Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
                 Mint.logException(genf);
             }
         } else {
-            Log.d(this.TAG,"Not first attempt, nor first attempt today");
+            Log.d(TAG,"Not first attempt, nor first attempt today");
         }
 
         return new GamificationEvent(Gamification.EVENT_NAME_QUIZ_ATTEMPT, totalPoints);
@@ -154,7 +143,7 @@ public class GamificationEngine {
             try{
                 totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED).getPoints();
             } catch (GamificationEventNotFound genf) {
-                Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_ACTIVITY_COMPLETED, genf);
+                Log.d(TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_ACTIVITY_COMPLETED, genf);
                 Mint.logException(genf);
             }
         }
@@ -167,30 +156,20 @@ public class GamificationEngine {
 
         for (Media m : activity.getMedia()) {
             if (m.getFilename().equals(mediaFileName)) {
-                // add points if first attempt today
-                if (db.isActivityFirstAttemptToday(m.getDigest())){
-                    try {
-                        totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
-                    } catch (GamificationEventNotFound genf) {
-                        Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_MEDIA_STARTED, genf);
-                        Mint.logException(genf);
-                    }
-                }
-                // add points for length of time the media has been playing
                 try {
+                    // add points if first attempt today
+                    if (db.isActivityFirstAttemptToday(m.getDigest())){
+                            totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
+                    }
+                    // add points for length of time the media has been playing
                     totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor(timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
-                } catch (GamificationEventNotFound genf) {
-                    Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL, genf);
-                    Mint.logException(genf);
-                }
 
-                // make sure can't exceed max points
-                try {
-                    if (totalPoints >= this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints()){
-                        totalPoints = this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints();
-                    }
+                    // make sure can't exceed max points
+                    totalPoints = Math.min(totalPoints, getEventFromHierarchy(course,activity,
+                            Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints());
+
                 } catch (GamificationEventNotFound genf) {
-                    Log.d(this.TAG,LOG_EVENT_NOT_FOUND + Gamification.EVENT_NAME_MEDIA_MAX_POINTS, genf);
+                    Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
                     Mint.logException(genf);
                 }
             }
@@ -206,8 +185,6 @@ public class GamificationEngine {
 
     public GamificationEvent processEventCourseDownloaded(Course course){
         int totalPoints = 0;
-        DbHelper db = DbHelper.getInstance(this.ctx);
-
         try{
             totalPoints = this.getEventFromCourseHierarchy(course, Gamification.EVENT_NAME_COURSE_DOWNLOADED).getPoints();
         } catch (GamificationEventNotFound genf) {
@@ -262,15 +239,5 @@ public class GamificationEngine {
             return ctx.getString(resId,
                 (c == null) ? "" : c.getMultiLangInfo().getTitle(prefLang));
         }
-    }
-
-
-    public void notifyEvent(Context ctx, View view, GamificationEvent event, Course c, Activity a) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
-        if(notifEnabled) {
-            Snackbar.make(view, getEventMessage(event, c, a), Snackbar.LENGTH_SHORT).show();
-        }
-
     }
 }

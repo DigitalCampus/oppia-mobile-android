@@ -289,6 +289,6 @@ public class Course implements Serializable {
                 return ge;
             }
         }
-        throw new GamificationEventNotFound();
+        throw new GamificationEventNotFound(event);
     }
 }

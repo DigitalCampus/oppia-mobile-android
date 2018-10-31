@@ -1,5 +1,7 @@
 package org.digitalcampus.oppia.model;
 
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,6 +74,10 @@ public class CourseTransferableFile implements Serializable {
 
     public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public String getDisplayFileSize(){
+        return FileUtils.readableFileSize(fileSize);
     }
 
     public String getType() {

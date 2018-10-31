@@ -86,6 +86,6 @@ public class Gamification {
                 return ge;
             }
         }
-        throw new GamificationEventNotFound();
+        throw new GamificationEventNotFound(event);
     }
 }
