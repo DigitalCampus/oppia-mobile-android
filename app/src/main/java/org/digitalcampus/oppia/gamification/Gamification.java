@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.gamification;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.GamificationEvent;
 
@@ -40,6 +41,7 @@ public class Gamification {
     public static final String EVENT_NAME_COURSE_DOWNLOADED = "course_downloaded";
     public static final String EVENT_NAME_SEARCH_PERFORMED = "search_performed";
     public static final String EVENT_NAME_MEDIA_MISSING = "media_missing";
+    public static final String EVENT_NAME_MEDIA_THRESHOLD_PASSED = "media_threshold_passed";
 
     // default points for gamification
     public static final GamificationEvent GAMIFICATION_REGISTER = new GamificationEvent(EVENT_NAME_REGISTER,100);
@@ -56,6 +58,12 @@ public class Gamification {
     public static final GamificationEvent GAMIFICATION_COURSE_DOWNLOADED =  new GamificationEvent(EVENT_NAME_COURSE_DOWNLOADED,50);
     public static final GamificationEvent GAMIFICATION_SEARCH_PERFORMED =  new GamificationEvent(EVENT_NAME_SEARCH_PERFORMED,0);
     public static final GamificationEvent GAMIFICATION_MEDIA_MISSING =  new GamificationEvent(EVENT_NAME_MEDIA_MISSING,0);
+    public static final GamificationEvent GAMIFICATION_MEDIA_THRESHOLD_PASSED =  new GamificationEvent(EVENT_NAME_MEDIA_THRESHOLD_PASSED,150);
+
+    public static final String MEDIA_CRITERIA_INTERVALS = "intervals";
+    public static final String MEDIA_CRITERIA_THRESHOLD = "threshold";
+    public static final String DEFAULT_MEDIA_CRITERIA = BuildConfig.GAMIFICATION_MEDIA_CRITERIA;
+    public static final int DEFAULT_MEDIA_THRESHOLD = BuildConfig.GAMIFICATION_DEFAULT_MEDIA_THRESHOLD;
 
     //fallback option
     public static final String EVENT_NAME_UNDEFINED = "undefined";
@@ -78,6 +86,7 @@ public class Gamification {
         events.add(GAMIFICATION_COURSE_DOWNLOADED);
         events.add(GAMIFICATION_SEARCH_PERFORMED);
         events.add(GAMIFICATION_MEDIA_MISSING);
+        events.add(GAMIFICATION_MEDIA_THRESHOLD_PASSED);
     }
 
     public GamificationEvent getEvent(String event) throws GamificationEventNotFound {
@@ -86,6 +95,6 @@ public class Gamification {
                 return ge;
             }
         }
-        throw new GamificationEventNotFound();
+        throw new GamificationEventNotFound(event);
     }
 }

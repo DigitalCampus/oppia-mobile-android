@@ -239,7 +239,7 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public void saveTracker(){
 		long timetaken = this.getSpentTime();
-		if (timetaken < MobileLearning.RESOURCE_READ_TIME) {
+		if (activity == null || timetaken < MobileLearning.RESOURCE_READ_TIME) {
 			return;
 		}
 

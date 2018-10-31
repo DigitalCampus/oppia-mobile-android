@@ -297,7 +297,7 @@
     <string name="notification.remote_admin.title">&appName;: Administración Remota </string>
     <string name="permissions.allow_btn_text">Conceder permisos</string>
     <string name="permissions.not_askable.info">Estás viendo este mensaje porque se han solicitado permisos previamente y los denegaste marcando la casilla "No preguntar de nuevo"</string>
-    <string name="permissions.not_askable.message"><![CDATA[La app no tiene los permisos necesarios para funcionar. Por favor, ve a Configuración \> Aplicaciones \> &appname; \> Permisos para conceder estos permisos]]></string>
+    <string name="permissions.not_askable.message">La app no tiene los permisos necesarios para funcionar. Por favor, ve a Configuración \> Aplicaciones \> &appName; \> Permisos para conceder estos permisos</string>
     <string name="permissions.storage.description">&appName; necesita acceso a la tarjeta SD para poder guardar los contenidos multimedia descargados para los cursos</string>
     <string name="permissions.storage.title">leer y modificar contenidos de la tarjeta SD</string>
     <string name="permissions.title">&appName; necesita los siguientes permisos para funcionar correctamente:</string>

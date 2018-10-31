@@ -974,39 +974,27 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = COURSE_C_SHORTNAME + "=?";
 		String[] args = new String[] { shortname };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean isInstalled = (c.getCount() > 0);
+		c.close();
+		return isInstalled;
 	}
 	
 	public boolean toUpdate(String shortname, Double version){
 		String s = COURSE_C_SHORTNAME + "=? AND "+ COURSE_C_VERSIONID + "< ?";
 		String[] args = new String[] { shortname, String.format("%.0f", version) };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean toUpdate = (c.getCount() > 0);
+		c.close();
+		return  toUpdate;
 	}
 	
 	public boolean toUpdateSchedule(String shortname, Double scheduleVersion){
 		String s = COURSE_C_SHORTNAME + "=? AND "+ COURSE_C_SCHEDULE + "< ?";
 		String[] args = new String[] { shortname, String.format("%.0f", scheduleVersion) };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean toUpdate = (c.getCount() > 0);
+		c.close();
+		return  toUpdate;
 	}
 	
 	public long getUserId(String username){
@@ -1524,11 +1512,8 @@ public class DbHelper extends SQLiteOpenHelper {
         int count = c.getCount();
         Log.d(this.TAG, "isQuizFirstAttempt returned " + count + " rows");
         c.close();
-        if (count > 0){
-            return false;
-        } else {
-            return true;
-        }
+		return (count == 0);
+
     }
 
     public boolean isQuizFirstAttemptToday(String digest){
@@ -1548,11 +1533,7 @@ public class DbHelper extends SQLiteOpenHelper {
         int count = c.getCount();
 		Log.d(this.TAG, "isQuizFirstAttemptToday returned " + count + " rows");
         c.close();
-        if (count > 0){
-            return false;
-        } else {
-            return true;
-        }
+        return (count == 0);
     }
 
 	public boolean isActivityFirstAttemptToday(String digest){
@@ -1571,11 +1552,19 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		int count = c.getCount();
 		c.close();
-		if (count > 0){
-			return false;
-		} else {
-			return true;
-		}
+		return (count == 0);
+	}
+
+	public boolean isMediaPlayed(String digest){
+		//get current user id
+		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+
+		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_USERID + "=? AND " + TRACKER_LOG_C_COMPLETED + "=1";
+		String[] args = new String[] { digest, String.valueOf(userId) };
+		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return (count > 0);
 	}
 
 	public void deleteTrackers(long courseId, long userId){
@@ -1591,13 +1580,9 @@ public class DbHelper extends SQLiteOpenHelper {
 					TRACKER_LOG_C_COURSEID + "=?";
 		String[] args = new String[] { digest, String.valueOf(userId), String.valueOf(courseId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean isAttempted = (c.getCount() > 0);
+		c.close();
+		return isAttempted;
 	}
 	
 	public boolean activityCompleted(int courseId, String digest, long userId){
@@ -1607,13 +1592,9 @@ public class DbHelper extends SQLiteOpenHelper {
 					TRACKER_LOG_C_COMPLETED + "=1";
 		String[] args = new String[] { digest, String.valueOf(courseId), String.valueOf(userId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean isCompleted = (c.getCount() > 0);
+		c.close();
+		return isCompleted;
 	}
 
     public void getCourseQuizResults(List<QuizStats> stats, int courseId, long userId){
@@ -2051,6 +2032,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		else{
 			db.insertOrThrow(LEADERBOARD_TABLE, null, values);
 			updated = true;
+			c.close();
 		}
 
 		return updated;

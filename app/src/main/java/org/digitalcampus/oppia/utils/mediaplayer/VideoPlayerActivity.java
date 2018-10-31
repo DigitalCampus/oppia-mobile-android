@@ -29,28 +29,23 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Locale;
 
-public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl {
+public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, VideoControllerView.MediaPlayerControl, MediaPlayer.OnCompletionListener {
 
 	public static final String TAG = VideoPlayerActivity.class.getSimpleName();
 	public static final String MEDIA_TAG = "mediaFileName";
@@ -63,6 +58,11 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private long startTime = System.currentTimeMillis()/1000;
     private Activity activity;
     private Course course;
+
+    private View endContainer;
+    private ImageButton replayBtn;
+    private ImageButton continueBtn;
+
     protected SharedPreferences prefs;
 
     @Override
@@ -71,6 +71,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         setContentView(R.layout.activity_video_player);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         player = new MediaPlayer();
+
         controller = new VideoControllerView(this);
         
         Bundle bundle = this.getIntent().getExtras();
@@ -100,6 +101,23 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     protected void onStart(){
         super.onStart();
         videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
+        endContainer = findViewById(R.id.end_container);
+        replayBtn = (ImageButton) findViewById(R.id.replay_button);
+        continueBtn = (ImageButton) findViewById(R.id.continue_button);
+
+        replayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start();
+            }
+        });
+        continueBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VideoPlayerActivity.this.finish();
+            }
+        });
+
         videoSurface.setKeepScreenOn(true); //prevents player going into sleep mode
         SurfaceHolder videoHolder = videoSurface.getHolder();
         videoHolder.addCallback(this);
@@ -124,43 +142,18 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private void saveTracker(){
     	long endTime = System.currentTimeMillis() / 1000;
 		long timeTaken = endTime - startTime;
-		// track that the video has been played (or at least clicked on)
-		Tracker t = new Tracker(this);
+
 		// digest should be that of the video not the page
         Log.d(TAG, "Attempting to save media tracker. Time: " + timeTaken);
+
 		for (Media m : this.activity.getMedia()) {
 		    Log.d(TAG, mediaFileName + "/" + m.getFilename());
 			if (m.getFilename().equals(mediaFileName)) {
 				Log.d(TAG,"saving tracker... " + m.getLength());
-				boolean completed = false;
-				if (timeTaken >= m.getLength()) {
-					completed = true;
-				}
-				JSONObject data = new JSONObject();
-				try {
-					data.put("media", "played");
-					data.put("mediafile", mediaFileName);
-					data.put("timetaken", timeTaken);
-					String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
-							.getLanguage());
-					data.put("lang", lang);
-					Log.d(TAG,data.toString());
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				MetaDataUtils mdu = new MetaDataUtils(this);
-				// add in extra meta-data
-				try {
-					data = mdu.getMetaData(data);
-				} catch (JSONException e) {
-					// Do nothing
-				}
-                GamificationEngine gamificationEngine = new GamificationEngine(this);
-				GamificationEvent event = gamificationEngine.processEventMediaPlayed(this.course, this.activity, mediaFileName, timeTaken);
-                if (event.getPoints() > 0){
-                    gamificationEngine.notifyEvent(this, this.videoSurface, event, this.course, this.activity);
-                }
-				t.saveTracker(this.course.getCourseId(), m.getDigest(), data, completed, event);
+				boolean completed = (timeTaken >= m.getLength());
+                new GamificationServiceDelegate(this)
+                        .createActivityIntent(course, activity, completed, false)
+                        .registerMediaPlaybackEvent(timeTaken, mediaFileName);
 			}
 		}
 	}
@@ -170,6 +163,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
         player.start();
+        player.setOnCompletionListener(this);
     }
     // End MediaPlayer.OnPreparedListener
 
@@ -212,6 +206,8 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
     public void start() {
         player.start();
+        endContainer.setVisibility(View.GONE);
+        player.setOnCompletionListener(this);
     }
 
     public boolean isFullScreen() {
@@ -257,6 +253,12 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
     public void surfaceDestroyed(SurfaceHolder holder) {
 
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        Log.d(TAG, "Video completed!");
+        endContainer.setVisibility(View.VISIBLE);
     }
     // End SurfaceHolder.Callback
 
