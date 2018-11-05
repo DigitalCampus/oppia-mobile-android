@@ -407,7 +407,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             progressDialog = null;
         }
         refreshFileList(false);
-        Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -488,7 +488,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
         Log.d(TAG, "Complete! ");
 
-        Toast.makeText(getActivity(), "Transfer complete", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Transfer complete", Toast.LENGTH_SHORT).show();
         refreshFileList(true);
     }
 
