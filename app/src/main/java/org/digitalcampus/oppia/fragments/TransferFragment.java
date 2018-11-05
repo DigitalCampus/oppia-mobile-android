@@ -385,6 +385,17 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
                 courseFiles.add(file);
             }
         }
+        for (CourseTransferableFile course : courseFiles){
+            long relatedSize = 0;
+            for (CourseTransferableFile file : transferableFiles){
+                if (course.getRelatedMedia().contains(file.getFilename())){
+                    relatedSize += file.getFileSize();
+                }
+            }
+            course.setRelatedFilesize(relatedSize);
+        }
+
+
         coursesAdapter.notifyDataSetChanged();
     }
 
