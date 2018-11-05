@@ -388,5 +388,7 @@
     <string name="prefDownloadEnabled">Enable course downloading from homepage</string>
     <string name="prefChangeLanguageEnabled">Enable changing language from homepage</string>
     <string name="transfer_receiving_course">Receiving course file...</string>
+    <string name="permissions.location.title">access location</string>
+    <string name="permissions.location.description">In new Android devices, this permission is needed to be able to pair with other devices using Bluetooth</string>
 </resources>
 

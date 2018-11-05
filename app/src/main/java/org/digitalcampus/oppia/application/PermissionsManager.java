@@ -43,7 +43,9 @@ public class PermissionsManager {
     private static final List<String> PERMISSIONS_REQUIRED = Arrays.asList(
         //Remember to update this when the Manifest permisssions change!
         Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
     );
 
     private static boolean isFirstTimeAsked(SharedPreferences prefs, String permission){
