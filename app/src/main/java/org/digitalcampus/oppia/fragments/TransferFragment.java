@@ -197,13 +197,12 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             public void onClick(int position) {
                 final CourseTransferableFile toShare = courseFiles.get(position);
                 if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
-                    btServiceDelegate.sendFile(toShare);
-
                     for (CourseTransferableFile file : transferableFiles){
                         if (toShare.getRelatedMedia().contains(file.getFilename())){
                             btServiceDelegate.sendFile(file);
                         }
                     }
+                    btServiceDelegate.sendFile(toShare);
                 }
             }
         });
