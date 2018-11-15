@@ -1132,14 +1132,14 @@ public class DbHelper extends SQLiteOpenHelper {
 
 				case Gamification.EVENT_NAME_MEDIA_PLAYED:
 					String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
+                    activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 					try {
 						JSONObject jsonObj = new JSONObject(data);
 						String mediaFileName = jsonObj.getString("mediafile");
 						course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 						if (course != null) {
 							description = this.ctx.getString(R.string.points_event_media_played,
-									mediaFileName,
-									course.getMultiLangInfo().getTitle(prefLang));
+									mediaFileName);
 						}
 					} catch (JSONException jsone) {
 						Log.d(TAG, jsone.getMessage(), jsone);
