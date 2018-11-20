@@ -32,6 +32,7 @@ import android.widget.LinearLayout.LayoutParams;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
@@ -49,6 +50,10 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 	private EditText passwordField;
 	private ProgressDialog pDialog;
     private Context appContext;
+
+    private Button registerBtn;
+    private Button loginBtn;
+    private Button resetPasswordBtn;
 	
 	public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -56,26 +61,43 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_login, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
-		return vv;
+		View v = inflater.inflate(R.layout.fragment_login, container, false);
+
+		usernameField = (EditText) v.findViewById(R.id.login_username_field);
+		passwordField = (EditText) v.findViewById(R.id.login_password_field);
+		loginBtn  = (Button) v.findViewById(R.id.login_btn);
+		registerBtn = (Button) v.findViewById(R.id.register_btn);
+		resetPasswordBtn = (Button) v.findViewById(R.id.forgot_btn);
+		return v;
 	}
 
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		usernameField = (EditText) super.getActivity().findViewById(R.id.login_username_field);
-        passwordField = (EditText) super.getActivity().findViewById(R.id.login_password_field);
-        Button loginButton = (Button) super.getActivity().findViewById(R.id.login_btn);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-			
+		appContext = super.getActivity().getApplicationContext();
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				onLoginClick();
 			}
 		});
-        appContext = super.getActivity().getApplicationContext();
+
+		resetPasswordBtn.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				WelcomeActivity wa = (WelcomeActivity) LoginFragment.super.getActivity();
+				wa.switchTab(WelcomeActivity.TAB_PASSWORD);
+			}
+		});
+		registerBtn.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				WelcomeActivity wa = (WelcomeActivity) LoginFragment.super.getActivity();
+				wa.switchTab(WelcomeActivity.TAB_REGISTER);
+			}
+		});
+
 	}
 
     @Override

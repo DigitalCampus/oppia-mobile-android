@@ -388,5 +388,8 @@
     <string name="prefDownloadEnabled">Enable course downloading from homepage</string>
     <string name="prefChangeLanguageEnabled">Enable changing language from homepage</string>
     <string name="transfer_receiving_course">Receiving course file...</string>
+    <string name="sign_in_title">Sign in</string>
+    <string name="register_account_already">Already have an account?</string>
+    <string name="login_dont_have_account">Don\'t have an account yet?</string>
 </resources>
 

@@ -130,5 +130,15 @@ public class WelcomeActivity extends AppActivity {
 		viewPager.setCurrentItem(tab);
 		this.currentTab = tab;
 	}
+
+	@Override
+	public void onBackPressed() {
+		if (currentTab == TAB_WELCOME){
+			super.onBackPressed();
+		}
+		else{
+			switchTab(TAB_WELCOME);
+		}
+	}
 }
 

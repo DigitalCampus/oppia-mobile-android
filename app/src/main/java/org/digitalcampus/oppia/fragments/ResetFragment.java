@@ -17,7 +17,14 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import java.util.ArrayList;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.SubmitListener;
@@ -28,22 +35,14 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout.LayoutParams;
+import java.util.ArrayList;
 
 public class ResetFragment extends AppFragment implements SubmitListener{
 
 	public static final String TAG = RegisterFragment.class.getSimpleName();
 	private EditText usernameField;
     private ProgressDialog pDialog;
+    private Button resetButton;
 	
 	public static ResetFragment newInstance() {
         return new ResetFragment();
@@ -55,19 +54,16 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_reset, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
-		return vv;
+		View v = inflater.inflate(R.layout.fragment_reset, container);
+
+		usernameField = (EditText) v.findViewById(R.id.reset_username_field);
+		resetButton = (Button) v.findViewById(R.id.reset_btn);
+		return v;
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		usernameField = (EditText) super.getActivity().findViewById(R.id.reset_username_field);
-
-        Button resetButton = (Button) super.getActivity().findViewById(R.id.reset_btn);
 		resetButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {

@@ -36,20 +36,25 @@ public class WelcomeFragment extends Fragment {
         return new WelcomeFragment();
 	}
 
+	private Button loginButton;
+    private Button registerButton;
+
 	public WelcomeFragment() {
 
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_welcome, container, false);
+		View v = inflater.inflate(R.layout.fragment_welcome, container, false);
+        loginButton = (Button) v.findViewById(R.id.welcome_login);
+        registerButton = (Button) v.findViewById(R.id.welcome_register);
+
+		return v;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-        Button loginButton = (Button) super.getActivity().findViewById(R.id.welcome_login);
-        Button registerButton = (Button) super.getActivity().findViewById(R.id.welcome_register);
 
 		loginButton.setOnClickListener(new View.OnClickListener() {
 

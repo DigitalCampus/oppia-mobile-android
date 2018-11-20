@@ -77,27 +77,24 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_register, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
+		View vv = inflater.inflate(R.layout.fragment_register, container, false);
+		usernameField = (EditText) vv.findViewById(R.id.register_form_username_field);
+		emailField = (EditText) vv.findViewById(R.id.register_form_email_field);
+		passwordField = (EditText) vv.findViewById(R.id.register_form_password_field);
+		passwordAgainField = (EditText) vv.findViewById(R.id.register_form_password_again_field);
+		firstnameField = (EditText) vv.findViewById(R.id.register_form_firstname_field);
+		lastnameField = (EditText) vv.findViewById(R.id.register_form_lastname_field);
+		jobTitleField = (EditText) vv.findViewById(R.id.register_form_jobtitle_field);
+		organisationField = (EditText) vv.findViewById(R.id.register_form_organisation_field);
+		phoneNoField = (EditText) vv.findViewById(R.id.register_form_phoneno_field);
+
+		registerButton = (Button) vv.findViewById(R.id.register_btn);
 		return vv;
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		usernameField = (EditText) super.getActivity().findViewById(R.id.register_form_username_field);
-		emailField = (EditText) super.getActivity().findViewById(R.id.register_form_email_field);
-		passwordField = (EditText) super.getActivity().findViewById(R.id.register_form_password_field);
-		passwordAgainField = (EditText) super.getActivity().findViewById(R.id.register_form_password_again_field);
-		firstnameField = (EditText) super.getActivity().findViewById(R.id.register_form_firstname_field);
-		lastnameField = (EditText) super.getActivity().findViewById(R.id.register_form_lastname_field);
-		jobTitleField = (EditText) super.getActivity().findViewById(R.id.register_form_jobtitle_field);
-		organisationField = (EditText) super.getActivity().findViewById(R.id.register_form_organisation_field);
-		phoneNoField = (EditText) super.getActivity().findViewById(R.id.register_form_phoneno_field);
-		
-		registerButton = (Button) super.getActivity().findViewById(R.id.register_btn);
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {

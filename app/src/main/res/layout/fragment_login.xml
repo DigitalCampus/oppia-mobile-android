@@ -1,48 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
         android:orientation="vertical"
-        android:padding="10dp" >
+        >
+
 
         <TextView
-            android:id="@+id/main_email_title"
-            android:layout_width="fill_parent"
+            android:id="@+id/textView24"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/login_username_title" />
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:background="@drawable/actionbar_background_gradient"
+            android:drawableTop="@drawable/dc_logo"
+            android:gravity="center"
+            android:paddingTop="@dimen/course_icon_size"
+            android:paddingBottom="@dimen/padding_large"
+            android:text="@string/app_name"
+            android:textAppearance="@style/SectionHeader"
+            android:textColor="@color/text_light"/>
 
-        <EditText
-            android:id="@+id/login_username_field"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:padding="5dp" />
 
-        <TextView
-            android:id="@+id/main_password_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/login_password_title" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/login_password_field"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:padding="5dp" />
+            <android.support.design.widget.TextInputLayout
+                app:hintTextAppearance="@style/Oppia.TextLabel"
+                android:id="@+id/input_layout_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/login_btn"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/title_login" />
+                <EditText
+                    android:id="@+id/login_username_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:layout_marginLeft="@dimen/padding_large"
+                    android:layout_marginRight="@dimen/padding_large"
+                    android:hint="@string/login_username_title"
+                    android:inputType="text"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/login_password_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_large"
+                    android:layout_marginRight="@dimen/padding_large"
+                    android:hint="@string/login_password_title"
+                    android:inputType="textPassword"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/login_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_large"
+                android:layout_marginTop="@dimen/padding_medium"
+                android:layout_marginRight="@dimen/padding_large"
+                android:text="@string/title_login"
+                android:theme="@style/PrimaryButton"/>
+
+            <Button
+                android:id="@+id/forgot_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_large"
+                android:layout_marginRight="@dimen/padding_large"
+                android:text="@string/title_btn_reset"/>
+
+            <TextView
+                android:id="@+id/dont_have_account"
+                style="@style/SubheaderText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/padding_large"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:autoText="true"
+                android:gravity="center"
+                android:text="@string/login_dont_have_account"/>
+
+            <Button
+                android:id="@+id/register_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_large"
+                android:layout_marginRight="@dimen/padding_large"
+                android:text="@string/title_register"
+                />
+        </LinearLayout>
+
 
     </LinearLayout>
 

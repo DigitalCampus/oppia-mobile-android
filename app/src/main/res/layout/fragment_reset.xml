@@ -8,27 +8,28 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:orientation="vertical"
-        android:padding="10dp" >
+        android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
             android:id="@+id/reset_username_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@android:dimen/notification_large_icon_height"
             android:padding="5dp"
-            android:text="@string/reset_username_title" />
+            android:text="@string/reset_username_title"/>
 
         <EditText
             android:id="@+id/reset_username_field"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:padding="5dp" />
+            android:padding="5dp"/>
 
         <Button
             android:id="@+id/reset_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title_btn_reset" />
+            android:text="@string/title_btn_reset"/>
 
     </LinearLayout>
 
