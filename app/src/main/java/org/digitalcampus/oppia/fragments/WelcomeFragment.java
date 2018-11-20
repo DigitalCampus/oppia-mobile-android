@@ -42,10 +42,7 @@ public class WelcomeFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_welcome, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
-		return vv;
+		return inflater.inflate(R.layout.fragment_welcome, container, false);
 	}
 
 	@Override
@@ -58,7 +55,7 @@ public class WelcomeFragment extends Fragment {
 
             public void onClick(View v) {
                 WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
-                wa.switchTab(1);
+                wa.switchTab(WelcomeActivity.TAB_LOGIN);
             }
         });
 		
@@ -66,7 +63,7 @@ public class WelcomeFragment extends Fragment {
 
             public void onClick(View v) {
                 WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
-                wa.switchTab(2);
+                wa.switchTab(WelcomeActivity.TAB_REGISTER);
             }
         });
 	}
