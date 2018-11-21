@@ -154,12 +154,17 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_FIRSTNAME = "firstname";
 	private static final String USER_C_LASTNAME = "lastname";
 	private static final String USER_C_PASSWORDENCRYPTED = "passwordencrypted";
+	private static final String USER_C_PASSWORDPLAIN = "passwordplain";
 	private static final String USER_C_APIKEY = "apikey";
 	private static final String USER_C_LAST_LOGIN_DATE = "lastlogin";
 	private static final String USER_C_NO_LOGINS = "nologins";
 	private static final String USER_C_POINTS = "points";
 	private static final String USER_C_BADGES = "badges";
 	private static final String USER_C_OFFLINE_REGISTER = "offlineregister";
+	private static final String USER_C_EMAIL = "email";
+	private static final String USER_C_JOBTITLE = "jobTitle";
+	private static final String USER_C_ORGANIZATION = "organisation";
+	private static final String USER_C_PHONE = "phoneNo";
 
 	private static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
@@ -300,7 +305,12 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_FIRSTNAME +"] TEXT, " +
                 "["+USER_C_LASTNAME+"] TEXT, " +
                 "["+USER_C_PASSWORDENCRYPTED +"] TEXT, " +
+				"["+USER_C_PASSWORDPLAIN +"] TEXT, " +
                 "["+USER_C_APIKEY +"] TEXT, " +
+				"["+USER_C_EMAIL +"] TEXT, " +
+				"["+USER_C_PHONE +"] TEXT, " +
+				"["+USER_C_JOBTITLE +"] TEXT, " +
+				"["+USER_C_ORGANIZATION +"] TEXT, " +
                 "["+USER_C_LAST_LOGIN_DATE +"] datetime null, " +
                 "["+USER_C_NO_LOGINS +"] integer default 0,  " +
                 "["+USER_C_POINTS +"] integer default 0,  " +
@@ -525,9 +535,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 
 		if(oldVersion <= 29 && newVersion >= 30){
-			// add field "offline_register" to User table
-			String sql1 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_OFFLINE_REGISTER + " integer default 0;";
-			db.execSQL(sql1);
+			// add fields for offline_register to User table
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_OFFLINE_REGISTER + " integer default 0;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_PASSWORDPLAIN + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_EMAIL + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_PHONE + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_JOBTITLE + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
 		}
 	}
 
@@ -628,6 +642,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(USER_C_POINTS, user.getPoints());
 		values.put(USER_C_BADGES, user.getBadges());
 		values.put(USER_C_OFFLINE_REGISTER, user.isOfflineRegister());
+		values.put(USER_C_EMAIL, user.getEmail());
+		values.put(USER_C_PHONE, user.getPhoneNo());
+		values.put(USER_C_JOBTITLE, user.getJobTitle());
+		values.put(USER_C_ORGANIZATION, user.getOrganisation());
+		if (user.isOfflineRegister()){
+			values.put(USER_C_PASSWORDPLAIN, user.getPassword());
+		}
 		
 		long userId = this.isUser(user.getUsername());
 		if (userId == -1) {
@@ -1030,6 +1051,15 @@ public class DbHelper extends SQLiteOpenHelper {
 		u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
 		u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
 		u.setOfflineRegister(c.getInt(c.getColumnIndex(USER_C_OFFLINE_REGISTER))>0);
+		u.setPhoneNo(c.getString(c.getColumnIndex(USER_C_PHONE)));
+		u.setEmail(c.getString(c.getColumnIndex(USER_C_EMAIL)));
+		u.setJobTitle(c.getString(c.getColumnIndex(USER_C_JOBTITLE)));
+		u.setOrganisation(c.getString(c.getColumnIndex(USER_C_ORGANIZATION)));
+		if (u.isOfflineRegister()){
+			u.setPassword(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
+			u.setPasswordAgain(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
+		}
+
 		return u;
 	}
 
@@ -1268,7 +1298,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		return count;
 	}
 
-	
 
 	public Payload getUnsentTrackers(long userId){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
