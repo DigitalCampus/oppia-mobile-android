@@ -67,7 +67,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
 
         boolean saveUser = true;
         if (!user.isOfflineRegister()){
-            saveUser = submitUserToServer(user, payload);
+            saveUser = submitUserToServer(user, payload, true);
         }
 
         if (saveUser){
@@ -81,10 +81,13 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
 	}
 
 
-	private boolean submitUserToServer(User u, Payload payload){
+	public boolean submitUserToServer(User u, Payload payload, boolean updateProgress){
         try {
-            // update progress dialog
-            publishProgress(ctx.getString(R.string.register_process));
+            if (updateProgress){
+                // update progress dialog
+                publishProgress(ctx.getString(R.string.register_process));
+            }
+
             // add post params
             JSONObject json = new JSONObject();
             json.put("username", u.getUsername());
@@ -138,9 +141,11 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             else{
                 switch (response.code()) {
                     case 400:
+                        String bodyResponse = response.body().string();
                         payload.setResult(false);
                         payload.setResponseData(new ArrayList<Object>(Arrays.asList(SUBMIT_ERROR)));
-                        payload.setResultResponse(response.body().string());
+                        payload.setResultResponse(bodyResponse);
+                        Log.d(TAG, bodyResponse);
                         break;
                     default:
                         payload.setResult(false);
