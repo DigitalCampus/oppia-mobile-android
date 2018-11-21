@@ -646,9 +646,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(USER_C_PHONE, user.getPhoneNo());
 		values.put(USER_C_JOBTITLE, user.getJobTitle());
 		values.put(USER_C_ORGANIZATION, user.getOrganisation());
-		if (user.isOfflineRegister()){
-			values.put(USER_C_PASSWORDPLAIN, user.getPassword());
-		}
+		values.put(USER_C_PASSWORDPLAIN, user.isOfflineRegister() ? user.getPassword() : "");
 		
 		long userId = this.isUser(user.getUsername());
 		if (userId == -1) {
