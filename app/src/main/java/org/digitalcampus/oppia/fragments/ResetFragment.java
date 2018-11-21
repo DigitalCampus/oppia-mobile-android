@@ -54,7 +54,7 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_reset, container);
+		View v = inflater.inflate(R.layout.fragment_reset, container, false);
 
 		usernameField = (EditText) v.findViewById(R.id.reset_username_field);
 		resetButton = (Button) v.findViewById(R.id.reset_btn);

@@ -61,6 +61,7 @@
                     android:id="@+id/login_password_field"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="15sp"
                     android:layout_marginLeft="@dimen/padding_large"
                     android:layout_marginRight="@dimen/padding_large"
                     android:hint="@string/login_password_title"

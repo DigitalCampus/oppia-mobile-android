@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
@@ -65,6 +66,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 	private EditText organisationField;
 	private EditText phoneNoField;
 	private Button registerButton;
+	private Button loginButton;
 	private ProgressDialog pDialog;
 	
 	public static RegisterFragment newInstance() {
@@ -89,6 +91,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		phoneNoField = (EditText) vv.findViewById(R.id.register_form_phoneno_field);
 
 		registerButton = (Button) vv.findViewById(R.id.register_btn);
+		loginButton = (Button) vv.findViewById(R.id.login_btn);
 		return vv;
 	}
 	
@@ -99,6 +102,13 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 			
 			public void onClick(View v) {
 				onRegisterClick();
+			}
+		});
+		loginButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				WelcomeActivity wa = (WelcomeActivity) RegisterFragment.super.getActivity();
+				wa.switchTab(WelcomeActivity.TAB_LOGIN);
 			}
 		});
 	}

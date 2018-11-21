@@ -28,7 +28,6 @@
 
     <style name="PrimaryButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:colorButtonNormal">@color/highlight_light</item>
-        <item name="fontPath">fonts/montserrat.ttf</item>
         <item name="android:textColor">@color/text_light</item>
     </style>
 </resources>

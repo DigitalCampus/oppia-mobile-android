@@ -129,7 +129,8 @@ dependencies {
     compile "com.splunk.mint:mint:5.0.0"
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'com.google.android:flexbox:0.2.5'
-    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
+    compile 'io.github.inflationx:calligraphy3:3.0.0'
+    compile 'io.github.inflationx:viewpump:1.0.0'
 
     //JUnit Dependencies
     compile 'com.android.support.constraint:constraint-layout:1.1.0'
