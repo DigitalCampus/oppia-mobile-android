@@ -69,7 +69,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 29;
+	private static final int DB_VERSION = 30;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -159,6 +159,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_NO_LOGINS = "nologins";
 	private static final String USER_C_POINTS = "points";
 	private static final String USER_C_BADGES = "badges";
+	private static final String USER_C_OFFLINE_REGISTER = "offlineregister";
 
 	private static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
@@ -303,7 +304,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_LAST_LOGIN_DATE +"] datetime null, " +
                 "["+USER_C_NO_LOGINS +"] integer default 0,  " +
                 "["+USER_C_POINTS +"] integer default 0,  " +
-                "["+USER_C_BADGES +"] integer default 0 " +
+                "["+USER_C_BADGES +"] integer default 0, " +
+				 "["+USER_C_OFFLINE_REGISTER+"] integer default 0 "+
             ");";
 		db.execSQL(sql);
 	}
@@ -521,6 +523,12 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL("drop table if exists " + LEADERBOARD_TABLE);
 			createLeaderboardTable(db);
 		}
+
+		if(oldVersion <= 29 && newVersion >= 30){
+			// add field "offline_register" to User table
+			String sql1 = "ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_OFFLINE_REGISTER + " integer default 0;";
+			db.execSQL(sql1);
+		}
 	}
 
 	public void updateV43(long userId){
@@ -619,6 +627,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(USER_C_APIKEY, user.getApiKey());
 		values.put(USER_C_POINTS, user.getPoints());
 		values.put(USER_C_BADGES, user.getBadges());
+		values.put(USER_C_OFFLINE_REGISTER, user.isOfflineRegister());
 		
 		long userId = this.isUser(user.getUsername());
 		if (userId == -1) {
@@ -1009,30 +1018,41 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return userId;
 	}
-	
-	public User getUser(long userId) throws UserNotFoundException {
-		String s = USER_C_ID + "=? ";
-		String[] args = new String[] { String.valueOf(userId) };
-		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
-		c.moveToFirst();
+
+	private User fetchUser(Cursor c){
+		User u = new User();
+		u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
+		u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
+		u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+		u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
+		u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+		u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+		u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
+		u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+		u.setOfflineRegister(c.getInt(c.getColumnIndex(USER_C_OFFLINE_REGISTER))>0);
+		return u;
+	}
+
+	private User getUser(Cursor c) throws UserNotFoundException {
 		User u = null;
+		c.moveToFirst();
 		while (!c.isAfterLast()) {
-			u = new User();
-			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
-			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
-			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
-			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
-			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
-			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+			u = fetchUser(c);
 			c.moveToNext();
 		}
 		c.close();
 		if (u == null){
 			throw new UserNotFoundException();
 		}
+
 		return u;
+	}
+
+	public User getUser(long userId) throws UserNotFoundException {
+		String s = USER_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(userId) };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		return getUser(c);
 	}
 	
 	public User getUser(String userName) throws UserNotFoundException {
@@ -1040,25 +1060,21 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = USER_C_USERNAME + "=? ";
 		String[] args = new String[] { userName };
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		return getUser(c);
+	}
+
+	public List<User> getAllUsers(){
+		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();
-		User u = null;
+
+		ArrayList<User> users = new ArrayList<>();
 		while (!c.isAfterLast()) {
-			u = new User();
-			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
-			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
-			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
-			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
-			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
-			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+			User u = fetchUser(c);
+			users.add(u);
 			c.moveToNext();
 		}
 		c.close();
-		if (u == null){
-			throw new UserNotFoundException();
-		}
-		return u;
+		return users;
 	}
 
     public void incrementUserPoints(long userId, int pointsToAdd) {
@@ -1223,28 +1239,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = USER_C_ID + "=? ";
 		String[] args = new String[] { String.valueOf(userId) };
 		db.update(USER_TABLE, values, s ,args);
-	}
-	
-	public List<User> getAllUsers(){
-		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
-		c.moveToFirst();
-		
-		ArrayList<User> users = new ArrayList<>();
-		while (!c.isAfterLast()) {
-			User u = new User();
-			u.setUserId(c.getInt(c.getColumnIndex(USER_C_ID)));
-			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
-			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
-			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
-			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
-			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
-			users.add(u);
-			c.moveToNext();
-		}
-		c.close();
-		return users;
 	}
 	
 	public int getSentTrackersCount(){
