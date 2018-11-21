@@ -607,7 +607,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	// returns id of the row
 	public long addOrUpdateUser(User user) {
 		
-		if (user.getUsername().equals("") || user.getUsername() == null){
+		if (user.getUsername() == null || user.getUsername().equals("")){
 			return 0;
 		}
 		
@@ -630,7 +630,6 @@ public class DbHelper extends SQLiteOpenHelper {
 			String s = USER_C_ID + "=?";
 			String[] args = new String[] { String.valueOf(userId) };
 			db.update(USER_TABLE, values, s, args);
-
 		}
 		return userId;
 	}
