@@ -69,7 +69,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 29;
+	private static final int DB_VERSION = 30;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -154,11 +154,17 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_FIRSTNAME = "firstname";
 	private static final String USER_C_LASTNAME = "lastname";
 	private static final String USER_C_PASSWORDENCRYPTED = "passwordencrypted";
+	private static final String USER_C_PASSWORDPLAIN = "passwordplain";
 	private static final String USER_C_APIKEY = "apikey";
 	private static final String USER_C_LAST_LOGIN_DATE = "lastlogin";
 	private static final String USER_C_NO_LOGINS = "nologins";
 	private static final String USER_C_POINTS = "points";
 	private static final String USER_C_BADGES = "badges";
+	private static final String USER_C_OFFLINE_REGISTER = "offlineregister";
+	private static final String USER_C_EMAIL = "email";
+	private static final String USER_C_JOBTITLE = "jobTitle";
+	private static final String USER_C_ORGANIZATION = "organisation";
+	private static final String USER_C_PHONE = "phoneNo";
 
 	private static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
@@ -299,11 +305,17 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_FIRSTNAME +"] TEXT, " +
                 "["+USER_C_LASTNAME+"] TEXT, " +
                 "["+USER_C_PASSWORDENCRYPTED +"] TEXT, " +
+				"["+USER_C_PASSWORDPLAIN +"] TEXT, " +
                 "["+USER_C_APIKEY +"] TEXT, " +
+				"["+USER_C_EMAIL +"] TEXT, " +
+				"["+USER_C_PHONE +"] TEXT, " +
+				"["+USER_C_JOBTITLE +"] TEXT, " +
+				"["+USER_C_ORGANIZATION +"] TEXT, " +
                 "["+USER_C_LAST_LOGIN_DATE +"] datetime null, " +
                 "["+USER_C_NO_LOGINS +"] integer default 0,  " +
                 "["+USER_C_POINTS +"] integer default 0,  " +
-                "["+USER_C_BADGES +"] integer default 0 " +
+                "["+USER_C_BADGES +"] integer default 0, " +
+				 "["+USER_C_OFFLINE_REGISTER+"] integer default 0 "+
             ");";
 		db.execSQL(sql);
 	}
@@ -521,6 +533,16 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL("drop table if exists " + LEADERBOARD_TABLE);
 			createLeaderboardTable(db);
 		}
+
+		if(oldVersion <= 29 && newVersion >= 30){
+			// add fields for offline_register to User table
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_OFFLINE_REGISTER + " integer default 0;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_PASSWORDPLAIN + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_EMAIL + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_PHONE + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_JOBTITLE + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
+		}
 	}
 
 	public void updateV43(long userId){
@@ -607,7 +629,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	// returns id of the row
 	public long addOrUpdateUser(User user) {
 		
-		if (user.getUsername().equals("") || user.getUsername() == null){
+		if (user.getUsername() == null || user.getUsername().equals("")){
 			return 0;
 		}
 		
@@ -619,6 +641,12 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(USER_C_APIKEY, user.getApiKey());
 		values.put(USER_C_POINTS, user.getPoints());
 		values.put(USER_C_BADGES, user.getBadges());
+		values.put(USER_C_OFFLINE_REGISTER, user.isOfflineRegister());
+		values.put(USER_C_EMAIL, user.getEmail());
+		values.put(USER_C_PHONE, user.getPhoneNo());
+		values.put(USER_C_JOBTITLE, user.getJobTitle());
+		values.put(USER_C_ORGANIZATION, user.getOrganisation());
+		values.put(USER_C_PASSWORDPLAIN, user.isOfflineRegister() ? user.getPassword() : "");
 		
 		long userId = this.isUser(user.getUsername());
 		if (userId == -1) {
@@ -630,7 +658,6 @@ public class DbHelper extends SQLiteOpenHelper {
 			String s = USER_C_ID + "=?";
 			String[] args = new String[] { String.valueOf(userId) };
 			db.update(USER_TABLE, values, s, args);
-
 		}
 		return userId;
 	}
@@ -1010,30 +1037,50 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return userId;
 	}
-	
-	public User getUser(long userId) throws UserNotFoundException {
-		String s = USER_C_ID + "=? ";
-		String[] args = new String[] { String.valueOf(userId) };
-		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
-		c.moveToFirst();
+
+	private User fetchUser(Cursor c){
+		User u = new User();
+		u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
+		u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
+		u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+		u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
+		u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+		u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+		u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
+		u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+		u.setOfflineRegister(c.getInt(c.getColumnIndex(USER_C_OFFLINE_REGISTER))>0);
+		u.setPhoneNo(c.getString(c.getColumnIndex(USER_C_PHONE)));
+		u.setEmail(c.getString(c.getColumnIndex(USER_C_EMAIL)));
+		u.setJobTitle(c.getString(c.getColumnIndex(USER_C_JOBTITLE)));
+		u.setOrganisation(c.getString(c.getColumnIndex(USER_C_ORGANIZATION)));
+		if (u.isOfflineRegister()){
+			u.setPassword(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
+			u.setPasswordAgain(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
+		}
+
+		return u;
+	}
+
+	private User getUser(Cursor c) throws UserNotFoundException {
 		User u = null;
+		c.moveToFirst();
 		while (!c.isAfterLast()) {
-			u = new User();
-			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
-			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
-			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
-			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
-			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
-			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+			u = fetchUser(c);
 			c.moveToNext();
 		}
 		c.close();
 		if (u == null){
 			throw new UserNotFoundException();
 		}
+
 		return u;
+	}
+
+	public User getUser(long userId) throws UserNotFoundException {
+		String s = USER_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(userId) };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		return getUser(c);
 	}
 	
 	public User getUser(String userName) throws UserNotFoundException {
@@ -1041,25 +1088,21 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = USER_C_USERNAME + "=? ";
 		String[] args = new String[] { userName };
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		return getUser(c);
+	}
+
+	public List<User> getAllUsers(){
+		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();
-		User u = null;
+
+		ArrayList<User> users = new ArrayList<>();
 		while (!c.isAfterLast()) {
-			u = new User();
-			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
-			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
-			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
-			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
-			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
-			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+			User u = fetchUser(c);
+			users.add(u);
 			c.moveToNext();
 		}
 		c.close();
-		if (u == null){
-			throw new UserNotFoundException();
-		}
-		return u;
+		return users;
 	}
 
     public void incrementUserPoints(long userId, int pointsToAdd) {
@@ -1132,14 +1175,14 @@ public class DbHelper extends SQLiteOpenHelper {
 
 				case Gamification.EVENT_NAME_MEDIA_PLAYED:
 					String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
+                    activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 					try {
 						JSONObject jsonObj = new JSONObject(data);
 						String mediaFileName = jsonObj.getString("mediafile");
 						course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 						if (course != null) {
 							description = this.ctx.getString(R.string.points_event_media_played,
-									mediaFileName,
-									course.getMultiLangInfo().getTitle(prefLang));
+									mediaFileName);
 						}
 					} catch (JSONException jsone) {
 						Log.d(TAG, jsone.getMessage(), jsone);
@@ -1226,28 +1269,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(USER_TABLE, values, s ,args);
 	}
 	
-	public List<User> getAllUsers(){
-		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
-		c.moveToFirst();
-		
-		ArrayList<User> users = new ArrayList<>();
-		while (!c.isAfterLast()) {
-			User u = new User();
-			u.setUserId(c.getInt(c.getColumnIndex(USER_C_ID)));
-			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
-			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
-			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
-			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
-			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
-			users.add(u);
-			c.moveToNext();
-		}
-		c.close();
-		return users;
-	}
-	
 	public int getSentTrackersCount(){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
 		String[] args = new String[] { "1"};
@@ -1275,7 +1296,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		return count;
 	}
 
-	
 
 	public Payload getUnsentTrackers(long userId){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";

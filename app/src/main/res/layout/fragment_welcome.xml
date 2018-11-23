@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
     <LinearLayout
@@ -8,55 +9,74 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:orientation="vertical"
-        android:padding="10dp" >
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingTop="@dimen/listitem_icon_size"
+        android:paddingRight="@dimen/padding_large">
+
+        <ImageView
+            android:id="@+id/imageView13"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            app:srcCompat="@drawable/dc_logo"/>
 
         <TextView
             android:id="@+id/welcome_title"
+            style="@style/HeaderText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fragment_welcome_title"
-            android:gravity="center"
             android:layout_marginBottom="20dp"
-            style="@style/HeaderText" />
+            android:gravity="center"
+            android:text="@string/fragment_welcome_title"/>
 
         <TextView
             android:id="@+id/welcome_desc"
+            style="@style/NormalTextDark"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fragment_welcome_desc"
-            android:gravity="center"
             android:layout_marginBottom="20dp"
-            style="@style/NormalTextDark" />
-        
+            android:gravity="center"
+            android:text="@string/fragment_welcome_desc"/>
+
         <TextView
             android:id="@+id/welcome_login_info"
+            style="@style/SubheaderText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fragment_welcome_login_info"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:gravity="center"
-            android:layout_marginBottom="20dp"
-            style="@style/NormalTextDark" />
-        
+            android:text="@string/fragment_welcome_login_info"/>
+
         <Button
             android:id="@+id/welcome_register"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title_register" />
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:text="@string/title_register"
+            android:theme="@style/PrimaryButton"/>
 
         <Button
             android:id="@+id/welcome_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title_login" />
-        
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:text="@string/title_login"/>
+
         <TextView
             android:id="@+id/welcome_privacy_info"
+            style="@style/SmallTextDarkItalic"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fragment_welcome_privacy"
-            android:gravity="center"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginTop="20dp"
-            style="@style/SmallTextDarkItalic" />
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:gravity="center"
+            android:text="@string/fragment_welcome_privacy"/>
     </LinearLayout>
 
 </ScrollView>

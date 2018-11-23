@@ -378,7 +378,7 @@
 
     <!-- Strings for point events -->
     <string name="points_event_activity_completed">Activity completed \'%1$s - %2$s\'</string>
-    <string name="points_event_media_played">Media played \'%1$s - %2$s\'</string>
+    <string name="points_event_media_played">Media played \'%1$s\'</string>
     <string name="points_event_quiz_attempt">Quiz attempt \'%1$s - %2$s\'</string>
     <string name="points_event_course_downloaded">Course \'%1$s\' downloaded</string>
     <string name="tab_title_leaderboard">Leaderboard</string>
@@ -388,5 +388,10 @@
     <string name="prefDownloadEnabled">Enable course downloading from homepage</string>
     <string name="prefChangeLanguageEnabled">Enable changing language from homepage</string>
     <string name="transfer_receiving_course">Receiving course file...</string>
+    <string name="sign_in_title">Sign in</string>
+    <string name="register_account_already">Already have an account?</string>
+    <string name="login_dont_have_account">Don\'t have an account yet?</string>
+    <string name="offline_register_confirm">Alternatively, you can register offline and start using the app. Then, you\'ll need to submit or transfer your user data later</string>
+    <string name="register_offline">Register offline</string>
 </resources>
 

@@ -50,6 +50,15 @@
         <item name="fontPath">fonts/montserrat.ttf</item>
     </style>
 
+    <style name="PrimaryButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/highlight_light</item>
+        <item name="android:textColor">@color/text_light</item>
+    </style>
+
+    <style name="Oppia.TextLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">13sp</item>
+    </style>
+
     <style name="Oppia.ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/highlight_light</item>
         <item name="colorPrimaryDark">@color/highlight_shadow</item>

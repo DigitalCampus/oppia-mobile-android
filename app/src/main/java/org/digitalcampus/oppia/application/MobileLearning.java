@@ -38,7 +38,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import io.github.inflationx.calligraphy3.CalligraphyConfig;
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
+import io.github.inflationx.viewpump.ViewPump;
 
 public class MobileLearning extends Application {
 
@@ -115,7 +117,7 @@ public class MobileLearning extends Application {
 
 	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
-	
+
 	// for tracking if SubmitTrackerMultipleTask is already running
 	public SubmitTrackerMultipleTask omSubmitTrackerMultipleTask = null;
 	
@@ -131,11 +133,14 @@ public class MobileLearning extends Application {
 
         // this method fires once at application start
         Log.d(TAG, "Application start");
-		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-				.setDefaultFontPath("fonts/lato.ttf")
-				.setFontAttrId(R.attr.fontPath)
-				.build()
-		);
+
+		ViewPump.init(ViewPump.builder()
+				.addInterceptor(new CalligraphyInterceptor(
+						new CalligraphyConfig.Builder()
+								.setDefaultFontPath("fonts/lato.ttf")
+								.setFontAttrId(R.attr.fontPath)
+								.build()))
+				.build());
 
         Context ctx = getApplicationContext();
 		PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
