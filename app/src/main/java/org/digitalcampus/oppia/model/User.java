@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.model;
 
+import org.digitalcampus.oppia.utils.CryptoUtils;
 import org.jarjar.apache.commons.codec.digest.DigestUtils;
 
 public class User {
@@ -113,13 +114,21 @@ public class User {
 	
 	public String getPasswordEncrypted() {
 		if (this.passwordEncrypted == null){
-            this.passwordEncrypted = DigestUtils.sha256Hex(this.password);
+            this.passwordEncrypted = CryptoUtils.encryptLocalPassword(this.password);
         }
 		return this.passwordEncrypted;
 	}
 	
 	public void setPasswordEncrypted(String pwEncrypted){
 		this.passwordEncrypted = pwEncrypted;
+	}
+
+	public String getPasswordHashed(){
+		if (this.password != null){
+			return CryptoUtils.encryptExternalPassword(this.password);
+		}
+		else return "";
+
 	}
 	
 	public long getUserId() {
