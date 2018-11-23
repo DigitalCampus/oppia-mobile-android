@@ -47,7 +47,6 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
     @Override
     protected String doInBackground(Payload... payloads) {
 
-        String filename = "activity_" +  new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".json";
 
         DbHelper db = DbHelper.getInstance(ctx);
         List<User> users = db.getAllUsers();
@@ -95,6 +94,9 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             boolean canWrite = destDir.canWrite();
             Log.d(TAG, "Error creating destination dir: canWrite=" + canWrite);
         }
+
+        String filename = (users.size() > 1) ? "activity" : users.get(0).getUsername();
+        filename += "_" + new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".json";
 
         File file = new File(destDir, filename);
         FileOutputStream f = null;
