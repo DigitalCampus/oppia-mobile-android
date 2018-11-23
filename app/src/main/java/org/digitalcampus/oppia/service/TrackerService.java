@@ -17,24 +17,6 @@
 
 package org.digitalcampus.oppia.service;
 
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.listener.APIRequestListener;
-import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.task.APIUserRequestTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
-import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
-import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -52,13 +34,31 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.listener.APIRequestListener;
+import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.task.APIUserRequestTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.RegisterTask;
+import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
+import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
 public class TrackerService extends Service implements APIRequestListener {
 
 	public static final String TAG = TrackerService.class.getSimpleName();
 
 	private final IBinder mBinder = new MyBinder();
-	private SharedPreferences prefs;
-	
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -68,54 +68,42 @@ public class TrackerService extends Service implements APIRequestListener {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
-		boolean backgroundData = true;
-		Bundle b = intent.getExtras();
-		if (b != null) {
-			backgroundData = b.getBoolean("backgroundData");
-		}
+		if (isOnline()) {
 
-		if (isOnline() && backgroundData) {
-			
-			Payload p = null;
-			
-			// check for updated courses
-			// should only do this once a day or so....
-			prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			long lastRun = prefs.getLong("lastCourseUpdateCheck", 0);
-			long now = System.currentTimeMillis()/1000;
-			if((lastRun + (3600*12)) < now){
-				APIUserRequestTask task = new APIUserRequestTask(this);
-				p = new Payload(MobileLearning.SERVER_COURSES_PATH);
-				task.setAPIRequestListener(this);
-				task.execute(p);
-				
-				Editor editor = prefs.edit();
-				editor.putLong("lastCourseUpdateCheck", now);
-				editor.commit();
+			boolean backgroundData = true;
+			Bundle b = intent.getExtras();
+			if (b != null) {
+				backgroundData = b.getBoolean("backgroundData");
 			}
 
-			// send activity trackers
-			MobileLearning app = (MobileLearning) this.getApplication();
-			if(app.omSubmitTrackerMultipleTask == null){
-				Log.d(TAG,"Submitting trackers multiple task");
-				app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(this);
-				app.omSubmitTrackerMultipleTask.execute();
-			}
-			
-			// send quiz results
-			if(app.omSubmitQuizAttemptsTask == null){
-				Log.d(TAG,"Submitting quiz task");
-				DbHelper db = DbHelper.getInstance(this);
-				List<QuizAttempt> unsent = db.getUnsentQuizAttempts();
-		
-				if (unsent.size() > 0){
-					p = new Payload(unsent);
-					app.omSubmitQuizAttemptsTask = new SubmitQuizAttemptsTask(this);
-					app.omSubmitQuizAttemptsTask.execute(p);
+			final boolean finalBackgroundData = backgroundData;
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+					Log.d(TAG, "Sending offline registered users to server (if needed)");
+					List<User> users = DbHelper.getInstance(TrackerService.this).getAllUsers();
+					for (User user : users){
+						//We try to send the new user to register
+						if (user.isOfflineRegister()){
+							Log.d(TAG, "Trying to send user " + user.getUsername() + " to registration...");
+							Payload p = new Payload();
+							RegisterTask rt = new RegisterTask(TrackerService.this);
+							boolean success = rt.submitUserToServer(user, p, false);
+							Log.d(TAG, "User " + user.getUsername() + " " + (success?"succeeded":"failed"));
+
+							if (success){
+								DbHelper.getInstance(TrackerService.this).addOrUpdateUser(user);
+							}
+						}
+					}
+
+
+					if (finalBackgroundData){
+						updateTracking();
+					}
 				}
-			}
-
-			
+			});
+			thread.start();
 
 		}
 		return Service.START_NOT_STICKY;
@@ -140,16 +128,52 @@ public class TrackerService extends Service implements APIRequestListener {
 	private boolean isOnline() {
 		getApplicationContext();
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cm.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isConnected()) {
-			return true;
+		NetworkInfo netInfo = cm != null ? cm.getActiveNetworkInfo() : null;
+		return netInfo != null && netInfo.isConnected();
+	}
+
+	public void updateTracking(){
+		Payload p = null;
+
+		// check for updated courses
+		// should only do this once a day or so....
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		long lastRun = prefs.getLong("lastCourseUpdateCheck", 0);
+		long now = System.currentTimeMillis()/1000;
+		if((lastRun + (3600*12)) < now){
+			APIUserRequestTask task = new APIUserRequestTask(this);
+			p = new Payload(MobileLearning.SERVER_COURSES_PATH);
+			task.setAPIRequestListener(this);
+			task.execute(p);
+
+			Editor editor = prefs.edit();
+			editor.putLong("lastCourseUpdateCheck", now);
+			editor.apply();
 		}
-		return false;
+
+		// send activity trackers
+		MobileLearning app = (MobileLearning) this.getApplication();
+		if(app.omSubmitTrackerMultipleTask == null){
+			Log.d(TAG,"Submitting trackers multiple task");
+			app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(this);
+			app.omSubmitTrackerMultipleTask.execute();
+		}
+
+		// send quiz results
+		if(app.omSubmitQuizAttemptsTask == null){
+			Log.d(TAG,"Submitting quiz task");
+			DbHelper db = DbHelper.getInstance(this);
+			List<QuizAttempt> unsent = db.getUnsentQuizAttempts();
+
+			if (unsent.size() > 0){
+				p = new Payload(unsent);
+				app.omSubmitQuizAttemptsTask = new SubmitQuizAttemptsTask(this);
+				app.omSubmitQuizAttemptsTask.execute(p);
+			}
+		}
 	}
 
 	public void apiRequestComplete(Payload response) {
-		
-		
 		boolean updateAvailable = false;
 		try {
 			

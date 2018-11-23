@@ -83,9 +83,7 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View vv = inflater.inflate(R.layout.fragment_export_activity, null);
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        vv.setLayoutParams(lp);
+        View vv = inflater.inflate(R.layout.fragment_export_activity, container, false);
 
         exportedFilesRecyclerView = (RecyclerView) vv.findViewById(R.id.exported_files_list);
         exportBtn = (Button) vv.findViewById(R.id.export_btn);
@@ -141,7 +139,7 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
         filesAdapter = new ExportedTrackersFileAdapter(files, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
-                Context ctx = ExportActivityFragment.this.getActivity().getApplicationContext();
+                Context ctx = ExportActivityFragment.this.getActivity();
                 File toShare = files.get(position);
                 Intent share = ExternalResourceOpener.constructShareFileIntent(ctx, toShare);
                 ctx.startActivity(share);

@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.model;
 
+import org.digitalcampus.oppia.utils.CryptoUtils;
 import org.jarjar.apache.commons.codec.digest.DigestUtils;
 
 public class User {
@@ -32,11 +33,12 @@ public class User {
 	private String jobTitle;
 	private String organisation;
 	private String phoneNo;
-	private String passwordEncypted;
+	private String passwordEncrypted;
 	private boolean scoringEnabled = true;
 	private boolean badgingEnabled = true;
 	private int points = 0;
 	private int badges = 0;
+	private boolean offlineRegister = false;
 	
 	public String getUsername() {
 		return username;
@@ -111,14 +113,22 @@ public class User {
 	}
 	
 	public String getPasswordEncrypted() {
-		if (this.passwordEncypted == null){
-            this.passwordEncypted = DigestUtils.sha256Hex(this.password);
+		if (this.passwordEncrypted == null){
+            this.passwordEncrypted = CryptoUtils.encryptLocalPassword(this.password);
         }
-		return this.passwordEncypted;
+		return this.passwordEncrypted;
 	}
 	
 	public void setPasswordEncrypted(String pwEncrypted){
-		this.passwordEncypted = pwEncrypted;
+		this.passwordEncrypted = pwEncrypted;
+	}
+
+	public String getPasswordHashed(){
+		if (this.password != null){
+			return CryptoUtils.encryptExternalPassword(this.password);
+		}
+		else return "";
+
 	}
 	
 	public long getUserId() {
@@ -146,4 +156,12 @@ public class User {
 		this.phoneNo = phoneNo;
 	}
 
+
+	public boolean isOfflineRegister() {
+		return offlineRegister;
+	}
+
+	public void setOfflineRegister(boolean offlineRegister) {
+		this.offlineRegister = offlineRegister;
+	}
 }

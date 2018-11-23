@@ -185,7 +185,7 @@ public class DrawerMenuManager {
     }
 
     private void logout() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(drawerAct, R.style.Oppia_AlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(drawerAct);
         builder.setCancelable(false);
         builder.setTitle(R.string.logout);
         builder.setMessage(R.string.logout_confirm);

@@ -32,7 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -42,16 +41,14 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.GamificationBroadcastReceiver;
-import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
-import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.utils.UIUtils;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import io.github.inflationx.viewpump.ViewPumpContextWrapper;
+
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 	
@@ -72,7 +69,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
     }
 	
 	@Override
@@ -87,8 +84,11 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 		}
 	}
 
-	protected void onStart(boolean overrideTitle){
+    protected void onStart(boolean overrideTitle, boolean configureActionBar){
         super.onStart();
+
+        if (!configureActionBar)
+            return;
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         if (toolbar != null){
@@ -118,9 +118,13 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         }
     }
 
+    protected void onStart(boolean overrideTitle) {
+        onStart(overrideTitle, true);
+    }
+
     @Override
     protected void onStart() {
-        onStart(true);
+        onStart(true, true);
     }
 
     @Override

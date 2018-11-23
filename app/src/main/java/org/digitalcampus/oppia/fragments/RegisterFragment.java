@@ -17,17 +17,26 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import java.util.ArrayList;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.listener.SubmitListener;
-import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
@@ -35,22 +44,9 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout.LayoutParams;
+import java.util.Arrays;
 
-public class RegisterFragment extends AppFragment implements SubmitListener {
+public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
 
 	public static final String TAG = RegisterFragment.class.getSimpleName();
 
@@ -65,6 +61,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 	private EditText organisationField;
 	private EditText phoneNoField;
 	private Button registerButton;
+	private Button loginButton;
 	private ProgressDialog pDialog;
 	
 	public static RegisterFragment newInstance() {
@@ -77,31 +74,36 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_register, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
+		View vv = inflater.inflate(R.layout.fragment_register, container, false);
+		usernameField = (EditText) vv.findViewById(R.id.register_form_username_field);
+		emailField = (EditText) vv.findViewById(R.id.register_form_email_field);
+		passwordField = (EditText) vv.findViewById(R.id.register_form_password_field);
+		passwordAgainField = (EditText) vv.findViewById(R.id.register_form_password_again_field);
+		firstnameField = (EditText) vv.findViewById(R.id.register_form_firstname_field);
+		lastnameField = (EditText) vv.findViewById(R.id.register_form_lastname_field);
+		jobTitleField = (EditText) vv.findViewById(R.id.register_form_jobtitle_field);
+		organisationField = (EditText) vv.findViewById(R.id.register_form_organisation_field);
+		phoneNoField = (EditText) vv.findViewById(R.id.register_form_phoneno_field);
+
+		registerButton = (Button) vv.findViewById(R.id.register_btn);
+		loginButton = (Button) vv.findViewById(R.id.login_btn);
 		return vv;
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		usernameField = (EditText) super.getActivity().findViewById(R.id.register_form_username_field);
-		emailField = (EditText) super.getActivity().findViewById(R.id.register_form_email_field);
-		passwordField = (EditText) super.getActivity().findViewById(R.id.register_form_password_field);
-		passwordAgainField = (EditText) super.getActivity().findViewById(R.id.register_form_password_again_field);
-		firstnameField = (EditText) super.getActivity().findViewById(R.id.register_form_firstname_field);
-		lastnameField = (EditText) super.getActivity().findViewById(R.id.register_form_lastname_field);
-		jobTitleField = (EditText) super.getActivity().findViewById(R.id.register_form_jobtitle_field);
-		organisationField = (EditText) super.getActivity().findViewById(R.id.register_form_organisation_field);
-		phoneNoField = (EditText) super.getActivity().findViewById(R.id.register_form_phoneno_field);
-		
-		registerButton = (Button) super.getActivity().findViewById(R.id.register_btn);
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
 				onRegisterClick();
+			}
+		});
+		loginButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				WelcomeActivity wa = (WelcomeActivity) RegisterFragment.super.getActivity();
+				wa.switchTab(WelcomeActivity.TAB_LOGIN);
 			}
 		});
 	}
@@ -192,14 +194,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_phoneno);
 			return;
 		}
-				
-		pDialog = new ProgressDialog(super.getActivity());
-		pDialog.setTitle(R.string.register_alert_title);
-		pDialog.setMessage(getString(R.string.register_process));
-		pDialog.setCancelable(true);
-		pDialog.show();
 
-		ArrayList<Object> users = new ArrayList<>();
     	User u = new User();
 		u.setUsername(username);
 		u.setPassword(password);
@@ -210,8 +205,62 @@ public class RegisterFragment extends AppFragment implements SubmitListener {
 		u.setJobTitle(jobTitle);
 		u.setOrganisation(organisation);
 		u.setPhoneNo(phoneNo);
-		users.add(u);
-		Payload p = new Payload(users);
+
+		executeRegisterTask(u);
+	}
+
+	@Override
+	public void onSubmitComplete(User registeredUser) {
+		pDialog.dismiss();
+		SessionManager.loginUser(getActivity(), registeredUser);
+		// registration gamification
+		GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
+		gamificationEngine.processEventRegister();
+
+		//Save the search tracker
+		new Tracker(super.getActivity()).saveRegisterTracker();
+		startActivity(new Intent(getActivity(), OppiaMobileActivity.class));
+		super.getActivity().finish();
+	}
+
+	@Override
+	public void onSubmitError(String error) {
+		pDialog.dismiss();
+		Context ctx = super.getActivity();
+		if (ctx != null){
+			UIUtils.showAlert(getActivity(), R.string.error, error);
+		}
+	}
+
+	@Override
+	public void onConnectionError(String error, final User u) {
+		pDialog.dismiss();
+		Context ctx = super.getActivity();
+		if (ctx != null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+			builder.setCancelable(false);
+			builder.setTitle(error);
+			builder.setMessage(R.string.offline_register_confirm);
+			builder.setPositiveButton(R.string.register_offline, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					u.setOfflineRegister(true);
+					executeRegisterTask(u);
+				}
+			});
+			builder.setNegativeButton(R.string.cancel, null);
+			builder.show();
+		}
+	}
+
+	private void executeRegisterTask(User u){
+
+		pDialog = new ProgressDialog(super.getActivity());
+		pDialog.setTitle(R.string.register_alert_title);
+		pDialog.setMessage(getString(R.string.register_process));
+		pDialog.setCancelable(true);
+		pDialog.show();
+
+		Payload p = new Payload(Arrays.asList(u));
 		RegisterTask rt = new RegisterTask(super.getActivity());
 		rt.setRegisterListener(this);
 		rt.execute(p);
