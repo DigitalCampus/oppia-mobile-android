@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:background="@drawable/actionbar_background_gradient"
+                android:background="@color/highlight_dark"
                 android:paddingLeft="30dp"
                 android:paddingTop="@android:dimen/notification_large_icon_height"
                 android:paddingBottom="@dimen/padding_large"
