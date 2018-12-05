@@ -6,4 +6,9 @@
         <attr name="android:listSelector"/>
         <attr name="android:drawSelectorOnTop"/>
     </declare-styleable>
+
+    <declare-styleable name="ValidableTextInputLayout">
+        <attr name="required" format="boolean" />
+        <attr name="cantContainSpaces" format="boolean" />
+    </declare-styleable>
 </resources>

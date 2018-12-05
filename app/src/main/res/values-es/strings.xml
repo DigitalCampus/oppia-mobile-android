@@ -112,12 +112,12 @@
     <string name="about_logged_in">Conectado como: %1$s</string>
     <string name="about_not_logged_in">No conectado</string>
 
-	<string name="register_form_username_title">Usuario (*)</string>
-	<string name="register_form_email_title">Dirección e-mail (*)</string>
-	<string name="register_form_firstname_title">Nombre (*)</string>
-	<string name="register_form_lastname_title">Apellidos (*)</string>
-	<string name="register_form_password_title">Contraseña (*)</string>
-	<string name="register_form_password_again_title">Contraseña (repetir) (*)</string>
+	<string name="register_form_username_title">Usuario</string>
+	<string name="register_form_email_title">Dirección e-mail</string>
+	<string name="register_form_firstname_title">Nombre</string>
+	<string name="register_form_lastname_title">Apellidos</string>
+	<string name="register_form_password_title">Contraseña</string>
+	<string name="register_form_password_again_title">Contraseña (repetir)</string>
 	<string name="register_btn_text">Registro</string>
 	
 	<string name="yes">Sí</string>
@@ -249,7 +249,7 @@
     <string name="more_courses">Descargar más cursos</string>
     <string name="register_form_organisation_title">Organización</string>
     <string name="register_form_jobtitle_title">Puesto de trabajo</string>
-    <string name="register_form_phoneno_title">Número de teléfono (*)</string>
+    <string name="register_form_phoneno_title">Número de teléfono</string>
     <string name="submit_stats_btn_text">Enviar ahora</string>
     <string name="admin_password_required">Esta funcionalidad está protegida para uso de admin únicamente. Por favor, introduce la constraseña de admin para continuar:</string>
     <string name="admin_password_newpassword_dialog_title">Contraseña </string>
