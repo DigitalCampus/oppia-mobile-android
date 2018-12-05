@@ -42,7 +42,6 @@ import android.os.SystemClock;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.AccessibilityDelegateCompat;
-import android.support.v4.view.KeyEventCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v4.view.ViewCompat;
@@ -291,7 +290,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
          * @param totalItemCount the number of items in the list adaptor
          */
         public void onScroll(TwoWayView view, int firstVisibleItem, int visibleItemCount,
-                int totalItemCount);
+                             int totalItemCount);
     }
 
     /**
@@ -1021,7 +1020,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     // This will trigger a layout
                     resurrectSelection();
 
-                // If we come back in touch mode, then we want to hide the selector
+                    // If we come back in touch mode, then we want to hide the selector
                 } else {
                     hideSelector();
                     mLayoutMode = LAYOUT_NORMAL;
@@ -1055,10 +1054,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
     @TargetApi(9)
     private boolean overScrollByInternal(int deltaX, int deltaY,
-            int scrollX, int scrollY,
-            int scrollRangeX, int scrollRangeY,
-            int maxOverScrollX, int maxOverScrollY,
-            boolean isTouchEvent) {
+                                         int scrollX, int scrollY,
+                                         int scrollRangeX, int scrollRangeY,
+                                         int maxOverScrollX, int maxOverScrollY,
+                                         boolean isTouchEvent) {
         if (Build.VERSION.SDK_INT < 9) {
             return false;
         }
@@ -1379,76 +1378,76 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
         switch (action) {
-        case MotionEvent.ACTION_DOWN:
-            initOrResetVelocityTracker();
-            mVelocityTracker.addMovement(ev);
+            case MotionEvent.ACTION_DOWN:
+                initOrResetVelocityTracker();
+                mVelocityTracker.addMovement(ev);
 
-            mScroller.abortAnimation();
-            if (mPositionScroller != null) {
-                mPositionScroller.stop();
-            }
+                mScroller.abortAnimation();
+                if (mPositionScroller != null) {
+                    mPositionScroller.stop();
+                }
 
-            final float x = ev.getX();
-            final float y = ev.getY();
+                final float x = ev.getX();
+                final float y = ev.getY();
 
-            mLastTouchPos = (mIsVertical ? y : x);
+                mLastTouchPos = (mIsVertical ? y : x);
 
-            final int motionPosition = findMotionRowOrColumn((int) mLastTouchPos);
+                final int motionPosition = findMotionRowOrColumn((int) mLastTouchPos);
 
-            mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
-            mTouchRemainderPos = 0;
+                mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+                mTouchRemainderPos = 0;
 
-            if (mTouchMode == TOUCH_MODE_FLINGING) {
-                return true;
-            } else if (motionPosition >= 0) {
-                mMotionPosition = motionPosition;
-                mTouchMode = TOUCH_MODE_DOWN;
-            }
+                if (mTouchMode == TOUCH_MODE_FLINGING) {
+                    return true;
+                } else if (motionPosition >= 0) {
+                    mMotionPosition = motionPosition;
+                    mTouchMode = TOUCH_MODE_DOWN;
+                }
 
-            break;
+                break;
 
-        case MotionEvent.ACTION_MOVE: {
-            if (mTouchMode != TOUCH_MODE_DOWN) {
+            case MotionEvent.ACTION_MOVE: {
+                if (mTouchMode != TOUCH_MODE_DOWN) {
+                    break;
+                }
+
+                initVelocityTrackerIfNotExists();
+                mVelocityTracker.addMovement(ev);
+
+                final int index = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                if (index < 0) {
+                    Log.e(LOGTAG, "onInterceptTouchEvent could not find pointer with id " +
+                            mActivePointerId + " - did TwoWayView receive an inconsistent " +
+                            "event stream?");
+                    return false;
+                }
+
+                final float pos;
+                if (mIsVertical) {
+                    pos = MotionEventCompat.getY(ev, index);
+                } else {
+                    pos = MotionEventCompat.getX(ev, index);
+                }
+
+                final float diff = pos - mLastTouchPos + mTouchRemainderPos;
+                final int delta = (int) diff;
+                mTouchRemainderPos = diff - delta;
+
+                if (maybeStartScrolling(delta)) {
+                    return true;
+                }
+
                 break;
             }
 
-            initVelocityTrackerIfNotExists();
-            mVelocityTracker.addMovement(ev);
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                mActivePointerId = INVALID_POINTER;
+                mTouchMode = TOUCH_MODE_REST;
+                recycleVelocityTracker();
+                reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
 
-            final int index = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
-            if (index < 0) {
-                Log.e(LOGTAG, "onInterceptTouchEvent could not find pointer with id " +
-                        mActivePointerId + " - did TwoWayView receive an inconsistent " +
-                        "event stream?");
-                return false;
-            }
-
-            final float pos;
-            if (mIsVertical) {
-                pos = MotionEventCompat.getY(ev, index);
-            } else {
-                pos = MotionEventCompat.getX(ev, index);
-            }
-
-            final float diff = pos - mLastTouchPos + mTouchRemainderPos;
-            final int delta = (int) diff;
-            mTouchRemainderPos = diff - delta;
-
-            if (maybeStartScrolling(delta)) {
-                return true;
-            }
-            
-            break;
-        }
-
-        case MotionEvent.ACTION_CANCEL:
-        case MotionEvent.ACTION_UP:
-            mActivePointerId = INVALID_POINTER;
-            mTouchMode = TOUCH_MODE_REST;
-            recycleVelocityTracker();
-            reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-
-            break;
+                break;
         }
 
         return false;
@@ -1473,226 +1472,226 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         final int action = ev.getAction() & MotionEventCompat.ACTION_MASK;
         switch (action) {
-        case MotionEvent.ACTION_DOWN: {
-            if (mDataChanged) {
-                break;
-            }
+            case MotionEvent.ACTION_DOWN: {
+                if (mDataChanged) {
+                    break;
+                }
 
-            mVelocityTracker.clear();
-            mScroller.abortAnimation();
-            if (mPositionScroller != null) {
-                mPositionScroller.stop();
-            }
-
-            final float x = ev.getX();
-            final float y = ev.getY();
-
-            mLastTouchPos = (mIsVertical ? y : x);
-
-            int motionPosition = pointToPosition((int) x, (int) y);
-
-            mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
-            mTouchRemainderPos = 0;
-
-            if (mDataChanged) {
-                break;
-            }
-
-            if (mTouchMode == TOUCH_MODE_FLINGING) {
-                mTouchMode = TOUCH_MODE_DRAGGING;
-                reportScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
-                motionPosition = findMotionRowOrColumn((int) mLastTouchPos);
-            } else if (mMotionPosition >= 0 && mAdapter.isEnabled(mMotionPosition)) {
-                mTouchMode = TOUCH_MODE_DOWN;
-                triggerCheckForTap();
-            }
-
-            mMotionPosition = motionPosition;
-
-            break;
-        }
-
-        case MotionEvent.ACTION_MOVE: {
-            final int index = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
-            if (index < 0) {
-                Log.e(LOGTAG, "onInterceptTouchEvent could not find pointer with id " +
-                        mActivePointerId + " - did TwoWayView receive an inconsistent " +
-                        "event stream?");
-                return false;
-            }
-
-            final float pos;
-            if (mIsVertical) {
-                pos = MotionEventCompat.getY(ev, index);
-            } else {
-                pos = MotionEventCompat.getX(ev, index);
-            }
-
-            if (mDataChanged) {
-                // Re-sync everything if data has been changed
-                // since the scroll operation can query the adapter.
-                layoutChildren();
-            }
-
-            final float diff = pos - mLastTouchPos + mTouchRemainderPos;
-            final int delta = (int) diff;
-            mTouchRemainderPos = diff - delta;
-
-            switch (mTouchMode) {
-            case TOUCH_MODE_DOWN:
-            case TOUCH_MODE_TAP:
-            case TOUCH_MODE_DONE_WAITING:
-                // Check if we have moved far enough that it looks more like a
-                // scroll than a tap
-                maybeStartScrolling(delta);
-                break;
-
-            case TOUCH_MODE_DRAGGING:
-            case TOUCH_MODE_OVERSCROLL:
-                mLastTouchPos = pos;
-                maybeScroll(delta);
-                break;
-            }
-
-            break;
-        }
-
-        case MotionEvent.ACTION_CANCEL:
-            cancelCheckForTap();
-            mTouchMode = TOUCH_MODE_REST;
-            reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-
-            setPressed(false);
-            View motionView = this.getChildAt(mMotionPosition - mFirstPosition);
-            if (motionView != null) {
-                motionView.setPressed(false);
-            }
-
-            if (mStartEdge != null && mEndEdge != null) {
-                needsInvalidate = mStartEdge.onRelease() || mEndEdge.onRelease();
-            }
-
-            recycleVelocityTracker();
-
-            break;
-
-        case MotionEvent.ACTION_UP: {
-            switch (mTouchMode) {
-            case TOUCH_MODE_DOWN:
-            case TOUCH_MODE_TAP:
-            case TOUCH_MODE_DONE_WAITING: {
-                final int motionPosition = mMotionPosition;
-                final View child = getChildAt(motionPosition - mFirstPosition);
+                mVelocityTracker.clear();
+                mScroller.abortAnimation();
+                if (mPositionScroller != null) {
+                    mPositionScroller.stop();
+                }
 
                 final float x = ev.getX();
                 final float y = ev.getY();
 
-                final boolean inList;
-                if (mIsVertical) {
-                    inList = x > getPaddingLeft() && x < getWidth() - getPaddingRight();
-                } else {
-                    inList = y > getPaddingTop() && y < getHeight() - getPaddingBottom();
+                mLastTouchPos = (mIsVertical ? y : x);
+
+                int motionPosition = pointToPosition((int) x, (int) y);
+
+                mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
+                mTouchRemainderPos = 0;
+
+                if (mDataChanged) {
+                    break;
                 }
 
-                if (child != null && !child.hasFocusable() && inList) {
-                    if (mTouchMode != TOUCH_MODE_DOWN) {
-                        child.setPressed(false);
-                    }
-
-                    if (mPerformClick == null) {
-                        mPerformClick = new PerformClick();
-                    }
-
-                    final PerformClick performClick = mPerformClick;
-                    performClick.mClickMotionPosition = motionPosition;
-                    performClick.rememberWindowAttachCount();
-
-                    mResurrectToPosition = motionPosition;
-
-                    if (mTouchMode == TOUCH_MODE_DOWN || mTouchMode == TOUCH_MODE_TAP) {
-                        if (mTouchMode == TOUCH_MODE_DOWN) {
-                            cancelCheckForTap();
-                        } else {
-                            cancelCheckForLongPress();
-                        }
-
-                        mLayoutMode = LAYOUT_NORMAL;
-
-                        if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
-                            mTouchMode = TOUCH_MODE_TAP;
-
-                            setPressed(true);
-                            positionSelector(mMotionPosition, child);
-                            child.setPressed(true);
-
-                            if (mSelector != null) {
-                                Drawable d = mSelector.getCurrent();
-                                if (d != null && d instanceof TransitionDrawable) {
-                                    ((TransitionDrawable) d).resetTransition();
-                                }
-                            }
-
-                            if (mTouchModeReset != null) {
-                                removeCallbacks(mTouchModeReset);
-                            }
-
-                            mTouchModeReset = new Runnable() {
-                                public void run() {
-                                    mTouchMode = TOUCH_MODE_REST;
-
-                                    setPressed(false);
-                                    child.setPressed(false);
-
-                                    if (!mDataChanged) {
-                                        performClick.run();
-                                    }
-
-                                    mTouchModeReset = null;
-                                }
-                            };
-
-                            postDelayed(mTouchModeReset,
-                                    ViewConfiguration.getPressedStateDuration());
-                        } else {
-                            mTouchMode = TOUCH_MODE_REST;
-                            updateSelectorState();
-                        }
-                    } else if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
-                        performClick.run();
-                    }
+                if (mTouchMode == TOUCH_MODE_FLINGING) {
+                    mTouchMode = TOUCH_MODE_DRAGGING;
+                    reportScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
+                    motionPosition = findMotionRowOrColumn((int) mLastTouchPos);
+                } else if (mMotionPosition >= 0 && mAdapter.isEnabled(mMotionPosition)) {
+                    mTouchMode = TOUCH_MODE_DOWN;
+                    triggerCheckForTap();
                 }
 
-                mTouchMode = TOUCH_MODE_REST;
-
-                finishSmoothScrolling();
-                updateSelectorState();
+                mMotionPosition = motionPosition;
 
                 break;
             }
 
-            case TOUCH_MODE_DRAGGING:
-                if (contentFits()) {
-                    mTouchMode = TOUCH_MODE_REST;
-                    reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-                    break;
+            case MotionEvent.ACTION_MOVE: {
+                final int index = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                if (index < 0) {
+                    Log.e(LOGTAG, "onInterceptTouchEvent could not find pointer with id " +
+                            mActivePointerId + " - did TwoWayView receive an inconsistent " +
+                            "event stream?");
+                    return false;
                 }
 
-                mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-
-                final float velocity;
+                final float pos;
                 if (mIsVertical) {
-                    velocity = VelocityTrackerCompat.getYVelocity(mVelocityTracker,
-                            mActivePointerId);
+                    pos = MotionEventCompat.getY(ev, index);
                 } else {
-                    velocity = VelocityTrackerCompat.getXVelocity(mVelocityTracker,
-                            mActivePointerId);
+                    pos = MotionEventCompat.getX(ev, index);
                 }
 
-                if (Math.abs(velocity) >= mFlingVelocity) {
-                    mTouchMode = TOUCH_MODE_FLINGING;
-                    reportScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
+                if (mDataChanged) {
+                    // Re-sync everything if data has been changed
+                    // since the scroll operation can query the adapter.
+                    layoutChildren();
+                }
 
-                    mScroller.fling(0, 0,
+                final float diff = pos - mLastTouchPos + mTouchRemainderPos;
+                final int delta = (int) diff;
+                mTouchRemainderPos = diff - delta;
+
+                switch (mTouchMode) {
+                    case TOUCH_MODE_DOWN:
+                    case TOUCH_MODE_TAP:
+                    case TOUCH_MODE_DONE_WAITING:
+                        // Check if we have moved far enough that it looks more like a
+                        // scroll than a tap
+                        maybeStartScrolling(delta);
+                        break;
+
+                    case TOUCH_MODE_DRAGGING:
+                    case TOUCH_MODE_OVERSCROLL:
+                        mLastTouchPos = pos;
+                        maybeScroll(delta);
+                        break;
+                }
+
+                break;
+            }
+
+            case MotionEvent.ACTION_CANCEL:
+                cancelCheckForTap();
+                mTouchMode = TOUCH_MODE_REST;
+                reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+
+                setPressed(false);
+                View motionView = this.getChildAt(mMotionPosition - mFirstPosition);
+                if (motionView != null) {
+                    motionView.setPressed(false);
+                }
+
+                if (mStartEdge != null && mEndEdge != null) {
+                    needsInvalidate = mStartEdge.onRelease() || mEndEdge.onRelease();
+                }
+
+                recycleVelocityTracker();
+
+                break;
+
+            case MotionEvent.ACTION_UP: {
+                switch (mTouchMode) {
+                    case TOUCH_MODE_DOWN:
+                    case TOUCH_MODE_TAP:
+                    case TOUCH_MODE_DONE_WAITING: {
+                        final int motionPosition = mMotionPosition;
+                        final View child = getChildAt(motionPosition - mFirstPosition);
+
+                        final float x = ev.getX();
+                        final float y = ev.getY();
+
+                        final boolean inList;
+                        if (mIsVertical) {
+                            inList = x > getPaddingLeft() && x < getWidth() - getPaddingRight();
+                        } else {
+                            inList = y > getPaddingTop() && y < getHeight() - getPaddingBottom();
+                        }
+
+                        if (child != null && !child.hasFocusable() && inList) {
+                            if (mTouchMode != TOUCH_MODE_DOWN) {
+                                child.setPressed(false);
+                            }
+
+                            if (mPerformClick == null) {
+                                mPerformClick = new PerformClick();
+                            }
+
+                            final PerformClick performClick = mPerformClick;
+                            performClick.mClickMotionPosition = motionPosition;
+                            performClick.rememberWindowAttachCount();
+
+                            mResurrectToPosition = motionPosition;
+
+                            if (mTouchMode == TOUCH_MODE_DOWN || mTouchMode == TOUCH_MODE_TAP) {
+                                if (mTouchMode == TOUCH_MODE_DOWN) {
+                                    cancelCheckForTap();
+                                } else {
+                                    cancelCheckForLongPress();
+                                }
+
+                                mLayoutMode = LAYOUT_NORMAL;
+
+                                if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
+                                    mTouchMode = TOUCH_MODE_TAP;
+
+                                    setPressed(true);
+                                    positionSelector(mMotionPosition, child);
+                                    child.setPressed(true);
+
+                                    if (mSelector != null) {
+                                        Drawable d = mSelector.getCurrent();
+                                        if (d != null && d instanceof TransitionDrawable) {
+                                            ((TransitionDrawable) d).resetTransition();
+                                        }
+                                    }
+
+                                    if (mTouchModeReset != null) {
+                                        removeCallbacks(mTouchModeReset);
+                                    }
+
+                                    mTouchModeReset = new Runnable() {
+                                        public void run() {
+                                            mTouchMode = TOUCH_MODE_REST;
+
+                                            setPressed(false);
+                                            child.setPressed(false);
+
+                                            if (!mDataChanged) {
+                                                performClick.run();
+                                            }
+
+                                            mTouchModeReset = null;
+                                        }
+                                    };
+
+                                    postDelayed(mTouchModeReset,
+                                            ViewConfiguration.getPressedStateDuration());
+                                } else {
+                                    mTouchMode = TOUCH_MODE_REST;
+                                    updateSelectorState();
+                                }
+                            } else if (!mDataChanged && mAdapter.isEnabled(motionPosition)) {
+                                performClick.run();
+                            }
+                        }
+
+                        mTouchMode = TOUCH_MODE_REST;
+
+                        finishSmoothScrolling();
+                        updateSelectorState();
+
+                        break;
+                    }
+
+                    case TOUCH_MODE_DRAGGING:
+                        if (contentFits()) {
+                            mTouchMode = TOUCH_MODE_REST;
+                            reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+                            break;
+                        }
+
+                        mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+
+                        final float velocity;
+                        if (mIsVertical) {
+                            velocity = VelocityTrackerCompat.getYVelocity(mVelocityTracker,
+                                    mActivePointerId);
+                        } else {
+                            velocity = VelocityTrackerCompat.getXVelocity(mVelocityTracker,
+                                    mActivePointerId);
+                        }
+
+                        if (Math.abs(velocity) >= mFlingVelocity) {
+                            mTouchMode = TOUCH_MODE_FLINGING;
+                            reportScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
+
+                            mScroller.fling(0, 0,
                                     (int) (mIsVertical ? 0 : velocity),
                                     (int) (mIsVertical ? velocity : 0),
                                     (mIsVertical ? 0 : Integer.MIN_VALUE),
@@ -1700,33 +1699,33 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                                     (mIsVertical ? Integer.MIN_VALUE : 0),
                                     (mIsVertical ? Integer.MAX_VALUE : 0));
 
-                    mLastTouchPos = 0;
-                    needsInvalidate = true;
-                } else {
-                    mTouchMode = TOUCH_MODE_REST;
-                    reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+                            mLastTouchPos = 0;
+                            needsInvalidate = true;
+                        } else {
+                            mTouchMode = TOUCH_MODE_REST;
+                            reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+                        }
+
+                        break;
+
+                    case TOUCH_MODE_OVERSCROLL:
+                        mTouchMode = TOUCH_MODE_REST;
+                        reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+                        break;
                 }
 
-                break;
+                cancelCheckForTap();
+                cancelCheckForLongPress();
+                setPressed(false);
 
-            case TOUCH_MODE_OVERSCROLL:
-                mTouchMode = TOUCH_MODE_REST;
-                reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+                if (mStartEdge != null && mEndEdge != null) {
+                    needsInvalidate |= mStartEdge.onRelease() || mEndEdge.onRelease();
+                }
+
+                recycleVelocityTracker();
+
                 break;
             }
-
-            cancelCheckForTap();
-            cancelCheckForLongPress();
-            setPressed(false);
-
-            if (mStartEdge != null && mEndEdge != null) {
-                needsInvalidate |= mStartEdge.onRelease() || mEndEdge.onRelease();
-            }
-
-            recycleVelocityTracker();
-
-            break;
-        }
         }
 
         if (needsInvalidate) {
@@ -1832,19 +1831,19 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
 
         switch (action) {
-        case AccessibilityNodeInfo.ACTION_SCROLL_FORWARD:
-            if (isEnabled() && getLastVisiblePosition() < getCount() - 1) {
-                scrollListItemsBy(getAvailableSize());
-                return true;
-            }
-            return false;
+            case AccessibilityNodeInfo.ACTION_SCROLL_FORWARD:
+                if (isEnabled() && getLastVisiblePosition() < getCount() - 1) {
+                    scrollListItemsBy(getAvailableSize());
+                    return true;
+                }
+                return false;
 
-        case AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD:
-            if (isEnabled() && mFirstPosition > 0) {
-                scrollListItemsBy(-getAvailableSize());
-                return true;
-            }
-            return false;
+            case AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD:
+                if (isEnabled() && mFirstPosition > 0) {
+                    scrollListItemsBy(-getAvailableSize());
+                    return true;
+                }
+                return false;
         }
 
         return false;
@@ -1861,7 +1860,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         final ViewParent theParent = child.getParent();
 
         return (theParent instanceof ViewGroup) &&
-                 isViewAncestorOf((View) theParent, parent);
+                isViewAncestorOf((View) theParent, parent);
     }
 
     private void forceValidFocusDirection(int direction) {
@@ -2077,7 +2076,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
      *        when something has focus, we don't want to show selection (ugh).
      */
     private void handleNewSelectionChange(View selectedView, int direction, int newSelectedPosition,
-            boolean newFocusAssigned) {
+                                          boolean newFocusAssigned) {
         forceValidFocusDirection(direction);
 
         if (newSelectedPosition == INVALID_POSITION) {
@@ -2221,7 +2220,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
                 if (selectablePosition != INVALID_POSITION &&
                         ((movingForward && selectablePosition < positionOfNewFocus) ||
-                         (movingBackward && selectablePosition > positionOfNewFocus))) {
+                                (movingBackward && selectablePosition > positionOfNewFocus))) {
                     return null;
                 }
             }
@@ -2556,7 +2555,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     private boolean handleKeyScroll(KeyEvent event, int count, int direction) {
         boolean handled = false;
 
-        if (KeyEventCompat.hasNoModifiers(event)) {
+        if (event.hasNoModifiers()) {
             handled = resurrectSelectionIfNeeded();
             if (!handled) {
                 while (count-- > 0) {
@@ -2567,7 +2566,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     }
                 }
             }
-        } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_ALT_ON)) {
+        } else if (event.hasModifiers(KeyEvent.META_ALT_ON)) {
             handled = resurrectSelectionIfNeeded() || fullScroll(direction);
         }
 
@@ -2588,96 +2587,96 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         if (action != KeyEvent.ACTION_UP) {
             switch (keyCode) {
-            case KeyEvent.KEYCODE_DPAD_UP:
-                if (mIsVertical) {
-                    handled = handleKeyScroll(event, count, View.FOCUS_UP);
-                } else if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = handleFocusWithinItem(View.FOCUS_UP);
-                }
-                break;
-
-            case KeyEvent.KEYCODE_DPAD_DOWN: {
-                if (mIsVertical) {
-                    handled = handleKeyScroll(event, count, View.FOCUS_DOWN);
-                } else if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = handleFocusWithinItem(View.FOCUS_DOWN);
-                }
-                break;
-            }
-
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-                if (!mIsVertical) {
-                    handled = handleKeyScroll(event, count, View.FOCUS_LEFT);
-                } else if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = handleFocusWithinItem(View.FOCUS_LEFT);
-                }
-                break;
-
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                if (!mIsVertical) {
-                    handled = handleKeyScroll(event, count, View.FOCUS_RIGHT);
-                } else if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = handleFocusWithinItem(View.FOCUS_RIGHT);
-                }
-                break;
-
-            case KeyEvent.KEYCODE_DPAD_CENTER:
-            case KeyEvent.KEYCODE_ENTER:
-                if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = resurrectSelectionIfNeeded();
-                    if (!handled
-                            && event.getRepeatCount() == 0 && getChildCount() > 0) {
-                        keyPressed();
-                        handled = true;
+                case KeyEvent.KEYCODE_DPAD_UP:
+                    if (mIsVertical) {
+                        handled = handleKeyScroll(event, count, View.FOCUS_UP);
+                    } else if (event.hasNoModifiers()) {
+                        handled = handleFocusWithinItem(View.FOCUS_UP);
                     }
-                }
-                break;
+                    break;
 
-            case KeyEvent.KEYCODE_SPACE:
-                if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = resurrectSelectionIfNeeded() ||
-                            pageScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
-                } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_SHIFT_ON)) {
-                    handled = resurrectSelectionIfNeeded() ||
-                            fullScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
+                case KeyEvent.KEYCODE_DPAD_DOWN: {
+                    if (mIsVertical) {
+                        handled = handleKeyScroll(event, count, View.FOCUS_DOWN);
+                    } else if (event.hasNoModifiers()) {
+                        handled = handleFocusWithinItem(View.FOCUS_DOWN);
+                    }
+                    break;
                 }
 
-                handled = true;
-                break;
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                    if (!mIsVertical) {
+                        handled = handleKeyScroll(event, count, View.FOCUS_LEFT);
+                    } else if (event.hasNoModifiers()) {
+                        handled = handleFocusWithinItem(View.FOCUS_LEFT);
+                    }
+                    break;
 
-            case KeyEvent.KEYCODE_PAGE_UP:
-                if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = resurrectSelectionIfNeeded() ||
-                            pageScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
-                } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_ALT_ON)) {
-                    handled = resurrectSelectionIfNeeded() ||
-                            fullScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
-                }
-                break;
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    if (!mIsVertical) {
+                        handled = handleKeyScroll(event, count, View.FOCUS_RIGHT);
+                    } else if (event.hasNoModifiers()) {
+                        handled = handleFocusWithinItem(View.FOCUS_RIGHT);
+                    }
+                    break;
 
-            case KeyEvent.KEYCODE_PAGE_DOWN:
-                if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = resurrectSelectionIfNeeded() ||
-                            pageScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
-                } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_ALT_ON)) {
-                    handled = resurrectSelectionIfNeeded() ||
-                            fullScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
-                }
-                break;
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                case KeyEvent.KEYCODE_ENTER:
+                    if (event.hasNoModifiers()) {
+                        handled = resurrectSelectionIfNeeded();
+                        if (!handled
+                                && event.getRepeatCount() == 0 && getChildCount() > 0) {
+                            keyPressed();
+                            handled = true;
+                        }
+                    }
+                    break;
 
-            case KeyEvent.KEYCODE_MOVE_HOME:
-                if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = resurrectSelectionIfNeeded() ||
-                            fullScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
-                }
-                break;
+                case KeyEvent.KEYCODE_SPACE:
+                    if (event.hasNoModifiers()) {
+                        handled = resurrectSelectionIfNeeded() ||
+                                pageScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
+                    } else if (event.hasModifiers(KeyEvent.META_SHIFT_ON)) {
+                        handled = resurrectSelectionIfNeeded() ||
+                                fullScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
+                    }
 
-            case KeyEvent.KEYCODE_MOVE_END:
-                if (KeyEventCompat.hasNoModifiers(event)) {
-                    handled = resurrectSelectionIfNeeded() ||
-                            fullScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
-                }
-                break;
+                    handled = true;
+                    break;
+
+                case KeyEvent.KEYCODE_PAGE_UP:
+                    if (event.hasNoModifiers()) {
+                        handled = resurrectSelectionIfNeeded() ||
+                                pageScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
+                    } else if (event.hasModifiers(KeyEvent.META_ALT_ON)) {
+                        handled = resurrectSelectionIfNeeded() ||
+                                fullScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
+                    }
+                    break;
+
+                case KeyEvent.KEYCODE_PAGE_DOWN:
+                    if (event.hasNoModifiers()) {
+                        handled = resurrectSelectionIfNeeded() ||
+                                pageScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
+                    } else if (event.hasModifiers(KeyEvent.META_ALT_ON)) {
+                        handled = resurrectSelectionIfNeeded() ||
+                                fullScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
+                    }
+                    break;
+
+                case KeyEvent.KEYCODE_MOVE_HOME:
+                    if (event.hasNoModifiers()) {
+                        handled = resurrectSelectionIfNeeded() ||
+                                fullScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
+                    }
+                    break;
+
+                case KeyEvent.KEYCODE_MOVE_END:
+                    if (event.hasNoModifiers()) {
+                        handled = resurrectSelectionIfNeeded() ||
+                                fullScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
+                    }
+                    break;
             }
         }
 
@@ -2686,35 +2685,35 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
 
         switch (action) {
-        case KeyEvent.ACTION_DOWN:
-            return super.onKeyDown(keyCode, event);
+            case KeyEvent.ACTION_DOWN:
+                return super.onKeyDown(keyCode, event);
 
-        case KeyEvent.ACTION_UP:
-            if (!isEnabled()) {
-                return true;
-            }
-
-            if (isClickable() && isPressed() &&
-                    mSelectedPosition >= 0 && mAdapter != null &&
-                    mSelectedPosition < mAdapter.getCount()) {
-
-                final View child = getChildAt(mSelectedPosition - mFirstPosition);
-                if (child != null) {
-                    performItemClick(child, mSelectedPosition, mSelectedRowId);
-                    child.setPressed(false);
+            case KeyEvent.ACTION_UP:
+                if (!isEnabled()) {
+                    return true;
                 }
 
-                setPressed(false);
-                return true;
-            }
+                if (isClickable() && isPressed() &&
+                        mSelectedPosition >= 0 && mAdapter != null &&
+                        mSelectedPosition < mAdapter.getCount()) {
 
-            return false;
+                    final View child = getChildAt(mSelectedPosition - mFirstPosition);
+                    if (child != null) {
+                        performItemClick(child, mSelectedPosition, mSelectedRowId);
+                        child.setPressed(false);
+                    }
 
-        case KeyEvent.ACTION_MULTIPLE:
-            return super.onKeyMultiple(keyCode, count, event);
+                    setPressed(false);
+                    return true;
+                }
 
-        default:
-            return false;
+                return false;
+
+            case KeyEvent.ACTION_MULTIPLE:
+                return super.onKeyMultiple(keyCode, count, event);
+
+            default:
+                return false;
         }
     }
 
@@ -2840,13 +2839,13 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
     private void updateOverScrollState(int delta, int overscroll) {
         overScrollByInternal((mIsVertical ? 0 : overscroll),
-                             (mIsVertical ? overscroll : 0),
-                             (mIsVertical ? 0 : mOverScroll),
-                             (mIsVertical ? mOverScroll : 0),
-                             0, 0,
-                             (mIsVertical ? 0 : mOverscrollDistance),
-                             (mIsVertical ? mOverscrollDistance : 0),
-                             true);
+                (mIsVertical ? overscroll : 0),
+                (mIsVertical ? 0 : mOverScroll),
+                (mIsVertical ? mOverScroll : 0),
+                0, 0,
+                (mIsVertical ? 0 : mOverscrollDistance),
+                (mIsVertical ? mOverscrollDistance : 0),
+                true);
 
         if (Math.abs(mOverscrollDistance) == Math.abs(mOverScroll)) {
             // Break fling velocity if we impacted an edge
@@ -2929,46 +2928,46 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         int dX, dY; // dest x, y
 
         switch (direction) {
-        case View.FOCUS_RIGHT:
-            sX = source.right;
-            sY = source.top + source.height() / 2;
-            dX = dest.left;
-            dY = dest.top + dest.height() / 2;
-            break;
+            case View.FOCUS_RIGHT:
+                sX = source.right;
+                sY = source.top + source.height() / 2;
+                dX = dest.left;
+                dY = dest.top + dest.height() / 2;
+                break;
 
-        case View.FOCUS_DOWN:
-            sX = source.left + source.width() / 2;
-            sY = source.bottom;
-            dX = dest.left + dest.width() / 2;
-            dY = dest.top;
-            break;
+            case View.FOCUS_DOWN:
+                sX = source.left + source.width() / 2;
+                sY = source.bottom;
+                dX = dest.left + dest.width() / 2;
+                dY = dest.top;
+                break;
 
-        case View.FOCUS_LEFT:
-            sX = source.left;
-            sY = source.top + source.height() / 2;
-            dX = dest.right;
-            dY = dest.top + dest.height() / 2;
-            break;
+            case View.FOCUS_LEFT:
+                sX = source.left;
+                sY = source.top + source.height() / 2;
+                dX = dest.right;
+                dY = dest.top + dest.height() / 2;
+                break;
 
-        case View.FOCUS_UP:
-            sX = source.left + source.width() / 2;
-            sY = source.top;
-            dX = dest.left + dest.width() / 2;
-            dY = dest.bottom;
-            break;
+            case View.FOCUS_UP:
+                sX = source.left + source.width() / 2;
+                sY = source.top;
+                dX = dest.left + dest.width() / 2;
+                dY = dest.bottom;
+                break;
 
-        case View.FOCUS_FORWARD:
-        case View.FOCUS_BACKWARD:
-            sX = source.right + source.width() / 2;
-            sY = source.top + source.height() / 2;
-            dX = dest.left + dest.width() / 2;
-            dY = dest.top + dest.height() / 2;
-            break;
+            case View.FOCUS_FORWARD:
+            case View.FOCUS_BACKWARD:
+                sX = source.right + source.width() / 2;
+                sY = source.top + source.height() / 2;
+                dX = dest.left + dest.width() / 2;
+                dY = dest.top + dest.height() / 2;
+                break;
 
-        default:
-            throw new IllegalArgumentException("direction must be one of "
-                    + "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, "
-                    + "FOCUS_FORWARD, FOCUS_BACKWARD}.");
+            default:
+                throw new IllegalArgumentException("direction must be one of "
+                        + "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, "
+                        + "FOCUS_FORWARD, FOCUS_BACKWARD}.");
         }
 
         int deltaX = dX - sX;
@@ -3218,7 +3217,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         // invalidate before moving the children to avoid unnecessary invalidate
         // calls to bubble up from the children all the way to the top
         if (!awakenScrollbarsInternal()) {
-           invalidate();
+            invalidate();
         }
 
         offsetChildren(incrementalDelta);
@@ -3462,11 +3461,11 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
     private boolean touchModeDrawsInPressedState() {
         switch (mTouchMode) {
-        case TOUCH_MODE_TAP:
-        case TOUCH_MODE_DONE_WAITING:
-            return true;
-        default:
-            return false;
+            case TOUCH_MODE_TAP:
+            case TOUCH_MODE_DONE_WAITING:
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -3900,13 +3899,13 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         if (distance == 0 || mItemCount == 0 || childCount == 0 ||
                 (firstPosition == 0 && getChildStartEdge(getChildAt(0)) == start && distance < 0) ||
                 (lastPosition == mItemCount &&
-                            getChildEndEdge(getChildAt(childCount - 1)) == end && distance > 0)) {
+                        getChildEndEdge(getChildAt(childCount - 1)) == end && distance > 0)) {
             finishSmoothScrolling();
         } else {
             mScroller.startScroll(0, 0,
-                                   mIsVertical ? 0 : -distance,
-                                   mIsVertical ? -distance : 0,
-                                   duration);
+                    mIsVertical ? 0 : -distance,
+                    mIsVertical ? -distance : 0,
+                    duration);
 
             mLastTouchPos = 0;
 
@@ -4063,37 +4062,37 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             View oldFirstChild = null;
 
             switch (mLayoutMode) {
-            case LAYOUT_SET_SELECTION:
-                index = mNextSelectedPosition - mFirstPosition;
-                if (index >= 0 && index < childCount) {
-                    newSelected = getChildAt(index);
-                }
+                case LAYOUT_SET_SELECTION:
+                    index = mNextSelectedPosition - mFirstPosition;
+                    if (index >= 0 && index < childCount) {
+                        newSelected = getChildAt(index);
+                    }
 
-                break;
+                    break;
 
-            case LAYOUT_FORCE_TOP:
-            case LAYOUT_FORCE_BOTTOM:
-            case LAYOUT_SPECIFIC:
-            case LAYOUT_SYNC:
-                break;
+                case LAYOUT_FORCE_TOP:
+                case LAYOUT_FORCE_BOTTOM:
+                case LAYOUT_SPECIFIC:
+                case LAYOUT_SYNC:
+                    break;
 
-            case LAYOUT_MOVE_SELECTION:
-            default:
-                // Remember the previously selected view
-                index = mSelectedPosition - mFirstPosition;
-                if (index >= 0 && index < childCount) {
-                    oldSelected = getChildAt(index);
-                }
+                case LAYOUT_MOVE_SELECTION:
+                default:
+                    // Remember the previously selected view
+                    index = mSelectedPosition - mFirstPosition;
+                    if (index >= 0 && index < childCount) {
+                        oldSelected = getChildAt(index);
+                    }
 
-                // Remember the previous first child
-                oldFirstChild = getChildAt(0);
+                    // Remember the previous first child
+                    oldFirstChild = getChildAt(0);
 
-                if (mNextSelectedPosition >= 0) {
-                    delta = mNextSelectedPosition - mSelectedPosition;
-                }
+                    if (mNextSelectedPosition >= 0) {
+                        delta = mNextSelectedPosition - mSelectedPosition;
+                    }
 
-                // Caution: newSelected might be null
-                newSelected = getChildAt(index + delta);
+                    // Caution: newSelected might be null
+                    newSelected = getChildAt(index + delta);
             }
 
             final boolean dataChanged = mDataChanged;
@@ -4161,64 +4160,64 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             detachAllViewsFromParent();
 
             switch (mLayoutMode) {
-            case LAYOUT_SET_SELECTION:
-                if (newSelected != null) {
-                    final int newSelectedStart = getChildStartEdge(newSelected);
-                    selected = fillFromSelection(newSelectedStart, start, end);
-                } else {
-                    selected = fillFromMiddle(start, end);
-                }
-
-                break;
-
-            case LAYOUT_SYNC:
-                selected = fillSpecific(mSyncPosition, mSpecificStart);
-                break;
-
-            case LAYOUT_FORCE_BOTTOM:
-                selected = fillBefore(mItemCount - 1, end);
-                adjustViewsStartOrEnd();
-                break;
-
-            case LAYOUT_FORCE_TOP:
-                mFirstPosition = 0;
-                selected = fillFromOffset(start);
-                adjustViewsStartOrEnd();
-                break;
-
-            case LAYOUT_SPECIFIC:
-                selected = fillSpecific(reconcileSelectedPosition(), mSpecificStart);
-                break;
-
-            case LAYOUT_MOVE_SELECTION:
-                selected = moveSelection(oldSelected, newSelected, delta, start, end);
-                break;
-
-            default:
-                if (childCount == 0) {
-                    final int position = lookForSelectablePosition(0);
-                    setSelectedPositionInt(position);
-                    selected = fillFromOffset(start);
-                } else {
-                    if (mSelectedPosition >= 0 && mSelectedPosition < mItemCount) {
-                        int offset = start;
-                        if (oldSelected != null) {
-                            offset = getChildStartEdge(oldSelected);
-                        }
-                        selected = fillSpecific(mSelectedPosition, offset);
-                    } else if (mFirstPosition < mItemCount) {
-                        int offset = start;
-                        if (oldFirstChild != null) {
-                            offset = getChildStartEdge(oldFirstChild);
-                        }
-
-                        selected = fillSpecific(mFirstPosition, offset);
+                case LAYOUT_SET_SELECTION:
+                    if (newSelected != null) {
+                        final int newSelectedStart = getChildStartEdge(newSelected);
+                        selected = fillFromSelection(newSelectedStart, start, end);
                     } else {
-                        selected = fillSpecific(0, start);
+                        selected = fillFromMiddle(start, end);
                     }
-                }
 
-                break;
+                    break;
+
+                case LAYOUT_SYNC:
+                    selected = fillSpecific(mSyncPosition, mSpecificStart);
+                    break;
+
+                case LAYOUT_FORCE_BOTTOM:
+                    selected = fillBefore(mItemCount - 1, end);
+                    adjustViewsStartOrEnd();
+                    break;
+
+                case LAYOUT_FORCE_TOP:
+                    mFirstPosition = 0;
+                    selected = fillFromOffset(start);
+                    adjustViewsStartOrEnd();
+                    break;
+
+                case LAYOUT_SPECIFIC:
+                    selected = fillSpecific(reconcileSelectedPosition(), mSpecificStart);
+                    break;
+
+                case LAYOUT_MOVE_SELECTION:
+                    selected = moveSelection(oldSelected, newSelected, delta, start, end);
+                    break;
+
+                default:
+                    if (childCount == 0) {
+                        final int position = lookForSelectablePosition(0);
+                        setSelectedPositionInt(position);
+                        selected = fillFromOffset(start);
+                    } else {
+                        if (mSelectedPosition >= 0 && mSelectedPosition < mItemCount) {
+                            int offset = start;
+                            if (oldSelected != null) {
+                                offset = getChildStartEdge(oldSelected);
+                            }
+                            selected = fillSpecific(mSelectedPosition, offset);
+                        } else if (mFirstPosition < mItemCount) {
+                            int offset = start;
+                            if (oldFirstChild != null) {
+                                offset = getChildStartEdge(oldFirstChild);
+                            }
+
+                            selected = fillSpecific(mFirstPosition, offset);
+                        } else {
+                            selected = fillSpecific(0, start);
+                        }
+                    }
+
+                    break;
 
             }
 
@@ -4312,7 +4311,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     }
 
     private View moveSelection(View oldSelected, View newSelected, int delta, int start,
-            int end) {
+                               int end) {
         final int fadingEdgeLength = getFadingEdgeLength();
         final int selectedPosition = mSelectedPosition;
 
@@ -4421,7 +4420,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 // Find space required to bring the top of the selected item fully into view
                 final int spaceBefore = minStart - selectedStart;
 
-               // Find space available below the selection into which we can scroll downwards
+                // Find space available below the selection into which we can scroll downwards
                 final int spaceAfter = maxEnd - selectedEnd;
 
                 // Don't scroll more than half the height of the list
@@ -4525,51 +4524,51 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 mPendingSync = null;
 
                 switch (mSyncMode) {
-                case SYNC_SELECTED_POSITION:
-                    if (isInTouchMode()) {
-                        // We saved our state when not in touch mode. (We know this because
-                        // mSyncMode is SYNC_SELECTED_POSITION.) Now we are trying to
-                        // restore in touch mode. Just leave mSyncPosition as it is (possibly
-                        // adjusting if the available range changed) and return.
+                    case SYNC_SELECTED_POSITION:
+                        if (isInTouchMode()) {
+                            // We saved our state when not in touch mode. (We know this because
+                            // mSyncMode is SYNC_SELECTED_POSITION.) Now we are trying to
+                            // restore in touch mode. Just leave mSyncPosition as it is (possibly
+                            // adjusting if the available range changed) and return.
+                            mLayoutMode = LAYOUT_SYNC;
+                            mSyncPosition = Math.min(Math.max(0, mSyncPosition), itemCount - 1);
+
+                            return;
+                        } else {
+                            // See if we can find a position in the new data with the same
+                            // id as the old selection. This will change mSyncPosition.
+                            newPos = findSyncPosition();
+                            if (newPos >= 0) {
+                                // Found it. Now verify that new selection is still selectable
+                                selectablePos = lookForSelectablePosition(newPos, true);
+                                if (selectablePos == newPos) {
+                                    // Same row id is selected
+                                    mSyncPosition = newPos;
+
+                                    if (mSyncSize == getSize()) {
+                                        // If we are at the same height as when we saved state, try
+                                        // to restore the scroll position too.
+                                        mLayoutMode = LAYOUT_SYNC;
+                                    } else {
+                                        // We are not the same height as when the selection was saved, so
+                                        // don't try to restore the exact position
+                                        mLayoutMode = LAYOUT_SET_SELECTION;
+                                    }
+
+                                    // Restore selection
+                                    setNextSelectedPositionInt(newPos);
+                                    return;
+                                }
+                            }
+                        }
+                        break;
+
+                    case SYNC_FIRST_POSITION:
+                        // Leave mSyncPosition as it is -- just pin to available range
                         mLayoutMode = LAYOUT_SYNC;
                         mSyncPosition = Math.min(Math.max(0, mSyncPosition), itemCount - 1);
 
                         return;
-                    } else {
-                        // See if we can find a position in the new data with the same
-                        // id as the old selection. This will change mSyncPosition.
-                        newPos = findSyncPosition();
-                        if (newPos >= 0) {
-                            // Found it. Now verify that new selection is still selectable
-                            selectablePos = lookForSelectablePosition(newPos, true);
-                            if (selectablePos == newPos) {
-                                // Same row id is selected
-                                mSyncPosition = newPos;
-
-                                if (mSyncSize == getSize()) {
-                                    // If we are at the same height as when we saved state, try
-                                    // to restore the scroll position too.
-                                    mLayoutMode = LAYOUT_SYNC;
-                                } else {
-                                    // We are not the same height as when the selection was saved, so
-                                    // don't try to restore the exact position
-                                    mLayoutMode = LAYOUT_SET_SELECTION;
-                                }
-
-                                // Restore selection
-                                setNextSelectedPositionInt(newPos);
-                                return;
-                            }
-                        }
-                    }
-                    break;
-
-                case SYNC_FIRST_POSITION:
-                    // Leave mSyncPosition as it is -- just pin to available range
-                    mLayoutMode = LAYOUT_SYNC;
-                    mSyncPosition = Math.min(Math.max(0, mSyncPosition), itemCount - 1);
-
-                    return;
                 }
             }
 
@@ -4844,7 +4843,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
      * @return The height of this TwoWayView with the given children.
      */
     private int measureHeightOfChildren(int widthMeasureSpec, int startPosition, int endPosition,
-            final int maxHeight, int disallowPartialChildPosition) {
+                                        final int maxHeight, int disallowPartialChildPosition) {
 
         final int paddingTop = getPaddingTop();
         final int paddingBottom = getPaddingBottom();
@@ -4891,9 +4890,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 // We went over, figure out which height to return.  If returnedHeight > maxHeight,
                 // then the i'th position did not fit completely.
                 return (disallowPartialChildPosition >= 0) // Disallowing is enabled (> -1)
-                            && (i > disallowPartialChildPosition) // We've past the min pos
-                            && (prevHeightWithoutPartialChild > 0) // We have a prev height
-                            && (returnedHeight != maxHeight) // i'th child did not fit completely
+                        && (i > disallowPartialChildPosition) // We've past the min pos
+                        && (prevHeightWithoutPartialChild > 0) // We have a prev height
+                        && (returnedHeight != maxHeight) // i'th child did not fit completely
                         ? prevHeightWithoutPartialChild
                         : maxHeight;
             }
@@ -4935,7 +4934,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
      * @return The width of this TwoWayView with the given children.
      */
     private int measureWidthOfChildren(int heightMeasureSpec, int startPosition, int endPosition,
-            final int maxWidth, int disallowPartialChildPosition) {
+                                       final int maxWidth, int disallowPartialChildPosition) {
 
         final int paddingLeft = getPaddingLeft();
         final int paddingRight = getPaddingRight();
@@ -4982,9 +4981,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 // We went over, figure out which width to return.  If returnedWidth > maxWidth,
                 // then the i'th position did not fit completely.
                 return (disallowPartialChildPosition >= 0) // Disallowing is enabled (> -1)
-                            && (i > disallowPartialChildPosition) // We've past the min pos
-                            && (prevWidthWithoutPartialChild > 0) // We have a prev width
-                            && (returnedWidth != maxWidth) // i'th child did not fit completely
+                        && (i > disallowPartialChildPosition) // We've past the min pos
+                        && (prevWidthWithoutPartialChild > 0) // We have a prev width
+                        && (returnedWidth != maxWidth) // i'th child did not fit completely
                         ? prevWidthWithoutPartialChild
                         : maxWidth;
             }
@@ -5036,7 +5035,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
     @TargetApi(11)
     private void setupChild(View child, int position, int top, int left,
-            boolean flow, boolean selected, boolean recycled) {
+                            boolean flow, boolean selected, boolean recycled) {
         final boolean isSelected = selected && shouldShowSelector();
         final boolean updateChildSelected = isSelected != child.isSelected();
         final int touchMode = mTouchMode;
@@ -5692,7 +5691,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     }
 
     private boolean performLongPress(final View child,
-            final int longPressPosition, final long longPressId) {
+                                     final int longPressPosition, final long longPressId) {
         // CHOICE_MODE_MULTIPLE_MODAL takes over long press.
         boolean handled = false;
 
@@ -6501,8 +6500,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             final int motionPosition = mClickMotionPosition;
 
             if (adapter != null && mItemCount > 0 &&
-                motionPosition != INVALID_POSITION &&
-                motionPosition < adapter.getCount() && sameWindow()) {
+                    motionPosition != INVALID_POSITION &&
+                    motionPosition < adapter.getCount() && sameWindow()) {
 
                 final View child = getChildAt(motionPosition - mFirstPosition);
                 if (child != null) {
@@ -6697,25 +6696,25 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             final long id = getItemIdAtPosition(position);
 
             switch (action) {
-            case AccessibilityNodeInfoCompat.ACTION_CLEAR_SELECTION:
-                if (getSelectedItemPosition() == position) {
-                    setSelection(INVALID_POSITION);
-                    return true;
-                }
-                return false;
+                case AccessibilityNodeInfoCompat.ACTION_CLEAR_SELECTION:
+                    if (getSelectedItemPosition() == position) {
+                        setSelection(INVALID_POSITION);
+                        return true;
+                    }
+                    return false;
 
-            case AccessibilityNodeInfoCompat.ACTION_SELECT:
-                if (getSelectedItemPosition() != position) {
-                    setSelection(position);
-                    return true;
-                }
-                return false;
+                case AccessibilityNodeInfoCompat.ACTION_SELECT:
+                    if (getSelectedItemPosition() != position) {
+                        setSelection(position);
+                        return true;
+                    }
+                    return false;
 
-            case AccessibilityNodeInfoCompat.ACTION_CLICK:
-                return isClickable() && performItemClick(host, position, id);
+                case AccessibilityNodeInfoCompat.ACTION_CLICK:
+                    return isClickable() && performItemClick(host, position, id);
 
-            case AccessibilityNodeInfoCompat.ACTION_LONG_CLICK:
-                return isLongClickable() && performLongPress(host, position, id);
+                case AccessibilityNodeInfoCompat.ACTION_LONG_CLICK:
+                    return isLongClickable() && performLongPress(host, position, id);
             }
 
             return false;
@@ -7040,8 +7039,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     final int nextViewIndex = 1;
                     final int childCount = getChildCount();
                     if (firstPosition == mBoundPosition ||
-                        childCount <= nextViewIndex ||
-                        firstPosition + childCount >= mItemCount) {
+                            childCount <= nextViewIndex ||
+                            firstPosition + childCount >= mItemCount) {
                         return;
                     }
 
