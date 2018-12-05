@@ -27,8 +27,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.OppiaMobileActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
@@ -45,7 +45,6 @@ import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -167,6 +166,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		if (password.length() < MobileLearning.PASSWORD_MIN_LENGTH) {
 			passwordField.setErrorEnabled(true);
 			passwordField.setError(getString(R.string.error_register_password,  MobileLearning.PASSWORD_MIN_LENGTH ));
+			passwordField.requestFocus();
 		    return;
 		}
 		
@@ -174,6 +174,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		if (!password.equals(passwordAgain)) {
             passwordField.setErrorEnabled(true);
             passwordField.setError(getString(R.string.error_register_password_no_match ));
+			passwordField.requestFocus();
             return;
 		}
 
@@ -181,6 +182,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		if (phoneNo.length() < 8) {
             phoneNoField.setErrorEnabled(true);
             phoneNoField.setError(getString(R.string.error_register_no_phoneno ));
+			phoneNoField.requestFocus();
 			return;
 		}
 
@@ -227,7 +229,10 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	public void onConnectionError(String error, final User u) {
 		pDialog.dismiss();
 		Context ctx = super.getActivity();
-		if (ctx != null) {
+		if (ctx == null){
+			return;
+		}
+		if (BuildConfig.OFFLINE_REGISTER_ENABLED){
 			AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
 			builder.setCancelable(false);
 			builder.setTitle(error);
@@ -240,6 +245,9 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			});
 			builder.setNegativeButton(R.string.cancel, null);
 			builder.show();
+		}
+		else{
+			UIUtils.showAlert(ctx,R.string.error,error);
 		}
 	}
 

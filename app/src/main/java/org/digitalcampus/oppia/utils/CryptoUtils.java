@@ -47,7 +47,7 @@ public class CryptoUtils {
         String hashed = "";
         for (Pair<String, String> algorithm : preferred_algorithms){
             try {
-                hashed = encryptWithAlgorithm(password, algorithm);
+                return encryptWithAlgorithm(password, algorithm);
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
