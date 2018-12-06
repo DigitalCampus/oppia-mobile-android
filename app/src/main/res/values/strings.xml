@@ -142,15 +142,15 @@
     <string name="login_password_title">Password</string>
     <string name="title_register">Register</string>
 
-    <string name="register_form_username_title">Username (*)</string>
-    <string name="register_form_email_title">Email address (*)</string>
-    <string name="register_form_firstname_title">First name (*)</string>
+    <string name="register_form_username_title">Username</string>
+    <string name="register_form_email_title">Email address</string>
+    <string name="register_form_firstname_title">First name</string>
     <string name="register_form_jobtitle_title">Job Title</string>
-    <string name="register_form_lastname_title">Last name (*)</string>
+    <string name="register_form_lastname_title">Last name</string>
     <string name="register_form_organisation_title">Organisation</string>
-    <string name="register_form_password_title">Password (*)</string>
-    <string name="register_form_password_again_title">Password (again) (*)</string>
-    <string name="register_form_phoneno_title">Phone number (*)</string>
+    <string name="register_form_password_title">Password</string>
+    <string name="register_form_password_again_title">Password (again)</string>
+    <string name="register_form_phoneno_title">Phone number</string>
     <string name="register_btn_text">Register</string>
 
     <string name="reset_username_title">Username or Email</string>
@@ -393,5 +393,7 @@
     <string name="login_dont_have_account">Don\'t have an account yet?</string>
     <string name="offline_register_confirm">Alternatively, you can register offline and start using the app. Then, you\'ll need to submit or transfer your user data later</string>
     <string name="register_offline">Register offline</string>
+    <string name="field_required">This field cannot be empty</string>
+    <string name="field_spaces_error">Cannot contain spaces</string>
 </resources>
 
