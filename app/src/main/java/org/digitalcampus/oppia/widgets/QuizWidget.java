@@ -435,7 +435,7 @@ public class QuizWidget extends WidgetFactory {
 	private boolean saveAnswer() {
 		try {
 			List<String> answers = qw.getQuestionResponses(quiz.getCurrentQuestion().getResponseOptions());
-			if (answers != null) {
+			if ( (answers != null) && (answers.size() > 0)) {
 				quiz.getCurrentQuestion().setUserResponses(answers);
 				return true;
 			}
