@@ -65,10 +65,7 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_scorecards, null);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        vv.setLayoutParams(lp);
-        return vv;
+        return inflater.inflate(R.layout.fragment_scorecards, null);
     }
 
     @Override

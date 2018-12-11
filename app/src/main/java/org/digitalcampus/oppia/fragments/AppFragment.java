@@ -11,7 +11,7 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
     @Override
     public void apiKeyInvalidated() {
         FragmentActivity parent = this.getActivity();
-        if (parent != null && parent instanceof AppActivity){
+        if (parent instanceof AppActivity){
             ((AppActivity) parent).apiKeyInvalidated();
         }
     }

@@ -17,10 +17,25 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
@@ -38,27 +53,10 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.splunk.mint.Mint;
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class ResourceWidget extends WidgetFactory {
 
@@ -96,9 +94,8 @@ public class ResourceWidget extends WidgetFactory {
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = (org.digitalcampus.oppia.model.Activity) getArguments().getSerializable(org.digitalcampus.oppia.model.Activity.TAG);
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_resource, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
+
+		View vv = inflater.inflate(R.layout.widget_resource, container, false);
 		vv.setId(activity.getActId());
 		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
 			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));

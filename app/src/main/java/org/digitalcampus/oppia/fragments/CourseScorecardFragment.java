@@ -89,8 +89,6 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View vv = inflater.inflate(R.layout.fragment_scorecard, null);
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        vv.setLayoutParams(lp);
         // refresh course to get most recent info (otherwise gets the info from when course first opened)
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));

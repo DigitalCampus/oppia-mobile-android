@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.widgets;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -38,7 +37,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -60,18 +58,11 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.gamification.Gamification;
-import org.digitalcampus.oppia.gamification.GamificationEngine;
-import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.GamificationEvent;
-import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizFeedback;
 import org.digitalcampus.oppia.model.QuizStats;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 import org.digitalcampus.oppia.widgets.quiz.DescriptionWidget;
@@ -82,8 +73,6 @@ import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
 import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
 import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -133,7 +122,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = LayoutInflater.from(getActivity()).inflate(R.layout.widget_quiz, null);
+		View vv = inflater.inflate(R.layout.widget_quiz, container, false);
 		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
@@ -141,8 +130,6 @@ public class QuizWidget extends WidgetFactory {
 		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(
 				PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
 		vv.setId(activity.getActId());
 		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
 			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG));

@@ -17,9 +17,6 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -28,7 +25,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.LinearLayout.LayoutParams;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 
 public class OppiaWebViewFragment extends Fragment{
 
@@ -55,12 +54,11 @@ public class OppiaWebViewFragment extends Fragment{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_webview, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
+		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
+		View vv = inflater.inflate(R.layout.fragment_webview, container, false);
 		this.id = (Integer) getArguments().getSerializable(OppiaWebViewFragment.TAG_ID);
 		vv.setId(id);
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
+
 		return vv;
 	}
 	
