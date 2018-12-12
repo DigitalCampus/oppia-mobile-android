@@ -104,7 +104,7 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, null);
+		View vv = inflater.inflate(R.layout.widget_quiz, container, false);
 		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
