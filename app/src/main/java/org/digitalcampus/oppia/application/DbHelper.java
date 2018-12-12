@@ -1925,8 +1925,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		c2.close();
 	    		c.moveToNext();
 	    	}
-	    } else {
-	    	completed = true;
 	    }
         c.close();
         return completed;
@@ -1968,8 +1966,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	    		c2.close();
 	    		c.moveToNext();
 	    	}
-	    } else {
-	    	completed = true;
 	    }
 	    c.close();
 	    return completed;

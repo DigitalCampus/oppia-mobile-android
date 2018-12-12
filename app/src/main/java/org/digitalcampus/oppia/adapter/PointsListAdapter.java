@@ -17,12 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Points;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -30,6 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.model.Points;
+
+import java.util.List;
 
 public class PointsListAdapter extends ArrayAdapter<Points>{
 

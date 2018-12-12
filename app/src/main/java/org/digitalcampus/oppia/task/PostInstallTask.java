@@ -63,7 +63,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
                         f = new FileOutputStream(new File(Storage.getDownloadPath(ctx), file));
                         is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_COURSES_DIR + File.separator + file);
                         byte[] buffer = new byte[1024];
-                        int len = 0;
+                        int len;
                         while ((len = is.read(buffer)) > 0) {
                             f.write(buffer, 0, len);
                         }
@@ -106,7 +106,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
                         f = new FileOutputStream(new File(Storage.getMediaPath(ctx), file));
                         is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_MEDIA_DIR + File.separator + file);
                         byte[] buffer = new byte[1024];
-                        int len = 0;
+                        int len;
                         while ((len = is.read(buffer)) > 0) {
                             f.write(buffer, 0, len);
                         }

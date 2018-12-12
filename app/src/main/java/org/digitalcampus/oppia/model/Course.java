@@ -172,11 +172,7 @@ public class Course extends MultiLangInfoModel implements Serializable {
 	}
 	
 	public boolean hasMedia(){
-		if(media.size() == 0){
-			return false;
-		} else {
-			return true;
-		}
+		return media.size() != 0;
 	}
 	
 	public void setMetaPages(ArrayList<CourseMetaPage> ammp){

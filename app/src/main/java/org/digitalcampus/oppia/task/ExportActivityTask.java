@@ -29,7 +29,7 @@ import java.util.List;
 
 public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
-    private static final String TAG = ExportActivityTask.class.getSimpleName();;
+    private static final String TAG = ExportActivityTask.class.getSimpleName();
     protected Context ctx;
     private SharedPreferences prefs;
     private ExportActivityListener listener;

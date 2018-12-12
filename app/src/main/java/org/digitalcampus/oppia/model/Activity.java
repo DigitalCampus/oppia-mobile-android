@@ -180,7 +180,7 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 				@SuppressWarnings("unchecked")
 				Iterator<String> iter = (Iterator<String>) contentObj.keys();
 				while(iter.hasNext()){
-					String key = iter.next().toString();
+					String key = iter.next();
 					String content = contentObj.getString(key);
 					Lang l = new Lang(key,content);
 					this.contents.add(l);
@@ -191,11 +191,7 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 		}
 	}
 	public boolean hasMedia(){
-		if(media.size() == 0){
-			return false;
-		} else {
-			return true;
-		}
+		return media.size() != 0;
 	}
 	
 	public void setCompleted(boolean completed){

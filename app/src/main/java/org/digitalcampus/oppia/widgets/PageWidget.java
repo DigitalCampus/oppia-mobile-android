@@ -53,9 +53,7 @@ import java.util.Locale;
 public class PageWidget extends WidgetFactory {
 
 	public static final String TAG = PageWidget.class.getSimpleName();
-	private WebView wv;
 
-	
 	public static PageWidget newInstance(Activity activity, Course course, boolean isBaseline) {
 		PageWidget myFragment = new PageWidget();
 	    Bundle args = new Bundle();
@@ -97,7 +95,7 @@ public class PageWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		wv = (WebView) super.getActivity().findViewById(activity.getActId());
+		WebView wv = (WebView) super.getActivity().findViewById(activity.getActId());
 		// get the location data
 		String url = course.getLocation()
 				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
@@ -207,7 +205,7 @@ public class PageWidget extends WidgetFactory {
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
-		HashMap<String, Object> config = new HashMap<String, Object>();
+		HashMap<String, Object> config = new HashMap<>();
 		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
 		config.put(WidgetFactory.PROPERTY_ACTIVITY, this.activity);
 		config.put(WidgetFactory.PROPERTY_COURSE, this.course);

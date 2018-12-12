@@ -17,10 +17,20 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
@@ -36,15 +46,11 @@ import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.Gamification;
-import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -52,23 +58,11 @@ import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
 import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
 import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class FeedbackWidget extends WidgetFactory {
 
@@ -167,7 +161,7 @@ public class FeedbackWidget extends WidgetFactory {
 		}
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
-		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).toString()));
+		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))));
 
 		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
@@ -309,11 +303,7 @@ public class FeedbackWidget extends WidgetFactory {
 	
 	@Override
 	public boolean getActivityCompleted() {
-		if (isOnResultsPage) {
-			return true;
-		} else {
-			return false;
-		}
+		return isOnResultsPage;
 	}
 
 	@Override

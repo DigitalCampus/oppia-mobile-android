@@ -101,7 +101,7 @@ public class PermissionsManager {
 
     public static void requestPermissions(final Activity act, List<String> permissions){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            act.requestPermissions( permissions.toArray( new String[permissions.size()] ), PERMISSIONS_REQUEST );
+            act.requestPermissions( permissions.toArray(new String[0]), PERMISSIONS_REQUEST );
         }
     }
 

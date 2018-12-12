@@ -497,7 +497,7 @@ public class QuizWidget extends WidgetFactory {
 		// Show the detail of which questions were right/wrong
 		if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ATEND){
 			ListView questionFeedbackLV = (ListView) getView().findViewById(R.id.quiz_results_feedback);
-			ArrayList<QuizFeedback> quizFeedback = new ArrayList<QuizFeedback>();
+			ArrayList<QuizFeedback> quizFeedback = new ArrayList<>();
 			List<QuizQuestion> questions = this.quiz.getQuestions();
 			for(QuizQuestion q: questions){
 				if(!(q instanceof Description)){
@@ -597,7 +597,7 @@ public class QuizWidget extends WidgetFactory {
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
-		HashMap<String, Object> config = new HashMap<String, Object>();
+		HashMap<String, Object> config = new HashMap<>();
 		config.put("quiz", this.quiz);
 		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
 		config.put(WidgetFactory.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
@@ -648,11 +648,9 @@ public class QuizWidget extends WidgetFactory {
 	private class OnImageClickListener implements OnClickListener{
 
 		private Context ctx;
-		private String type;
 		
 		public OnImageClickListener(Context ctx){
 			this.ctx = ctx;
-			this.type = type;
 		}
 
 		public void onClick(View v) {

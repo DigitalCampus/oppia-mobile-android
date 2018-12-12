@@ -39,7 +39,6 @@ import java.util.Locale;
 public class AboutFragment extends Fragment{
 
 	public static final String TAG = AboutFragment.class.getSimpleName();
-	private WebView webView;
 	private SharedPreferences prefs;
 	
 	public static AboutFragment newInstance() {
@@ -61,7 +60,7 @@ public class AboutFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		webView = (WebView) super.getActivity().findViewById(R.id.about_webview);
+		WebView webView = (WebView) super.getActivity().findViewById(R.id.about_webview);
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		String url = Storage.getLocalizedFilePath(super.getActivity(), lang, "about.html");
 

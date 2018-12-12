@@ -33,8 +33,7 @@ public class OppiaWebViewFragment extends Fragment{
 
 	public static final String TAG = OppiaWebViewFragment.class.getSimpleName();
 	private static final String TAG_ID = "OppiaWebViewFragment_TAG_ID";
-	
-	private WebView webView;
+
 	private String url;
 	private int id;
 	private SharedPreferences prefs;
@@ -65,8 +64,8 @@ public class OppiaWebViewFragment extends Fragment{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		webView = (WebView) super.getActivity().findViewById(this.id);
+
+		WebView webView = (WebView) super.getActivity().findViewById(this.id);
 		webView.getSettings().setJavaScriptEnabled(true);
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		webView.getSettings().setDefaultFontSize(defaultFontSize);

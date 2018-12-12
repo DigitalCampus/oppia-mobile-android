@@ -49,8 +49,6 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
     private static final int RESULT_DISMISS = -1;
     public static final String FRAGMENT_TAG = "GrantStorageAccessFragment";
 
-    private InfoDialog dialog;
-
     public interface AccessGrantedListener{
         void onAccessGranted(Uri pathAccessGranted);
     }
@@ -65,7 +63,7 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
         super.onCreate(savedInstanceState);
 
         FragmentManager fragmentManager = getFragmentManager();
-        dialog = new InfoDialog();
+        InfoDialog dialog = new InfoDialog();
         dialog.setListener(this);
         dialog.show(fragmentManager, "dialog");
     }

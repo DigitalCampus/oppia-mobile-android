@@ -22,7 +22,7 @@ import java.util.List;
 
 public class Payload {
 	
-	private List<? extends Object> data;
+	private List<?> data;
 	private boolean result = false;
 	private String resultResponse;
 	private ArrayList<Object> responseData = new ArrayList<>();

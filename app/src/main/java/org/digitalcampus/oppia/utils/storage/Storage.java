@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.StatFs;
 import android.util.Log;
 
-import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
 
