@@ -58,7 +58,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
             if (backup != null){
                 CourseTransferableFile courseBackup = new CourseTransferableFile();
                 courseBackup.setType(CourseTransferableFile.TYPE_COURSE_BACKUP);
-                courseBackup.setTitle(course.getMultiLangInfo().getTitle(lang));
+                courseBackup.setTitle(course.getTitle(lang));
                 courseBackup.setFilename(backup.getName());
                 courseBackup.setShortname(course.getShortname());
                 courseBackup.setVersionId(course.getVersionId());

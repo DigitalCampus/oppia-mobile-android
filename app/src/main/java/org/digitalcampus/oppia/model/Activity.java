@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
 
-public class Activity implements Serializable{
+public class Activity extends MultiLangInfoModel implements Serializable{
 	
 	/**
 	 * 
@@ -47,7 +47,6 @@ public class Activity implements Serializable{
 	private int actId;
 	private int dbId;
 	private String actType;
-    private MultiLangInfo multiLangInfo = new MultiLangInfo();
 	private ArrayList<Lang> locations = new ArrayList<>();
 	private ArrayList<Lang> contents = new ArrayList<>();
 	private String digest;
@@ -246,12 +245,6 @@ public class Activity implements Serializable{
 	public void setDbId(int dbId) {
 		this.dbId = dbId;
 	}
-
-    public MultiLangInfo getMultiLangInfo() { return multiLangInfo; }
-
-    public void setMultiLangInfo(MultiLangInfo multiLangInfo) {
-        this.multiLangInfo = multiLangInfo;
-    }
 
     public void addGamificationEvent(GamificationEvent event){
         gamificationEvents.add(event);

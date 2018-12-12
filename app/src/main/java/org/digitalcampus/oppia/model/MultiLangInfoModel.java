@@ -17,6 +17,9 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.content.SharedPreferences;
+
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,9 +27,10 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 
-public class MultiLangInfo implements Serializable {
+public class MultiLangInfoModel implements Serializable {
 
     private ArrayList<Lang> langs = new ArrayList<>();
     private ArrayList<Lang> titles = new ArrayList<>();
@@ -38,6 +42,10 @@ public class MultiLangInfo implements Serializable {
     public String getTitle(String lang) {
         String title = getInfo(lang, titles);
         return title == null ? DEFAULT_NOTITLE : title;
+    }
+
+    public String getTitle(SharedPreferences prefs){
+        return this.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
     }
 
     public void setTitles(ArrayList<Lang> titles) {
@@ -54,6 +62,10 @@ public class MultiLangInfo implements Serializable {
 
     public String getDescription(String lang) {
         return getInfo(lang, descriptions);
+    }
+
+    public String getDescription(SharedPreferences prefs){
+        return this.getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
     }
 
     public void setDescriptions(ArrayList<Lang> descriptions) {

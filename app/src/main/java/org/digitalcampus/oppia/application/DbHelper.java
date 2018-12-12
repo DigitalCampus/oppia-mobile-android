@@ -565,11 +565,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		ContentValues values = new ContentValues();
 		values.put(COURSE_C_VERSIONID, course.getVersionId());
-		values.put(COURSE_C_TITLE, course.getMultiLangInfo().getTitleJSONString());
+		values.put(COURSE_C_TITLE, course.getTitleJSONString());
 		values.put(COURSE_C_SHORTNAME, course.getShortname());
-		values.put(COURSE_C_LANGS, course.getMultiLangInfo().getLangsJSONString());
+		values.put(COURSE_C_LANGS, course.getLangsJSONString());
 		values.put(COURSE_C_IMAGE, course.getImageFile());
-		values.put(COURSE_C_DESC, course.getMultiLangInfo().getDescriptionJSONString());
+		values.put(COURSE_C_DESC, course.getDescriptionJSONString());
 		values.put(COURSE_C_ORDER_PRIORITY, course.getPriority());
         values.put(COURSE_C_SEQUENCING, course.getSequencingMode());
 		
@@ -709,7 +709,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(ACTIVITY_C_ACTID, a.getActId());
 			values.put(ACTIVITY_C_ACTTYPE, a.getActType());
 			values.put(ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
-			values.put(ACTIVITY_C_TITLE, a.getMultiLangInfo().getTitleJSONString());
+			values.put(ACTIVITY_C_TITLE, a.getTitleJSONString());
 			db.insertOrThrow(ACTIVITY_TABLE, null, values);
 		}
         endTransaction(true);
@@ -758,9 +758,9 @@ public class DbHelper extends SQLiteOpenHelper {
 			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
-			course.getMultiLangInfo().setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
+			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
-			course.getMultiLangInfo().setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
+			course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
 			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
 			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
             course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
@@ -803,12 +803,12 @@ public class DbHelper extends SQLiteOpenHelper {
 			Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
 			course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
-			course.getMultiLangInfo().setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
+			course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
-			course.getMultiLangInfo().setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
+			course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
 			course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
 			course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
-			course.getMultiLangInfo().setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
+			course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
             course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
             course = this.courseSetProgress(course, userId);
 			courses.add(course);
@@ -828,12 +828,12 @@ public class DbHelper extends SQLiteOpenHelper {
 			course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
 			course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
             course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
-            course.getMultiLangInfo().setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
+            course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
 			course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
-            course.getMultiLangInfo().setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
+            course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
             course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
             course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
-            course.getMultiLangInfo().setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
+            course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
             course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
 			course = this.courseSetProgress(course, userId);
 			c.moveToNext();
@@ -884,7 +884,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			Activity activity = new Activity();
 			activity.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
 			activity.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
-			activity.getMultiLangInfo().setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+			activity.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
 			activities.add(activity);
 			c.moveToNext();
 		}
@@ -919,7 +919,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			Activity quiz = new Activity();
 			quiz.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
 			quiz.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
-			quiz.getMultiLangInfo().setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+			quiz.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
 			quizzes.add(quiz);
 			c.moveToNext();
 		}
@@ -1167,8 +1167,8 @@ public class DbHelper extends SQLiteOpenHelper {
 						course = this.getCourse(activity.getCourseId(), userId);
 						if (course != null) {
 							description = this.ctx.getString(R.string.points_event_activity_completed,
-									activity.getMultiLangInfo().getTitle(prefLang),
-									course.getMultiLangInfo().getTitle(prefLang));
+									activity.getTitle(prefLang),
+									course.getTitle(prefLang));
 						}
 					}
 					break;
@@ -1196,8 +1196,8 @@ public class DbHelper extends SQLiteOpenHelper {
 					course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 					if ((course != null) && (activity!=null)) {
                         description = this.ctx.getString(R.string.points_event_quiz_attempt,
-								activity.getMultiLangInfo().getTitle(prefLang),
-                                course.getMultiLangInfo().getTitle(prefLang));
+								activity.getTitle(prefLang),
+                                course.getTitle(prefLang));
                     }
 
 					break;
@@ -1206,7 +1206,7 @@ public class DbHelper extends SQLiteOpenHelper {
 					Log.d(TAG, "id: " + c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)));
 					course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 					description = this.ctx.getString(R.string.points_event_course_downloaded,
-							course == null ? "" : course.getMultiLangInfo().getTitle(prefLang));
+							course == null ? "" : course.getTitle(prefLang));
 					break;
 			}
 
@@ -1235,8 +1235,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 Course course = this.getCourse(activity.getCourseId(), userId);
                 if (course != null) {
                     description = this.ctx.getString(R.string.points_event_quiz_attempt,
-                            activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
-                            course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+                            activity.getTitle(prefs),
+                            course.getTitle(prefs));
                 }
             }
             p.setDescription(description);
@@ -1683,7 +1683,7 @@ public class DbHelper extends SQLiteOpenHelper {
 				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
                 a.setActType(c.getString(c.getColumnIndex(ACTIVITY_C_ACTTYPE)));
 				a.setDbId(c.getInt(c.getColumnIndex(ACTIVITY_C_ID)));
-				a.getMultiLangInfo().setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+				a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
 				a.setSectionId(c.getInt(c.getColumnIndex(ACTIVITY_C_SECTIONID)));
 			}
 			c.moveToNext();
@@ -1712,7 +1712,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		while (!c.isAfterLast()) {
 			Activity a = new Activity();
 			if(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
-				a.getMultiLangInfo().setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
+				a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
 				a.setCourseId(c.getLong(c.getColumnIndex(ACTIVITY_C_COURSEID)));
 				a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
 				activities.add(a);
@@ -1735,7 +1735,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			while (!c2.isAfterLast()) {
 				Activity a = new Activity();
 				if(c2.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null){
-					a.getMultiLangInfo().setTitlesFromJSONString(c2.getString(c2.getColumnIndex(ACTIVITY_C_TITLE)));
+					a.setTitlesFromJSONString(c2.getString(c2.getColumnIndex(ACTIVITY_C_TITLE)));
 					a.setCourseId(c2.getLong(c2.getColumnIndex(ACTIVITY_C_COURSEID)));
 					a.setDigest(c2.getString(c2.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
 					activities.add(a);
