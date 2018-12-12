@@ -65,7 +65,7 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_scorecards, null);
+        return inflater.inflate(R.layout.fragment_scorecards, container, false);
     }
 
     @Override

@@ -62,7 +62,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_badges, null);
+		return inflater.inflate(R.layout.fragment_badges, container, false);
 	}
 	
 	@Override
