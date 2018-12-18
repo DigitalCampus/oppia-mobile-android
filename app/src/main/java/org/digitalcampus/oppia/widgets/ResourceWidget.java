@@ -34,7 +34,6 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
-import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -160,7 +159,7 @@ public class ResourceWidget extends WidgetFactory {
 		editor.putBoolean("widget_"+activity.getDigest()+"_Resource_Viewing", this.isResourceViewing());
 		editor.putLong("widget_"+activity.getDigest()+"_Resource_StartTime", this.getResourceStartTime());
 		editor.putString("widget_"+activity.getDigest()+"_Resource_FileName", this.getResourceFileName());
-		editor.commit();
+		editor.apply();
 	}
 	
 	@Override
@@ -192,7 +191,7 @@ public class ResourceWidget extends WidgetFactory {
 				editor.remove(entry.getKey());
 			}            
 		 }
-		editor.commit();
+		editor.apply();
 	}
 	
 	private void resourceStopped() {
@@ -214,9 +213,10 @@ public class ResourceWidget extends WidgetFactory {
 				Mint.logException(e);
 				e.printStackTrace();
 			}
-			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
+
 			// add in extra meta-data
 			try {
+				MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 				data = mdu.getMetaData(data);
 			} catch (JSONException e) {
 				// Do nothing
@@ -250,7 +250,7 @@ public class ResourceWidget extends WidgetFactory {
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
-		HashMap<String, Object> config = new HashMap<String, Object>();
+		HashMap<String, Object> config = new HashMap<>();
 		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
 		config.put(PROPERTY_RESOURCE_VIEWING, this.isResourceViewing());
 		config.put(PROPERTY_RESOURCE_STARTTIME, this.getResourceStartTime());
@@ -314,9 +314,8 @@ public class ResourceWidget extends WidgetFactory {
 		public void onClick(View v) {
 			File file = (File) v.getTag();
 			// check the file is on the file system (should be but just in case)
-			boolean exists = Storage.mediaFileExists(ctx, file.getName());
-			if(!exists){
-				Toast.makeText(ctx, ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
+			if(!file.exists()){
+				Toast.makeText(ctx, ctx.getString(R.string.error_resource_not_found, file.getName()), Toast.LENGTH_LONG).show();
 				return;
 			}
             Intent intent = ExternalResourceOpener.getIntentToOpenResource(ctx, file);
