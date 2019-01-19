@@ -38,10 +38,11 @@ import org.digitalcampus.oppia.service.bluetooth.BluetoothConnectionManager;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferServiceDelegate;
 import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
-import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,8 +72,8 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private ImageButton bluetoothBtn;
     private ImageButton discoverBtn;
     private ProgressBar sendTransferProgress;
-    private View pendingCoursesMessage;
-    private Button installCoursesBtn;
+    private View pendingLogsMessage;
+    private Button transferLogsBtn;
     private View receivingCover;
 
     private final BluetoothTransferHandler uiHandler = new BluetoothTransferHandler(this);
@@ -177,8 +178,8 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         statusTitle = (TextView) vv.findViewById(R.id.status_title);
         statusSubtitle = (TextView) vv.findViewById(R.id.status_subtitle);
         notConnectedInfo = vv.findViewById(R.id.not_connected_info);
-        pendingCoursesMessage = vv.findViewById(R.id.home_messages);
-        installCoursesBtn = (Button) vv.findViewById(R.id.message_action_button);
+        pendingLogsMessage = vv.findViewById(R.id.home_messages);
+        transferLogsBtn = (Button) vv.findViewById(R.id.message_action_button);
         sendTransferProgress = (ProgressBar) vv.findViewById(R.id.send_transfer_progress);
         pendingFiles = (TextView) vv.findViewById(R.id.transfer_pending_files);
         pendingSize = (TextView) vv.findViewById(R.id.transfer_pending_size);
@@ -220,16 +221,28 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             @Override
             public void onClick(View v) { ensureDiscoverable(); }
         });
-        installCoursesBtn.setOnClickListener(new View.OnClickListener() {
+        transferLogsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { installCourses(); }
+            public void onClick(View v) { transferPendingLogs(); }
         });
     }
 
-    private void installCourses(){
-        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(getActivity());
-        imTask.setInstallerListener(this);
-        imTask.execute(new Payload());
+    private void transferPendingLogs(){
+        File activityLogsDir = new File(Storage.getActivityPath(this.getActivity()));
+        if (!activityLogsDir.exists()){
+            return;
+        }
+        String[] children = activityLogsDir.list();
+        for (String filename : children){
+            File file = new File(activityLogsDir, filename);
+            CourseTransferableFile log = new CourseTransferableFile();
+            log.setFilename(file.getName());
+            log.setFile(file);
+            log.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
+            log.setFileSize(file.length());
+            log.setShortname("");
+            btServiceDelegate.sendFile(log);
+        }
     }
 
     private void connectDevice(Intent data) {
@@ -273,11 +286,13 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         if (connectedDevice == null){
             statusSubtitle.setText(R.string.bluetooth_no_device_connected);
             notConnectedInfo.setVisibility(View.VISIBLE);
+            pendingLogsMessage.setVisibility(View.GONE);
             coursesRecyclerView.setVisibility(View.GONE);
             discoverBtn.setVisibility(View.VISIBLE);
             bluetoothBtn.setImageResource(R.drawable.ic_bluetooth);
         }
         else{
+            updateActivityTransferBar();
             statusSubtitle.setText(connectedDevice);
             notConnectedInfo.setVisibility(View.GONE);
             coursesRecyclerView.setVisibility(View.VISIBLE);
@@ -341,29 +356,45 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         }
         else{
             Log.d(TAG, "Installing transferred courses!");
-            installCourses();
+            transferPendingLogs();
         }
 
     }
 
+    private void updateActivityTransferBar(){
+        File dir = new File(Storage.getActivityPath(this.getActivity()));
+        if (!dir.exists()){
+            return;
+        }
+        String[] children = dir.list();
+        boolean pending = children != null && children.length > 0;
+        Log.d(TAG, "Activity" + children.length);
+        pendingLogsMessage.setVisibility(
+                ( BluetoothConnectionManager.isConnected() && pending ) ? View.VISIBLE : View.GONE
+        );
+    }
+
 
     private void refreshFileList(final boolean isAfterTransfer){
+        updateActivityTransferBar();
+
         FetchCourseTransferableFilesTask task = new FetchCourseTransferableFilesTask(this.getActivity());
         task.setListener(new FetchCourseTransferableFilesTask.FetchBackupsListener() {
             @Override
             public void coursesPendingToInstall(boolean pending) {
-                if (isAfterTransfer){
+                if (pending && isAfterTransfer){
                     final Handler handler = new Handler();
+                    Log.e(TAG, "Installing new course!");
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             installTransferredCourses();
                         }
-                    }, 150);
+                    }, 250);
                 }
                 else{
                     Log.d(TAG, "There are courses left to install!");
-                    pendingCoursesMessage.setVisibility(pending ? View.VISIBLE : View.GONE);
+
                 }
             }
 
@@ -384,6 +415,17 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
                 courseFiles.add(file);
             }
         }
+        for (CourseTransferableFile course : courseFiles){
+            long relatedSize = 0;
+            for (CourseTransferableFile file : transferableFiles){
+                if (course.getRelatedMedia().contains(file.getFilename())){
+                    relatedSize += file.getFileSize();
+                }
+            }
+            course.setRelatedFilesize(relatedSize);
+        }
+
+
         coursesAdapter.notifyDataSetChanged();
     }
 
@@ -406,7 +448,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             progressDialog = null;
         }
         refreshFileList(false);
-        Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -477,18 +519,24 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     @Override
     public void onTransferComplete(CourseTransferableFile file) {
         updateStatus(false);
+        isReceiving = false;
+
+        Log.d(TAG, "Complete! ");
+
+        Toast.makeText(getActivity(), "Transfer complete " + file.getFilename(), Toast.LENGTH_SHORT).show();
+        Log.e(TAG, "File complete!");
+        if (file.getType().equals(CourseTransferableFile.TYPE_COURSE_BACKUP) ){
+            Log.e(TAG, "Installing new course!");
+            refreshFileList(true);
+        }
+
         if (BluetoothTransferService.getTasksTransferring().size() == 0){
             sendTransferProgress.setVisibility(View.GONE);
             pendingSize.setVisibility(View.GONE);
             pendingFiles.setVisibility(View.GONE);
         }
         receivingCover.setVisibility(View.GONE);
-        isReceiving = false;
 
-        Log.d(TAG, "Complete! ");
-
-        Toast.makeText(getActivity(), "Transfer complete", Toast.LENGTH_SHORT).show();
-        refreshFileList(true);
     }
 
     @Override

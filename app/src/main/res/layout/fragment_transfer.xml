@@ -6,36 +6,7 @@
               android:layout_height="fill_parent"
               android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/home_messages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/message_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:visibility="gone"
-        android:weightSum="1.0">
 
-        <TextView
-            android:id="@+id/home_message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.65"
-            android:gravity="center_vertical"
-            android:text="@string/courses_install_pending"
-            android:textColor="@color/text_dark"
-            android:textSize="14sp"/>
-
-        <Button
-            android:id="@+id/message_action_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".35"
-            android:gravity="center_vertical|center"
-            android:text="@string/install"
-            android:textColor="@color/text_dark"/>
-    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -127,6 +98,40 @@
             android:src="@drawable/ic_bluetooth"
             android:tint="@color/text_dark"/>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/home_messages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/message_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:visibility="gone"
+        android:weightSum="1.0">
+
+        <TextView
+            android:id="@+id/home_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.65"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:text="@string/activity_not_transferred_message"
+            android:textColor="@color/text_dark"
+            android:textSize="14sp"/>
+
+        <Button
+            android:id="@+id/message_action_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_weight=".35"
+            android:gravity="center_vertical|center"
+            android:text="@string/submit_stats_btn_text"
+            android:textColor="@color/text_dark"/>
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
