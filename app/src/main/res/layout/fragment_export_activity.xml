@@ -108,9 +108,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
         android:layout_marginRight="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/submit_btn"
@@ -147,42 +147,15 @@
             android:indeterminate="true"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/padding_large"
-        android:visibility="gone">
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            >
-
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/textView19"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/padding_large"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/export_activity.text"/>
-
-    </LinearLayout>
-
     <TextView
         android:id="@+id/textView20"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@color/stroke"
-        android:paddingBottom="@dimen/padding_medium"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/padding_medium"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/padding_medium"
         android:text="@string/exported_activities.title"/>
 
     <FrameLayout

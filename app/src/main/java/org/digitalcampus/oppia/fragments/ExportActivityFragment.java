@@ -152,12 +152,22 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
         updateActions(true);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser){
+        super.setUserVisibleHint(isVisibleToUser);
+        if( (getView() != null) && isVisibleToUser){
+            // Your fragment is visible
+            refreshFileList();
+            refreshStats();
+        }
+    }
+
     private void updateActions(boolean enable){
         if (enable){
             progressContainer.setVisibility(View.GONE);
             actionsContainer.setVisibility(View.VISIBLE);
-            refreshStats();
             refreshFileList();
+            refreshStats();
         }
         else{
             progressContainer.setVisibility(View.VISIBLE);
@@ -174,7 +184,8 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
         unsentTrackers.setText(NumberFormat.getNumberInstance().format(unsent));
         submittedTrackers.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
 
-        submitBtn.setEnabled( (unsent > 0) );
+        Log.d(TAG, "files " + files.size());
+        submitBtn.setEnabled( (unsent > 0) || files.size()>0 );
         exportBtn.setEnabled( (unexported > 0) );
 
     }
@@ -219,8 +230,8 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     public void onExportComplete(String filename) {
         if (filename != null){
             UIUtils.showAlert(getActivity(),
-                R.string.export_task_completed,
-                getString(R.string.export_task_completed_text, filename)
+                    R.string.export_task_completed,
+                    getString(R.string.export_task_completed_text, filename)
             );
         }
         else{
