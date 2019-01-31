@@ -4,8 +4,6 @@
           package="org.digitalcampus.mobile.learning">
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="28"
         tools:ignore="GradleOverrides"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
