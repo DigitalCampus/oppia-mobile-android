@@ -203,7 +203,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 		} catch (Exception e) {
 			Mint.logException(e);
-			e.printStackTrace();
+            Log.d(TAG, "Error processing response: ", e);
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
 		
@@ -227,7 +227,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 			} catch (JSONException e) {
 				Mint.logException(e);
-				e.printStackTrace();
+                Log.d(TAG, "Error connecting to server: ", e);
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
 		} else {
