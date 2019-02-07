@@ -168,12 +168,12 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void fetchViews(){
-		this.prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
-		this.nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
-		this.qText = (TextView) getView().findViewById(R.id.question_text);
-		this.questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
-		this.playAudioBtn = (ImageView) getView().findViewById(R.id.playAudioBtn);
-		this.progressBar = (ProgressBar) getView().findViewById(R.id.progress_quiz);
+		this.prevBtn = getView().findViewById(R.id.mquiz_prev_btn);
+		this.nextBtn = getView().findViewById(R.id.mquiz_next_btn);
+		this.qText = getView().findViewById(R.id.question_text);
+		this.questionImage = getView().findViewById(R.id.question_image);
+		this.playAudioBtn = getView().findViewById(R.id.playAudioBtn);
+		this.progressBar =  getView().findViewById(R.id.progress_quiz);
 		this.barAnim = new ProgressBarAnimator(progressBar);
 		this.barAnim.setAnimDuration(PROGRESS_ANIM_DURATION);
 		this.questionImage.setVisibility(View.GONE);
@@ -205,12 +205,12 @@ public class QuizWidget extends WidgetFactory {
         else{
             View localContainer = getView();
             if (localContainer != null){
-                ViewGroup vg = (ViewGroup) localContainer.findViewById(activity.getActId());
+                ViewGroup vg = localContainer.findViewById(activity.getActId());
                 if (vg!=null){
                     vg.removeAllViews();
                     vg.addView(View.inflate(getView().getContext(), R.layout.widget_quiz_unavailable, null));
 
-                    TextView tv = (TextView) getView().findViewById(R.id.quiz_unavailable);
+                    TextView tv = getView().findViewById(R.id.quiz_unavailable);
                     tv.setText(result);
                 }
             }
@@ -280,17 +280,17 @@ public class QuizWidget extends WidgetFactory {
 			String fileUrl = course.getLocation() + q.getProp("image");
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
-			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
+			ImageView iv = getView().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
 			if (q.getProp("media") == null){
 				OnImageClickListener oicl = new OnImageClickListener(super.getActivity());
 				iv.setOnClickListener(oicl);
-				TextView tv = (TextView) getView().findViewById(R.id.question_image_caption);
+				TextView tv = getView().findViewById(R.id.question_image_caption);
 				tv.setText(R.string.widget_quiz_image_caption);
 				questionImage.setVisibility(View.VISIBLE);
 			} else {
-				TextView tv = (TextView) getView().findViewById(R.id.question_image_caption);
+				TextView tv = getView().findViewById(R.id.question_image_caption);
 				tv.setText(R.string.widget_quiz_media_caption);
 				OnMediaClickListener omcl = new OnMediaClickListener(q.getProp("media"));
 				iv.setOnClickListener(omcl);
@@ -420,7 +420,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void setProgress() {
-		TextView progress = (TextView) getView().findViewById(R.id.quiz_progress);
+		TextView progress = getView().findViewById(R.id.quiz_progress);
 
 		int current = progressBar.getProgress();
 		progressBar.setMax(quiz.getTotalNoQuestions());
@@ -506,18 +506,18 @@ public class QuizWidget extends WidgetFactory {
             parent.addView(C, index);
         }
 
-		TextView title = (TextView) getView().findViewById(R.id.quiz_results_score);
+		TextView title = getView().findViewById(R.id.quiz_results_score);
 		title.setText(super.getActivity().getString(R.string.widget_quiz_results_score, this.getPercent()));
 
 		if (this.isBaseline) {
-			TextView baselineExtro = (TextView) getView().findViewById(R.id.quiz_results_baseline);
+			TextView baselineExtro = getView().findViewById(R.id.quiz_results_baseline);
 			baselineExtro.setVisibility(View.VISIBLE);
 			baselineExtro.setText(super.getActivity().getString(R.string.widget_quiz_baseline_completed));
 		}
 		
 		// Show the detail of which questions were right/wrong
 		if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ATEND){
-			ListView questionFeedbackLV = (ListView) getView().findViewById(R.id.quiz_results_feedback);
+			ListView questionFeedbackLV = getView().findViewById(R.id.quiz_results_feedback);
 			ArrayList<QuizFeedback> quizFeedback = new ArrayList<QuizFeedback>();
 			List<QuizQuestion> questions = this.quiz.getQuestions();
 			for(QuizQuestion q: questions){
@@ -535,13 +535,13 @@ public class QuizWidget extends WidgetFactory {
 		}
 		
 		// Show restart or continue button
-		Button restartBtn = (Button) getView().findViewById(R.id.quiz_results_button);
+		Button restartBtn = getView().findViewById(R.id.quiz_results_button);
 
         int quizAvailability = checkQuizAvailability();
         boolean quizAvailable = quizAvailability == QUIZ_AVAILABLE;
 
         if (!quizAvailable){
-            TextView availabilityMsg = (TextView) getView().findViewById(R.id.quiz_availability_message);
+            TextView availabilityMsg = getView().findViewById(R.id.quiz_availability_message);
             availabilityMsg.setText(quizAvailability);
             availabilityMsg.setVisibility(View.VISIBLE);
         }
@@ -674,7 +674,6 @@ public class QuizWidget extends WidgetFactory {
 		
 		public OnImageClickListener(Context ctx){
 			this.ctx = ctx;
-			this.type = type;
 		}
 
 		public void onClick(View v) {

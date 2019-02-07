@@ -121,12 +121,12 @@ public class OppiaMobileActivity
 		}
 
         messageContainer = this.findViewById(R.id.home_messages);
-        messageText = (TextView) this.findViewById(R.id.home_message);
-        messageButton = (Button) this.findViewById(R.id.message_action_button);
+        messageText = this.findViewById(R.id.home_message);
+        messageButton = this.findViewById(R.id.message_action_button);
 
         courses = new ArrayList<>();
         courseListAdapter = new CourseListAdapter(this, courses);
-        courseList = (ListView) findViewById(R.id.course_list);
+        courseList = findViewById(R.id.course_list);
         courseList.setAdapter(courseListAdapter);
 
         CourseContextMenuCustom courseMenu = new CourseContextMenuCustom(this);
@@ -184,13 +184,13 @@ public class OppiaMobileActivity
         courses.clear();
 		courses.addAll(coursesRepository.getCourses(this));
 		
-		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
+		LinearLayout llLoading = this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
 		
 		if (courses.size() < MobileLearning.DOWNLOAD_COURSES_DISPLAY){
 			displayDownloadSection();
 		} else {
-			TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
+			TextView tv = this.findViewById(R.id.manage_courses_text);
 			tv.setText(R.string.no_courses);
             noCoursesView.setVisibility(View.GONE);
 		}
@@ -209,7 +209,7 @@ public class OppiaMobileActivity
 
 			this.drawReminders(activities);
 		} else {
-			LinearLayout ll = (LinearLayout) findViewById(R.id.schedule_reminders);
+			LinearLayout ll = findViewById(R.id.schedule_reminders);
 			ll.setVisibility(View.GONE);
 		}		
 	}
@@ -248,10 +248,10 @@ public class OppiaMobileActivity
     private void displayDownloadSection(){
         noCoursesView.setVisibility(View.VISIBLE);
 
-        TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
+        TextView tv = this.findViewById(R.id.manage_courses_text);
         tv.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
 
-        Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
+        Button manageBtn = this.findViewById(R.id.manage_courses_btn);
         manageBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AdminSecurityManager.checkAdminPermission(OppiaMobileActivity.this, R.id.menu_download, new AdminSecurityManager.AuthListener() {

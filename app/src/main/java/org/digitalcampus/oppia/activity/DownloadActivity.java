@@ -89,7 +89,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             Tag t = (Tag) bundle.getSerializable(Tag.TAG);
             if (t != null){
                 this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
-                Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+                Toolbar toolbar = findViewById(R.id.toolbar);
                 if (toolbar != null){
                     toolbar.setSubtitle(t.getName());
                 }
@@ -103,7 +103,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         courses = new ArrayList<>();
         dla = new DownloadCourseListAdapter(this, courses);
         dla.setOnClickListener(new CourseListListener());
-        ListView listView = (ListView) findViewById(R.id.tag_list);
+        ListView listView = findViewById(R.id.tag_list);
         if (listView != null) {
             listView.setAdapter(dla);
         }

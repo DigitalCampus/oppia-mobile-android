@@ -75,7 +75,7 @@ public class SearchActivity extends AppActivity {
 		setContentView(R.layout.activity_search);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         srla = new SearchResultsListAdapter(this, results);
-        resultsList = (ListView) findViewById(R.id.search_results_list);
+        resultsList = findViewById(R.id.search_results_list);
         if (resultsList != null) {
             resultsList.setAdapter(srla);
             resultsList.setOnItemClickListener(new OnItemClickListener() {
@@ -106,7 +106,7 @@ public class SearchActivity extends AppActivity {
 		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("preUsername", ""));
 		
-		searchText = (EditText) findViewById(R.id.search_string);
+		searchText = findViewById(R.id.search_string);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             //@Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -115,9 +115,9 @@ public class SearchActivity extends AppActivity {
                 return false;
             }
         });
-		summary = (TextView) findViewById(R.id.search_results_summary);
-        loadingSpinner = (ProgressBar) findViewById(R.id.progressBar);
-        searchButton = (ImageView) findViewById(R.id.searchbutton);
+		summary = findViewById(R.id.search_results_summary);
+        loadingSpinner = findViewById(R.id.progressBar);
+        searchButton = findViewById(R.id.searchbutton);
         if (searchButton != null) {
             searchButton.setClickable(true);
             searchButton.setOnClickListener(new View.OnClickListener() {

@@ -40,7 +40,7 @@ public class ViewDigestActivity extends AppActivity {
         final String digest = intent.getData().getQueryParameter(ACTIVITY_DIGEST_PARAM);
 
         activityDetail = findViewById(R.id.activity_detail);
-        errorText = (TextView) findViewById(R.id.error_text);
+        errorText = findViewById(R.id.error_text);
 
         boolean validDigest = validate(digest);
         if (validDigest){

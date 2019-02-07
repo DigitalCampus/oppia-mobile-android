@@ -69,10 +69,10 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.search_results_row, parent, false);
             viewHolder = new SearchResultsViewHolder();
-            viewHolder.activityTitle = (TextView) convertView.findViewById(R.id.activity_title);
-            viewHolder.sectionTitle = (TextView) convertView.findViewById(R.id.section_title);
-            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
-            viewHolder.courseImage = (ImageView) convertView.findViewById(R.id.course_image);
+            viewHolder.activityTitle = convertView.findViewById(R.id.activity_title);
+            viewHolder.sectionTitle = convertView.findViewById(R.id.section_title);
+            viewHolder.courseTitle = convertView.findViewById(R.id.course_title);
+            viewHolder.courseImage = convertView.findViewById(R.id.course_image);
             convertView.setTag(viewHolder);
         }
         else{

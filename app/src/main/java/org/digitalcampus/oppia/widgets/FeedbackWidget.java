@@ -133,10 +133,10 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
-		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
-		qText = (TextView) getView().findViewById(R.id.question_text);
-		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
+		prevBtn = getView().findViewById(R.id.mquiz_prev_btn);
+		nextBtn = getView().findViewById(R.id.mquiz_next_btn);
+		qText = getView().findViewById(R.id.question_text);
+		questionImage = getView().findViewById(R.id.question_image);
 
         loadFeedback();
 	}
@@ -179,7 +179,7 @@ public class FeedbackWidget extends WidgetFactory {
 			String fileUrl = course.getLocation() + q.getProp("image");
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
-			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
+			ImageView iv = getView().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
 		}
@@ -289,7 +289,7 @@ public class FeedbackWidget extends WidgetFactory {
 	}
 	
 	private void setProgress() {
-		TextView progress = (TextView) getView().findViewById(R.id.quiz_progress);
+		TextView progress = getView().findViewById(R.id.quiz_progress);
 		progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, feedback.getCurrentQuestionNo(),
 				this.feedback.getTotalNoQuestions()));
 	}

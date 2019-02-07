@@ -50,7 +50,7 @@ public class MatchingWidget extends QuestionWidget {
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
-		responsesLL = (LinearLayout) view.findViewById(R.id.questionresponses);
+		responsesLL = view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
     	
     	// this could be tidied up - to use ArrayAdapters/Lists

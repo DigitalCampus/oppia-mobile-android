@@ -44,7 +44,7 @@ public class MultiChoiceWidget extends QuestionWidget{
 	}
 
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
-		LinearLayout responsesLL = (LinearLayout) view.findViewById(R.id.questionresponses);
+		LinearLayout responsesLL = view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
     	RadioGroup responsesRG = new RadioGroup(ctx);
     	responsesRG.setId(R.id.multichoiceRadioGroup);
@@ -74,7 +74,7 @@ public class MultiChoiceWidget extends QuestionWidget{
 	}
 	
 	public List<String> getQuestionResponses(List<Response> responses){
-		RadioGroup responsesRG = (RadioGroup) view.findViewById(R.id.multichoiceRadioGroup);
+		RadioGroup responsesRG = view.findViewById(R.id.multichoiceRadioGroup);
 		int resp = responsesRG.getCheckedRadioButtonId();
     	View rb = responsesRG.findViewById(resp);
     	int idx = responsesRG.indexOfChild(rb);

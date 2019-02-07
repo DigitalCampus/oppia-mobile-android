@@ -61,8 +61,8 @@ public class ScorecardActivity extends AppActivity {
 
 		setContentView(R.layout.activity_scorecard);
 
-		viewPager = (ViewPager) findViewById(R.id.activity_scorecard_pager);
-        tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
+		viewPager = findViewById(R.id.activity_scorecard_pager);
+        tabs = findViewById(R.id.tabs_toolbar);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		Bundle bundle = this.getIntent().getExtras();

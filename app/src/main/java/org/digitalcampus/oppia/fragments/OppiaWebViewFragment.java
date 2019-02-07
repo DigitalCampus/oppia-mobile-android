@@ -68,7 +68,7 @@ public class OppiaWebViewFragment extends Fragment{
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		webView = (WebView) super.getActivity().findViewById(this.id);
+		webView = super.getActivity().findViewById(this.id);
 		webView.getSettings().setJavaScriptEnabled(true);
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		webView.getSettings().setDefaultFontSize(defaultFontSize);

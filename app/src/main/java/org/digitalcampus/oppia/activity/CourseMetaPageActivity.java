@@ -56,18 +56,18 @@ public class CourseMetaPageActivity extends AppActivity {
             cmp = course.getMetaPage(pageID);
         }
 		
-		TextView titleTV = (TextView) findViewById(R.id.course_title);
+		TextView titleTV = findViewById(R.id.course_title);
 		String title = cmp.getLang(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).getContent();
 		titleTV.setText(title);
 		
-		TextView versionTV = (TextView) findViewById(R.id.course_versionid);
+		TextView versionTV = findViewById(R.id.course_versionid);
 		BigDecimal big = new BigDecimal(course.getVersionId());
 		versionTV.setText(big.toString());
 		
-		TextView shortnameTV = (TextView) findViewById(R.id.course_shortname);
+		TextView shortnameTV = findViewById(R.id.course_shortname);
 		shortnameTV.setText(course.getShortname());
 		
-		WebView wv = (WebView) this.findViewById(R.id.metapage_webview);
+		WebView wv = this.findViewById(R.id.metapage_webview);
 		String url = course.getLocation() + File.separator +cmp.getLang(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).getLocation();
 		
 		try {

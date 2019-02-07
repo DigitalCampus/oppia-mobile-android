@@ -182,7 +182,7 @@ public class Activity implements Serializable{
 			for(int i=0; i<contentsArray.length(); i++){
 				JSONObject contentObj = contentsArray.getJSONObject(i);
 				@SuppressWarnings("unchecked")
-				Iterator<String> iter = (Iterator<String>) contentObj.keys();
+				Iterator<String> iter =  contentObj.keys();
 				while(iter.hasNext()){
 					String key = iter.next().toString();
 					String content = contentObj.getString(key);

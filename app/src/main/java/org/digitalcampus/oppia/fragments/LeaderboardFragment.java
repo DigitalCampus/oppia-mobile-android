@@ -21,7 +21,6 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.Leaderboard;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.LeaderboardPosition;
-import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateLeaderboardFromServerTask;
 
@@ -49,11 +48,11 @@ public class LeaderboardFragment extends Fragment implements SubmitListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vv = inflater.inflate(R.layout.fragment_leaderboard, container, false);
 
-        leaderboard_view = (RecyclerView) vv.findViewById(R.id.list_leaderboard);
-        rankingPosition = (TextView) vv.findViewById(R.id.tv_ranking);
-        totalPoints= (TextView) vv.findViewById(R.id.tv_total_points);
+        leaderboard_view = vv.findViewById(R.id.list_leaderboard);
+        rankingPosition = vv.findViewById(R.id.tv_ranking);
+        totalPoints= vv.findViewById(R.id.tv_total_points);
 
-        loadingSpinner = (ProgressBar) vv.findViewById(R.id.loading_spinner);
+        loadingSpinner = vv.findViewById(R.id.loading_spinner);
         loadingSpinner.setVisibility(View.VISIBLE);
 
         return vv;

@@ -63,11 +63,11 @@ public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.widget_quiz_feedback_row, parent, false);
             viewHolder = new QuizFeedbackViewHolder();
-            viewHolder.quizQuestion = (TextView) convertView.findViewById(R.id.quiz_question_text);
-            viewHolder.quizUserResponse = (TextView) convertView.findViewById(R.id.quiz_question_user_response_text);
-            viewHolder.quizFeedbackText = (TextView) convertView.findViewById(R.id.quiz_question_user_feedback_text);
-            viewHolder.quizFeedbackTitle = (TextView) convertView.findViewById(R.id.quiz_question_user_feedback_title);
-            viewHolder.quizFeedbackIcon = (ImageView) convertView.findViewById(R.id.quiz_question_feedback_image);
+            viewHolder.quizQuestion = convertView.findViewById(R.id.quiz_question_text);
+            viewHolder.quizUserResponse = convertView.findViewById(R.id.quiz_question_user_response_text);
+            viewHolder.quizFeedbackText = convertView.findViewById(R.id.quiz_question_user_feedback_text);
+            viewHolder.quizFeedbackTitle = convertView.findViewById(R.id.quiz_question_user_feedback_title);
+            viewHolder.quizFeedbackIcon = convertView.findViewById(R.id.quiz_question_feedback_image);
             convertView.setTag(viewHolder);
         }
         else{

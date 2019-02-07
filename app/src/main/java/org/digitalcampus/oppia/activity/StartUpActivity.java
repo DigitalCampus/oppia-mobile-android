@@ -78,7 +78,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
             if (!isGooglePlayAvailable) return;
         }
 
-        tvProgress = (TextView) this.findViewById(R.id.start_up_progress);
+        tvProgress = this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String username = SessionManager.getUsername(this);
         Mint.setUserIdentifier( username.equals("") ? "anon" : username);

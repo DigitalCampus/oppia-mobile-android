@@ -171,17 +171,17 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View vv = inflater.inflate(R.layout.fragment_transfer, container, false);
-        coursesRecyclerView = (RecyclerView) vv.findViewById(R.id.course_backups_list);
-        bluetoothBtn = (ImageButton) vv.findViewById(R.id.bluetooth_btn);
-        discoverBtn = (ImageButton) vv.findViewById(R.id.discover_btn);
-        statusTitle = (TextView) vv.findViewById(R.id.status_title);
-        statusSubtitle = (TextView) vv.findViewById(R.id.status_subtitle);
+        coursesRecyclerView = vv.findViewById(R.id.course_backups_list);
+        bluetoothBtn = vv.findViewById(R.id.bluetooth_btn);
+        discoverBtn = vv.findViewById(R.id.discover_btn);
+        statusTitle = vv.findViewById(R.id.status_title);
+        statusSubtitle = vv.findViewById(R.id.status_subtitle);
         notConnectedInfo = vv.findViewById(R.id.not_connected_info);
         pendingCoursesMessage = vv.findViewById(R.id.home_messages);
-        installCoursesBtn = (Button) vv.findViewById(R.id.message_action_button);
-        sendTransferProgress = (ProgressBar) vv.findViewById(R.id.send_transfer_progress);
-        pendingFiles = (TextView) vv.findViewById(R.id.transfer_pending_files);
-        pendingSize = (TextView) vv.findViewById(R.id.transfer_pending_size);
+        installCoursesBtn = vv.findViewById(R.id.message_action_button);
+        sendTransferProgress = vv.findViewById(R.id.send_transfer_progress);
+        pendingFiles = vv.findViewById(R.id.transfer_pending_files);
+        pendingSize = vv.findViewById(R.id.transfer_pending_size);
         receivingCover = vv.findViewById(R.id.receiving_progress);
         return vv;
     }

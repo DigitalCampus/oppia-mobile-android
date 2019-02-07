@@ -84,13 +84,13 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.course_download_row, parent, false);
             viewHolder = new DownloadCourseViewHolder();
-            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
-            viewHolder.courseDraft = (TextView) convertView.findViewById(R.id.course_draft);
-            viewHolder.courseDescription = (TextView) convertView.findViewById(R.id.course_description);
-            viewHolder.actionBtn = (ImageButton) convertView.findViewById(R.id.download_course_btn);
-            viewHolder.actionProgress = (ProgressBar) convertView.findViewById(R.id.download_progress);
-            viewHolder.courseAuthor = (TextView) convertView.findViewById(R.id.course_author);
-            viewHolder.labelAuthor = (TextView) convertView.findViewById(R.id.label_author);
+            viewHolder.courseTitle = convertView.findViewById(R.id.course_title);
+            viewHolder.courseDraft = convertView.findViewById(R.id.course_draft);
+            viewHolder.courseDescription = convertView.findViewById(R.id.course_description);
+            viewHolder.actionBtn = convertView.findViewById(R.id.download_course_btn);
+            viewHolder.actionProgress = convertView.findViewById(R.id.download_progress);
+            viewHolder.courseAuthor = convertView.findViewById(R.id.course_author);
+            viewHolder.labelAuthor = convertView.findViewById(R.id.label_author);
 
             convertView.setTag(viewHolder);
         }

@@ -79,7 +79,7 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
 
         List<Course> courses = coursesRepository.getCourses(getActivity());
 
-        GridView scorecardList = (GridView) super.getActivity().findViewById(R.id.scorecards_list);
+        GridView scorecardList = super.getActivity().findViewById(R.id.scorecards_list);
         View emptyState = this.getActivity().findViewById(R.id.empty_state);
 
         if (courses.isEmpty()){
@@ -87,7 +87,7 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
             scorecardList.setVisibility(View.GONE);
             emptyState.setVisibility(View.VISIBLE);
 
-            Button download = (Button) emptyState.findViewById(R.id.btn_download_courses);
+            Button download = emptyState.findViewById(R.id.btn_download_courses);
             download.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

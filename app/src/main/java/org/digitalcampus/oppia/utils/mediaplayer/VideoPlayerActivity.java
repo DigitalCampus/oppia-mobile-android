@@ -104,10 +104,10 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
     protected void onStart(){
         super.onStart();
-        videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
+        videoSurface = findViewById(R.id.videoSurface);
         endContainer = findViewById(R.id.end_container);
-        replayBtn = (ImageButton) findViewById(R.id.replay_button);
-        continueBtn = (ImageButton) findViewById(R.id.continue_button);
+        replayBtn = findViewById(R.id.replay_button);
+        continueBtn = findViewById(R.id.continue_button);
 
         replayBtn.setOnClickListener(new View.OnClickListener() {
             @Override

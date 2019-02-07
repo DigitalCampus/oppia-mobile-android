@@ -66,7 +66,7 @@ public class AboutFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		webView = (WebView) super.getActivity().findViewById(R.id.about_webview);
+		webView = super.getActivity().findViewById(R.id.about_webview);
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		String url = Storage.getLocalizedFilePath(super.getActivity(), lang, "about.html");
 
@@ -75,7 +75,7 @@ public class AboutFragment extends Fragment{
 		
 		webView.loadUrl(url);
 		
-		TextView versionNo = (TextView) super.getActivity().findViewById(R.id.about_versionno);
+		TextView versionNo = super.getActivity().findViewById(R.id.about_versionno);
 		try {
 			String no = super.getActivity().getPackageManager().getPackageInfo(super.getActivity().getPackageName(), 0).versionName;
 			versionNo.setText(getString(R.string.version,no));

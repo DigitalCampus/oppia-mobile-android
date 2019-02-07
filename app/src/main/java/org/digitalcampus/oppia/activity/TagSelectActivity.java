@@ -66,7 +66,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
         tags = new ArrayList<>();
         tla = new TagListAdapter(this, tags);
 
-        ListView listView = (ListView) findViewById(R.id.tag_list);
+        ListView listView = findViewById(R.id.tag_list);
         listView.setAdapter(tla);
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -73,8 +73,8 @@ public class UIUtils {
 			return;
 		}
 		
-		TextView points = (TextView) pointsItem.getActionView().findViewById(R.id.userpoints);
-		TextView badges = (TextView) pointsItem.getActionView().findViewById(R.id.userbadges);
+		TextView points = pointsItem.getActionView().findViewById(R.id.userpoints);
+		TextView badges = pointsItem.getActionView().findViewById(R.id.userbadges);
 
 		if(points == null || badges == null){
 			return;
