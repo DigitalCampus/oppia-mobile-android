@@ -28,12 +28,12 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
-import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -159,7 +159,7 @@ public class ResourceWidget extends WidgetFactory {
 		editor.putBoolean("widget_"+activity.getDigest()+"_Resource_Viewing", this.isResourceViewing());
 		editor.putLong("widget_"+activity.getDigest()+"_Resource_StartTime", this.getResourceStartTime());
 		editor.putString("widget_"+activity.getDigest()+"_Resource_FileName", this.getResourceFileName());
-		editor.commit();
+		editor.apply();
 	}
 	
 	@Override
@@ -191,7 +191,7 @@ public class ResourceWidget extends WidgetFactory {
 				editor.remove(entry.getKey());
 			}            
 		 }
-		editor.commit();
+		editor.apply();
 	}
 	
 	private void resourceStopped() {
@@ -213,9 +213,10 @@ public class ResourceWidget extends WidgetFactory {
 				Mint.logException(e);
 				e.printStackTrace();
 			}
-			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
+
 			// add in extra meta-data
 			try {
+				MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 				data = mdu.getMetaData(data);
 			} catch (JSONException e) {
 				// Do nothing
@@ -238,38 +239,18 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public void saveTracker(){
 		long timetaken = this.getSpentTime();
-		if (timetaken < MobileLearning.RESOURCE_READ_TIME) {
+		if (activity == null || timetaken < MobileLearning.RESOURCE_READ_TIME) {
 			return;
 		}
-		Tracker t = new Tracker(super.getActivity());
-		JSONObject obj = new JSONObject();
-		
-		// add in extra meta-data
-		try {
-			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
-			obj.put("timetaken", timetaken);
-			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
 
-            GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
-            GamificationEvent gamificationEvent = gamificationEngine.processEventResourceActivity(this.course, this.activity);
-			// if it's a baseline activity then assume completed
-			if(this.isBaseline){
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
-			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
-			}
-		} catch (JSONException e) {
-			// Do nothing
-		} catch (NullPointerException npe){
-			//do nothing
-		}
+		new GamificationServiceDelegate(getActivity())
+				.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
+				.registerResourceEvent(timetaken);
 	}
 
 	@Override
 	public HashMap<String, Object> getWidgetConfig() {
-		HashMap<String, Object> config = new HashMap<String, Object>();
+		HashMap<String, Object> config = new HashMap<>();
 		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
 		config.put(PROPERTY_RESOURCE_VIEWING, this.isResourceViewing());
 		config.put(PROPERTY_RESOURCE_STARTTIME, this.getResourceStartTime());
@@ -333,9 +314,8 @@ public class ResourceWidget extends WidgetFactory {
 		public void onClick(View v) {
 			File file = (File) v.getTag();
 			// check the file is on the file system (should be but just in case)
-			boolean exists = Storage.mediaFileExists(ctx, file.getName());
-			if(!exists){
-				Toast.makeText(ctx, ctx.getString(R.string.error_resource_not_found,file.getName()), Toast.LENGTH_LONG).show();
+			if(!file.exists()){
+				Toast.makeText(ctx, ctx.getString(R.string.error_resource_not_found, file.getName()), Toast.LENGTH_LONG).show();
 				return;
 			}
             Intent intent = ExternalResourceOpener.getIntentToOpenResource(ctx, file);

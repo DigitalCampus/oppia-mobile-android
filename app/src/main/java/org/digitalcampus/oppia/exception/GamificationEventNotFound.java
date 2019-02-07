@@ -20,4 +20,14 @@ package org.digitalcampus.oppia.exception;
 public class GamificationEventNotFound extends Exception {
 
     public static final String TAG = GamificationEventNotFound.class.getSimpleName();
+
+    private String eventName;
+
+    public GamificationEventNotFound(String eventName){
+        this.eventName = eventName;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
 }

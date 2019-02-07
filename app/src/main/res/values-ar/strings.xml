@@ -146,15 +146,15 @@
 <string name="login_password_title">كلمة السر</string>
 <string name="title_register">تسجيل دخول</string>
 
-<string name="register_form_username_title">إسم المستخدم (*)</string>
-<string name="register_form_email_title">عنوان البريد الاكتروني (*)</string>
-<string name="register_form_firstname_title">الإسم (*)</string>
+<string name="register_form_username_title">إسم المستخدم </string>
+<string name="register_form_email_title">عنوان البريد الاكتروني </string>
+<string name="register_form_firstname_title">الإسم </string>
 <string name="register_form_jobtitle_title">المسمى الوظيفي</string>
-<string name="register_form_lastname_title">الشهرة (*)</string>
+<string name="register_form_lastname_title">الشهرة </string>
 <string name="register_form_organisation_title">إلمؤسسة</string>
-<string name="register_form_password_title">كلمة السر (*)</string>
-<string name="register_form_password_again_title">أعد إدخال كلمة السر (*)</string>
-<string name="register_form_phoneno_title">رقم الهاتف (*)</string>
+<string name="register_form_password_title">كلمة السر </string>
+<string name="register_form_password_again_title">أعد إدخال كلمة السر </string>
+<string name="register_form_phoneno_title">رقم الهاتف </string>
 <string name="register_btn_text">تسجيل دخول</string>
 
 <string name="reset_username_title">الإسم أو عنوان البريد الإلكتروني</string>

@@ -38,7 +38,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import io.github.inflationx.calligraphy3.CalligraphyConfig;
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
+import io.github.inflationx.viewpump.ViewPump;
 
 public class MobileLearning extends Application {
 
@@ -65,6 +67,7 @@ public class MobileLearning extends Application {
 	public static final String SERVER_AWARDS_PATH = OPPIAMOBILE_API + "awards/";
 	public static final String SERVER_COURSES_NAME = "courses";
 	public static final String COURSE_ACTIVITY_PATH = SERVER_COURSES_PATH + "%s/activity/";
+	public static final String LEADERBOARD_PATH = OPPIAMOBILE_API + "leaderboard/";
 
     // admin security settings
     public static final boolean ADMIN_PROTECT_SETTINGS = BuildConfig.ADMIN_PROTECT_SETTINGS;
@@ -87,11 +90,13 @@ public class MobileLearning extends Application {
 
     public static final int SCORECARD_ANIM_DURATION = 800;
     public static final long MEDIA_SCAN_TIME_LIMIT = 3600;
+    public static final long LEADERBOARD_FETCH_EXPIRATION = 3600;
 
 	public static final boolean DEFAULT_DISPLAY_COMPLETED = true;
 	public static final boolean DEFAULT_DISPLAY_PROGRESS_BAR = true;
 	
 	public static final boolean MENU_ALLOW_COURSE_DOWNLOAD = BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD;
+	public static final boolean MENU_ALLOW_LANGUAGE = BuildConfig.MENU_ALLOW_LANGUAGE;
 	public static final boolean MENU_ALLOW_SETTINGS = BuildConfig.MENU_ALLOW_SETTINGS;
 	public static final boolean MENU_ALLOW_MONITOR = BuildConfig.MENU_ALLOW_MONITOR;
 	public static final boolean MENU_ALLOW_SYNC = BuildConfig.MENU_ALLOW_SYNC;
@@ -112,7 +117,7 @@ public class MobileLearning extends Application {
 
 	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
-	
+
 	// for tracking if SubmitTrackerMultipleTask is already running
 	public SubmitTrackerMultipleTask omSubmitTrackerMultipleTask = null;
 	
@@ -128,11 +133,14 @@ public class MobileLearning extends Application {
 
         // this method fires once at application start
         Log.d(TAG, "Application start");
-		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-				.setDefaultFontPath("fonts/lato.ttf")
-				.setFontAttrId(R.attr.fontPath)
-				.build()
-		);
+
+		ViewPump.init(ViewPump.builder()
+				.addInterceptor(new CalligraphyInterceptor(
+						new CalligraphyConfig.Builder()
+								.setDefaultFontPath("fonts/lato.ttf")
+								.setFontAttrId(R.attr.fontPath)
+								.build()))
+				.build());
 
         Context ctx = getApplicationContext();
 		PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);

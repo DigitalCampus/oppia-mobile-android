@@ -279,12 +279,16 @@ public class Course implements Serializable {
 	    gamificationEvents.add(ge);
     }
 
+	public void setGamificationEvents(ArrayList<GamificationEvent> events){
+		gamificationEvents = events;
+	}
+
     public GamificationEvent findGamificationEvent(String event) throws GamificationEventNotFound {
         for(GamificationEvent ge: gamificationEvents){
             if(ge.getEvent().equals(event)){
                 return ge;
             }
         }
-        throw new GamificationEventNotFound();
+        throw new GamificationEventNotFound(event);
     }
 }

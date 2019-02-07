@@ -1,7 +1,7 @@
 package Utils;
 
 import android.app.Activity;
-import android.support.test.espresso.core.deps.guava.collect.Iterables;
+import android.support.test.espresso.core.internal.deps.guava.collect.Iterables;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 

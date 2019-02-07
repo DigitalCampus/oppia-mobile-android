@@ -27,15 +27,22 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.CompleteCourse;
+import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Media;
+import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +85,7 @@ public class CourseInstall {
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
             aioobe.printStackTrace();
             Log.d(TAG, "Error: " + aioobe.getMessage());
-            listener.onError(ctx.getString(R.string.error_installing_course));
+            listener.onError(ctx.getString(R.string.error_installing_course, shortname));
             return;
         }
         listener.onInstallProgress(10);
@@ -179,9 +186,15 @@ public class CourseInstall {
         // delete zip file from download dir
         FileUtils.deleteFile(zipFile);
 
+        listener.onInstallProgress(95);
+
+        // add event
+        c.setCourseId((int)courseId);
+        new GamificationServiceDelegate(ctx)
+                .registerCourseDownloadEvent(c);
+
         long estimatedTime = System.currentTimeMillis() - startTime;
         Log.d(TAG, "MeasureTime - " + c.getShortname() + ": " + estimatedTime + "ms");
-
         Log.d(TAG, shortname + " succesfully downloaded");
         listener.onComplete();
     }

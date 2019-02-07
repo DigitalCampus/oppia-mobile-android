@@ -50,6 +50,15 @@
         <item name="fontPath">fonts/montserrat.ttf</item>
     </style>
 
+    <style name="PrimaryButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/highlight_light</item>
+        <item name="android:textColor">@color/text_light</item>
+    </style>
+
+    <style name="Oppia.TextLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">13sp</item>
+    </style>
+
     <style name="Oppia.ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/highlight_light</item>
         <item name="colorPrimaryDark">@color/highlight_shadow</item>
@@ -175,6 +184,8 @@
         <item name="tabIndicatorHeight">5dp</item>
         <item name="tabPaddingStart">6dp</item>
         <item name="tabPaddingEnd">6dp</item>
+        <item name="tabBackground">@color/tab_bg_color</item>
+        <item name="tabSelectedTextColor">@color/tab_selected_text_color</item>
         <item name="tabTextAppearance">@style/Oppia.ToolbarTheme.AppTabTextAppearance</item>
     </style>
 
@@ -182,7 +193,7 @@
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/text_light</item>
+        <item name="android:textColor">@color/tab_text_color</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
         <item name="fontPath">fonts/montserrat.ttf</item>

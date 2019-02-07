@@ -39,6 +39,7 @@ import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.model.LeaderboardPosition;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
@@ -68,7 +69,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 28;
+	private static final int DB_VERSION = 30;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -153,16 +154,28 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_FIRSTNAME = "firstname";
 	private static final String USER_C_LASTNAME = "lastname";
 	private static final String USER_C_PASSWORDENCRYPTED = "passwordencrypted";
+	private static final String USER_C_PASSWORDPLAIN = "passwordplain";
 	private static final String USER_C_APIKEY = "apikey";
 	private static final String USER_C_LAST_LOGIN_DATE = "lastlogin";
 	private static final String USER_C_NO_LOGINS = "nologins";
 	private static final String USER_C_POINTS = "points";
 	private static final String USER_C_BADGES = "badges";
+	private static final String USER_C_OFFLINE_REGISTER = "offlineregister";
+	private static final String USER_C_EMAIL = "email";
+	private static final String USER_C_JOBTITLE = "jobTitle";
+	private static final String USER_C_ORGANIZATION = "organisation";
+	private static final String USER_C_PHONE = "phoneNo";
 
 	private static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
     private static final String USER_PREFS_C_PREFKEY = "preference";
     private static final String USER_PREFS_C_PREFVALUE = "value";
+
+	private static final String LEADERBOARD_TABLE = "leaderboard";
+	private static final String LEADERBOARD_C_USERNAME = "username";
+	private static final String LEADERBOARD_C_FULLNAME = "fullname";
+	private static final String LEADERBOARD_C_POINTS = "points";
+	private static final String LEADERBOARD_C_LASTUPDATE = "lastupdate";
 
 	// Constructor
 	private DbHelper(Context ctx) { //
@@ -199,6 +212,7 @@ public class DbHelper extends SQLiteOpenHelper {
         createUserPrefsTable(db);
         createCourseGamificationTable(db);
 		createActivityGamificationTable(db);
+		createLeaderboardTable(db);
 	}
 
     public void beginTransaction(){
@@ -211,7 +225,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.endTransaction();
     }
 
-	public void createCourseTable(SQLiteDatabase db){
+	private void createCourseTable(SQLiteDatabase db){
 		String mSql = "create table " + COURSE_TABLE + " (" + COURSE_C_ID + " integer primary key autoincrement, "
 				+ COURSE_C_VERSIONID + " int, " + COURSE_C_TITLE + " text, " + COURSE_C_LOCATION + " text, "
 				+ COURSE_C_SHORTNAME + " text," + COURSE_C_SCHEDULE + " int,"
@@ -223,7 +237,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(mSql);
 	}
 	
-	public void createActivityTable(SQLiteDatabase db){
+	private void createActivityTable(SQLiteDatabase db){
 		String aSql = "create table " + ACTIVITY_TABLE + " (" +
 									ACTIVITY_C_ID + " integer primary key autoincrement, " + 
 									ACTIVITY_C_COURSEID + " int, " + 
@@ -237,7 +251,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(aSql);
 	}
 	
-	public void createLogTable(SQLiteDatabase db){
+	private void createLogTable(SQLiteDatabase db){
 		String lSql = "create table " + TRACKER_LOG_TABLE + " (" +
 				TRACKER_LOG_C_ID + " integer primary key autoincrement, " + 
 				TRACKER_LOG_C_COURSEID + " integer, " + 
@@ -256,7 +270,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(lSql);
 	}
 
-	public void createQuizAttemptsTable(SQLiteDatabase db){
+	private void createQuizAttemptsTable(SQLiteDatabase db){
 		String sql = "create table " + QUIZATTEMPTS_TABLE + " (" + 
 							QUIZATTEMPTS_C_ID + " integer primary key autoincrement, " + 
 							QUIZATTEMPTS_C_DATETIME + " datetime default current_timestamp, " + 
@@ -274,7 +288,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(sql);
 	}
 	
-	public void createSearchTable(SQLiteDatabase db){
+	private void createSearchTable(SQLiteDatabase db){
 		String sql = "CREATE VIRTUAL TABLE "+SEARCH_TABLE+" USING FTS3 (" +
                 SEARCH_C_TEXT + " text, " +
                 SEARCH_C_COURSETITLE + " text, " +
@@ -284,18 +298,24 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(sql);
 	}
 	
-	public void createUserTable(SQLiteDatabase db){
+	private void createUserTable(SQLiteDatabase db){
 		String sql = "CREATE TABLE ["+USER_TABLE+"] (" +
                 "["+USER_C_ID+"]" + " integer primary key autoincrement, " +
                 "["+USER_C_USERNAME +"]" + " TEXT, "+
                 "["+USER_C_FIRSTNAME +"] TEXT, " +
                 "["+USER_C_LASTNAME+"] TEXT, " +
                 "["+USER_C_PASSWORDENCRYPTED +"] TEXT, " +
+				"["+USER_C_PASSWORDPLAIN +"] TEXT, " +
                 "["+USER_C_APIKEY +"] TEXT, " +
+				"["+USER_C_EMAIL +"] TEXT, " +
+				"["+USER_C_PHONE +"] TEXT, " +
+				"["+USER_C_JOBTITLE +"] TEXT, " +
+				"["+USER_C_ORGANIZATION +"] TEXT, " +
                 "["+USER_C_LAST_LOGIN_DATE +"] datetime null, " +
                 "["+USER_C_NO_LOGINS +"] integer default 0,  " +
                 "["+USER_C_POINTS +"] integer default 0,  " +
-                "["+USER_C_BADGES +"] integer default 0 " +
+                "["+USER_C_BADGES +"] integer default 0, " +
+				 "["+USER_C_OFFLINE_REGISTER+"] integer default 0 "+
             ");";
 		db.execSQL(sql);
 	}
@@ -319,13 +339,22 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(mSql);
     }
 
-	public void createActivityGamificationTable(SQLiteDatabase db){
+	private void createActivityGamificationTable(SQLiteDatabase db){
 		String mSql = "create table " + ACTIVITY_GAME_TABLE + " ("
 				+ ACTIVITY_GAME_C_ID + " integer primary key autoincrement, "
 				+ ACTIVITY_GAME_C_ACTIVITYID + " integer,"
 				+ ACTIVITY_GAME_C_EVENT + " text,"
 				+ ACTIVITY_GAME_C_POINTS + " integer default 0 )";
 		db.execSQL(mSql);
+	}
+
+	private void createLeaderboardTable(SQLiteDatabase db){
+		String sql = "create table " + LEADERBOARD_TABLE + " (" +
+				LEADERBOARD_C_USERNAME + " text, " +
+				LEADERBOARD_C_FULLNAME + " text, " +
+				LEADERBOARD_C_POINTS + " integer default 0, " +
+				LEADERBOARD_C_LASTUPDATE + " datetime default current_timestamp )";
+		db.execSQL(sql);
 	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -498,6 +527,22 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL(sql3);
             db.execSQL(sql4);
         }
+
+		if(oldVersion <= 28 && newVersion >= 29){
+			// add leaderboard table
+			db.execSQL("drop table if exists " + LEADERBOARD_TABLE);
+			createLeaderboardTable(db);
+		}
+
+		if(oldVersion <= 29 && newVersion >= 30){
+			// add fields for offline_register to User table
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_OFFLINE_REGISTER + " integer default 0;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_PASSWORDPLAIN + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_EMAIL + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_PHONE + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_JOBTITLE + " text null;");
+			db.execSQL("ALTER TABLE " + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
+		}
 	}
 
 	public void updateV43(long userId){
@@ -584,7 +629,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	// returns id of the row
 	public long addOrUpdateUser(User user) {
 		
-		if (user.getUsername().equals("") || user.getUsername() == null){
+		if (user.getUsername() == null || user.getUsername().equals("")){
 			return 0;
 		}
 		
@@ -596,17 +641,25 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(USER_C_APIKEY, user.getApiKey());
 		values.put(USER_C_POINTS, user.getPoints());
 		values.put(USER_C_BADGES, user.getBadges());
+		values.put(USER_C_OFFLINE_REGISTER, user.isOfflineRegister());
+		values.put(USER_C_EMAIL, user.getEmail());
+		values.put(USER_C_PHONE, user.getPhoneNo());
+		values.put(USER_C_JOBTITLE, user.getJobTitle());
+		values.put(USER_C_ORGANIZATION, user.getOrganisation());
+		values.put(USER_C_PASSWORDPLAIN, user.isOfflineRegister() ? user.getPassword() : "");
 		
 		long userId = this.isUser(user.getUsername());
 		if (userId == -1) {
 			Log.v(TAG, "Record added");
-			return db.insertOrThrow(USER_TABLE, null, values);
+			userId = db.insertOrThrow(USER_TABLE, null, values);
+			this.insertOrUpdateUserLeaderboard(user.getUsername(), user.getDisplayName(), user.getPoints(), new DateTime());
+
 		} else {
 			String s = USER_C_ID + "=?";
 			String[] args = new String[] { String.valueOf(userId) };
 			db.update(USER_TABLE, values, s, args);
-			return userId;
-		} 
+		}
+		return userId;
 	}
 	
 	public long isUser(String username){
@@ -948,39 +1001,27 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = COURSE_C_SHORTNAME + "=?";
 		String[] args = new String[] { shortname };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean isInstalled = (c.getCount() > 0);
+		c.close();
+		return isInstalled;
 	}
 	
 	public boolean toUpdate(String shortname, Double version){
 		String s = COURSE_C_SHORTNAME + "=? AND "+ COURSE_C_VERSIONID + "< ?";
 		String[] args = new String[] { shortname, String.format("%.0f", version) };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean toUpdate = (c.getCount() > 0);
+		c.close();
+		return  toUpdate;
 	}
 	
 	public boolean toUpdateSchedule(String shortname, Double scheduleVersion){
 		String s = COURSE_C_SHORTNAME + "=? AND "+ COURSE_C_SCHEDULE + "< ?";
 		String[] args = new String[] { shortname, String.format("%.0f", scheduleVersion) };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean toUpdate = (c.getCount() > 0);
+		c.close();
+		return  toUpdate;
 	}
 	
 	public long getUserId(String username){
@@ -996,30 +1037,50 @@ public class DbHelper extends SQLiteOpenHelper {
 		c.close();
 		return userId;
 	}
-	
-	public User getUser(long userId) throws UserNotFoundException {
-		String s = USER_C_ID + "=? ";
-		String[] args = new String[] { String.valueOf(userId) };
-		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
-		c.moveToFirst();
+
+	private User fetchUser(Cursor c){
+		User u = new User();
+		u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
+		u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
+		u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+		u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
+		u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
+		u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
+		u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
+		u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+		u.setOfflineRegister(c.getInt(c.getColumnIndex(USER_C_OFFLINE_REGISTER))>0);
+		u.setPhoneNo(c.getString(c.getColumnIndex(USER_C_PHONE)));
+		u.setEmail(c.getString(c.getColumnIndex(USER_C_EMAIL)));
+		u.setJobTitle(c.getString(c.getColumnIndex(USER_C_JOBTITLE)));
+		u.setOrganisation(c.getString(c.getColumnIndex(USER_C_ORGANIZATION)));
+		if (u.isOfflineRegister()){
+			u.setPassword(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
+			u.setPasswordAgain(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
+		}
+
+		return u;
+	}
+
+	private User getUser(Cursor c) throws UserNotFoundException {
 		User u = null;
+		c.moveToFirst();
 		while (!c.isAfterLast()) {
-			u = new User();
-			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
-			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
-			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
-			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
-			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
-			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+			u = fetchUser(c);
 			c.moveToNext();
 		}
 		c.close();
 		if (u == null){
 			throw new UserNotFoundException();
 		}
+
 		return u;
+	}
+
+	public User getUser(long userId) throws UserNotFoundException {
+		String s = USER_C_ID + "=? ";
+		String[] args = new String[] { String.valueOf(userId) };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		return getUser(c);
 	}
 	
 	public User getUser(String userName) throws UserNotFoundException {
@@ -1027,25 +1088,21 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = USER_C_USERNAME + "=? ";
 		String[] args = new String[] { userName };
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		return getUser(c);
+	}
+
+	public List<User> getAllUsers(){
+		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
 		c.moveToFirst();
-		User u = null;
+
+		ArrayList<User> users = new ArrayList<>();
 		while (!c.isAfterLast()) {
-			u = new User();
-			u.setUserId(c.getLong(c.getColumnIndex(USER_C_ID)));
-			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
-			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
-			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
-			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
-			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
+			User u = fetchUser(c);
+			users.add(u);
 			c.moveToNext();
 		}
 		c.close();
-		if (u == null){
-			throw new UserNotFoundException();
-		}
-		return u;
+		return users;
 	}
 
     public void incrementUserPoints(long userId, int pointsToAdd) {
@@ -1055,17 +1112,27 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[] { String.valueOf(userId) };
         Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
+
+        String username = "";
+        String fullname = "";
+
         while (!c.isAfterLast()) {
             currentPoints = c.getInt(c.getColumnIndex(USER_C_POINTS));
+            username = c.getString(c.getColumnIndex(USER_C_USERNAME));
+            fullname = c.getString(c.getColumnIndex(USER_C_FIRSTNAME)) + " " + c.getString(c.getColumnIndex(USER_C_LASTNAME));
             c.moveToNext();
         }
         c.close();
 
+		currentPoints += pointsToAdd;
         ContentValues values = new ContentValues();
-        values.put(USER_C_POINTS, currentPoints+pointsToAdd);
+        values.put(USER_C_POINTS, currentPoints);
         s = USER_C_ID + "=? ";
         args = new String[] { String.valueOf(userId) };
         db.update(USER_TABLE, values, s, args);
+
+		DateTime lastUpdate = new DateTime();
+        this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate);
     }
 
 	public List<Points> getUserPoints(long userId) {
@@ -1076,6 +1143,9 @@ public class DbHelper extends SQLiteOpenHelper {
         String[] args = new String[] { String.valueOf(userId) };
         Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
+
+        String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+
         while (!c.isAfterLast()) {
             Points p = new Points();
             p.setDateTime(c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
@@ -1083,36 +1153,62 @@ public class DbHelper extends SQLiteOpenHelper {
             p.setEvent(c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
 
             // get course and activity title
-            String description = c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT));
-            if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_ACTIVITY_COMPLETED)){
-                Activity activity = this.getActivityByDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
-                if (activity != null) {
-					Course course = this.getCourse(activity.getCourseId(), userId);
-					if (course != null) {
-                        description = this.ctx.getString(R.string.points_event_activity_completed,
-                                activity.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())),
-                                course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-                    }
-				}
-            } else if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_MEDIA_PLAYED)){
-                String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
-                try {
-                    JSONObject jsonObj = new JSONObject(data);
-                    String mediaFileName = jsonObj.getString("mediafile");
-                    Course course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
-                        if (course != null) {
-                            description = this.ctx.getString(R.string.points_event_media_played,
-                                    mediaFileName,
-                                    course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-                    }
-                } catch (JSONException jsone){
-					Log.d(TAG, "cannot read tracker log data as JSON object", jsone);
-					Mint.logException(jsone);
-                }
+			String event = c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT));
+            String description = event;
+            Log.d(TAG, event);
 
-            } else if ((c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT))).equals(Gamification.EVENT_NAME_COURSE_DOWNLOADED)){
-                description = this.ctx.getString(R.string.points_event_course_downloaded);
-            }
+			Activity activity;
+			Course course;
+
+			switch (event) {
+				case Gamification.EVENT_NAME_ACTIVITY_COMPLETED:
+					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
+					if (activity != null) {
+						course = this.getCourse(activity.getCourseId(), userId);
+						if (course != null) {
+							description = this.ctx.getString(R.string.points_event_activity_completed,
+									activity.getMultiLangInfo().getTitle(prefLang),
+									course.getMultiLangInfo().getTitle(prefLang));
+						}
+					}
+					break;
+
+				case Gamification.EVENT_NAME_MEDIA_PLAYED:
+					String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
+                    activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
+					try {
+						JSONObject jsonObj = new JSONObject(data);
+						String mediaFileName = jsonObj.getString("mediafile");
+						course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+						if (course != null) {
+							description = this.ctx.getString(R.string.points_event_media_played,
+									mediaFileName);
+						}
+					} catch (JSONException jsone) {
+						Log.d(TAG, jsone.getMessage(), jsone);
+					}
+
+					break;
+
+				case Gamification.EVENT_NAME_QUIZ_ATTEMPT:
+					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
+					Log.d(TAG, "quizid " + c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
+					course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+					if ((course != null) && (activity!=null)) {
+                        description = this.ctx.getString(R.string.points_event_quiz_attempt,
+								activity.getMultiLangInfo().getTitle(prefLang),
+                                course.getMultiLangInfo().getTitle(prefLang));
+                    }
+
+					break;
+
+				case Gamification.EVENT_NAME_COURSE_DOWNLOADED:
+					Log.d(TAG, "id: " + c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)));
+					course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+					description = this.ctx.getString(R.string.points_event_course_downloaded,
+							course == null ? "" : course.getMultiLangInfo().getTitle(prefLang));
+					break;
+			}
 
             p.setDescription(description);
 
@@ -1173,28 +1269,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.update(USER_TABLE, values, s ,args);
 	}
 	
-	public List<User> getAllUsers(){
-		Cursor c = db.query(USER_TABLE, null, null, null, null, null, null);
-		c.moveToFirst();
-		
-		ArrayList<User> users = new ArrayList<>();
-		while (!c.isAfterLast()) {
-			User u = new User();
-			u.setUserId(c.getInt(c.getColumnIndex(USER_C_ID)));
-			u.setApiKey(c.getString(c.getColumnIndex(USER_C_APIKEY)));
-			u.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
-			u.setFirstname(c.getString(c.getColumnIndex(USER_C_FIRSTNAME)));
-			u.setLastname(c.getString(c.getColumnIndex(USER_C_LASTNAME)));
-			u.setPoints(c.getInt(c.getColumnIndex(USER_C_POINTS)));
-			u.setBadges(c.getInt(c.getColumnIndex(USER_C_BADGES)));
-			u.setPasswordEncrypted(c.getString(c.getColumnIndex(USER_C_PASSWORDENCRYPTED)));
-			users.add(u);
-			c.moveToNext();
-		}
-		c.close();
-		return users;
-	}
-	
 	public int getSentTrackersCount(){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? ";
 		String[] args = new String[] { "1"};
@@ -1222,7 +1296,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		return count;
 	}
 
-	
 
 	public Payload getUnsentTrackers(long userId){
 		String s = TRACKER_LOG_C_SUBMITTED + "=? AND " + TRACKER_LOG_C_USERID + "=? ";
@@ -1459,11 +1532,8 @@ public class DbHelper extends SQLiteOpenHelper {
         int count = c.getCount();
         Log.d(this.TAG, "isQuizFirstAttempt returned " + count + " rows");
         c.close();
-        if (count > 0){
-            return false;
-        } else {
-            return true;
-        }
+		return (count == 0);
+
     }
 
     public boolean isQuizFirstAttemptToday(String digest){
@@ -1483,11 +1553,7 @@ public class DbHelper extends SQLiteOpenHelper {
         int count = c.getCount();
 		Log.d(this.TAG, "isQuizFirstAttemptToday returned " + count + " rows");
         c.close();
-        if (count > 0){
-            return false;
-        } else {
-            return true;
-        }
+        return (count == 0);
     }
 
 	public boolean isActivityFirstAttemptToday(String digest){
@@ -1506,11 +1572,19 @@ public class DbHelper extends SQLiteOpenHelper {
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
 		int count = c.getCount();
 		c.close();
-		if (count > 0){
-			return false;
-		} else {
-			return true;
-		}
+		return (count == 0);
+	}
+
+	public boolean isMediaPlayed(String digest){
+		//get current user id
+		long userId = this.getUserId(prefs.getString(PrefsActivity.PREF_USER_NAME, ""));
+
+		String s = TRACKER_LOG_C_ACTIVITYDIGEST + "=? AND " + TRACKER_LOG_C_USERID + "=? AND " + TRACKER_LOG_C_COMPLETED + "=1";
+		String[] args = new String[] { digest, String.valueOf(userId) };
+		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
+		int count = c.getCount();
+		c.close();
+		return (count > 0);
 	}
 
 	public void deleteTrackers(long courseId, long userId){
@@ -1526,13 +1600,9 @@ public class DbHelper extends SQLiteOpenHelper {
 					TRACKER_LOG_C_COURSEID + "=?";
 		String[] args = new String[] { digest, String.valueOf(userId), String.valueOf(courseId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean isAttempted = (c.getCount() > 0);
+		c.close();
+		return isAttempted;
 	}
 	
 	public boolean activityCompleted(int courseId, String digest, long userId){
@@ -1542,13 +1612,9 @@ public class DbHelper extends SQLiteOpenHelper {
 					TRACKER_LOG_C_COMPLETED + "=1";
 		String[] args = new String[] { digest, String.valueOf(courseId), String.valueOf(userId) };
 		Cursor c = db.query(TRACKER_LOG_TABLE, null, s, args, null, null, null);
-		if(c.getCount() == 0){
-			c.close();
-			return false;
-		} else {
-			c.close();
-			return true;
-		}
+		boolean isCompleted = (c.getCount() > 0);
+		c.close();
+		return isCompleted;
 	}
 
     public void getCourseQuizResults(List<QuizStats> stats, int courseId, long userId){
@@ -1955,6 +2021,59 @@ public class DbHelper extends SQLiteOpenHelper {
 
         c.close();
         return prefValue;
+    }
+
+    public boolean insertOrUpdateUserLeaderboard(String username, String fullname, int points, DateTime lastUpdate){
+
+		if ((username == null) || ("".equals(username)))
+			return false;
+
+		String whereClause = LEADERBOARD_C_USERNAME + "=? ";
+		String[] args = new String[] { username };
+		boolean updated;
+		String lastUpdateStr = MobileLearning.DATETIME_FORMAT.print(lastUpdate);
+
+		ContentValues values = new ContentValues();
+		values.put(LEADERBOARD_C_FULLNAME, fullname);
+		values.put(LEADERBOARD_C_USERNAME, username);
+		values.put(LEADERBOARD_C_POINTS, points);
+		values.put(LEADERBOARD_C_LASTUPDATE, lastUpdateStr);
+
+		Cursor c = db.query(LEADERBOARD_TABLE, null, whereClause, args, null, null, null);
+		if (c.getCount() > 0){
+			c.close();
+			//Update table only if the last update value is smaller than the current one
+			String s = LEADERBOARD_C_USERNAME + "=? AND " + LEADERBOARD_C_LASTUPDATE + "<=? ";
+			args = new String[] { username, lastUpdateStr };
+			int affectedRows = db.update(LEADERBOARD_TABLE, values, s, args);
+
+			updated = (affectedRows > 0);
+		}
+		else{
+			db.insertOrThrow(LEADERBOARD_TABLE, null, values);
+			updated = true;
+			c.close();
+		}
+
+		return updated;
+	}
+
+	public List<LeaderboardPosition> getLeaderboard(){
+        ArrayList<LeaderboardPosition> leaderboard = new ArrayList<>();
+        String order = LEADERBOARD_C_POINTS + " DESC ";
+        Cursor c = db.query(LEADERBOARD_TABLE, null, null, null, null, null, order);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            LeaderboardPosition pos = new LeaderboardPosition();
+            pos.setUsername(c.getString(c.getColumnIndex(LEADERBOARD_C_USERNAME)));
+            pos.setFullname(c.getString(c.getColumnIndex(LEADERBOARD_C_FULLNAME)));
+            pos.setPoints(c.getInt(c.getColumnIndex(LEADERBOARD_C_POINTS)));
+            leaderboard.add(pos);
+            c.moveToNext();
+        }
+
+        c.close();
+        return leaderboard;
     }
 
 

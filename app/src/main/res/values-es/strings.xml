@@ -112,12 +112,12 @@
     <string name="about_logged_in">Conectado como: %1$s</string>
     <string name="about_not_logged_in">No conectado</string>
 
-	<string name="register_form_username_title">Usuario (*)</string>
-	<string name="register_form_email_title">Dirección e-mail (*)</string>
-	<string name="register_form_firstname_title">Nombre (*)</string>
-	<string name="register_form_lastname_title">Apellidos (*)</string>
-	<string name="register_form_password_title">Contraseña (*)</string>
-	<string name="register_form_password_again_title">Contraseña (repetir) (*)</string>
+	<string name="register_form_username_title">Usuario</string>
+	<string name="register_form_email_title">Dirección e-mail</string>
+	<string name="register_form_firstname_title">Nombre</string>
+	<string name="register_form_lastname_title">Apellidos</string>
+	<string name="register_form_password_title">Contraseña</string>
+	<string name="register_form_password_again_title">Contraseña (repetir)</string>
 	<string name="register_btn_text">Registro</string>
 	
 	<string name="yes">Sí</string>
@@ -249,7 +249,7 @@
     <string name="more_courses">Descargar más cursos</string>
     <string name="register_form_organisation_title">Organización</string>
     <string name="register_form_jobtitle_title">Puesto de trabajo</string>
-    <string name="register_form_phoneno_title">Número de teléfono (*)</string>
+    <string name="register_form_phoneno_title">Número de teléfono</string>
     <string name="submit_stats_btn_text">Enviar ahora</string>
     <string name="admin_password_required">Esta funcionalidad está protegida para uso de admin únicamente. Por favor, introduce la constraseña de admin para continuar:</string>
     <string name="admin_password_newpassword_dialog_title">Contraseña </string>
@@ -297,7 +297,7 @@
     <string name="notification.remote_admin.title">&appName;: Administración Remota </string>
     <string name="permissions.allow_btn_text">Conceder permisos</string>
     <string name="permissions.not_askable.info">Estás viendo este mensaje porque se han solicitado permisos previamente y los denegaste marcando la casilla "No preguntar de nuevo"</string>
-    <string name="permissions.not_askable.message"><![CDATA[La app no tiene los permisos necesarios para funcionar. Por favor, ve a Configuración \> Aplicaciones \> &appname; \> Permisos para conceder estos permisos]]></string>
+    <string name="permissions.not_askable.message">La app no tiene los permisos necesarios para funcionar. Por favor, ve a Configuración \> Aplicaciones \> &appName; \> Permisos para conceder estos permisos</string>
     <string name="permissions.storage.description">&appName; necesita acceso a la tarjeta SD para poder guardar los contenidos multimedia descargados para los cursos</string>
     <string name="permissions.storage.title">leer y modificar contenidos de la tarjeta SD</string>
     <string name="permissions.title">&appName; necesita los siguientes permisos para funcionar correctamente:</string>

@@ -95,6 +95,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     //Temporary vars
     private Section currentSection;
     private String currentLang;
+    private String currentGamifEvent;
     private Activity currentActivity;
     private ArrayList<Lang> sectTitles;
 
@@ -109,6 +110,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     private ArrayList<Media> actMedia;
     private ArrayList<GamificationEvent> actGamification;
 
+    private ArrayList<GamificationEvent> currentGamification = new ArrayList<>();
     private ArrayList<Media> currentMedia = new ArrayList<>();
 
     @Override
@@ -132,6 +134,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             actContents = new ArrayList<>();
             actDescriptions = new ArrayList<>();
             actMedia = new ArrayList<>();
+            actGamification = new ArrayList<>();
             parentElements.push(NODE_ACTIVITY);
 
         }
@@ -182,6 +185,12 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             pageLocations = new ArrayList<>();
             currentPage.setId(Integer.parseInt(aAttributes.getValue(NODE_ID)));
             parentElements.push(NODE_PAGE);
+        }
+        else if (NODE_GAMIFICATION.equals(aQName)){
+            parentElements.push(NODE_GAMIFICATION);
+        }
+        else if (NODE_EVENT.equals(aQName)){
+            currentGamifEvent = aAttributes.getValue(ATTR_NAME);
         }
     }
 
@@ -259,6 +268,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             currentActivity.setLocations(actLocations);
             currentActivity.setContents(actContents);
             currentActivity.setMedia(actMedia);
+            currentActivity.setGamificationEvents(actGamification);
             parentElements.pop();
 
             if (NODE_SECTION.equals(parentElements.peek())){
@@ -303,7 +313,24 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
             parentElements.pop();
         }
         else if (NODE_GAMIFICATION.equals(aQName)){
-            // TODO GAMIFICATION
+            parentElements.pop();
+            if (NODE_ACTIVITY.equals(parentElements.peek())){
+                actGamification = new ArrayList<>();
+                actGamification.addAll(currentGamification);
+            }
+            else{
+                courseGamification.addAll(currentGamification);
+            }
+            currentGamification.clear();
+        }
+        else if (NODE_EVENT.equals(aQName)){
+            if (chars.length() <= 0) return;
+
+            int points = Integer.parseInt(chars.toString());
+            GamificationEvent event = new GamificationEvent();
+            event.setEvent(currentGamifEvent);
+            event.setPoints(points);
+            currentGamification.add(event);
         }
     }
 

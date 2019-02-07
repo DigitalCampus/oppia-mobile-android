@@ -36,29 +36,31 @@ public class WelcomeFragment extends Fragment {
         return new WelcomeFragment();
 	}
 
+	private Button loginButton;
+    private Button registerButton;
+
 	public WelcomeFragment() {
 
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_welcome, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
-		return vv;
+		View v = inflater.inflate(R.layout.fragment_welcome, container, false);
+        loginButton = (Button) v.findViewById(R.id.welcome_login);
+        registerButton = (Button) v.findViewById(R.id.welcome_register);
+
+		return v;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-        Button loginButton = (Button) super.getActivity().findViewById(R.id.welcome_login);
-        Button registerButton = (Button) super.getActivity().findViewById(R.id.welcome_register);
 
 		loginButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
-                wa.switchTab(1);
+                wa.switchTab(WelcomeActivity.TAB_LOGIN);
             }
         });
 		
@@ -66,7 +68,7 @@ public class WelcomeFragment extends Fragment {
 
             public void onClick(View v) {
                 WelcomeActivity wa = (WelcomeActivity) WelcomeFragment.super.getActivity();
-                wa.switchTab(2);
+                wa.switchTab(WelcomeActivity.TAB_REGISTER);
             }
         });
 	}

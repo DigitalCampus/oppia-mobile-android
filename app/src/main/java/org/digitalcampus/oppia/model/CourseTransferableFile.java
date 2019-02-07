@@ -1,7 +1,11 @@
 package org.digitalcampus.oppia.model;
 
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseTransferableFile implements Serializable {
 
@@ -17,6 +21,20 @@ public class CourseTransferableFile implements Serializable {
     private String filename;
     private long fileSize;
     private File file;
+    private List<String> relatedMedia;
+
+
+    public List<String> getRelatedMedia() {
+
+        return (relatedMedia != null) ?
+                relatedMedia
+                : new ArrayList<String>();
+    }
+
+    public void setRelatedMedia(List<String> relatedMedia) {
+        this.relatedMedia = relatedMedia;
+    }
+
 
     public String getTitle() {
         return title;
@@ -58,6 +76,10 @@ public class CourseTransferableFile implements Serializable {
         this.fileSize = fileSize;
     }
 
+    public String getDisplayFileSize(){
+        return FileUtils.readableFileSize(fileSize);
+    }
+
     public String getType() {
         return type;
     }
@@ -72,5 +94,14 @@ public class CourseTransferableFile implements Serializable {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof CourseTransferableFile){
+            CourseTransferableFile other = (CourseTransferableFile) o;
+            return other.getFilename().equals(this.filename);
+        }
+        return false;
     }
 }

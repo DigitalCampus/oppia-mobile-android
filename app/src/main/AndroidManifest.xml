@@ -4,8 +4,6 @@
           package="org.digitalcampus.mobile.learning">
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="23"
         tools:ignore="GradleOverrides"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -14,11 +12,15 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
+
     <!-- Bluetooth permissions -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
 
     <!-- Dangerous-level permissions (need user confirmation) -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -37,7 +39,8 @@
         android:allowBackup="true"
         android:icon="@drawable/dc_logo"
         android:label="@string/app_name"
-        android:theme="@style/Oppia.Theme">
+        android:theme="@style/Oppia.Theme"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
@@ -88,6 +91,7 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.WelcomeActivity"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Oppia.ToolbarTheme"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"
@@ -128,7 +132,6 @@
             android:theme="@style/Oppia.ToolbarTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
@@ -140,6 +143,17 @@
                     android:host="@string/oppiaServerHost"
                     android:pathPrefix="/view"
                     android:scheme="https"/>
+
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:pathPrefix="/view"
+                    android:scheme="oppiamobile"/>
             </intent-filter>
         </activity>
 
@@ -154,6 +168,14 @@
             android:icon="@drawable/dc_logo"/>
         <service
             android:name="org.digitalcampus.oppia.service.courseinstall.CourseIntallerService"
+            android:exported="false"
+            android:icon="@drawable/dc_logo"/>
+        <service
+            android:name="org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService"
+            android:exported="false"
+            android:icon="@drawable/dc_logo"/>
+        <service
+            android:name="org.digitalcampus.oppia.gamification.GamificationService"
             android:exported="false"
             android:icon="@drawable/dc_logo"/>
 

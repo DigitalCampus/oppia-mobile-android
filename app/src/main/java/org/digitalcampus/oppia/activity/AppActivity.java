@@ -19,16 +19,19 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -37,21 +40,27 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.gamification.GamificationBroadcastReceiver;
+import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
-import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.UIUtils;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
-public class AppActivity extends AppCompatActivity implements APIKeyRequestListener {
+
+public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 	
 	public static final String TAG = AppActivity.class.getSimpleName();
+
+	GamificationBroadcastReceiver gamificationReceiver;
+
 
     /**
 	 * @param activities: list of activities to show on the ScheduleReminders section
 	 */
-	public void drawReminders(List<Activity> activities){
+	public void drawReminders(List<org.digitalcampus.oppia.model.Activity> activities){
         ScheduleReminders reminders = (ScheduleReminders) findViewById(R.id.schedule_reminders);
         if (reminders != null){
             reminders.initSheduleReminders(activities);
@@ -60,7 +69,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
     }
 	
 	@Override
@@ -75,9 +84,11 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 		}
 	}
 
-    @Override
-    protected void onStart() {
+    protected void onStart(boolean overrideTitle, boolean configureActionBar){
         super.onStart();
+
+        if (!configureActionBar)
+            return;
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         if (toolbar != null){
@@ -92,16 +103,28 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             actionBar.setDisplayShowTitleEnabled(true);
 
             //If we are in a course-related activity, we show its title
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            Bundle bundle = this.getIntent().getExtras();
-            if (bundle != null) {
-                Course course = (Course) bundle.getSerializable(Course.TAG);
-                if (course == null ) return;
-                String title = course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-                setTitle(title);
-                actionBar.setTitle(title);
+            if (overrideTitle){
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                Bundle bundle = this.getIntent().getExtras();
+                if (bundle != null) {
+                    Course course = (Course) bundle.getSerializable(Course.TAG);
+                    if (course == null ) return;
+                    String title = course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+                    setTitle(title);
+                    actionBar.setTitle(title);
+                }
             }
+
         }
+    }
+
+    protected void onStart(boolean overrideTitle) {
+        onStart(overrideTitle, true);
+    }
+
+    @Override
+    protected void onStart() {
+        onStart(true, true);
     }
 
     @Override
@@ -112,6 +135,13 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         if (!apiKeyValid){
             apiKeyInvalidated();
         }
+
+        // Register the receiver for gamification events
+        gamificationReceiver = new GamificationBroadcastReceiver();
+        gamificationReceiver.setGamificationEventListener(this);
+        IntentFilter broadcastFilter = new IntentFilter(GamificationService.BROADCAST_ACTION);
+        broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        registerReceiver(gamificationReceiver, broadcastFilter);
 
         //We check if the user session time has expired to log him out
         if (MobileLearning.SESSION_EXPIRATION_ENABLED){
@@ -137,6 +167,8 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 .getDefaultSharedPreferences(this).edit()
                 .putLong(PrefsActivity.LAST_ACTIVE_TIME, now).apply();
         }
+
+        unregisterReceiver(gamificationReceiver);
     }
 
     public void logoutAndRestartApp(){
@@ -158,5 +190,15 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onGamificationEvent(String message, int points) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
+        if(notifEnabled) {
+            final View rootView =  ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+            Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT).show();
+        }
     }
 }

@@ -46,4 +46,10 @@ public class OppiaNotificationUtils {
             notificationManager.notify(id, notification);
         }
     }
+
+    public static void sendSimpleMessage(Context ctx, boolean setAutoCancel, int id, String message){
+        NotificationCompat.Builder mBuilder  = OppiaNotificationUtils.getBaseBuilder(ctx, setAutoCancel);
+        mBuilder.setContentTitle(ctx.getString(R.string.app_name)).setContentText(message).build();
+        OppiaNotificationUtils.sendNotification(ctx, 0, mBuilder.build());
+    }
 }

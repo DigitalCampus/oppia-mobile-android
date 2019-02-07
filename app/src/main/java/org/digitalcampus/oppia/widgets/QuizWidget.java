@@ -63,6 +63,8 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
+import org.digitalcampus.oppia.gamification.GamificationService;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
@@ -433,7 +435,7 @@ public class QuizWidget extends WidgetFactory {
 	private boolean saveAnswer() {
 		try {
 			List<String> answers = qw.getQuestionResponses(quiz.getCurrentQuestion().getResponseOptions());
-			if (answers != null) {
+			if ( (answers != null) && (answers.size() > 0)) {
 				quiz.getCurrentQuestion().setUserResponses(answers);
 				return true;
 			}
@@ -484,35 +486,6 @@ public class QuizWidget extends WidgetFactory {
 		isOnResultsPage = true;
 		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
-		DbHelper db = DbHelper.getInstance(super.getActivity());
-		long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-
-        GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
-        GamificationEvent gamificationEvent = gamificationEngine.processEventQuizAttempt(this.course, this.activity, this.getPercent());
-        Log.d(this.TAG,"quiz points:" + String.valueOf(gamificationEvent.getPoints()));
-
-        // save results ready to send back to the quiz server
-        String data = quiz.getResultObject(gamificationEvent).toString();
-        Log.d(TAG,data);
-
-		QuizAttempt qa = new QuizAttempt();
-		qa.setCourseId(course.getCourseId());
-		qa.setUserId(userId);
-		qa.setData(data);
-
-		qa.setActivityDigest(activity.getDigest());
-		qa.setScore(quiz.getUserscore());
-		qa.setMaxscore(quiz.getMaxscore());
-		qa.setPassed(this.getActivityCompleted());
-		qa.setSent(false);
-		qa.setEvent(gamificationEvent.getEvent());
-		qa.setPoints(gamificationEvent.getPoints());
-		db.insertQuizAttempt(qa);
-
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(super.getActivity()).edit();
-        long now = System.currentTimeMillis()/1000;
-        editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
-		
 		//Check if quiz results layout is already loaded
         View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
         if (quizResultsLayout == null){
@@ -590,6 +563,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private void restart() {
+		this.saveTracker();
 		this.setStartTime(System.currentTimeMillis() / 1000);
 		
 		this.quiz = new Quiz();
@@ -624,37 +598,14 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void saveTracker() {
 		long timetaken = this.getSpentTime();
-		Tracker t = new Tracker(super.getActivity());
-		JSONObject obj = new JSONObject();
-        Log.d(this.TAG," saving quiz tracker1");
-		if(!isOnResultsPage){
+		if(activity == null || !isOnResultsPage){
 			return;
 		}
-        Log.d(this.TAG," saving quiz tracker2");
-		// add in extra meta-data
-		try {
-			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
-			obj.put("timetaken", timetaken);
-			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
-			obj.put("quiz_id", quiz.getID());
-			obj.put("instance_id", quiz.getInstanceID());
-			obj.put("score", this.getPercent());
 
-            GamificationEvent gamificationEvent = Gamification.GAMIFICATION_QUIZ_ATTEMPT;
-			// if it's a baseline activity then assume completed
-			if (this.isBaseline) {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, true, gamificationEvent);
-			} else {
-				t.saveTracker(course.getCourseId(), activity.getDigest(), obj, this.getActivityCompleted(), gamificationEvent);
-			}
-		} catch (JSONException e) {
-			Log.d(this.TAG," saving quiz json error");
-		} catch (NullPointerException npe){
-			Log.d(this.TAG," saving quiz null pointer");
-		}
-		
+        Log.d(TAG," saving quiz tracker");
+		new GamificationServiceDelegate(getActivity())
+			.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
+			.registerQuizAttemptEvent(timetaken, quiz, this.getPercent());
 	}
 
 	@Override
@@ -710,9 +661,11 @@ public class QuizWidget extends WidgetFactory {
 	private class OnImageClickListener implements OnClickListener{
 
 		private Context ctx;
+		private String type;
 		
 		public OnImageClickListener(Context ctx){
 			this.ctx = ctx;
+			this.type = type;
 		}
 
 		public void onClick(View v) {

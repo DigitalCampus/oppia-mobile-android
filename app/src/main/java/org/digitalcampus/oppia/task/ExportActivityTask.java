@@ -47,12 +47,12 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
     @Override
     protected String doInBackground(Payload... payloads) {
 
-        String filename = "activity_" +  new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".json";
 
         DbHelper db = DbHelper.getInstance(ctx);
         List<User> users = db.getAllUsers();
 
         int trackersCount = 0;
+        int offlineUsersCount = 0;
         ArrayList<String> userResults = new ArrayList<>();
         for (User u: users) {
             Collection<TrackerLog> userTrackers = db.getUnexportedTrackers(u.getUserId());
@@ -62,6 +62,16 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             trackersCount+= userQuizzes.size();
 
             String userJSON = "{ \"username\":\"" + u.getUsername() + "\",";
+            userJSON += "\"email\":\"" + u.getEmail() + "\", ";
+            if (u.isOfflineRegister()){
+                offlineUsersCount++;
+                userJSON += "\"password\":\"" + u.getPasswordHashed() + "\", ";
+            }
+            userJSON += "\"firstname\":\"" + u.getFirstname() + "\", ";
+            userJSON += "\"lastname\":\"" + u.getLastname() + "\", ";
+            userJSON += "\"organisation\":\"" + u.getOrganisation() + "\", ";
+            userJSON += "\"jobtitle\":\"" + u.getJobTitle() + "\", ";
+            userJSON += "\"phoneno\":\"" + u.getPhoneNo() + "\", ";
             userJSON += "\"trackers\":" + TrackerLog.asJSONCollectionString(userTrackers) + ", ";
             userJSON += "\"quizresponses\":" + QuizAttempt.asJSONCollectionString(userQuizzes) + ", ";
             userJSON += "\"points\":[]";
@@ -69,7 +79,7 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             userResults.add(userJSON);
         }
 
-        if (trackersCount <= 0){
+        if ((trackersCount <= 0) && (offlineUsersCount <=0)){
             //We didn't have any new tracker!
             Log.d(TAG, "There are no new trackers to export...");
             return null;
@@ -84,6 +94,9 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             boolean canWrite = destDir.canWrite();
             Log.d(TAG, "Error creating destination dir: canWrite=" + canWrite);
         }
+
+        String filename = (users.size() > 1) ? "activity" : users.get(0).getUsername();
+        filename += "_" + new SimpleDateFormat("yyyyMMddhhmm").format(new Date()) + ".json";
 
         File file = new File(destDir, filename);
         FileOutputStream f = null;

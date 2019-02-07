@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.adapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Points;
@@ -35,9 +36,9 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
 	public static final String TAG = PointsListAdapter.class.getSimpleName();
 	
 	private final Context ctx;
-	private final ArrayList<Points> pointsList;
+	private final List<Points> pointsList;
 	
-	public PointsListAdapter(Activity context, ArrayList<Points> pointsList) {
+	public PointsListAdapter(Activity context, List<Points> pointsList) {
 		super(context, R.layout.fragment_points_list_row, pointsList);
 		this.ctx = context;
 		this.pointsList = pointsList;

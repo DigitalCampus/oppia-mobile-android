@@ -253,9 +253,13 @@ public class Activity implements Serializable{
         this.multiLangInfo = multiLangInfo;
     }
 
-    public void addGamificationEvent(GamificationEvent ge){
-        gamificationEvents.add(ge);
+    public void addGamificationEvent(GamificationEvent event){
+        gamificationEvents.add(event);
     }
+
+	public void setGamificationEvents(ArrayList<GamificationEvent> events){
+		gamificationEvents = events;
+	}
 
     public GamificationEvent findGamificationEvent(String event) throws GamificationEventNotFound {
         for(GamificationEvent ge: gamificationEvents){
@@ -263,6 +267,6 @@ public class Activity implements Serializable{
                 return ge;
             }
         }
-        throw new GamificationEventNotFound();
+        throw new GamificationEventNotFound(event);
     }
 }

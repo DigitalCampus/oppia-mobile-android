@@ -377,6 +377,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         parsedCourse = parsed;
         course.setMetaPages(parsedCourse.getMetaPages());
         course.setMedia(parsedCourse.getMedia());
+        course.setGamificationEvents(parsedCourse.getGamification());
         sections = parsedCourse.getSections();
 
         boolean baselineCompleted = isBaselineCompleted();

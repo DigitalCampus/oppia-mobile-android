@@ -117,7 +117,7 @@
                         style="@style/Highlight.Text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/highlight_pretest" />
+                        android:id="@+id/tv_ranking" />
 
                     <TextView
                         style="@style/Highlight.Label"
@@ -125,7 +125,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/scorecard_quizzes_highlight_pretest"
                         android:id="@+id/textView5"
-                        android:layout_below="@+id/highlight_pretest"
+                        android:layout_below="@+id/tv_ranking"
                         />
 
                 </RelativeLayout>

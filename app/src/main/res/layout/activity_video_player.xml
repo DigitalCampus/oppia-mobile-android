@@ -1,21 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/video_container"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:id="@+id/video_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    android:gravity="center_horizontal|center_vertical"
-    android:orientation="vertical" >
+    android:gravity="center_horizontal|center_vertical">
 
     <FrameLayout
         android:id="@+id/videoSurfaceContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <SurfaceView
             android:id="@+id/videoSurface"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
     </FrameLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/end_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_cover"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageButton
+                android:id="@+id/replay_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/dialog_rounded_button"
+                android:tint="@color/text_light"
+                app:srcCompat="@drawable/dialog_ic_action_update"/>
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play again"
+                android:textColor="@color/text_light"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageButton
+                android:id="@+id/continue_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/dialog_rounded_button"
+                android:tint="@color/text_light"
+                app:srcCompat="@drawable/ic_arrow_right"/>
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Continue to course"
+                android:textColor="@color/text_light"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

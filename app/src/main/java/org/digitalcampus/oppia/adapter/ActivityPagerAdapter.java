@@ -33,8 +33,9 @@ import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
+import io.github.inflationx.calligraphy3.CalligraphyTypefaceSpan;
+import io.github.inflationx.calligraphy3.TypefaceUtils;
+
 
 public class ActivityPagerAdapter extends FragmentStatePagerAdapter {
 

@@ -80,7 +80,7 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
                 current.getType().equals(CourseTransferableFile.TYPE_COURSE_BACKUP)?
                         R.drawable.ic_notification : R.drawable.default_icon_video);
 
-        holder.courseFilesize.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.getFileSize()));
+        holder.courseFilesize.setText( current.getDisplayFileSize() );
         if (listener!=null){
             holder.listener = this.listener;
         }

@@ -12,7 +12,7 @@
     <string name="menu_settings">Asetukset</string>
     <string name="menu_search">Etsi</string>
     <string name="login_password_title">Salasana</string>
-    <string name="register_form_password_title">Salasana (*)</string>
+    <string name="register_form_password_title">Salasana</string>
     <string name="yes">Kyllä</string>
     <string name="no">Ei</string>
     <string name="ok">Selvä</string>
@@ -22,11 +22,11 @@
     <string name="media_file_size">%1$.1fMt</string>
     <string name="search.activity_title">Etsi</string>
     <string name="prefServer">Palvelin</string>
-    <string name="register_form_firstname_title">Etunimi (*)</string>
-    <string name="register_form_lastname_title">Sukunimi (*)</string>
-    <string name="register_form_username_title">Käyttäjätunnus (*)</string>
+    <string name="register_form_firstname_title">Etunimi</string>
+    <string name="register_form_lastname_title">Sukunimi</string>
+    <string name="register_form_username_title">Käyttäjätunnus</string>
     <string name="prefUser">Käyttäjätunnus</string>
-    <string name="register_form_email_title">Sähköposti (*)</string>
+    <string name="register_form_email_title">Sähköposti</string>
     <string name="reset_username_title">Käyttäjätunnus tai sähköposti</string>
     <string name="warning">Varokaa</string>
     <string name="title_login">Kirjaudu sisään</string>
