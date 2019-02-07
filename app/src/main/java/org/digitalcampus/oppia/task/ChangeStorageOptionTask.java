@@ -23,6 +23,8 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
@@ -142,8 +144,8 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             FileUtils.deleteDir(source);
             Log.d(TAG,"Copying " + sourcePath + " completed");
         } catch (IOException e) {
-            Log.d(TAG,"Copying " + sourcePath + " to " + destPath + " failed");
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "Copying " + sourcePath + " to " + destPath + " failed", e);
             return false;
         }
         return true;

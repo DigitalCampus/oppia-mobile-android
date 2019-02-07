@@ -182,7 +182,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				refreshTagList();
 			} catch (JSONException e) {
 				Mint.logException(e);
-				e.printStackTrace();
+                Log.d(TAG, "Error conencting to server: ", e);
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
 		} else {

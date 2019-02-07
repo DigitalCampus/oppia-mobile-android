@@ -416,7 +416,7 @@ public class CourseIntallerService extends IntentService {
 
         } catch (JSONException e) {
             Mint.logException(e);
-            e.printStackTrace();
+            Log.d(TAG, "JSON error: ", e);
             sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_processing_response));
             removeDownloading(scheduleUrl);
         } catch (UserNotFoundException | IOException e) {

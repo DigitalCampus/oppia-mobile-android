@@ -22,6 +22,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -83,8 +85,8 @@ public class CourseInstall {
             courseDir = tempdir.list()[0]; // use this to get the course name
         } catch (ArrayIndexOutOfBoundsException aioobe) {
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
-            aioobe.printStackTrace();
-            Log.d(TAG, "Error: " + aioobe.getMessage());
+            Mint.logException(aioobe);
+            Log.d(TAG, "Error: ", aioobe);
             listener.onError(ctx.getString(R.string.error_installing_course, shortname));
             return;
         }
@@ -100,8 +102,8 @@ public class CourseInstall {
             courseTrackerXMLPath = tempdir + File.separator + courseDir + File.separator + MobileLearning.COURSE_TRACKER_XML;
         } catch (ArrayIndexOutOfBoundsException aioobe){
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
-            aioobe.printStackTrace();
-            Log.d(TAG, "Error: " + aioobe.getMessage());
+            Mint.logException(aioobe);
+            Log.d(TAG, "Error: ", aioobe);
             listener.onError(ctx.getString(R.string.error_media_download));
             return;
         }
@@ -154,7 +156,8 @@ public class CourseInstall {
                 org.apache.commons.io.FileUtils.copyDirectory(src, new File(dest, src.getName()));
                 success = true;
             } catch (IOException e) {
-                e.printStackTrace();
+                Mint.logException(e);
+                Log.d(TAG, "Error copying course: ", e);
                 listener.onFail(ctx.getString(R.string.error_installing_course, title));
                 return;
             }

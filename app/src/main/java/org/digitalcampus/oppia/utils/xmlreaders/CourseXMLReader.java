@@ -92,7 +92,7 @@ public class CourseXMLReader {
 
             } catch (Exception e) {
                 Mint.logException(e);
-                e.printStackTrace();
+                Log.d(TAG, "Error loading course", e);
                 throw new InvalidXMLException(e, ctx.getResources().getString(R.string.error_reading_xml));
             }
         } else {

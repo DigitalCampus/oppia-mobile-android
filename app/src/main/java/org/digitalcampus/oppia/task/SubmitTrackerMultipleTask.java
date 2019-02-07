@@ -21,8 +21,6 @@ import android.content.Context;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -51,10 +49,14 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
 	public final static String TAG = SubmitTrackerMultipleTask.class.getSimpleName();
 
+    private final static String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
+
 	private TrackerServiceListener trackerServiceListener;
 
     public SubmitTrackerMultipleTask(Context ctx) { super(ctx); }
     public SubmitTrackerMultipleTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
+
+
 
 	@Override
 	protected Payload doInBackground(Payload... params) {
@@ -74,7 +76,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
 	
 		} catch (IllegalStateException ise) {
-			ise.printStackTrace();
+            Log.d(TAG, "IllegalStateException:", ise);
 			payload.setResult(false);
 		} 
 		
@@ -113,7 +115,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                             editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
                             editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
                         }
                         editor.apply();
 
@@ -122,7 +124,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                             MetaDataUtils mu = new MetaDataUtils(ctx);
                             mu.saveMetaData(metadata, prefs);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
                         }
                     } else {
                         if (response.code() == 400) {
@@ -147,8 +149,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 } catch (IOException e) {
                     p.setResult(false);
                 } catch (JSONException e) {
-                    Mint.logException(e);
-                    e.printStackTrace();
+                    Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
                     p.setResult(false);
                 }
                 publishProgress(0);

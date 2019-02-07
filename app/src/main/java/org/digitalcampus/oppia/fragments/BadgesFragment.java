@@ -111,7 +111,8 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			tv.setVisibility(View.GONE);
             badgesAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "Error refreshing badges list: ", e);
 		}
 
 	}
@@ -129,7 +130,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			} catch (JSONException e) {
 				Mint.logException(e);
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
-				e.printStackTrace();
+				Log.d(TAG, "Error connecting to server: ", e);
 			}
 		} else {
 			TextView tv = (TextView) this.getView().findViewById(R.id.fragment_badges_title);

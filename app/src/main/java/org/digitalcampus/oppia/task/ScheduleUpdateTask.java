@@ -18,6 +18,8 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
@@ -113,7 +115,7 @@ public class ScheduleUpdateTask extends APIRequestTask<Payload, DownloadProgress
 		
 		} catch (JSONException e) {
 			Mint.logException(e);
-			e.printStackTrace();
+            Log.d(TAG, "JSONException:", e);
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
 		} catch (UserNotFoundException e) {

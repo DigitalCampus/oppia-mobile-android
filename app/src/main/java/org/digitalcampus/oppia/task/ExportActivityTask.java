@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
@@ -29,7 +31,7 @@ import java.util.List;
 
 public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
 
-    private static final String TAG = ExportActivityTask.class.getSimpleName();;
+    private static final String TAG = ExportActivityTask.class.getSimpleName();
     protected Context ctx;
     private SharedPreferences prefs;
     private ExportActivityListener listener;
@@ -106,9 +108,11 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             out = new OutputStreamWriter(f);
             out.write(json);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "FileNotFoundException: ", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "IO exception: ", e);
         } finally {
             if (out != null){
                 try {

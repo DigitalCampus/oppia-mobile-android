@@ -52,6 +52,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
 	public static final String TAG = UpgradeManagerTask.class.getSimpleName();
@@ -185,7 +187,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
                     csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
                     ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
                 } catch (InvalidXMLException e) {
-                    e.printStackTrace();
+					Mint.logException(e);
+					Log.d(TAG, "InvalidXMLException:", e);
                     break;
                 }
 

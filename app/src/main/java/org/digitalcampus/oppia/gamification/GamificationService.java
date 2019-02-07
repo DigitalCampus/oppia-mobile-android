@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -179,7 +181,8 @@ public class GamificationService  extends IntentService {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "JSON error: ", e);
         }
     }
 

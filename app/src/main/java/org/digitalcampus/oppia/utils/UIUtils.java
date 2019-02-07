@@ -48,6 +48,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.splunk.mint.Mint;
+
 public class UIUtils {
 
 	public final static String TAG = UIUtils.class.getSimpleName();
@@ -232,7 +234,8 @@ public class UIUtils {
 				try {
 					funct.call();
 				} catch (Exception e) {
-					e.printStackTrace();
+					Mint.logException(e);
+					Log.d(TAG, "Exception:", e);
 				}
 
 			}
@@ -293,7 +296,8 @@ public class UIUtils {
 							try {
 								funct.call();
 							} catch (Exception e) {
-								e.printStackTrace();
+								Mint.logException(e);
+								Log.d(TAG, "Exception:", e);
 							}
 						}
 					}).setTitle(ctx.getString(R.string.change_language))

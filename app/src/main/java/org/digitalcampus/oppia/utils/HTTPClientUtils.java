@@ -21,6 +21,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -42,6 +45,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 public class HTTPClientUtils{
 
+    public static final String TAG = HTTPClientUtils.class.getSimpleName();
     public static final String HEADER_AUTH = "Authorization";
     public static final String HEADER_USER_AGENT = "User-Agent";
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
@@ -105,7 +109,8 @@ public class HTTPClientUtils{
             try {
                 v = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+                Mint.logException(e);
+                Log.d(TAG, "NameNotFoundException:", e);
             }
 
             Request originalRequest = chain.request();

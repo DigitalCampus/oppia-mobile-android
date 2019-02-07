@@ -44,6 +44,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
 import org.digitalcampus.mobile.quiz.Quiz;
@@ -262,7 +264,8 @@ public class QuizWidget extends WidgetFactory {
 			q = this.quiz.getCurrentQuestion();
 		} catch (InvalidQuizException e) {
 			Toast.makeText(super.getActivity(), super.getActivity().getString(R.string.error_quiz_no_questions), Toast.LENGTH_LONG).show();
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 			return;
 		}
 
@@ -396,7 +399,8 @@ public class QuizWidget extends WidgetFactory {
 							showResults();
 						}
 					} catch (InvalidQuizException e) {
-						e.printStackTrace();
+						Mint.logException(e);
+						Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 					}
 				} else {
 					CharSequence text = QuizWidget.super.getActivity().getString(R.string.widget_quiz_noanswergiven);
@@ -428,7 +432,8 @@ public class QuizWidget extends WidgetFactory {
 				progress.setText("");
 			}
 		} catch (InvalidQuizException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 		}
 	}
 
@@ -443,7 +448,8 @@ public class QuizWidget extends WidgetFactory {
 				return true;
 			}
 		} catch (InvalidQuizException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 		}
 		return false;
 	}
@@ -459,7 +465,8 @@ public class QuizWidget extends WidgetFactory {
 				builder.setIcon(R.drawable.quiz_cross);
 			}
 		} catch (InvalidQuizException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 		}
 		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 
@@ -476,7 +483,8 @@ public class QuizWidget extends WidgetFactory {
 		try {
 			this.quiz.getCurrentQuestion().setFeedbackDisplayed(true);
 		} catch (InvalidQuizException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 		}
 	}
 
@@ -637,7 +645,8 @@ public class QuizWidget extends WidgetFactory {
 		try {
 			toRead = quiz.getCurrentQuestion().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		} catch (InvalidQuizException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 		}
 		return toRead;
 	}

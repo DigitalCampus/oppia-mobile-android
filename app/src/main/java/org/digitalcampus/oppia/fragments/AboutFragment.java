@@ -30,6 +30,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +81,7 @@ public class AboutFragment extends Fragment{
 			versionNo.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
 			Mint.logException(e);
-			e.printStackTrace();
+			Log.d(TAG, "Error getting version name: ", e);
 		}
 	}
 }

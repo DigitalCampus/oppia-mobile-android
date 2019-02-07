@@ -211,7 +211,7 @@ public class ResourceWidget extends WidgetFactory {
 				data.put("lang", lang);
 			} catch (JSONException e) {
 				Mint.logException(e);
-				e.printStackTrace();
+				Log.d(TAG, "JSONException", e);
 			}
 
 			// add in extra meta-data
@@ -219,7 +219,8 @@ public class ResourceWidget extends WidgetFactory {
 				MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 				data = mdu.getMetaData(data);
 			} catch (JSONException e) {
-				// Do nothing
+				Mint.logException(e);
+				Log.d(TAG, "JSONException", e);
 			}
 
 			GamificationEngine gamificationEngine = new GamificationEngine( getActivity());

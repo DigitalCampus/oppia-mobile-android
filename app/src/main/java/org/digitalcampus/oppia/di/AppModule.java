@@ -3,6 +3,9 @@ package org.digitalcampus.oppia.di;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -26,6 +29,8 @@ import dagger.Provides;
 
 @Module
 public class AppModule {
+
+    public static final String TAG = AppModule.class.getSimpleName();
 
     private Application app;
 
@@ -57,7 +62,8 @@ public class AppModule {
         try {
             return DbHelper.getInstance(app).getUser(SessionManager.getUsername(app));
         } catch (UserNotFoundException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "User not found: ", e);
         }
         return null;
     }

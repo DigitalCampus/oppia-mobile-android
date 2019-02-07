@@ -17,6 +17,10 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.util.Log;
+
+import com.splunk.mint.Mint;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +31,8 @@ import java.util.Iterator;
 
 
 public class MultiLangInfo implements Serializable {
+
+    public static final String TAG = MultiLangInfo.class.getSimpleName();
 
     private ArrayList<Lang> langs = new ArrayList<>();
     private ArrayList<Lang> titles = new ArrayList<>();
@@ -103,7 +109,8 @@ public class MultiLangInfo implements Serializable {
             try {
                 obj.put(l.getLang(), l.getContent());
             } catch (JSONException e) {
-                e.printStackTrace();
+                Mint.logException(e);
+                Log.d(TAG, "JSON error: ", e);
             }
             array.put(obj);
         }
@@ -128,9 +135,11 @@ public class MultiLangInfo implements Serializable {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "JSON error: ", e);
         } catch (NullPointerException npe){
-            npe.printStackTrace();
+            Mint.logException(npe);
+            Log.d(TAG, "Null pointer error: ", npe);
         }
     }
 }
