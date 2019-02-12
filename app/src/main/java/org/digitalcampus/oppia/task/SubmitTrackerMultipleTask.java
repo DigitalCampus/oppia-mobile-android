@@ -135,25 +135,29 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
-                JSONObject jsonResp = new JSONObject(response.body().string());
-                db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
 
-                        Editor editor = prefs.edit();
-                        try {
-                            editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
-                            editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
-                        } catch (JSONException e) {
-                            Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
-                        }
-                        editor.apply();
+                if (!isRaw){
+                    JSONObject jsonResp = new JSONObject(response.body().string());
+                    db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
 
-                try {
-                    JSONObject metadata = jsonResp.getJSONObject("metadata");
-                    MetaDataUtils mu = new MetaDataUtils(ctx);
-                    mu.saveMetaData(metadata, prefs);
-                } catch (JSONException e) {
-                    Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
+                    Editor editor = prefs.edit();
+                    try {
+                        editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
+                        editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
+                    } catch (JSONException e) {
+                        Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
+                    }
+                    editor.apply();
+
+                    try {
+                        JSONObject metadata = jsonResp.getJSONObject("metadata");
+                        MetaDataUtils mu = new MetaDataUtils(ctx);
+                        mu.saveMetaData(metadata, prefs);
+                    } catch (JSONException e) {
+                        Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
+                    }
                 }
+
                 return true;
 
             } else {
