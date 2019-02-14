@@ -57,7 +57,7 @@ public class PasswordDialogFragment extends DialogFragment {
             {
                 public void onClick(View v)
                 {
-                    EditText passwordField = (EditText) d.findViewById(R.id.admin_password_field);
+                    EditText passwordField = d.findViewById(R.id.admin_password_field);
                     View errorMessage = d.findViewById(R.id.admin_password_error);
                     String password = passwordField.getText().toString();
 

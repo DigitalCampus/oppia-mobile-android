@@ -55,10 +55,14 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
 	public final static String TAG = SubmitTrackerMultipleTask.class.getSimpleName();
 
+    private final static String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
+
 	private TrackerServiceListener trackerServiceListener;
 
     public SubmitTrackerMultipleTask(Context ctx) { super(ctx); }
     public SubmitTrackerMultipleTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
+
+
 
 	@Override
 	protected Payload doInBackground(Payload... params) {
@@ -84,7 +88,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             }
 	
 		} catch (IllegalStateException ise) {
-			ise.printStackTrace();
+            Log.d(TAG, "IllegalStateException:", ise);
 			payload.setResult(false);
 		} 
 		
@@ -108,10 +112,10 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Mint.logException(e);
             payload.setResult(false);
         } catch (UserNotFoundException e) {
-            e.printStackTrace();
+            Mint.logException(e);
             payload.setResult(false);
         }
     }
@@ -134,21 +138,21 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 JSONObject jsonResp = new JSONObject(response.body().string());
                 db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
 
-                Editor editor = prefs.edit();
-                try {
-                    editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
-                    editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                editor.apply();
+                        Editor editor = prefs.edit();
+                        try {
+                            editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
+                            editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
+                        } catch (JSONException e) {
+                            Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
+                        }
+                        editor.apply();
 
                 try {
                     JSONObject metadata = jsonResp.getJSONObject("metadata");
                     MetaDataUtils mu = new MetaDataUtils(ctx);
                     mu.saveMetaData(metadata, prefs);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
                 }
                 return true;
 
@@ -175,7 +179,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             Mint.logException(e);
             return false;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
             Mint.logException(e);
             return false;
         }

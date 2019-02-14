@@ -57,8 +57,8 @@ public class BadgesListAdapter extends ArrayAdapter<Badges>{
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.fragment_badges_list_row, parent, false);
             viewHolder = new BadgeViewHolder();
-            viewHolder.badgeDescription = (TextView) convertView.findViewById(R.id.badges_description);
-            viewHolder.badgeDate = (TextView) convertView.findViewById(R.id.badges_date);
+            viewHolder.badgeDescription = convertView.findViewById(R.id.badges_description);
+            viewHolder.badgeDate = convertView.findViewById(R.id.badges_date);
             convertView.setTag(viewHolder);
         }
         else{

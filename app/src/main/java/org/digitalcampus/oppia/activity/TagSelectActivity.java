@@ -37,6 +37,7 @@ import com.splunk.mint.Mint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,7 +66,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
         tags = new ArrayList<>();
         tla = new TagListAdapter(this, tags);
 
-        ListView listView = (ListView) findViewById(R.id.tag_list);
+        ListView listView = findViewById(R.id.tag_list);
         listView.setAdapter(tla);
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -121,7 +122,10 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
             }
 
             this.json = new JSONObject(savedInstanceState.getString("json"));
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            Mint.logException(e);
+            Log.d(TAG, "Error restoring saved state: ", e);
+        }
 	}
 
 	@Override
@@ -154,7 +158,8 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
             findViewById(R.id.empty_state).setVisibility((tags.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (JSONException e) {
-			e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "Error refreshing tag list: ", e);
 		}
 		
 	}
@@ -177,7 +182,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 				refreshTagList();
 			} catch (JSONException e) {
 				Mint.logException(e);
-				e.printStackTrace();
+                Log.d(TAG, "Error conencting to server: ", e);
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
 		} else {

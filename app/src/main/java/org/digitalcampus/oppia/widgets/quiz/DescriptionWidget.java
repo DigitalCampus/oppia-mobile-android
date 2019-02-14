@@ -33,7 +33,7 @@ public class DescriptionWidget extends QuestionWidget{
 	public static final String TAG = DescriptionWidget.class.getSimpleName();
 	
 	public DescriptionWidget(View v) {
-		LinearLayout ll = (LinearLayout) v.findViewById(R.id.quiz_response_widget);
+		LinearLayout ll = v.findViewById(R.id.quiz_response_widget);
 		ll.removeAllViews();
 	}
 	

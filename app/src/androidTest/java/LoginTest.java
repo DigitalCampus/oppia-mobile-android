@@ -1,14 +1,8 @@
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
-
-import junit.framework.TestCase;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;

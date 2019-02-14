@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
@@ -17,6 +20,8 @@ import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import okhttp3.Request;
 
 public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+
+    public static final String TAG = APIRequestTask.class.getSimpleName();
 
     protected Context ctx;
     protected SharedPreferences prefs;
@@ -44,7 +49,8 @@ public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask
                     .build();
 
         } catch (UserNotFoundException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "User not found: ", e);
         }
 
         if (request == null){

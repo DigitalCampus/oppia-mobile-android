@@ -100,7 +100,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 			} catch (JSONException e) {
 				payload.setResult(false);
 				Mint.logException(e);
-				e.printStackTrace();
+				Log.d(TAG, "JSONException:", e);
 			} 
 		}
 		Editor editor = prefs.edit();

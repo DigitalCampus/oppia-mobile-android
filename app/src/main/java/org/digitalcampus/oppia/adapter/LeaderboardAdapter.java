@@ -37,11 +37,11 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
         ViewHolder(View v) {
             super(v);
-            points = (TextView) v.findViewById(R.id.leaderboard_points);
-            pos = (TextView) v.findViewById(R.id.leaderboard_position);
-            username = (TextView) v.findViewById(R.id.leaderboard_username);
-            fullname = (TextView) v.findViewById(R.id.leaderboard_fullname);
-            userCard = (CardView) v.findViewById(R.id.user_card);
+            points = v.findViewById(R.id.leaderboard_points);
+            pos = v.findViewById(R.id.leaderboard_position);
+            username = v.findViewById(R.id.leaderboard_username);
+            fullname = v.findViewById(R.id.leaderboard_fullname);
+            userCard = v.findViewById(R.id.user_card);
         }
     }
 

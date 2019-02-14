@@ -45,11 +45,11 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
         String fileUrl = courseLocation + dropzoneBackground;
         Bitmap background = BitmapFactory.decodeFile(fileUrl);
         backgroundWidth = background.getWidth();
-        ImageView dropzone = (ImageView) view.findViewById(R.id.dropzone_bg);
+        ImageView dropzone = view.findViewById(R.id.dropzone_bg);
         dropzone.setImageBitmap(background);
 
-        draggablesContainer = (ViewGroup) view.findViewById(R.id.drags_container);
-        dropsContainer = (ViewGroup) view.findViewById(R.id.drops_container) ;
+        draggablesContainer = view.findViewById(R.id.drags_container);
+        dropsContainer = view.findViewById(R.id.drops_container) ;
 
         // set up an observer that will be called once the layout is ready, to position the elements
         android.view.ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();

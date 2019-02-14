@@ -61,7 +61,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 	 * @param activities: list of activities to show on the ScheduleReminders section
 	 */
 	public void drawReminders(List<org.digitalcampus.oppia.model.Activity> activities){
-        ScheduleReminders reminders = (ScheduleReminders) findViewById(R.id.schedule_reminders);
+        ScheduleReminders reminders = findViewById(R.id.schedule_reminders);
         if (reminders != null){
             reminders.initSheduleReminders(activities);
         }
@@ -90,7 +90,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         if (!configureActionBar)
             return;
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null){
             setSupportActionBar( toolbar );
         }

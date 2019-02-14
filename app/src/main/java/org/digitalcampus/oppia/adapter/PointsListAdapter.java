@@ -61,10 +61,10 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.fragment_points_list_row, parent, false);
             viewHolder = new PointsViewHolder();
-            viewHolder.pointsDescription = (TextView) convertView.findViewById(R.id.points_description);
-            viewHolder.pointsTime = (TextView) convertView.findViewById(R.id.points_time);
-            viewHolder.pointsDate = (TextView) convertView.findViewById(R.id.points_date);
-            viewHolder.pointsPoints = (TextView) convertView.findViewById(R.id.points_points);
+            viewHolder.pointsDescription = convertView.findViewById(R.id.points_description);
+            viewHolder.pointsTime = convertView.findViewById(R.id.points_time);
+            viewHolder.pointsDate = convertView.findViewById(R.id.points_date);
+            viewHolder.pointsPoints = convertView.findViewById(R.id.points_points);
             convertView.setTag(viewHolder);
         }
         else{

@@ -32,6 +32,9 @@ import org.json.JSONObject;
 
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 public class Activity implements Serializable{
 	
@@ -179,7 +182,7 @@ public class Activity implements Serializable{
 			for(int i=0; i<contentsArray.length(); i++){
 				JSONObject contentObj = contentsArray.getJSONObject(i);
 				@SuppressWarnings("unchecked")
-				Iterator<String> iter = (Iterator<String>) contentObj.keys();
+				Iterator<String> iter =  contentObj.keys();
 				while(iter.hasNext()){
 					String key = iter.next().toString();
 					String content = contentObj.getString(key);
@@ -188,7 +191,8 @@ public class Activity implements Serializable{
 				}
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "JSON error: ", e);
 		}
 	}
 	public boolean hasMedia(){

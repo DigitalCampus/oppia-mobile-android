@@ -45,7 +45,7 @@ public class MultiSelectWidget extends QuestionWidget {
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
-		responsesLL = (LinearLayout) view.findViewById(R.id.questionresponses);
+		responsesLL = view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
 
 		String shuffle = question.getProp("shuffleanswers");

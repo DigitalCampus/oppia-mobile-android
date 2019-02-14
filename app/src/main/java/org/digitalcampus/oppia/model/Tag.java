@@ -20,7 +20,7 @@ package org.digitalcampus.oppia.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Tag implements Serializable{
+public class 	Tag implements Serializable{
 
 	/**
 	 * 

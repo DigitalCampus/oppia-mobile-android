@@ -36,6 +36,8 @@ public abstract class WidgetFactory extends Fragment {
 	
 	public final static String TAG = WidgetFactory.class.getSimpleName();
 
+	protected static final String QUIZ_EXCEPTION_MESSAGE = "Invalid Quiz Error: ";
+
     protected static final String WIDGET_CONFIG = "widget_config";
     protected static final String PROPERTY_FEEDBACK = "feedback";
     protected static final String PROPERTY_ACTIVITY_STARTTIME = "Activity_StartTime";
@@ -71,7 +73,7 @@ public abstract class WidgetFactory extends Fragment {
 	public void setIsBaseline(boolean isBaseline) {
 		this.isBaseline = isBaseline;
 	}
-	
+
 	protected void setStartTime(long startTime){
 		this.startTime = (startTime != 0) ? startTime : (System.currentTimeMillis()/1000);
         currentTimeAccounted = false;

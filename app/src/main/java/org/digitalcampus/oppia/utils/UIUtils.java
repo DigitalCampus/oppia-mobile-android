@@ -48,6 +48,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.splunk.mint.Mint;
+
 public class UIUtils {
 
 	public final static String TAG = UIUtils.class.getSimpleName();
@@ -71,8 +73,8 @@ public class UIUtils {
 			return;
 		}
 		
-		TextView points = (TextView) pointsItem.getActionView().findViewById(R.id.userpoints);
-		TextView badges = (TextView) pointsItem.getActionView().findViewById(R.id.userbadges);
+		TextView points = pointsItem.getActionView().findViewById(R.id.userpoints);
+		TextView badges = pointsItem.getActionView().findViewById(R.id.userbadges);
 
 		if(points == null || badges == null){
 			return;
@@ -232,7 +234,8 @@ public class UIUtils {
 				try {
 					funct.call();
 				} catch (Exception e) {
-					e.printStackTrace();
+					Mint.logException(e);
+					Log.d(TAG, "Exception:", e);
 				}
 
 			}
@@ -293,7 +296,8 @@ public class UIUtils {
 							try {
 								funct.call();
 							} catch (Exception e) {
-								e.printStackTrace();
+								Mint.logException(e);
+								Log.d(TAG, "Exception:", e);
 							}
 						}
 					}).setTitle(ctx.getString(R.string.change_language))

@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.StatFs;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.Tracker;
@@ -126,7 +128,8 @@ public class Storage {
             try {
                 fileCreated = nomedia.createNewFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                Mint.logException(e);
+                Log.d(TAG, "IOException", e);
             }
             Log.d(TAG, (fileCreated ? "File .nomedia created in " : "Failed creating .nomedia file in ") + dir.getAbsolutePath());
         }

@@ -54,7 +54,7 @@ public class ScheduleReminders extends LinearLayout {
 
 	public void initSheduleReminders(List<Activity> activities) {
 		setOrientation(VERTICAL);
-		LinearLayout ll = (LinearLayout) findViewById(R.id.schedule_reminders);
+		LinearLayout ll = findViewById(R.id.schedule_reminders);
 		ll.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.schedule_reminder, this);
@@ -64,7 +64,7 @@ public class ScheduleReminders extends LinearLayout {
 			ScheduleReminders.this.setVisibility(GONE);
 		}
 		ScheduleReminderListAdapter srla = new ScheduleReminderListAdapter(ctx, activities);
-		ListView listView = (ListView) findViewById(R.id.schedule_reminder_list);
+		ListView listView = findViewById(R.id.schedule_reminder_list);
 		listView.setAdapter(srla);
 
 		listView.setOnItemClickListener(new OnItemClickListener() {

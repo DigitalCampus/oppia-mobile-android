@@ -74,7 +74,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		initializeDagger();
 
         badgesAdapter = new BadgesListAdapter(super.getActivity(), badges);
-        ListView listView = (ListView) this.getView().findViewById(R.id.badges_list);
+        ListView listView = this.getView().findViewById(R.id.badges_list);
         listView.setAdapter(badgesAdapter);
 
 		getBadges();
@@ -96,7 +96,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
         badges.clear();
 		try {
-			TextView tv = (TextView) this.getView().findViewById(R.id.fragment_badges_title);
+			TextView tv = this.getView().findViewById(R.id.fragment_badges_title);
 			if(json.getJSONArray("objects").length() == 0){
 				tv.setText(R.string.info_no_badges);
 				return;
@@ -111,7 +111,8 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			tv.setVisibility(View.GONE);
             badgesAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "Error refreshing badges list: ", e);
 		}
 
 	}
@@ -129,10 +130,10 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			} catch (JSONException e) {
 				Mint.logException(e);
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
-				e.printStackTrace();
+				Log.d(TAG, "Error connecting to server: ", e);
 			}
 		} else {
-			TextView tv = (TextView) this.getView().findViewById(R.id.fragment_badges_title);
+			TextView tv = this.getView().findViewById(R.id.fragment_badges_title);
 			tv.setVisibility(View.VISIBLE);
 			tv.setText(R.string.error_connection_required);
 		} 		
