@@ -88,12 +88,12 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.scorecard_list_row, parent, false);
             viewHolder = new ScorecardViewHolder();
-            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
-            PieChart pie = (PieChart) convertView.findViewById(R.id.scorecard_pie_chart);
+            viewHolder.courseTitle = convertView.findViewById(R.id.course_title);
+            PieChart pie = convertView.findViewById(R.id.scorecard_pie_chart);
             viewHolder.pieChart = new ScorecardPieChart(ctx, pie, course);
             viewHolder.pieChart.configureChart(0, 0.79f, false);
-            viewHolder.activitiesCompleted = (TextView) convertView.findViewById(R.id.scorecard_activities_completed);
-            viewHolder.activitiesTotal = (TextView) convertView.findViewById(R.id.scorecard_activities_total);
+            viewHolder.activitiesCompleted = convertView.findViewById(R.id.scorecard_activities_completed);
+            viewHolder.activitiesTotal = convertView.findViewById(R.id.scorecard_activities_total);
 
             convertView.setTag(viewHolder);
         } else {

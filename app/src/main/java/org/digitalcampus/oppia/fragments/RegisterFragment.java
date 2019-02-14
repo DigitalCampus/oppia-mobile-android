@@ -79,17 +79,17 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View vv = inflater.inflate(R.layout.fragment_register, container, false);
-		usernameField = (ValidableTextInputLayout) vv.findViewById(R.id.register_form_username_field);
-		emailField = (ValidableTextInputLayout) vv.findViewById(R.id.register_form_email_field);
-		passwordField = (ValidableTextInputLayout) vv.findViewById(R.id.register_form_password_field);
-		passwordAgainField = (ValidableTextInputLayout) vv.findViewById(R.id.register_form_password_again_field);
-		firstnameField = (ValidableTextInputLayout) vv.findViewById(R.id.register_form_firstname_field);
-		lastnameField = (ValidableTextInputLayout) vv.findViewById(R.id.register_form_lastname_field);
-		jobTitleField = (ValidableTextInputLayout) vv.findViewById(R.id.register_form_jobtitle_field);
-		organisationField = (ValidableTextInputLayout) vv.findViewById(R.id.register_form_organisation_field);
-		phoneNoField = (ValidableTextInputLayout) vv.findViewById(R.id.register_form_phoneno_field);
-		registerButton = (Button) vv.findViewById(R.id.register_btn);
-		loginButton = (Button) vv.findViewById(R.id.login_btn);
+		usernameField = vv.findViewById(R.id.register_form_username_field);
+		emailField = vv.findViewById(R.id.register_form_email_field);
+		passwordField = vv.findViewById(R.id.register_form_password_field);
+		passwordAgainField = vv.findViewById(R.id.register_form_password_again_field);
+		firstnameField = vv.findViewById(R.id.register_form_firstname_field);
+		lastnameField = vv.findViewById(R.id.register_form_lastname_field);
+		jobTitleField = vv.findViewById(R.id.register_form_jobtitle_field);
+		organisationField = vv.findViewById(R.id.register_form_organisation_field);
+		phoneNoField = vv.findViewById(R.id.register_form_phoneno_field);
+		registerButton = vv.findViewById(R.id.register_btn);
+		loginButton = vv.findViewById(R.id.login_btn);
 
 		fields = Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
 				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField);

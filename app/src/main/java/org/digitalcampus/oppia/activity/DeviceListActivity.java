@@ -57,7 +57,7 @@ public class DeviceListActivity extends Activity {
 
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
     private static final List<String> BLUETOOTH_PERMISSIONS = Arrays.asList(
-            //Remember to update this when the Manifest permisssions change!
+            //Remember to update this when the Manifest permissions change!
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
     );
@@ -81,7 +81,7 @@ public class DeviceListActivity extends Activity {
 
         scanningMessage = findViewById(R.id.scanning_message);
         // Initialize the button to perform device discovery
-        scanButton = (Button) findViewById(R.id.button_scan);
+        scanButton = findViewById(R.id.button_scan);
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -125,12 +125,12 @@ public class DeviceListActivity extends Activity {
         mNewDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.device_row);
 
         // Find and set up the ListView for paired devices
-        ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
+        ListView pairedListView = findViewById(R.id.paired_devices);
         pairedListView.setAdapter(pairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
         // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = (ListView) findViewById(R.id.new_devices);
+        ListView newDevicesListView = findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 

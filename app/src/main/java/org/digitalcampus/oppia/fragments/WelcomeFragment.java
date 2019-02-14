@@ -45,8 +45,8 @@ public class WelcomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_welcome, container, false);
-        loginButton = (Button) v.findViewById(R.id.welcome_login);
-        registerButton = (Button) v.findViewById(R.id.welcome_register);
+        loginButton = v.findViewById(R.id.welcome_login);
+        registerButton = v.findViewById(R.id.welcome_register);
 
 		return v;
 	}

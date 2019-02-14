@@ -115,7 +115,8 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
                     MetaDataUtils mu = new MetaDataUtils(ctx);
                     mu.saveMetaData(metadata, prefs);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Mint.logException(e);
+                    Log.d(TAG, "JSONException: ", e);
                 }
                 DbHelper db = DbHelper.getInstance(ctx);
                 db.addOrUpdateUser(u);
@@ -134,7 +135,8 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
             }
 
 		} catch(javax.net.ssl.SSLHandshakeException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "SSLHandshakeException: ", e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
         }catch (UnsupportedEncodingException e) {
@@ -145,8 +147,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 			payload.setResultResponse(ctx.getString(R.string.error_connection_required));
 		} catch (JSONException e) {
 			Mint.logException(e);
-			e.printStackTrace();
-			payload.setResult(false);
+            Log.d(TAG, "JSONException: ", e);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
 		} 
 		

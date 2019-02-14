@@ -59,7 +59,7 @@ public class CourseQuizzesGridAdapter  extends ArrayAdapter<QuizStats> {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.scorecard_quiz_item, parent, false);
             viewHolder = new QuizStatsViewHolder();
-            viewHolder.percent = (TextView) convertView.findViewById(R.id.percent_label);
+            viewHolder.percent = convertView.findViewById(R.id.percent_label);
             viewHolder.baseView = convertView;
             convertView.setTag(viewHolder);
         }

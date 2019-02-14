@@ -40,7 +40,7 @@ public class ShortAnswerWidget extends TextInputQuizWidget {
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswers) {
-		EditText et = (EditText) view.findViewById(R.id.responsetext);
+		EditText et = view.findViewById(R.id.responsetext);
 		for (String answer : currentAnswers) {
 			et.setText(answer);
 		}
@@ -48,7 +48,7 @@ public class ShortAnswerWidget extends TextInputQuizWidget {
 	}
 	
 	public List<String> getQuestionResponses(List<Response> responses){
-		EditText et = (EditText) view.findViewById(R.id.responsetext);
+		EditText et = view.findViewById(R.id.responsetext);
 		if(et.getText().toString().trim().equals("")){
 			return new ArrayList<>();
 		} else {

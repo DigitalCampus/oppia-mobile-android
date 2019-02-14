@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -113,12 +114,12 @@ public class ResourceWidget extends WidgetFactory {
 		super.onActivityCreated(savedInstanceState);
 
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-		LinearLayout ll = (LinearLayout) getView().findViewById(R.id.widget_resource_object);
+		LinearLayout ll = getView().findViewById(R.id.widget_resource_object);
 		String fileUrl = course.getLocation() + activity.getLocation(lang);
 
 		// show description if any
 		String desc = activity.getDescription(lang);
-		TextView descTV = (TextView) getView().findViewById(R.id.widget_resource_description);
+		TextView descTV = getView().findViewById(R.id.widget_resource_description);
 		if ((desc != null) && desc.length() > 0){
 			descTV.setText(desc);
 		} else {
@@ -208,7 +209,7 @@ public class ResourceWidget extends WidgetFactory {
 				data.put("lang", lang);
 			} catch (JSONException e) {
 				Mint.logException(e);
-				e.printStackTrace();
+				Log.d(TAG, "JSONException", e);
 			}
 
 			// add in extra meta-data
@@ -216,7 +217,8 @@ public class ResourceWidget extends WidgetFactory {
 				MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 				data = mdu.getMetaData(data);
 			} catch (JSONException e) {
-				// Do nothing
+				Mint.logException(e);
+				Log.d(TAG, "JSONException", e);
 			}
 
 			GamificationEngine gamificationEngine = new GamificationEngine( getActivity());

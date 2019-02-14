@@ -11,6 +11,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -316,7 +318,8 @@ public class BluetoothTransferService extends Service {
             tasksDownloading.remove(trFile);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "IO exception: ", e);
         }
     }
 

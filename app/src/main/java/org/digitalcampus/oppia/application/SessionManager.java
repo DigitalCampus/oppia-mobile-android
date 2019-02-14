@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.Pair;
 
 import com.splunk.mint.Mint;
@@ -38,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SessionManager {
+
+    public static final String TAG = SessionManager.class.getSimpleName();
 
     public static final String ACCOUNTS_CSV_FILENAME = "oppia_accounts.csv";
     public static final String APIKEY_VALID = "prefApiKeyInvalid";
@@ -61,7 +64,8 @@ public class SessionManager {
             return u.getDisplayName();
 
         } catch (UserNotFoundException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "User not found: ", e);
             return null;
         }
 

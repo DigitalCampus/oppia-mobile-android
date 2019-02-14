@@ -95,7 +95,7 @@ public class PageWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		WebView wv = (WebView) super.getActivity().findViewById(activity.getActId());
+		WebView wv = super.getActivity().findViewById(activity.getActId());
 		// get the location data
 		String url = course.getLocation()
 				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()

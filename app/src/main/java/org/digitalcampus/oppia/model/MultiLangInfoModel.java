@@ -18,6 +18,9 @@
 package org.digitalcampus.oppia.model;
 
 import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.json.JSONArray;
@@ -31,6 +34,8 @@ import java.util.Locale;
 
 
 public class MultiLangInfoModel implements Serializable {
+
+    public static final String TAG = MultiLangInfoModel.class.getSimpleName();
 
     private ArrayList<Lang> langs = new ArrayList<>();
     private ArrayList<Lang> titles = new ArrayList<>();
@@ -115,7 +120,8 @@ public class MultiLangInfoModel implements Serializable {
             try {
                 obj.put(l.getLang(), l.getContent());
             } catch (JSONException e) {
-                e.printStackTrace();
+                Mint.logException(e);
+                Log.d(TAG, "JSON error: ", e);
             }
             array.put(obj);
         }
@@ -140,9 +146,11 @@ public class MultiLangInfoModel implements Serializable {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "JSON error: ", e);
         } catch (NullPointerException npe){
-            npe.printStackTrace();
+            Mint.logException(npe);
+            Log.d(TAG, "Null pointer error: ", npe);
         }
     }
 }

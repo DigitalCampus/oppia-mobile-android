@@ -47,11 +47,11 @@ public class LeaderboardFragment extends Fragment implements SubmitListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vv = inflater.inflate(R.layout.fragment_leaderboard, container, false);
 
-        leaderboard_view = (RecyclerView) vv.findViewById(R.id.list_leaderboard);
-        rankingPosition = (TextView) vv.findViewById(R.id.tv_ranking);
-        totalPoints= (TextView) vv.findViewById(R.id.tv_total_points);
+        leaderboard_view = vv.findViewById(R.id.list_leaderboard);
+        rankingPosition = vv.findViewById(R.id.tv_ranking);
+        totalPoints= vv.findViewById(R.id.tv_total_points);
 
-        loadingSpinner = (ProgressBar) vv.findViewById(R.id.loading_spinner);
+        loadingSpinner = vv.findViewById(R.id.loading_spinner);
         loadingSpinner.setVisibility(View.VISIBLE);
 
         return vv;

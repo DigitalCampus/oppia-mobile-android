@@ -75,7 +75,7 @@ public class ActivityPagerAdapter extends FragmentStatePagerAdapter {
 
         for (int i = 0; i < tabs.getTabCount(); i++) {
             View v = LayoutInflater.from(ctx).inflate(R.layout.tablayout_fixed_tab, null);
-            TextView tv = (TextView) v.findViewById(R.id.tabTitle);
+            TextView tv = v.findViewById(R.id.tabTitle);
             tv.setText(tabTitles.get(i));
 
             TabLayout.Tab tab = tabs.getTabAt(i);

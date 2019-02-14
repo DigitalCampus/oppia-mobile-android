@@ -73,10 +73,10 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.course_list_row, parent, false);
             viewHolder = new CourseViewHolder();
-            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
-            viewHolder.courseDescription = (TextView) convertView.findViewById(R.id.course_description);
-            viewHolder.courseProgress = (ProgressBar) convertView.findViewById(R.id.course_progress_bar);
-            viewHolder.courseImage = (ImageView) convertView.findViewById(R.id.course_image);
+            viewHolder.courseTitle = convertView.findViewById(R.id.course_title);
+            viewHolder.courseDescription = convertView.findViewById(R.id.course_description);
+            viewHolder.courseProgress = convertView.findViewById(R.id.course_progress_bar);
+            viewHolder.courseImage = convertView.findViewById(R.id.course_image);
             viewHolder.barAnimator = new ProgressBarAnimator(viewHolder.courseProgress);
             convertView.setTag(viewHolder);
         }

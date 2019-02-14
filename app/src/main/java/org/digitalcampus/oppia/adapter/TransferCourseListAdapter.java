@@ -32,11 +32,11 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
 
         public TclaViewHolder(View v) {
             super(v);
-            courseTitle = (TextView) v.findViewById(R.id.course_title);
-            courseFilesize = (TextView) v.findViewById(R.id.course_filesize);
-            courseDescription = (TextView) v.findViewById(R.id.course_description);
-            actionBtn = (ImageButton) v.findViewById(R.id.download_course_btn);
-            icon = (ImageView) v.findViewById(R.id.elem_icon);
+            courseTitle = v.findViewById(R.id.course_title);
+            courseFilesize = v.findViewById(R.id.course_filesize);
+            courseDescription = v.findViewById(R.id.course_description);
+            actionBtn = v.findViewById(R.id.download_course_btn);
+            icon = v.findViewById(R.id.elem_icon);
 
             actionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

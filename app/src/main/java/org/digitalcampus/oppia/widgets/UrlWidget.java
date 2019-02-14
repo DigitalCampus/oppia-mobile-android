@@ -88,14 +88,14 @@ public class UrlWidget extends WidgetFactory {
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		// show description if any
 		String desc = activity.getDescription(lang);
-		TextView descTV = (TextView) getView().findViewById(R.id.widget_url_description);
+		TextView descTV = getView().findViewById(R.id.widget_url_description);
 		if ((desc != null) && desc.length() > 0){
 			descTV.setText(desc);
 		} else {
 			descTV.setVisibility(View.GONE);
 		}
 		
-		WebView wv = (WebView) getView().findViewById(R.id.widget_url_webview);
+		WebView wv = getView().findViewById(R.id.widget_url_webview);
 		int defaultFontSize = Integer.parseInt(prefs.getString(PrefsActivity.PREF_TEXT_SIZE, "16"));
 		wv.getSettings().setDefaultFontSize(defaultFontSize);
 		wv.getSettings().setJavaScriptEnabled(true);

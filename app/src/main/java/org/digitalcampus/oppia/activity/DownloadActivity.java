@@ -85,7 +85,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             Tag t = (Tag) bundle.getSerializable(Tag.TAG);
             if (t != null){
                 this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
-                Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+                Toolbar toolbar = findViewById(R.id.toolbar);
                 if (toolbar != null){
                     toolbar.setSubtitle(t.getName());
                 }
@@ -99,7 +99,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         courses = new ArrayList<>();
         dla = new DownloadCourseListAdapter(this, courses);
         dla.setOnClickListener(new CourseListListener());
-        ListView listView = (ListView) findViewById(R.id.tag_list);
+        ListView listView = findViewById(R.id.tag_list);
         if (listView != null) {
             listView.setAdapter(dla);
         }
@@ -199,7 +199,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 		} catch (Exception e) {
 			Mint.logException(e);
-			e.printStackTrace();
+            Log.d(TAG, "Error processing response: ", e);
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
 		
@@ -223,7 +223,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 			} catch (JSONException e) {
 				Mint.logException(e);
-				e.printStackTrace();
+                Log.d(TAG, "Error connecting to server: ", e);
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
 		} else {

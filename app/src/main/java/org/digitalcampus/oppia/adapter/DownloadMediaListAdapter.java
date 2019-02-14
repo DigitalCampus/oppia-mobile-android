@@ -74,12 +74,12 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.media_download_row, parent, false);
             viewHolder = new DownloadMediaViewHolder();
-            viewHolder.mediaCourses = (TextView) convertView.findViewById(R.id.media_courses);
-            viewHolder.mediaTitle = (TextView) convertView.findViewById(R.id.media_title);
-            viewHolder.mediaPath = (TextView) convertView.findViewById(R.id.media_path);
-            viewHolder.mediaFileSize = (TextView) convertView.findViewById(R.id.media_file_size);
-            viewHolder.downloadBtn = (ImageButton) convertView.findViewById(R.id.action_btn);
-            viewHolder.downloadProgress = (ProgressBar) convertView.findViewById(R.id.download_progress);
+            viewHolder.mediaCourses = convertView.findViewById(R.id.media_courses);
+            viewHolder.mediaTitle = convertView.findViewById(R.id.media_title);
+            viewHolder.mediaPath = convertView.findViewById(R.id.media_path);
+            viewHolder.mediaFileSize = convertView.findViewById(R.id.media_file_size);
+            viewHolder.downloadBtn = convertView.findViewById(R.id.action_btn);
+            viewHolder.downloadProgress = convertView.findViewById(R.id.download_progress);
             convertView.setTag(viewHolder);
         }
         else{

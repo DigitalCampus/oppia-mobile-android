@@ -111,7 +111,7 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
         {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             View view = inflater.inflate(R.layout.dialog_lollipop_storage_access, container, false);
-            Button acceptButton = (Button) view.findViewById(R.id.acceptBtn);
+            Button acceptButton = view.findViewById(R.id.acceptBtn);
 
             acceptButton.setOnClickListener(this);
             getDialog().setCanceledOnTouchOutside(true);

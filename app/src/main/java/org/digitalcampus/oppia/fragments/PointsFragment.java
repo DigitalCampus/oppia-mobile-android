@@ -60,7 +60,7 @@ public class PointsFragment extends AppFragment {
         getPoints();
 
         pointsAdapter = new PointsListAdapter(super.getActivity(), points);
-        ListView listView = (ListView) getView().findViewById(R.id.points_list);
+        ListView listView = getView().findViewById(R.id.points_list);
         listView.setAdapter(pointsAdapter);
 	}
 
@@ -73,7 +73,7 @@ public class PointsFragment extends AppFragment {
 		DbHelper db = DbHelper.getInstance(super.getActivity());
 		long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
 		points = db.getUserPoints(userId);
-        TextView tv = (TextView) super.getActivity().findViewById(R.id.fragment_points_title);
+        TextView tv = super.getActivity().findViewById(R.id.fragment_points_title);
         tv.setVisibility(View.GONE);
 	}
 }

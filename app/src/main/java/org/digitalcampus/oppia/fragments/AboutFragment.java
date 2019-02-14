@@ -22,6 +22,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,7 @@ public class AboutFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		WebView webView = (WebView) super.getActivity().findViewById(R.id.about_webview);
+		WebView webView = super.getActivity().findViewById(R.id.about_webview);
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		String url = Storage.getLocalizedFilePath(super.getActivity(), lang, "about.html");
 
@@ -69,13 +70,13 @@ public class AboutFragment extends Fragment{
 		
 		webView.loadUrl(url);
 		
-		TextView versionNo = (TextView) super.getActivity().findViewById(R.id.about_versionno);
+		TextView versionNo = super.getActivity().findViewById(R.id.about_versionno);
 		try {
 			String no = super.getActivity().getPackageManager().getPackageInfo(super.getActivity().getPackageName(), 0).versionName;
 			versionNo.setText(getString(R.string.version,no));
 		} catch (NameNotFoundException e) {
 			Mint.logException(e);
-			e.printStackTrace();
+			Log.d(TAG, "Error getting version name: ", e);
 		}
 	}
 }

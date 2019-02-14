@@ -237,7 +237,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void initializeCourseIndex(boolean animate){
 
-        final ListView listView = (ListView) findViewById(R.id.section_list);
+        final ListView listView = findViewById(R.id.section_list);
 	if (listView == null) return;        
 	ViewCompat.setNestedScrollingEnabled(listView, true);
         sla = new SectionListAdapter(CourseIndexActivity.this, course, sections, new SectionListAdapter.CourseClickListener() {

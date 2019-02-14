@@ -34,8 +34,8 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.GCMRegistrationService;
-import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -60,11 +60,11 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-		usernameField = (EditText) v.findViewById(R.id.login_username_field);
-		passwordField = (EditText) v.findViewById(R.id.login_password_field);
-		loginBtn  = (Button) v.findViewById(R.id.login_btn);
-		registerBtn = (Button) v.findViewById(R.id.register_btn);
-		resetPasswordBtn = (Button) v.findViewById(R.id.forgot_btn);
+		usernameField = v.findViewById(R.id.login_username_field);
+		passwordField = v.findViewById(R.id.login_password_field);
+		loginBtn = v.findViewById(R.id.login_btn);
+		registerBtn = v.findViewById(R.id.register_btn);
+		resetPasswordBtn = v.findViewById(R.id.forgot_btn);
 		return v;
 	}
 

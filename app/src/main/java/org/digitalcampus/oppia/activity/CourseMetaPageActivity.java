@@ -20,8 +20,11 @@ package org.digitalcampus.oppia.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.webkit.WebView;
 import android.widget.TextView;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Course;
@@ -53,16 +56,16 @@ public class CourseMetaPageActivity extends AppActivity {
             cmp = course.getMetaPage(pageID);
         }
 		
-		TextView titleTV = (TextView) findViewById(R.id.course_title);
-		TextView versionTV = (TextView) findViewById(R.id.course_versionid);
-		TextView shortnameTV = (TextView) findViewById(R.id.course_shortname);
+		TextView titleTV = findViewById(R.id.course_title);
+		TextView versionTV = findViewById(R.id.course_versionid);
+		TextView shortnameTV = findViewById(R.id.course_shortname);
 		String title = cmp.getLang(prefLang).getContent();
 		titleTV.setText(title);
 		BigDecimal big = new BigDecimal(course.getVersionId());
 		versionTV.setText(big.toString());
 		shortnameTV.setText(course.getShortname());
 		
-		WebView wv = (WebView) this.findViewById(R.id.metapage_webview);
+		WebView wv = this.findViewById(R.id.metapage_webview);
 		String url = course.getLocation() + File.separator +cmp.getLang(prefLang).getLocation();
 		
 		try {
@@ -74,7 +77,8 @@ public class CourseMetaPageActivity extends AppActivity {
 			content += "</html>";
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, content, "text/html", "utf-8", null);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "IOException: ", e);
 			wv.loadUrl("file://" + url);
 		}
 	    

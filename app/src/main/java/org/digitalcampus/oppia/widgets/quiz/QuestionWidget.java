@@ -54,7 +54,7 @@ public abstract class QuestionWidget {
 		currentUserLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		view = v;
 
-		LinearLayout ll = (LinearLayout) v.findViewById(R.id.quiz_response_widget);
+		LinearLayout ll = v.findViewById(R.id.quiz_response_widget);
 		ll.removeAllViews();
 		LayoutInflater localInflater = ((LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).cloneInContext(ctx);
 		View vv = localInflater.inflate(layout, container, false);

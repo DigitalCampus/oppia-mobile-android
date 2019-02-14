@@ -22,6 +22,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
@@ -124,10 +127,10 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
-		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
-		qText = (TextView) getView().findViewById(R.id.question_text);
-		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
+		prevBtn = getView().findViewById(R.id.mquiz_prev_btn);
+		nextBtn = getView().findViewById(R.id.mquiz_next_btn);
+		qText = getView().findViewById(R.id.question_text);
+		questionImage = getView().findViewById(R.id.question_image);
 
         loadFeedback();
 	}
@@ -156,7 +159,8 @@ public class FeedbackWidget extends WidgetFactory {
 			q = this.feedback.getCurrentQuestion();
 		} catch (InvalidQuizException e) {
 			Toast.makeText(super.getActivity(), super.getActivity().getString(R.string.error_quiz_no_questions), Toast.LENGTH_LONG).show();
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 			return;
 		}
 		qText.setVisibility(View.VISIBLE);
@@ -169,7 +173,7 @@ public class FeedbackWidget extends WidgetFactory {
 			String fileUrl = course.getLocation() + q.getProp("image");
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
-			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
+			ImageView iv = getView().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
 		}
@@ -279,7 +283,7 @@ public class FeedbackWidget extends WidgetFactory {
 	}
 	
 	private void setProgress() {
-		TextView progress = (TextView) getView().findViewById(R.id.quiz_progress);
+		TextView progress = getView().findViewById(R.id.quiz_progress);
 		progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, feedback.getCurrentQuestionNo(),
 				this.feedback.getTotalNoQuestions()));
 	}
@@ -296,7 +300,8 @@ public class FeedbackWidget extends WidgetFactory {
 				return true;
 			}
 		} catch (InvalidQuizException e) {
-			e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 		}
 		return false;
 	}
@@ -325,7 +330,8 @@ public class FeedbackWidget extends WidgetFactory {
 		try {
 			toRead = feedback.getCurrentQuestion().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		} catch (InvalidQuizException e) {
-			e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 		}
 		return toRead;
 	}

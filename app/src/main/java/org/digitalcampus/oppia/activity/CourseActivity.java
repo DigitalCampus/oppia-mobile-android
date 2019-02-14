@@ -90,7 +90,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         setContentView(R.layout.activity_course);
         ActionBar actionBar = getSupportActionBar();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        viewPager = (ViewPager) findViewById(R.id.activity_widget_pager);
+        viewPager = findViewById(R.id.activity_widget_pager);
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
@@ -111,7 +111,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 actionBar.setDisplayShowTitleEnabled(true);
             }
         }
-        tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
+        tabs = findViewById(R.id.tabs_toolbar);
 
         loadActivities();
     }
@@ -273,7 +273,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         viewPager.setAdapter(apAdapter);
         tabs.setupWithViewPager(viewPager);
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tabs.setOnTabSelectedListener(this);
+        tabs.addOnTabSelectedListener(this);
         apAdapter.updateTabViews(tabs);
         viewPager.setCurrentItem(currentActivityNo);
     }

@@ -29,6 +29,9 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 public class Tracker {
 
@@ -48,7 +51,8 @@ public class Tracker {
 		try {
 			data.put("uuid", guid.toString());
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "error with uuid: ", e);
 		}
 		DbHelper db = DbHelper.getInstance(this.ctx);
 
@@ -74,7 +78,8 @@ public class Tracker {
 			saveTracker(0, "", searchData, SEARCH_TYPE, true, Gamification.GAMIFICATION_SEARCH_PERFORMED);
 
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "Errors saving search tracker: ", e);
 		}
     }
 
@@ -87,7 +92,8 @@ public class Tracker {
 			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true, Gamification.GAMIFICATION_MEDIA_MISSING);
 
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "Error saving missing media tracker: ", e);
 		}
 	}
 
@@ -100,7 +106,8 @@ public class Tracker {
 			saveTracker(0, "", registerData, Gamification.EVENT_NAME_REGISTER, true, Gamification.GAMIFICATION_REGISTER);
 
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "Error saving register tracker:", e);
 		}
 	}
 

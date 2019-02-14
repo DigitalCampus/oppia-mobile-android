@@ -2,7 +2,13 @@ package org.digitalcampus.oppia.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.splunk.mint.Mint;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.gamification.Leaderboard;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -17,13 +23,13 @@ import java.text.ParseException;
 public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress, Payload> {
 
 
+    private static final String TAG = ImportLeaderboardsTask.class.getSimpleName();
+
     public interface ImportLeaderboardListener {
         void onLeaderboardImportProgress(String message);
         void onLeaderboardImportComplete(Boolean success, String message);
     }
 
-
-    public final static String TAG = ImportLeaderboardsTask.class.getSimpleName();
     private Context ctx;
 
 
@@ -53,13 +59,17 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                         String json = FileUtils.readFile(json_file);
                         updatedPositions += Leaderboard.importLeaderboardJSON(ctx, json);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Mint.logException(e);
+                        Log.d(TAG, "IOException: ", e);
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Mint.logException(e);
+                        Log.d(TAG, "ParseException: ", e);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Mint.logException(e);
+                        Log.d(TAG, "JSONException: ", e);
                     } catch (WrongServerException e) {
-                        e.printStackTrace();
+                        Mint.logException(e);
+                        Log.d(TAG, "WrongServerException: ", e);
                     }
 
                     FileUtils.deleteFile(json_file);

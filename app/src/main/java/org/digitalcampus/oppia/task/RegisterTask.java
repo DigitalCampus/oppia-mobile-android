@@ -131,7 +131,8 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
                     MetaDataUtils mu = new MetaDataUtils(ctx);
                     mu.saveMetaData(metadata, prefs);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.d(TAG, "JSONException:", e);
+                    Mint.logException(e);
                 }
 
                 u.setFirstname(jsonResp.getString("first_name"));
@@ -154,7 +155,8 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             }
 
         } catch(javax.net.ssl.SSLHandshakeException e) {
-            e.printStackTrace();
+            Log.d(TAG, "SSLHandshakeException:", e);
+            Mint.logException(e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
         } catch (UnsupportedEncodingException e) {
@@ -166,7 +168,7 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             payload.setResultResponse(ctx.getString(R.string.error_connection_required));
         } catch (JSONException e) {
             Mint.logException(e);
-            e.printStackTrace();
+            Log.d(TAG, "JSONException:", e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_processing_response));
         }

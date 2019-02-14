@@ -80,15 +80,15 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vv = inflater.inflate(R.layout.fragment_export_activity, container, false);
 
-        exportedFilesRecyclerView = (RecyclerView) vv.findViewById(R.id.exported_files_list);
-        exportBtn = (Button) vv.findViewById(R.id.export_btn);
-        submitBtn = (Button) vv.findViewById(R.id.submit_btn);
+        exportedFilesRecyclerView = vv.findViewById(R.id.exported_files_list);
+        exportBtn = vv.findViewById(R.id.export_btn);
+        submitBtn = vv.findViewById(R.id.submit_btn);
         progressContainer = vv.findViewById(R.id.progress_container);
         actionsContainer = vv.findViewById(R.id.export_actions);
 
-        unsentTrackers = (TextView) vv.findViewById(R.id.highlight_to_submit);
-        unexportedTrackers = (TextView) vv.findViewById(R.id.highlight_to_export);
-        submittedTrackers = (TextView) vv.findViewById(R.id.highlight_submitted);
+        unsentTrackers = vv.findViewById(R.id.highlight_to_submit);
+        unexportedTrackers = vv.findViewById(R.id.highlight_to_export);
+        submittedTrackers = vv.findViewById(R.id.highlight_submitted);
 
         return vv;
 
