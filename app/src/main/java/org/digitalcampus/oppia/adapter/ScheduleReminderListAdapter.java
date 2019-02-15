@@ -17,17 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Course;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -36,6 +25,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
+
+import java.util.List;
+import java.util.Locale;
 
 public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.oppia.model.Activity> {
 
@@ -64,7 +63,7 @@ public class ScheduleReminderListAdapter extends ArrayAdapter<org.digitalcampus.
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		
 		TextView scheduleTitle = rowView.findViewById(R.id.schedule_title);
-		scheduleTitle.setText(course.getMultiLangInfo().getTitle(lang) + ": " + a.getMultiLangInfo().getTitle(lang));
+		scheduleTitle.setText(course.getTitle(lang) + ": " + a.getTitle(lang));
 		rowView.setTag(R.id.TAG_COURSE,course);
 		rowView.setTag(R.id.TAG_ACTIVITY_DIGEST,a.getDigest());
 		

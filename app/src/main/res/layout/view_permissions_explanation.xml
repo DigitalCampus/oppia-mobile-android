@@ -25,9 +25,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/notification_subtext_size"
-        android:layout_marginTop="@dimen/notification_subtext_size"
-        android:layout_marginRight="@dimen/notification_subtext_size">
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium">
 
         <ImageView
             android:layout_width="30dp"
@@ -38,7 +38,9 @@
             android:layout_marginRight="@dimen/padding_medium"
             android:layout_alignParentLeft="true"
             android:tint="@android:color/tab_indicator_text"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:contentDescription="@string/permissions.phone_state.title"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,7 +49,8 @@
             android:id="@+id/textView13"
             android:layout_toRightOf="@+id/imageView9"
             android:textStyle="bold"
-            android:textColor="@color/highlight_label"/>
+            android:textColor="@color/highlight_label"
+            android:layout_toEndOf="@+id/imageView9"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -55,13 +58,14 @@
             android:text="@string/permissions.phone_state.description"
             android:id="@+id/textView14"
             android:layout_below="@+id/textView13"
-            android:layout_toRightOf="@+id/imageView9"/>
+            android:layout_toRightOf="@+id/imageView9"
+            android:layout_toEndOf="@+id/imageView9"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/notification_subtext_size">
+        android:layout_margin="@dimen/margin_medium">
 
         <ImageView
             android:layout_width="30dp"
@@ -72,7 +76,9 @@
             android:layout_marginRight="@dimen/padding_medium"
             android:layout_alignParentLeft="true"
             android:tint="@android:color/tab_indicator_text"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:contentDescription="@string/permissions.storage.title"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,7 +87,8 @@
             android:id="@+id/textView15"
             android:layout_toRightOf="@+id/imageView10"
             android:textStyle="bold"
-            android:textColor="@color/highlight_label"/>
+            android:textColor="@color/highlight_label"
+            android:layout_toEndOf="@+id/imageView10"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,7 +96,8 @@
             android:text="@string/permissions.storage.description"
             android:id="@+id/textView16"
             android:layout_below="@+id/textView15"
-            android:layout_toRightOf="@+id/imageView10"/>
+            android:layout_toRightOf="@+id/imageView10"
+            android:layout_toEndOf="@+id/imageView10"/>
     </RelativeLayout>
 
     <Button
@@ -98,7 +106,7 @@
         android:text="@string/permissions.allow_btn_text"
         android:id="@+id/btn_permissions"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/notification_subtext_size"
+        android:layout_marginTop="@dimen/margin_medium"
         android:visibility="gone"/>
 
     <LinearLayout
@@ -106,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/not_askable_description"
-        android:layout_marginTop="@dimen/notification_subtext_size"
+        android:layout_marginTop="@dimen/margin_medium"
         android:visibility="gone">
 
         <TextView

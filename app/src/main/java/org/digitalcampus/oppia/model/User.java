@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.model;
 
 import org.digitalcampus.oppia.utils.CryptoUtils;
-import org.jarjar.apache.commons.codec.digest.DigestUtils;
 
 public class User {
 

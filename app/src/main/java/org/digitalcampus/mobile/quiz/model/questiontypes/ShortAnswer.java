@@ -44,12 +44,10 @@ public class ShortAnswer extends QuizQuestion implements Serializable {
 
         float total = 0;
         for (Response r : responseOptions){
-            Iterator<String> itr = this.userResponses.iterator();
-            while(itr.hasNext()) {
-                String a = itr.next();
-                if (r.getTitle(lang).equalsIgnoreCase(a.toLowerCase())){
+            for (String a : this.userResponses) {
+                if (r.getTitle(lang).equalsIgnoreCase(a.toLowerCase())) {
                     total += r.getScore();
-                    if(r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
+                    if (r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))) {
                         this.feedback = r.getFeedback(lang);
                     }
                 }

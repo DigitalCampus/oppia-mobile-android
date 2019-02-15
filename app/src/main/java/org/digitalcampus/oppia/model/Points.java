@@ -36,7 +36,7 @@ public class Points {
 	}
 	
 	public void setDateTime(String date) {
-		this.datetime = MobileLearning.DATETIME_FORMAT.parseDateTime(date);;
+		this.datetime = MobileLearning.DATETIME_FORMAT.parseDateTime(date);
 	}
 
 	public DateTime getDateTime() {

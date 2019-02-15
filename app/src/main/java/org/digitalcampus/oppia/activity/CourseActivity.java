@@ -44,7 +44,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.MultiLangInfo;
+import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
@@ -226,13 +226,13 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     private void loadActivities(){
         String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-        String actionBarTitle = section.getMultiLangInfo().getTitle(currentLang);
-        if ((actionBarTitle != null) && ( !actionBarTitle.equals(MultiLangInfo.DEFAULT_NOTITLE)) ){
+        String actionBarTitle = section.getTitle(currentLang);
+        if ((actionBarTitle != null) && ( !actionBarTitle.equals(MultiLangInfoModel.DEFAULT_NOTITLE)) ){
             setTitle(actionBarTitle);
         } else {
             ArrayList<Activity> sectionActivities = section.getActivities();
             String preTestTitle = getString(R.string.alert_pretest);
-            setTitle(!sectionActivities.isEmpty() && sectionActivities.get(0).getMultiLangInfo().getTitle(currentLang).equalsIgnoreCase(preTestTitle) ?
+            setTitle(!sectionActivities.isEmpty() && sectionActivities.get(0).getTitle(currentLang).equalsIgnoreCase(preTestTitle) ?
                     preTestTitle : isBaseline ? getString(R.string.title_baseline): "");
         }
 
@@ -266,7 +266,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 UrlWidget f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
                 fragments.add(f);
             }
-            titles.add(activity.getMultiLangInfo().getTitle(currentLang));
+            titles.add(activity.getTitle(currentLang));
         }
 
         apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
@@ -279,8 +279,8 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getMultiLangInfo().getLangs(), prefs, new Callable<Boolean>() {
-            public Boolean call() throws Exception {
+        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+            public Boolean call() {
                 CourseActivity.this.loadActivities();
                 return true;
             }

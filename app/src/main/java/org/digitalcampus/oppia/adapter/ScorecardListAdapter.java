@@ -17,16 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
-
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
@@ -43,13 +33,22 @@ import android.widget.TextView;
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.SegmentFormatter;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
+
+import java.util.List;
+import java.util.Locale;
+
 public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
 	public static final String TAG = ScorecardListAdapter.class.getSimpleName();
 
 	private final Activity ctx;
 	private final List<Course> courseList;
-	private SharedPreferences prefs;
+    private String prefLang;
 
     private SegmentFormatter sfCompleted;
     private SegmentFormatter sfStarted;
@@ -59,7 +58,8 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 		super(context, R.layout.scorecard_list_row, courseList);
 		this.ctx = context;
 		this.courseList = courseList;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         //Initialization of SegmentFormatters
         sfCompleted = new SegmentFormatter();
@@ -100,7 +100,7 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
             viewHolder = (ScorecardViewHolder) convertView.getTag();
         }
 
-        viewHolder.courseTitle.setText(course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+        viewHolder.courseTitle.setText(course.getTitle(prefLang));
 
         int numCompleted = course.getNoActivitiesCompleted();
         int numStarted = course.getNoActivitiesStarted();

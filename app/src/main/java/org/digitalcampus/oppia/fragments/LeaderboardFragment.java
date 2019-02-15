@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.adapter.LeaderboardAdapter;
@@ -92,7 +91,7 @@ public class LeaderboardFragment extends Fragment implements SubmitListener {
         Collections.sort(leaderboard);
 
         LeaderboardPosition userPos = null;
-        int i = 0;
+        int i;
         for (i=0; i<leaderboard.size(); i++){
             LeaderboardPosition pos = leaderboard.get(i);
             if (pos.getUsername().equals(username)){

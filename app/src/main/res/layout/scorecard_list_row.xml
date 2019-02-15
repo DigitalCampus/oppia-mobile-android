@@ -36,11 +36,12 @@
                 android:text="@string/scorecard_activities_completed"
                 android:id="@+id/textView8"
                 android:layout_gravity="center_horizontal"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#000000"
-                style="@style/ScorecardPie.Label.Separator"></View>
+                style="@style/ScorecardPie.Label.Separator"/>
             <TextView
                 style="@style/Highlight.Text"
                 android:layout_width="wrap_content"

@@ -141,10 +141,29 @@
         <ProgressBar
             android:id="@+id/progressBar3"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:indeterminate="true"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_large"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/padding_large"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/export_activity.text"/>
+
     </LinearLayout>
 
     <TextView
@@ -165,7 +184,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/padding_medium"
-            android:background="@drawable/top_shadow_gradient"></View>
+            android:background="@drawable/top_shadow_gradient"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/exported_files_list"

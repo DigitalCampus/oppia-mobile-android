@@ -11,7 +11,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTrackersFileAdapter.EtfaViewHolder> {
