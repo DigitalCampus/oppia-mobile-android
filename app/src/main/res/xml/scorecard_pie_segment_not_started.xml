@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config
         fillPaint.color="#FFFFFF"
-        labelPaint.textSize="@dimen/pie_segment_label_font_size"
-        labelPaint.color="@color/text_dark"
-        innerEdgePaint.color="@color/background_light"
-        outerEdgePaint.color="@color/background_light"
-        radialEdgePaint.color="@color/background_light"
+        labelPaint.textSize="16dp"
+        labelPaint.color="#222222"
+        innerEdgePaint.color="#eeeeee"
+        outerEdgePaint.color="#eeeeee"
+        radialEdgePaint.color="#eeeeee"
         radialEdgePaint.strokeWidth="8"/>
