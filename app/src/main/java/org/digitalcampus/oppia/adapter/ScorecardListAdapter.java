@@ -17,16 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
-
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
@@ -42,6 +32,15 @@ import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.SegmentFormatter;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
+
+import java.util.List;
+import java.util.Locale;
 
 public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
@@ -62,12 +61,12 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         //Initialization of SegmentFormatters
-        sfCompleted = new SegmentFormatter();
-        sfCompleted.configure(ctx, R.xml.scorecard_pie_segment_completed);
-        sfStarted = new SegmentFormatter();
-        sfStarted.configure(ctx, R.xml.scorecard_pie_segment_started);
-        sfNotStarted = new SegmentFormatter();
-        sfNotStarted.configure(ctx, R.xml.scorecard_pie_segment_not_started);
+        sfCompleted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_completed);
+//        sfCompleted.configure(ctx, R.xml.scorecard_pie_segment_completed);
+        sfStarted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_started);
+//        sfStarted.configure(ctx, R.xml.scorecard_pie_segment_started);
+        sfNotStarted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_not_started);
+//        sfNotStarted.configure(ctx, R.xml.scorecard_pie_segment_not_started);
 	}
 
     static class ScorecardViewHolder{
