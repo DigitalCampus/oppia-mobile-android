@@ -17,10 +17,6 @@
 
 package org.digitalcampus.oppia.utils.ui;
 
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.model.Course;
-
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
@@ -31,6 +27,10 @@ import com.androidplot.pie.PieChart;
 import com.androidplot.pie.PieRenderer;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.Course;
 
 public class ScorecardPieChart {
 
@@ -53,12 +53,12 @@ public class ScorecardPieChart {
 
     public void configureChart(int margin, float donutSize, boolean showSegementTitles){
         pie.setPlotMargins(margin, margin, margin, margin);
-        SegmentFormatter sfNotStarted = new SegmentFormatter();
-        sfNotStarted.configure(activity.getApplicationContext(), R.xml.scorecard_pie_segment_not_started);
+        SegmentFormatter sfNotStarted = new SegmentFormatter(activity, R.xml.scorecard_pie_segment_not_started);
+//        sfNotStarted.configure(activity.getApplicationContext(), R.xml.scorecard_pie_segment_not_started);
         sfNotStarted.getInnerEdgePaint().setStrokeWidth(4);
 
-        SegmentFormatter sfCompleted = new SegmentFormatter();
-        sfCompleted.configure(activity.getApplicationContext(), R.xml.scorecard_pie_segment_completed);
+        SegmentFormatter sfCompleted = new SegmentFormatter(activity, R.xml.scorecard_pie_segment_completed);
+//        sfCompleted.configure(activity.getApplicationContext(), R.xml.scorecard_pie_segment_completed);
 
         int numCompleted = course.getNoActivitiesCompleted();
         if (numCompleted != 0){

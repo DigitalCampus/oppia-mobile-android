@@ -62,12 +62,12 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 		prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         //Initialization of SegmentFormatters
-        sfCompleted = new SegmentFormatter();
-        sfCompleted.configure(ctx, R.xml.scorecard_pie_segment_completed);
-        sfStarted = new SegmentFormatter();
-        sfStarted.configure(ctx, R.xml.scorecard_pie_segment_started);
-        sfNotStarted = new SegmentFormatter();
-        sfNotStarted.configure(ctx, R.xml.scorecard_pie_segment_not_started);
+        sfCompleted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_completed);
+//        sfCompleted.configure(ctx, R.xml.scorecard_pie_segment_completed);
+        sfStarted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_started);
+//        sfStarted.configure(ctx, R.xml.scorecard_pie_segment_started);
+        sfNotStarted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_not_started);
+//        sfNotStarted.configure(ctx, R.xml.scorecard_pie_segment_not_started);
 	}
 
     static class ScorecardViewHolder{
