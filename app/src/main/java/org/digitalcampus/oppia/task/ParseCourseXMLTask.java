@@ -30,7 +30,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 public class ParseCourseXMLTask extends AsyncTask<Course, Object, CompleteCourse> {
 
-    private static final String TAG = ParseCourseXMLTask.class.getSimpleName();;
+    private static final String TAG = ParseCourseXMLTask.class.getSimpleName();
 
     //Interface to listen to this task results
     public interface OnParseXmlListener{

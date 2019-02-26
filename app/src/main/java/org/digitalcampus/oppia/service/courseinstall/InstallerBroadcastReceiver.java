@@ -39,20 +39,24 @@ public class InstallerBroadcastReceiver extends BroadcastReceiver {
         String action = intent.getStringExtra(CourseIntallerService.SERVICE_ACTION);
 
         if(cListener != null){
-            if (action.equals(CourseIntallerService.ACTION_COMPLETE)){
-                cListener.onInstallComplete(fileUrl);
-            }
-            else if(action.equals(CourseIntallerService.ACTION_FAILED)){
-                String message = intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE);
-                cListener.onInstallFailed(fileUrl, message);
-            }
-            else if(action.equals(CourseIntallerService.ACTION_DOWNLOAD)){
-                int progress = Integer.parseInt(intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE));
-                cListener.onDownloadProgress(fileUrl, progress);
-            }
-            else if(action.equals(CourseIntallerService.ACTION_INSTALL)){
-                int progress = Integer.parseInt(intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE));
-                cListener.onInstallProgress(fileUrl, progress);
+            switch (action) {
+                case CourseIntallerService.ACTION_COMPLETE:
+                    cListener.onInstallComplete(fileUrl);
+                    break;
+                case CourseIntallerService.ACTION_FAILED:
+                    String message = intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE);
+                    cListener.onInstallFailed(fileUrl, message);
+                    break;
+                case CourseIntallerService.ACTION_DOWNLOAD: {
+                    int progress = Integer.parseInt(intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE));
+                    cListener.onDownloadProgress(fileUrl, progress);
+                    break;
+                }
+                case CourseIntallerService.ACTION_INSTALL: {
+                    int progress = Integer.parseInt(intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE));
+                    cListener.onInstallProgress(fileUrl, progress);
+                    break;
+                }
             }
         }
 

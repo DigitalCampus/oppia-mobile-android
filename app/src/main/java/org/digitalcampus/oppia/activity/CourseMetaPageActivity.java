@@ -40,15 +40,15 @@ public class CourseMetaPageActivity extends AppActivity {
 
 	public static final String TAG = CourseMetaPageActivity.class.getSimpleName();
 	private Course course;
-	private SharedPreferences prefs;
-    private CourseMetaPage cmp;
+	private CourseMetaPage cmp;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_metapage);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             course = (Course) bundle.getSerializable(Course.TAG);
@@ -57,18 +57,16 @@ public class CourseMetaPageActivity extends AppActivity {
         }
 		
 		TextView titleTV = findViewById(R.id.course_title);
-		String title = cmp.getLang(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).getContent();
-		titleTV.setText(title);
-		
 		TextView versionTV = findViewById(R.id.course_versionid);
+		TextView shortnameTV = findViewById(R.id.course_shortname);
+		String title = cmp.getLang(prefLang).getContent();
+		titleTV.setText(title);
 		BigDecimal big = new BigDecimal(course.getVersionId());
 		versionTV.setText(big.toString());
-		
-		TextView shortnameTV = findViewById(R.id.course_shortname);
 		shortnameTV.setText(course.getShortname());
 		
 		WebView wv = this.findViewById(R.id.metapage_webview);
-		String url = course.getLocation() + File.separator +cmp.getLang(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).getLocation();
+		String url = course.getLocation() + File.separator +cmp.getLang(prefLang).getLocation();
 		
 		try {
 			String content =  "<html><head>";

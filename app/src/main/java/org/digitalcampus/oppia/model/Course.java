@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class Course implements Serializable {
+public class Course extends MultiLangInfoModel implements Serializable {
 	
 	/**
 	 * 
@@ -41,7 +41,6 @@ public class Course implements Serializable {
 	private int courseId;
 	private String shortname;
 	private Double versionId;
-    private MultiLangInfo multiLangInfo = new MultiLangInfo();
 	private boolean installed;
 	private boolean toUpdate;
 	private boolean toUpdateSchedule;
@@ -173,11 +172,7 @@ public class Course implements Serializable {
 	}
 	
 	public boolean hasMedia(){
-		if(media.size() == 0){
-			return false;
-		} else {
-			return true;
-		}
+		return media.size() != 0;
 	}
 	
 	public void setMetaPages(ArrayList<CourseMetaPage> ammp){
@@ -264,12 +259,6 @@ public class Course implements Serializable {
     public void setSequencingMode(String sequencingMode) {
         this.sequencingMode = sequencingMode;
     }
-
-    public MultiLangInfo getMultiLangInfo() { return multiLangInfo; }
-    public void setMultiLangInfo(MultiLangInfo multiLangInfo) {
-        this.multiLangInfo = multiLangInfo;
-    }
-
 
 	public static String getLocalFilename(String shortname, Double versionID){
 		return shortname+"-"+String.format("%.0f",versionID)+".zip";

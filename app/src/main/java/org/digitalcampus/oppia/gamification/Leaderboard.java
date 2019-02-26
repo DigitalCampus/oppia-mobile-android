@@ -5,13 +5,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.WrongServerException;
-import org.digitalcampus.oppia.task.Payload;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -346,6 +346,7 @@
     <string name="exported_activities.title">Activity exported trackers</string>
     <string name="export_task_no_activities">There were no new activities or quizzes to export.</string>
     <string name="submit_trackers_success">Trackers successfully submitted to server.</string>
+    <string name="activity_not_transferred_message">You have exported log files not transferred yet.</string>
     <string name="tab_title_transfer">Transfer</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled</string>
     <string name="paired_devices">Paired devices</string>

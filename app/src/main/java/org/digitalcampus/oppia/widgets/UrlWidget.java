@@ -17,8 +17,17 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.util.HashMap;
-import java.util.Locale;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.TextView;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
@@ -33,18 +42,8 @@ import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
-
-import com.splunk.mint.Mint;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class UrlWidget extends WidgetFactory {
 
@@ -73,9 +72,8 @@ public class UrlWidget extends WidgetFactory {
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = (org.digitalcampus.oppia.model.Activity) getArguments().getSerializable(org.digitalcampus.oppia.model.Activity.TAG);
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_url, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
+
+		View vv = inflater.inflate(R.layout.widget_url, container, false);
 		vv.setId(activity.getActId());
 		if ((savedInstanceState != null) && (savedInstanceState.getSerializable("widget_config") != null)){
 			setWidgetConfig((HashMap<String, Object>) savedInstanceState.getSerializable("widget_config"));
@@ -89,7 +87,7 @@ public class UrlWidget extends WidgetFactory {
 
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		// show description if any
-		String desc = activity.getMultiLangInfo().getDescription(lang);
+		String desc = activity.getDescription(lang);
 		TextView descTV = getView().findViewById(R.id.widget_url_description);
 		if ((desc != null) && desc.length() > 0){
 			descTV.setText(desc);

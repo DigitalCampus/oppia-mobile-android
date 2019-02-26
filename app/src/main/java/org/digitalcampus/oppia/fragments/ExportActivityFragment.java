@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,13 +30,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -54,7 +50,6 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class ExportActivityFragment extends Fragment implements TrackerServiceListener, ExportActivityListener {
 
@@ -152,12 +147,22 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
         updateActions(true);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser){
+        super.setUserVisibleHint(isVisibleToUser);
+        if( (getView() != null) && isVisibleToUser){
+            // Your fragment is visible
+            refreshFileList();
+            refreshStats();
+        }
+    }
+
     private void updateActions(boolean enable){
         if (enable){
             progressContainer.setVisibility(View.GONE);
             actionsContainer.setVisibility(View.VISIBLE);
-            refreshStats();
             refreshFileList();
+            refreshStats();
         }
         else{
             progressContainer.setVisibility(View.VISIBLE);
@@ -174,7 +179,8 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
         unsentTrackers.setText(NumberFormat.getNumberInstance().format(unsent));
         submittedTrackers.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
 
-        submitBtn.setEnabled( (unsent > 0) );
+        Log.d(TAG, "files " + files.size());
+        submitBtn.setEnabled( (unsent > 0) || files.size()>0 );
         exportBtn.setEnabled( (unexported > 0) );
 
     }
@@ -219,8 +225,8 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     public void onExportComplete(String filename) {
         if (filename != null){
             UIUtils.showAlert(getActivity(),
-                R.string.export_task_completed,
-                getString(R.string.export_task_completed_text, filename)
+                    R.string.export_task_completed,
+                    getString(R.string.export_task_completed_text, filename)
             );
         }
         else{

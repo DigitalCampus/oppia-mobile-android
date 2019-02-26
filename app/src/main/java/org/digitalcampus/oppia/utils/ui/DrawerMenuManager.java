@@ -54,7 +54,7 @@ public class DrawerMenuManager {
     public interface MenuOption{ void onOptionSelected(); }
 
     private AppActivity drawerAct;
-    private boolean isRootActivity = false;
+    private boolean isRootActivity;
 
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
