@@ -32,13 +32,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.application.ScheduleReminders;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.GamificationBroadcastReceiver;
 import org.digitalcampus.oppia.gamification.GamificationService;
@@ -55,17 +53,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 	public static final String TAG = AppActivity.class.getSimpleName();
 
 	GamificationBroadcastReceiver gamificationReceiver;
-
-
-    /**
-	 * @param activities: list of activities to show on the ScheduleReminders section
-	 */
-	public void drawReminders(List<org.digitalcampus.oppia.model.Activity> activities){
-        ScheduleReminders reminders = findViewById(R.id.schedule_reminders);
-        if (reminders != null){
-            reminders.initSheduleReminders(activities);
-        }
-	}
 
     @Override
     protected void attachBaseContext(Context newBase) {

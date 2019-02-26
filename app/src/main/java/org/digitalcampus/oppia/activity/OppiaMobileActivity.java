@@ -165,7 +165,6 @@ public class OppiaMobileActivity
 	@Override
 	public void onResume(){
 		super.onResume();
-		this.updateReminders();
 
         receiver = new InstallerBroadcastReceiver();
         receiver.setCourseInstallerListener(this);
@@ -196,22 +195,7 @@ public class OppiaMobileActivity
 		}
 
         courseListAdapter.notifyDataSetChanged();
-		this.updateReminders();
 		this.scanMedia();
-	}
-
-	private void updateReminders(){
-		if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS, false)){
-			DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
-			int max = Integer.valueOf(prefs.getString(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS, "2"));
-			long sessionUserId = db.getUserId(SessionManager.getUsername(this));
-			List<Activity> activities = db.getActivitiesDue(max, sessionUserId);
-
-			this.drawReminders(activities);
-		} else {
-			LinearLayout ll = findViewById(R.id.schedule_reminders);
-			ll.setVisibility(View.GONE);
-		}		
 	}
 
 	@Override

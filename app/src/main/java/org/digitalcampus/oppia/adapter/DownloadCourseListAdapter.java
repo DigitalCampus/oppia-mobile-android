@@ -62,7 +62,6 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
         installDescription = ctx.getString(R.string.install);
         installedDescription = ctx.getString(R.string.installed);
         cancelDescription = ctx.getString(R.string.cancel);
-        updateSchedDescription = ctx.getString(R.string.update_schedule);
 	}
 
     static class DownloadCourseViewHolder{

@@ -96,8 +96,6 @@
     <string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
     <string name="prefLanguage">Preferred Language</string>
     <string name="prefHighlightCompleted">Highlight completed activities</string>
-    <string name="prefNoScheduleReminders">Number of suggested activities</string>
-    <string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
     <string name="prefServer">Server</string>
     <string name="prefServer_errorTitle">Invalid URL</string>
     <string name="prefServer_errorDescription">Please, enter a well-formed URL corresponding to your &appName;
@@ -108,8 +106,6 @@
     <string name="prefInt_errorDescription">Please, enter a valid integer value</string>
     <string name="prefShowCourseDescription">Show course description</string>
     <string name="prefShowProgressBar">Show progress bar</string>
-    <string name="prefShowScheduleReminders">Display suggested activities</string>
-    <string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
     <string name="prefShowSectionNumbers">Show section numbers</string>
     <string name="prefTextSize">Text size</string>
     <string name="prefUser">Username</string>
@@ -179,7 +175,6 @@
 
     <string name="publisher">Publisher:</string>
     <string name="update">Update</string>
-    <string name="update_schedule">Update Schedule</string>
     <string name="installed">Installed</string>
     <string name="install">Install</string>
     <string name="courses_install_pending">There are new received courses not installed yet.</string>
@@ -188,9 +183,7 @@
     <string name="downloading">Downloading &#8230;</string>
     <string name="download_complete">Download complete</string>
 
-    <string name="update_starting">Getting schedule updates</string>
     <string name="updating">Updating &#8230;</string>
-    <string name="update_complete">Schedule update complete</string>
 
     <string name="installing_course">Installing: %1$s</string>
     <string name="install_complete">Installation complete</string>
@@ -285,8 +278,6 @@
     <string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
     <string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
     <string name="download_via_pc_extenal_storage">You need to set an external storage option to be able to place the files downloaded from your PC inside the app directory. Please, go to "Settings" and change your storage option.</string>
-
-    <string name="schedule_reminders">Suggested next activities:</string>
 
     <string name="course_draft">(Draft version)</string>
 
