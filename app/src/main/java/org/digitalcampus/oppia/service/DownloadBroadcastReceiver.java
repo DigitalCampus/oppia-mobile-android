@@ -40,16 +40,18 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
         String action = intent.getStringExtra(DownloadService.SERVICE_ACTION);
 
         if(mediaListener != null){
-            if (action.equals(DownloadService.ACTION_COMPLETE)){
-                mediaListener.onDownloadComplete(fileUrl);
-            }
-            else if(action.equals(DownloadService.ACTION_FAILED)){
-                String message = intent.getStringExtra(DownloadService.SERVICE_MESSAGE);
-                mediaListener.onDownloadFailed(fileUrl, message);
-            }
-            else if(action.equals(DownloadService.ACTION_DOWNLOAD)){
-                int progress = Integer.parseInt(intent.getStringExtra(DownloadService.SERVICE_MESSAGE));
-                mediaListener.onDownloadProgress(fileUrl, progress);
+            switch (action) {
+                case DownloadService.ACTION_COMPLETE:
+                    mediaListener.onDownloadComplete(fileUrl);
+                    break;
+                case DownloadService.ACTION_FAILED:
+                    String message = intent.getStringExtra(DownloadService.SERVICE_MESSAGE);
+                    mediaListener.onDownloadFailed(fileUrl, message);
+                    break;
+                case DownloadService.ACTION_DOWNLOAD:
+                    int progress = Integer.parseInt(intent.getStringExtra(DownloadService.SERVICE_MESSAGE));
+                    mediaListener.onDownloadProgress(fileUrl, progress);
+                    break;
             }
         }
 

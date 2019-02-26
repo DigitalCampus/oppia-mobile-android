@@ -17,32 +17,22 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.PointsListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Points;
-import org.digitalcampus.oppia.task.APIUserRequestTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.splunk.mint.Mint;
-
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -50,8 +40,7 @@ public class PointsFragment extends AppFragment {
 
 	public static final String TAG = PointsFragment.class.getSimpleName();
 
-    private JSONObject json;
-    @Inject
+	@Inject
 	List<Points> points;
 	private PointsListAdapter pointsAdapter;
 
@@ -61,10 +50,7 @@ public class PointsFragment extends AppFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_points, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
-		return vv;
+		return inflater.inflate(R.layout.fragment_points, container, false);
 	}
 	
 	@Override

@@ -42,7 +42,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 
 	private final Context ctx;
 	private final ArrayList<CourseIntallViewAdapter> courseList;
-	private SharedPreferences prefs;
+    private String prefLang;
 
     private String updateDescription;
     private String updateSchedDescription;
@@ -56,7 +56,8 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 		super(context, R.layout.course_download_row, courseList);
 		this.ctx = context;
 		this.courseList = courseList;
-		this.prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         updateDescription = ctx.getString(R.string.update);
         installDescription = ctx.getString(R.string.install);
@@ -100,9 +101,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 
         CourseIntallViewAdapter c = courseList.get(position);
 
-        viewHolder.courseTitle.setText(c.getMultiLangInfo().getTitle(
-                prefs.getString(PrefsActivity.PREF_LANGUAGE,
-                Locale.getDefault().getLanguage())));
+        viewHolder.courseTitle.setText(c.getTitle(prefLang));
 
 	    if (c.isDraft()){
             viewHolder.courseDraft.setVisibility(View.VISIBLE);
@@ -111,7 +110,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             viewHolder.courseDraft.setVisibility(View.GONE);
 	    }
 
-	    String desc = c.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    String desc = c.getDescription(prefLang);
 	    if (desc != null){
             viewHolder.courseDescription.setVisibility(View.VISIBLE);
             viewHolder.courseDescription.setText(desc);

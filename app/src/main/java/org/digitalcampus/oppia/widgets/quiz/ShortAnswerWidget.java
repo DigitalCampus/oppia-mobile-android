@@ -41,10 +41,8 @@ public class ShortAnswerWidget extends TextInputQuizWidget {
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswers) {
 		EditText et = view.findViewById(R.id.responsetext);
-		Iterator<String> itr = currentAnswers.iterator(); 
-		while(itr.hasNext()) {
-		    String answer = itr.next(); 
-		    et.setText(answer);
+		for (String answer : currentAnswers) {
+			et.setText(answer);
 		}
         hideOnFocusLoss(et);
 	}

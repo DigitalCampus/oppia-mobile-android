@@ -17,44 +17,6 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.quiz.InvalidQuizException;
-import org.digitalcampus.mobile.quiz.Quiz;
-import org.digitalcampus.mobile.quiz.model.QuizQuestion;
-import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
-import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
-import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
-import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
-import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
-import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
-import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.gamification.Gamification;
-import org.digitalcampus.oppia.gamification.GamificationEngine;
-import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
-import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.GamificationEvent;
-import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
-import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
-import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
-import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
-import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
-import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
-import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
-import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -72,6 +34,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.splunk.mint.Mint;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.InvalidQuizException;
+import org.digitalcampus.mobile.quiz.Quiz;
+import org.digitalcampus.mobile.quiz.model.QuizQuestion;
+import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Essay;
+import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
+import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
+import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
+import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
+import org.digitalcampus.oppia.activity.CourseActivity;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.gamification.Gamification;
+import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
+import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
+import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
+import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
+import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
+import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
+import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class FeedbackWidget extends WidgetFactory {
 
@@ -107,7 +101,7 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, null);
+		View vv = inflater.inflate(R.layout.widget_quiz, container, false);
 		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
@@ -171,7 +165,7 @@ public class FeedbackWidget extends WidgetFactory {
 		}
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
-		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).toString()));
+		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))));
 
 		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
@@ -314,11 +308,7 @@ public class FeedbackWidget extends WidgetFactory {
 	
 	@Override
 	public boolean getActivityCompleted() {
-		if (isOnResultsPage) {
-			return true;
-		} else {
-			return false;
-		}
+		return isOnResultsPage;
 	}
 
 	@Override

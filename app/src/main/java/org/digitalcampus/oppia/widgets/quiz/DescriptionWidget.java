@@ -17,16 +17,14 @@
 
 package org.digitalcampus.oppia.widgets.quiz;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.model.Response;
 
-import android.app.Activity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DescriptionWidget extends QuestionWidget{
 

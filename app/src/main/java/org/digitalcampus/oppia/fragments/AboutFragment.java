@@ -17,14 +17,6 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.utils.storage.Storage;
-
-import com.splunk.mint.Mint;
-
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -35,13 +27,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+
+import com.splunk.mint.Mint;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.utils.storage.Storage;
+
+import java.util.Locale;
 
 public class AboutFragment extends Fragment{
 
 	public static final String TAG = AboutFragment.class.getSimpleName();
-	private WebView webView;
 	private SharedPreferences prefs;
 	
 	public static AboutFragment newInstance() {
@@ -55,10 +53,7 @@ public class AboutFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_about, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
-		return vv;
+		return inflater.inflate(R.layout.fragment_about, container, false);
 	}
 	
 	@Override
@@ -66,7 +61,7 @@ public class AboutFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		webView = super.getActivity().findViewById(R.id.about_webview);
+		WebView webView = super.getActivity().findViewById(R.id.about_webview);
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		String url = Storage.getLocalizedFilePath(super.getActivity(), lang, "about.html");
 

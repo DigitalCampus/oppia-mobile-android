@@ -246,7 +246,7 @@
 <string name="error_processing_response">خطأ لدى معالجة البيانات</string>
 <string name="error_quiz_no_questions">لا يضم هذا الاختبار اسئلة</string>
 <string name="error_register_no_email">رجاء أدخل عنوان البريد الالكتروني</string>
-<string name="error_register_password">يجب أن تحتوي كلمة السر على 8 أحرف كحد أدنى</string>
+<string name="error_register_password">يجب أن تحتوي كلمة السر على %1$d أحرف كحد أدنى</string>
 <string name="error_register_password_no_match">كلمات السر الخاصة بك ليست  نفسها</string>
 <string name="error_register_no_firstname">رجاء إدخال الإسم</string>
 <string name="error_register_no_lastname">رجاء إدخال الشهرة</string>

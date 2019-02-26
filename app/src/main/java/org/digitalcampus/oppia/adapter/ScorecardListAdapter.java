@@ -48,7 +48,7 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
 	private final Activity ctx;
 	private final List<Course> courseList;
-	private SharedPreferences prefs;
+    private String prefLang;
 
     private SegmentFormatter sfCompleted;
     private SegmentFormatter sfStarted;
@@ -58,7 +58,8 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 		super(context, R.layout.scorecard_list_row, courseList);
 		this.ctx = context;
 		this.courseList = courseList;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         //Initialization of SegmentFormatters
         sfCompleted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_completed);
@@ -99,7 +100,7 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
             viewHolder = (ScorecardViewHolder) convertView.getTag();
         }
 
-        viewHolder.courseTitle.setText(course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+        viewHolder.courseTitle.setText(course.getTitle(prefLang));
 
         int numCompleted = course.getNoActivitiesCompleted();
         int numStarted = course.getNoActivitiesStarted();

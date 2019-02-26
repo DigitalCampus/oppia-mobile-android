@@ -108,9 +108,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_medium"
         android:layout_marginRight="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/submit_btn"
@@ -141,7 +141,7 @@
         <ProgressBar
             android:id="@+id/progressBar3"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:indeterminate="true"/>
@@ -153,13 +153,6 @@
         android:orientation="horizontal"
         android:padding="@dimen/padding_large"
         android:visibility="gone">
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            >
-
-        </FrameLayout>
 
         <TextView
             android:id="@+id/textView19"
@@ -177,12 +170,11 @@
         android:id="@+id/textView20"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:background="@color/stroke"
-        android:paddingBottom="@dimen/padding_medium"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/padding_medium"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/padding_medium"
         android:text="@string/exported_activities.title"/>
 
     <FrameLayout
@@ -192,7 +184,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/padding_medium"
-            android:background="@drawable/top_shadow_gradient"></View>
+            android:background="@drawable/top_shadow_gradient"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/exported_files_list"

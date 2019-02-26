@@ -32,10 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.Callable;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.ScheduleReminders;
@@ -46,6 +42,9 @@ import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 import org.digitalcampus.oppia.listener.GamificationEventListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.UIUtils;
+
+import java.util.List;
+import java.util.concurrent.Callable;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
@@ -109,7 +108,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 if (bundle != null) {
                     Course course = (Course) bundle.getSerializable(Course.TAG);
                     if (course == null ) return;
-                    String title = course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+                    String title = course.getTitle(prefs);
                     setTitle(title);
                     actionBar.setTitle(title);
                 }

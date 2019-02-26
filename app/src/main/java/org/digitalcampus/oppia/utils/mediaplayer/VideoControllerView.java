@@ -653,7 +653,7 @@ public class VideoControllerView extends FrameLayout {
         private final WeakReference<VideoControllerView> mView; 
 
         MessageHandler(VideoControllerView view) {
-            mView = new WeakReference<VideoControllerView>(view);
+            mView = new WeakReference<>(view);
         }
         @Override
         public void handleMessage(Message msg) {

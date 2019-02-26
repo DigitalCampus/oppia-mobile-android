@@ -20,14 +20,9 @@ package org.digitalcampus.oppia.model;
 import android.text.TextUtils;
 
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.application.Tracker;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
-import static java.util.stream.Collectors.mapping;
 
 public class TrackerLog {
 

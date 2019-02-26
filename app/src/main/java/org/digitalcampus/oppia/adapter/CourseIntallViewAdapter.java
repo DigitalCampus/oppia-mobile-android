@@ -128,7 +128,7 @@ public class CourseIntallViewAdapter extends Course {
                 Lang l = new Lang(key, jsonTitles.getString(key));
                 titles.add(l);
             }
-            course.getMultiLangInfo().setTitles(titles);
+            course.setTitles(titles);
 
             ArrayList<Lang> descriptions = new ArrayList<>();
             if (json_obj.has(JSON_PROPERTY_DESCRIPTION) && !json_obj.isNull(JSON_PROPERTY_DESCRIPTION)) {
@@ -142,7 +142,7 @@ public class CourseIntallViewAdapter extends Course {
                             descriptions.add(l);
                         }
                     }
-                    course.getMultiLangInfo().setDescriptions(descriptions);
+                    course.setDescriptions(descriptions);
                 } catch (JSONException jsone) {
                     //do nothing
                 }

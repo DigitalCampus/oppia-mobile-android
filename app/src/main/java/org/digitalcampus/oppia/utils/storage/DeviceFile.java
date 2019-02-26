@@ -108,7 +108,7 @@ public class DeviceFile{
         if (mChildren2 == null)
             return new DeviceFile[0];
 
-        if (grandPeek && !bGrandPeeked && mChildren2 != null && mChildren2.length > 0) {
+        if (grandPeek && !bGrandPeeked && mChildren2.length > 0) {
             for (int i = 0; i < mChildren2.length; i++) {
                 try {
                     if (!mChildren2[i].isDirectory())
@@ -121,7 +121,7 @@ public class DeviceFile{
             bGrandPeeked = true;
         }
 
-        this.mChildren = new WeakReference<DeviceFile[]>(mChildren2);
+        this.mChildren = new WeakReference<>(mChildren2);
 
         return mChildren2;
     }

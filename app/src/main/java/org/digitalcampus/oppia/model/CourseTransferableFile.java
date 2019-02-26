@@ -13,6 +13,7 @@ public class CourseTransferableFile implements Serializable {
 
     public static final String TYPE_COURSE_BACKUP = "backup";
     public static final String TYPE_COURSE_MEDIA = "media";
+    public static final String TYPE_ACTIVITY_LOG = "activity";
 
     private String title;
     private String shortname;
@@ -22,6 +23,7 @@ public class CourseTransferableFile implements Serializable {
     private long fileSize;
     private File file;
     private List<String> relatedMedia;
+    private long relatedFilesize = 0;
 
 
     public List<String> getRelatedMedia() {
@@ -77,7 +79,7 @@ public class CourseTransferableFile implements Serializable {
     }
 
     public String getDisplayFileSize(){
-        return FileUtils.readableFileSize(fileSize);
+        return FileUtils.readableFileSize(fileSize + relatedFilesize);
     }
 
     public String getType() {
@@ -94,6 +96,14 @@ public class CourseTransferableFile implements Serializable {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public long getRelatedFilesize() {
+        return relatedFilesize;
+    }
+
+    public void setRelatedFilesize(long relatedFilesize) {
+        this.relatedFilesize = relatedFilesize;
     }
 
     @Override

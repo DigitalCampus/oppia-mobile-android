@@ -198,7 +198,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
     public void endElement(String aUri, String aLocalName, String aQName) {
 
         if (NODE_SECTION.equals(aQName)){
-            currentSection.getMultiLangInfo().setTitles(sectTitles);
+            currentSection.setTitles(sectTitles);
             sections.add(currentSection);
             parentElements.pop();
         }
@@ -263,8 +263,8 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         }
         else if (NODE_ACTIVITY.equals(aQName)){
 
-            currentActivity.getMultiLangInfo().setTitles(actTitles);
-            currentActivity.getMultiLangInfo().setDescriptions(actDescriptions);
+            currentActivity.setTitles(actTitles);
+            currentActivity.setDescriptions(actDescriptions);
             currentActivity.setLocations(actLocations);
             currentActivity.setContents(actContents);
             currentActivity.setMedia(actMedia);
@@ -339,9 +339,9 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         c.setVersionId(courseVersionId);
         c.setImageFile(courseIcon);
         c.setPriority(coursePriority);
-        c.getMultiLangInfo().setTitles(courseTitles);
-        c.getMultiLangInfo().setLangs(courseLangs);
-        c.getMultiLangInfo().setDescriptions(courseDescriptions);
+        c.setTitles(courseTitles);
+        c.setLangs(courseLangs);
+        c.setDescriptions(courseDescriptions);
         c.setBaselineActivities(courseBaseline);
         c.setMedia(courseMedia);
         c.setMetaPages(courseMetaPages);

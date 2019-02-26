@@ -35,9 +35,9 @@ public class CourseMediaXMLHandler extends DefaultLexicalHandler implements IMed
     private static final String NODE_FILESIZE = "filesize";
     private static final String NODE_MODULE = "module";
 
-    private ArrayList<Media> courseMedia = new ArrayList<Media>();
+    private ArrayList<Media> courseMedia = new ArrayList<>();
     private boolean insideMediaTag = false;
-    private Stack<String> parentElements = new Stack<String>();
+    private Stack<String> parentElements = new Stack<>();
 
     public ArrayList<Media> getCourseMedia() {
         return courseMedia;
