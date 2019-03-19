@@ -5,7 +5,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.MultiLangInfo;
+import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import TestRules.DisableAnimationsRule;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -35,7 +36,7 @@ public class MultiLangInfoTest {
 
     @Test
     public void MultiLangInfo_correctTitles() throws Exception {
-        MultiLangInfo multiLangInfo = new MultiLangInfo();
+        MultiLangInfoConcreteModel multiLangInfo = new MultiLangInfoConcreteModel();
 
         String englishTitle = "English Title";
         String spanishTitle = "Titulo Español";
@@ -54,14 +55,14 @@ public class MultiLangInfoTest {
 
     @Test
     public void MultiLangInfo_NoTitles() throws Exception {
-        MultiLangInfo multiLangInfo = new MultiLangInfo();
+        MultiLangInfoConcreteModel multiLangInfo = new MultiLangInfoConcreteModel();
 
         assertEquals(context.getString(R.string.no_title_set), multiLangInfo.getTitle("en"));
     }
 
     @Test
     public void MultiLangInfo_nonExistingTitle() throws Exception{
-        MultiLangInfo multiLangInfo = new MultiLangInfo();
+        MultiLangInfoConcreteModel multiLangInfo = new MultiLangInfoConcreteModel();
 
         String firstTitle = "First Title";
         String secondTitle = "Second Title";
@@ -77,7 +78,7 @@ public class MultiLangInfoTest {
 
     @Test
     public void MultiLangInfo_malformedJSONString() throws Exception{
-        MultiLangInfo multiLangInfo = new MultiLangInfo();
+        MultiLangInfoConcreteModel multiLangInfo = new MultiLangInfoConcreteModel();
 
         String malformedJSONString = "[{\"en\":\"EnglishTitle\"}, {\"es\": ]";
 
@@ -88,7 +89,7 @@ public class MultiLangInfoTest {
 
     @Test
     public void MultiLangInfo_wellFormedJSONString() throws Exception{
-        MultiLangInfo multiLangInfo = new MultiLangInfo();
+        MultiLangInfoConcreteModel multiLangInfo = new MultiLangInfoConcreteModel();
 
         String englishTitle = "English Title";
         String spanishTitle = "Titulo Español";
@@ -102,7 +103,7 @@ public class MultiLangInfoTest {
 
     @Test
     public void MultiLangInfo_emptyJSONString() throws Exception {
-        MultiLangInfo multiLangInfo = new MultiLangInfo();
+        MultiLangInfoConcreteModel multiLangInfo = new MultiLangInfoConcreteModel();
 
         String wellFormedJSONString = "[]";
         multiLangInfo.setTitlesFromJSONString(wellFormedJSONString);
@@ -110,10 +111,13 @@ public class MultiLangInfoTest {
         assertEquals(context.getString(R.string.no_title_set), multiLangInfo.getTitle("en"));
     }
 
-    /*@Test
+    @Test
     public void MultiLangInfo_NoDescription() throws Exception {
-        MultiLangInfo multiLangInfo = new MultiLangInfo();
+        MultiLangInfoConcreteModel multiLangInfo = new MultiLangInfoConcreteModel();
+        assertNull(multiLangInfo.getDescription("en"));
+    }
+}
 
-        assertEquals(context.getString(R.string.no_description_set), multiLangInfo.getDescription("en"));
-    }*/
+class MultiLangInfoConcreteModel extends MultiLangInfoModel {
+
 }
