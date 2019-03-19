@@ -163,49 +163,48 @@ public class GamificationEngine {
         boolean completed = false;
         DbHelper db = DbHelper.getInstance(this.ctx);
 
-        for (Media m : activity.getMedia()) {
-            if (m.getFilename().equals(mediaFileName)) {
-                try {
-                    String criteria = getMediaCompletionCriteriaFromHierarchy(course, activity);
-                    Log.d(TAG, "Video criteria: " + criteria);
-                    if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD)){
+        Media m = activity.getMedia(mediaFileName);
+        if (m != null) {
+            try {
+                String criteria = getMediaCompletionCriteriaFromHierarchy(course, activity);
+                Log.d(TAG, "Video criteria: " + criteria);
+                if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD)){
 
-                        int threshold = getMediaCompletionThresholdFromHierarchy(course, activity);
-                        Log.d(TAG, "Threshold: " + threshold);
-                        if ((timeTaken * 100 / m.getLength()) > threshold){
-                            completed = true;
-                            Log.d(TAG, "Threshold passed!");
-                            if (!db.isMediaPlayed(activity.getDigest())){
-                                Log.d(TAG, "First view --> giving points");
-                                totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
-                            }
-                            else{
-                                Log.d(TAG, "Not first view --> not giving points");
-                            }
-
+                    int threshold = getMediaCompletionThresholdFromHierarchy(course, activity);
+                    Log.d(TAG, "Threshold: " + threshold);
+                    if ((timeTaken * 100 / m.getLength()) > threshold){
+                        completed = true;
+                        Log.d(TAG, "Threshold passed!");
+                        if (!db.isMediaPlayed(activity.getDigest())){
+                            Log.d(TAG, "First view --> giving points");
+                            totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
+                        }
+                        else{
+                            Log.d(TAG, "Not first view --> not giving points");
                         }
 
                     }
-                    else{
-                        //Using intervals media criteria
-                        // add points if first attempt today
-                        if (db.isActivityFirstAttemptToday(activity.getDigest())){
-                            totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
-                        }
-                        // add points for length of time the media has been playing
-                        totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor(timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
 
-                        // make sure can't exceed max points
-                        totalPoints = Math.min(totalPoints, getEventFromHierarchy(course,activity,
-                                Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints());
-                    }
-
-
-
-                } catch (GamificationEventNotFound genf) {
-                    Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
-                    Mint.logException(genf);
                 }
+                else{
+                    //Using intervals media criteria
+                    // add points if first attempt today
+                    if (db.isActivityFirstAttemptToday(activity.getDigest())){
+                        totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
+                    }
+                    // add points for length of time the media has been playing
+                    totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor(timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
+
+                    // make sure can't exceed max points
+                    totalPoints = Math.min(totalPoints, getEventFromHierarchy(course,activity,
+                            Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints());
+                }
+
+
+
+            } catch (GamificationEventNotFound genf) {
+                Log.d(TAG,LOG_EVENT_NOT_FOUND + genf.getEventName(), genf);
+                Mint.logException(genf);
             }
         }
         return new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints, completed);

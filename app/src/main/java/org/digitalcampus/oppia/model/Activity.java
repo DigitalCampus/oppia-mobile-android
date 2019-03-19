@@ -99,6 +99,15 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 		return media;
 	}
 
+	public Media getMedia(String filename){
+		for (Media m : getMedia()) {
+			if (m.getFilename().equals(filename)) {
+				return m;
+			}
+		}
+		return null;
+	}
+
 	public void setMedia(ArrayList<Media> media) {
 		this.media = media;
 	}
