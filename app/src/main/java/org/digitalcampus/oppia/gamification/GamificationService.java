@@ -16,6 +16,7 @@ import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONException;
@@ -85,6 +86,7 @@ public class GamificationService  extends IntentService {
                 GamificationEvent event = null;
                 Course c = null;
                 Activity act = null;
+                String trackerDigest = "";
 
 
                 if (SERVICE_EVENT_DOWNLOAD.equals(eventName)){
@@ -100,6 +102,8 @@ public class GamificationService  extends IntentService {
 
                         eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
                         eventData.put("readaloud", intent.getBooleanExtra(EVENTDATA_READALOUD, false));
+
+                        trackerDigest = act.getDigest();
                     }
                 }
                 else if (SERVICE_EVENT_QUIZ.equals(eventName)){
@@ -147,6 +151,8 @@ public class GamificationService  extends IntentService {
                         event = gEngine.processEventResourceActivity(c, act);
 
                         eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
+
+                        trackerDigest = act.getDigest();
                     }
                 }
                 else if (SERVICE_EVENT_FEEDBACK.equals(eventName)){
@@ -157,6 +163,8 @@ public class GamificationService  extends IntentService {
                     eventData.put("timetaken", intent.getLongExtra(EVENTDATA_TIMETAKEN, 0));
                     eventData.put("quiz_id", intent.getIntExtra(EVENTDATA_QUIZID, 0));
                     eventData.put("instance_id", intent.getStringExtra(EVENTDATA_INSTANCEID));
+
+                    trackerDigest = act.getDigest();
                 }
                 else if (SERVICE_EVENT_MEDIAPLAYBACK.equals(eventName)){
                     act = (Activity) intent.getSerializableExtra(SERVICE_ACTIVITY);
@@ -168,13 +176,16 @@ public class GamificationService  extends IntentService {
                     eventData.put("timetaken", timetaken);
                     eventData.put("mediafile", filename);
                     eventData.put("media", "played");
+
+                    Media m = act.getMedia(filename);
+                    trackerDigest = (m != null) ? m.getDigest() : act.getDigest();
                 }
 
                 if (event == null)
                     return;
 
                 Tracker t = new Tracker(this);
-                t.saveTracker(c.getCourseId(), act!=null ? act.getDigest() : "", eventData, event.isCompleted() || isCompleted || isBaseline, event);
+                t.saveTracker(c.getCourseId(), trackerDigest, eventData, event.isCompleted() || isCompleted || isBaseline, event);
 
                 if (event.getPoints() > 0){
                     broadcastEvent(event, act, c);
