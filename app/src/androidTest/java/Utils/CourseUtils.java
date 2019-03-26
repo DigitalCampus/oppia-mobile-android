@@ -9,7 +9,6 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.MultiLangInfo;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.storage.*;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -81,11 +80,9 @@ public class CourseUtils {
         //Add activities
         for(int i = 0; i < numberOfActivities; i++){
             final int n = i;
-            MultiLangInfo mli = new MultiLangInfo();
-            mli.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Activity " + n)); }});
 
             Activity activity = new Activity();
-            activity.setMultiLangInfo(mli);
+            activity.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Activity " + n)); }});
             activity.setDigest("");
             activity.setActType("ActType");
             activities.add(activity);
@@ -94,23 +91,17 @@ public class CourseUtils {
         //Add sections
         for(int i = 0; i < numberOfSections; i++){
             final int n = i;
-            MultiLangInfo mli = new MultiLangInfo();
-            mli.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Section " + n)); }});
 
             Section section = new Section();
-            section.setMultiLangInfo(mli);
+            section.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Section " + n)); }});
             section.setActivities(activities);
             sections.add(section);
 
         }
 
-        MultiLangInfo mli = new MultiLangInfo();
-        mli.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Mock Course")); }});
-
-
         CompleteCourse completeCourse = new CompleteCourse();
         completeCourse.setShortname("Mock Course");
-        completeCourse.setMultiLangInfo(mli);
+        completeCourse.setTitles(new ArrayList<Lang>(){{ add(new Lang("en", "Mock Course")); }});
         completeCourse.setSections(sections);
 
         return completeCourse;
