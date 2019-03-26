@@ -109,7 +109,7 @@ public class InstallDownloadedCoursesTest {
         Course c = CourseUtils.getCourseFromDatabase(context, shortName);
         assertNotNull(c);   //Check that the course exists in the database
 
-        String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.install_course_complete, title), response.getResultResponse());
@@ -139,7 +139,7 @@ public class InstallDownloadedCoursesTest {
         Course c = CourseUtils.getCourseFromDatabase(context, shortName);
         assertNotNull(c);   //Check that the course exists in the database
 
-        String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.error_latest_already_installed, title), response.getResultResponse());
