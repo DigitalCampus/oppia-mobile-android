@@ -22,21 +22,6 @@
         android:entryValues="@array/TextSizeValues"
         android:key="prefTextSize"
         android:title="@string/prefTextSize" />
-    
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="prefShowScheduleReminders"
-        android:summary="@string/prefShowScheduleReminders_summary"
-        android:title="@string/prefShowScheduleReminders" />
-
-    <ListPreference
-        android:defaultValue="2"
-        android:dependency="prefShowScheduleReminders"
-        android:entries="@array/NoScheduleReminders"
-        android:entryValues="@array/NoScheduleRemindersValues"
-        android:key="prefNoScheduleReminders"
-        android:summary="@string/prefNoScheduleReminders"
-        android:title="@string/prefNoScheduleReminders_summary" />
 
     <CheckBoxPreference
         android:defaultValue="true"
