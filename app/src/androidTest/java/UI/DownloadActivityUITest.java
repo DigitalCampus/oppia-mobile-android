@@ -14,7 +14,6 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.MultiLangInfo;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
 import org.digitalcampus.oppia.task.Payload;
@@ -159,11 +158,10 @@ public class DownloadActivityUITest {
     public void showTitleIfExists() throws Exception{
         CourseIntallViewAdapter c = getBaseCourse();
         final String title =  "Mock Title";
-        c.setMultiLangInfo(new MultiLangInfo(){{
-            setTitles(new ArrayList<Lang>() {{
-                add(new Lang("en", title));
-            }});
+        c.setTitles(new ArrayList<Lang>() {{
+            add(new Lang("en", title));
         }});
+
 
         givenThereAreSomeCourses(2, c);
 
@@ -195,10 +193,8 @@ public class DownloadActivityUITest {
     public void showDescriptionIfExists() throws Exception{
         CourseIntallViewAdapter c = getBaseCourse();
         final String description =  "Mock Description";
-        c.setMultiLangInfo(new MultiLangInfo(){{
-            setDescriptions(new ArrayList<Lang>() {{
-                add(new Lang("en", description));
-            }});
+        c.setDescriptions(new ArrayList<Lang>() {{
+            add(new Lang("en", description));
         }});
 
         givenThereAreSomeCourses(2, c);

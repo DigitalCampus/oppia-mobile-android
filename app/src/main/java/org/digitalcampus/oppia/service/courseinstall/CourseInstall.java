@@ -113,6 +113,7 @@ public class CourseInstall {
             csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
             ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
         } catch (InvalidXMLException e) {
+            FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
             listener.onError(e.getMessage());
             return;
         }
@@ -150,6 +151,7 @@ public class CourseInstall {
             } catch (IOException e) {
                 Mint.logException(e);
                 Log.d(TAG, "Error copying course: ", e);
+                FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
                 listener.onFail(ctx.getString(R.string.error_installing_course, title));
                 return;
             }
