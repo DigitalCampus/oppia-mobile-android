@@ -4,8 +4,6 @@
           package="org.digitalcampus.mobile.learning">
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="23"
         tools:ignore="GradleOverrides"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -41,7 +39,8 @@
         android:allowBackup="true"
         android:icon="@drawable/academy_logo"
         android:label="@string/app_name"
-        android:theme="@style/Oppia.Theme">
+        android:theme="@style/Oppia.Theme"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
@@ -92,6 +91,7 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.WelcomeActivity"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Oppia.ToolbarTheme"/>
         <activity
             android:name="org.digitalcampus.oppia.activity.CourseMetaPageActivity"

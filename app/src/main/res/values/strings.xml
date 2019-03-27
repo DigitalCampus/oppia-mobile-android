@@ -96,8 +96,6 @@
     <string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
     <string name="prefLanguage">Preferred Language</string>
     <string name="prefHighlightCompleted">Highlight completed activities</string>
-    <string name="prefNoScheduleReminders">Number of suggested activities</string>
-    <string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
     <string name="prefServer">Server</string>
     <string name="prefServer_errorTitle">Invalid URL</string>
     <string name="prefServer_errorDescription">Please, enter a well-formed URL corresponding to your &appName;
@@ -108,8 +106,6 @@
     <string name="prefInt_errorDescription">Please, enter a valid integer value</string>
     <string name="prefShowCourseDescription">Show course description</string>
     <string name="prefShowProgressBar">Show progress bar</string>
-    <string name="prefShowScheduleReminders">Display suggested activities</string>
-    <string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
     <string name="prefShowSectionNumbers">Show section numbers</string>
     <string name="prefTextSize">Text size</string>
     <string name="prefUser">Username</string>
@@ -142,15 +138,15 @@
     <string name="login_password_title">Password</string>
     <string name="title_register">Register</string>
 
-    <string name="register_form_username_title">Username (*)</string>
-    <string name="register_form_email_title">Email address (*)</string>
-    <string name="register_form_firstname_title">First name (*)</string>
+    <string name="register_form_username_title">Username</string>
+    <string name="register_form_email_title">Email address</string>
+    <string name="register_form_firstname_title">First name</string>
     <string name="register_form_jobtitle_title">Job Title</string>
-    <string name="register_form_lastname_title">Last name (*)</string>
+    <string name="register_form_lastname_title">Last name</string>
     <string name="register_form_organisation_title">Organisation</string>
-    <string name="register_form_password_title">Password (*)</string>
-    <string name="register_form_password_again_title">Password (again) (*)</string>
-    <string name="register_form_phoneno_title">Phone number (*)</string>
+    <string name="register_form_password_title">Password</string>
+    <string name="register_form_password_again_title">Password (again)</string>
+    <string name="register_form_phoneno_title">Phone number</string>
     <string name="register_btn_text">Register</string>
 
     <string name="reset_username_title">Username or Email</string>
@@ -179,7 +175,6 @@
 
     <string name="publisher">Publisher:</string>
     <string name="update">Update</string>
-    <string name="update_schedule">Update Schedule</string>
     <string name="installed">Installed</string>
     <string name="install">Install</string>
     <string name="courses_install_pending">There are new received courses not installed yet.</string>
@@ -188,9 +183,7 @@
     <string name="downloading">Downloading &#8230;</string>
     <string name="download_complete">Download complete</string>
 
-    <string name="update_starting">Getting schedule updates</string>
     <string name="updating">Updating &#8230;</string>
-    <string name="update_complete">Schedule update complete</string>
 
     <string name="installing_course">Installing: %1$s</string>
     <string name="install_complete">Installation complete</string>
@@ -286,8 +279,6 @@
     <string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
     <string name="download_via_pc_extenal_storage">You need to set an external storage option to be able to place the files downloaded from your PC inside the app directory. Please, go to "Settings" and change your storage option.</string>
 
-    <string name="schedule_reminders">Suggested next activities:</string>
-
     <string name="course_draft">(Draft version)</string>
 
     <string name="search.activity_title">Search</string>
@@ -355,6 +346,7 @@
     <string name="exported_activities.title">Activity exported trackers</string>
     <string name="export_task_no_activities">There were no new activities or quizzes to export.</string>
     <string name="submit_trackers_success">Trackers successfully submitted to server.</string>
+    <string name="activity_not_transferred_message">You have exported log files not transferred yet.</string>
     <string name="tab_title_transfer">Transfer</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled</string>
     <string name="paired_devices">Paired devices</string>
@@ -393,6 +385,8 @@
     <string name="login_dont_have_account">Don\'t have an account yet?</string>
     <string name="offline_register_confirm">Alternatively, you can register offline and start using the app. Then, you\'ll need to submit or transfer your user data later</string>
     <string name="register_offline">Register offline</string>
+    <string name="field_required">This field cannot be empty</string>
+    <string name="field_spaces_error">Cannot contain spaces</string>
     <string name="permissions.location.title">access location</string>
     <string name="permissions.location.description">In new Android devices, this permission is needed to be able to pair with other devices using Bluetooth</string>
 </resources>

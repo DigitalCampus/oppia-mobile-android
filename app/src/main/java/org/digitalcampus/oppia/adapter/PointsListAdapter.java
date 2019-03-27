@@ -17,12 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Points;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -30,6 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.model.Points;
+
+import java.util.List;
 
 public class PointsListAdapter extends ArrayAdapter<Points>{
 
@@ -61,10 +60,10 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.fragment_points_list_row, parent, false);
             viewHolder = new PointsViewHolder();
-            viewHolder.pointsDescription = (TextView) convertView.findViewById(R.id.points_description);
-            viewHolder.pointsTime = (TextView) convertView.findViewById(R.id.points_time);
-            viewHolder.pointsDate = (TextView) convertView.findViewById(R.id.points_date);
-            viewHolder.pointsPoints = (TextView) convertView.findViewById(R.id.points_points);
+            viewHolder.pointsDescription = convertView.findViewById(R.id.points_description);
+            viewHolder.pointsTime = convertView.findViewById(R.id.points_time);
+            viewHolder.pointsDate = convertView.findViewById(R.id.points_date);
+            viewHolder.pointsPoints = convertView.findViewById(R.id.points_points);
             convertView.setTag(viewHolder);
         }
         else{

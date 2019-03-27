@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,13 +30,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -54,7 +50,6 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class ExportActivityFragment extends Fragment implements TrackerServiceListener, ExportActivityListener {
 
@@ -85,15 +80,15 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vv = inflater.inflate(R.layout.fragment_export_activity, container, false);
 
-        exportedFilesRecyclerView = (RecyclerView) vv.findViewById(R.id.exported_files_list);
-        exportBtn = (Button) vv.findViewById(R.id.export_btn);
-        submitBtn = (Button) vv.findViewById(R.id.submit_btn);
+        exportedFilesRecyclerView = vv.findViewById(R.id.exported_files_list);
+        exportBtn = vv.findViewById(R.id.export_btn);
+        submitBtn = vv.findViewById(R.id.submit_btn);
         progressContainer = vv.findViewById(R.id.progress_container);
         actionsContainer = vv.findViewById(R.id.export_actions);
 
-        unsentTrackers = (TextView) vv.findViewById(R.id.highlight_to_submit);
-        unexportedTrackers = (TextView) vv.findViewById(R.id.highlight_to_export);
-        submittedTrackers = (TextView) vv.findViewById(R.id.highlight_submitted);
+        unsentTrackers = vv.findViewById(R.id.highlight_to_submit);
+        unexportedTrackers = vv.findViewById(R.id.highlight_to_export);
+        submittedTrackers = vv.findViewById(R.id.highlight_submitted);
 
         return vv;
 
@@ -152,12 +147,23 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
         updateActions(true);
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser){
+        super.setUserVisibleHint(isVisibleToUser);
+        if( (getView() != null) && isVisibleToUser){
+            // Your fragment is visible
+            refreshFileList();
+            refreshStats();
+
+        }
+    }
+
     private void updateActions(boolean enable){
         if (enable){
             progressContainer.setVisibility(View.GONE);
             actionsContainer.setVisibility(View.VISIBLE);
-            refreshStats();
             refreshFileList();
+            refreshStats();
         }
         else{
             progressContainer.setVisibility(View.VISIBLE);
@@ -174,7 +180,8 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
         unsentTrackers.setText(NumberFormat.getNumberInstance().format(unsent));
         submittedTrackers.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
 
-        submitBtn.setEnabled( (unsent > 0) );
+        Log.d(TAG, "files " + files.size());
+        submitBtn.setEnabled( (unsent > 0) || files.size()>0 );
         exportBtn.setEnabled( (unexported > 0) );
 
     }
@@ -219,8 +226,8 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     public void onExportComplete(String filename) {
         if (filename != null){
             UIUtils.showAlert(getActivity(),
-                R.string.export_task_completed,
-                getString(R.string.export_task_completed_text, filename)
+                    R.string.export_task_completed,
+                    getString(R.string.export_task_completed_text, filename)
             );
         }
         else{

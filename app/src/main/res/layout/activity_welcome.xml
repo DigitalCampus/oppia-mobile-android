@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <org.digitalcampus.oppia.utils.ui.NoSwipeableViewpager
-        android:id="@+id/activity_welcome_pager"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-    </org.digitalcampus.oppia.utils.ui.NoSwipeableViewpager>
+    <android.support.design.widget.CoordinatorLayout
+
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <org.digitalcampus.oppia.utils.ui.NoSwipeableViewpager
+            android:id="@+id/activity_welcome_pager"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </org.digitalcampus.oppia.utils.ui.NoSwipeableViewpager>
 
 
         <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/ActionBar.Solid.Om"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            android:elevation="4dp"
             android:background="@color/transparent"
+            android:elevation="4dp"
+            android:minHeight="?attr/actionBarSize"
+            android:paddingTop="@dimen/tool_bar_top_padding"
             app:contentInsetLeft="0dp"
-            android:id="@+id/toolbar"
             app:contentInsetStart="0dp"
             app:contentInsetStartWithNavigation="0dp"
-            style="@style/ActionBar.Solid.Om"
-            android:paddingTop="@dimen/tool_bar_top_padding"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
         </android.support.v7.widget.Toolbar>
 
 
-
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

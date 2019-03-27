@@ -19,32 +19,23 @@ package org.digitalcampus.oppia.service.courseinstall;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.model.ActivitySchedule;
-import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
-import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,7 +48,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -99,7 +89,7 @@ public class CourseIntallerService extends IntentService {
                 return currentInstance.tasksDownloading;
             }
         }
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     public CourseIntallerService() {
@@ -416,7 +406,7 @@ public class CourseIntallerService extends IntentService {
 
         } catch (JSONException e) {
             Mint.logException(e);
-            e.printStackTrace();
+            Log.d(TAG, "JSON error: ", e);
             sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_processing_response));
             removeDownloading(scheduleUrl);
         } catch (UserNotFoundException | IOException e) {

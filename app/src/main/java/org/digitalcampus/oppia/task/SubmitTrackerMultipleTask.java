@@ -28,14 +28,18 @@ import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.storage.Storage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -51,10 +55,14 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
 	public final static String TAG = SubmitTrackerMultipleTask.class.getSimpleName();
 
+    private final static String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
+
 	private TrackerServiceListener trackerServiceListener;
 
     public SubmitTrackerMultipleTask(Context ctx) { super(ctx); }
     public SubmitTrackerMultipleTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
+
+
 
 	@Override
 	protected Payload doInBackground(Payload... params) {
@@ -69,12 +77,18 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
                 @SuppressWarnings("unchecked")
                 Collection<Collection<TrackerLog>> userTrackers = split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
-                sendTrackerBatch(userTrackers, u, db, payload);
+                sendTrackerBatch(userTrackers, u, payload);
             }
 
+            List<File> unsentLogs = getActivityLogsToSend();
+			if (unsentLogs.size() > 0){
+			    for (File activityLog : unsentLogs){
+			        sendTrackerLog(activityLog, payload);
+                }
+            }
 	
 		} catch (IllegalStateException ise) {
-			ise.printStackTrace();
+            Log.d(TAG, "IllegalStateException:", ise);
 			payload.setResult(false);
 		} 
 		
@@ -84,72 +98,124 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 		return payload;
 	}
 
-    private void sendTrackerBatch(Collection<Collection<TrackerLog>> trackers, User user, DbHelper db, Payload p) {
+	private void sendTrackerLog(File activityLog, Payload payload){
+        try {
+            DbHelper db = DbHelper.getInstance(ctx);
+            String dataToSend = org.apache.commons.io.FileUtils.readFileToString(activityLog);
+            User user = db.getUser(SessionManager.getUsername(ctx));
+            boolean success = sendTrackers(user, dataToSend, true);
+            payload.setResult(success);
+            if (success){
+                Log.d(TAG, "Success sending " + activityLog.getName());
+                // If the logs were sent successfully, we can delete the file
+                FileUtils.deleteFile(activityLog);
+            }
+
+        } catch (IOException e) {
+            Mint.logException(e);
+            payload.setResult(false);
+        } catch (UserNotFoundException e) {
+            Mint.logException(e);
+            payload.setResult(false);
+        }
+    }
+
+	private boolean sendTrackers(User user, String dataToSend, boolean isRaw){
+        Log.d(TAG, dataToSend);
+        DbHelper db = DbHelper.getInstance(ctx);
+
+        try {
+            OkHttpClient client = HTTPClientUtils.getClient(ctx);
+            Request request = new Request.Builder()
+                    .url(apiEndpoint.getFullURL(ctx, isRaw ? MobileLearning.ACTIVITYLOG_PATH : MobileLearning.TRACKER_PATH))
+                    .addHeader(HTTPClientUtils.HEADER_AUTH,
+                            HTTPClientUtils.getAuthHeaderValue(user.getUsername(), user.getApiKey()))
+                    .patch(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, dataToSend))
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+
+                if (!isRaw){
+                    JSONObject jsonResp = new JSONObject(response.body().string());
+                    db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
+
+                    Editor editor = prefs.edit();
+                    try {
+                        editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
+                        editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
+                    } catch (JSONException e) {
+                        Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
+                    }
+                    editor.apply();
+
+                    try {
+                        JSONObject metadata = jsonResp.getJSONObject("metadata");
+                        MetaDataUtils mu = new MetaDataUtils(ctx);
+                        mu.saveMetaData(metadata, prefs);
+                    } catch (JSONException e) {
+                        Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
+                    }
+                }
+
+                return true;
+
+            } else {
+                if (response.code() == 400) {
+                    // submitted but invalid digest - returned 400 Bad Request -
+                    // so record as submitted so doesn't keep trying
+                    return true;
+                } else{
+                    Log.d(TAG, "Error sending trackers:" + response.code());
+                    Log.d(TAG, "Msg:" + response.body().string());
+                    if (response.code() == 401) {
+                        //The apiKey of this user is invalid
+                        SessionManager.setUserApiKeyValid(ctx, user, false);
+                        //We don't process more of this user trackers
+                    }
+                    return false;
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            Mint.logException(e);
+            return false;
+        } catch (IOException e) {
+            Mint.logException(e);
+            return false;
+        } catch (JSONException e) {
+            Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
+            Mint.logException(e);
+            return false;
+        }
+    }
+
+    private List<File> getActivityLogsToSend(){
+        ArrayList<File> files = new ArrayList<>();
+        File activityFolder = new File(Storage.getActivityPath(ctx));
+        if (activityFolder.exists()){
+
+            String[] children = activityFolder.list();
+            for (String dirFile : children) {
+                File exportedActivity = new File(activityFolder, dirFile);
+                files.add(exportedActivity);
+            }
+        }
+        return files;
+    }
+
+    private void sendTrackerBatch(Collection<Collection<TrackerLog>> trackers, User user, Payload p) {
+
+            DbHelper db = DbHelper.getInstance(ctx);
+            p.setResult(true);
             for (Collection<TrackerLog> trackerBatch : trackers) {
                 String dataToSend = createDataString(trackerBatch);
-                Log.d(TAG, dataToSend);
-                try {
+                boolean success = sendTrackers(user, dataToSend, false);
+                p.setResult(success);
 
-                    OkHttpClient client = HTTPClientUtils.getClient(ctx);
-                    Request request = new Request.Builder()
-                            .url(apiEndpoint.getFullURL(ctx, MobileLearning.TRACKER_PATH))
-                            .addHeader(HTTPClientUtils.HEADER_AUTH,
-                                    HTTPClientUtils.getAuthHeaderValue(user.getUsername(), user.getApiKey()))
-                            .patch(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, dataToSend))
-                            .build();
-
-                    Response response = client.newCall(request).execute();
-                    if (response.isSuccessful()) {
-                        for (TrackerLog tl : trackerBatch) {
-                            db.markLogSubmitted(tl.getId());
-                        }
-                        p.setResult(true);
-
-                        JSONObject jsonResp = new JSONObject(response.body().string());
-                        db.updateUserBadges(user.getUserId(), jsonResp.getInt("badges"));
-
-                        Editor editor = prefs.edit();
-                        try {
-                            editor.putBoolean(PrefsActivity.PREF_SCORING_ENABLED, jsonResp.getBoolean("scoring"));
-                            editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, jsonResp.getBoolean("badging"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        editor.apply();
-
-                        try {
-                            JSONObject metadata = jsonResp.getJSONObject("metadata");
-                            MetaDataUtils mu = new MetaDataUtils(ctx);
-                            mu.saveMetaData(metadata, prefs);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        if (response.code() == 400) {
-                            // submitted but invalid digest - returned 400 Bad Request -
-                            // so record as submitted so doesn't keep trying
-                            for (TrackerLog tl : trackerBatch) {
-                                db.markLogSubmitted(tl.getId());
-                            }
-                            p.setResult(true);
-                        } else{
-                            p.setResult(false);
-                            if (response.code() == 401) {
-                                //The apiKey of this user is invalid
-                                SessionManager.setUserApiKeyValid(ctx, user, false);
-                                //We don't process more of this user trackers
-                                return;
-                            }
-                        }
+                if (success){
+                    for (TrackerLog tl : trackerBatch) {
+                        db.markLogSubmitted(tl.getId());
                     }
-                } catch (UnsupportedEncodingException e) {
-                    p.setResult(false);
-                } catch (IOException e) {
-                    p.setResult(false);
-                } catch (JSONException e) {
-                    Mint.logException(e);
-                    e.printStackTrace();
-                    p.setResult(false);
                 }
                 publishProgress(0);
             }

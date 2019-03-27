@@ -17,10 +17,23 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.InvalidQuizException;
@@ -36,15 +49,11 @@ import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.Gamification;
-import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.QuizAttempt;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.widgets.quiz.DragAndDropWidget;
 import org.digitalcampus.oppia.widgets.quiz.EssayWidget;
 import org.digitalcampus.oppia.widgets.quiz.MultiChoiceWidget;
@@ -52,23 +61,11 @@ import org.digitalcampus.oppia.widgets.quiz.MultiSelectWidget;
 import org.digitalcampus.oppia.widgets.quiz.NumericalWidget;
 import org.digitalcampus.oppia.widgets.quiz.QuestionWidget;
 import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class FeedbackWidget extends WidgetFactory {
 
@@ -104,7 +101,7 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.widget_quiz, null);
+		View vv = inflater.inflate(R.layout.widget_quiz, container, false);
 		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
@@ -130,10 +127,10 @@ public class FeedbackWidget extends WidgetFactory {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		prevBtn = (Button) getView().findViewById(R.id.mquiz_prev_btn);
-		nextBtn = (Button) getView().findViewById(R.id.mquiz_next_btn);
-		qText = (TextView) getView().findViewById(R.id.question_text);
-		questionImage = (LinearLayout) getView().findViewById(R.id.question_image);
+		prevBtn = getView().findViewById(R.id.mquiz_prev_btn);
+		nextBtn = getView().findViewById(R.id.mquiz_next_btn);
+		qText = getView().findViewById(R.id.question_text);
+		questionImage = getView().findViewById(R.id.question_image);
 
         loadFeedback();
 	}
@@ -162,12 +159,13 @@ public class FeedbackWidget extends WidgetFactory {
 			q = this.feedback.getCurrentQuestion();
 		} catch (InvalidQuizException e) {
 			Toast.makeText(super.getActivity(), super.getActivity().getString(R.string.error_quiz_no_questions), Toast.LENGTH_LONG).show();
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 			return;
 		}
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
-		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())).toString()));
+		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))));
 
 		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
@@ -175,7 +173,7 @@ public class FeedbackWidget extends WidgetFactory {
 			String fileUrl = course.getLocation() + q.getProp("image");
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			File file = new File(fileUrl);
-			ImageView iv = (ImageView) getView().findViewById(R.id.question_image_image);
+			ImageView iv = getView().findViewById(R.id.question_image_image);
 			iv.setImageBitmap(myBitmap);
 			iv.setTag(file);
 		}
@@ -285,7 +283,7 @@ public class FeedbackWidget extends WidgetFactory {
 	}
 	
 	private void setProgress() {
-		TextView progress = (TextView) getView().findViewById(R.id.quiz_progress);
+		TextView progress = getView().findViewById(R.id.quiz_progress);
 		progress.setText(super.getActivity().getString(R.string.widget_quiz_progress, feedback.getCurrentQuestionNo(),
 				this.feedback.getTotalNoQuestions()));
 	}
@@ -302,18 +300,15 @@ public class FeedbackWidget extends WidgetFactory {
 				return true;
 			}
 		} catch (InvalidQuizException e) {
-			e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 		}
 		return false;
 	}
 	
 	@Override
 	public boolean getActivityCompleted() {
-		if (isOnResultsPage) {
-			return true;
-		} else {
-			return false;
-		}
+		return isOnResultsPage;
 	}
 
 	@Override
@@ -335,7 +330,8 @@ public class FeedbackWidget extends WidgetFactory {
 		try {
 			toRead = feedback.getCurrentQuestion().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		} catch (InvalidQuizException e) {
-			e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
 		}
 		return toRead;
 	}

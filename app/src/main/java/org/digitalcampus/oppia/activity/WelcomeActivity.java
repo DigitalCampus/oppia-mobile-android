@@ -52,14 +52,13 @@ public class WelcomeActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_welcome);
-        //tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
-		viewPager = (ViewPager) findViewById(R.id.activity_welcome_pager);
+		viewPager = findViewById(R.id.activity_welcome_pager);
 	}
 	
 	@Override
 	public void onStart() {
 		super.onStart(true, false);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		toolbar.getMenu().clear();
 		toolbar.inflateMenu(R.menu.activity_welcome);
 		toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

@@ -49,8 +49,6 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
     private static final int RESULT_DISMISS = -1;
     public static final String FRAGMENT_TAG = "GrantStorageAccessFragment";
 
-    private InfoDialog dialog;
-
     public interface AccessGrantedListener{
         void onAccessGranted(Uri pathAccessGranted);
     }
@@ -65,7 +63,7 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
         super.onCreate(savedInstanceState);
 
         FragmentManager fragmentManager = getFragmentManager();
-        dialog = new InfoDialog();
+        InfoDialog dialog = new InfoDialog();
         dialog.setListener(this);
         dialog.show(fragmentManager, "dialog");
     }
@@ -112,8 +110,8 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            View view = inflater.inflate(R.layout.dialog_lollipop_storage_access, null);
-            Button acceptButton = (Button) view.findViewById(R.id.acceptBtn);
+            View view = inflater.inflate(R.layout.dialog_lollipop_storage_access, container, false);
+            Button acceptButton = view.findViewById(R.id.acceptBtn);
 
             acceptButton.setOnClickListener(this);
             getDialog().setCanceledOnTouchOutside(true);

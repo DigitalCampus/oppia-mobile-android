@@ -4,38 +4,32 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.gamification.Leaderboard;
-import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.service.courseinstall.CourseInstall;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress, Payload> {
 
+
+    private static final String TAG = ImportLeaderboardsTask.class.getSimpleName();
 
     public interface ImportLeaderboardListener {
         void onLeaderboardImportProgress(String message);
         void onLeaderboardImportComplete(Boolean success, String message);
     }
 
-
-    public final static String TAG = ImportLeaderboardsTask.class.getSimpleName();
     private Context ctx;
 
 
@@ -65,13 +59,17 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                         String json = FileUtils.readFile(json_file);
                         updatedPositions += Leaderboard.importLeaderboardJSON(ctx, json);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Mint.logException(e);
+                        Log.d(TAG, "IOException: ", e);
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Mint.logException(e);
+                        Log.d(TAG, "ParseException: ", e);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Mint.logException(e);
+                        Log.d(TAG, "JSONException: ", e);
                     } catch (WrongServerException e) {
-                        e.printStackTrace();
+                        Mint.logException(e);
+                        Log.d(TAG, "WrongServerException: ", e);
                     }
 
                     FileUtils.deleteFile(json_file);

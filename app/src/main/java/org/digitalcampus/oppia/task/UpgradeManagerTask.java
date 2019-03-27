@@ -52,6 +52,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
 	public static final String TAG = UpgradeManagerTask.class.getSimpleName();
@@ -122,27 +124,21 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		
 		if(!prefs.getBoolean("upgradeV49b",false)){
 			upgradeV49();
-			Editor editor = prefs.edit();
-			editor.putBoolean("upgradeV49b", true);
-			editor.commit();
+			prefs.edit().putBoolean("upgradeV49b", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v49"));
 			payload.setResult(true);
 		}
 		
 		if(!prefs.getBoolean("upgradeV54",false)){
 			upgradeV54();
-			Editor editor = prefs.edit();
-			editor.putBoolean("upgradeV54", true);
-			editor.commit();
+			prefs.edit().putBoolean("upgradeV54", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v54"));
 			payload.setResult(true);
 		}
 		
 		if(!prefs.getBoolean("upgradeV54a",false)){
 			upgradeV54a();
-			Editor editor = prefs.edit();
-			editor.putBoolean("upgradeV54a", true);
-			editor.commit();
+			prefs.edit().putBoolean("upgradeV54a", true).apply();
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v54a"));
 			payload.setResult(true);
 		}
@@ -185,7 +181,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
                     csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
                     ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
                 } catch (InvalidXMLException e) {
-                    e.printStackTrace();
+					Mint.logException(e);
+					Log.d(TAG, "InvalidXMLException:", e);
                     break;
                 }
 
@@ -213,9 +210,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	/* switch to using demo.oppia-mobile.org
 	 */
 	protected void upgradeV20(){
-		Editor editor = prefs.edit();
-		editor.putString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault));
-		editor.commit();
+		prefs.edit().putString(PrefsActivity.PREF_SERVER, ctx.getString(R.string.prefServerDefault)).apply();
 	}
 	
 	/* go through and add html content to tables

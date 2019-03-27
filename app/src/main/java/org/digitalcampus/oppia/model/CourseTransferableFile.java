@@ -13,6 +13,7 @@ public class CourseTransferableFile implements Serializable {
 
     public static final String TYPE_COURSE_BACKUP = "backup";
     public static final String TYPE_COURSE_MEDIA = "media";
+    public static final String TYPE_ACTIVITY_LOG = "activity";
 
     private String title;
     private String shortname;

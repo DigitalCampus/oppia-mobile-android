@@ -64,7 +64,7 @@ public class PermissionsManager {
 
         final List<String> permissionsToAsk = filterNotGrantedPermissions(act, PERMISSIONS_REQUIRED);
 
-        ViewGroup container = (ViewGroup) act.findViewById(R.id.permissions_explanation);
+        ViewGroup container = act.findViewById(R.id.permissions_explanation);
         if (!permissionsToAsk.isEmpty()){
             //Show the permissions informative view
             LayoutInflater layoutInflater = (LayoutInflater)act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -72,7 +72,7 @@ public class PermissionsManager {
             View explanation = layoutInflater.inflate(R.layout.view_permissions_explanation, container);
             container.setVisibility(View.VISIBLE);
 
-            Button reqPermsBtn = (Button) explanation.findViewById(R.id.btn_permissions);
+            Button reqPermsBtn = explanation.findViewById(R.id.btn_permissions);
             View permsNotAskable = explanation.findViewById(R.id.not_askable_description);
             //Check the user has not selected the "Don't ask again" option for any permission yet
             if (canAskForAllPermissions(act, permissionsToAsk)){
@@ -103,7 +103,7 @@ public class PermissionsManager {
 
     public static void requestPermissions(final Activity act, List<String> permissions){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            act.requestPermissions( permissions.toArray( new String[permissions.size()] ), PERMISSIONS_REQUEST );
+            act.requestPermissions( permissions.toArray(new String[0]), PERMISSIONS_REQUEST );
         }
     }
 

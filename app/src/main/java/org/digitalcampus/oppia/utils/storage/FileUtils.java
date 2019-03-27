@@ -20,6 +20,8 @@ package org.digitalcampus.oppia.utils.storage;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.oppia.application.MobileLearning;
 
 import java.io.BufferedInputStream;
@@ -127,7 +129,8 @@ public class FileUtils {
 			zis.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "Exception:", e);
 			return false;
 		}
 
@@ -156,7 +159,8 @@ public class FileUtils {
 			}
 			out.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "Exception:", e);
 			return false;
 		}
 		return true;
@@ -329,8 +333,8 @@ public class FileUtils {
 		try {
 			org.apache.commons.io.FileUtils.moveFileToDirectory(file, mediaDir, true);
 		}catch (IOException e) {
-			e.printStackTrace();
-			Log.d(TAG, "Moving file failed");
+			Mint.logException(e);
+			Log.d(TAG, "Moving file failed", e);
 			if (deleteOnError){
 				FileUtils.deleteFile(file);
 			}

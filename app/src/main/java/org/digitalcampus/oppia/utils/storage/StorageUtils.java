@@ -40,9 +40,9 @@ public class StorageUtils {
             return mInternalDrive;
         ret = new DeviceFile(Environment.getExternalStorageDirectory());
         Log.d(TAG, "Storage: " + ret.getPath());
-        if (ret == null || !ret.exists()) {
+        if (!ret.exists()) {
             DeviceFile mnt = new DeviceFile("/mnt");
-            if (mnt != null && mnt.exists())
+            if (mnt.exists())
                 for (DeviceFile kid : mnt.listFiles())
                     if (kid.getName().toLowerCase().contains("sd"))
                         if (kid.canWrite()){
@@ -52,7 +52,7 @@ public class StorageUtils {
 
         } else if (ret.getName().endsWith("1")) {
             DeviceFile sdcard0 = new DeviceFile(ret.getPath().substring(0, ret.getPath().length() - 1) + "0");
-            if (sdcard0 != null && sdcard0.exists()) ret = sdcard0;
+            if (sdcard0.exists()) ret = sdcard0;
         }
         mInternalDrive = ret;
         return mInternalDrive;
@@ -114,7 +114,7 @@ public class StorageUtils {
 
     public static List<StorageLocationInfo> getStorageList(Context ctx) {
 
-        List<StorageLocationInfo> list = new ArrayList<StorageLocationInfo>();
+        List<StorageLocationInfo> list = new ArrayList<>();
         DeviceFile internalStorage = getInternalMemoryDrive();
         DeviceFile externalStorage = getExternalMemoryDrive(ctx);
 

@@ -11,7 +11,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTrackersFileAdapter.EtfaViewHolder> {
@@ -29,9 +28,9 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
 
         public EtfaViewHolder(View v) {
             super(v);
-            fileName = (TextView) v.findViewById(R.id.file_name);
-            fileSize = (TextView) v.findViewById(R.id.file_size);
-            btnShare = (ImageButton) v.findViewById(R.id.share_btn);
+            fileName = v.findViewById(R.id.file_name);
+            fileSize = v.findViewById(R.id.file_size);
+            btnShare = v.findViewById(R.id.share_btn);
 
             btnShare.setOnClickListener(new View.OnClickListener() {
                 @Override

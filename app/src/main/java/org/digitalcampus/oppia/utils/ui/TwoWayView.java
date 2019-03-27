@@ -42,7 +42,6 @@ import android.os.SystemClock;
 import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.AccessibilityDelegateCompat;
-import android.support.v4.view.KeyEventCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v4.view.ViewCompat;
@@ -2556,7 +2555,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     private boolean handleKeyScroll(KeyEvent event, int count, int direction) {
         boolean handled = false;
 
-        if (KeyEventCompat.hasNoModifiers(event)) {
+        if (event.hasNoModifiers()) {
             handled = resurrectSelectionIfNeeded();
             if (!handled) {
                 while (count-- > 0) {
@@ -2567,7 +2566,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     }
                 }
             }
-        } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_ALT_ON)) {
+        } else if (event.hasModifiers(KeyEvent.META_ALT_ON)) {
             handled = resurrectSelectionIfNeeded() || fullScroll(direction);
         }
 
@@ -2591,7 +2590,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             case KeyEvent.KEYCODE_DPAD_UP:
                 if (mIsVertical) {
                     handled = handleKeyScroll(event, count, View.FOCUS_UP);
-                } else if (KeyEventCompat.hasNoModifiers(event)) {
+                } else if (event.hasNoModifiers()) {
                     handled = handleFocusWithinItem(View.FOCUS_UP);
                 }
                 break;
@@ -2599,7 +2598,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             case KeyEvent.KEYCODE_DPAD_DOWN: {
                 if (mIsVertical) {
                     handled = handleKeyScroll(event, count, View.FOCUS_DOWN);
-                } else if (KeyEventCompat.hasNoModifiers(event)) {
+                } else if (event.hasNoModifiers()) {
                     handled = handleFocusWithinItem(View.FOCUS_DOWN);
                 }
                 break;
@@ -2608,7 +2607,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             case KeyEvent.KEYCODE_DPAD_LEFT:
                 if (!mIsVertical) {
                     handled = handleKeyScroll(event, count, View.FOCUS_LEFT);
-                } else if (KeyEventCompat.hasNoModifiers(event)) {
+                } else if (event.hasNoModifiers()) {
                     handled = handleFocusWithinItem(View.FOCUS_LEFT);
                 }
                 break;
@@ -2616,14 +2615,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             case KeyEvent.KEYCODE_DPAD_RIGHT:
                 if (!mIsVertical) {
                     handled = handleKeyScroll(event, count, View.FOCUS_RIGHT);
-                } else if (KeyEventCompat.hasNoModifiers(event)) {
+                } else if (event.hasNoModifiers()) {
                     handled = handleFocusWithinItem(View.FOCUS_RIGHT);
                 }
                 break;
 
             case KeyEvent.KEYCODE_DPAD_CENTER:
             case KeyEvent.KEYCODE_ENTER:
-                if (KeyEventCompat.hasNoModifiers(event)) {
+                if (event.hasNoModifiers()) {
                     handled = resurrectSelectionIfNeeded();
                     if (!handled
                             && event.getRepeatCount() == 0 && getChildCount() > 0) {
@@ -2634,10 +2633,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 break;
 
             case KeyEvent.KEYCODE_SPACE:
-                if (KeyEventCompat.hasNoModifiers(event)) {
+                if (event.hasNoModifiers()) {
                     handled = resurrectSelectionIfNeeded() ||
                             pageScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
-                } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_SHIFT_ON)) {
+                } else if (event.hasModifiers(KeyEvent.META_SHIFT_ON)) {
                     handled = resurrectSelectionIfNeeded() ||
                             fullScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
                 }
@@ -2646,34 +2645,34 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 break;
 
             case KeyEvent.KEYCODE_PAGE_UP:
-                if (KeyEventCompat.hasNoModifiers(event)) {
+                if (event.hasNoModifiers()) {
                     handled = resurrectSelectionIfNeeded() ||
                             pageScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
-                } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_ALT_ON)) {
+                } else if (event.hasModifiers(KeyEvent.META_ALT_ON)) {
                     handled = resurrectSelectionIfNeeded() ||
                             fullScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
                 }
                 break;
 
             case KeyEvent.KEYCODE_PAGE_DOWN:
-                if (KeyEventCompat.hasNoModifiers(event)) {
+                if (event.hasNoModifiers()) {
                     handled = resurrectSelectionIfNeeded() ||
                             pageScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
-                } else if (KeyEventCompat.hasModifiers(event, KeyEvent.META_ALT_ON)) {
+                } else if (event.hasModifiers(KeyEvent.META_ALT_ON)) {
                     handled = resurrectSelectionIfNeeded() ||
                             fullScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
                 }
                 break;
 
             case KeyEvent.KEYCODE_MOVE_HOME:
-                if (KeyEventCompat.hasNoModifiers(event)) {
+                if (event.hasNoModifiers()) {
                     handled = resurrectSelectionIfNeeded() ||
                             fullScroll(mIsVertical ? View.FOCUS_UP : View.FOCUS_LEFT);
                 }
                 break;
 
             case KeyEvent.KEYCODE_MOVE_END:
-                if (KeyEventCompat.hasNoModifiers(event)) {
+                if (event.hasNoModifiers()) {
                     handled = resurrectSelectionIfNeeded() ||
                             fullScroll(mIsVertical ? View.FOCUS_DOWN : View.FOCUS_RIGHT);
                 }

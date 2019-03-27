@@ -17,21 +17,6 @@
 
 package org.digitalcampus.oppia.utils;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.concurrent.Callable;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.ScorecardActivity;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.model.User;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -47,6 +32,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.splunk.mint.Mint;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.activity.ScorecardActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
+import org.digitalcampus.oppia.model.User;
+
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.concurrent.Callable;
 
 public class UIUtils {
 
@@ -71,8 +70,8 @@ public class UIUtils {
 			return;
 		}
 		
-		TextView points = (TextView) pointsItem.getActionView().findViewById(R.id.userpoints);
-		TextView badges = (TextView) pointsItem.getActionView().findViewById(R.id.userbadges);
+		TextView points = pointsItem.getActionView().findViewById(R.id.userpoints);
+		TextView badges = pointsItem.getActionView().findViewById(R.id.userbadges);
 
 		if(points == null || badges == null){
 			return;
@@ -232,7 +231,8 @@ public class UIUtils {
 				try {
 					funct.call();
 				} catch (Exception e) {
-					e.printStackTrace();
+					Mint.logException(e);
+					Log.d(TAG, "Exception:", e);
 				}
 
 			}
@@ -288,12 +288,13 @@ public class UIUtils {
 							String newLang = languagesList.get(whichButton).getLang();
 							Editor editor = prefs.edit();
 							editor.putString(PrefsActivity.PREF_LANGUAGE, newLang);
-							editor.commit();
+							editor.apply();
 							dialog.dismiss();
 							try {
 								funct.call();
 							} catch (Exception e) {
-								e.printStackTrace();
+								Mint.logException(e);
+								Log.d(TAG, "Exception:", e);
 							}
 						}
 					}).setTitle(ctx.getString(R.string.change_language))

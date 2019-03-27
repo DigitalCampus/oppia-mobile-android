@@ -11,6 +11,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -307,6 +309,11 @@ public class BluetoothTransferService extends Service {
 
             Log.d(TAG, totalBytes + " bytes sent via bluetooth.");
 
+            if (trFile.getType().equals(CourseTransferableFile.TYPE_ACTIVITY_LOG)){
+                //If it was an activity log, remove the local one
+                FileUtils.deleteFile(trFile.getFile());
+            }
+
             localIntent = new Intent(BROADCAST_ACTION);
             localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);
             localIntent.putExtra(SERVICE_FILE, trFile);
@@ -316,7 +323,8 @@ public class BluetoothTransferService extends Service {
             tasksDownloading.remove(trFile);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "IO exception: ", e);
         }
     }
 
@@ -405,6 +413,10 @@ public class BluetoothTransferService extends Service {
                     if (type.equals(CourseTransferableFile.TYPE_COURSE_MEDIA)){
                         File mediaDir = new File(Storage.getMediaPath(BluetoothTransferService.this));
                         FileUtils.moveFileToDir(file, mediaDir, true);
+                    }
+                    else if (type.equals(CourseTransferableFile.TYPE_ACTIVITY_LOG)){
+                        File activityLogsDir = new File(Storage.getActivityPath(BluetoothTransferService.this));
+                        FileUtils.moveFileToDir(file, activityLogsDir, true);
                     }
                     localIntent = new Intent(BROADCAST_ACTION);
                     localIntent.putExtra(SERVICE_MESSAGE, MESSAGE_TRANSFER_COMPLETE);

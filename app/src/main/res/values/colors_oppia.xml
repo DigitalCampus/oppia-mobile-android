@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   	<color name="pressed_om">#4bb7d6</color>
+    <color name="pressed_om">#4bb7d6</color>
     <color name="highlight_light">#4bb7d6</color>
     <color name="highlight_mid">#4dd5ee</color>
     <color name="highlight_dark">#193948</color>

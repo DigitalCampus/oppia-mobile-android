@@ -17,16 +17,15 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout.LayoutParams;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.WelcomeActivity;
 
 public class WelcomeFragment extends Fragment {
 
@@ -46,8 +45,8 @@ public class WelcomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_welcome, container, false);
-        loginButton = (Button) v.findViewById(R.id.welcome_login);
-        registerButton = (Button) v.findViewById(R.id.welcome_register);
+        loginButton = v.findViewById(R.id.welcome_login);
+        registerButton = v.findViewById(R.id.welcome_register);
 
 		return v;
 	}

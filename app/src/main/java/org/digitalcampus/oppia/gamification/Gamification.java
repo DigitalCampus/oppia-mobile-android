@@ -21,7 +21,6 @@ import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.GamificationEvent;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Gamification {

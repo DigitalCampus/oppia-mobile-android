@@ -102,14 +102,14 @@
 	<string name="login_password_title">पासवर्ड</string>
 	<string name="title_register">पंजीकरण</string>
 	
-	<string name="register_form_username_title">उपयोगकर्ता का नाम  (*)</string>
-	<string name="register_form_email_title">ईमेल पता  (*)</string>
-	<string name="register_form_firstname_title"> पहला नाम  (*)</string>
+	<string name="register_form_username_title">उपयोगकर्ता का नाम </string>
+	<string name="register_form_email_title">ईमेल पता </string>
+	<string name="register_form_firstname_title"> पहला नाम </string>
 	<string name="register_form_jobtitle_title">व्यवसाय </string>
-	<string name="register_form_lastname_title"> अंतिम नाम (*)</string>
+	<string name="register_form_lastname_title"> अंतिम नाम </string>
 	<string name="register_form_organisation_title">संस्था </string>
-	<string name="register_form_password_title">पासवर्ड  (*)</string>
-	<string name="register_form_password_again_title">पासवर्ड दोबारा लिखें (*)</string>
+	<string name="register_form_password_title">पासवर्ड </string>
+	<string name="register_form_password_again_title">पासवर्ड दोबारा लिखें </string>
 	<string name="register_btn_text">पंजीकरण </string>
 	
 	<string name="reset_username_title">उपयोगकर्ता का नाम </string>

@@ -62,9 +62,9 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.tag_row, parent, false);
             viewHolder = new TagViewHolder();
-            viewHolder.tagName = (TextView) convertView.findViewById(R.id.tag_name);
-            viewHolder.tagDescription = (TextView) convertView.findViewById(R.id.tag_description);
-            viewHolder.tagIcon = (ImageView) convertView.findViewById(R.id.tag_icon);
+            viewHolder.tagName = convertView.findViewById(R.id.tag_name);
+            viewHolder.tagDescription = convertView.findViewById(R.id.tag_description);
+            viewHolder.tagIcon = convertView.findViewById(R.id.tag_icon);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (TagViewHolder) convertView.getTag();

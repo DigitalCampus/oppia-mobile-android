@@ -128,9 +128,9 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 }
                 Log.d(TAG, usersAdded + " users added");
             }
-            catch (IOException ex) {
-                Mint.logException(ex);
-                ex.printStackTrace();
+            catch (IOException e) {
+                Mint.logException(e);
+                Log.d(TAG, "IOException: ", e);
                 payload.setResult(true);
                 payload.setResultResponse(ctx.getString(R.string.error_preloading_accounts));
             }

@@ -101,7 +101,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 		dmla = new DownloadMediaListAdapter(this, missingMedia);
         dmla.setOnClickListener(new DownloadMediaListener());
 
-        mediaList = (ListView) findViewById(R.id.missing_media_list);
+        mediaList = findViewById(R.id.missing_media_list);
 		mediaList.setAdapter(dmla);
 
         mediaList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -211,11 +211,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         });
 
         missingMediaContainer = this.findViewById(R.id.home_messages);
-        downloadSelected = (TextView) this.findViewById(R.id.download_selected);
-        unselectAll = (TextView) this.findViewById(R.id.unselect_all);
+        downloadSelected = this.findViewById(R.id.download_selected);
+        unselectAll = this.findViewById(R.id.unselect_all);
 
 		
-		downloadViaPCBtn = (Button) this.findViewById(R.id.download_media_via_pc_btn);
+		downloadViaPCBtn = this.findViewById(R.id.download_media_via_pc_btn);
 		downloadViaPCBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 downloadViaPC();
@@ -224,7 +224,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
 		Media.resetMediaScan(prefs);
 
-        emptyState = (TextView) findViewById(R.id.empty_state);
+        emptyState = findViewById(R.id.empty_state);
 	}
 	
 	@Override

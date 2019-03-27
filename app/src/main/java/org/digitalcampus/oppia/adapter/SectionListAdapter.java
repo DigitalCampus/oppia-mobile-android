@@ -58,7 +58,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
     private CourseClickListener listener;
 	private SharedPreferences prefs;
 	private Course course;
-    private final String locale;
+    private final String prefLang;
 
     public interface CourseClickListener{
         void onActivityClicked(String activityDigest);
@@ -70,7 +70,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
 		this.sectionList = sectionList;
 		this.course = course;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        locale = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 	}
 
     public SectionListAdapter(Context context, Course course, ArrayList<Section> sectionList, CourseClickListener listener) {
@@ -95,9 +95,9 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.section_list_row, parent, false);
             viewHolder = new SectionViewHolder();
-            viewHolder.sectionTitle = (TextView) convertView.findViewById(R.id.section_title);
-            viewHolder.sectionActivities = (TwoWayView) convertView.findViewById(R.id.section_activities);
-            innerListAdapter = new ActivityAdapter(locale, course.getLocation());
+            viewHolder.sectionTitle = convertView.findViewById(R.id.section_title);
+            viewHolder.sectionActivities = convertView.findViewById(R.id.section_activities);
+            innerListAdapter = new ActivityAdapter(prefLang, course.getLocation());
             viewHolder.sectionActivities.setAdapter(innerListAdapter);
 
             convertView.setTag(viewHolder);
@@ -111,7 +111,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
 	    if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false)){
 	    	title += String.valueOf(section.getOrder()) + ". ";
 	    }
-	    title += section.getMultiLangInfo().getTitle(locale);
+	    title += section.getTitle(prefLang);
         viewHolder.sectionTitle.setText(title);
         innerListAdapter.setData(sectionActivities);
         viewHolder.sectionActivities.setSelection(0);
@@ -182,15 +182,15 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
                 Context context = parent.getContext();
                 convertView = LayoutInflater.from(context).inflate(R.layout.section_horizonal_item, null);
                 viewHolder.activityContainer = convertView.findViewById(R.id.activity_object);
-                viewHolder.activityTitle = (TextView)  viewHolder.activityContainer.findViewById(R.id.activity_title);
-                viewHolder.activityImage = (ImageView)  viewHolder.activityContainer.findViewById(R.id.activity_image);
+                viewHolder.activityTitle = viewHolder.activityContainer.findViewById(R.id.activity_title);
+                viewHolder.activityImage = viewHolder.activityContainer.findViewById(R.id.activity_image);
                 viewHolder.completedBadge = convertView.findViewById(R.id.completed_badge);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ActivityViewHolder) convertView.getTag();
             }
 
-            viewHolder.activityTitle.setText(activity.getMultiLangInfo().getTitle(locale));
+            viewHolder.activityTitle.setText(activity.getTitle(locale));
             viewHolder.activityImage.setScaleType(!activity.hasCustomImage()?ImageView.ScaleType.CENTER: ImageView.ScaleType.FIT_CENTER);
             int defaultActivityDrawable = activity.getDefaultResourceImage();
             if (activity.hasCustomImage()){

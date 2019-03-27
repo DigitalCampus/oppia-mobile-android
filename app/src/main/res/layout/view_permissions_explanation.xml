@@ -28,66 +28,70 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/permissions.title"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium">
+
+        <ImageView
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/notification_subtext_size"
-            android:layout_marginTop="@dimen/notification_subtext_size"
-            android:layout_marginRight="@dimen/notification_subtext_size">
+            android:id="@+id/imageView9"
+            android:src="@android:drawable/sym_action_call"
+            android:layout_alignParentStart="false"
+            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_alignParentLeft="true"
+            android:tint="@android:color/tab_indicator_text"
+            android:scaleType="fitCenter"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:contentDescription="@string/permissions.phone_state.title"/>
 
-            <ImageView
-                android:id="@+id/imageView9"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="false"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="@dimen/padding_medium"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/sym_action_call"
-                android:tint="@android:color/tab_indicator_text"/>
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/imageView9"
-                android:text="@string/permissions.phone_state.title"
-                android:textColor="@color/highlight_label"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView13"
-                android:layout_toRightOf="@+id/imageView9"
-                android:text="@string/permissions.phone_state.description"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/notification_subtext_size">
+            android:text="@string/permissions.phone_state.title"
+            android:id="@+id/textView13"
+            android:layout_toRightOf="@+id/imageView9"
+            android:textStyle="bold"
+            android:textColor="@color/highlight_label"
+            android:layout_toEndOf="@+id/imageView9"/>
 
-            <ImageView
-                android:id="@+id/imageView10"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="false"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="@dimen/padding_medium"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/stat_notify_sdcard"
-                android:tint="@android:color/tab_indicator_text"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permissions.phone_state.description"
+            android:id="@+id/textView14"
+            android:layout_below="@+id/textView13"
+            android:layout_toRightOf="@+id/imageView9"
+            android:layout_toEndOf="@+id/imageView9"/>
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/imageView10"
-                android:text="@string/permissions.storage.title"
-                android:textColor="@color/highlight_label"
-                android:textStyle="bold"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/notification_subtext_size">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView10"
+            android:src="@android:drawable/stat_notify_sdcard"
+            android:layout_alignParentStart="false"
+            android:layout_marginRight="@dimen/padding_medium"
+            android:layout_alignParentLeft="true"
+            android:tint="@android:color/tab_indicator_text"
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permissions.storage.title"
+            android:id="@+id/textView15"
+            android:layout_toRightOf="@+id/imageView10"
+            android:textStyle="bold"
+            android:textColor="@color/highlight_label"/>
 
             <TextView
                 android:id="@+id/textView16"
@@ -134,22 +138,22 @@
                 android:text="@string/permissions.location.description"/>
         </RelativeLayout>
 
-        <Button
-            android:id="@+id/btn_permissions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/notification_subtext_size"
-            android:text="@string/permissions.allow_btn_text"
-            android:visibility="gone"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/permissions.allow_btn_text"
+        android:id="@+id/btn_permissions"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:visibility="gone"/>
 
-        <LinearLayout
-            android:id="@+id/not_askable_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/notification_subtext_size"
-            android:orientation="vertical"
-            android:visibility="gone">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/not_askable_description"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:visibility="gone">
 
             <TextView
                 android:id="@+id/textView17"

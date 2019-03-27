@@ -42,7 +42,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 
 	private final Context ctx;
 	private final ArrayList<CourseIntallViewAdapter> courseList;
-	private SharedPreferences prefs;
+    private String prefLang;
 
     private String updateDescription;
     private String updateSchedDescription;
@@ -56,13 +56,13 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 		super(context, R.layout.course_download_row, courseList);
 		this.ctx = context;
 		this.courseList = courseList;
-		this.prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         updateDescription = ctx.getString(R.string.update);
         installDescription = ctx.getString(R.string.install);
         installedDescription = ctx.getString(R.string.installed);
         cancelDescription = ctx.getString(R.string.cancel);
-        updateSchedDescription = ctx.getString(R.string.update_schedule);
 	}
 
     static class DownloadCourseViewHolder{
@@ -84,13 +84,13 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.course_download_row, parent, false);
             viewHolder = new DownloadCourseViewHolder();
-            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
-            viewHolder.courseDraft = (TextView) convertView.findViewById(R.id.course_draft);
-            viewHolder.courseDescription = (TextView) convertView.findViewById(R.id.course_description);
-            viewHolder.actionBtn = (ImageButton) convertView.findViewById(R.id.download_course_btn);
-            viewHolder.actionProgress = (ProgressBar) convertView.findViewById(R.id.download_progress);
-            viewHolder.courseAuthor = (TextView) convertView.findViewById(R.id.course_author);
-            viewHolder.labelAuthor = (TextView) convertView.findViewById(R.id.label_author);
+            viewHolder.courseTitle = convertView.findViewById(R.id.course_title);
+            viewHolder.courseDraft = convertView.findViewById(R.id.course_draft);
+            viewHolder.courseDescription = convertView.findViewById(R.id.course_description);
+            viewHolder.actionBtn = convertView.findViewById(R.id.download_course_btn);
+            viewHolder.actionProgress = convertView.findViewById(R.id.download_progress);
+            viewHolder.courseAuthor = convertView.findViewById(R.id.course_author);
+            viewHolder.labelAuthor = convertView.findViewById(R.id.label_author);
 
             convertView.setTag(viewHolder);
         }
@@ -100,9 +100,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 
         CourseIntallViewAdapter c = courseList.get(position);
 
-        viewHolder.courseTitle.setText(c.getMultiLangInfo().getTitle(
-                prefs.getString(PrefsActivity.PREF_LANGUAGE,
-                Locale.getDefault().getLanguage())));
+        viewHolder.courseTitle.setText(c.getTitle(prefLang));
 
 	    if (c.isDraft()){
             viewHolder.courseDraft.setVisibility(View.VISIBLE);
@@ -111,7 +109,7 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             viewHolder.courseDraft.setVisibility(View.GONE);
 	    }
 
-	    String desc = c.getMultiLangInfo().getDescription(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+	    String desc = c.getDescription(prefLang);
 	    if (desc != null){
             viewHolder.courseDescription.setVisibility(View.VISIBLE);
             viewHolder.courseDescription.setText(desc);

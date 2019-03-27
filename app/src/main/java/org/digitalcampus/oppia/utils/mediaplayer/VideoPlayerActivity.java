@@ -30,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
@@ -68,6 +69,10 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Prevent activity from going to sleep
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         setContentView(R.layout.activity_video_player);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         player = new MediaPlayer();
@@ -88,22 +93,26 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
             player.setDataSource(this, Uri.parse(Storage.getMediaPath(this) + mediaFileName));
             player.setOnPreparedListener(this);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "IllegalArgumentException:", e);
         } catch (SecurityException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "SecurityException:", e);
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "ExceIllegalStateExceptionption:", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "IOException:", e);
         }
     }
 
     protected void onStart(){
         super.onStart();
-        videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
+        videoSurface = findViewById(R.id.videoSurface);
         endContainer = findViewById(R.id.end_container);
-        replayBtn = (ImageButton) findViewById(R.id.replay_button);
-        continueBtn = (ImageButton) findViewById(R.id.continue_button);
+        replayBtn = findViewById(R.id.replay_button);
+        continueBtn = findViewById(R.id.continue_button);
 
         replayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,7 +245,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
 
         } catch (IOException e) {
             //If the source is not available, close the activity
-            e.printStackTrace();
+            Log.d(TAG, "IOException:", e);
             Mint.logException(e);
             player.release();
             this.finish();
@@ -245,8 +254,8 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
             //If the player state was illegal, try to reset it again
             player.reset();
             player.prepareAsync();
-            e.printStackTrace();
             Mint.logException(e);
+            Log.d(TAG, "IllegalStateException:", e);
         }
 
     }

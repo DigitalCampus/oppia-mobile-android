@@ -54,7 +54,7 @@ public class DrawerMenuManager {
     public interface MenuOption{ void onOptionSelected(); }
 
     private AppActivity drawerAct;
-    private boolean isRootActivity = false;
+    private boolean isRootActivity;
 
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
@@ -67,9 +67,9 @@ public class DrawerMenuManager {
 
     public void initializeDrawer(){
         // Initializing Drawer Layout and ActionBarToggle
-        final Toolbar toolbar = (Toolbar) drawerAct.findViewById(R.id.toolbar);
-        final DrawerLayout drawerLayout = (DrawerLayout) drawerAct.findViewById(R.id.drawer);
-        navigationView = (NavigationView) drawerAct.findViewById(R.id.navigation_view);
+        final Toolbar toolbar = drawerAct.findViewById(R.id.toolbar);
+        final DrawerLayout drawerLayout = drawerAct.findViewById(R.id.drawer);
+        navigationView = drawerAct.findViewById(R.id.navigation_view);
 
         if (drawerLayout == null || navigationView == null) return;
         View headerView = navigationView.getHeaderView(0);

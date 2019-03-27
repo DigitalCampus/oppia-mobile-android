@@ -17,16 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
-
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
@@ -43,13 +33,22 @@ import android.widget.TextView;
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.SegmentFormatter;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
+
+import java.util.List;
+import java.util.Locale;
+
 public class ScorecardListAdapter extends ArrayAdapter<Course> {
 
 	public static final String TAG = ScorecardListAdapter.class.getSimpleName();
 
 	private final Activity ctx;
 	private final List<Course> courseList;
-	private SharedPreferences prefs;
+    private String prefLang;
 
     private SegmentFormatter sfCompleted;
     private SegmentFormatter sfStarted;
@@ -59,15 +58,16 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
 		super(context, R.layout.scorecard_list_row, courseList);
 		this.ctx = context;
 		this.courseList = courseList;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+		prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         //Initialization of SegmentFormatters
-        sfCompleted = new SegmentFormatter();
-        sfCompleted.configure(ctx, R.xml.scorecard_pie_segment_completed);
-        sfStarted = new SegmentFormatter();
-        sfStarted.configure(ctx, R.xml.scorecard_pie_segment_started);
-        sfNotStarted = new SegmentFormatter();
-        sfNotStarted.configure(ctx, R.xml.scorecard_pie_segment_not_started);
+        sfCompleted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_completed);
+//        sfCompleted.configure(ctx, R.xml.scorecard_pie_segment_completed);
+        sfStarted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_started);
+//        sfStarted.configure(ctx, R.xml.scorecard_pie_segment_started);
+        sfNotStarted = new SegmentFormatter(ctx, R.xml.scorecard_pie_segment_not_started);
+//        sfNotStarted.configure(ctx, R.xml.scorecard_pie_segment_not_started);
 	}
 
     static class ScorecardViewHolder{
@@ -88,19 +88,19 @@ public class ScorecardListAdapter extends ArrayAdapter<Course> {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.scorecard_list_row, parent, false);
             viewHolder = new ScorecardViewHolder();
-            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
-            PieChart pie = (PieChart) convertView.findViewById(R.id.scorecard_pie_chart);
+            viewHolder.courseTitle = convertView.findViewById(R.id.course_title);
+            PieChart pie = convertView.findViewById(R.id.scorecard_pie_chart);
             viewHolder.pieChart = new ScorecardPieChart(ctx, pie, course);
             viewHolder.pieChart.configureChart(0, 0.79f, false);
-            viewHolder.activitiesCompleted = (TextView) convertView.findViewById(R.id.scorecard_activities_completed);
-            viewHolder.activitiesTotal = (TextView) convertView.findViewById(R.id.scorecard_activities_total);
+            viewHolder.activitiesCompleted = convertView.findViewById(R.id.scorecard_activities_completed);
+            viewHolder.activitiesTotal = convertView.findViewById(R.id.scorecard_activities_total);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ScorecardViewHolder) convertView.getTag();
         }
 
-        viewHolder.courseTitle.setText(course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+        viewHolder.courseTitle.setText(course.getTitle(prefLang));
 
         int numCompleted = course.getNoActivitiesCompleted();
         int numStarted = course.getNoActivitiesStarted();

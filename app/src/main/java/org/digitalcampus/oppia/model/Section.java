@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Section implements Serializable  {
+public class Section extends MultiLangInfoModel implements Serializable  {
 
 	/**
 	 * 
@@ -30,7 +30,6 @@ public class Section implements Serializable  {
 	
 	public static final String TAG = Section.class.getSimpleName();
 	private int order;
-    private MultiLangInfo multiLangInfo = new MultiLangInfo();
 	private ArrayList<Activity> activities;
 	private String imageFile;
 	
@@ -65,8 +64,4 @@ public class Section implements Serializable  {
 		this.activities = activities;
 	}
 
-    public MultiLangInfo getMultiLangInfo() { return multiLangInfo; }
-    public void setMultiLangInfo(MultiLangInfo multiLangInfo) {
-        this.multiLangInfo = multiLangInfo;
-    }
 }

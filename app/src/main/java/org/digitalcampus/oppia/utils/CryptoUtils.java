@@ -1,6 +1,9 @@
 package org.digitalcampus.oppia.utils;
 
 import android.support.v4.util.Pair;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.jarjar.apache.commons.codec.digest.DigestUtils;
 
@@ -25,7 +28,8 @@ public class CryptoUtils {
         try {
             passBytes = password.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "UnsupportedEncodingException:", e);
             passBytes = password.getBytes();
         }
         result = digest.digest(passBytes);
@@ -47,9 +51,10 @@ public class CryptoUtils {
         String hashed = "";
         for (Pair<String, String> algorithm : preferred_algorithms){
             try {
-                hashed = encryptWithAlgorithm(password, algorithm);
+                return encryptWithAlgorithm(password, algorithm);
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                Mint.logException(e);
+                Log.d(TAG, "NoSuchAlgorithmException:", e);
             }
         }
 

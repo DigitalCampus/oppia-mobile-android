@@ -33,8 +33,8 @@ public class SyncActivity extends AppActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_sync);
-        viewPager = (ViewPager) findViewById(R.id.activity_sync_pager);
-        tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
+        viewPager = findViewById(R.id.activity_sync_pager);
+        tabs = findViewById(R.id.tabs_toolbar);
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
@@ -47,7 +47,7 @@ public class SyncActivity extends AppActivity {
         super.onStart();
 
         // Make the Toolbar back button call the back press (to close possible bluetooth connection)
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null){
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override

@@ -121,12 +121,12 @@ public class OppiaMobileActivity
 		}
 
         messageContainer = this.findViewById(R.id.home_messages);
-        messageText = (TextView) this.findViewById(R.id.home_message);
-        messageButton = (Button) this.findViewById(R.id.message_action_button);
+        messageText = this.findViewById(R.id.home_message);
+        messageButton = this.findViewById(R.id.message_action_button);
 
         courses = new ArrayList<>();
         courseListAdapter = new CourseListAdapter(this, courses);
-        courseList = (ListView) findViewById(R.id.course_list);
+        courseList = findViewById(R.id.course_list);
         courseList.setAdapter(courseListAdapter);
 
         CourseContextMenuCustom courseMenu = new CourseContextMenuCustom(this);
@@ -165,7 +165,6 @@ public class OppiaMobileActivity
 	@Override
 	public void onResume(){
 		super.onResume();
-		this.updateReminders();
 
         receiver = new InstallerBroadcastReceiver();
         receiver.setCourseInstallerListener(this);
@@ -184,34 +183,19 @@ public class OppiaMobileActivity
         courses.clear();
 		courses.addAll(coursesRepository.getCourses(this));
 		
-		LinearLayout llLoading = (LinearLayout) this.findViewById(R.id.loading_courses);
+		LinearLayout llLoading = this.findViewById(R.id.loading_courses);
 		llLoading.setVisibility(View.GONE);
 		
 		if (courses.size() < MobileLearning.DOWNLOAD_COURSES_DISPLAY){
 			displayDownloadSection();
 		} else {
-			TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
+			TextView tv = this.findViewById(R.id.manage_courses_text);
 			tv.setText(R.string.no_courses);
             noCoursesView.setVisibility(View.GONE);
 		}
 
         courseListAdapter.notifyDataSetChanged();
-		this.updateReminders();
 		this.scanMedia();
-	}
-
-	private void updateReminders(){
-		if(prefs.getBoolean(PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS, false)){
-			DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
-			int max = Integer.valueOf(prefs.getString(PrefsActivity.PREF_NO_SCHEDULE_REMINDERS, "2"));
-			long sessionUserId = db.getUserId(SessionManager.getUsername(this));
-			List<Activity> activities = db.getActivitiesDue(max, sessionUserId);
-
-			this.drawReminders(activities);
-		} else {
-			LinearLayout ll = (LinearLayout) findViewById(R.id.schedule_reminders);
-			ll.setVisibility(View.GONE);
-		}		
 	}
 
 	@Override
@@ -239,7 +223,7 @@ public class OppiaMobileActivity
         Intent i = new Intent(OppiaMobileActivity.this, PrefsActivity.class);
         Bundle tb = new Bundle();
         ArrayList<Lang> langs = new ArrayList<>();
-        for(Course m: courses){ langs.addAll(m.getMultiLangInfo().getLangs()); }
+        for(Course m: courses){ langs.addAll(m.getLangs()); }
         tb.putSerializable("langs", langs);
         i.putExtras(tb);
         startActivity(i);
@@ -248,10 +232,10 @@ public class OppiaMobileActivity
     private void displayDownloadSection(){
         noCoursesView.setVisibility(View.VISIBLE);
 
-        TextView tv = (TextView) this.findViewById(R.id.manage_courses_text);
+        TextView tv = this.findViewById(R.id.manage_courses_text);
         tv.setText((!courses.isEmpty())? R.string.more_courses : R.string.no_courses);
 
-        Button manageBtn = (Button) this.findViewById(R.id.manage_courses_btn);
+        Button manageBtn = this.findViewById(R.id.manage_courses_btn);
         manageBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AdminSecurityManager.checkAdminPermission(OppiaMobileActivity.this, R.id.menu_download, new AdminSecurityManager.AuthListener() {
@@ -264,7 +248,7 @@ public class OppiaMobileActivity
     }
 	private void createLanguageDialog() {
 		ArrayList<Lang> langs = new ArrayList<>();
-		for(Course m: courses){ langs.addAll(m.getMultiLangInfo().getLangs()); }
+		for(Course m: courses){ langs.addAll(m.getLangs()); }
 
         UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
             public Boolean call(){

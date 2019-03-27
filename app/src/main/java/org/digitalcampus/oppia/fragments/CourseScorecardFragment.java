@@ -88,27 +88,25 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = inflater.inflate(R.layout.fragment_scorecard, null);
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        vv.setLayoutParams(lp);
+		View vv = inflater.inflate(R.layout.fragment_scorecard, container, false);
         // refresh course to get most recent info (otherwise gets the info from when course first opened)
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
         this.course = db.getCourse(this.course.getCourseId(), userId);
 
-        quizzesGrid = (GridView) vv.findViewById(R.id.scorecard_grid_quizzes);
-        scorecardPieChart = (PieChart) vv.findViewById(R.id.scorecard_pie_chart);
+        quizzesGrid = vv.findViewById(R.id.scorecard_grid_quizzes);
+        scorecardPieChart = vv.findViewById(R.id.scorecard_pie_chart);
 
-        highlightPretest = (TextView) vv.findViewById(R.id.tv_ranking);
-        highlightAttempted = (TextView) vv.findViewById(R.id.highlight_attempted);
-        highlightPassed = (TextView) vv.findViewById(R.id.highlight_passed);
-        quizzesProgressBar = (ProgressBar) vv.findViewById(R.id.progress_quizzes);
+        highlightPretest = vv.findViewById(R.id.tv_ranking);
+        highlightAttempted = vv.findViewById(R.id.highlight_attempted);
+        highlightPassed = vv.findViewById(R.id.highlight_passed);
+        quizzesProgressBar = vv.findViewById(R.id.progress_quizzes);
         quizzesView = vv.findViewById(R.id.quizzes_view);
         quizzesContainer = vv.findViewById(R.id.scorecard_quizzes_container);
-        activitiesTotal = (TextView)vv.findViewById(R.id.scorecard_activities_total);
-        activitiesCompleted = (TextView) vv.findViewById(R.id.scorecard_activities_completed);
+        activitiesTotal = vv.findViewById(R.id.scorecard_activities_total);
+        activitiesCompleted = vv.findViewById(R.id.scorecard_activities_completed);
 
-        loadingSpinner = (ProgressBar) vv.findViewById(R.id.loading_spinner);
+        loadingSpinner = vv.findViewById(R.id.loading_spinner);
         loadingSpinner.setVisibility(View.VISIBLE);
 		return vv;
 	}

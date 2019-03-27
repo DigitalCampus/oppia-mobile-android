@@ -69,10 +69,10 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.search_results_row, parent, false);
             viewHolder = new SearchResultsViewHolder();
-            viewHolder.activityTitle = (TextView) convertView.findViewById(R.id.activity_title);
-            viewHolder.sectionTitle = (TextView) convertView.findViewById(R.id.section_title);
-            viewHolder.courseTitle = (TextView) convertView.findViewById(R.id.course_title);
-            viewHolder.courseImage = (ImageView) convertView.findViewById(R.id.course_image);
+            viewHolder.activityTitle = convertView.findViewById(R.id.activity_title);
+            viewHolder.sectionTitle = convertView.findViewById(R.id.section_title);
+            viewHolder.courseTitle = convertView.findViewById(R.id.course_title);
+            viewHolder.courseImage = convertView.findViewById(R.id.course_image);
             convertView.setTag(viewHolder);
         }
         else{
@@ -81,9 +81,10 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 
 	    SearchResult sr = searchResultList.get(position);
 
-	    String cTitle = sr.getCourse().getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-	    String sTitle = sr.getSection().getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-	    String aTitle = sr.getActivity().getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+        String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+	    String cTitle = sr.getCourse().getTitle(prefLang);
+	    String sTitle = sr.getSection().getTitle(prefLang);
+	    String aTitle = sr.getActivity().getTitle(prefLang);
 
         viewHolder.activityTitle.setText(aTitle);
         viewHolder.sectionTitle.setText(sTitle);

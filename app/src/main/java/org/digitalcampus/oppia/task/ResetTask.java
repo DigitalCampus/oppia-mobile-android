@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.splunk.mint.Mint;
 
@@ -90,7 +91,7 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (JSONException e) {
 			Mint.logException(e);
-			e.printStackTrace();
+			Log.d(TAG, "JSONException:", e);
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_processing_response));
 		}

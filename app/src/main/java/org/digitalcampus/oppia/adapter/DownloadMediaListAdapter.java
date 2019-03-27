@@ -74,12 +74,12 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView  = inflater.inflate(R.layout.media_download_row, parent, false);
             viewHolder = new DownloadMediaViewHolder();
-            viewHolder.mediaCourses = (TextView) convertView.findViewById(R.id.media_courses);
-            viewHolder.mediaTitle = (TextView) convertView.findViewById(R.id.media_title);
-            viewHolder.mediaPath = (TextView) convertView.findViewById(R.id.media_path);
-            viewHolder.mediaFileSize = (TextView) convertView.findViewById(R.id.media_file_size);
-            viewHolder.downloadBtn = (ImageButton) convertView.findViewById(R.id.action_btn);
-            viewHolder.downloadProgress = (ProgressBar) convertView.findViewById(R.id.download_progress);
+            viewHolder.mediaCourses = convertView.findViewById(R.id.media_courses);
+            viewHolder.mediaTitle = convertView.findViewById(R.id.media_title);
+            viewHolder.mediaPath = convertView.findViewById(R.id.media_path);
+            viewHolder.mediaFileSize = convertView.findViewById(R.id.media_file_size);
+            viewHolder.downloadBtn = convertView.findViewById(R.id.action_btn);
+            viewHolder.downloadProgress = convertView.findViewById(R.id.download_progress);
             convertView.setTag(viewHolder);
         }
         else{
@@ -92,7 +92,7 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
         String courses = "";
         for(int i = 0; i < m.getCourses().size(); i++){
             Course c = m.getCourses().get(i);
-            String title = c.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            String title = c.getTitle(prefs);
             courses += i != 0 ? ", " + title : title;
         }
 
@@ -145,12 +145,13 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 
     public void sortByCourse(){
         //Sort the media list by filename
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        final String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         Collections.sort(this.mediaList, new Comparator<Object>() {
             @Override
             public int compare(Object o1, Object o2){
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-            String titleCourse1 = ((Media) o1).getCourses().get(0).getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-            String titleCourse2= ((Media) o2).getCourses().get(0).getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            String titleCourse1 = ((Media) o1).getCourses().get(0).getTitle(lang);
+            String titleCourse2= ((Media) o2).getCourses().get(0).getTitle(lang);
             return (titleCourse1.compareTo(titleCourse2));
             }
         });

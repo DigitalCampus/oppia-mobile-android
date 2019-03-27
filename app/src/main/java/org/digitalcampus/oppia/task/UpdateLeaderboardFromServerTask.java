@@ -6,16 +6,13 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.gamification.Leaderboard;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -54,13 +51,16 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
                     payload.setResult(true);
                     payload.setResultResponse(updatedPositions + " updated.");
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Mint.logException(e);
+                    Log.d(TAG, "ParseException:", e);
                     payload.setResult(false);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Mint.logException(e);
+                    Log.d(TAG, "JSONException:", e);
                     payload.setResult(false);
                 } catch (WrongServerException e) {
-                    e.printStackTrace();
+                    Mint.logException(e);
+                    Log.d(TAG, "WrongServerException:", e);
                     payload.setResult(false);
                 }
             }
@@ -73,7 +73,8 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "IOException:", e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_required));
         }

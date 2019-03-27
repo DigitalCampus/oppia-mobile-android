@@ -17,7 +17,15 @@
 
 package org.digitalcampus.oppia.fragments;
 
-import java.util.ArrayList;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.BadgesListAdapter;
@@ -30,17 +38,7 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.splunk.mint.Mint;
-
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -62,10 +60,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = super.getLayoutInflater(savedInstanceState).inflate(R.layout.fragment_badges, null);
-		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		vv.setLayoutParams(lp);
-		return vv;
+		return inflater.inflate(R.layout.fragment_badges, container, false);
 	}
 	
 	@Override
@@ -74,7 +69,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		initializeDagger();
 
         badgesAdapter = new BadgesListAdapter(super.getActivity(), badges);
-        ListView listView = (ListView) this.getView().findViewById(R.id.badges_list);
+        ListView listView = this.getView().findViewById(R.id.badges_list);
         listView.setAdapter(badgesAdapter);
 
 		getBadges();
@@ -96,7 +91,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
         badges.clear();
 		try {
-			TextView tv = (TextView) this.getView().findViewById(R.id.fragment_badges_title);
+			TextView tv = this.getView().findViewById(R.id.fragment_badges_title);
 			if(json.getJSONArray("objects").length() == 0){
 				tv.setText(R.string.info_no_badges);
 				return;
@@ -111,7 +106,8 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			tv.setVisibility(View.GONE);
             badgesAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "Error refreshing badges list: ", e);
 		}
 
 	}
@@ -129,10 +125,10 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			} catch (JSONException e) {
 				Mint.logException(e);
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
-				e.printStackTrace();
+				Log.d(TAG, "Error connecting to server: ", e);
 			}
 		} else {
-			TextView tv = (TextView) this.getView().findViewById(R.id.fragment_badges_title);
+			TextView tv = this.getView().findViewById(R.id.fragment_badges_title);
 			tv.setVisibility(View.VISIBLE);
 			tv.setText(R.string.error_connection_required);
 		} 		

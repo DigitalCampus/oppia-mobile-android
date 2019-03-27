@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,6 +22,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -133,17 +135,20 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         return payload;
     }
 
-    private boolean copyDirectory(String sourcePath, String destPath){
+    private boolean copyDirectory(String sourcePath, String destPath, boolean optional){
 
         try {
             File source = new File(sourcePath);
+            if (!source.exists()){
+                return optional;
+            }
             File dest = new File(destPath);
             org.apache.commons.io.FileUtils.copyDirectoryToDirectory(source, dest);
             FileUtils.deleteDir(source);
             Log.d(TAG,"Copying " + sourcePath + " completed");
         } catch (IOException e) {
-            Log.d(TAG,"Copying " + sourcePath + " to " + destPath + " failed");
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "Copying " + sourcePath + " to " + destPath + " failed", e);
             return false;
         }
         return true;
@@ -154,10 +159,15 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         String downloadPath = sourcePath + File.separator + Storage.APP_DOWNLOAD_DIR_NAME;
         String mediaPath = sourcePath + File.separator + Storage.APP_MEDIA_DIR_NAME;
         String coursePath = sourcePath + File.separator + Storage.APP_COURSES_DIR_NAME;
+        String backupPath = sourcePath + File.separator + Storage.APP_BACKUP_DIR_NAME;
+        String logsPath = sourcePath + File.separator + Storage.APP_ACTIVITY_DIR_NAME;
 
-        return (copyDirectory(downloadPath, destinationPath) &&
-                copyDirectory(mediaPath, destinationPath) &&
-                copyDirectory(coursePath, destinationPath));
+
+        return (copyDirectory(downloadPath, destinationPath, false) &&
+                copyDirectory(mediaPath, destinationPath, false) &&
+                copyDirectory(backupPath, destinationPath, true) &&
+                copyDirectory(logsPath, destinationPath, true) &&
+                copyDirectory(coursePath, destinationPath, false));
     }
 
     private void resetStrategy(StorageAccessStrategy previousStrategy, String previousLocation){
@@ -168,7 +178,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PrefsActivity.PREF_STORAGE_OPTION, previousStrategy.getStorageType());
         editor.putString(PrefsActivity.PREF_STORAGE_LOCATION, previousLocation);
-        editor.commit();
+        editor.apply();
 
     }
 

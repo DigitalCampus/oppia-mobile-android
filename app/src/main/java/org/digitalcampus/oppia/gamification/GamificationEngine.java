@@ -268,12 +268,12 @@ public class GamificationEngine {
 
         if (a != null){
             return ctx.getString(resId,
-                (c == null) ? "" : c.getMultiLangInfo().getTitle(prefLang),
-                a.getMultiLangInfo().getTitle(prefLang) );
+                (c == null) ? "" : c.getTitle(prefLang),
+                a.getTitle(prefLang) );
         }
         else{
             return ctx.getString(resId,
-                (c == null) ? "" : c.getMultiLangInfo().getTitle(prefLang));
+                (c == null) ? "" : c.getTitle(prefLang));
         }
     }
 }

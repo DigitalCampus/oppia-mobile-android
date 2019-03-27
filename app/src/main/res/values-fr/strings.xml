@@ -137,15 +137,15 @@
     <string name="login_password_title">Mot de passe</string>
     <string name="title_register">S\'inscrire</string>
 
-    <string name="register_form_username_title">Nom d\'utilisateur(*)</string>
-    <string name="register_form_email_title">Email address (*)</string>
-    <string name="register_form_firstname_title">Prénom (*)</string>
+    <string name="register_form_username_title">Nom d\'utilisateur</string>
+    <string name="register_form_email_title">Email address</string>
+    <string name="register_form_firstname_title">Prénom</string>
     <string name="register_form_jobtitle_title">Job Title</string>
-    <string name="register_form_lastname_title">Nom de famille (*)</string>
+    <string name="register_form_lastname_title">Nom de famille</string>
     <string name="register_form_organisation_title">Organisation</string>
-    <string name="register_form_password_title">Mot de passe (*)</string>
-    <string name="register_form_password_again_title">Mot de passe (encore une fois) (*)</string>
-    <string name="register_form_phoneno_title">Numéro de téléphone (*)</string>
+    <string name="register_form_password_title">Mot de passe</string>
+    <string name="register_form_password_again_title">Mot de passe (encore une fois)</string>
+    <string name="register_form_phoneno_title">Numéro de téléphone</string>
     <string name="register_btn_text">S\'inscrire</string>
 
     <string name="reset_username_title">Nom d\'utilisateur ou Email</string>

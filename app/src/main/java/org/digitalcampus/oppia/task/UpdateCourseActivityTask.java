@@ -18,6 +18,7 @@
 package org.digitalcampus.oppia.task;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.splunk.mint.Mint;
 
@@ -94,26 +95,28 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
 
                 } catch (InvalidXMLException e) {
                     Mint.logException(e);
-                    e.printStackTrace();
+                    Log.d(TAG, "InvalidXMLException:", e);
                 }
             }
 
         } catch(javax.net.ssl.SSLHandshakeException e) {
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "InvalidXMLException:", e);
             payload.setResult(false);
             payload.setResultResponse(ctx.getString(R.string.error_connection_ssl));
 		} catch (SocketTimeoutException cpe) {
 			Mint.logException(cpe);
-			cpe.printStackTrace();
+            Log.d(TAG, "SocketTimeoutException:", cpe);
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (IOException ioe) {
 			Mint.logException(ioe);
-			ioe.printStackTrace();
+            Log.d(TAG, "IOException:", ioe);
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (UserNotFoundException unfe) {
-			unfe.printStackTrace();
+            Mint.logException(unfe);
+            Log.d(TAG, "UserNotFoundException:", unfe);
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		}

@@ -79,7 +79,7 @@ public class MetaDataUtils {
             String key = (String) keys.next();
             editor.putBoolean(PrefsActivity.PREF_METADATA + "_" + key, metadata.getBoolean(key));
         }
-		editor.commit();
+		editor.apply();
 	}
 	
 	public JSONObject getMetaData(JSONObject json) throws JSONException{

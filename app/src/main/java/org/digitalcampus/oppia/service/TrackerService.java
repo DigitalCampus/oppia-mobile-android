@@ -197,7 +197,8 @@ public class TrackerService extends Service implements APIRequestListener {
 			}
 			
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Mint.logException(e);
+			Log.d(TAG, "JSON error: ", e);
 		} 
 		
 		if(updateAvailable){

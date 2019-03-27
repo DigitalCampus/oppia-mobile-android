@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewCompat;
@@ -49,7 +48,6 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
-import org.digitalcampus.oppia.utils.ImageUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -232,7 +230,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 	}
 
 	private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getMultiLangInfo().getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() throws Exception {
                 CourseIndexActivity.this.onStart();
                 return true;
@@ -242,15 +240,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void initializeCourseIndex(boolean animate){
 
-        final ListView listView = (ListView) findViewById(R.id.section_list);
-
-        LayoutInflater inflater = getLayoutInflater();
-        View header = inflater.inflate(R.layout.course_title_bar, listView, false);
-        listView.addHeaderView(header, null, false);
-
-        TextView courseTitle = (TextView) header.findViewById(R.id.course_title);
-        courseTitle.setText(course.getMultiLangInfo().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
-        ViewCompat.setNestedScrollingEnabled(listView, true);
+        final ListView listView = findViewById(R.id.section_list);
+	if (listView == null) return;        
+	ViewCompat.setNestedScrollingEnabled(listView, true);
         sla = new SectionListAdapter(CourseIndexActivity.this, course, sections, new SectionListAdapter.CourseClickListener() {
             @Override
             public void onActivityClicked(String activityDigest) {

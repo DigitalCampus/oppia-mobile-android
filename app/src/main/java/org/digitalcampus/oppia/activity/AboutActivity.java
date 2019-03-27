@@ -55,9 +55,9 @@ public class AboutActivity extends AppActivity {
 
 		setContentView(R.layout.activity_about);
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		viewPager = (ViewPager) findViewById(R.id.activity_about_pager);
+		viewPager = findViewById(R.id.activity_about_pager);
 
-        tabs = (TabLayout) findViewById(R.id.tabs_toolbar);
+        tabs = findViewById(R.id.tabs_toolbar);
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {

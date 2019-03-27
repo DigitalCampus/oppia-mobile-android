@@ -12,7 +12,7 @@ import java.io.File;
 
 public class JSInterfaceForResourceImages {
 
-    private static final String TAG = JSInterfaceForResourceImages.class.getSimpleName();;
+    private static final String TAG = JSInterfaceForResourceImages.class.getSimpleName();
 
     //Name of the JS interface to add to the webView
     public static String InterfaceExposedName = "OppiaAndroid";

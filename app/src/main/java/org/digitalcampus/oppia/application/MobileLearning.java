@@ -63,6 +63,7 @@ public class MobileLearning extends Application {
 	public static final String SERVER_COURSES_PATH = OPPIAMOBILE_API + "course/";
 	public static final String SERVER_TAG_PATH = OPPIAMOBILE_API + "tag/";
 	public static final String TRACKER_PATH = OPPIAMOBILE_API + "tracker/";
+	public static final String ACTIVITYLOG_PATH = "api/activitylog/";
 	public static final String SERVER_POINTS_PATH = OPPIAMOBILE_API + "points/";
 	public static final String SERVER_AWARDS_PATH = OPPIAMOBILE_API + "awards/";
 	public static final String SERVER_COURSES_NAME = "courses";

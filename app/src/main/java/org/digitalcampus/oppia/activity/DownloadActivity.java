@@ -35,19 +35,15 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCourseListAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
-import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
 import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,7 +85,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             Tag t = (Tag) bundle.getSerializable(Tag.TAG);
             if (t != null){
                 this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
-                Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+                Toolbar toolbar = findViewById(R.id.toolbar);
                 if (toolbar != null){
                     toolbar.setSubtitle(t.getName());
                 }
@@ -103,7 +99,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         courses = new ArrayList<>();
         dla = new DownloadCourseListAdapter(this, courses);
         dla.setOnClickListener(new CourseListListener());
-        ListView listView = (ListView) findViewById(R.id.tag_list);
+        ListView listView = findViewById(R.id.tag_list);
         if (listView != null) {
             listView.setAdapter(dla);
         }
@@ -203,7 +199,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 		} catch (Exception e) {
 			Mint.logException(e);
-			e.printStackTrace();
+            Log.d(TAG, "Error processing response: ", e);
 			UIUtils.showAlert(this, R.string.loading, R.string.error_processing_response);
 		}
 		
@@ -227,7 +223,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
 			} catch (JSONException e) {
 				Mint.logException(e);
-				e.printStackTrace();
+                Log.d(TAG, "Error connecting to server: ", e);
 				UIUtils.showAlert(this, R.string.loading, R.string.error_connection, finishActivity);
 			}
 		} else {

@@ -21,6 +21,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
@@ -51,7 +53,7 @@ public class SearchUtils {
 
         db.beginTransaction();
         for( Activity a : activities) {
-            ArrayList<Lang> langs = course.getMultiLangInfo().getLangs();
+            ArrayList<Lang> langs = course.getLangs();
             String fileContent = "";
             for (Lang l : langs) {
                 if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")) {
@@ -59,16 +61,17 @@ public class SearchUtils {
                     try {
                         fileContent += " " + FileUtils.readFile(url);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Mint.logException(e);
+                        Log.d(TAG, "IOException:", e);
                     }
                 }
             }
 
 		Activity act = db.getActivityByDigest(a.getDigest());
             if ((act != null) && !fileContent.equals("")) {
-                db.insertActivityIntoSearchTable(course.getMultiLangInfo().getTitleJSONString(),
-                        parsedCourse.getSection(a.getSectionId()).getMultiLangInfo().getTitleJSONString(),
-                        a.getMultiLangInfo().getTitleJSONString(),
+                db.insertActivityIntoSearchTable(course.getTitleJSONString(),
+                        parsedCourse.getSection(a.getSectionId()).getTitleJSONString(),
+                        a.getTitleJSONString(),
                         act.getDbId(),
                         fileContent);
             }
@@ -83,7 +86,8 @@ public class SearchUtils {
             indexAddCourse(ctx, course, cxr.getParsedCourse());
         } catch (InvalidXMLException e) {
             // Ignore course
-            e.printStackTrace();
+            Mint.logException(e);
+            Log.d(TAG, "InvalidXMLException:", e);
         }
 	}
 
@@ -103,7 +107,7 @@ public class SearchUtils {
 			db.deleteSearchIndex();
 			List<Course> courses  = db.getAllCourses();
 			for (Course c : courses){
-				Log.d(TAG,"indexing: "+ c.getMultiLangInfo().getTitle("en"));
+				Log.d(TAG,"indexing: "+ c.getTitle("en"));
 				SearchUtils.indexAddCourse(ctx,c);
 			}
 			

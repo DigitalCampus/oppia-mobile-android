@@ -115,14 +115,14 @@
 	<string name="login_password_title">پاسورڈ</string>
 	<string name="title_register">رجسٹریشن</string>
 	
-	<string name="register_form_username_title">استمعال کردہ نام(*)</string>
-	<string name="register_form_email_title">ای میل ایڈریس(*)</string>
-	<string name="register_form_firstname_title">نام(*)</string>
+	<string name="register_form_username_title">استمعال کردہ نام</string>
+	<string name="register_form_email_title">ای میل ایڈریس</string>
+	<string name="register_form_firstname_title">نام</string>
 	<string name="register_form_jobtitle_title">کاروبار</string>
-	<string name="register_form_lastname_title">والد یا شُہر کا نام(*)</string>
+	<string name="register_form_lastname_title">والد یا شُہر کا نام</string>
 	<string name="register_form_organisation_title">ادارہ</string>
-	<string name="register_form_password_title">پاسورڈ (*)</string>
-	<string name="register_form_password_again_title">پاسورڈ (دوبارہ) (*)</string>
+	<string name="register_form_password_title">پاسورڈ </string>
+	<string name="register_form_password_again_title">پاسورڈ (دوبارہ) </string>
 	<string name="register_btn_text">رجسٹریشن</string>
 	
 	<string name="reset_username_title">استمعال کردہ نام</string>

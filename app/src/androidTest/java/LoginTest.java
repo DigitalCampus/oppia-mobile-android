@@ -1,14 +1,8 @@
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.InstrumentationTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
-
-import junit.framework.TestCase;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
@@ -34,6 +28,9 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest{
+
+    // adb  shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE
+    // https://product.reverb.com/disabling-animations-in-espresso-for-android-testing-de17f7cf236f
 
     @Rule
     public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();

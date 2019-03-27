@@ -17,13 +17,6 @@
             android:paddingTop="@dimen/tool_bar_top_padding"
             android:layout_marginTop="?attr/actionBarSize">
 
-            <org.digitalcampus.oppia.application.ScheduleReminders
-                android:id="@+id/schedule_reminders"
-                android:background="@drawable/message_background"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
-
             <FrameLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
