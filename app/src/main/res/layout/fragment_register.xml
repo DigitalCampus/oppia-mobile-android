@@ -45,7 +45,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:required="true"
-                    app:cantContainSpaces="true">
+                    app:cantContainSpaces="true"
+                    app:helperText="Use your family name and your ID number as username. For example, MenyonJTP5-04"
+                    app:helperTextEnabled="true">
 
                     <EditText
                         android:layout_width="fill_parent"
@@ -70,7 +72,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_password_title"
-                        android:inputType="textPassword"
+                        android:inputType="text"
                         android:textSize="15sp"/>
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
 
@@ -85,7 +87,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_password_again_title"
-                        android:inputType="textPassword"
+                        android:inputType="text"
                         android:textSize="15sp"/>
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
 

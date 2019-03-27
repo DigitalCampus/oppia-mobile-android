@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.service.bluetooth.BluetoothConnectionManager;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferServiceDelegate;
 import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
+import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -350,13 +351,20 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     }
 
 
+    private void installCourses() {
+        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(getActivity());
+        imTask.setInstallerListener(this);
+        imTask.execute(new Payload());
+    }
+
+
     private void installTransferredCourses(){
         if (isReceiving){
             Log.d(TAG, "We are receiving more files, wait until the last one");
         }
         else{
             Log.d(TAG, "Installing transferred courses!");
-            transferPendingLogs();
+            installCourses();
         }
 
     }
@@ -384,10 +392,11 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             public void coursesPendingToInstall(boolean pending) {
                 if (pending && isAfterTransfer){
                     final Handler handler = new Handler();
-                    Log.e(TAG, "Installing new course!");
+                    Log.e(TAG, "Installing pending courses!");
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            Log.e(TAG, "launch delayed task");
                             installTransferredCourses();
                         }
                     }, 250);
