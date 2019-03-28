@@ -26,7 +26,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -155,12 +154,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             }
         }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onGamificationEvent("ES PRUEBA", 3);
-            }
-        }, 100);
     }
 
     @Override
@@ -221,7 +214,9 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             // Inflate our custom view
             View snackView = View.inflate(this, R.layout.view_gamification_notif, null);
             TextView tvGamificationMessage = snackView.findViewById(R.id.tv_gamification_notif_message);
+            TextView tvGamificationPoints = snackView.findViewById(R.id.tv_gamification_notif_points);
             tvGamificationMessage.setText(message);
+            tvGamificationPoints.setText(String.valueOf(points));
 
             //If the view is not covering the whole snackbar layout, add this line
             layout.setPadding(0, 0, 0, 0);
@@ -264,47 +259,25 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
         if (optionsMenu != null && optionsMenu.findItem(R.id.points) != null) {
 
-            Animator animXY = null;
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            Path path = new Path();
-//            float left = tvGamificationNotifPoints.getLeft() -100;
-//            float top = 50f;
-//            float right = tvGamificationNotifPoints.getLeft();
-//            float bottom = tvGamificationNotifPoints.getTop();
-////            path.arcTo(left, top, right, bottom, 0f, 180f, true);
-//            path.arcTo(0f, 0f, 1000f, 1000f, 270f, -180f, true);
-//
-//            animXY = ObjectAnimator.ofFloat(tvGamificationNotifPoints,
-//                    View.X, View.Y, path);
-//            animXY.setDuration(1500);
-//        } else {
+            AnimatorSet animXY = new AnimatorSet();
 
             ObjectAnimator animY = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "y",
                     tvGamificationNotifPoints.getTop(), 50);
             animY.setInterpolator(new AccelerateDecelerateInterpolator());
 
-            int left = optionsMenu.findItem(R.id.points).getActionView().getLeft();
+            // Nice workaround! https://stackoverflow.com/a/47694906/1365440
+            View menuItemView = findViewById(R.id.points);
+            int[] itemWindowLocation = new int[2];
+            menuItemView.getLocationInWindow(itemWindowLocation);
+
+            int itemX = itemWindowLocation[0];
+
             ObjectAnimator animX = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "x",
-                    tvGamificationNotifPoints.getLeft(), tvGamificationNotifPoints.getLeft() - 100);
+                    tvGamificationNotifPoints.getLeft(), itemX);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//
-//            Path path = new Path();
-//            float left = tvGamificationNotifPoints.getLeft() -100;
-//            float top = 50f;
-//            float right = tvGamificationNotifPoints.getLeft();
-//            float bottom = tvGamificationNotifPoints.getTop();
-//            path.arcTo(left, top, right, bottom, 0f, 180f, true);
-//            PathInterpolator pathInterpolator = new PathInterpolator(path);
-//            animX.setInterpolator(pathInterpolator);
-//
-//        }
             animXY = new AnimatorSet();
-            ((AnimatorSet) animXY).playTogether(animX, animY);
+            animXY.playTogether(animX, animY);
             animXY.setDuration(1200);
-
-//        }
 
 
             ObjectAnimator animCoinJumpX = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "rotationX", 0, 360);
