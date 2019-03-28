@@ -20,5 +20,6 @@
     <dimen name="toolbar_tab_width">130dp</dimen>
 
     <dimen name="listitem_icon_size">32dp</dimen>
+    <dimen name="height_gamification_notif_view">150dp</dimen>
 
 </resources>
