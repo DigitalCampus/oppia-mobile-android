@@ -53,9 +53,13 @@ public class UIUtils {
 	
 	 /**
      * Displays the users points and badges scores in the app header
-     * @param act
+     * @param
      */
 	public static void showUserData(Menu menu, final Context ctx, final Course courseInContext) {
+		if (menu == null) {
+			return;
+		}
+
 		MenuItem pointsItem = menu.findItem(R.id.points);
       	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
