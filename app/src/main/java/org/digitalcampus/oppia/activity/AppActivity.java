@@ -154,6 +154,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             }
         }
 
+//        onGamificationEvent("esprueba", 20);
     }
 
     @Override
@@ -224,17 +225,26 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.addView(snackView, 0);
             layout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
+            final boolean animatePoints = prefs.getBoolean(PrefsActivity.PREF_ANIMATE_GAMIFICATION_POINTS, true);
+
+            snackbar.setDuration(animatePoints ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
+
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override
                 public void onShown(Snackbar sb) {
                     super.onShown(sb);
-                    animatePoints(sb);
+
+                    if (animatePoints) {
+                        animatePoints(sb);
+                    } else {
+                        UIUtils.showUserData(optionsMenu, AppActivity.this, null, true);
+                    }
                 }
 
                 @Override
                 public void onDismissed(Snackbar transientBottomBar, int event) {
                     super.onDismissed(transientBottomBar, event);
-                    UIUtils.showUserData(optionsMenu, AppActivity.this, null);
+                    UIUtils.showUserData(optionsMenu, AppActivity.this, null, false);
                 }
             });
             snackbar.show();
@@ -312,7 +322,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             @Override
             public void onAnimationEnd(Animator animation) {
                 snackbar.dismiss();
-                UIUtils.showUserData(optionsMenu, AppActivity.this, null);
+                UIUtils.showUserData(optionsMenu, AppActivity.this, null, true);
             }
 
             @Override
