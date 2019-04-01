@@ -17,25 +17,6 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.BuildConfig;
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.AdminReceiver;
-import org.digitalcampus.oppia.fragments.PreferencesFragment;
-import org.digitalcampus.oppia.listener.MoveStorageListener;
-import org.digitalcampus.oppia.listener.StorageAccessListener;
-import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
-import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
-import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
-import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
-
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -58,6 +39,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import org.digitalcampus.mobile.learning.BuildConfig;
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.application.AdminReceiver;
+import org.digitalcampus.oppia.fragments.PreferencesFragment;
+import org.digitalcampus.oppia.listener.MoveStorageListener;
+import org.digitalcampus.oppia.listener.StorageAccessListener;
+import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
+import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
+import org.digitalcampus.oppia.utils.storage.Storage;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
+import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
 	
@@ -105,6 +105,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
     public static final String PREF_DISABLE_NOTIFICATIONS = "prefDisableNotifications";
     public static final String PREF_SHOW_GAMIFICATION_EVENTS = "prefShowGamificationEvents";
+    public static final String PREF_ANIMATE_GAMIFICATION_POINTS = "prefAnimateGamificationPoints";
+
+
 
 
     public static final String PREF_LAST_LEADERBOARD_FETCH = "prefLastLeaderboardFetch";

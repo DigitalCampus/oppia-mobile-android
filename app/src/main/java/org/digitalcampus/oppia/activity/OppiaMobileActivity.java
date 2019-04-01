@@ -50,7 +50,6 @@ import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.listener.ScanMediaListener;
 import org.digitalcampus.oppia.listener.UpdateActivityListener;
-import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.DownloadProgress;
@@ -68,7 +67,6 @@ import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -206,7 +204,7 @@ public class OppiaMobileActivity
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		UIUtils.showUserData(menu, this, null);
+		UIUtils.showUserData(menu, this, null, false);
         Map<Integer, DrawerMenuManager.MenuOption> mainOptions = new HashMap<>();
         mainOptions.put(R.id.menu_settings, new DrawerMenuManager.MenuOption(){
             public void onOptionSelected(){ startPrefsActivity(); }
