@@ -63,6 +63,7 @@ public class Gamification {
     public static final String MEDIA_CRITERIA_THRESHOLD = "threshold";
     public static final String DEFAULT_MEDIA_CRITERIA = BuildConfig.GAMIFICATION_MEDIA_CRITERIA;
     public static final int DEFAULT_MEDIA_THRESHOLD = BuildConfig.GAMIFICATION_DEFAULT_MEDIA_THRESHOLD;
+    public static final boolean POINTS_ANIMATION_ENABLED = BuildConfig.GAMIFICATION_POINTS_ANIMATION_ENABLED;
 
     //fallback option
     public static final String EVENT_NAME_UNDEFINED = "undefined";

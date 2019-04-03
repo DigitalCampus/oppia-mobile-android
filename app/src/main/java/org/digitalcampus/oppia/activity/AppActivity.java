@@ -44,6 +44,7 @@ import android.widget.TextView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationBroadcastReceiver;
 import org.digitalcampus.oppia.gamification.GamificationService;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
@@ -225,7 +226,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.addView(snackView, 0);
             layout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
-            final boolean animatePoints = prefs.getBoolean(PrefsActivity.PREF_ANIMATE_GAMIFICATION_POINTS, true);
+            final boolean animatePoints = prefs.getBoolean(PrefsActivity.PREF_ANIMATE_GAMIFICATION_POINTS, Gamification.POINTS_ANIMATION_ENABLED);
 
             snackbar.setDuration(animatePoints ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
 
