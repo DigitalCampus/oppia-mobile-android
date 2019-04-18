@@ -42,8 +42,6 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(Parameterized.class)
 public class DeleteCourseTest {
     public static final String TAG = DeleteCourseTest.class.getSimpleName();
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
     private final String CORRECT_COURSE = "Correct_Course.zip";
 

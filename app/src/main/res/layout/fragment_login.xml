@@ -101,7 +101,7 @@
                 android:text="@string/login_dont_have_account"/>
 
             <Button
-                android:id="@+id/register_btn"
+                android:id="@+id/action_register_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding_large"

@@ -29,8 +29,6 @@ public class ResetUITest {
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
     @Test
     public void  showsErrorMessageWhenThereIsNoUsername() throws  Exception {

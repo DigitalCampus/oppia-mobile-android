@@ -43,8 +43,6 @@ import static junit.framework.Assert.assertTrue;
 public class InstallDownloadedCoursesTest {
     public static final String TAG = InstallDownloadedCoursesTest.class.getSimpleName();
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
     private final String CORRECT_COURSE = "Correct_Course.zip";
     private final String EXISTING_COURSE = "Existing_Course.zip";

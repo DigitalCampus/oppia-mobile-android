@@ -26,8 +26,7 @@ public class WelcomeUITest {
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
+
 
     @Test
     public void showsLoginFragmentOnLoginButtonClick() throws Exception{

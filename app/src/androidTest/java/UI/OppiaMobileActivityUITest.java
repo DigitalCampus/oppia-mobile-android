@@ -95,8 +95,6 @@ public class OppiaMobileActivityUITest {
     public ActivityTestRule<OppiaMobileActivity> oppiaMobileActivityTestRule =
             new ActivityTestRule<>(OppiaMobileActivity.class, false, false);
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
     
 
