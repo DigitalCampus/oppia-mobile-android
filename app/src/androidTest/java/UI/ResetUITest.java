@@ -32,7 +32,10 @@ public class ResetUITest {
 
     @Test
     public void  showsErrorMessageWhenThereIsNoUsername() throws  Exception {
-        onView(withText(R.string.tab_title_reset))
+
+        onView(withId(R.id.welcome_login))
+                .perform(scrollTo(), click());
+        onView(withId(R.id.forgot_btn))
                 .perform(click());
 
         onView(withId(R.id.reset_username_field))
@@ -47,7 +50,9 @@ public class ResetUITest {
 
     @Test
     public void clickResetButton_WrongUsername() throws  Exception {
-        onView(withText(R.string.tab_title_reset))
+        onView(withId(R.id.welcome_login))
+                .perform(scrollTo(), click());
+        onView(withId(R.id.forgot_btn))
                 .perform(click());
 
         onView(withId(R.id.reset_username_field))
