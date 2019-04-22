@@ -212,7 +212,8 @@ public class CourseInstall {
                 }
             }
         }
-        return previousBackup;
+
+        return (previousBackup != null && previousBackup.exists()) ? previousBackup : null;
     }
 
 
