@@ -109,9 +109,6 @@ public class InstallDownloadedCoursesTest {
 
         String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
-        //Check if the resultResponse is correct
-        assertEquals(context.getString(R.string.install_course_complete, title), response.getResultResponse());
-
     }
 
     @Test
@@ -122,7 +119,7 @@ public class InstallDownloadedCoursesTest {
         runInstallCourseTask(EXISTING_COURSE);
         runInstallCourseTask(EXISTING_COURSE);
 
-        //Check if result is false
+        //Check that it failed
         assertFalse(response.isResult());
 
         File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
