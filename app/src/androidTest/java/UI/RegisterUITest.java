@@ -179,7 +179,7 @@ public class RegisterUITest {
         onView(withId(R.id.register_btn))
                 .perform(click());
 
-        String passwordError = InstrumentationRegistry.getContext().getString(
+        String passwordError = InstrumentationRegistry.getTargetContext().getResources().getString(
                 R.string.error_register_password, MobileLearning.PASSWORD_MIN_LENGTH);
 
         onErrorViewWithinTextInputLayoutWithId(R.id.register_form_password_field)

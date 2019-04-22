@@ -171,10 +171,8 @@ public class OppiaMobileActivityUITest {
     @Test
     public void showsCourseIndexOnCourseClick() throws Exception{
 
-        givenThereAreSomeCourses(1);
 
         final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
-
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -184,6 +182,8 @@ public class OppiaMobileActivityUITest {
             }
         }).when(completeCourseProvider).getCompleteCourseAsync((Context) any(), (Course) any());
 
+
+        givenThereAreSomeCourses(1);
 
         oppiaMobileActivityTestRule.launchActivity(null);
 
@@ -263,7 +263,7 @@ public class OppiaMobileActivityUITest {
 
     @Test
     public void doesNotShowLogoutItemOnPrefsValueFalse() throws Exception{
-
+        
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(false);
 
         oppiaMobileActivityTestRule.launchActivity(null);
@@ -323,7 +323,9 @@ public class OppiaMobileActivityUITest {
 
         assertEquals(0, badgesList.size());
 
-        onView(withText(R.string.info_no_badges)).check(matches(isDisplayed()));
+        onView(withId(R.id.fragment_badges_title))
+            .check(matches(withText(R.string.info_no_badges)));
+
     }
 
     @Test
