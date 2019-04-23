@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.service.bluetooth.BluetoothConnectionManager;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService;
 import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferServiceDelegate;
 import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
+import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -350,13 +351,20 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     }
 
 
+    private void installCourses() {
+        InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(getActivity());
+        imTask.setInstallerListener(this);
+        imTask.execute(new Payload());
+    }
+
+
     private void installTransferredCourses(){
         if (isReceiving){
             Log.d(TAG, "We are receiving more files, wait until the last one");
         }
         else{
             Log.d(TAG, "Installing transferred courses!");
-            transferPendingLogs();
+            installCourses();
         }
 
     }
@@ -384,10 +392,11 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             public void coursesPendingToInstall(boolean pending) {
                 if (pending && isAfterTransfer){
                     final Handler handler = new Handler();
-                    Log.e(TAG, "Installing new course!");
+                    Log.e(TAG, "Installing pending courses!");
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            Log.e(TAG, "launch delayed task");
                             installTransferredCourses();
                         }
                     }, 250);
@@ -431,7 +440,9 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
 
     public void onBackPressed() {
-        bluetoothManager.disconnect(true);
+        if (isBluetoothAvailable()){
+            bluetoothManager.disconnect(false);
+        }
     }
 
     @Override
@@ -509,6 +520,11 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
     }
 
+    private boolean isBluetoothAvailable(){
+        return (bluetoothAdapter != null) && (bluetoothManager != null)
+                && (BluetoothConnectionManager.getState() != BluetoothConnectionManager.STATE_NONE);
+    }
+
     @Override
     public void onReceiveProgress(CourseTransferableFile file, int progress) {
         updateStatus(false);
@@ -519,16 +535,16 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     @Override
     public void onTransferComplete(CourseTransferableFile file) {
         updateStatus(false);
-        isReceiving = false;
 
+        isReceiving = false;
         Log.d(TAG, "Complete! ");
 
-        Toast.makeText(getActivity(), "Transfer complete " + file.getFilename(), Toast.LENGTH_SHORT).show();
         Log.e(TAG, "File complete!");
         if (file.getType().equals(CourseTransferableFile.TYPE_COURSE_BACKUP) ){
             Log.e(TAG, "Installing new course!");
             refreshFileList(true);
         }
+
 
         if (BluetoothTransferService.getTasksTransferring().size() == 0){
             sendTransferProgress.setVisibility(View.GONE);
