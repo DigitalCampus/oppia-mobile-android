@@ -121,22 +121,33 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
         try {
             DbHelper db = DbHelper.getInstance(ctx);
             String dataToSend = org.apache.commons.io.FileUtils.readFileToString(activityLog);
-            User user = db.getUser(SessionManager.getUsername(ctx));
-            boolean success = sendTrackers(user, dataToSend, true);
-            payload.setResult(success);
-            if (success){
-                Log.d(TAG, "Success sending " + activityLog.getName());
-                // If the logs were sent successfully, we can delete the file
-                FileUtils.deleteFile(activityLog);
+
+            //We don't need the current user to send this, just some with a valid apiKey
+            User user;
+            try {
+                user = db.getOneRegisteredUser();
+            } catch (UserNotFoundException e) {
+                Mint.logException(e);
+                payload.setResult(false);
+                //If there is no logged in user, there is no point in trying to submit trackers
+                return;
+            }
+
+            if (!user.isOfflineRegister()){
+                boolean success = sendTrackers(user, dataToSend, true);
+                payload.setResult(success);
+                if (success){
+                    Log.d(TAG, "Success sending " + activityLog.getName());
+                    // If the logs were sent successfully, we can delete the file
+                    FileUtils.deleteFile(activityLog);
+                }
             }
 
         } catch (IOException e) {
             Mint.logException(e);
             payload.setResult(false);
-        } catch (UserNotFoundException e) {
-            Mint.logException(e);
-            payload.setResult(false);
         }
+
     }
 
 	private boolean sendTrackers(User user, String dataToSend, boolean isRaw){
