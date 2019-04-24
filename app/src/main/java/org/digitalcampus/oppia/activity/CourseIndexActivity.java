@@ -191,7 +191,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             }
 
 		}
-		UIUtils.showUserData(menu, this, course);
+		UIUtils.showUserData(menu, this, course, false);
 		return true;
 	}
 

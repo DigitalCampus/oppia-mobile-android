@@ -122,6 +122,11 @@
 	        android:key="prefDownloadViaCellularEnabled"
 	        android:title="@string/prefDownloadViaCellularEnabled"
 	        android:summary="@string/warning_download_via_cellular_enabled" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="prefAnimateGamificationPoints"
+            android:title="@string/prefAnimateGamificationPoints" />
     </PreferenceCategory>
 
 </PreferenceScreen>

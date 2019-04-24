@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.utils;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -26,6 +28,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,9 +56,13 @@ public class UIUtils {
 	
 	 /**
      * Displays the users points and badges scores in the app header
-     * @param act
+     * @param
      */
-	public static void showUserData(Menu menu, final Context ctx, final Course courseInContext) {
+	public static void showUserData(Menu menu, final Context ctx, final Course courseInContext, boolean animateBgPoints) {
+		if (menu == null) {
+			return;
+		}
+
 		MenuItem pointsItem = menu.findItem(R.id.points);
       	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
@@ -70,12 +77,28 @@ public class UIUtils {
 			return;
 		}
 		
-		TextView points = pointsItem.getActionView().findViewById(R.id.userpoints);
+		final TextView points = pointsItem.getActionView().findViewById(R.id.userpoints);
 		TextView badges = pointsItem.getActionView().findViewById(R.id.userbadges);
 
 		if(points == null || badges == null){
 			return;
 		}
+
+        if (animateBgPoints) {
+            int colorFrom = ContextCompat.getColor(ctx, R.color.ap_white);
+            int colorTo = ContextCompat.getColor(ctx, R.color.highlight_dark);
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+            colorAnimation.setDuration(1000); // milliseconds
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    points.getBackground().setColorFilter((int) animator.getAnimatedValue(), android.graphics.PorterDuff.Mode.SRC_OVER);
+                }
+
+            });
+            colorAnimation.start();
+        }
 		
 		
 		boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
