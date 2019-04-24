@@ -32,6 +32,7 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -73,6 +74,24 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 			List<User> users = db.getAllUsers();
 			
 			for (User u: users) {
+
+                //We try to send the new user to register
+                if (u.isOfflineRegister()){
+                    Log.d(TAG, "Trying to send user " + u.getUsername() + " to registration...");
+                    Payload p = new Payload();
+                    RegisterTask rt = new RegisterTask(ctx);
+                    boolean success = rt.submitUserToServer(u, p, false);
+                    Log.d(TAG, "User " + u.getUsername() + " " + (success?"succeeded":"failed"));
+
+                    if (success){
+                        db.addOrUpdateUser(u);
+                    }
+                    else{
+                        // If we don't get the user registered, then avoid sending the trackers as he would not have an apiKey
+                        continue;
+                    }
+                }
+
                 payload = db.getUnsentTrackers(u.getUserId());
 
                 @SuppressWarnings("unchecked")
