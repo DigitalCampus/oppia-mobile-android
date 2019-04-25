@@ -3,11 +3,11 @@ OppiaMobile Learning
 
 For full information about OppiaMobile, please visit:
 
-https://digital-campus.org/oppiamobile/overview/
+https://digital-campus.org/oppiamobile/
 
 http://oppiamobile.readthedocs.org/en/latest/
 
-Questions, problems or issues? Please see our Google Groups forum:
+Questions, problems or issues? Please see our community site:
 
-https://groups.google.com/forum/#!forum/oppiamobile
+https://community.oppia-mobile.org/
 
