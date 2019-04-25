@@ -32,6 +32,7 @@ import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -73,6 +74,24 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 			List<User> users = db.getAllUsers();
 			
 			for (User u: users) {
+
+                //We try to send the new user to register
+                if (u.isOfflineRegister()){
+                    Log.d(TAG, "Trying to send user " + u.getUsername() + " to registration...");
+                    Payload p = new Payload();
+                    RegisterTask rt = new RegisterTask(ctx);
+                    boolean success = rt.submitUserToServer(u, p, false);
+                    Log.d(TAG, "User " + u.getUsername() + " " + (success?"succeeded":"failed"));
+
+                    if (success){
+                        db.addOrUpdateUser(u);
+                    }
+                    else{
+                        // If we don't get the user registered, then avoid sending the trackers as he would not have an apiKey
+                        continue;
+                    }
+                }
+
                 payload = db.getUnsentTrackers(u.getUserId());
 
                 @SuppressWarnings("unchecked")
@@ -102,22 +121,33 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
         try {
             DbHelper db = DbHelper.getInstance(ctx);
             String dataToSend = org.apache.commons.io.FileUtils.readFileToString(activityLog);
-            User user = db.getUser(SessionManager.getUsername(ctx));
-            boolean success = sendTrackers(user, dataToSend, true);
-            payload.setResult(success);
-            if (success){
-                Log.d(TAG, "Success sending " + activityLog.getName());
-                // If the logs were sent successfully, we can delete the file
-                FileUtils.deleteFile(activityLog);
+
+            //We don't need the current user to send this, just some with a valid apiKey
+            User user;
+            try {
+                user = db.getOneRegisteredUser();
+            } catch (UserNotFoundException e) {
+                Mint.logException(e);
+                payload.setResult(false);
+                //If there is no logged in user, there is no point in trying to submit trackers
+                return;
+            }
+
+            if (!user.isOfflineRegister()){
+                boolean success = sendTrackers(user, dataToSend, true);
+                payload.setResult(success);
+                if (success){
+                    Log.d(TAG, "Success sending " + activityLog.getName());
+                    // If the logs were sent successfully, we can delete the file
+                    FileUtils.deleteFile(activityLog);
+                }
             }
 
         } catch (IOException e) {
             Mint.logException(e);
             payload.setResult(false);
-        } catch (UserNotFoundException e) {
-            Mint.logException(e);
-            payload.setResult(false);
         }
+
     }
 
 	private boolean sendTrackers(User user, String dataToSend, boolean isRaw){
