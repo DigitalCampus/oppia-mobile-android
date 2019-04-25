@@ -26,8 +26,7 @@ public class WelcomeUITest {
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
+
 
     @Test
     public void showsLoginFragmentOnLoginButtonClick() throws Exception{
@@ -45,13 +44,16 @@ public class WelcomeUITest {
                 .perform(scrollTo(), click());
 
         onView(withId(R.id.register_btn))
-                .perform(scrollTo())
                 .check(matches(isDisplayed()));
     }
 
     @Test
     public void showsResetFragmentOnResetTabClicked() throws Exception{
-        onView(withText(R.string.tab_title_reset))
+
+        onView(withId(R.id.welcome_login))
+                .perform(scrollTo(), click());
+
+        onView(withId(R.id.forgot_btn))
                 .perform(scrollTo(), click());
 
         onView(withId(R.id.reset_btn))

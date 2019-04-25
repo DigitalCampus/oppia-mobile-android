@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -60,8 +61,9 @@ public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadPro
 
 					@Override
 					public void onError(String message) {
+						Log.d(TAG, message);
 						payload.setResult(false);
-						payload.setResultResponse(message);
+						payload.setResultResponse(ctx.getString(R.string.error_installing_course, course_filename));
 					}
 
 					@Override
