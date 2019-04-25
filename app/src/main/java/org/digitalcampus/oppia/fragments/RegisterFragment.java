@@ -89,7 +89,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		organisationField = vv.findViewById(R.id.register_form_organisation_field);
 		phoneNoField = vv.findViewById(R.id.register_form_phoneno_field);
 		registerButton = vv.findViewById(R.id.register_btn);
-		loginButton = vv.findViewById(R.id.login_btn);
+		loginButton = vv.findViewById(R.id.action_login_btn);
 
 		fields = Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
 				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField);
