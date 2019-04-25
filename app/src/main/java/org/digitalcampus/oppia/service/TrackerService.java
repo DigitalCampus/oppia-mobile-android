@@ -80,24 +80,6 @@ public class TrackerService extends Service implements APIRequestListener {
 			Thread thread = new Thread(new Runnable(){
 				@Override
 				public void run() {
-					Log.d(TAG, "Sending offline registered users to server (if needed)");
-					List<User> users = DbHelper.getInstance(TrackerService.this).getAllUsers();
-					for (User user : users){
-						//We try to send the new user to register
-						if (user.isOfflineRegister()){
-							Log.d(TAG, "Trying to send user " + user.getUsername() + " to registration...");
-							Payload p = new Payload();
-							RegisterTask rt = new RegisterTask(TrackerService.this);
-							boolean success = rt.submitUserToServer(user, p, false);
-							Log.d(TAG, "User " + user.getUsername() + " " + (success?"succeeded":"failed"));
-
-							if (success){
-								DbHelper.getInstance(TrackerService.this).addOrUpdateUser(user);
-							}
-						}
-					}
-
-
 					if (finalBackgroundData){
 						updateTracking();
 					}
