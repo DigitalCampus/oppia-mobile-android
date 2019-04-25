@@ -36,4 +36,19 @@
         <item name="internal">internal</item>
         <item name="external">external</item>
     </string-array>
+
+    <string-array name="GamificationPointsViewTypes">
+        <!--<item>@string/prefGamificationPointsViewTypeNone</item>-->
+        <item>@string/prefGamificationPointsViewTypeSimpleAnimation</item>
+        <item>@string/prefGamificationPointsViewTypeFullAnimation</item>
+        <item>@string/prefGamificationPointsViewTypeFullAnimationSound</item>
+    </string-array>
+
+    <string-array name="GamificationPointsViewTypesValues">
+        <!--<item>0</item>-->
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
 </resources>
