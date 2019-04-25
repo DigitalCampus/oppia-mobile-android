@@ -17,8 +17,8 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        versionCode 67
-        versionName "6.7.0"
+        versionCode 68
+        versionName "6.8.0"
 
         applicationId "org.lastmilehealth.oppiamobile"
         minSdkVersion 14

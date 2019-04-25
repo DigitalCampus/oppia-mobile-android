@@ -440,7 +440,9 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
 
     public void onBackPressed() {
-        bluetoothManager.disconnect(true);
+        if (isBluetoothAvailable()){
+            bluetoothManager.disconnect(false);
+        }
     }
 
     @Override
@@ -516,6 +518,11 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             pendingSize.setText(FileUtils.readableFileSize(pendingProgress));
         }
 
+    }
+
+    private boolean isBluetoothAvailable(){
+        return (bluetoothAdapter != null) && (bluetoothManager != null)
+                && (BluetoothConnectionManager.getState() != BluetoothConnectionManager.STATE_NONE);
     }
 
     @Override
