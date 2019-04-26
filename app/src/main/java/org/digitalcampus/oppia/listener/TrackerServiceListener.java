@@ -19,6 +19,6 @@ package org.digitalcampus.oppia.listener;
 
 
 public interface TrackerServiceListener {
-	void trackerComplete(boolean success, String message);
+	void trackerComplete(boolean success);
 	void trackerProgressUpdate();
 }

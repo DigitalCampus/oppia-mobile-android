@@ -62,7 +62,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private RecyclerView coursesRecyclerView;
     private RecyclerView.Adapter coursesAdapter;
     private ArrayList<CourseTransferableFile> transferableFiles = new ArrayList<>();
-    private ArrayList<CourseTransferableFile> courseFiles = new ArrayList<>();
 
     private ProgressDialog progressDialog;
     private View notConnectedInfo;
@@ -194,10 +193,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
         coursesRecyclerView.setHasFixedSize(true);
         coursesRecyclerView.setLayoutManager( new LinearLayoutManager(this.getContext()));
-        coursesAdapter = new TransferCourseListAdapter(courseFiles, new ListInnerBtnOnClickListener() {
+        coursesAdapter = new TransferCourseListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
-                final CourseTransferableFile toShare = courseFiles.get(position);
+                final CourseTransferableFile toShare = transferableFiles.get(position);
                 if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
                     for (CourseTransferableFile file : transferableFiles){
                         if (toShare.getRelatedMedia().contains(file.getFilename())){
@@ -407,31 +406,12 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             public void onFetchComplete(List<CourseTransferableFile> backups) {
                 transferableFiles.clear();
                 transferableFiles.addAll(backups);
-                filterCoursesList();
+                coursesAdapter.notifyDataSetChanged();
             }
         });
         task.execute();
     }
 
-    private void filterCoursesList(){
-        courseFiles.clear();
-        for (CourseTransferableFile file : transferableFiles){
-            if (CourseTransferableFile.TYPE_COURSE_BACKUP.equals(file.getType())){
-                courseFiles.add(file);
-            }
-        }
-        for (CourseTransferableFile course : courseFiles){
-            long relatedSize = 0;
-            for (CourseTransferableFile file : transferableFiles){
-                if (course.getRelatedMedia().contains(file.getFilename())){
-                    relatedSize += file.getFileSize();
-                }
-            }
-            course.setRelatedFilesize(relatedSize);
-        }
-
-        coursesAdapter.notifyDataSetChanged();
-    }
 
 
     public void onBackPressed() {
@@ -601,6 +581,5 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             }
         }
     }
-
 
 }
