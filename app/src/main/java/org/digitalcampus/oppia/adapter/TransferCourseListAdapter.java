@@ -1,5 +1,6 @@
 package org.digitalcampus.oppia.adapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,8 @@ import java.util.ArrayList;
 public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCourseListAdapter.TclaViewHolder> {
 
     public static final String TAG = TransferCourseListAdapter.class.getSimpleName();
-    private ArrayList<CourseTransferableFile> courses;
+    private ArrayList<CourseTransferableFile> transferableFiles;
+    private ArrayList<CourseTransferableFile> courseFiles = new ArrayList<>();
     private final ListInnerBtnOnClickListener listener;
 
     public static class TclaViewHolder extends RecyclerView.ViewHolder {
@@ -49,14 +51,43 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
         }
     }
 
+    private void filterCourses(){
+        courseFiles.clear();
+        for (CourseTransferableFile file : transferableFiles){
+            if (CourseTransferableFile.TYPE_COURSE_BACKUP.equals(file.getType())){
+                courseFiles.add(file);
+            }
+        }
+        for (CourseTransferableFile course : courseFiles){
+            long relatedSize = 0;
+            for (CourseTransferableFile file : transferableFiles){
+                if (course.getRelatedMedia().contains(file.getFilename())){
+                    relatedSize += file.getFileSize();
+                }
+            }
+            course.setRelatedFilesize(relatedSize);
+        }
 
-    public TransferCourseListAdapter(ArrayList<CourseTransferableFile> courses, ListInnerBtnOnClickListener listener){
-        this.courses = courses;
-        this.listener = listener;
     }
 
+
+    public TransferCourseListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener){
+        this.transferableFiles = files;
+        this.listener = listener;
+        filterCourses();
+
+        this.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                filterCourses();
+                super.onChanged();
+            }
+        });
+    }
+
+    @NonNull
     @Override
-    public TclaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TclaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.course_transfer_row, parent, false);
         return new TclaViewHolder(v);
@@ -64,8 +95,8 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
     }
 
     @Override
-    public void onBindViewHolder(TclaViewHolder holder, int position) {
-        CourseTransferableFile current = courses.get(position);
+    public void onBindViewHolder(@NonNull TclaViewHolder holder, int position) {
+        CourseTransferableFile current = courseFiles.get(position);
 
         if (current.getTitle() != null){
             holder.courseTitle.setVisibility(View.VISIBLE);
@@ -88,7 +119,7 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
 
     @Override
     public int getItemCount() {
-        return courses.size();
+        return courseFiles.size();
     }
 
 

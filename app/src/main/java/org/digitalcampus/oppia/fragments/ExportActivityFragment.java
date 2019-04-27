@@ -201,18 +201,17 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     }
 
     @Override
-    public void trackerComplete(boolean success) {
+    public void trackerComplete(boolean success, String message) {
 
-        if (success){
+        if (message != null && message.length()>0){
             Toast.makeText(getContext(),
-                    R.string.submit_trackers_success,
+                    message,
                     Toast.LENGTH_LONG).show();
         }
-        else {
+        else{
             Toast.makeText(getContext(),
-                    R.string.error_connection,
+                    success ? R.string.submit_trackers_success : R.string.error_connection,
                     Toast.LENGTH_LONG).show();
-
         }
         updateActions(true);
     }

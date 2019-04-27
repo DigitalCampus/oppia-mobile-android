@@ -62,7 +62,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private RecyclerView coursesRecyclerView;
     private RecyclerView.Adapter coursesAdapter;
     private ArrayList<CourseTransferableFile> transferableFiles = new ArrayList<>();
-    private ArrayList<CourseTransferableFile> courseFiles = new ArrayList<>();
 
     private ProgressDialog progressDialog;
     private View notConnectedInfo;
@@ -194,10 +193,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
         coursesRecyclerView.setHasFixedSize(true);
         coursesRecyclerView.setLayoutManager( new LinearLayoutManager(this.getContext()));
-        coursesAdapter = new TransferCourseListAdapter(courseFiles, new ListInnerBtnOnClickListener() {
+        coursesAdapter = new TransferCourseListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
-                final CourseTransferableFile toShare = courseFiles.get(position);
+                final CourseTransferableFile toShare = transferableFiles.get(position);
                 if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
                     for (CourseTransferableFile file : transferableFiles){
                         if (toShare.getRelatedMedia().contains(file.getFilename())){
@@ -357,7 +356,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         imTask.execute(new Payload());
     }
 
-
     private void installTransferredCourses(){
         if (isReceiving){
             Log.d(TAG, "We are receiving more files, wait until the last one");
@@ -366,7 +364,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             Log.d(TAG, "Installing transferred courses!");
             installCourses();
         }
-
     }
 
     private void updateActivityTransferBar(){
@@ -381,7 +378,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
                 ( BluetoothConnectionManager.isConnected() && pending ) ? View.VISIBLE : View.GONE
         );
     }
-
 
     private void refreshFileList(final boolean isAfterTransfer){
         updateActivityTransferBar();
@@ -403,7 +399,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
                 }
                 else{
                     Log.d(TAG, "There are courses left to install!");
-
                 }
             }
 
@@ -411,32 +406,12 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             public void onFetchComplete(List<CourseTransferableFile> backups) {
                 transferableFiles.clear();
                 transferableFiles.addAll(backups);
-                filterCoursesList();
+                coursesAdapter.notifyDataSetChanged();
             }
         });
         task.execute();
     }
 
-    private void filterCoursesList(){
-        courseFiles.clear();
-        for (CourseTransferableFile file : transferableFiles){
-            if (CourseTransferableFile.TYPE_COURSE_BACKUP.equals(file.getType())){
-                courseFiles.add(file);
-            }
-        }
-        for (CourseTransferableFile course : courseFiles){
-            long relatedSize = 0;
-            for (CourseTransferableFile file : transferableFiles){
-                if (course.getRelatedMedia().contains(file.getFilename())){
-                    relatedSize += file.getFileSize();
-                }
-            }
-            course.setRelatedFilesize(relatedSize);
-        }
-
-
-        coursesAdapter.notifyDataSetChanged();
-    }
 
 
     public void onBackPressed() {
@@ -447,7 +422,6 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
 
     @Override
     public void downloadComplete(Payload p) { }
-
     @Override
     public void downloadProgressUpdate(DownloadProgress dp) { }
 
@@ -476,6 +450,12 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         }
         progressDialog.setProgress(dp.getProgress());
         progressDialog.setMessage(dp.getMessage());
+    }
+
+    @Override
+    public void onCommunicationStarted() {
+        Log.d(TAG, "Communication started! ");
+        updateStatus(true);
     }
 
     @Override
@@ -601,6 +581,5 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             }
         }
     }
-
 
 }
