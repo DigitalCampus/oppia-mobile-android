@@ -25,6 +25,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
@@ -537,7 +538,15 @@ public class QuizWidget extends WidgetFactory {
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_baseline_goto_course));
 			restartBtn.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					QuizWidget.this.getActivity().finish();
+
+					// This is a great workaround, but there is no easy way to solve issue #767
+					// as it is coded now the GamificationService and Tracker system.
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							QuizWidget.this.getActivity().finish();
+						}
+					}, 200);
 				}
 			});
 		} else if (this.getActivityCompleted() || !quizAvailable){

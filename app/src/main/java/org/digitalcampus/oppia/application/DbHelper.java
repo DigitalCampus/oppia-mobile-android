@@ -969,7 +969,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(TRACKER_LOG_C_TYPE, type);
 		values.put(TRACKER_LOG_C_EVENT,event);
 		values.put(TRACKER_LOG_C_POINTS, points);
-		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
+		long id = db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 
         this.incrementUserPoints(userId, points);
 
