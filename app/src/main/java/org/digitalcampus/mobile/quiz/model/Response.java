@@ -17,28 +17,28 @@
 
 package org.digitalcampus.mobile.quiz.model;
 
+import org.digitalcampus.mobile.quiz.Quiz;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.digitalcampus.mobile.quiz.Quiz;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class Response implements Serializable{
+public class Response implements Serializable {
 
     private static final long serialVersionUID = 5970350772982572264L;
     public static final String TAG = Response.class.getSimpleName();
-    private Map<String,String> title = new HashMap<>();
+    private Map<String, String> title = new HashMap<>();
     private float score;
-    private Map<String,String> props = new HashMap<>();
-    private Map<String,String> feedback = new HashMap<>();
+    private Map<String, String> props = new HashMap<>();
+    private Map<String, String> feedback = new HashMap<>();
 
     public String getTitle(String lang) {
-        if(title.containsKey(lang)){
+        if (title.containsKey(lang)) {
             return title.get(lang);
-        } else if (!title.entrySet().isEmpty()){
+        } else if (!title.entrySet().isEmpty()) {
             return title.entrySet().iterator().next().getValue();
         } else {
             return "";
@@ -57,7 +57,7 @@ public class Response implements Serializable{
         this.score = score;
     }
 
-    public void setProps(Map<String,String> props) {
+    public void setProps(Map<String, String> props) {
         this.props = props;
     }
 
@@ -65,7 +65,7 @@ public class Response implements Serializable{
         return props.get(key);
     }
 
-    public void setFeedback(String defaultLang){
+    public void setFeedback(String defaultLang) {
         if (this.props.containsKey(Quiz.JSON_PROPERTY_FEEDBACK)) try {
             JSONObject feedbackLangs = new JSONObject(this.getProp(Quiz.JSON_PROPERTY_FEEDBACK));
             Iterator<?> keys = feedbackLangs.keys();
@@ -79,14 +79,14 @@ public class Response implements Serializable{
         }
     }
 
-    private void setFeedbackForLang(String lang, String title){
+    private void setFeedbackForLang(String lang, String title) {
         this.feedback.put(lang, title);
     }
 
     public String getFeedback(String lang) {
-        if(feedback.containsKey(lang)){
+        if (feedback.containsKey(lang)) {
             return feedback.get(lang);
-        } else if (!feedback.entrySet().isEmpty()){
+        } else if (!feedback.entrySet().isEmpty()) {
             return feedback.entrySet().iterator().next().getValue();
         } else {
             return "";
