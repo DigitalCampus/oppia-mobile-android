@@ -73,6 +73,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     @Inject
     CompleteCourseProvider completeCourseProvider;
+    private AlertDialog aDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,16 +119,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-//        if (aDialog != null) {
-//            aDialog.show();
-//        }
 
         if (digestJumpTo != null && isBaselineCompleted()) {
             startCourseActivityByDigest(digestJumpTo);
@@ -154,22 +147,32 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         }
         editor.apply();
 
+        checkParsedCourse();
+    }
+
+    private void checkParsedCourse() {
+
         if ((parsedCourse != null) && (sections != null) && (!sections.isEmpty())) {
             parsedCourse.setCourseId(course.getCourseId());
             parsedCourse.updateCourseActivity(this);
             sla.notifyDataSetChanged();
             if (!isBaselineCompleted()) {
                 showBaselineMessage(null);
+            } else {
+                closeBaselineDialogIfOpen();
             }
+        }
+    }
+
+    private void closeBaselineDialogIfOpen() {
+        if (aDialog != null && aDialog.isShowing()) {
+            aDialog.dismiss();
+            aDialog = null;
         }
     }
 
     @Override
     public void onPause() {
-//		if (aDialog != null) {
-//			aDialog.dismiss();
-//			aDialog = null;
-//        }
         super.onPause();
     }
 
@@ -283,7 +286,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void showBaselineMessage(final String digest) {
-        AlertDialog aDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle).create();
+        aDialog = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle).create();
         aDialog.setCancelable(false);
         aDialog.setTitle(R.string.alert_pretest);
         aDialog.setMessage(this.getString(R.string.alert_pretest_summary));
@@ -393,5 +396,16 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             String digest = data.getStringExtra(JUMPTO_TAG);
             startCourseActivityByDigest(digest);
         }
+    }
+
+    @Override
+    public void onGamificationEvent(String message, int points) {
+        super.onGamificationEvent(message, points);
+
+        // This solves a non usual bug which shows pretest dialog event when it is done
+        // This happens in few devices when GamificationService ends (and stores data) after onResume() of this class is called
+        // Fixed with this workaround
+        checkParsedCourse();
+
     }
 }
