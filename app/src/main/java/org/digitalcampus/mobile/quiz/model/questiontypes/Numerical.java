@@ -75,7 +75,7 @@ public class Numerical extends QuizQuestion implements Serializable {
         if (score == 0){
             for (Response r : responseOptions){
                 if (r.getTitle(lang).equalsIgnoreCase("*") && r.getProp(Quiz.JSON_PROPERTY_FEEDBACK) != null && !(r.getProp(Quiz.JSON_PROPERTY_FEEDBACK).equals(""))){
-                    this.feedback = r.getProp(Quiz.JSON_PROPERTY_FEEDBACK);
+                    this.feedback = r.getFeedback(lang);
                 }
             }
         }
