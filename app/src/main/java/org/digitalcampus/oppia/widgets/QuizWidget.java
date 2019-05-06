@@ -513,7 +513,8 @@ public class QuizWidget extends WidgetFactory {
 					qf.setScore(q.getScoreAsPercent());
 					qf.setQuestionText(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
 					qf.setUserResponse(q.getUserResponses());
-					qf.setFeedbackText(q.getFeedback(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+					String feedbackText = q.getFeedback(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+					qf.setFeedbackText(feedbackText);
 					quizFeedback.add(qf);
 				}
 			}
