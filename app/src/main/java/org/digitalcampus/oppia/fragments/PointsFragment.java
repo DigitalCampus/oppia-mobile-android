@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.fragments;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,22 +30,25 @@ import android.widget.TextView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.PointsListAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Points;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -59,7 +63,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     @Inject
     List<Points> pointsFull;
     List<Points> pointsFiltered = new ArrayList<>();
-    private Map<String, Integer> pointsGroupedByDay = new TreeMap<>(); // sorts automatically
+    private Map<String, Integer> pointsGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
     private int totalPoints;
     private PointsListAdapter pointsAdapter;
     private ListView listView;
@@ -68,6 +72,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private LineChart chart;
     List<Integer> yVals = new ArrayList<>();
     List<String> labels = new ArrayList<>();
+    private int currentDatesRangePosition;
 
     public static PointsFragment newInstance() {
         return new PointsFragment();
@@ -111,49 +116,53 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
         chart.setPinchZoom(true);
 
+//        chart.setViewPortOffsets(40f, 0f, 40f, 0f);
+        chart.offsetLeftAndRight(getResources().getDimensionPixelSize(R.dimen.offset_chart_horizontal));
+
         Legend l = chart.getLegend();
         l.setEnabled(false);
 
         chart.getAxisRight().setEnabled(false);
-        chart.getXAxis().setEnabled(false);
+//        chart.getXAxis().setEnabled(false);
 
-//        XAxis xAxis = chart.getXAxis();
-//        xAxis.setValueFormatter(new ValueFormatter() {
-//            @Override
-//            public String getFormattedValue(float value) {
-////                return labels.get((int) value);
-//                return String.valueOf(value);
-//            }
-//        });
-//
-////        xAxis.setSpaceMin(data.getBarWidth()/2);
-////        xAxis.setSpaceMax(data.getBarWidth()/2);
-//
-////        xAxis.setXOffset(widthBetweenObservations);
-//        xAxis.setGranularity(1);
-//        xAxis.setGranularityEnabled(true);
-////        xAxis.setCenterAxisLabels(true);
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setDrawGridLines(false);
-//        xAxis.setLabelRotationAngle(40);
+        chart.getAxisLeft().setAxisMinimum(0);
+
+        XAxis xAxis = chart.getXAxis();
+
+//        xAxis.setSpaceMin(data.getBarWidth()/2);
+//        xAxis.setSpaceMax(data.getBarWidth()/2);
+
+//        xAxis.setXOffset(widthBetweenObservations);
+        xAxis.setGranularity(1);
+        xAxis.setGranularityEnabled(true);
+//        xAxis.setCenterAxisLabels(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setLabelRotationAngle(40);
 //        xAxis.setLabelCount(2);
 
     }
 
     private void showPointsFiltered(int position) {
 
-        DateTime initialDateTime;
-        switch (position) {
+        currentDatesRangePosition = position;
+
+        DateTime initialDateTime = new DateTime();
+        DateTime initialNowAtEndOfDay = new DateTime();
+        initialNowAtEndOfDay.withHourOfDay(23);
+        initialNowAtEndOfDay.withMinuteOfHour(59);
+        initialNowAtEndOfDay.withSecondOfMinute(59);
+        switch (currentDatesRangePosition) {
             case POSITION_TAB_LAST_YEAR:
-                initialDateTime = new DateTime().minusYears(1);
+                initialDateTime = initialNowAtEndOfDay.minusYears(1);
                 break;
 
             case POSITION_TAB_LAST_MONTH:
-                initialDateTime = new DateTime().minusMonths(1);
+                initialDateTime = initialNowAtEndOfDay.minusMonths(1);
                 break;
 
             case POSITION_TAB_LAST_WEEK:
-                initialDateTime = new DateTime().minusWeeks(1);
+                initialDateTime = initialNowAtEndOfDay.minusWeeks(1);
                 break;
 
             default:
@@ -168,7 +177,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
             }
         }
 
-        groupPointsByDay();
+        groupPoints();
 
         tvTotalPoints.setText(String.valueOf(totalPoints));
 
@@ -184,7 +193,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         labels.clear();
         chart.animateY(1000, Easing.EaseInOutQuad);
 
-        for (Map.Entry<String, Integer> entry : pointsGroupedByDay.entrySet()) {
+        for (Map.Entry<String, Integer> entry : pointsGrouped.entrySet()) {
             yVals.add(entry.getValue());
             labels.add(entry.getKey());
         }
@@ -203,50 +212,94 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         LineData lineData = new LineData(dataSet);
 
         if (chart.getData() != null) {
-            chart.clearValues();
+            chart.clear();
         }
+
 
         chart.setData(lineData);
         chart.animateY(1000, Easing.EaseInOutQuad);
-        chart.invalidate(); // refresh
 
-//		plotXY.clear();
-//
-//
-//		XYSeries series = new SimpleXYSeries(yVals, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, null);
-////		((SimpleXYSeries) series).setTitle(null);
-//		PointLabeler pointLabeler = new PointLabeler() {
-//			@Override
-//			public String getLabel(XYSeries series, int index) {
-//				return String.valueOf(yVals.get(index));
-//			}
-//		};
-//
-//		LineAndPointFormatter formatter =
-//				new LineAndPointFormatter(getActivity(), R.xml.line_point_formatter_with_labels);
-//		formatter.setPointLabeler(pointLabeler);
-//
-//		plotXY.addSeries(series, formatter);
-//		plotXY.invalidate();
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setLabelCount(Math.min(entries.size(), 12));
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                Log.i(TAG, "getFormattedValue: enter. value: " + (int)value);
+                try {
+                    return labels.get((int) value);
+                } catch (IndexOutOfBoundsException e) {
+                    Log.i(TAG, "getFormattedValue: exception. value: " + (int)value);
+                    return "MAL";
+                }
+//                return String.valueOf(value);
+            }
+        });
+
+        chart.invalidate(); // refresh
     }
 
 
-    private void groupPointsByDay() {
+    private void groupPoints() {
 
         totalPoints = 0;
 
-        pointsGroupedByDay.clear();
+        pointsGrouped.clear();
+
+        Calendar calendarIterate = Calendar.getInstance();
+        Calendar calendarNow = Calendar.getInstance();
+        calendarNow.set(Calendar.HOUR_OF_DAY, 23);
+        calendarNow.set(Calendar.MINUTE, 59);
+        calendarNow.set(Calendar.SECOND, 59);
+
+        DateTimeFormatter datetimeFormatter = null;
+
+        switch (currentDatesRangePosition) {
+            case POSITION_TAB_LAST_WEEK:
+                datetimeFormatter = MobileLearning.DATE_FORMAT_DAY_MONTH;
+                calendarIterate.add(Calendar.DAY_OF_MONTH, -7);
+                while (calendarIterate.before(calendarNow)) {
+                    pointsGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), 0);
+                    calendarIterate.add(Calendar.DAY_OF_MONTH, 1);
+                }
+                break;
+
+            case POSITION_TAB_LAST_MONTH:
+
+                datetimeFormatter = MobileLearning.DATE_FORMAT_DAY_MONTH;
+                calendarIterate.add(Calendar.MONTH, -1);
+                while (calendarIterate.before(calendarNow)) {
+                    pointsGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), 0);
+                    calendarIterate.add(Calendar.DAY_OF_MONTH, 1);
+                }
+                break;
+
+            case POSITION_TAB_LAST_YEAR:
+
+                datetimeFormatter = MobileLearning.MONTH_FORMAT;
+                calendarIterate.add(Calendar.YEAR, -1);
+                calendarIterate.add(Calendar.MONTH, 1);
+                while (calendarIterate.before(calendarNow)) {
+                    pointsGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), 0);
+                    calendarIterate.add(Calendar.DAY_OF_MONTH, 1);
+                }
+
+                break;
+        }
 
         for (Points point : pointsFiltered) {
             totalPoints += point.getPoints();
             int previousPoints = 0;
-            if (pointsGroupedByDay.containsKey(point.getDateAsString())) {
-                previousPoints = pointsGroupedByDay.get(point.getDateAsString());
+            String key = datetimeFormatter.print(point.getDateTime());
+            if (pointsGrouped.containsKey(key)) {
+                previousPoints = pointsGrouped.get(key);
+            } else {
+                Log.e(TAG, "groupPoints: this should not happen. Just in case avoids exception");
+                continue;
             }
 
-            previousPoints += point.getPoints();
+            int newPoints = previousPoints + point.getPoints();
 
-            pointsGroupedByDay.put(point.getDateAsString(), previousPoints);
+            pointsGrouped.put(key, newPoints);
         }
 
     }
@@ -257,9 +310,50 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     }
 
     private void loadPoints() {
-        DbHelper db = DbHelper.getInstance(super.getActivity());
-        long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-        pointsFull = db.getUserPoints(userId);
+//        DbHelper db = DbHelper.getInstance(super.getActivity());
+//        long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
+//        pointsFull = db.getUserPoints(userId);
+
+        pointsFull = getMockPoints();
+    }
+
+    // Useful for testing
+    private List<Points> getMockPoints() {
+
+        List<Points> pointsMock = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -1);
+
+        for (int i = 0; i < 366; i++) {
+
+            Points mockPoint = new Points();
+            mockPoint.setDateTime(MobileLearning.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
+            mockPoint.setPoints(new Random().nextInt(70));
+            mockPoint.setEvent("Event " + i);
+            mockPoint.setDescription("Description " + i);
+
+            if (i % 13 == 0) {
+                // to add some days with 0 points
+                mockPoint.setPoints(0);
+            }
+
+            pointsMock.add(mockPoint);
+
+            if (i % 7 == 0) {
+                // to add some days with more than one number of points
+                Points mockPointExtra = new Points();
+                mockPointExtra.setDateTime(MobileLearning.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
+                mockPointExtra.setPoints(new Random().nextInt(70));
+                mockPointExtra.setEvent("Event extra " + i);
+                mockPointExtra.setDescription("Description extra " + i);
+                pointsMock.add(mockPointExtra);
+            }
+
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return pointsMock;
     }
 
     @Override
