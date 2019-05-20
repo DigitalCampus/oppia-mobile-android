@@ -25,9 +25,11 @@ import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.AdminReceiver;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
+import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
+import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
@@ -67,6 +69,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	
 	public static final String PREF_USER_NAME = "prefUsername";
 	public static final String PREF_SERVER = "prefServer";
+    public static final String PREF_SERVER_CHECKED = "prefServerChecked";
+    public static final String PREF_SERVER_VALID = "prefServerValid";
+    public static final String PREF_SERVER_NAME = "prefServerName";
+    public static final String PREF_SERVER_VERSION = "prefServerVersion";
 	
 	public static final String PREF_TRIGGER_POINTS_REFRESH = "prefScoreRefresh";
 	public static final String PREF_SCORING_ENABLED = "prefScoringEnabled";
@@ -185,7 +191,21 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 newServerURL = newServerURL +"/";
                 sharedPreferences.edit().putString(PrefsActivity.PREF_SERVER, newServerURL).apply();
             }
-            mPrefsFragment.updateServerPref(newServerURL);
+            sharedPreferences.edit().putBoolean(PrefsActivity.PREF_SERVER_CHECKED, false).apply();
+
+            FetchServerInfoTask fetchServerInfoTask = new FetchServerInfoTask(this);
+            fetchServerInfoTask.execute(new Payload());
+            fetchServerInfoTask.setListener(new APIRequestListener() {
+                @Override
+                public void apiRequestComplete(Payload response) {
+                    mPrefsFragment.updateServerPref();
+                }
+
+                @Override
+                public void apiKeyInvalidated() { }
+            });
+            mPrefsFragment.updateServerPref();
+
         }
         else if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
             String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
