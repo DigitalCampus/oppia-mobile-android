@@ -1,50 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/points_row"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="5dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="10dp">
 
-    <RelativeLayout
-        android:id="@+id/points_datetime"
-        android:layout_width="80dp"
-        android:layout_height="fill_parent">
 
-        <TextView
-            android:id="@+id/points_time"
-            style="@style/SmallTextDark"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingRight="5dp"/>
+    <TextView
+        android:id="@+id/points_date"
+        style="@style/SmallTextDark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.17" />
 
-        <TextView
-            android:id="@+id/points_date"
-            style="@style/SmallTextDark"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/points_time"
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
-            android:paddingRight="5dp" />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/points_time"
+        style="@style/SmallTextDark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="0.13" />
+
 
     <TextView
         android:id="@+id/points_points"
-        android:background="@drawable/points_background"
-        android:layout_width="50dp"
-        android:layout_height="fill_parent"
+        style="@style/PointsText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_weight="0.15"
+        android:background="@drawable/points_background_frame"
         android:gravity="center|center_vertical"
-        android:layout_toRightOf="@id/points_datetime"
-        android:layout_marginRight="5dp" 
-        style="@style/PointsText"/>
+        android:textColor="@color/listitem_icon_tint" />
 
     <TextView
         android:id="@+id/points_description"
         style="@style/SmallTextDark"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:gravity="center_vertical"
-        android:layout_toRightOf="@id/points_points" />
+        android:layout_width="0dp"
+        android:layout_weight="0.75"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" />
 
-</RelativeLayout>
+</LinearLayout>

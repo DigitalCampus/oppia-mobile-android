@@ -387,5 +387,10 @@
     <string name="register_offline">Register offline</string>
     <string name="field_required">This field cannot be empty</string>
     <string name="field_spaces_error">Cannot contain spaces</string>
+    <string name="points">points</string>
+    <string name="last_year">last year</string>
+    <string name="last_month">last month</string>
+    <string name="last_week">last week</string>
+    <string name="no_points_data">No points data</string>
 </resources>
 
