@@ -38,7 +38,9 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.PointsListAdapter;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Points;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -310,11 +312,11 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     }
 
     private void loadPoints() {
-//        DbHelper db = DbHelper.getInstance(super.getActivity());
-//        long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-//        pointsFull = db.getUserPoints(userId);
+        DbHelper db = DbHelper.getInstance(super.getActivity());
+        long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
+        pointsFull = db.getUserPoints(userId);
 
-        pointsFull = getMockPoints();
+//        pointsFull = getMockPoints();
     }
 
     // Useful for testing
