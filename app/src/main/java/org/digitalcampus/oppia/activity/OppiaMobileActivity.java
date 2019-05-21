@@ -204,7 +204,7 @@ public class OppiaMobileActivity
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		UIUtils.showUserData(menu, this, null, false);
+		UIUtils.showUserData(menu, this, null);
         Map<Integer, DrawerMenuManager.MenuOption> mainOptions = new HashMap<>();
         mainOptions.put(R.id.menu_settings, new DrawerMenuManager.MenuOption(){
             public void onOptionSelected(){ startPrefsActivity(); }

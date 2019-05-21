@@ -226,26 +226,33 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.addView(snackView, 0);
             layout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
-            final boolean animatePoints = prefs.getBoolean(PrefsActivity.PREF_ANIMATE_GAMIFICATION_POINTS, Gamification.POINTS_ANIMATION_ENABLED);
+            final int gamifPointsViewType = Integer.parseInt(prefs.getString(PrefsActivity.PREF_GAMIFICATION_POINTS_VIEW_TYPE, Gamification.PREF_GAMIFICATION_POINTS_VIEW_TYPE));
 
-            snackbar.setDuration(animatePoints ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
+            final boolean fullAnimation = gamifPointsViewType > 1;
+            final boolean withSound = gamifPointsViewType == 3;
+
+            if (fullAnimation) {
+                UIUtils.showUserData(optionsMenu, AppActivity.this, null, false, points);
+            }
+
+            snackbar.setDuration(fullAnimation ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
 
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override
                 public void onShown(Snackbar sb) {
                     super.onShown(sb);
 
-                    if (animatePoints) {
-                        animatePoints(sb);
+                    if (fullAnimation) {
+                        animatePoints(sb, withSound);
                     } else {
-                        UIUtils.showUserData(optionsMenu, AppActivity.this, null, true);
+                        UIUtils.showUserData(optionsMenu, AppActivity.this, null, false, 0);
                     }
                 }
 
                 @Override
                 public void onDismissed(Snackbar transientBottomBar, int event) {
                     super.onDismissed(transientBottomBar, event);
-                    UIUtils.showUserData(optionsMenu, AppActivity.this, null, false);
+                    UIUtils.showUserData(optionsMenu, AppActivity.this, null, false, 0);
                 }
             });
             snackbar.show();
@@ -253,10 +260,12 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         }
     }
 
-    private void animatePoints(final Snackbar snackbar) {
+    private void animatePoints(final Snackbar snackbar, boolean withSound) {
 
-        MediaPlayer mp = MediaPlayer.create(this, R.raw.sound_gamification_points);
-        mp.start();
+        if (withSound) {
+            MediaPlayer mp = MediaPlayer.create(this, R.raw.sound_gamification_points);
+            mp.start();
+        }
 
         Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout) snackbar.getView();
         View snackView = layout.getChildAt(0);
@@ -323,7 +332,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             @Override
             public void onAnimationEnd(Animator animation) {
                 snackbar.dismiss();
-                UIUtils.showUserData(optionsMenu, AppActivity.this, null, true);
+                UIUtils.showUserData(optionsMenu, AppActivity.this, null, true, 0);
             }
 
             @Override
