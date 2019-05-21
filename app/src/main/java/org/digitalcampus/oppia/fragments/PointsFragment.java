@@ -37,10 +37,12 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.adapter.PointsListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Points;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -75,6 +77,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     List<Integer> yVals = new ArrayList<>();
     List<String> labels = new ArrayList<>();
     private int currentDatesRangePosition;
+    private Course course;
 
     public static PointsFragment newInstance() {
         return new PointsFragment();
@@ -101,6 +104,9 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         findViews();
         initializeDagger();
         configureChart();
+
+        course = ((ScorecardActivity) getActivity()).getCourse();
+
         loadPoints();
 
         pointsAdapter = new PointsListAdapter(super.getActivity(), pointsFiltered);
@@ -314,7 +320,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private void loadPoints() {
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-        pointsFull = db.getUserPoints(userId);
+        pointsFull = db.getUserPoints(userId, course);
 
 //        pointsFull = getMockPoints();
     }
@@ -332,8 +338,8 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
             Points mockPoint = new Points();
             mockPoint.setDateTime(MobileLearning.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
             mockPoint.setPoints(new Random().nextInt(70));
-            mockPoint.setEvent("Event " + i);
-            mockPoint.setDescription("Description " + i);
+            mockPoint.setEvent("Event mock " + i);
+            mockPoint.setDescription("Description mock " + i);
 
             if (i % 13 == 0) {
                 // to add some days with 0 points
