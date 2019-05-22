@@ -83,6 +83,8 @@ android {
             buildConfigField "int", "DOWNLOAD_COURSES_DISPLAY", runtimeProps['DOWNLOAD_COURSES_DISPLAY']
             buildConfigField "String", "GAMIFICATION_MEDIA_CRITERIA", "\"" + runtimeProps['GAMIFICATION_MEDIA_CRITERIA'] + "\""
             buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
+            buildConfigField "String", "PREF_GAMIFICATION_POINTS_VIEW_TYPE", "\"" + runtimeProps['PREF_GAMIFICATION_POINTS_VIEW_TYPE'] + "\""
+
 
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
@@ -171,6 +173,10 @@ dependencies {
 //    androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.2'
     androidTestImplementation 'com.github.fabioCollini.daggermock:daggermock:0.8.5'
 
+//    implementation "com.androidplot:androidplot-core:1.5.6"
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 }
 
 apply plugin: 'com.google.gms.google-services'

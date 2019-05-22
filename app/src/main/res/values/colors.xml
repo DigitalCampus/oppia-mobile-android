@@ -21,4 +21,5 @@
     <color name="design_snackbar_background_color" tools:override="true">@color/highlight_light</color>
     <color name="background_cover">#c6333333</color>
     <color name="transparent">#00ffffff</color>
+
 </resources>

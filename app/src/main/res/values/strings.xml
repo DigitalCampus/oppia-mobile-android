@@ -29,7 +29,7 @@
     <string name="service_tracker">&appName; Tracker Service</string>
 
     <string name="fragment_welcome_title">Welcome to &appName;</string>
-    <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.\n</string>
+    <string name="fragment_welcome_desc">&appName; is a mobile learning platform for delivering learning content, video and quizzes.\n\n\'Oppia\' means \'to learn\' in Finnish</string>
     <string name="fragment_welcome_login_info">To get started with &appName;, you will need to register or login.</string>
     <string name="fragment_welcome_privacy">We take your privacy seriously, <a href="http://digital-campus.org/privacy/">find out more about &companyName;\'s privacy policy</a></string>
 
@@ -337,8 +337,8 @@
     <string name="open_digest.description">&appName; has the functionality to open activities based in its URL (opened from an SMS, for example)</string>
     <string name="open_digest.btn_action">Open activity</string>
     <string name="open_digest.activity_completed">Activity completed</string>
-    <string name="menu_sync">Sync</string>
-    <string name="title_sync">Sync</string>
+    <string name="menu_sync">Synchronise</string>
+    <string name="title_sync">Synchronise</string>
     <string name="export_activity.text">Export latest activity and quiz trackers to an external file</string>
     <string name="tab_title_export">Export</string>
     <string name="export_task_completed">Export completed</string>
@@ -389,5 +389,16 @@
     <string name="field_spaces_error">Cannot contain spaces</string>
     <string name="permissions.location.title">access location</string>
     <string name="permissions.location.description">In new Android devices, this permission is needed to be able to pair with other devices using Bluetooth</string>
+    <string name="points">points</string>
+    <string name="last_year">last year</string>
+    <string name="last_month">last month</string>
+    <string name="last_week">last week</string>
+    <string name="no_points_data">No points data</string>
+
+    <string name="prefViewTypeGamificationPoints">Gamification points view type</string>
+    <string name="prefGamificationPointsViewTypeFullAnimationSound">Full animation with sound</string>
+    <string name="prefGamificationPointsViewTypeFullAnimation">Full animation</string>
+    <string name="prefGamificationPointsViewTypeSimpleAnimation">Simple animation</string>
+    <string name="prefGamificationPointsViewTypeNone">None</string>
 </resources>
 

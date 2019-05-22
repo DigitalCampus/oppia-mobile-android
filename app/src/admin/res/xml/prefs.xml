@@ -51,7 +51,14 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="prefShowGamificationEvents"
-        android:title="@string/prefShowGamificationEvents" />
+        android:title="@string/prefShowGamificationEvents"/>
+
+    <ListPreference
+        android:dependency="prefShowGamificationEvents"
+        android:key="prefGamificationPointsViewType"
+        android:title="@string/prefViewTypeGamificationPoints"
+        android:entries="@array/GamificationPointsViewTypes"
+        android:entryValues="@array/GamificationPointsViewTypesValues" />
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -127,6 +134,7 @@
             android:defaultValue="false"
             android:key="prefRemoteAdminEnabled"
             android:title="@string/prefRemoteAdminEnabled" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
