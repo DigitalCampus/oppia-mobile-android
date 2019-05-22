@@ -1135,7 +1135,7 @@ public class DbHelper extends SQLiteOpenHelper {
         this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate);
     }
 
-	public List<Points> getUserPoints(long userId) {
+	public List<Points> getUserPoints(long userId, Course courseFilter) {
         ArrayList<Points> points = new ArrayList<>();
 
         // Points from Tracker
@@ -1147,6 +1147,17 @@ public class DbHelper extends SQLiteOpenHelper {
         String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 
         while (!c.isAfterLast()) {
+
+			Activity activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
+			Course course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
+
+			if(courseFilter != null && course != null){
+				if (courseFilter.getCourseId() != course.getCourseId()) {
+					c.moveToNext();
+					continue;
+				}
+			}
+
             Points p = new Points();
             p.setDateTime(c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
             p.setPoints(c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
@@ -1157,29 +1168,24 @@ public class DbHelper extends SQLiteOpenHelper {
             String description = event;
             Log.d(TAG, event);
 
-			Activity activity;
-			Course course;
 
 			switch (event) {
 				case Gamification.EVENT_NAME_ACTIVITY_COMPLETED:
-					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 					if (activity != null) {
-						course = this.getCourse(activity.getCourseId(), userId);
-						if (course != null) {
+						Course courseActivity = this.getCourse(activity.getCourseId(), userId);
+						if (courseActivity != null) {
 							description = this.ctx.getString(R.string.points_event_activity_completed,
 									activity.getTitle(prefLang),
-									course.getTitle(prefLang));
+									courseActivity.getTitle(prefLang));
 						}
 					}
 					break;
 
 				case Gamification.EVENT_NAME_MEDIA_PLAYED:
 					String data = c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA));
-                    activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 					try {
 						JSONObject jsonObj = new JSONObject(data);
 						String mediaFileName = jsonObj.getString("mediafile");
-						course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 						if (course != null) {
 							description = this.ctx.getString(R.string.points_event_media_played,
 									mediaFileName);
@@ -1191,20 +1197,17 @@ public class DbHelper extends SQLiteOpenHelper {
 					break;
 
 				case Gamification.EVENT_NAME_QUIZ_ATTEMPT:
-					activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
 					Log.d(TAG, "quizid " + c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
-					course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
-					if ((course != null) && (activity!=null)) {
-                        description = this.ctx.getString(R.string.points_event_quiz_attempt,
+					if ((course != null) && (activity != null)) {
+						description = this.ctx.getString(R.string.points_event_quiz_attempt,
 								activity.getTitle(prefLang),
-                                course.getTitle(prefLang));
-                    }
+								course.getTitle(prefLang));
+					}
 
 					break;
 
 				case Gamification.EVENT_NAME_COURSE_DOWNLOADED:
 					Log.d(TAG, "id: " + c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)));
-					course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 					description = this.ctx.getString(R.string.points_event_course_downloaded,
 							course == null ? "" : course.getTitle(prefLang));
 					break;
@@ -1231,7 +1234,16 @@ public class DbHelper extends SQLiteOpenHelper {
             // get course and activity title
             String description = qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_EVENT));
             Activity activity = this.getActivityByDigest(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
+
             if (activity != null) {
+
+            	if(courseFilter != null){
+					if (courseFilter.getCourseId() != activity.getCourseId()) {
+						qac.moveToNext();
+						continue;
+					}
+				}
+
                 Course course = this.getCourse(activity.getCourseId(), userId);
                 if (course != null) {
                     description = this.ctx.getString(R.string.points_event_quiz_attempt,
@@ -1248,7 +1260,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Re-order by date time with latest date first
         Collections.sort(points, new PointsComparator());
-        Collections.reverse(points);
 
         return points;
 	}
