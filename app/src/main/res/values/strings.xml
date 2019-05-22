@@ -387,5 +387,11 @@
     <string name="register_offline">Register offline</string>
     <string name="field_required">This field cannot be empty</string>
     <string name="field_spaces_error">Cannot contain spaces</string>
+
+    <string name="prefViewTypeGamificationPoints">Gamification points view type</string>
+    <string name="prefGamificationPointsViewTypeFullAnimationSound">Full animation with sound</string>
+    <string name="prefGamificationPointsViewTypeFullAnimation">Full animation</string>
+    <string name="prefGamificationPointsViewTypeSimpleAnimation">Simple animation</string>
+    <string name="prefGamificationPointsViewTypeNone">None</string>
 </resources>
 
