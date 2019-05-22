@@ -30,9 +30,25 @@ public class Points {
 	public String getDateAsString() {
 		return MobileLearning.DATE_FORMAT.print(datetime);
 	}
+
+	public String getMonthAsString() {
+		return MobileLearning.MONTH_FORMAT.print(datetime);
+	}
+
+	public String getDayMonthAsString() {
+		return MobileLearning.DATE_FORMAT_DAY_MONTH.print(datetime);
+	}
+
+	public String getDateDayMonth() {
+		return MobileLearning.DATE_FORMAT_DAY_MONTH.print(datetime);
+	}
 	
 	public String getTimeAsString() {
 		return MobileLearning.TIME_FORMAT.print(datetime);
+	}
+
+	public String getTimeHoursMinutes() {
+		return MobileLearning.TIME_FORMAT_HOURS_MINUTES.print(datetime);
 	}
 	
 	public void setDateTime(String date) {

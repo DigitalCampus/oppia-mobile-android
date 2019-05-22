@@ -72,8 +72,8 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
 
 	    Points p = pointsList.get(position);
         viewHolder.pointsDescription.setText(p.getDescription());
-        viewHolder.pointsTime.setText(p.getTimeAsString());
-        viewHolder.pointsDate.setText(p.getDateAsString());
+        viewHolder.pointsTime.setText(p.getTimeHoursMinutes());
+        viewHolder.pointsDate.setText(p.getDateDayMonth());
         viewHolder.pointsPoints.setText(String.valueOf(p.getPoints()));
 
 	    return convertView;

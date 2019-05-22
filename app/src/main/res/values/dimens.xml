@@ -21,5 +21,6 @@
 
     <dimen name="listitem_icon_size">32dp</dimen>
     <dimen name="height_gamification_notif_view">150dp</dimen>
+    <dimen name="offset_chart_horizontal">10dp</dimen>
 
 </resources>

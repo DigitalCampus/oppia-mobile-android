@@ -171,6 +171,10 @@ dependencies {
 //    androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.2'
     androidTestImplementation 'com.github.fabioCollini.daggermock:daggermock:0.8.5'
 
+//    implementation "com.androidplot:androidplot-core:1.5.6"
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 }
 
 apply plugin: 'com.google.gms.google-services'
