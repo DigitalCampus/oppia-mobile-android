@@ -143,6 +143,8 @@ public class GamificationService  extends IntentService {
                     eventData.put("instance_id", quiz.getInstanceID());
                     eventData.put("score", score);
 
+                    trackerDigest = act.getDigest();
+
                 }
                 else if (SERVICE_EVENT_RESOURCE.equals(eventName)){
                     if (isCompleted){

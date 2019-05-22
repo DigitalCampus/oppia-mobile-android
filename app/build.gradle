@@ -10,6 +10,7 @@ apply plugin: "org.sonarqube"
 
 repositories {
     maven { url "https://mint.splunk.com/gradle/" }
+    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -167,7 +168,8 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.5'
 //    implementation 'javax.annotation:jsr250-api:1.0' /*compileOnly*/
     implementation 'org.glassfish:javax.annotation:10.0-b28'
-    androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.6.2'
+//    androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.2'
+    androidTestImplementation 'com.github.fabioCollini.daggermock:daggermock:0.8.5'
 
 }
 
