@@ -146,6 +146,8 @@ public class MobileLearning extends Application {
 				.build());
 
         Context ctx = getApplicationContext();
+		// Load the preferences from XML resources
+		PreferenceManager.setDefaultValues(ctx, R.xml.common_prefs, false);
 		PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         checkAdminProtectionOnFirstRun(prefs);

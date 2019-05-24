@@ -43,7 +43,8 @@ public class PreferencesFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
 
-        // Load the preferences from an XML resource
+        // Load the preferences from XML resources
+        addPreferencesFromResource(R.xml.common_prefs);
         addPreferencesFromResource(R.xml.prefs);
 
         storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
