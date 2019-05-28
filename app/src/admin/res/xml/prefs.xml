@@ -5,6 +5,7 @@
             android:defaultValue="false"
             android:key="prefRemoteAdminEnabled"
             android:title="@string/prefRemoteAdminEnabled" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

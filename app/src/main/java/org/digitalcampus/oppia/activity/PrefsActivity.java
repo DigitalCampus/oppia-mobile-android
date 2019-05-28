@@ -111,7 +111,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
     public static final String PREF_DISABLE_NOTIFICATIONS = "prefDisableNotifications";
     public static final String PREF_SHOW_GAMIFICATION_EVENTS = "prefShowGamificationEvents";
-
+    public static final String PREF_GAMIFICATION_POINTS_VIEW_TYPE = "prefGamificationPointsViewType";
 
     public static final String PREF_LAST_LEADERBOARD_FETCH = "prefLastLeaderboardFetch";
 
@@ -322,6 +322,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 dpm.removeActiveAdmin(adminReceiver);
             }
         }
+//        else if (key.equalsIgnoreCase(PREF_SHOW_GAMIFICATION_EVENTS)){
+//
+//        }
     }
 
     private void disableAdminProtection(SharedPreferences prefs){

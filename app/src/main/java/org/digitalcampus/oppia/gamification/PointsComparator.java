@@ -25,6 +25,6 @@ import java.util.Comparator;
 public class PointsComparator implements Comparator<Points> {
     @Override
     public int compare(Points p1, Points p2) {
-        return p1.getDateTime().compareTo(p2.getDateTime());
+        return p2.getDateTime().compareTo(p1.getDateTime());
     }
 }

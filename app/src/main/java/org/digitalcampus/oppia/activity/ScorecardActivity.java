@@ -131,8 +131,12 @@ public class ScorecardActivity extends AppActivity {
             }
         }
 		viewPager.setCurrentItem(currentTab);
-        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 		tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+	}
+
+	public Course getCourse() {
+		return course;
 	}
 
 	@Override
