@@ -71,15 +71,33 @@ public class ActivityPagerAdapter extends FragmentStatePagerAdapter {
 		return fragments.size();
 	}
 
+
+	public void updateTabLayout(TabLayout.Tab tab, int layoutId, String tabTitle){
+
+	    if (tab == null){
+	        return;
+        }
+	    View v = LayoutInflater.from(ctx).inflate(layoutId, null);
+        TextView tv = v.findViewById(R.id.tabTitle);
+        tv.setText(tabTitle);
+        tab.setCustomView(v);
+    }
+
     public void updateTabViews(TabLayout tabs) {
 
-        for (int i = 0; i < tabs.getTabCount(); i++) {
-            View v = LayoutInflater.from(ctx).inflate(R.layout.tablayout_fixed_tab, null);
-            TextView tv = v.findViewById(R.id.tabTitle);
-            tv.setText(tabTitles.get(i));
+	    if (tabs.getTabCount() == 1){
+            updateTabLayout(
+                    tabs.getTabAt(0),
+                    R.layout.tablayout_fullwidth_tab,
+                    tabTitles.get(0));
+            return;
+        }
 
-            TabLayout.Tab tab = tabs.getTabAt(i);
-            if (tab!=null) tab.setCustomView(v);
+        for (int i = 0; i < tabs.getTabCount(); i++) {
+            updateTabLayout(
+                    tabs.getTabAt(i),
+                    R.layout.tablayout_fixed_tab,
+                    tabTitles.get(i));
         }
     }
 

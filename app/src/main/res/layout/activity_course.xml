@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Oppia.ToolbarTheme.AppTabLayout"
+            app:tabMaxWidth="2000dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </android.support.design.widget.AppBarLayout>
 
