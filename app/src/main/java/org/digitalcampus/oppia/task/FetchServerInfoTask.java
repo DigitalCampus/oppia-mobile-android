@@ -8,23 +8,32 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.listener.APIKeyRequestListener;
-import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class FetchServerInfoTask extends APIRequestTask<Payload, Object, Payload> {
+public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<String, String>> {
 
 
-    private APIRequestListener listener;
+    private final static String SERVER_NAME = "name";
+    private final static String SERVER_VERSION = "version";
+    private final static String ERROR_MESSAGE = "errorMessage";
+
+    public interface FetchServerInfoListener{
+        void onError(String message);
+        void onValidServer(String version, String name);
+        void onUnchecked();
+    }
+
+    private FetchServerInfoListener listener;
 
     public FetchServerInfoTask(Context ctx) {
         super(ctx);
@@ -35,13 +44,14 @@ public class FetchServerInfoTask extends APIRequestTask<Payload, Object, Payload
     }
 
     @Override
-    protected Payload doInBackground(Payload... serverUrl) {
-        Payload payload = serverUrl[0];
+    protected HashMap<String, String> doInBackground(Void... params) {
+
+        HashMap<String, String> result = new HashMap<>();
 
         if (!ConnectionUtils.isNetworkConnected(ctx)){
             // If there is no connection available right now, we don't try to fetch info (to avoid setting a server as invalid)
-            payload.setResult(true);
-            return payload;
+            result.put("result", "no_internet");
+            return result;
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -52,11 +62,14 @@ public class FetchServerInfoTask extends APIRequestTask<Payload, Object, Payload
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
-                payload.setResult(true);
                 String serverInfo = response.body().string();
                 JSONObject json = new JSONObject(serverInfo);
-                String serverVersion = json.getString("version");
-                String serverName = json.getString("name");
+                String serverVersion = json.getString(SERVER_VERSION);
+                String serverName = json.getString(SERVER_NAME);
+
+                result.put("result", "success");
+                result.put(SERVER_VERSION, serverVersion);
+                result.put(SERVER_NAME, serverName);
 
                 prefs.edit()
                     .putBoolean(PrefsActivity.PREF_SERVER_CHECKED, true)
@@ -67,21 +80,23 @@ public class FetchServerInfoTask extends APIRequestTask<Payload, Object, Payload
                 validServer = true;
             }
             else{
+                result.put("result", "error");
                 switch (response.code()) {
                     case 401:
                     case 403: // unauthorised
-                        payload.setResult(false);
-                        payload.setResultResponse(ctx.getString(R.string.error_login));
+                        result.put(ERROR_MESSAGE, ctx.getString(R.string.error_login));
                         break;
-
                     default:
-                        payload.setResult(false);
-                        payload.setResultResponse(ctx.getString(R.string.error_connection));
+                        result.put(ERROR_MESSAGE, ctx.getString(R.string.error_processing_response));
                 }
             }
         } catch (IOException e) {
+            result.put("result", "error");
+            result.put(ERROR_MESSAGE, e.getMessage());
             e.printStackTrace();
         } catch (JSONException e) {
+            result.put("result", "error");
+            result.put(ERROR_MESSAGE, ctx.getString(R.string.error_processing_response));
             e.printStackTrace();
         }
 
@@ -92,18 +107,27 @@ public class FetchServerInfoTask extends APIRequestTask<Payload, Object, Payload
                 .apply();
         }
 
-        return payload;
+        return result;
     }
 
     @Override
-    protected void onPostExecute(Payload payload) {
-        super.onPostExecute(payload);
+    protected void onPostExecute(HashMap<String, String> r) {
+        super.onPostExecute(r);
         if (listener != null){
-            listener.apiRequestComplete(payload);
+            String result = r.get("result");
+            if ("noInternet".equals(result)){
+                listener.onUnchecked();
+            }
+            if ("success".equals(result)){
+                listener.onValidServer(r.get(SERVER_VERSION), r.get(SERVER_NAME));
+            }
+            else if (("error".equals(result))){
+                listener.onError(r.get(ERROR_MESSAGE));
+            }
         }
     }
 
-    public void setListener(APIRequestListener listener) {
+    public void setListener(FetchServerInfoListener listener) {
         this.listener = listener;
     }
 }

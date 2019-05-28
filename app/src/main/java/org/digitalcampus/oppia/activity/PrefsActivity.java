@@ -194,15 +194,23 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             sharedPreferences.edit().putBoolean(PrefsActivity.PREF_SERVER_CHECKED, false).apply();
 
             FetchServerInfoTask fetchServerInfoTask = new FetchServerInfoTask(this);
-            fetchServerInfoTask.execute(new Payload());
-            fetchServerInfoTask.setListener(new APIRequestListener() {
+            fetchServerInfoTask.execute();
+            fetchServerInfoTask.setListener(new FetchServerInfoTask.FetchServerInfoListener() {
                 @Override
-                public void apiRequestComplete(Payload response) {
+                public void onError(String message) {
+                    Toast.makeText(PrefsActivity.this, message, Toast.LENGTH_LONG).show();
                     mPrefsFragment.updateServerPref();
                 }
 
                 @Override
-                public void apiKeyInvalidated() { }
+                public void onValidServer(String version, String name) {
+                    mPrefsFragment.updateServerPref();
+                }
+
+                @Override
+                public void onUnchecked() {
+                    mPrefsFragment.updateServerPref();
+                }
             });
             mPrefsFragment.updateServerPref();
 

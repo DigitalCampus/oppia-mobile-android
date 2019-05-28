@@ -111,10 +111,10 @@ public class TrackerService extends Service implements APIRequestListener {
 
 	public void updateTracking(){
 
-		Payload p = new Payload();
+		Payload p;
 		// Update server info
 		FetchServerInfoTask fetchServerInfoTask = new FetchServerInfoTask(this);
-		fetchServerInfoTask.execute(p);
+		fetchServerInfoTask.execute();
 
 		// check for updated courses
 		// should only do this once a day or so....
