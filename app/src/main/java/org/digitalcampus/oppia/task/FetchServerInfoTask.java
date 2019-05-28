@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -50,7 +51,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
 
         if (!ConnectionUtils.isNetworkConnected(ctx)){
             // If there is no connection available right now, we don't try to fetch info (to avoid setting a server as invalid)
-            result.put("result", "no_internet");
+            result.put("result", "noInternet");
             return result;
         }
 
@@ -59,7 +60,6 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
         boolean validServer = false;
         Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, MobileLearning.SERVER_INFO_PATH));
         try {
-
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
                 String serverInfo = response.body().string();
@@ -94,6 +94,8 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
             result.put("result", "error");
             result.put(ERROR_MESSAGE, e.getMessage());
             e.printStackTrace();
+            return result;
+
         } catch (JSONException e) {
             result.put("result", "error");
             result.put(ERROR_MESSAGE, ctx.getString(R.string.error_processing_response));
@@ -115,6 +117,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
         super.onPostExecute(r);
         if (listener != null){
             String result = r.get("result");
+            Log.d(TAG, result);
             if ("noInternet".equals(result)){
                 listener.onUnchecked();
             }
