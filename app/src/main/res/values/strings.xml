@@ -97,6 +97,7 @@
     <string name="prefLanguage">Preferred Language</string>
     <string name="prefHighlightCompleted">Highlight completed activities</string>
     <string name="prefServer">Server</string>
+    <string name="prefServer_notChecked">Unchecked URL</string>
     <string name="prefServer_errorTitle">Invalid URL</string>
     <string name="prefServer_errorDescription">Please, enter a well-formed URL corresponding to your &appName;
         server endpoint</string>
