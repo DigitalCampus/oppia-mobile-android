@@ -111,6 +111,8 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
+        animationsDisabled = true
+
     }
 
 
@@ -189,17 +191,17 @@ task grantPermissions(type: Exec, dependsOn: 'installDebug') {
     } else {
         println "Granting permissions for a windows os"
     }
-    commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE --stacktrace".split(" ")
+
+    commandLine "${adb} shell pm grant ${android.defaultConfig.applicationId} android.permission.SET_ANIMATION_SCALE".split(' ')
+    // commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE --stacktrace".split(" ")
 
 }
 
-afterEvaluate {
-    tasks.each { task ->
-        if (task.name.contentEquals('connectedAndroidTest') ||
-                task.name.contentEquals('connectedDebugAndroidTest') ||
-                task.name.contentEquals('assembleDebugAndroidTest') ||
-                task.name.contentEquals('assembleAndroidTest')) {
-            task.dependsOn grantPermissions
-        }
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('connectedAndroidTest')  ||
+            task.name.startsWith('connectedDebugAndroidTest') ||
+            task.name.startsWith('assembleDebugAndroidTest') ||
+            task.name.startsWith('assembleAndroidTest')) {
+        task.dependsOn grantPermissions
     }
 }

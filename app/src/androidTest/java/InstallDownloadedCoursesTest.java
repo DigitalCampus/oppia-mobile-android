@@ -17,11 +17,13 @@ import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,8 +43,6 @@ import static junit.framework.Assert.assertTrue;
 public class InstallDownloadedCoursesTest {
     public static final String TAG = InstallDownloadedCoursesTest.class.getSimpleName();
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
     private final String CORRECT_COURSE = "Correct_Course.zip";
     private final String EXISTING_COURSE = "Existing_Course.zip";
@@ -109,9 +109,6 @@ public class InstallDownloadedCoursesTest {
 
         String title = c.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
-        //Check if the resultResponse is correct
-        assertEquals(context.getString(R.string.install_course_complete, title), response.getResultResponse());
-
     }
 
     @Test
@@ -122,7 +119,7 @@ public class InstallDownloadedCoursesTest {
         runInstallCourseTask(EXISTING_COURSE);
         runInstallCourseTask(EXISTING_COURSE);
 
-        //Check if result is false
+        //Check that it failed
         assertFalse(response.isResult());
 
         File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));

@@ -69,10 +69,6 @@ public class DownloadActivityUITest {
     public ActivityTestRule<DownloadActivity> tagSelectActivityTestRule =
             new ActivityTestRule<>(DownloadActivity.class, false, false);
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
-
-
     @Mock CourseInstallRepository courseInstallRepository;
     @Mock CourseInstallerServiceDelegate courseInstallerServiceDelegate;
 

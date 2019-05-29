@@ -32,9 +32,6 @@ import static junit.framework.Assert.assertTrue;
 @SmallTest
 public class ResetTest {
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
-
 
     private CountDownLatch signal;
     private MockWebServer mockServer;
