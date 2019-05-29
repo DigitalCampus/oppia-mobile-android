@@ -20,17 +20,17 @@ package org.digitalcampus.oppia.fragments;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -38,10 +38,13 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
-import org.digitalcampus.oppia.adapter.PointsListAdapter;
+import org.digitalcampus.oppia.adapter.ActivityTypesAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.gamification.Gamification;
+import org.digitalcampus.oppia.model.ActivityCount;
+import org.digitalcampus.oppia.model.ActivityType;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Points;
 import org.joda.time.DateTime;
@@ -56,9 +59,11 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
-public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener {
+public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
 
-    public static final String TAG = PointsFragment.class.getSimpleName();
+    public static final String TAG = ActivitiesFragment.class.getSimpleName();
+
+    private static final int DURATION_CHART_Y_VALUES_ANIMATION = 1000;
 
     private final int POSITION_TAB_LAST_YEAR = 0;
     private final int POSITION_TAB_LAST_MONTH = 1;
@@ -67,25 +72,22 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     @Inject
     List<Points> pointsFull;
     List<Points> pointsFiltered = new ArrayList<>();
-    private Map<String, Integer> pointsGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
-    private int totalPoints;
-    private PointsListAdapter pointsAdapter;
-    private ListView listView;
-    private TextView tvTotalPoints;
+    private Map<String, ActivityCount> activitiesGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
     private TabLayout tabsFilterPoints;
     private LineChart chart;
-    List<Integer> yVals = new ArrayList<>();
     List<String> labels = new ArrayList<>();
     private int currentDatesRangePosition;
     private Course course;
+    private RecyclerView recyclerActivityTypes;
+    private ActivityTypesAdapter adapterActivityTypes;
+    private ArrayList<ActivityType> activityTypes;
 
-    public static PointsFragment newInstance() {
-        return new PointsFragment();
+    public static ActivitiesFragment newInstance() {
+        return new ActivitiesFragment();
     }
 
     private void findViews() {
-        listView = getView().findViewById(R.id.points_list);
-        tvTotalPoints = getView().findViewById(R.id.tv_total_points);
+        recyclerActivityTypes = getView().findViewById(R.id.recycler_activity_types);
         tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
         chart = getView().findViewById(R.id.chart);
 
@@ -95,7 +97,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_points, container, false);
+        return inflater.inflate(R.layout.fragment_activities, container, false);
     }
 
     @Override
@@ -103,18 +105,34 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         super.onActivityCreated(savedInstanceState);
         findViews();
         initializeDagger();
+        configureActivityTypes();
         configureChart();
 
         course = ((ScorecardActivity) getActivity()).getCourse();
 
         loadPoints();
 
-        pointsAdapter = new PointsListAdapter(super.getActivity(), pointsFiltered);
-        listView.setAdapter(pointsAdapter);
-
         showPointsFiltered(POSITION_TAB_LAST_YEAR);
 
 
+    }
+
+    private void configureActivityTypes() {
+        activityTypes = new ArrayList<>();
+        activityTypes.add(new ActivityType(getString(R.string.event_activity_all), ActivityType.ALL,
+                ContextCompat.getColor(getActivity(), R.color.chart_line_activity_all), true));
+        activityTypes.add(new ActivityType(getString(R.string.event_activity_completed), Gamification.EVENT_NAME_ACTIVITY_COMPLETED,
+                ContextCompat.getColor(getActivity(), R.color.chart_line_activity_completed), true));
+        activityTypes.add(new ActivityType(getString(R.string.event_media_watched), Gamification.EVENT_NAME_MEDIA_PLAYED,
+                ContextCompat.getColor(getActivity(), R.color.chart_line_media_watched), true));
+        activityTypes.add(new ActivityType(getString(R.string.event_course_downloaded), Gamification.EVENT_NAME_COURSE_DOWNLOADED,
+                ContextCompat.getColor(getActivity(), R.color.chart_line_course_downloaded), true));
+        activityTypes.add(new ActivityType(getString(R.string.event_quiz_attempt), Gamification.EVENT_NAME_QUIZ_ATTEMPT,
+                ContextCompat.getColor(getActivity(), R.color.chart_line_quiz_attempt), true));
+
+        adapterActivityTypes = new ActivityTypesAdapter(getActivity(), activityTypes);
+        adapterActivityTypes.setOnItemClickListener(this);
+        recyclerActivityTypes.setAdapter(adapterActivityTypes);
     }
 
     private void configureChart() {
@@ -187,71 +205,12 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
         groupPoints();
 
-        tvTotalPoints.setText(String.valueOf(totalPoints));
-
-        pointsAdapter.notifyDataSetChanged();
-
-        loadPlot();
+        loadPlot(true);
     }
-
-    private void loadPlot() {
-
-
-        yVals.clear();
-        labels.clear();
-        chart.animateY(1000, Easing.EaseInOutQuad);
-
-        for (Map.Entry<String, Integer> entry : pointsGrouped.entrySet()) {
-            yVals.add(entry.getValue());
-            labels.add(entry.getKey());
-        }
-
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < yVals.size(); i++) {
-            entries.add(new Entry(i, yVals.get(i)));
-        }
-
-        LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
-        dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.highlight_light));
-        dataSet.setDrawValues(false);
-        dataSet.setDrawFilled(true);
-        dataSet.setFillDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_chart_fill_gradient));
-
-        LineData lineData = new LineData(dataSet);
-
-        if (chart.getData() != null) {
-            chart.clear();
-        }
-
-
-        chart.setData(lineData);
-        chart.animateY(1000, Easing.EaseInOutQuad);
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setLabelCount(Math.min(entries.size(), 12));
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                Log.i(TAG, "getFormattedValue: enter. value: " + (int)value);
-                try {
-                    return labels.get((int) value);
-                } catch (IndexOutOfBoundsException e) {
-                    Log.i(TAG, "getFormattedValue: exception. value: " + (int)value);
-                    return "MAL";
-                }
-//                return String.valueOf(value);
-            }
-        });
-
-        chart.invalidate(); // refresh
-    }
-
 
     private void groupPoints() {
 
-        totalPoints = 0;
-
-        pointsGrouped.clear();
+        activitiesGrouped.clear();
 
         Calendar calendarIterate = Calendar.getInstance();
         Calendar calendarNow = Calendar.getInstance();
@@ -266,7 +225,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 datetimeFormatter = MobileLearning.DATE_FORMAT_DAY_MONTH;
                 calendarIterate.add(Calendar.DAY_OF_MONTH, -7);
                 while (calendarIterate.before(calendarNow)) {
-                    pointsGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), 0);
+                    activitiesGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), ActivityCount.initialize(activityTypes));
                     calendarIterate.add(Calendar.DAY_OF_MONTH, 1);
                 }
                 break;
@@ -276,7 +235,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 datetimeFormatter = MobileLearning.DATE_FORMAT_DAY_MONTH;
                 calendarIterate.add(Calendar.MONTH, -1);
                 while (calendarIterate.before(calendarNow)) {
-                    pointsGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), 0);
+                    activitiesGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), ActivityCount.initialize(activityTypes));
                     calendarIterate.add(Calendar.DAY_OF_MONTH, 1);
                 }
                 break;
@@ -287,7 +246,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 calendarIterate.add(Calendar.YEAR, -1);
                 calendarIterate.add(Calendar.MONTH, 1);
                 while (calendarIterate.before(calendarNow)) {
-                    pointsGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), 0);
+                    activitiesGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), ActivityCount.initialize(activityTypes));
                     calendarIterate.add(Calendar.DAY_OF_MONTH, 1);
                 }
 
@@ -295,22 +254,113 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         }
 
         for (Points point : pointsFiltered) {
-            totalPoints += point.getPoints();
-            int previousPoints = 0;
+
+
             String key = datetimeFormatter.print(point.getDateTime());
-            if (pointsGrouped.containsKey(key)) {
-                previousPoints = pointsGrouped.get(key);
+            if (activitiesGrouped.containsKey(key)) {
+                if (activitiesGrouped.get(key).hasValidEvent(point.getEvent())) {
+                    activitiesGrouped.get(key).incrementNumberActivityType(point.getEvent());
+                    activitiesGrouped.get(key).incrementNumberActivityType(ActivityType.ALL);
+                }
             } else {
                 Log.e(TAG, "groupPoints: this should not happen. Just in case avoids exception");
                 continue;
             }
 
-            int newPoints = previousPoints + point.getPoints();
-
-            pointsGrouped.put(key, newPoints);
         }
 
     }
+
+    private void loadPlot(boolean animate) {
+
+        labels.clear();
+
+        for (ActivityType activityType : activityTypes) {
+            activityType.getValues().clear();
+        }
+
+        for (Map.Entry<String, ActivityCount> entryMap : activitiesGrouped.entrySet()) {
+            labels.add(entryMap.getKey());
+            ActivityCount activityCount = entryMap.getValue();
+            for (ActivityType activityType : activityTypes) {
+
+                if (!activityType.isEnabled()) {
+                    continue;
+                }
+
+                int value = activityCount.getValueForType(activityType.getType());
+                activityType.getValues().add(value);
+
+            }
+        }
+
+        LineData lineData = new LineData();
+
+        int maxYValue = 0;
+
+        for (ActivityType activityType : activityTypes) {
+
+            if (!activityType.isEnabled()) {
+                continue;
+            }
+
+            List<Entry> entries = new ArrayList<>();
+            for (int i = 0; i < activityType.getValues().size(); i++) {
+                int yValue = activityType.getValues().get(i);
+                entries.add(new Entry(i, yValue));
+
+                maxYValue = Math.max(maxYValue, yValue);
+            }
+
+            LineDataSet dataSet = new LineDataSet(entries, activityType.getName()); // add entries to dataset
+            dataSet.setColor(activityType.getColor());
+            dataSet.setDrawValues(false);
+            dataSet.setDrawCircles(false);
+            dataSet.setLineWidth(getResources().getDimension(R.dimen.width_line_chart_activities));
+
+            lineData.addDataSet(dataSet);
+        }
+
+        if (chart.getData() != null) {
+            chart.clear();
+        }
+
+        chart.setData(lineData);
+
+        if (animate) {
+            chart.animateY(DURATION_CHART_Y_VALUES_ANIMATION, Easing.EaseInOutQuad);
+        }
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setLabelCount(Math.min(labels.size(), 12));
+        xAxis.setValueFormatter(new ValueFormatter(){
+
+            @Override
+            public String getFormattedValue(float value) {
+
+                Log.i(TAG, "getFormattedValue: enter. value: " + (int) value);
+                try {
+                    return labels.get((int) value);
+                } catch (IndexOutOfBoundsException e) {
+                    Log.i(TAG, "getFormattedValue: exception. value: " + (int) value);
+                    return "MAL";
+                }
+            }
+        });
+
+        YAxis yAxis = chart.getAxisLeft();
+        yAxis.setLabelCount(maxYValue);
+        yAxis.setValueFormatter(new ValueFormatter(){
+
+            @Override
+            public String getFormattedValue(float value) {
+                return String.valueOf((int) value);
+            }
+        });
+
+        chart.invalidate(); // refresh
+    }
+
 
     private void initializeDagger() {
         MobileLearning app = (MobileLearning) getActivity().getApplication();
@@ -320,7 +370,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private void loadPoints() {
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
-        pointsFull = db.getUserPoints(userId, course, false);
+        pointsFull = db.getUserPoints(userId, course, true);
 
 //        pointsFull = getMockPoints();
     }
@@ -333,12 +383,16 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -1);
 
+        String[] eventTypes = new String[]{Gamification.EVENT_NAME_ACTIVITY_COMPLETED, Gamification.EVENT_NAME_MEDIA_PLAYED,
+                Gamification.EVENT_NAME_COURSE_DOWNLOADED, Gamification.EVENT_NAME_QUIZ_ATTEMPT};
+
         for (int i = 0; i < 366; i++) {
 
             Points mockPoint = new Points();
             mockPoint.setDateTime(MobileLearning.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
-            mockPoint.setPoints(new Random().nextInt(70));
-            mockPoint.setEvent("Event mock " + i);
+            int random = new Random().nextInt(70);
+            mockPoint.setPoints(random);
+            mockPoint.setEvent(eventTypes[random % eventTypes.length]); // random event type
             mockPoint.setDescription("Description mock " + i);
 
             if (i % 13 == 0) {
@@ -379,5 +433,12 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    // Event types list
+    @Override
+    public void onItemClick(int position, String type, boolean enabled) {
+
+        loadPlot(false);
     }
 }

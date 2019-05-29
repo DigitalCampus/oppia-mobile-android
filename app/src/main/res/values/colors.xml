@@ -22,4 +22,10 @@
     <color name="background_cover">#c6333333</color>
     <color name="transparent">#00ffffff</color>
 
+    <color name="chart_line_activity_all">#000000</color>
+    <color name="chart_line_activity_completed">#43A047</color>
+    <color name="chart_line_media_watched">#1E88E5</color>
+    <color name="chart_line_course_downloaded">#E53935</color>
+    <color name="chart_line_quiz_attempt">#8E24AA</color>
+
 </resources>
