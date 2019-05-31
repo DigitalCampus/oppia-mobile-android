@@ -207,7 +207,7 @@
         android:paddingBottom="@dimen/padding_medium"
         android:weightSum="2">
 
-        <!--
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -230,7 +230,7 @@
                 android:layout_gravity="bottom"
                 android:text="@string/tab_title_login"/>
         </LinearLayout>
-        -->
+
 
         <Button
             android:id="@+id/register_btn"
