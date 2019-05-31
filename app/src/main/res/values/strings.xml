@@ -393,6 +393,12 @@
     <string name="last_month">last month</string>
     <string name="last_week">last week</string>
     <string name="no_points_data">No points data</string>
+    <string name="event_activity_completed">Activity completed</string>
+    <string name="event_media_played">Media played</string>
+    <string name="event_media_watched">Media watched</string>
+    <string name="event_course_downloaded">Course downloaded</string>
+    <string name="event_quiz_attempt">Quiz attempt</string>
+    <string name="event_activity_all">All activities</string>
 
     <string name="prefViewTypeGamificationPoints">Gamification points view type</string>
     <string name="prefGamificationPointsViewTypeFullAnimationSound">Full animation with sound</string>

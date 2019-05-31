@@ -1143,7 +1143,7 @@ public class DbHelper extends SQLiteOpenHelper {
         this.insertOrUpdateUserLeaderboard(username, fullname, currentPoints, lastUpdate);
     }
 
-	public List<Points> getUserPoints(long userId, Course courseFilter) {
+	public List<Points> getUserPoints(long userId, Course courseFilter, boolean onlyTrackerlogs) {
         ArrayList<Points> points = new ArrayList<>();
 
         // Points from Tracker
@@ -1227,6 +1227,12 @@ public class DbHelper extends SQLiteOpenHelper {
             c.moveToNext();
         }
         c.close();
+
+		if (onlyTrackerlogs) {
+			// Re-order by date time with latest date first
+			Collections.sort(points, new PointsComparator());
+			return points;
+		}
 
         // Points from QuizAttempts
         String qa = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_POINTS + "!=0";
