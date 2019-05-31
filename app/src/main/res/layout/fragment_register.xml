@@ -208,7 +208,7 @@
         android:weightSum="2">
 
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -229,7 +229,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:text="@string/tab_title_login"/>
-        </LinearLayout>
+        </LinearLayout> -->
 
 
         <Button
