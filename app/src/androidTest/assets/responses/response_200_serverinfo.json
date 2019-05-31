@@ -1,0 +1,6 @@
+{
+  "version":"test_version",
+  "name":"test_name",
+  "admin_email":"alex@digital-campus.org",
+  "max_upload":15242880
+}

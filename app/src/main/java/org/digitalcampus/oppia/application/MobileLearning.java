@@ -69,8 +69,10 @@ public class MobileLearning extends Application {
 	public static final String SERVER_COURSES_NAME = "courses";
 	public static final String COURSE_ACTIVITY_PATH = SERVER_COURSES_PATH + "%s/activity/";
 	public static final String LEADERBOARD_PATH = OPPIAMOBILE_API + "leaderboard/";
+	public static final String SERVER_INFO_PATH =  "server/";
 
-    // admin security settings
+
+	// admin security settings
     public static final boolean ADMIN_PROTECT_SETTINGS = BuildConfig.ADMIN_PROTECT_SETTINGS;
     public static final boolean ADMIN_PROTECT_COURSE_DELETE = BuildConfig.ADMIN_PROTECT_COURSE_DELETE;
     public static final boolean ADMIN_PROTECT_COURSE_RESET = BuildConfig.ADMIN_PROTECT_COURSE_RESET;
@@ -148,6 +150,8 @@ public class MobileLearning extends Application {
 				.build());
 
         Context ctx = getApplicationContext();
+		// Load the preferences from XML resources
+		PreferenceManager.setDefaultValues(ctx, R.xml.common_prefs, false);
 		PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         checkAdminProtectionOnFirstRun(prefs);
@@ -194,6 +198,7 @@ public class MobileLearning extends Application {
         if (success) Storage.setStorageStrategy(strategy);
         return success;
     }
+
 
 
 	public AppComponent getComponent(){

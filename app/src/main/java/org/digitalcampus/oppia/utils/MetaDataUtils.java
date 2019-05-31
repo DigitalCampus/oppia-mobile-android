@@ -42,9 +42,12 @@ public class MetaDataUtils {
 	public MetaDataUtils(Context ctx){
 		this.ctx = ctx;
 		TelephonyManager manager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
-		networkProvider = manager.getNetworkOperatorName();
-		deviceId = manager.getDeviceId();
-		simSerial = manager.getSimSerialNumber();
+		if (manager != null){
+			networkProvider = manager.getNetworkOperatorName();
+			deviceId = manager.getDeviceId();
+			simSerial = manager.getSimSerialNumber();
+		}
+
 	}
 	
 	private String getNetworkProvider() {

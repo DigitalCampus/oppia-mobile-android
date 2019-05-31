@@ -60,8 +60,6 @@ public class TagActivityUITest {
     public ActivityTestRule<TagSelectActivity> tagSelectActivityTestRule =
             new ActivityTestRule<>(TagSelectActivity.class, false, false);
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
 
     @Mock TagRepository tagRepository;

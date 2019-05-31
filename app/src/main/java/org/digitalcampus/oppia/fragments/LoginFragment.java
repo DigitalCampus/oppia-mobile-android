@@ -63,7 +63,7 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 		usernameField = v.findViewById(R.id.login_username_field);
 		passwordField = v.findViewById(R.id.login_password_field);
 		loginBtn = v.findViewById(R.id.login_btn);
-		registerBtn = v.findViewById(R.id.register_btn);
+		registerBtn = v.findViewById(R.id.action_register_btn);
 		resetPasswordBtn = v.findViewById(R.id.forgot_btn);
 		return v;
 	}

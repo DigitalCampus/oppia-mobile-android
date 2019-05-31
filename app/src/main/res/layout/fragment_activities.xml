@@ -47,38 +47,12 @@
             android:layout_height="match_parent" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_activity_types"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal|bottom"
-        android:paddingTop="10dp">
-
-        <TextView
-            android:id="@+id/tv_total_points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_dark"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="@color/text_dark"
-            android:text="@string/points"
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp"/>
-
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/points_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/list_divider_light"
-        android:dividerHeight="1dp"
-        android:padding="10dp"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
 
 </LinearLayout>
