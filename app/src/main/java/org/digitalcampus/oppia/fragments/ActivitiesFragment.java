@@ -354,9 +354,13 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
             @Override
             public String getFormattedValue(float value) {
-                return String.valueOf((int) value);
+                // Hide decimal values
+                boolean hasDecimals = value % 1 != 0;
+                return hasDecimals ? "" : String.valueOf((int) value);
             }
         });
+//        yAxis.setDrawTopYLabelEntry(true);
+        yAxis.setSpaceTop(0);
 
         chart.invalidate(); // refresh
     }
