@@ -32,8 +32,6 @@ public class LoginTest{
     // adb  shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE
     // https://product.reverb.com/disabling-animations-in-espresso-for-android-testing-de17f7cf236f
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
 
     private CountDownLatch signal;

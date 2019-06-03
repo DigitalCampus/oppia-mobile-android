@@ -165,14 +165,11 @@ public class CourseInstall {
         db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
 
         listener.onInstallProgress(70);
-        if (success){ SearchUtils.indexAddCourse(ctx, c); }
-
-        listener.onInstallProgress(80);
-
         if (success){
+            SearchUtils.indexAddCourse(ctx, c);
+            listener.onInstallProgress(80);
             copyBackupCourse(ctx, tempdir, c);
         }
-
         listener.onInstallProgress(90);
 
         //We reset the media scan
@@ -185,15 +182,18 @@ public class CourseInstall {
 
         listener.onInstallProgress(95);
 
-        // add event
-        c.setCourseId((int)courseId);
-        new GamificationServiceDelegate(ctx)
-                .registerCourseDownloadEvent(c);
+        if (success){
+            // add event
+            c.setCourseId((int)courseId);
+            new GamificationServiceDelegate(ctx)
+                    .registerCourseDownloadEvent(c);
 
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        Log.d(TAG, "MeasureTime - " + c.getShortname() + ": " + estimatedTime + "ms");
-        Log.d(TAG, shortname + " succesfully downloaded");
-        listener.onComplete();
+            long estimatedTime = System.currentTimeMillis() - startTime;
+            Log.d(TAG, "MeasureTime - " + c.getShortname() + ": " + estimatedTime + "ms");
+            Log.d(TAG, shortname + " succesfully downloaded");
+            listener.onComplete();
+        }
+
     }
 
     public static File savedBackupCourse(Context ctx, String shortname){
@@ -212,7 +212,8 @@ public class CourseInstall {
                 }
             }
         }
-        return previousBackup;
+
+        return (previousBackup != null && previousBackup.exists()) ? previousBackup : null;
     }
 
 

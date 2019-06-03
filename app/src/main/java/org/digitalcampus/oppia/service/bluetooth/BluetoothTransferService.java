@@ -52,6 +52,7 @@ public class BluetoothTransferService extends Service {
     public static final String ACTION_SENDFILE = "sendfile";
     public static final String ACTION_DISCONNECT = "disconnect";
 
+    public static final String MESSAGE_CONNECT = "connect";
     public static final String MESSAGE_DISCONNECT = "disconnect";
     public static final String MESSAGE_START_TRANSFER = "starttransfer";
     public static final String MESSAGE_SEND_PROGRESS = "sendprogress";
@@ -101,8 +102,13 @@ public class BluetoothTransferService extends Service {
         alternateNotifier = new BluetoothBroadcastReceiver();
         alternateNotifier.setListener(new BluetoothBroadcastReceiver.BluetoothTransferListener() {
             @Override
-            public void onFail(CourseTransferableFile file, String error) {
+            public void onCommunicationStarted() {
+                //Do nothing
+            }
 
+            @Override
+            public void onFail(CourseTransferableFile file, String error) {
+                //TODO: Notify the error?
             }
 
             @Override
@@ -331,6 +337,9 @@ public class BluetoothTransferService extends Service {
 
     private void listenAndReceiveFiles(){
         Log.i(TAG, "BEGIN receiving thread");
+        // Notify the UI that a course is transferring
+        sendOrderedBroadcast(new Intent(BROADCAST_ACTION)
+                .putExtra(SERVICE_MESSAGE, MESSAGE_CONNECT), null);
 
         // Read from the InputStream
         BufferedInputStream in = new BufferedInputStream(input);

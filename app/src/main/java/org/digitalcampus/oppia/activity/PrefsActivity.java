@@ -25,9 +25,11 @@ import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.AdminReceiver;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
+import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
+import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
@@ -67,6 +69,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	
 	public static final String PREF_USER_NAME = "prefUsername";
 	public static final String PREF_SERVER = "prefServer";
+    public static final String PREF_SERVER_CHECKED = "prefServerChecked";
+    public static final String PREF_SERVER_VALID = "prefServerValid";
+    public static final String PREF_SERVER_NAME = "prefServerName";
+    public static final String PREF_SERVER_VERSION = "prefServerVersion";
 	
 	public static final String PREF_TRIGGER_POINTS_REFRESH = "prefScoreRefresh";
 	public static final String PREF_SCORING_ENABLED = "prefScoringEnabled";
@@ -105,7 +111,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
     public static final String PREF_DISABLE_NOTIFICATIONS = "prefDisableNotifications";
     public static final String PREF_SHOW_GAMIFICATION_EVENTS = "prefShowGamificationEvents";
-
+    public static final String PREF_GAMIFICATION_POINTS_VIEW_TYPE = "prefGamificationPointsViewType";
 
     public static final String PREF_LAST_LEADERBOARD_FETCH = "prefLastLeaderboardFetch";
 
@@ -185,7 +191,29 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 newServerURL = newServerURL +"/";
                 sharedPreferences.edit().putString(PrefsActivity.PREF_SERVER, newServerURL).apply();
             }
-            mPrefsFragment.updateServerPref(newServerURL);
+            sharedPreferences.edit().putBoolean(PrefsActivity.PREF_SERVER_CHECKED, false).apply();
+
+            FetchServerInfoTask fetchServerInfoTask = new FetchServerInfoTask(this);
+            fetchServerInfoTask.execute();
+            fetchServerInfoTask.setListener(new FetchServerInfoTask.FetchServerInfoListener() {
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(PrefsActivity.this, message, Toast.LENGTH_LONG).show();
+                    mPrefsFragment.updateServerPref();
+                }
+
+                @Override
+                public void onValidServer(String version, String name) {
+                    mPrefsFragment.updateServerPref();
+                }
+
+                @Override
+                public void onUnchecked() {
+                    mPrefsFragment.updateServerPref();
+                }
+            });
+            mPrefsFragment.updateServerPref();
+
         }
         else if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
             String currentLocation = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
@@ -294,6 +322,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 dpm.removeActiveAdmin(adminReceiver);
             }
         }
+//        else if (key.equalsIgnoreCase(PREF_SHOW_GAMIFICATION_EVENTS)){
+//
+//        }
     }
 
     private void disableAdminProtection(SharedPreferences prefs){

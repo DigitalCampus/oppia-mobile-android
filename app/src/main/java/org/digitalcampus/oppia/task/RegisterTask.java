@@ -106,12 +106,12 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
                     .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
                     .build();
 
-
             // make request
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
                 JSONObject jsonResp = new JSONObject(response.body().string());
                 u.setApiKey(jsonResp.getString("api_key"));
+                u.setOfflineRegister(false);
                 try {
                     u.setBadges(jsonResp.getInt("badges"));
                 } catch (JSONException e){

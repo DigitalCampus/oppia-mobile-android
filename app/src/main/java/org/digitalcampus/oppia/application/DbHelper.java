@@ -969,7 +969,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		values.put(TRACKER_LOG_C_TYPE, type);
 		values.put(TRACKER_LOG_C_EVENT,event);
 		values.put(TRACKER_LOG_C_POINTS, points);
-		db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
+		long id = db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 
         this.incrementUserPoints(userId, points);
 
@@ -1087,6 +1087,14 @@ public class DbHelper extends SQLiteOpenHelper {
 	    Log.d(TAG,"getting username: " + userName);
 		String s = USER_C_USERNAME + "=? ";
 		String[] args = new String[] { userName };
+		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
+		return getUser(c);
+	}
+
+	public User getOneRegisteredUser() throws UserNotFoundException {
+		String s = USER_C_OFFLINE_REGISTER + "=? ";
+		String[] args = new String[] { "1" };
+
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		return getUser(c);
 	}

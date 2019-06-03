@@ -21,15 +21,15 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
+import org.digitalcampus.mobile.quiz.Quiz;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.digitalcampus.mobile.quiz.Quiz;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class QuizQuestion implements Serializable {
 
@@ -38,30 +38,29 @@ public class QuizQuestion implements Serializable {
 
     protected int id;
     protected float userscore = 0;
-    protected Map<String,String> title = new HashMap<>();
-    protected Map<String,String> props = new HashMap<>();
+    protected Map<String, String> title = new HashMap<>();
+    protected Map<String, String> props = new HashMap<>();
     protected boolean feedbackDisplayed = false;
     protected List<Response> responseOptions = new ArrayList<>();
     protected List<String> userResponses = new ArrayList<>();
     protected String feedback = "";
 
-    public void addResponseOption(Response r){
+    public void addResponseOption(Response r) {
         responseOptions.add(r);
     }
 
-    public List<Response> getResponseOptions(){
+    public List<Response> getResponseOptions() {
         return responseOptions;
     }
 
-    public void setUserResponses(List<String> str){
-        if (!str.equals(this.userResponses)){
+    public void setUserResponses(List<String> str) {
+        if (!str.equals(this.userResponses)) {
             this.setFeedbackDisplayed(false);
         }
         this.userResponses = str;
     }
 
-    public List<String> getUserResponses()
-    {
+    public List<String> getUserResponses() {
         return this.userResponses;
     }
 
@@ -69,11 +68,11 @@ public class QuizQuestion implements Serializable {
         this.responseOptions = responses;
     }
 
-    public void mark(String lang){
+    public void mark(String lang) {
         // loop through the responses
         // find whichever are set as selected and add up the responses
         float total = 0;
-        for (Response r : responseOptions){
+        for (Response r : responseOptions) {
             for (String a : userResponses) {
                 if (r.getTitle(lang).equals(a)) {
                     total += r.getScore();
@@ -83,9 +82,9 @@ public class QuizQuestion implements Serializable {
                 }
             }
         }
-        if(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE) != null){
+        if (this.getProp(Quiz.JSON_PROPERTY_MAXSCORE) != null) {
             int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
-            if (total > maxscore){
+            if (total > maxscore) {
                 userscore = maxscore;
             } else {
                 userscore = total;
@@ -95,7 +94,7 @@ public class QuizQuestion implements Serializable {
         }
     }
 
-    public int getID(){
+    public int getID() {
         return this.id;
     }
 
@@ -104,16 +103,16 @@ public class QuizQuestion implements Serializable {
     }
 
     public String getTitle(String lang) {
-        if(title.containsKey(lang)){
+        if (title.containsKey(lang)) {
             return title.get(lang);
-        } else if (!title.entrySet().isEmpty()){
+        } else if (!title.entrySet().isEmpty()) {
             return title.entrySet().iterator().next().getValue();
         } else {
             return "";
         }
     }
 
-    public void setTitleForLang(String lang, String title)  {
+    public void setTitleForLang(String lang, String title) {
         this.title.put(lang, title);
     }
 
@@ -141,24 +140,24 @@ public class QuizQuestion implements Serializable {
         JSONObject jo = new JSONObject();
         try {
             jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
-            jo.put(Quiz.JSON_PROPERTY_SCORE,0);
+            jo.put(Quiz.JSON_PROPERTY_SCORE, 0);
             jo.put(Quiz.JSON_PROPERTY_TEXT, null);
         } catch (JSONException jsone) {
-            Log.d(TAG,"Error creating json object", jsone);
+            Log.d(TAG, "Error creating json object", jsone);
             Mint.logException(jsone);
         }
         return jo;
     }
 
     public boolean responseExpected() {
-        if (this.props.containsKey(Quiz.JSON_PROPERTY_REQUIRED)){
+        if (this.props.containsKey(Quiz.JSON_PROPERTY_REQUIRED)) {
             return Boolean.parseBoolean(this.getProp(Quiz.JSON_PROPERTY_REQUIRED));
         }
         return true;
     }
 
     public int getScoreAsPercent() {
-        if (this.getMaxScore() > 0){
+        if (this.getMaxScore() > 0) {
             return (int) (100 * this.getUserscore()) / this.getMaxScore();
         } else {
             return 0;

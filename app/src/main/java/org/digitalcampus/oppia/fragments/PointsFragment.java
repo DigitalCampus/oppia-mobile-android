@@ -17,6 +17,9 @@
 
 package org.digitalcampus.oppia.fragments;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -215,7 +218,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.highlight_light));
         dataSet.setDrawValues(false);
         dataSet.setDrawFilled(true);
-        dataSet.setFillDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_chart_fill_gradient));
+        dataSet.setFillDrawable(getGradientDrawable());
 
         LineData lineData = new LineData(dataSet);
 
@@ -244,6 +247,23 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         });
 
         chart.invalidate(); // refresh
+    }
+
+    private Drawable getGradientDrawable() {
+
+        int colorStart = ContextCompat.getColor(getActivity(), R.color.highlight_light);
+        int colorEnd = ContextCompat.getColor(getActivity(), R.color.highlight_mid);
+
+        int alpha = 128;
+        int colorStartAlpha = Color.argb(alpha, Color.red(colorStart), Color.green(colorStart), Color.blue(colorStart));
+        int colorEndAlpha = Color.argb(alpha, Color.red(colorEnd), Color.green(colorEnd), Color.blue(colorEnd));
+
+        GradientDrawable gd = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[] {colorStartAlpha, colorEndAlpha});
+        gd.setCornerRadius(0f);
+
+        return gd;
     }
 
 

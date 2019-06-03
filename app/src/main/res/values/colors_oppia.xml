@@ -12,6 +12,4 @@
     <color name="tab_text_color">@color/text_light</color>
     <color name="tab_selected_text_color">@color/text_light</color>
 
-    <color name="chart_gradient_start">#9987BB17</color>
-    <color name="chart_gradient_end">#99AAD65A</color>
 </resources>

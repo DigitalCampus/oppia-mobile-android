@@ -27,6 +27,7 @@ import org.digitalcampus.oppia.model.CourseTransferableFile;
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
 
     public interface BluetoothTransferListener{
+        void onCommunicationStarted();
         void onFail(CourseTransferableFile file, String error);
         void onStartTransfer(CourseTransferableFile file);
         void onSendProgress(CourseTransferableFile file, int progress);
@@ -51,6 +52,9 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
             if (BluetoothTransferService.MESSAGE_DISCONNECT.equals(message)){
                 String error = intent.getStringExtra(BluetoothTransferService.SERVICE_ERROR);
                 cListener.onCommunicationClosed(error);
+            }
+            else if (BluetoothTransferService.MESSAGE_CONNECT.equals(message)){
+                cListener.onCommunicationStarted();
             }
             else if (BluetoothTransferService.MESSAGE_START_TRANSFER.equals(message)){
                 CourseTransferableFile file = (CourseTransferableFile) intent.getSerializableExtra(BluetoothTransferService.SERVICE_FILE);
