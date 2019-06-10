@@ -226,9 +226,9 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.addView(snackView, 0);
             layout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
 
-            final int gamifPointsViewType = Integer.parseInt(prefs.getString(PrefsActivity.PREF_GAMIFICATION_POINTS_VIEW_TYPE, Gamification.PREF_GAMIFICATION_POINTS_VIEW_TYPE));
+            final int gamifPointsViewType = Integer.parseInt(prefs.getString(PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION, Gamification.GAMIFICATION_POINTS_ANIMATION));
 
-            final boolean fullAnimation = gamifPointsViewType > 1;
+            final boolean fullAnimation = gamifPointsViewType == 2 || gamifPointsViewType == 3;
             final boolean withSound = gamifPointsViewType == 3;
 
             if (fullAnimation) {

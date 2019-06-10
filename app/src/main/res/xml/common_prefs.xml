@@ -55,10 +55,11 @@
 
     <ListPreference
         android:dependency="prefShowGamificationEvents"
-        android:key="prefGamificationPointsViewType"
-        android:title="@string/prefViewTypeGamificationPoints"
-        android:entries="@array/GamificationPointsViewTypes"
-        android:entryValues="@array/GamificationPointsViewTypesValues" />
+        android:key="prefGamificationPointsAnimation"
+        android:title="@string/prefAnimationTypeGamificationPoints"
+        android:entries="@array/GamificationPointsAnimation"
+        android:entryValues="@array/GamificationPointsAnimationValues"
+        android:defaultValue="@string/prefGamificationPointsAnimationDefault"/>
 
     <CheckBoxPreference
         android:defaultValue="false"
