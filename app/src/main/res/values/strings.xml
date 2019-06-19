@@ -405,5 +405,8 @@
     <string name="prefGamificationPointsViewTypeFullAnimation">Full animation</string>
     <string name="prefGamificationPointsViewTypeSimpleAnimation">Simple animation</string>
     <string name="prefGamificationPointsViewTypeNone">None</string>
+
+    <string name="prefDurationAnimationTypeGamificationPointsView">Duration of gamification points view (seconds)</string>
+
 </resources>
 

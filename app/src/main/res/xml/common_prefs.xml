@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ListPreference
         android:defaultValue=""
@@ -61,6 +62,13 @@
         android:entryValues="@array/GamificationPointsAnimationValues"
         android:defaultValue="@string/prefGamificationPointsAnimationDefault"/>
 
+    <EditTextPreference
+        android:dependency="prefShowGamificationEvents"
+        android:key="prefDurationGamificationPointsView"
+        android:title="@string/prefDurationAnimationTypeGamificationPointsView"
+        android:defaultValue="@string/prefDurationGamificationPointsViewDefault"
+        android:inputType="number" />
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="prefAdminProtection"
@@ -71,7 +79,8 @@
         android:key="prefAdminPassword"
         android:title="@string/prefAdminPassword"
         android:inputType="textPassword"
-        android:dependency="prefAdminProtection" />
+        android:dependency="prefAdminProtection"
+        android:maxLength="2"/>
 
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
