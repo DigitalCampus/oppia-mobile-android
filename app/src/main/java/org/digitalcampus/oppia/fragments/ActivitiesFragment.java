@@ -349,7 +349,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         });
 
         YAxis yAxis = chart.getAxisLeft();
-        yAxis.setLabelCount(maxYValue);
+        yAxis.setLabelCount(Math.min(maxYValue, 10));
         yAxis.setValueFormatter(new ValueFormatter(){
 
             @Override
