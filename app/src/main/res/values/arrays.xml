@@ -37,14 +37,14 @@
         <item name="external">external</item>
     </string-array>
 
-    <string-array name="GamificationPointsViewTypes">
+    <string-array name="GamificationPointsAnimation">
         <!--<item>@string/prefGamificationPointsViewTypeNone</item>-->
         <item>@string/prefGamificationPointsViewTypeSimpleAnimation</item>
         <item>@string/prefGamificationPointsViewTypeFullAnimation</item>
         <item>@string/prefGamificationPointsViewTypeFullAnimationSound</item>
     </string-array>
 
-    <string-array name="GamificationPointsViewTypesValues">
+    <string-array name="GamificationPointsAnimationValues">
         <!--<item>0</item>-->
         <item>1</item>
         <item>2</item>
