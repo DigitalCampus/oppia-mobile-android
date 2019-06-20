@@ -26,6 +26,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -53,6 +54,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
@@ -235,7 +237,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 UIUtils.showUserData(optionsMenu, AppActivity.this, null, false, points);
             }
 
-            snackbar.setDuration(fullAnimation ? Snackbar.LENGTH_INDEFINITE : Snackbar.LENGTH_SHORT);
+            snackbar.setDuration(Snackbar.LENGTH_INDEFINITE);
 
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override
@@ -246,6 +248,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                         animatePoints(sb, withSound);
                     } else {
                         UIUtils.showUserData(optionsMenu, AppActivity.this, null, false, 0);
+                        waitAndClose(sb);
                     }
                 }
 
@@ -259,6 +262,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
         }
     }
+
 
     private void animatePoints(final Snackbar snackbar, boolean withSound) {
 
@@ -331,8 +335,8 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                snackbar.dismiss();
                 UIUtils.showUserData(optionsMenu, AppActivity.this, null, true, 0);
+                waitAndClose(snackbar);
             }
 
             @Override
@@ -346,6 +350,19 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             }
         });
 
+    }
 
+    private void waitAndClose(final Snackbar snackbar) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int durationViewPoints = Integer.parseInt(prefs.getString(PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW,
+                String.valueOf(Gamification.DURATION_GAMIFICATION_POINTS_VIEW)));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                snackbar.dismiss();
+            }
+        }, TimeUnit.SECONDS.toMillis(durationViewPoints));
     }
 }
