@@ -17,13 +17,9 @@
 
 package org.digitalcampus.mobile.quiz;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.Response;
@@ -42,9 +38,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
-import com.splunk.mint.Mint;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class Quiz implements Serializable {
 
@@ -454,7 +454,6 @@ public class Quiz implements Serializable {
             return json.getInt(key);
         } catch (JSONException jsone) {
             Log.d(TAG, "Error getting int from propsSerialized", jsone);
-            Mint.logException(jsone);
         }
         return defaultValue;
     }
