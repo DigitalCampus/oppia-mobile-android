@@ -138,6 +138,8 @@ public class MobileLearning extends Application {
     public void onCreate() {
         super.onCreate();
 
+
+
         // this method fires once at application start
         Log.d(TAG, "Application start");
 
@@ -154,6 +156,7 @@ public class MobileLearning extends Application {
 		PreferenceManager.setDefaultValues(ctx, R.xml.common_prefs, false);
 		PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
         checkAdminProtectionOnFirstRun(prefs);
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
 

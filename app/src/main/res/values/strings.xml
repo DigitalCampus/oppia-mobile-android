@@ -402,10 +402,13 @@
     <string name="event_quiz_attempt">Quiz attempt</string>
     <string name="event_activity_all">All activities</string>
 
-    <string name="prefViewTypeGamificationPoints">Gamification points view type</string>
+    <string name="prefAnimationTypeGamificationPoints">Gamification points animation type</string>
     <string name="prefGamificationPointsViewTypeFullAnimationSound">Full animation with sound</string>
     <string name="prefGamificationPointsViewTypeFullAnimation">Full animation</string>
     <string name="prefGamificationPointsViewTypeSimpleAnimation">Simple animation</string>
     <string name="prefGamificationPointsViewTypeNone">None</string>
+
+    <string name="prefDurationAnimationTypeGamificationPointsView">Duration of gamification points view (seconds)</string>
+
 </resources>
 
