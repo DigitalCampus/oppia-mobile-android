@@ -20,7 +20,7 @@ android {
         versionCode 67
         versionName "6.7.0"
 
-        applicationId "org.digitalcampus.mobile.learning"
+        applicationId "org.nigersmartvillage.mobile.learning"
         minSdkVersion 14
         targetSdkVersion 28
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

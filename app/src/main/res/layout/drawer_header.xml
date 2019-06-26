@@ -58,7 +58,7 @@
             android:layout_height="fill_parent"
             android:id="@+id/imageView9"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/dc_logo"
+            android:src="@mipmap/ic_niger"
             android:layout_above="@+id/drawer_username"
             android:paddingBottom="5dp"
             android:layout_marginTop="@dimen/tool_bar_top_padding"/>

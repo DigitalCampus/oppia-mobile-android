@@ -37,7 +37,7 @@
     <application
         android:name="org.digitalcampus.oppia.application.MobileLearning"
         android:allowBackup="true"
-        android:icon="@drawable/dc_logo"
+        android:icon="@mipmap/ic_niger"
         android:label="@string/app_name"
         android:theme="@style/Oppia.Theme"
         android:usesCleartextTraffic="true">

@@ -1,32 +1,37 @@
 {
   "project_info": {
-    "project_number": "650899919285",
-    "project_id": "firebase-oppiamobile"
+    "project_number": "574694545437",
+    "firebase_url": "https://nigersmartvillageoppiamobile.firebaseio.com",
+    "project_id": "nigersmartvillageoppiamobile",
+    "storage_bucket": "nigersmartvillageoppiamobile.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:650899919285:android:7a5999343929f4a4",
+        "mobilesdk_app_id": "1:574694545437:android:1ea6cd9bda08eed5",
         "android_client_info": {
-          "package_name": "org.digitalcampus.mobile.learning"
+          "package_name": "org.nigersmartvillage.mobile.learning"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "574694545437-8vi2rfjcql06022bgi7g0llen8qclm14.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAdMct9eGjYus6yJn39vssoZFHwHunqrFk"
+          "current_key": "AIzaSyDXd5P1xw4WMuSJi51Ech4zgQxcKbEh4rM"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574694545437-8vi2rfjcql06022bgi7g0llen8qclm14.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
