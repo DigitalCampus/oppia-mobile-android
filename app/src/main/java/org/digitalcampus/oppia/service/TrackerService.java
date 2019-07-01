@@ -43,10 +43,12 @@ import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
+import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.RegisterTask;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
+import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,7 +70,7 @@ public class TrackerService extends Service implements APIRequestListener {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
-		if (isOnline()) {
+		if (ConnectionUtils.isNetworkConnected(getApplicationContext())) {
 
 			boolean backgroundData = true;
 			Bundle b = intent.getExtras();
@@ -80,24 +82,6 @@ public class TrackerService extends Service implements APIRequestListener {
 			Thread thread = new Thread(new Runnable(){
 				@Override
 				public void run() {
-					Log.d(TAG, "Sending offline registered users to server (if needed)");
-					List<User> users = DbHelper.getInstance(TrackerService.this).getAllUsers();
-					for (User user : users){
-						//We try to send the new user to register
-						if (user.isOfflineRegister()){
-							Log.d(TAG, "Trying to send user " + user.getUsername() + " to registration...");
-							Payload p = new Payload();
-							RegisterTask rt = new RegisterTask(TrackerService.this);
-							boolean success = rt.submitUserToServer(user, p, false);
-							Log.d(TAG, "User " + user.getUsername() + " " + (success?"succeeded":"failed"));
-
-							if (success){
-								DbHelper.getInstance(TrackerService.this).addOrUpdateUser(user);
-							}
-						}
-					}
-
-
 					if (finalBackgroundData){
 						updateTracking();
 					}
@@ -125,15 +109,12 @@ public class TrackerService extends Service implements APIRequestListener {
 		}
 	}
 
-	private boolean isOnline() {
-		getApplicationContext();
-		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cm != null ? cm.getActiveNetworkInfo() : null;
-		return netInfo != null && netInfo.isConnected();
-	}
-
 	public void updateTracking(){
-		Payload p = null;
+
+		Payload p;
+		// Update server info
+		FetchServerInfoTask fetchServerInfoTask = new FetchServerInfoTask(this);
+		fetchServerInfoTask.execute();
 
 		// check for updated courses
 		// should only do this once a day or so....

@@ -59,6 +59,10 @@ public class Gamification {
     public static final GamificationEvent GAMIFICATION_MEDIA_MISSING =  new GamificationEvent(EVENT_NAME_MEDIA_MISSING,0);
     public static final GamificationEvent GAMIFICATION_MEDIA_THRESHOLD_PASSED =  new GamificationEvent(EVENT_NAME_MEDIA_THRESHOLD_PASSED,150);
 
+    // Gamification points configuration
+    public static final String GAMIFICATION_POINTS_ANIMATION = BuildConfig.GAMIFICATION_POINTS_ANIMATION;
+    public static final int DURATION_GAMIFICATION_POINTS_VIEW = BuildConfig.DURATION_GAMIFICATION_POINTS_VIEW;
+
     public static final String MEDIA_CRITERIA_INTERVALS = "intervals";
     public static final String MEDIA_CRITERIA_THRESHOLD = "threshold";
     public static final String DEFAULT_MEDIA_CRITERIA = BuildConfig.GAMIFICATION_MEDIA_CRITERIA;

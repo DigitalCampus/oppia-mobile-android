@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -53,74 +53,110 @@ import okhttp3.Response;
 
 public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, Payload> {
 
-	public final static String TAG = SubmitTrackerMultipleTask.class.getSimpleName();
+    public final static String TAG = SubmitTrackerMultipleTask.class.getSimpleName();
 
     private final static String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
 
-	private TrackerServiceListener trackerServiceListener;
+    private TrackerServiceListener trackerServiceListener;
 
     public SubmitTrackerMultipleTask(Context ctx) { super(ctx); }
     public SubmitTrackerMultipleTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
+    @Override
+    protected Payload doInBackground(Payload... params) {
+        Payload payload = new Payload();
+        boolean submitAttempted = false;
 
+        try {
+            DbHelper db = DbHelper.getInstance(ctx);
+            List<User> users = db.getAllUsers();
 
-	@Override
-	protected Payload doInBackground(Payload... params) {
-		Payload payload = new Payload();
+            for (User u: users) {
 
-		try {	
-			DbHelper db = DbHelper.getInstance(ctx);
-			List<User> users = db.getAllUsers();
-			
-			for (User u: users) {
-                payload = db.getUnsentTrackers(u.getUserId());
+                boolean offlineUser = u.isOfflineRegister();
+                //We try to send the new user to register
+                if (offlineUser){
+                    Log.d(TAG, "Trying to send user " + u.getUsername() + " to registration...");
+                    Payload p = new Payload();
+                    RegisterTask rt = new RegisterTask(ctx);
+                    boolean success = rt.submitUserToServer(u, p, false);
+                    Log.d(TAG, "User " + u.getUsername() + " " + (success?"succeeded":"failed"));
 
-                @SuppressWarnings("unchecked")
-                Collection<Collection<TrackerLog>> userTrackers = split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
-                sendTrackerBatch(userTrackers, u, payload);
+                    if (success){
+                        db.addOrUpdateUser(u);
+                        offlineUser = false;
+                    }
+                }
+
+                if (!offlineUser){
+                    // If we don't get the user registered, then avoid sending the trackers as he would not have an apiKey
+                    payload = db.getUnsentTrackers(u.getUserId());
+                    submitAttempted = true;
+
+                    @SuppressWarnings("unchecked")
+                    Collection<Collection<TrackerLog>> userTrackers = split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
+                    sendTrackerBatch(userTrackers, u, payload);
+                }
             }
 
             List<File> unsentLogs = getActivityLogsToSend();
-			if (unsentLogs.size() > 0){
-			    for (File activityLog : unsentLogs){
-			        sendTrackerLog(activityLog, payload);
+            if (unsentLogs.size() > 0){
+                for (File activityLog : unsentLogs){
+                    sendTrackerLog(activityLog, payload);
                 }
             }
-	
-		} catch (IllegalStateException ise) {
-            Log.d(TAG, "IllegalStateException:", ise);
-			payload.setResult(false);
-		} 
-		
-		Editor editor = prefs.edit();
-		long now = System.currentTimeMillis()/1000;
-		editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
-		return payload;
-	}
 
-	private void sendTrackerLog(File activityLog, Payload payload){
+        } catch (IllegalStateException ise) {
+            Log.d(TAG, "IllegalStateException:", ise);
+            payload.setResult(false);
+        }
+
+        Editor editor = prefs.edit();
+        long now = System.currentTimeMillis()/1000;
+        editor.putLong(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH, now).apply();
+
+        if (!submitAttempted){
+            payload.setResultResponse("Trackers from offline registered users could not be sent");
+        }
+        return payload;
+    }
+
+
+
+    private void sendTrackerLog(File activityLog, Payload payload){
         try {
             DbHelper db = DbHelper.getInstance(ctx);
             String dataToSend = org.apache.commons.io.FileUtils.readFileToString(activityLog);
-            User user = db.getUser(SessionManager.getUsername(ctx));
-            boolean success = sendTrackers(user, dataToSend, true);
-            payload.setResult(success);
-            if (success){
-                Log.d(TAG, "Success sending " + activityLog.getName());
-                // If the logs were sent successfully, we can delete the file
-                FileUtils.deleteFile(activityLog);
+
+            //We don't need the current user to send this, just some with a valid apiKey
+            User user;
+            try {
+                user = db.getOneRegisteredUser();
+            } catch (UserNotFoundException e) {
+                Mint.logException(e);
+                payload.setResult(false);
+                //If there is no logged in user, there is no point in trying to submit trackers
+                return;
+            }
+
+            if (!user.isOfflineRegister()){
+                boolean success = sendTrackers(user, dataToSend, true);
+                payload.setResult(success);
+                if (success){
+                    Log.d(TAG, "Success sending " + activityLog.getName());
+                    // If the logs were sent successfully, we can delete the file
+                    FileUtils.deleteFile(activityLog);
+                }
             }
 
         } catch (IOException e) {
             Mint.logException(e);
             payload.setResult(false);
-        } catch (UserNotFoundException e) {
-            Mint.logException(e);
-            payload.setResult(false);
         }
+
     }
 
-	private boolean sendTrackers(User user, String dataToSend, boolean isRaw){
+    private boolean sendTrackers(User user, String dataToSend, boolean isRaw){
         Log.d(TAG, dataToSend);
         DbHelper db = DbHelper.getInstance(ctx);
 
@@ -205,84 +241,84 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
     private void sendTrackerBatch(Collection<Collection<TrackerLog>> trackers, User user, Payload p) {
 
-            DbHelper db = DbHelper.getInstance(ctx);
-            p.setResult(true);
-            for (Collection<TrackerLog> trackerBatch : trackers) {
-                String dataToSend = createDataString(trackerBatch);
-                boolean success = sendTrackers(user, dataToSend, false);
-                p.setResult(success);
+        DbHelper db = DbHelper.getInstance(ctx);
+        p.setResult(true);
+        for (Collection<TrackerLog> trackerBatch : trackers) {
+            String dataToSend = createDataString(trackerBatch);
+            boolean success = sendTrackers(user, dataToSend, false);
+            p.setResult(success);
 
-                if (success){
-                    for (TrackerLog tl : trackerBatch) {
-                        db.markLogSubmitted(tl.getId());
-                    }
+            if (success){
+                for (TrackerLog tl : trackerBatch) {
+                    db.markLogSubmitted(tl.getId());
                 }
-                publishProgress(0);
             }
+            publishProgress(0);
+        }
     }
 
-	@Override
-	protected void onProgressUpdate(Integer... obj) {
-		synchronized (this) {
+    @Override
+    protected void onProgressUpdate(Integer... obj) {
+        synchronized (this) {
             if (trackerServiceListener != null) {
-            	trackerServiceListener.trackerProgressUpdate();
+                trackerServiceListener.trackerProgressUpdate();
             }
         }
-	}
-	
-	@Override
-    protected void onPostExecute(Payload p) {
-		synchronized (this) {
-            if (trackerServiceListener != null) {
-            	trackerServiceListener.trackerComplete(p.isResult());
-            }
-        }
-		// reset submittask back to null after completion - so next call can run properly
-		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-		app.omSubmitTrackerMultipleTask = null;
-		
     }
-	
-	public void setTrackerServiceListener(TrackerServiceListener tsl) {
+
+    @Override
+    protected void onPostExecute(Payload p) {
+        synchronized (this) {
+            if (trackerServiceListener != null) {
+                trackerServiceListener.trackerComplete(p.isResult(), p.getResultResponse());
+            }
+        }
+        // reset submittask back to null after completion - so next call can run properly
+        MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+        app.omSubmitTrackerMultipleTask = null;
+
+    }
+
+    public void setTrackerServiceListener(TrackerServiceListener tsl) {
         trackerServiceListener = tsl;
     }
-	
-	private static Collection<Collection<TrackerLog>> split(Collection<Object> bigCollection, int maxBatchSize) {
-		Collection<Collection<TrackerLog>> result = new ArrayList<>();
 
-		ArrayList<TrackerLog> currentBatch = null;
-		for (Object obj : bigCollection) {
-			TrackerLog tl = (TrackerLog) obj;
-			if (currentBatch == null) {
-				currentBatch = new ArrayList<>();
-			} else if (currentBatch.size() >= maxBatchSize) {
-				result.add(currentBatch);
-				currentBatch = new ArrayList<>();
-			}
+    private static Collection<Collection<TrackerLog>> split(Collection<Object> bigCollection, int maxBatchSize) {
+        Collection<Collection<TrackerLog>> result = new ArrayList<>();
 
-			currentBatch.add(tl);
-		}
+        ArrayList<TrackerLog> currentBatch = null;
+        for (Object obj : bigCollection) {
+            TrackerLog tl = (TrackerLog) obj;
+            if (currentBatch == null) {
+                currentBatch = new ArrayList<>();
+            } else if (currentBatch.size() >= maxBatchSize) {
+                result.add(currentBatch);
+                currentBatch = new ArrayList<>();
+            }
 
-		if (currentBatch != null) {
-			result.add(currentBatch);
-		}
+            currentBatch.add(tl);
+        }
 
-		return result;
-	}
-	
-	private String createDataString(Collection<TrackerLog> collection){
-		String jsonString = "{\"objects\":[";
-		int counter = 0;
+        if (currentBatch != null) {
+            result.add(currentBatch);
+        }
+
+        return result;
+    }
+
+    private String createDataString(Collection<TrackerLog> collection){
+        StringBuilder jsonString = new StringBuilder("{\"objects\":[");
+        int counter = 0;
         int collectionSize = collection.size();
-		for(TrackerLog tl: collection){
-			counter++;
-            jsonString += tl.getContent();
-			if(counter != collectionSize){
-                jsonString += ",";
-			}
-		}
-        jsonString += "]}";
-		return jsonString;
-	}
+        for(TrackerLog tl: collection){
+            counter++;
+            jsonString.append(tl.getContent());
+            if(counter != collectionSize){
+                jsonString.append(",");
+            }
+        }
+        jsonString.append("]}");
+        return jsonString.toString();
+    }
 
 }

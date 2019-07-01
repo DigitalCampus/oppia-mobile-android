@@ -18,8 +18,8 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        versionCode 67
-        versionName "6.7.0"
+        versionCode 68
+        versionName "6.8.0"
 
         applicationId "org.digitalcampus.mobile.learning"
         minSdkVersion 14
@@ -83,6 +83,9 @@ android {
             buildConfigField "int", "DOWNLOAD_COURSES_DISPLAY", runtimeProps['DOWNLOAD_COURSES_DISPLAY']
             buildConfigField "String", "GAMIFICATION_MEDIA_CRITERIA", "\"" + runtimeProps['GAMIFICATION_MEDIA_CRITERIA'] + "\""
             buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
+            buildConfigField "String", "GAMIFICATION_POINTS_ANIMATION",  "\"" + runtimeProps['GAMIFICATION_POINTS_ANIMATION'] + "\""
+            buildConfigField "int", "DURATION_GAMIFICATION_POINTS_VIEW", runtimeProps['DURATION_GAMIFICATION_POINTS_VIEW']
+
 
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
@@ -90,6 +93,8 @@ android {
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
             resValue "string", "oppiaServerHost", runtimeProps['OPPIA_SERVER_HOST']
             resValue "string", "prefAdminPasswordDefault", runtimeProps['ADMIN_PROTECT_INITIAL_PASSWORD']
+            resValue "string", "prefGamificationPointsAnimationDefault", runtimeProps['GAMIFICATION_POINTS_ANIMATION']
+            resValue "string", "prefDurationGamificationPointsViewDefault", runtimeProps['DURATION_GAMIFICATION_POINTS_VIEW']
 
         }
 
@@ -109,6 +114,8 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
+        animationsDisabled = true
+
     }
 
 
@@ -131,6 +138,7 @@ dependencies {
     implementation 'joda-time:joda-time:2.3'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'com.android.support:preference-v7:28.0.0'
     implementation 'com.androidplot:androidplot-core:1.5.6'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.squareup.okhttp3:okhttp:3.3.1'
@@ -169,6 +177,10 @@ dependencies {
 //    androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.2'
     androidTestImplementation 'com.github.fabioCollini.daggermock:daggermock:0.8.5'
 
+//    implementation "com.androidplot:androidplot-core:1.5.6"
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 }
 
 apply plugin: 'com.google.gms.google-services'
@@ -183,17 +195,17 @@ task grantPermissions(type: Exec, dependsOn: 'installDebug') {
     } else {
         println "Granting permissions for a windows os"
     }
-    commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE --stacktrace".split(" ")
+
+    commandLine "${adb} shell pm grant ${android.defaultConfig.applicationId} android.permission.SET_ANIMATION_SCALE".split(' ')
+    // commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE --stacktrace".split(" ")
 
 }
 
-afterEvaluate {
-    tasks.each { task ->
-        if (task.name.contentEquals('connectedAndroidTest') ||
-                task.name.contentEquals('connectedDebugAndroidTest') ||
-                task.name.contentEquals('assembleDebugAndroidTest') ||
-                task.name.contentEquals('assembleAndroidTest')) {
-            task.dependsOn grantPermissions
-        }
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('connectedAndroidTest')  ||
+            task.name.startsWith('connectedDebugAndroidTest') ||
+            task.name.startsWith('assembleDebugAndroidTest') ||
+            task.name.startsWith('assembleAndroidTest')) {
+        task.dependsOn grantPermissions
     }
 }

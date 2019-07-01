@@ -30,8 +30,6 @@ public class LoginUITest {
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<>(WelcomeActivity.class);
 
-    @Rule
-    public DisableAnimationsRule disableAnimationsRule = new DisableAnimationsRule();
 
 
     @Test

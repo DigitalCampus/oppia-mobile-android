@@ -11,4 +11,5 @@
     <color name="tab_bg_color">@color/highlight_label</color>
     <color name="tab_text_color">@color/text_light</color>
     <color name="tab_selected_text_color">@color/text_light</color>
+
 </resources>

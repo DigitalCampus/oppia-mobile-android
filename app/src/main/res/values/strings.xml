@@ -97,6 +97,7 @@
     <string name="prefLanguage">Preferred Language</string>
     <string name="prefHighlightCompleted">Highlight completed activities</string>
     <string name="prefServer">Server</string>
+    <string name="prefServer_notChecked">Unchecked URL</string>
     <string name="prefServer_errorTitle">Invalid URL</string>
     <string name="prefServer_errorDescription">Please, enter a well-formed URL corresponding to your &appName;
         server endpoint</string>
@@ -387,5 +388,25 @@
     <string name="register_offline">Register offline</string>
     <string name="field_required">This field cannot be empty</string>
     <string name="field_spaces_error">Cannot contain spaces</string>
+    <string name="points">points</string>
+    <string name="last_year">last year</string>
+    <string name="last_month">last month</string>
+    <string name="last_week">last week</string>
+    <string name="no_points_data">No points data</string>
+    <string name="event_activity_completed">Activity completed</string>
+    <string name="event_media_played">Media played</string>
+    <string name="event_media_watched">Media watched</string>
+    <string name="event_course_downloaded">Course downloaded</string>
+    <string name="event_quiz_attempt">Quiz attempt</string>
+    <string name="event_activity_all">All activities</string>
+
+    <string name="prefAnimationTypeGamificationPoints">Gamification points animation type</string>
+    <string name="prefGamificationPointsViewTypeFullAnimationSound">Full animation with sound</string>
+    <string name="prefGamificationPointsViewTypeFullAnimation">Full animation</string>
+    <string name="prefGamificationPointsViewTypeSimpleAnimation">Simple animation</string>
+    <string name="prefGamificationPointsViewTypeNone">None</string>
+
+    <string name="prefDurationAnimationTypeGamificationPointsView">Duration of gamification points view (seconds)</string>
+
 </resources>
 

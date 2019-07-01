@@ -29,6 +29,7 @@ import android.view.MenuItem;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
+import org.digitalcampus.oppia.fragments.ActivitiesFragment;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.CourseScorecardFragment;
 import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
@@ -93,6 +94,9 @@ public class ScorecardActivity extends AppActivity {
 		fragments.add(fScorecard);
         tabTitles.add(this.getString(R.string.tab_title_scorecard));
 
+		fragments.add(ActivitiesFragment.newInstance());
+		tabTitles.add(this.getString(R.string.tab_title_activity));
+
 		boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
 		if (scoringEnabled) {
 			Fragment fPoints = PointsFragment.newInstance();
@@ -124,15 +128,19 @@ public class ScorecardActivity extends AppActivity {
         int currentTab = 0;
         if ( targetTabOnLoad != null){
             if (targetTabOnLoad.equals(TAB_TARGET_POINTS) && scoringEnabled) {
-                currentTab = 1;
+                currentTab = 2;
             }
             if (targetTabOnLoad.equals(TAB_TARGET_BADGES) && badgingEnabled) {
-                currentTab = scoringEnabled ? 2 : 1;
+                currentTab = scoringEnabled ? 3 : 2;
             }
         }
 		viewPager.setCurrentItem(currentTab);
-        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 		tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+	}
+
+	public Course getCourse() {
+		return course;
 	}
 
 	@Override

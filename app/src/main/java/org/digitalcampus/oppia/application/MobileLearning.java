@@ -18,6 +18,12 @@
 package org.digitalcampus.oppia.application;
 
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -31,12 +37,6 @@ import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
@@ -69,8 +69,10 @@ public class MobileLearning extends Application {
 	public static final String SERVER_COURSES_NAME = "courses";
 	public static final String COURSE_ACTIVITY_PATH = SERVER_COURSES_PATH + "%s/activity/";
 	public static final String LEADERBOARD_PATH = OPPIAMOBILE_API + "leaderboard/";
+	public static final String SERVER_INFO_PATH =  "server/";
 
-    // admin security settings
+
+	// admin security settings
     public static final boolean ADMIN_PROTECT_SETTINGS = BuildConfig.ADMIN_PROTECT_SETTINGS;
     public static final boolean ADMIN_PROTECT_COURSE_DELETE = BuildConfig.ADMIN_PROTECT_COURSE_DELETE;
     public static final boolean ADMIN_PROTECT_COURSE_RESET = BuildConfig.ADMIN_PROTECT_COURSE_RESET;
@@ -108,7 +110,11 @@ public class MobileLearning extends Application {
 	
 	public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
+	public static final DateTimeFormatter MONTH_FORMAT = DateTimeFormat.forPattern("MMM");
 	public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
+	public static final DateTimeFormatter DATE_FORMAT_DAY_MONTH = DateTimeFormat.forPattern("d MMM");
+	public static final DateTimeFormatter TIME_FORMAT_HOURS_MINUTES = DateTimeFormat.forPattern("HH:mm");
+
 	public static final int MAX_TRACKER_SUBMIT = 10;
 	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v","video/mp4","audio/mpeg","video/3gp","video/3gpp"};
@@ -132,6 +138,8 @@ public class MobileLearning extends Application {
     public void onCreate() {
         super.onCreate();
 
+
+
         // this method fires once at application start
         Log.d(TAG, "Application start");
 
@@ -144,8 +152,11 @@ public class MobileLearning extends Application {
 				.build());
 
         Context ctx = getApplicationContext();
+		// Load the preferences from XML resources
+		PreferenceManager.setDefaultValues(ctx, R.xml.common_prefs, false);
 		PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
         checkAdminProtectionOnFirstRun(prefs);
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
 
@@ -190,6 +201,7 @@ public class MobileLearning extends Application {
         if (success) Storage.setStorageStrategy(strategy);
         return success;
     }
+
 
 
 	public AppComponent getComponent(){

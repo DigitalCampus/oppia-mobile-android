@@ -48,6 +48,7 @@
                     app:cantContainSpaces="true">
 
                     <EditText
+                        android:id="@+id/register_form_username_edittext"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_username_title"
@@ -222,7 +223,7 @@
                 android:text="@string/register_account_already"/>
 
             <Button
-                android:id="@+id/login_btn"
+                android:id="@+id/action_login_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"

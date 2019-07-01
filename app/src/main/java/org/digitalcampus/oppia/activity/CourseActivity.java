@@ -272,7 +272,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
         viewPager.setAdapter(apAdapter);
         tabs.setupWithViewPager(viewPager);
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabs.setTabMode( activities.size()>1 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
         tabs.addOnTabSelectedListener(this);
         apAdapter.updateTabViews(tabs);
         viewPager.setCurrentItem(currentActivityNo);

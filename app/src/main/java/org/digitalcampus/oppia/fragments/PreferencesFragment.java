@@ -1,6 +1,7 @@
 package org.digitalcampus.oppia.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -42,12 +43,12 @@ public class PreferencesFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
 
-        // Load the preferences from an XML resource
+        // Load the preferences from XML resources
+        addPreferencesFromResource(R.xml.common_prefs);
         addPreferencesFromResource(R.xml.prefs);
 
         storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
         serverPref = (EditTextPreference) findPreference(PrefsActivity.PREF_SERVER);
-        serverPref.setSummary(serverPref.getText());
         serverPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -58,16 +59,15 @@ public class PreferencesFragment extends PreferenceFragment {
                             R.string.prefServer_errorDescription);
                     return false;
                 }
+
                 // If it is correct, we allow the change
                 return true;
             }
         });
 
         MaxIntOnStringPreferenceListener maxIntListener = new MaxIntOnStringPreferenceListener();
-        Preference connTimeout = findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN);
-        Preference responseTimeout = findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP);
-        connTimeout.setOnPreferenceChangeListener(maxIntListener);
-        responseTimeout.setOnPreferenceChangeListener(maxIntListener);
+        findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN).setOnPreferenceChangeListener(maxIntListener);
+        findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP).setOnPreferenceChangeListener(maxIntListener);
 
         if (!MobileLearning.ADMIN_PROTECT_SETTINGS){
             // If the whole settings activity is not protected by password, we need to protect admin settings
@@ -75,11 +75,17 @@ public class PreferencesFragment extends PreferenceFragment {
         }
 
         Bundle bundle = getArguments();
-        ArrayList<Lang> langs = new ArrayList<>();
+        ArrayList<Lang> langs;
         if ((bundle != null) && bundle.getSerializable("langs") != null) {
 	        langs = (ArrayList<Lang>) bundle.getSerializable("langs");
+	        if (langs != null){
+                updateLangsList(langs);
+            }
+
         }
-        updateLangsList(langs);
+
+        updateServerPref();
+
         updateStorageList(this.getActivity());
 
         EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
@@ -89,9 +95,30 @@ public class PreferencesFragment extends PreferenceFragment {
 
     }
 
-    public void updateServerPref(String url){
-        serverPref.setText(url);
-        serverPref.setSummary(url);
+    public void updateServerPref(){
+
+        SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        String server = prefs.getString(PrefsActivity.PREF_SERVER, "");
+        String status;
+
+        boolean checked = prefs.getBoolean(PrefsActivity.PREF_SERVER_CHECKED, false);
+        if (!checked){
+            status = getString(R.string.prefServer_notChecked);
+        }
+        else{
+            boolean valid = prefs.getBoolean(PrefsActivity.PREF_SERVER_VALID, false);
+            if (valid){
+                String name = prefs.getString(PrefsActivity.PREF_SERVER_NAME, server);
+                String version = prefs.getString(PrefsActivity.PREF_SERVER_VERSION, "");
+                status = name + " (" + version + ")";
+            }
+            else{
+                status = getString(R.string.prefServer_errorTitle);
+            }
+        }
+
+        serverPref.setText(server);
+        serverPref.setSummary(server + "\n" + status);
     }
 
     public void updateStoragePref(String storageOption){
@@ -134,8 +161,8 @@ public class PreferencesFragment extends PreferenceFragment {
 
             //If there is only one writable location, we'll use the default prefsList
             if (writableLocations > 1){
-                storagePref.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
-                storagePref.setEntries(entries.toArray(new CharSequence[entries.size()]));
+                storagePref.setEntryValues(entryValues.toArray(new CharSequence[0]));
+                storagePref.setEntries(entries.toArray(new CharSequence[0]));
                 storagePref.setValue((currentPath.equals(""))? PrefsActivity.STORAGE_OPTION_INTERNAL : currentPath);
             }
         }
@@ -156,8 +183,8 @@ public class PreferencesFragment extends PreferenceFragment {
 
         ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE);
         if (!entryValues.isEmpty()){
-            langsList.setEntries( entries.toArray(new CharSequence[entries.size()]) );
-            langsList.setEntryValues( entryValues.toArray(new CharSequence[entryValues.size()]) );
+            langsList.setEntries( entries.toArray(new CharSequence[0]) );
+            langsList.setEntryValues( entryValues.toArray(new CharSequence[0]) );
         }
         else{
             getPreferenceScreen().removePreference(langsList);
@@ -171,7 +198,7 @@ public class PreferencesFragment extends PreferenceFragment {
         adminEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                final boolean enableProtection = (Boolean) newValue;
+                final Boolean enableProtection = (Boolean) newValue;
                 if (enableProtection) {
                     //If we are going to re-enable the preference, there is no need to prompt for the previous password
                     return true;

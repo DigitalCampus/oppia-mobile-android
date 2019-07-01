@@ -17,7 +17,13 @@
 
 package org.digitalcampus.oppia.widgets;
 
-import java.util.HashMap;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Activity;
@@ -26,11 +32,7 @@ import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.widget.Toast;
+import java.util.HashMap;
 
 public abstract class WidgetFactory extends Fragment {
 	
@@ -61,8 +63,15 @@ public abstract class WidgetFactory extends Fragment {
 	public abstract String getContentToRead();
 	public abstract HashMap<String,Object> getWidgetConfig();
 	public abstract void setWidgetConfig(HashMap<String,Object> config);
-	
-	public void setReadAloud(boolean readAloud){
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Log.i(TAG, "onCreate WidgetFactory: " + this.getClass().getSimpleName());
+    }
+
+    public void setReadAloud(boolean readAloud){
 		this.readAloud = readAloud;
 	}
 	
