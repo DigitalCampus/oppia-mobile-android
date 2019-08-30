@@ -10,8 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import TestRules.DisableAnimationsRule;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -63,7 +61,7 @@ public class LoginUITest {
     }
 
     @Test
-    public void changeActivityWhenTheCredentialsAreCorrect() throws Exception{
+    public void changeActivityWhenTheCredentialsAreCorrect() throws Exception {
 
        onView(withId(R.id.welcome_login))
                .perform(scrollTo(), click());
