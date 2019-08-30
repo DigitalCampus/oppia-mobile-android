@@ -1,7 +1,7 @@
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.SmallTest;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.filters.SmallTest;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
@@ -11,7 +11,6 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ResetTask;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
-import TestRules.DisableAnimationsRule;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
@@ -40,7 +38,7 @@ public class ResetTest {
 
     @Before
     public void setUp() throws Exception {
-        context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         signal = new CountDownLatch(1);
     }
 
@@ -59,7 +57,7 @@ public class ResetTest {
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(201)
-                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename)));
 
             mockServer.start();
 
@@ -112,7 +110,7 @@ public class ResetTest {
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(400)
-                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename)));
 
             mockServer.start();
 
@@ -212,7 +210,7 @@ public class ResetTest {
             mockServer = new MockWebServer();
 
             mockServer.enqueue(new MockResponse()
-                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), "")));
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), "")));
 
             mockServer.start();
 

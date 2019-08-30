@@ -1,7 +1,7 @@
 package Utils;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -31,7 +31,7 @@ public class CourseUtils {
     public static void cleanUp(){
         //Clean course folders and database
 
-        Context ctx = InstrumentationRegistry.getTargetContext();
+        Context ctx = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         File root = new File(Storage.getStorageLocationRoot(ctx));
         FileUtils.cleanDir(root);

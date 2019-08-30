@@ -2,7 +2,7 @@ package org.digitalcampus.oppia.utils.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.design.widget.TextInputLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.AttributeSet;

@@ -2,14 +2,16 @@ package UI;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.design.widget.NavigationView;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.DrawerActions;
-import android.support.test.espresso.contrib.NavigationViewActions;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.DrawerActions;
+import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
@@ -42,24 +44,23 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
-import TestRules.DisableAnimationsRule;
 import Utils.CourseUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
-import static android.support.test.espresso.action.ViewActions.swipeUp;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withChild;
-import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.longClick;
+import static androidx.test.espresso.action.ViewActions.swipeUp;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withChild;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -455,7 +456,7 @@ public class OppiaMobileActivityUITest {
         onView(withChild(withId(R.id.course_context_update_activity)))
                 .perform(click());
 
-        onView(withText(containsString(InstrumentationRegistry.getTargetContext().getString(R.string.course_updating_success))));
+        onView(withText(containsString(InstrumentationRegistry.getInstrumentation().getTargetContext().getString(R.string.course_updating_success))));
 
     }
 

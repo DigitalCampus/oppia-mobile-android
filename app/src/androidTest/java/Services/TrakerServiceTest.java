@@ -3,9 +3,9 @@ package Services;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ServiceTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ServiceTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.digitalcampus.oppia.service.TrackerService;
 import org.junit.After;
@@ -30,7 +30,7 @@ public class TrakerServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
     }
 
     @After
@@ -41,7 +41,7 @@ public class TrakerServiceTest {
     public void testWithBoundService() throws TimeoutException {
         // Create the service Intent.
         Intent serviceIntent =
-                new Intent(InstrumentationRegistry.getTargetContext(),
+                new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(),
                         TrackerService.class);
 
         // Bind the service and grab a reference to the binder.

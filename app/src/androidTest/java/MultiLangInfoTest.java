@@ -1,20 +1,17 @@
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
-
-import TestRules.DisableAnimationsRule;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -28,7 +25,7 @@ public class MultiLangInfoTest {
 
     @Before
     public void setUp() throws Exception {
-        context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
     }
 
     @Test

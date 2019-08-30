@@ -1,6 +1,7 @@
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
@@ -10,7 +11,6 @@ import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -18,13 +18,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
-import TestRules.DisableAnimationsRule;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest{
@@ -45,7 +45,7 @@ public class LoginTest{
 
     @Before
     public void setUp() throws Exception { 
-        context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         //DbHelper.getInstance(context).resetDatabase();
         signal = new CountDownLatch(1);
     }
@@ -113,7 +113,7 @@ public class LoginTest{
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(201)
-                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename)));
 
             mockServer.start();
 
@@ -165,7 +165,7 @@ public class LoginTest{
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(400)
-                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename)));
 
             mockServer.start();
 
