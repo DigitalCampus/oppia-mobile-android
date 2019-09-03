@@ -1,7 +1,7 @@
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -19,7 +19,6 @@ import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
-import TestRules.DisableAnimationsRule;
 import Utils.CourseUtils;
 import Utils.FileUtils;
 
@@ -61,7 +59,7 @@ public class DeleteCourseTest {
 
     @Before
     public void setUp() throws Exception {
-        context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         setStorageStrategy();
@@ -85,7 +83,7 @@ public class DeleteCourseTest {
 
         installTestCourse();
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
@@ -114,7 +112,7 @@ public class DeleteCourseTest {
 
         CourseUtils.cleanUp();
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(0, children.length); //Check that the course does not exists in the "modules" directory
@@ -141,7 +139,7 @@ public class DeleteCourseTest {
 
         installTestCourse();
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory

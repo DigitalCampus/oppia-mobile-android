@@ -1,7 +1,7 @@
 package Utils;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.utils.storage.Storage;
 
@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 public class FileUtils {
 
@@ -48,7 +48,7 @@ public class FileUtils {
     public static void copyZipFromAssets(Context context, String filename){
 
         try {
-            InputStream is = InstrumentationRegistry.getContext().getResources().getAssets().open("courses/" + filename);
+            InputStream is = InstrumentationRegistry.getInstrumentation().getContext().getResources().getAssets().open("courses/" + filename);
             File downloadPath = new File(Storage.getDownloadPath(context));
             if(!downloadPath.exists()){Storage.createFolderStructure(context);}
             OutputStream os = new FileOutputStream(new File(downloadPath, filename));

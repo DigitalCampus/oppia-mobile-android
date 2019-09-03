@@ -1,11 +1,11 @@
 package Utils;
 
 import android.app.Activity;
-import android.support.test.espresso.core.internal.deps.guava.collect.Iterables;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.test.runner.lifecycle.Stage;
+import androidx.test.espresso.core.internal.deps.guava.collect.Iterables;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.runner.lifecycle.Stage;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 public class TestUtils{
     public static Activity getCurrentActivity() {

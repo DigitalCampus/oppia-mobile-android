@@ -1,11 +1,9 @@
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-import android.test.mock.MockContext;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -41,7 +39,7 @@ public class FetchServerInfoTest {
 
     @Before
     public void setUp() throws Exception {
-        context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -114,7 +112,8 @@ public class FetchServerInfoTest {
     @Test
     public void fetchServerInfo_validServer() throws Exception{
 
-        startServer(200, Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), VALID_SERVERINFO_RESPONSE));
+        startServer(200, Utils.FileUtils.getStringFromFile(
+                InstrumentationRegistry.getInstrumentation().getContext(), VALID_SERVERINFO_RESPONSE));
         fetchServerInfoSync(context);
 
         assertTrue(prefs.getBoolean(PrefsActivity.PREF_SERVER_CHECKED, false));
@@ -168,7 +167,7 @@ public class FetchServerInfoTest {
 
         int timeoutConn = Integer.parseInt(prefs.getString(PrefsActivity.PREF_SERVER_TIMEOUT_CONN,
                 context.getString(R.string.prefServerTimeoutConnectionDefault)));
-        startServer(200, Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), VALID_SERVERINFO_RESPONSE), timeoutConn+100);
+        startServer(200, Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), VALID_SERVERINFO_RESPONSE), timeoutConn+100);
         fetchServerInfoSync(context);
 
         assertFalse(prefs.getBoolean(PrefsActivity.PREF_SERVER_CHECKED, false));

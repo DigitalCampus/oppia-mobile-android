@@ -18,7 +18,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/highlight_light"/>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/user_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,5 +60,5 @@
                 android:text="username "/>
         </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>
