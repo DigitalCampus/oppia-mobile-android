@@ -181,13 +181,13 @@
             android:exported="false"
             android:icon="@drawable/dc_logo"/>
 
-        <receiver android:name="org.digitalcampus.oppia.service.TrackerScheduleReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name="org.digitalcampus.oppia.service.TrackerStartServiceReceiver">
-        </receiver>
+<!--        <receiver android:name="org.digitalcampus.oppia.service.TrackerScheduleReceiver">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
+<!--        <receiver android:name="org.digitalcampus.oppia.service.TrackerStartServiceReceiver">-->
+<!--        </receiver>-->
 
         <!-- Google Cloud Messaging part -->
         <receiver

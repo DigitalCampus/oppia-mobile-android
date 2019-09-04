@@ -24,12 +24,20 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
+import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -37,6 +45,8 @@ import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.util.concurrent.TimeUnit;
 
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
@@ -177,7 +187,37 @@ public class MobileLearning extends Application {
             Storage.setStorageStrategy(strategy);
         }
         Log.d(TAG, "Storage option set: " + storageOption);
+
+        setupPeriodicTrackerWorker();
     }
+
+    private void setupPeriodicTrackerWorker() {
+
+		boolean backgroundData = getPrefs(this).getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, true);
+
+		Data inputData = new Data.Builder()
+				.putBoolean("backgroundData", backgroundData)
+				.build();
+
+		Constraints constraints = new Constraints.Builder()
+				.setRequiredNetworkType(NetworkType.CONNECTED)
+				.build();
+
+		PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(TrackerWorker.class, 1, TimeUnit.HOURS)
+				.setInputData(inputData)
+				.setConstraints(constraints)
+				.setInitialDelay(1, TimeUnit.HOURS)
+				.build();
+
+		WorkManager.getInstance(this).enqueueUniquePeriodicWork("tracker_send_work",
+				ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
+
+	}
+
+	public static SharedPreferences getPrefs(Context context) {
+    	return PreferenceManager.getDefaultSharedPreferences(context);
+	}
+
 
     private void checkAdminProtectionOnFirstRun(SharedPreferences prefs){
 		if (prefs.getBoolean(PrefsActivity.PREF_APPLICATION_FIRST_RUN, true)) {

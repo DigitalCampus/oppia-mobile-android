@@ -181,6 +181,11 @@ dependencies {
 //    implementation "com.androidplot:androidplot-core:1.5.6"
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    implementation 'androidx.work:work-runtime:2.2.0'
+    implementation 'androidx.concurrent:concurrent-futures:1.0.0-rc01'
+
+
+
     //debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 }
 
