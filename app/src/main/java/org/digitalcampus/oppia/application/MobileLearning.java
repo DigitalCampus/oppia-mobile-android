@@ -25,7 +25,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.work.Constraints;
-import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
@@ -38,8 +37,6 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
 import org.digitalcampus.oppia.service.TrackerWorker;
-import org.digitalcampus.oppia.task.SubmitQuizAttemptsTask;
-import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
@@ -134,12 +131,13 @@ public class MobileLearning extends Application {
 
 	// only used in case a course doesn't have any lang specified
 	public static final String DEFAULT_LANG = "en";
+	private static final String NAME_TRACKER_SEND_WORK = "tracker_send_work";
 
 	// for tracking if SubmitTrackerMultipleTask is already running
-	public SubmitTrackerMultipleTask omSubmitTrackerMultipleTask = null;
-	
-	// for tracking if SubmitQuizAttemptsTask is already running
-	public SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = null;
+//	public SubmitTrackerMultipleTask omSubmitTrackerMultipleTask = null;
+//
+//	// for tracking if SubmitQuizAttemptsTask is already running
+//	public SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = null;
 
 
 	private AppComponent appComponent;
@@ -195,23 +193,37 @@ public class MobileLearning extends Application {
 
 		boolean backgroundData = getPrefs(this).getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, true);
 
-		Data inputData = new Data.Builder()
-				.putBoolean("backgroundData", backgroundData)
-				.build();
+		if (backgroundData) {
+			scheduleTrackerWork();
+		} else {
+			cancelTrackerWork();
+		}
+	}
+
+
+	private void scheduleTrackerWork() {
+
+//		Data inputData = new Data.Builder()
+//				.putBoolean("backgroundData", backgroundData)
+//				.build();
 
 		Constraints constraints = new Constraints.Builder()
 				.setRequiredNetworkType(NetworkType.CONNECTED)
 				.build();
 
-		PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(TrackerWorker.class, 1, TimeUnit.HOURS)
-				.setInputData(inputData)
+		PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(TrackerWorker.class, 15, TimeUnit.MINUTES)
+//				.setInputData(inputData)
 				.setConstraints(constraints)
-				.setInitialDelay(1, TimeUnit.HOURS)
+//				.setInitialDelay(1, TimeUnit.HOURS)
 				.build();
 
-		WorkManager.getInstance(this).enqueueUniquePeriodicWork("tracker_send_work",
+		WorkManager.getInstance(this).enqueueUniquePeriodicWork(NAME_TRACKER_SEND_WORK,
 				ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
+	}
 
+	public void cancelTrackerWork() {
+
+		WorkManager.getInstance(this).cancelUniqueWork(NAME_TRACKER_SEND_WORK);
 	}
 
 	public static SharedPreferences getPrefs(Context context) {

@@ -14,6 +14,7 @@ import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
@@ -23,21 +24,24 @@ public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask
 
     public static final String TAG = APIRequestTask.class.getSimpleName();
 
+    private APIRequestFinishListener listener;
+
     protected Context ctx;
     protected SharedPreferences prefs;
     protected ApiEndpoint apiEndpoint;
+    private String nameRequest;
 
     protected APIRequestTask(Context ctx) {
         this(ctx, new RemoteApiEndpoint());
     }
 
-    protected APIRequestTask(Context ctx, ApiEndpoint api){
+    protected APIRequestTask(Context ctx, ApiEndpoint api) {
         this.ctx = ctx;
         prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         apiEndpoint = api;
     }
 
-    protected Request createRequestWithUserAuth(String url){
+    protected Request createRequestWithUserAuth(String url) {
         DbHelper db = DbHelper.getInstance(ctx);
         Request request = null;
         try {
@@ -53,11 +57,26 @@ public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask
             Log.d(TAG, "User not found: ", e);
         }
 
-        if (request == null){
+        if (request == null) {
             //the user was not found, we create it without the header
             request = new Request.Builder().url(url).build();
         }
 
         return request;
+    }
+
+    @Override
+    protected void onPostExecute(Result result) {
+        super.onPostExecute(result);
+
+        if (listener != null) {
+            listener.onRequestFinish(nameRequest);
+        }
+    }
+
+    public void setAPIRequestFinishListener(APIRequestFinishListener listener, String nameRequest) {
+        this.nameRequest = nameRequest;
+        this.listener = listener;
+
     }
 }

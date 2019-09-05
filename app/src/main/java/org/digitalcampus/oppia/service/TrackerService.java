@@ -26,8 +26,9 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import androidx.core.app.NotificationCompat;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.splunk.mint.Mint;
 
@@ -36,6 +37,7 @@ import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
@@ -50,11 +52,13 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class TrackerService extends Service implements APIRequestListener {
+public class TrackerService extends Service implements APIRequestListener, APIRequestFinishListener {
 
 	public static final String TAG = TrackerService.class.getSimpleName();
 
 	private final IBinder mBinder = new MyBinder();
+	private SubmitTrackerMultipleTask omSubmitTrackerMultipleTask;
+	private SubmitQuizAttemptsTask omSubmitQuizAttemptsTask;
 
 	@Override
 	public void onCreate() {
@@ -98,7 +102,12 @@ public class TrackerService extends Service implements APIRequestListener {
         SessionManager.logoutCurrentUser(this);
     }
 
-    public class MyBinder extends Binder {
+	@Override
+	public void onRequestFinish(String idRequest) {
+
+	}
+
+	public class MyBinder extends Binder {
 		public TrackerService getService() {
 			return TrackerService.this;
 		}
@@ -109,6 +118,7 @@ public class TrackerService extends Service implements APIRequestListener {
 		Payload p;
 		// Update server info
 		FetchServerInfoTask fetchServerInfoTask = new FetchServerInfoTask(this);
+		fetchServerInfoTask.setAPIRequestFinishListener(this, null);
 		fetchServerInfoTask.execute();
 
 		// check for updated courses
@@ -128,23 +138,23 @@ public class TrackerService extends Service implements APIRequestListener {
 		}
 
 		// send activity trackers
-		MobileLearning app = (MobileLearning) this.getApplication();
-		if(app.omSubmitTrackerMultipleTask == null){
+//		MobileLearning app = (MobileLearning) this.getApplication();
+		if(omSubmitTrackerMultipleTask == null){
 			Log.d(TAG,"Submitting trackers multiple task");
-			app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(this);
-			app.omSubmitTrackerMultipleTask.execute();
+			omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(this);
+			omSubmitTrackerMultipleTask.execute();
 		}
 
 		// send quiz results
-		if(app.omSubmitQuizAttemptsTask == null){
+		if(omSubmitQuizAttemptsTask == null){
 			Log.d(TAG,"Submitting quiz task");
 			DbHelper db = DbHelper.getInstance(this);
 			List<QuizAttempt> unsent = db.getUnsentQuizAttempts();
 
 			if (unsent.size() > 0){
 				p = new Payload(unsent);
-				app.omSubmitQuizAttemptsTask = new SubmitQuizAttemptsTask(this);
-				app.omSubmitQuizAttemptsTask.execute(p);
+				omSubmitQuizAttemptsTask = new SubmitQuizAttemptsTask(this);
+				omSubmitQuizAttemptsTask.execute(p);
 			}
 		}
 
