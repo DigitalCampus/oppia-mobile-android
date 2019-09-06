@@ -160,11 +160,6 @@
         </activity>
 
         <service
-            android:name="org.digitalcampus.oppia.service.TrackerService"
-            android:icon="@drawable/dc_logo"
-            android:label="@string/service_tracker">
-        </service>
-        <service
             android:name="org.digitalcampus.oppia.service.DownloadService"
             android:exported="false"
             android:icon="@drawable/dc_logo"/>
@@ -180,14 +175,6 @@
             android:name="org.digitalcampus.oppia.gamification.GamificationService"
             android:exported="false"
             android:icon="@drawable/dc_logo"/>
-
-        <receiver android:name="org.digitalcampus.oppia.service.TrackerScheduleReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name="org.digitalcampus.oppia.service.TrackerStartServiceReceiver">
-        </receiver>
 
         <!-- Google Cloud Messaging part -->
         <receiver
