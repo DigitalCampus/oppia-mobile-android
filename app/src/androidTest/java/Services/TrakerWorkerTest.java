@@ -5,7 +5,6 @@ import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ServiceTestRule;
 import androidx.work.Configuration;
 import androidx.work.ListenableWorker;
 import androidx.work.testing.TestListenableWorkerBuilder;
@@ -13,7 +12,6 @@ import androidx.work.testing.WorkManagerTestInitHelper;
 
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,9 +25,6 @@ import static org.junit.Assert.assertThat;
 public class TrakerWorkerTest {
 
     private Context context;
-
-    @Rule
-    public final ServiceTestRule mServiceRule = new ServiceTestRule();
 
     @Before
     public void setUp() throws Exception {

@@ -25,13 +25,14 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.core.view.ViewCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.ViewCompat;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
@@ -43,7 +44,6 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Section;
-import org.digitalcampus.oppia.service.TrackerService;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 
@@ -127,14 +127,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             digestJumpTo = null;
             return;
         }
-
-        // start a new tracker service
-        Intent service = new Intent(this, TrackerService.class);
-
-        Bundle tb = new Bundle();
-        tb.putBoolean("backgroundData", true);
-        service.putExtras(tb);
-        this.startService(service);
 
         // remove any saved state info from shared prefs in case they interfere with subsequent page views
         Editor editor = prefs.edit();
