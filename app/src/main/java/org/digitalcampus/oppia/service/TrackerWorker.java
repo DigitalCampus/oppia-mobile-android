@@ -60,20 +60,6 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
 
         updateTracking();
 
-//        bgtask {
-//
-//            future.set(Result.success());
-//
-//        }
-
-//        CallbackToFutureAdapter.getFuture(new CallbackToFutureAdapter.Resolver<Object>() {
-//            @Nullable
-//            @Override
-//            public Object attachCompleter(@NonNull CallbackToFutureAdapter.Completer<Object> completer) throws Exception {
-//                return null;
-//            }
-//        });
-
         return future;
     }
 
