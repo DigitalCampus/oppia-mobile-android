@@ -28,10 +28,7 @@ import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -223,7 +220,6 @@ public class MobileLearning extends Application {
 		WorkManager.getInstance(this).enqueueUniquePeriodicWork(NAME_TRACKER_SEND_WORK,
 				ExistingPeriodicWorkPolicy.REPLACE, trackerSendWork);
 
-		ListenableFuture<WorkInfo> workInfo = WorkManager.getInstance(this).getWorkInfoById(null);
 	}
 
 	public void cancelTrackerWork() {

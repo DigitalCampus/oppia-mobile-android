@@ -33,6 +33,10 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.ViewCompat;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.SectionListAdapter;
@@ -44,6 +48,7 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Section;
+import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 
@@ -128,6 +133,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             return;
         }
 
+        sendTrackers();
+
         // remove any saved state info from shared prefs in case they interfere with subsequent page views
         Editor editor = prefs.edit();
         Map<String, ?> keys = prefs.getAll();
@@ -140,6 +147,19 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         editor.apply();
 
         checkParsedCourse();
+    }
+
+    private void sendTrackers() {
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        OneTimeWorkRequest trackerSendWork = new OneTimeWorkRequest.Builder(TrackerWorker.class)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance(this).enqueue(trackerSendWork);
     }
 
     private void checkParsedCourse() {
