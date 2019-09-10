@@ -268,14 +268,15 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
     @Override
     protected void onPostExecute(Payload p) {
+        super.onPostExecute(p);
         synchronized (this) {
             if (trackerServiceListener != null) {
                 trackerServiceListener.trackerComplete(p.isResult(), p.getResultResponse());
             }
         }
         // reset submittask back to null after completion - so next call can run properly
-        MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-        app.omSubmitTrackerMultipleTask = null;
+//        MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+//        app.omSubmitTrackerMultipleTask = null;
 
     }
 

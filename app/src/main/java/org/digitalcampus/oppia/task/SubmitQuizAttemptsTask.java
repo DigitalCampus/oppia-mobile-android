@@ -116,10 +116,11 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 
 	@Override
 	protected void onPostExecute(Payload p) {
+		super.onPostExecute(p);
 		// reset submittask back to null after completion - so next call can run
 		// properly
-		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-		app.omSubmitQuizAttemptsTask = null;
+//		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+//		app.omSubmitQuizAttemptsTask = null;
 	}
 
 }

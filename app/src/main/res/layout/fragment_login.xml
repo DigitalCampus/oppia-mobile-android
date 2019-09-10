@@ -35,7 +35,7 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 app:hintTextAppearance="@style/Oppia.TextLabel"
                 android:id="@+id/input_layout_username"
                 android:layout_width="match_parent"
@@ -50,9 +50,9 @@
                     android:layout_marginRight="@dimen/padding_large"
                     android:hint="@string/login_username_title"
                     android:inputType="text"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_layout_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -67,7 +67,7 @@
                     android:hint="@string/login_password_title"
                     android:inputType="textPassword"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/login_btn"

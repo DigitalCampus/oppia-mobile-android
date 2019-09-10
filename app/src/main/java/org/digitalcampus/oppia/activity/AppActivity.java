@@ -28,11 +28,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +36,14 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -212,7 +215,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.setClickable(false);
 
             // Hide the text
-            TextView textView = (TextView) layout.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = (TextView) layout.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setVisibility(View.INVISIBLE);
 
             // Inflate our custom view
@@ -237,7 +240,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 UIUtils.showUserData(optionsMenu, AppActivity.this, null, false, points);
             }
 
-            snackbar.setDuration(Snackbar.LENGTH_INDEFINITE);
+            snackbar.setDuration(BaseTransientBottomBar.LENGTH_INDEFINITE);
 
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override

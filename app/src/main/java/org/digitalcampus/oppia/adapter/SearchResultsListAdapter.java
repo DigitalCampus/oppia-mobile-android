@@ -17,14 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.model.SearchResult;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -37,6 +29,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.model.SearchResult;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 
@@ -95,7 +95,7 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 
         if(sr.getCourse().getImageFile() != null){
             String image = sr.getCourse().getImageFileFromRoot();
-            Picasso.with(ctx).load(new File(image))
+            Picasso.get().load(new File(image))
                     .placeholder(R.drawable.default_course)
                     .into(viewHolder.courseImage);
         }

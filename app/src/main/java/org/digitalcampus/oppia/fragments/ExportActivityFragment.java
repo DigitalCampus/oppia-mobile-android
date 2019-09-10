@@ -21,10 +21,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +29,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
@@ -67,6 +67,7 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
     private RecyclerView exportedFilesRecyclerView;
     private RecyclerView.Adapter filesAdapter;
     private ArrayList<File> files = new ArrayList<>();
+    private SubmitTrackerMultipleTask omSubmitTrackerMultipleTask;
 
     public static ExportActivityFragment newInstance() {
         return new ExportActivityFragment();
@@ -102,13 +103,13 @@ public class ExportActivityFragment extends Fragment implements TrackerServiceLi
             @Override
             public void onClick(View v) {
                 Activity parent = ExportActivityFragment.this.getActivity();
-                MobileLearning app = (MobileLearning) parent.getApplication();
-                if(app.omSubmitTrackerMultipleTask == null){
+//                MobileLearning app = (MobileLearning) parent.getApplication();
+                if(omSubmitTrackerMultipleTask == null){
                     Log.d(TAG,"Sumitting trackers multiple task");
                     updateActions(false);
-                    app.omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(parent);
-                    app.omSubmitTrackerMultipleTask.setTrackerServiceListener(ExportActivityFragment.this);
-                    app.omSubmitTrackerMultipleTask.execute();
+                    omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(parent);
+                    omSubmitTrackerMultipleTask.setTrackerServiceListener(ExportActivityFragment.this);
+                    omSubmitTrackerMultipleTask.execute();
                 }
             }
         });

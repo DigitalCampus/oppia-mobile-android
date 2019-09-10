@@ -1,6 +1,6 @@
 package org.digitalcampus.oppia.utils;
 
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 import android.util.Log;
 
 import com.splunk.mint.Mint;
