@@ -18,8 +18,8 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        versionCode 69
-        versionName "6.9.0"
+        versionCode 70
+        versionName "7.0.0"
 
         applicationId "org.digitalcampus.mobile.learning"
         minSdkVersion 14
