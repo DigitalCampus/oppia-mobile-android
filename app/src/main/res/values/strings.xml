@@ -407,6 +407,7 @@
     <string name="prefGamificationPointsViewTypeNone">None</string>
 
     <string name="prefDurationAnimationTypeGamificationPointsView">Duration of gamification points view (seconds)</string>
+    <string name="device_name">This device name: %s</string>
 
     <string name="channel_notif_internal_name">Internal notifications</string>
     <string name="channel_notif_internal_description">This channel shows useful notifications in many process like Bluetooth transfers, course downloads or sync tasks</string>

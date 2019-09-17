@@ -151,12 +151,14 @@ public class BluetoothConnectionManager {
      * @param device The BluetoothDevice to connect
      */
     public synchronized void connect(BluetoothDevice device) {
-        Log.d(TAG, "connect to: " + device);
+        Log.d(TAG, "connect to: " + device.getName() + ". Address: " + device.getAddress());
 
         // Cancel any thread attempting to make a connection
         if (state == STATE_CONNECTING) {
+            Log.d(TAG, "connect: STATE_CONNECTING");
             if (connectThread != null) {
                 connectThread.cancel();
+                Log.d(TAG, "connectThread canceled");
                 connectThread = null;
             }
         }
@@ -165,6 +167,8 @@ public class BluetoothConnectionManager {
         // Start the thread to connect with the given device
         connectThread = new ConnectThread(device);
         connectThread.start();
+        Log.d(TAG, "connectThread started");
+
         // Update UI title
         updateUserInterfaceTitle();
     }
@@ -342,7 +346,9 @@ public class BluetoothConnectionManager {
             setName("ConnectThread");
 
             // Always cancel discovery because it will slow down a connection
-            mAdapter.cancelDiscovery();
+            if (mAdapter.isDiscovering()) {
+                mAdapter.cancelDiscovery();
+            }
             // Make a connection to the BluetoothSocket
             try {
                 // This is a blocking call and will only return on a
@@ -366,6 +372,8 @@ public class BluetoothConnectionManager {
 
             // Start the connected thread
             connected(mmSocket, mmDevice);
+
+            Log.i(TAG, "END ConnectThread ");
         }
 
         public void cancel() {
@@ -380,6 +388,7 @@ public class BluetoothConnectionManager {
          * Indicate that the connection attempt failed and notify the UI Activity.
          */
         private void connectionFailed() {
+            Log.e(TAG, "connectionFailed. Unable to connect device");
             // Send a failure message back to the Activity
             Message msg = uiHandler.obtainMessage(UI_MESSAGE_TOAST);
             Bundle bundle = new Bundle();
