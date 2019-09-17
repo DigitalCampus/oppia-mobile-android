@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,8 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.squareup.picasso.Picasso;
 
@@ -195,7 +196,7 @@ public class SectionListAdapter extends ArrayAdapter<Section>{
             int defaultActivityDrawable = activity.getDefaultResourceImage();
             if (activity.hasCustomImage()){
                 String image = activity.getImageFilePath(courseLocation);
-                Picasso.with(ctx).load(new File(image)).into(viewHolder.activityImage);
+                Picasso.get().load(new File(image)).into(viewHolder.activityImage);
             }
             else {
                 viewHolder.activityImage.setImageResource(defaultActivityDrawable);

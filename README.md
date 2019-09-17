@@ -5,9 +5,9 @@ For full information about OppiaMobile, please visit:
 
 https://digital-campus.org/oppiamobile/
 
-http://oppiamobile.readthedocs.org/en/latest/
+https://oppiamobile.readthedocs.io/en/latest/
 
-Questions, problems or issues? Please see our community site:
+Questions, problems or issues? Please visit our community site:
 
 https://community.oppia-mobile.org/
 

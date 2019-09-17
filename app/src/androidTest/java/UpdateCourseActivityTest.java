@@ -1,30 +1,3 @@
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.listener.UpdateActivityListener;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
-import org.digitalcampus.oppia.utils.storage.Storage;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
-
-import Utils.CourseUtils;
-import Utils.FileUtils;
-
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -40,7 +13,7 @@ public class UpdateCourseActivityTest {
 
     @Before
     public void setUp() throws Exception {
-        context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         signal = new CountDownLatch(1);
     }
 

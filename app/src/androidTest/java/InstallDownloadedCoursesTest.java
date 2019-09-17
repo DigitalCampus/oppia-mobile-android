@@ -1,7 +1,7 @@
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
@@ -17,9 +17,7 @@ import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 
-import TestRules.DisableAnimationsRule;
 import Utils.CourseUtils;
 import Utils.FileUtils;
 
@@ -67,7 +64,7 @@ public class InstallDownloadedCoursesTest {
 
     @Before
     public void setUp() throws Exception {
-        context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         setStorageStrategy();
@@ -95,12 +92,12 @@ public class InstallDownloadedCoursesTest {
         //Check if result is true
         assertTrue(response.isResult());
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
 
-        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertEquals(0, downloadPath.list().length);    //Check that the course does not exists in the "downloads" directory
 
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
@@ -122,12 +119,12 @@ public class InstallDownloadedCoursesTest {
         //Check that it failed
         assertFalse(response.isResult());
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
 
-        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertEquals(0, downloadPath.list().length);    //Check that the course does not exists in the "downloads" directory
 
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
@@ -153,10 +150,10 @@ public class InstallDownloadedCoursesTest {
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.error_installing_course, NOXML_COURSE), response.getResultResponse());
 
-        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertEquals(0, downloadPath.list().length); //Check that the course does not exists in the "downloads" directory
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(0, children.length);    //Check that the course does not exists in the "modules" directory
@@ -186,12 +183,12 @@ public class InstallDownloadedCoursesTest {
         assertFalse(response.isResult());
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.error_installing_course, filename), response.getResultResponse());
-        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()), filename);
+        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()), filename);
         assertFalse(initialPath.exists());  //Check that the course does not exists in the "downloads" directory
 
 
         String shortTitle = "malformedxml_course";
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()), shortTitle);
+        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()), shortTitle);
         assertFalse(finalPath.exists()); //Check that the course exists in the "modules" directory
 
         DbHelper db = DbHelper.getInstance(context);
@@ -214,10 +211,10 @@ public class InstallDownloadedCoursesTest {
         //Check if the resultResponse is correct
         assertEquals(context.getString(R.string.error_installing_course, INCORRECT_COURSE), response.getResultResponse());
 
-        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        File downloadPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertEquals(0, downloadPath.list().length); //Check that the course does not exists in the "downloads" directory
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(0, children.length);    //Check that the course does not exists in the "modules" directory
@@ -251,12 +248,12 @@ public class InstallDownloadedCoursesTest {
 
         signal.await();
 
-        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getTargetContext()));
+        File initialPath = new File(Storage.getDownloadPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         String[] children = initialPath.list();
         assertEquals(0, children.length);
 
 
-        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        File finalPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         children = finalPath.list();
         assertEquals(0, children.length);
 
@@ -269,7 +266,7 @@ public class InstallDownloadedCoursesTest {
 
         runInstallCourseTask(CORRECT_COURSE);
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(1, children.length);    //Check that the course exists in the "modules" directory

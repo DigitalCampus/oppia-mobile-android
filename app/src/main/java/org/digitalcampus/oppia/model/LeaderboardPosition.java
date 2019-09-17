@@ -1,6 +1,6 @@
 package org.digitalcampus.oppia.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class LeaderboardPosition implements Comparable<LeaderboardPosition>{
     private String username;

@@ -17,11 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Tag;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -33,6 +28,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.model.Tag;
+
+import java.util.ArrayList;
 
 public class TagListAdapter extends ArrayAdapter<Tag> {
 
@@ -85,7 +85,7 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 	    	viewHolder.tagDescription.setVisibility(View.GONE);
 	    }
 	    if(t.getIcon() != null){
-            Picasso.with(ctx).load(t.getIcon()).into(viewHolder.tagIcon);
+            Picasso.get().load(t.getIcon()).into(viewHolder.tagIcon);
             viewHolder.tagIcon.setVisibility(View.VISIBLE);
 	    } else {
 	    	viewHolder.tagIcon.setVisibility(View.GONE);
