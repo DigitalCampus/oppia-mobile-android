@@ -40,6 +40,7 @@ import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
+import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -187,6 +188,9 @@ public class MobileLearning extends Application {
         Log.d(TAG, "Storage option set: " + storageOption);
 
         setupPeriodicTrackerWorker();
+
+		OppiaNotificationUtils.initializeOreoNotificationChannels(this);
+
     }
 
     private void setupPeriodicTrackerWorker() {
