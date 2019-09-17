@@ -407,6 +407,7 @@
     <string name="prefGamificationPointsViewTypeNone">None</string>
 
     <string name="prefDurationAnimationTypeGamificationPointsView">Duration of gamification points view (seconds)</string>
+    <string name="device_name">This device name: %s</string>
 
 </resources>
 
