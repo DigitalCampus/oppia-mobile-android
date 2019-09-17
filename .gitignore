@@ -8,10 +8,9 @@
 /.idea/
 /build
 /app/build
-/gradle
+/gradle/wrapper/gradle-wrapper.jar
 *.iml
 .gradle
-gradle.properties
 gradlew
 gradlew.bat
 app/app-release.apk
