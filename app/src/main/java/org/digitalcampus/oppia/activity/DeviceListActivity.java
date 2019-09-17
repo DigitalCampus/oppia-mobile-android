@@ -166,7 +166,9 @@ public class DeviceListActivity extends Activity {
 
         // Make sure we're not doing discovery anymore
         if (mBtAdapter != null) {
-            mBtAdapter.cancelDiscovery();
+            if (mBtAdapter.isDiscovering()) {
+                mBtAdapter.cancelDiscovery();
+            }
         }
 
         // Unregister broadcast listeners
@@ -186,6 +188,7 @@ public class DeviceListActivity extends Activity {
 
         // Turn on sub-title for new devices
         findViewById(R.id.new_devices_title).setVisibility(View.VISIBLE);
+        findViewById(R.id.new_devices).setVisibility(View.VISIBLE);
 
         // If we're already discovering, stop it
         if (mBtAdapter.isDiscovering()) {
@@ -208,7 +211,9 @@ public class DeviceListActivity extends Activity {
             = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
             // Cancel discovery because it's costly and we're about to connect
-            mBtAdapter.cancelDiscovery();
+            if (mBtAdapter.isDiscovering()) {
+                mBtAdapter.cancelDiscovery();
+            }
 
             // Get the device MAC address, which is the last 17 chars in the View
             String info = ((TextView) v).getText().toString();

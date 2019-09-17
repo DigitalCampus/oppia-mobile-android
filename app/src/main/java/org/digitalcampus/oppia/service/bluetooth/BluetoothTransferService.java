@@ -8,8 +8,9 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import androidx.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.splunk.mint.Mint;
 
@@ -157,6 +158,8 @@ public class BluetoothTransferService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        Log.d(TAG, "onStartCommand");
+
         if (intent != null && intent.hasExtra(SERVICE_ACTION)) {
             String action = intent.getStringExtra(SERVICE_ACTION);
             if (ACTION_RECEIVE.equals(action) && BluetoothConnectionManager.isConnected()){
@@ -190,6 +193,7 @@ public class BluetoothTransferService extends Service {
     @Override
     public void onDestroy(){
         super.onDestroy();
+        Log.d(TAG, "onDestroy");
         BluetoothTransferService.setInstance(null);
         unregisterReceiver(alternateNotifier);
     }
@@ -251,6 +255,8 @@ public class BluetoothTransferService extends Service {
             sendHandler = null;
         }
         tasksDownloading.clear();
+
+        Log.d(TAG, "connection closed");
 
     }
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
 
     <TextView
         android:layout_width="match_parent"
@@ -11,56 +12,53 @@
         android:paddingLeft="@dimen/padding_medium"
         android:text="@string/bluetooth.select_device"
         android:textAppearance="@style/Oppia.ActionBar.TitleTextStyle"
-        android:theme="@style/Header"/>
+        android:theme="@style/Header" />
+
 
     <TextView
         android:id="@+id/paired_devices_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/stroke"
-        android:paddingBottom="@dimen/padding_medium"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/padding_medium"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/padding_medium"
         android:text="@string/paired_devices"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/paired_devices"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:stackFromBottom="true"
-        />
+        android:layout_height="150dp"
+        android:fadeScrollbars="false"/>
 
     <TextView
         android:id="@+id/new_devices_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/stroke"
-        android:paddingBottom="@dimen/padding_medium"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/padding_medium"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/padding_medium"
         android:text="@string/other_devices"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/new_devices"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:stackFromBottom="true"
-        />
+        android:layout_height="150dp"
+        android:fadeScrollbars="false"
+        android:visibility="gone"/>
+
 
     <LinearLayout
         android:id="@+id/scanning_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -70,7 +68,7 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"/>
+            android:layout_weight="0" />
 
         <TextView
             android:id="@+id/textView22"
@@ -78,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding_medium"
             android:layout_weight="0"
-            android:text="@string/bluetooth_device_scanning"/>
+            android:text="@string/bluetooth_device_scanning" />
     </LinearLayout>
 
     <Button
@@ -88,5 +86,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/padding_medium"
         android:gravity="center_horizontal"
-        android:text="@string/bluetooth.button_scan"/>
+        android:text="@string/bluetooth.button_scan" />
+
 </LinearLayout>
