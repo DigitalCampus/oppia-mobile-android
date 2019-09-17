@@ -26,7 +26,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -39,6 +38,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseListAdapter;
@@ -73,7 +74,7 @@ import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
-public class OppiaMobileActivity
+public class CoursesListActivity
         extends AppActivity
         implements
             OnSharedPreferenceChangeListener,
@@ -83,7 +84,7 @@ public class OppiaMobileActivity
             UpdateActivityListener,
             CourseContextMenuCustom.OnContextMenuListener {
 
-	public static final String TAG = OppiaMobileActivity.class.getSimpleName();
+	public static final String TAG = CoursesListActivity.class.getSimpleName();
 	private ArrayList<Course> courses;
 	private Course tempCourse;
     private int initialCourseListPadding = 0;
@@ -106,7 +107,7 @@ public class OppiaMobileActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_courses_list);
 
         initializeDagger();
 
@@ -134,7 +135,7 @@ public class OppiaMobileActivity
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Course selectedCourse = courses.get(position);
-                Intent i = new Intent(OppiaMobileActivity.this, CourseIndexActivity.class);
+                Intent i = new Intent(CoursesListActivity.this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();
                 tb.putSerializable(Course.TAG, selectedCourse);
                 i.putExtras(tb);
@@ -218,7 +219,7 @@ public class OppiaMobileActivity
 	}
 
     private void startPrefsActivity(){
-        Intent i = new Intent(OppiaMobileActivity.this, PrefsActivity.class);
+        Intent i = new Intent(CoursesListActivity.this, PrefsActivity.class);
         Bundle tb = new Bundle();
         ArrayList<Lang> langs = new ArrayList<>();
         for(Course m: courses){ langs.addAll(m.getLangs()); }
@@ -236,9 +237,9 @@ public class OppiaMobileActivity
         Button manageBtn = this.findViewById(R.id.manage_courses_btn);
         manageBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                AdminSecurityManager.checkAdminPermission(OppiaMobileActivity.this, R.id.menu_download, new AdminSecurityManager.AuthListener() {
+                AdminSecurityManager.checkAdminPermission(CoursesListActivity.this, R.id.menu_download, new AdminSecurityManager.AuthListener() {
                 public void onPermissionGranted() {
-                    startActivity(new Intent(OppiaMobileActivity.this, TagSelectActivity.class));
+                    startActivity(new Intent(CoursesListActivity.this, TagSelectActivity.class));
                 }
             });
             }
@@ -250,7 +251,7 @@ public class OppiaMobileActivity
 
         UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
             public Boolean call(){
-                OppiaMobileActivity.this.onStart();
+                CoursesListActivity.this.onStart();
                 return true;
             }
         });
@@ -265,7 +266,7 @@ public class OppiaMobileActivity
                     if (prefs.getBoolean(PrefsActivity.PREF_DELETE_COURSE_ENABLED, true)){
                         confirmCourseDelete();
                     } else {
-                        Toast.makeText(OppiaMobileActivity.this, getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
+                        Toast.makeText(CoursesListActivity.this, getString(R.string.warning_delete_disabled), Toast.LENGTH_LONG).show();
                     }
                 } else if (itemId == R.id.course_context_reset) {
                     confirmCourseReset();
@@ -283,14 +284,14 @@ public class OppiaMobileActivity
 		builder.setMessage(R.string.course_context_delete_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-                DeleteCourseTask task = new DeleteCourseTask(OppiaMobileActivity.this);
+                DeleteCourseTask task = new DeleteCourseTask(CoursesListActivity.this);
                 ArrayList<Object> payloadData = new ArrayList<>();
                 payloadData.add(tempCourse);
                 Payload p = new Payload(payloadData);
-                task.setOnDeleteCourseListener(OppiaMobileActivity.this);
+                task.setOnDeleteCourseListener(CoursesListActivity.this);
                 task.execute(p);
 
-                progressDialog = new ProgressDialog(OppiaMobileActivity.this, R.style.Oppia_AlertDialogStyle);
+                progressDialog = new ProgressDialog(CoursesListActivity.this, R.style.Oppia_AlertDialogStyle);
                 progressDialog.setMessage(getString(R.string.course_deleting));
                 progressDialog.setCancelable(false);
                 progressDialog.setCanceledOnTouchOutside(false);
@@ -312,8 +313,8 @@ public class OppiaMobileActivity
 		builder.setMessage(R.string.course_context_reset_confirm);
 		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                DbHelper db = DbHelper.getInstance(OppiaMobileActivity.this);
-                db.resetCourse(tempCourse.getCourseId(), SessionManager.getUserId(OppiaMobileActivity.this));
+                DbHelper db = DbHelper.getInstance(CoursesListActivity.this);
+                db.resetCourse(tempCourse.getCourseId(), SessionManager.getUserId(CoursesListActivity.this));
                 displayCourses();
             }
         });
@@ -326,14 +327,14 @@ public class OppiaMobileActivity
 	}
 	
 	private void confirmCourseUpdateActivity(){
-        UpdateCourseActivityTask task = new UpdateCourseActivityTask(OppiaMobileActivity.this, SessionManager.getUserId(this));
+        UpdateCourseActivityTask task = new UpdateCourseActivityTask(CoursesListActivity.this, SessionManager.getUserId(this));
         ArrayList<Object> payloadData = new ArrayList<>();
         payloadData.add(tempCourse);
         Payload p = new Payload(payloadData);
-        task.setUpdateActivityListener(OppiaMobileActivity.this);
+        task.setUpdateActivityListener(CoursesListActivity.this);
         task.execute(p);
 
-        progressDialog = new ProgressDialog(OppiaMobileActivity.this, R.style.Oppia_AlertDialogStyle);
+        progressDialog = new ProgressDialog(CoursesListActivity.this, R.style.Oppia_AlertDialogStyle);
         progressDialog.setMessage(getString(R.string.course_updating));
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -416,7 +417,7 @@ public class OppiaMobileActivity
                     public void onClick(View view) {
                         @SuppressWarnings("unchecked")
                         ArrayList<Object> m = (ArrayList<Object>) view.getTag();
-                        Intent i = new Intent(OppiaMobileActivity.this, DownloadMediaActivity.class);
+                        Intent i = new Intent(CoursesListActivity.this, DownloadMediaActivity.class);
                         Bundle tb = new Bundle();
                         tb.putSerializable(DownloadMediaActivity.TAG, m);
                         i.putExtras(tb);
@@ -447,7 +448,7 @@ public class OppiaMobileActivity
         if (progressDialog != null){
             progressDialog.dismiss();
         }
-        Toast.makeText(OppiaMobileActivity.this,
+        Toast.makeText(CoursesListActivity.this,
                 getString(response.isResult()? R.string.course_deleting_success : R.string.course_deleting_error),
                 Toast.LENGTH_LONG).show();
         displayCourses();
@@ -481,7 +482,7 @@ public class OppiaMobileActivity
         if (progressDialog != null){
             progressDialog.dismiss();
         }
-        Toast.makeText(OppiaMobileActivity.this,
+        Toast.makeText(CoursesListActivity.this,
                 getString(
                     response.isResult() ? R.string.course_updating_success : R.string.course_updating_error,
                     (course!=null) ? course.getShortname() : ""),
