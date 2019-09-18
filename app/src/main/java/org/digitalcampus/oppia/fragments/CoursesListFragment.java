@@ -159,6 +159,10 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         IntentFilter broadcastFilter = new IntentFilter(CourseIntallerService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(receiver, broadcastFilter);
+
+        if (courseListAdapter != null) {
+            courseListAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

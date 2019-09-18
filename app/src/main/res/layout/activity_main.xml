@@ -20,6 +20,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_bottom_view"
             android:layout_width="match_parent"
@@ -37,6 +38,24 @@
         android:fitsSystemWindows="true"
         android:theme="@style/Oppia.Theme"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer_main" />
+        app:menu="@menu/drawer_main">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/drawer_version_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/HeaderText"
+                android:text="@string/version_name" />
+        </LinearLayout>
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

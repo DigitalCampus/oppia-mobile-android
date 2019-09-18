@@ -19,13 +19,14 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+
+import androidx.fragment.app.Fragment;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
@@ -113,6 +114,5 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
         tb.putSerializable(Course.TAG, selectedCourse);
         i.putExtras(tb);
         startActivity(i);
-        super.getActivity().finish();
     }
 }

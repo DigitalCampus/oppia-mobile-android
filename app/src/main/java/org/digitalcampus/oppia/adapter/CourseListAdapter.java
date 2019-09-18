@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,8 +89,9 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         viewHolder.courseTitle.setText(c.getTitle(lang));
         String description = c.getDescription(lang);
-	    if ((description != null) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)){
+	    if (!TextUtils.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)){
             viewHolder.courseDescription.setText(description);
+            viewHolder.courseDescription.setVisibility(View.VISIBLE);
 	    } else {
             viewHolder.courseDescription.setVisibility(View.GONE);
 	    }
