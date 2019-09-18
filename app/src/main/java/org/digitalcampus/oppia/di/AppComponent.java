@@ -2,7 +2,7 @@ package org.digitalcampus.oppia.di;
 
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.DownloadActivity;
-import org.digitalcampus.oppia.activity.CoursesListActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.fragments.ActivitiesFragment;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
@@ -18,7 +18,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = AppModule.class)
 public interface AppComponent {
-    void inject(CoursesListActivity activity);
+    void inject(MainActivity activity);
     void inject(CourseIndexActivity activity);
     void inject(TagSelectActivity activity);
     void inject(DownloadActivity activity);

@@ -16,7 +16,7 @@ import com.google.android.material.navigation.NavigationView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
-import org.digitalcampus.oppia.activity.CoursesListActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
@@ -93,8 +93,8 @@ public class OppiaMobileActivityUITest {
                     });
 
     @Rule
-    public ActivityTestRule<CoursesListActivity> oppiaMobileActivityTestRule =
-            new ActivityTestRule<>(CoursesListActivity.class, false, false);
+    public ActivityTestRule<MainActivity> oppiaMobileActivityTestRule =
+            new ActivityTestRule<>(MainActivity.class, false, false);
 
 
     
@@ -237,7 +237,7 @@ public class OppiaMobileActivityUITest {
         onView(withText(R.string.no))
                 .perform(click());
 
-        checkCorrectActivity(CoursesListActivity.class);
+        checkCorrectActivity(MainActivity.class);
 
     }
 
