@@ -21,14 +21,14 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -38,9 +38,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.adapter.PointsListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -62,6 +62,7 @@ import javax.inject.Inject;
 public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener {
 
     public static final String TAG = PointsFragment.class.getSimpleName();
+    private static final String ARG_COURSE = "arg_course";
 
     private final int POSITION_TAB_LAST_YEAR = 0;
     private final int POSITION_TAB_LAST_MONTH = 1;
@@ -82,8 +83,12 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private int currentDatesRangePosition;
     private Course course;
 
-    public static PointsFragment newInstance() {
-        return new PointsFragment();
+    public static PointsFragment newInstance(Course course) {
+        PointsFragment pointsFragment = new PointsFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_COURSE, course);
+        pointsFragment.setArguments(args);
+        return pointsFragment;
     }
 
     private void findViews() {
@@ -108,7 +113,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         initializeDagger();
         configureChart();
 
-        course = ((ScorecardActivity) getActivity()).getCourse();
+        course = (Course) getArguments().getSerializable(ARG_COURSE);
 
         loadPoints();
 

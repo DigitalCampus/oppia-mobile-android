@@ -23,18 +23,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/course_image"
-            android:textColor="@color/text_light"
+            android:textColor="@color/text_dark"
             android:textSize="18sp"
             android:layout_marginTop="10dp"
-            android:textStyle="normal" />
+            android:textStyle="normal"/>
 
         <TextView
             android:id="@+id/course_description"
-            style="@style/MediumTextItalic"
+            style="@style/MediumTextDarkItalic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/course_title"
-            android:layout_toRightOf="@+id/course_image" />
+            android:layout_toRightOf="@+id/course_image"/>
     </RelativeLayout>
 
     <ProgressBar

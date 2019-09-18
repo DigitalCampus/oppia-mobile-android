@@ -1,13 +1,13 @@
 package UI;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import junit.framework.AssertionFailedError;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CoursesListActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.junit.Rule;
@@ -27,7 +27,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class RegisterUITest {
@@ -340,7 +339,7 @@ public class RegisterUITest {
                 .perform( click());
 
         try{
-            assertEquals(CoursesListActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+            assertEquals(MainActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
         }catch(AssertionFailedError afe){
             afe.printStackTrace();
         }
