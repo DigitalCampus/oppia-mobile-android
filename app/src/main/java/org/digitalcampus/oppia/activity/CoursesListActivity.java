@@ -245,6 +245,7 @@ public class CoursesListActivity
             }
         });
     }
+
 	private void createLanguageDialog() {
 		ArrayList<Lang> langs = new ArrayList<>();
 		for(Course m: courses){ langs.addAll(m.getLangs()); }

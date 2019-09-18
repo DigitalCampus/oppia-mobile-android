@@ -6,6 +6,7 @@ import org.digitalcampus.oppia.activity.CoursesListActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.fragments.ActivitiesFragment;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
+import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.model.User;
@@ -26,6 +27,7 @@ public interface AppComponent {
     void inject(PointsFragment fragment);
     void inject(ActivitiesFragment fragment);
     void inject(BadgesFragment fragment);
+    void inject(CoursesListFragment fragment);
 
     User getUser();
 }
