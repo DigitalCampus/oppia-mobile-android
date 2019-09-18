@@ -25,6 +25,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 28
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     //Add the version_name value to strings resources
