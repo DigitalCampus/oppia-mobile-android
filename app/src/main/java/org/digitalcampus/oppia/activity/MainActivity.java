@@ -13,8 +13,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
+import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
-import org.digitalcampus.oppia.fragments.ScorecardFragment;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
@@ -76,11 +76,11 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 break;
 
             case R.id.nav_bottom_scorecard:
-                fragment = new ScorecardFragment();
+                fragment = GlobalScorecardFragment.newInstance();
                 break;
 
             case R.id.nav_bottom_points:
-                fragment = new PointsFragment();
+                fragment = PointsFragment.newInstance(null);
                 break;
         }
 

@@ -21,11 +21,13 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import com.google.android.material.tabs.TabLayout;
+import android.view.MenuItem;
+
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBar;
-import android.view.MenuItem;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
@@ -99,7 +101,7 @@ public class ScorecardActivity extends AppActivity {
 
 		boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
 		if (scoringEnabled) {
-			Fragment fPoints = PointsFragment.newInstance();
+			Fragment fPoints = PointsFragment.newInstance(course);
 			fragments.add(fPoints);
             tabTitles.add(this.getString(R.string.tab_title_points));
 
