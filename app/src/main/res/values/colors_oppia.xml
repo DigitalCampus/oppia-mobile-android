@@ -8,8 +8,8 @@
     <color name="highlight_secondary">#689e3a</color>
     <color name="activity_completed_filter">#999aca3c</color>
 
-    <color name="tab_bg_color">@color/highlight_label</color>
-    <color name="tab_text_color">@color/text_light</color>
-    <color name="tab_selected_text_color">@color/text_light</color>
+    <color name="tab_bg_color">#e0dde2</color>
+    <color name="tab_text_color">@color/text_dark</color>
+    <color name="tab_selected_text_color">@color/text_dark</color>
 
 </resources>

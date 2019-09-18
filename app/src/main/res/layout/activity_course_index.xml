@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
     <include
         android:id="@+id/toolbar"
@@ -25,22 +27,23 @@
 
         <TextView
             android:id="@+id/textView"
-            style="@style/SmallTextLight"
+            style="@style/SmallTextDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/loading_course" />
     </LinearLayout>
 
-    <ListView
+    <org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView
         android:id="@+id/section_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
         android:cacheColorHint="#00000000"
         android:divider="@color/list_divider"
-        android:dividerHeight="1dp"
         android:foreground="?android:windowContentOverlay"
-        android:listSelector="@drawable/background_change_pressed" />
+        android:orientation="vertical"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/section_item" />
 
 </RelativeLayout>
