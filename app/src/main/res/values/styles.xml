@@ -157,6 +157,12 @@
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
+    <style name="CourseTitle" parent="android:TextAppearance">
+        <item name="android:textSize">17sp</item>
+        <item name="fontPath">fonts/lato.ttf</item>
+        <item name="android:textColor">@color/text_dark</item>
+    </style>
+
     <style name="Highlight.Title" parent="android:TextAppearance.Medium">
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_marginBottom">@dimen/padding_medium</item>

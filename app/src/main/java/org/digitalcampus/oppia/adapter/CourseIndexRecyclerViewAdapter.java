@@ -37,8 +37,11 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
     private boolean highlightCompleted;
     private String prefLang;
     private String courseLocation;
+    private String courseTitle;
+    private String courseIcon;
     private int highlightColor;
     private int normalColor;
+
 
     public CourseIndexRecyclerViewAdapter(Context ctx, List<Section> sectionList, Course course){
         super();
@@ -51,6 +54,11 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         courseLocation = course.getLocation();
         highlightColor = ContextCompat.getColor(ctx, R.color.highlight_secondary);
         normalColor = ContextCompat.getColor(ctx, R.color.text_dark);
+
+        courseTitle = course.getTitle(prefLang);
+        courseIcon = course.getImageFileFromRoot();
+
+        this.setHeaderVisible(true);
     }
 
     @Override
@@ -75,7 +83,7 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
 
     @Override
     protected HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.section_header,parent,false);
+        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_title_bar,parent,false);
         return new HeaderViewHolder(rootView);
     }
 
@@ -95,7 +103,8 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
 
     @Override
     public void onBindHeaderViewHolder(HeaderViewHolder holder) {
-
+        holder.title.setText(courseTitle);
+        Picasso.get().load(new File(courseIcon)).into(holder.courseImage);
     }
 
     @Override
@@ -133,15 +142,12 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
     public class HeaderViewHolder extends RecyclerView.ViewHolder
     {
         private TextView title;
-        private ImageView activityImage;
-        private View completedBadge;
+        private ImageView courseImage;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.title);
-            activityImage = itemView.findViewById(R.id.icon);
-            completedBadge = itemView.findViewById(R.id.badge);
-
+            title = itemView.findViewById(R.id.course_title);
+            courseImage = itemView.findViewById(R.id.course_icon);
         }
     }
 
