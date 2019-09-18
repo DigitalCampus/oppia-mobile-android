@@ -21,7 +21,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
@@ -144,15 +143,4 @@ public class ScorecardActivity extends AppActivity {
 		return course;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				this.finish();
-				return true;
-			default:
-				return false;
-		}
-	}
 }

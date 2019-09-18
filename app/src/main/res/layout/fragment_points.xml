@@ -12,6 +12,8 @@
         android:layout_height="30dp"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         app:tabGravity="center"
         app:tabTextColor="@color/text_grey"
         app:tabSelectedTextColor="@color/ap_white"
@@ -79,6 +81,8 @@
         android:layout_height="wrap_content"
         android:divider="@color/list_divider_light"
         android:dividerHeight="1dp"
-        android:padding="10dp"/>
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 
 </LinearLayout>

@@ -62,6 +62,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
 
+//        startActivity(new Intent(this, ScorecardActivity.class));
 
     }
 

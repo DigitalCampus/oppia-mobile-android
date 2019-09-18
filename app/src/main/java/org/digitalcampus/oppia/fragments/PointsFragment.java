@@ -61,7 +61,6 @@ import javax.inject.Inject;
 
 public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener {
 
-    public static final String TAG = PointsFragment.class.getSimpleName();
     private static final String ARG_COURSE = "arg_course";
 
     private final int POSITION_TAB_LAST_YEAR = 0;

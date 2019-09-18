@@ -26,8 +26,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
-import androidx.fragment.app.Fragment;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
@@ -41,9 +39,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class GlobalScorecardFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class GlobalScorecardFragment extends AppFragment implements AdapterView.OnItemClickListener {
 
-    public static final String TAG = CourseScorecardFragment.class.getSimpleName();
     private ScorecardListAdapter scorecardListAdapter;
 
     @Inject
