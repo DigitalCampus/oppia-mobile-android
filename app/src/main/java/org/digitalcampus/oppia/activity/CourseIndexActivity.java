@@ -29,16 +29,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.ViewCompat;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
@@ -65,7 +61,6 @@ import javax.inject.Inject;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
-    public static final String TAG = CourseIndexActivity.class.getSimpleName();
     public static final String JUMPTO_TAG = "JumpTo";
     public static final int RESULT_JUMPTO = 99;
 

@@ -20,10 +20,12 @@ package org.digitalcampus.oppia.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import com.google.android.material.tabs.TabLayout;
+import android.view.MenuItem;
+
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import android.view.MenuItem;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
@@ -36,8 +38,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class AboutActivity extends AppActivity {
-
-	public static final String TAG = AboutActivity.class.getSimpleName();
 	
 	public static final String TAB_ACTIVE = "TAB_ACTIVE";
 	public static final int TAB_ABOUT = 0;

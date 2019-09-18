@@ -46,7 +46,6 @@ import java.util.List;
 
 public class ScorecardActivity extends AppActivity {
 
-	public static final String TAG = ScorecardActivity.class.getSimpleName();
     public static final String TAB_TARGET = "target";
     public static final String TAB_TARGET_POINTS = "tab_points";
     public static final String TAB_TARGET_BADGES = "tab_badges";

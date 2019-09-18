@@ -414,6 +414,7 @@
     <string name="nav_home">Home</string>
     <string name="nav_scorecard">Scorecard</string>
     <string name="nav_points">Points</string>
+    <string name="edit_profile">Edit profile</string>
 
 </resources>
 
