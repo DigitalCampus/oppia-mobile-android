@@ -96,7 +96,7 @@ public class UIUtils {
         final TextView points = pointsItem.getActionView().findViewById(R.id.userpoints);
         TextView badges = pointsItem.getActionView().findViewById(R.id.userbadges);
 
-        if (points == null || badges == null) {
+        if (points == null) {
             return;
         }
 
@@ -136,6 +136,10 @@ public class UIUtils {
             });
         } else {
             points.setVisibility(View.GONE);
+        }
+
+        if (badges == null){
+            return;
         }
 
         boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);

@@ -88,7 +88,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         super.onStart(false);
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -85,11 +85,11 @@ public class ScorecardActivity extends AppActivity {
 		Fragment fScorecard;
 		if(this.course != null){
 			fScorecard = CourseScorecardFragment.newInstance(course);
-			ActionBar actionBar = getSupportActionBar();
+			/*ActionBar actionBar = getSupportActionBar();
             if ((actionBar != null) && (course.getImageFile() != null)) {
                 BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.dc_logo);
                 actionBar.setHomeAsUpIndicator(bm);
-            }
+            }*/
 		} else {
 			fScorecard = GlobalScorecardFragment.newInstance();
 		}
@@ -114,12 +114,11 @@ public class ScorecardActivity extends AppActivity {
         }
 
 		boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);
-		if (badgingEnabled) {
+		if ((badgingEnabled) && (course == null)){
 			Fragment fBadges= BadgesFragment.newInstance();
 			fragments.add(fBadges);
             tabTitles.add(this.getString(R.string.tab_title_badges));
         }
-
 
 
 		ActivityPagerAdapter apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, tabTitles);
@@ -138,7 +137,7 @@ public class ScorecardActivity extends AppActivity {
         }
 		viewPager.setCurrentItem(currentTab);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-		tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+		tabs.setTabMode(TabLayout.MODE_FIXED);
 	}
 
 	public Course getCourse() {
