@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/course_title"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
        	style="@style/HeaderText"
@@ -14,7 +14,7 @@
     
     <TextView
         android:id="@+id/course_shortname"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         style="@style/SmallTextDark"
@@ -22,7 +22,7 @@
     
     <TextView
         android:id="@+id/course_versionid"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         style="@style/SmallTextDark"
@@ -30,8 +30,8 @@
 
     <WebView
         android:id="@+id/metapage_webview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
     </WebView>
 
 </LinearLayout>

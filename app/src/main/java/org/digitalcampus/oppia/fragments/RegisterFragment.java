@@ -51,8 +51,6 @@ import java.util.List;
 
 public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
 
-	public static final String TAG = RegisterFragment.class.getSimpleName();
-
 
 	private ValidableTextInputLayout usernameField;
 	private ValidableTextInputLayout emailField;

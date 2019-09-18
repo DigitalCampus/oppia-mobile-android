@@ -17,12 +17,12 @@
         >
 
         <FrameLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.androidplot.pie.PieChart
                 android:id="@+id/scorecard_pie_chart"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="245dp"
             />
 
@@ -72,7 +72,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/scorecard_quizzes_container"
             >
@@ -87,7 +87,7 @@
             <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/card"
             android:visibility="invisible"
             android:id="@+id/quizzes_view"
@@ -96,7 +96,7 @@
 
             <TextView
                 style="@style/Highlight.Title"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/scorecard_quizzes_title"
                 android:id="@+id/quizzes_title" />
@@ -188,7 +188,7 @@
             </LinearLayout>
 
                 <ProgressBar
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="15dp"
                     android:id="@+id/progress_quizzes"
                     android:layout_marginLeft="17dp"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/highlight_mid">
@@ -27,34 +28,83 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView8"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
+        android:background="@color/highlight_mid"
         android:paddingLeft="15dp"
+        android:paddingTop="5dp"
         android:paddingRight="15dp"
-        android:background="@color/highlight_mid">
+        android:paddingBottom="5dp">
 
         <TextView
             android:id="@+id/drawer_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:text="User name"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:text="User name" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/drawer_user_fullname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/drawer_username"
+            android:layout_alignParentLeft="true"
+            android:text="User full name"
             android:textColor="@color/black"
-            android:textSize="15sp"
-            android:text="User full name"/>
+            android:textSize="15sp" />
 
-
-
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn_expand_profile_options"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            app:srcCompat="@drawable/ic_expand"
+            android:background="@drawable/bg_pressable"
+            app:tint="@color/white" />
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/view_profile_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_user_info"
+        android:background="@color/grey_light"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/btn_edit_profile"
+            style="@style/MenuItemLayout">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                style="@style/MenuIcon"
+                app:srcCompat="@drawable/ic_profile" />
+
+            <TextView
+                style="@style/TextMenuItem"
+                android:text="@string/edit_profile" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_logout"
+            style="@style/MenuItemLayout">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                style="@style/MenuIcon"
+                app:srcCompat="@drawable/ic_action_logout" />
+
+            <TextView
+                style="@style/TextMenuItem"
+                android:text="@string/logout" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </RelativeLayout>

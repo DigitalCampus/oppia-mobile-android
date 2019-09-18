@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/media_row"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     android:background="@drawable/background_change_selected"
@@ -17,14 +17,14 @@
         <TextView
             android:id="@+id/media_courses"
             style="@style/SmallTextDark"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"  />
 
         <TextView
             android:id="@+id/media_title"
             style="@style/NormalTextDark"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:singleLine="true"
@@ -33,7 +33,7 @@
         <TextView
             android:id="@+id/media_path"
             style="@style/SmallTextGrey"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingTop="5dp"  />
@@ -54,7 +54,7 @@
         android:layout_below="@+id/action_btn"  />
 
     <ProgressBar
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"

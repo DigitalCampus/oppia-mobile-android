@@ -60,8 +60,6 @@ import java.util.List;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
 	
-	public static final String TAG = PrefsActivity.class.getSimpleName();
-	
 	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
 	
 	public static final String PREF_USER_NAME = "prefUsername";

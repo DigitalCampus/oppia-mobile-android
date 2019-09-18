@@ -8,14 +8,14 @@
 
     <LinearLayout
         android:id="@+id/bottom_control_bar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
         <Button
             android:id="@+id/download_media_via_pc_btn"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:text="@string/scan_media_download_via_pc_button" />
@@ -24,8 +24,8 @@
     <ListView
         android:layout_below="@id/toolbar"
         android:id="@+id/missing_media_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@id/bottom_control_bar"
         android:divider="@color/list_divider_light"
         android:listSelector="@drawable/background_change_selected"

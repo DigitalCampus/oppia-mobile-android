@@ -23,11 +23,12 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.splunk.mint.Mint;
 
@@ -55,8 +56,6 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
-	
-	public static final String TAG = DownloadActivity.class.getSimpleName();
 	
 	private SharedPreferences prefs;
 	private ProgressDialog progressDialog;

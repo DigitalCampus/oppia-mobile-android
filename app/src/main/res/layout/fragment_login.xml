@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
         android:orientation="vertical"
@@ -43,7 +43,7 @@
 
                 <EditText
                     android:id="@+id/login_username_field"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:layout_marginLeft="@dimen/padding_large"
@@ -59,7 +59,7 @@
 
                 <EditText
                     android:id="@+id/login_password_field"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:layout_marginLeft="@dimen/padding_large"
@@ -71,7 +71,7 @@
 
             <Button
                 android:id="@+id/login_btn"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding_large"
                 android:layout_marginTop="@dimen/padding_medium"

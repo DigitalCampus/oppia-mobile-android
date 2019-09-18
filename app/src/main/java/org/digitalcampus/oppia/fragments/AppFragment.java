@@ -1,5 +1,7 @@
 package org.digitalcampus.oppia.fragments;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -26,5 +28,10 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
 
     public void toast(int stringId) {
         toast(getString(stringId));
+    }
+
+
+    public SharedPreferences getPrefs() {
+        return PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 }

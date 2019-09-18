@@ -24,15 +24,17 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import com.google.android.material.navigation.NavigationView;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
@@ -51,7 +53,9 @@ import java.util.Map;
 
 public class DrawerMenuManager {
 
-    public interface MenuOption{ void onOptionSelected(); }
+    public interface MenuOption {
+        void onOptionSelected();
+    }
 
     private AppActivity drawerAct;
     private boolean isRootActivity;
@@ -60,12 +64,12 @@ public class DrawerMenuManager {
     private ActionBarDrawerToggle drawerToggle;
     private Map<Integer, MenuOption> customOptions = new HashMap<>();
 
-    public DrawerMenuManager(AppActivity act, boolean isRootActivity){
+    public DrawerMenuManager(AppActivity act, boolean isRootActivity) {
         drawerAct = act;
         this.isRootActivity = isRootActivity;
     }
 
-    public void initializeDrawer(){
+    public void initializeDrawer() {
         // Initializing Drawer Layout and ActionBarToggle
         final Toolbar toolbar = drawerAct.findViewById(R.id.toolbar);
         final DrawerLayout drawerLayout = drawerAct.findViewById(R.id.drawer);
@@ -81,7 +85,7 @@ public class DrawerMenuManager {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 boolean result = onOptionsItemSelected(menuItem);
-                if (result){
+                if (result) {
                     menuItem.setChecked(false);
                     drawerLayout.closeDrawers();
                 }
@@ -89,57 +93,57 @@ public class DrawerMenuManager {
             }
         });
 
-        drawerToggle = new ActionBarDrawerToggle(drawerAct,drawerLayout,toolbar,R.string.open, R.string.close);
+        drawerToggle = new ActionBarDrawerToggle(drawerAct, drawerLayout, toolbar, R.string.open, R.string.close);
         //Setting the actionbarToggle to drawer layout
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
     }
 
-    public void onPrepareOptionsMenu(Menu menu, int currentOption){
+    public void onPrepareOptionsMenu(Menu menu, int currentOption) {
         this.onPrepareOptionsMenu(menu, currentOption, null);
     }
-    public void onPrepareOptionsMenu(Menu menu, Map<Integer, MenuOption> options){
+
+    public void onPrepareOptionsMenu(Menu menu, Map<Integer, MenuOption> options) {
         this.onPrepareOptionsMenu(menu, null, options);
     }
-    public void onPrepareOptionsMenu(Menu menu, Integer currentOption, Map<Integer, MenuOption> options){
+
+    public void onPrepareOptionsMenu(Menu menu, Integer currentOption, Map<Integer, MenuOption> options) {
 
         if (options != null)
             this.customOptions = options;
 
         Menu drawerMenu = navigationView.getMenu();
-        MenuItem itemLogout = drawerMenu.findItem(R.id.menu_logout);
         MenuItem itemSettings = drawerMenu.findItem(R.id.menu_settings);
         MenuItem itemCourseDownload = drawerMenu.findItem(R.id.menu_download);
         MenuItem itemLanguageDialog = drawerMenu.findItem(R.id.menu_language);
         MenuItem itemSync = drawerMenu.findItem(R.id.menu_sync);
 
-        if (currentOption != null){
+        if (currentOption != null) {
             MenuItem current = drawerMenu.findItem(currentOption);
-            if (current != null){
+            if (current != null) {
                 current.setCheckable(true);
                 current.setChecked(true);
             }
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(drawerAct);
-        itemLogout.setVisible(prefs.getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT));
         itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS);
         itemCourseDownload.setVisible(prefs.getBoolean(PrefsActivity.PREF_DOWNLOAD_ENABLED, MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD));
         itemLanguageDialog.setVisible(customOptions.containsKey(R.id.menu_language) && prefs.getBoolean(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED, MobileLearning.MENU_ALLOW_LANGUAGE));
         itemSync.setVisible(MobileLearning.MENU_ALLOW_SYNC);
     }
 
-    public void onPostCreate(Bundle savedInstanceState){
+    public void onPostCreate(Bundle savedInstanceState) {
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
     }
 
-    public void onConfigurationChanged(Configuration newConfig){
+    public void onConfigurationChanged(Configuration newConfig) {
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private boolean onOptionsItemSelected(MenuItem item){
+    private boolean onOptionsItemSelected(MenuItem item) {
         // If it is the current selected item, we do nothing
         if (item.isChecked()) return false;
 
@@ -147,11 +151,9 @@ public class DrawerMenuManager {
         AdminSecurityManager.checkAdminPermission(drawerAct, itemId, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {
                 // Check if the option has custom manager
-                if(
-                    customOptions.containsKey(itemId)){
+                if (customOptions.containsKey(itemId)) {
                     customOptions.get(itemId).onOptionSelected();
-                }
-                else if (itemId == R.id.menu_download) {
+                } else if (itemId == R.id.menu_download) {
                     launchIntentForActivity(TagSelectActivity.class);
                 } else if (itemId == R.id.menu_about) {
                     launchIntentForActivity(AboutActivity.class);
@@ -163,8 +165,6 @@ public class DrawerMenuManager {
                     launchIntentForActivity(PrefsActivity.class);
                 } else if (itemId == R.id.menu_sync) {
                     launchIntentForActivity(SyncActivity.class);
-                }else if (itemId == R.id.menu_logout) {
-                    logout();
                 }
             }
         });
@@ -172,9 +172,9 @@ public class DrawerMenuManager {
         return true;
     }
 
-    public void launchIntentForActivity(Class<?> activityClass){
+    public void launchIntentForActivity(Class<?> activityClass) {
         Intent i = new Intent(drawerAct, activityClass);
-        if (!this.isRootActivity){
+        if (!this.isRootActivity) {
             //If the activity was not the root one, we close it
             drawerAct.finish();
         }
@@ -184,7 +184,7 @@ public class DrawerMenuManager {
         drawerAct.startActivity(i);
     }
 
-    private void logout() {
+    public void logout() {
         AlertDialog.Builder builder = new AlertDialog.Builder(drawerAct);
         builder.setCancelable(false);
         builder.setTitle(R.string.logout);

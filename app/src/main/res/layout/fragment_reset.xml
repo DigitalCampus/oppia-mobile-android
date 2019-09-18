@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
         android:orientation="vertical"
@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/reset_username_title"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@android:dimen/notification_large_icon_height"
             android:padding="5dp"
@@ -20,14 +20,14 @@
 
         <EditText
             android:id="@+id/reset_username_field"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:padding="5dp"/>
 
         <Button
             android:id="@+id/reset_btn"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/title_btn_reset"/>
 

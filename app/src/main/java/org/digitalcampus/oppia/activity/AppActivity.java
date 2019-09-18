@@ -83,6 +83,10 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         toast(getString(stringId));
     }
 
+    public SharedPreferences getPrefs() {
+        return PreferenceManager.getDefaultSharedPreferences(this);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection

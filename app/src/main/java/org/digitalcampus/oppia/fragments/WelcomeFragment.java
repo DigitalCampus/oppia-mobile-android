@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.fragments;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +26,7 @@ import android.widget.Button;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 
-public class WelcomeFragment extends Fragment {
-
-	public static final String TAG = WelcomeFragment.class.getSimpleName();
+public class WelcomeFragment extends AppFragment {
 
     public static WelcomeFragment newInstance() {
         return new WelcomeFragment();

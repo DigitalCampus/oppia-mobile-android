@@ -39,7 +39,6 @@ import java.util.ArrayList;
 
 public class ResetFragment extends AppFragment implements SubmitListener{
 
-	public static final String TAG = RegisterFragment.class.getSimpleName();
 	private EditText usernameField;
     private ProgressDialog pDialog;
     private Button resetButton;

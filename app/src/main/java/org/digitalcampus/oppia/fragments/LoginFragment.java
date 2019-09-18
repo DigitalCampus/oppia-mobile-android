@@ -42,7 +42,6 @@ import java.util.ArrayList;
 
 public class LoginFragment extends AppFragment implements SubmitListener {
 
-	public static final String TAG = LoginFragment.class.getSimpleName();
     private EditText usernameField;
 	private EditText passwordField;
 	private ProgressDialog pDialog;

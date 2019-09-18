@@ -25,8 +25,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/section_activities"
         style="@style/TwoWayView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:drawSelectorOnTop="false"
         tools:context=".CourseIndexActivity"
         android:listSelector="@drawable/background_change_pressed"
@@ -34,7 +34,7 @@
 
     <!--<HorizontalScrollView
         android:id="@+id/section_activities_scroll"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fadeScrollbars="false"
         android:scrollbars="none" >
