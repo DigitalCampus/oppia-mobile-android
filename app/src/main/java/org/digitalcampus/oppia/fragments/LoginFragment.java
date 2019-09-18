@@ -28,7 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.activity.CoursesListActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.SubmitListener;
@@ -150,7 +150,7 @@ public class LoginFragment extends AppFragment implements SubmitListener {
             getActivity().startService(intent);
 	    	
 			// return to main activity
-	    	startActivity(new Intent(super.getActivity(), OppiaMobileActivity.class));
+	    	startActivity(new Intent(super.getActivity(), CoursesListActivity.class));
 	    	super.getActivity().finish();
 		} else {
             Context ctx = super.getActivity();

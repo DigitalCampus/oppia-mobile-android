@@ -30,7 +30,7 @@ import android.widget.Button;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.activity.CoursesListActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -128,7 +128,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			gamificationEngine.processEventRegister();
             //Save the search tracker
             new Tracker(super.getActivity()).saveRegisterTracker();
-	    	startActivity(new Intent(getActivity(), OppiaMobileActivity.class));
+	    	startActivity(new Intent(getActivity(), CoursesListActivity.class));
 	    	super.getActivity().finish();
 		} else {
 			Context ctx = super.getActivity();
@@ -212,7 +212,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 		//Save the search tracker
 		new Tracker(super.getActivity()).saveRegisterTracker();
-		startActivity(new Intent(getActivity(), OppiaMobileActivity.class));
+		startActivity(new Intent(getActivity(), CoursesListActivity.class));
 		super.getActivity().finish();
 	}
 

@@ -6,7 +6,9 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
-    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <LinearLayout
         android:id="@+id/loading_course"
@@ -21,7 +23,7 @@
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:id="@+id/textView"
@@ -29,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/loading_course"/>
+            android:text="@string/loading_course" />
     </LinearLayout>
 
     <org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView

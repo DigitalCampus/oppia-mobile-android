@@ -1,4 +1,3 @@
-
 plugins {
     id "org.sonarqube" version "2.6.1"
 }
@@ -84,7 +83,7 @@ android {
             buildConfigField "int", "DOWNLOAD_COURSES_DISPLAY", runtimeProps['DOWNLOAD_COURSES_DISPLAY']
             buildConfigField "String", "GAMIFICATION_MEDIA_CRITERIA", "\"" + runtimeProps['GAMIFICATION_MEDIA_CRITERIA'] + "\""
             buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
-            buildConfigField "String", "GAMIFICATION_POINTS_ANIMATION",  "\"" + runtimeProps['GAMIFICATION_POINTS_ANIMATION'] + "\""
+            buildConfigField "String", "GAMIFICATION_POINTS_ANIMATION", "\"" + runtimeProps['GAMIFICATION_POINTS_ANIMATION'] + "\""
             buildConfigField "int", "DURATION_GAMIFICATION_POINTS_VIEW", runtimeProps['DURATION_GAMIFICATION_POINTS_VIEW']
 
 
@@ -123,8 +122,8 @@ android {
     flavorDimensions "main"
 
     productFlavors {
-        normal {dimension "main"}
-        admin {dimension "main"}
+        normal { dimension "main" }
+        admin { dimension "main" }
     }
 
 
@@ -151,6 +150,10 @@ dependencies {
     implementation 'io.github.inflationx:viewpump:1.0.0'
     //JUnit Dependencies
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
+    implementation 'androidx.navigation:navigation-fragment:2.0.0'
+    implementation 'androidx.navigation:navigation-ui:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.3.1'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -189,8 +192,6 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$work_version"
 
 
-
-
     //debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 }
 
@@ -213,7 +214,7 @@ task grantPermissions(type: Exec, dependsOn: 'installDebug') {
 }
 
 tasks.whenTaskAdded { task ->
-    if (task.name.startsWith('connectedAndroidTest')  ||
+    if (task.name.startsWith('connectedAndroidTest') ||
             task.name.startsWith('connectedDebugAndroidTest') ||
             task.name.startsWith('assembleDebugAndroidTest') ||
             task.name.startsWith('assembleAndroidTest')) {

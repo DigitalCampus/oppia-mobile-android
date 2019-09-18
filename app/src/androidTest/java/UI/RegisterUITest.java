@@ -7,7 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import junit.framework.AssertionFailedError;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.activity.CoursesListActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.junit.Rule;
@@ -19,7 +19,6 @@ import static Utils.ViewsUtils.onErrorViewWithinTextInputLayoutWithId;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.pressBack;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -341,7 +340,7 @@ public class RegisterUITest {
                 .perform( click());
 
         try{
-            assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+            assertEquals(CoursesListActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
         }catch(AssertionFailedError afe){
             afe.printStackTrace();
         }
