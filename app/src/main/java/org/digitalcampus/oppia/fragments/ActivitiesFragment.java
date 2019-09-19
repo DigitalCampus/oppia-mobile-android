@@ -38,7 +38,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.adapter.ActivityTypesAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -62,6 +61,8 @@ import javax.inject.Inject;
 
 public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
 
+    private static final String ARG_COURSE = "arg_course";
+
     private static final int DURATION_CHART_Y_VALUES_ANIMATION = 1000;
 
     private final int POSITION_TAB_LAST_YEAR = 0;
@@ -81,8 +82,12 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
     private ActivityTypesAdapter adapterActivityTypes;
     private ArrayList<ActivityType> activityTypes;
 
-    public static ActivitiesFragment newInstance() {
-        return new ActivitiesFragment();
+    public static ActivitiesFragment newInstance(Course course) {
+        ActivitiesFragment fragment = new ActivitiesFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_COURSE, course);
+        fragment.setArguments(args);
+        return fragment ;
     }
 
     private void findViews() {
@@ -107,7 +112,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         configureActivityTypes();
         configureChart();
 
-        course = ((ScorecardActivity) getActivity()).getCourse();
+        course = (Course) getArguments().getSerializable(ARG_COURSE);
 
         loadPoints();
 

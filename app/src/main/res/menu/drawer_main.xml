@@ -5,10 +5,6 @@
             android:id="@+id/menu_download"
             android:icon="@android:drawable/ic_menu_add"
             android:title="@string/menu_download"/>
-        <item
-            android:id="@+id/menu_search"
-            android:icon="@drawable/abs__ic_search"
-            android:title="@string/menu_search"/>
 
         <item
             android:id="@+id/menu_language"

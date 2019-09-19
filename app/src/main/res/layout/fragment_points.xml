@@ -16,7 +16,7 @@
         android:layout_marginRight="10dp"
         app:tabGravity="center"
         app:tabTextColor="@color/text_grey"
-        app:tabSelectedTextColor="@color/ap_white"
+        app:tabSelectedTextColor="@color/white"
         app:tabBackground="@drawable/bg_tab_text"
         app:tabTextAppearance="@style/TabLayoutAppearance"
         app:tabIndicatorHeight="0dp">

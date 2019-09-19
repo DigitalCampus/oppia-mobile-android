@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -16,8 +17,8 @@ import com.google.android.material.navigation.NavigationView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
-import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
-import org.digitalcampus.oppia.fragments.PointsFragment;
+import org.digitalcampus.oppia.fragments.MainPointsFragment;
+import org.digitalcampus.oppia.fragments.MainScorecardFragment;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
@@ -30,6 +31,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private NavigationView navDrawerView;
     private View btnExpandProfileOptions;
     private View viewProfileOptions;
+    private MenuItem searchMenuItem;
 
     private void findViews() {
 
@@ -76,7 +78,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     @Override
     public void onStart() {
         super.onStart();
-        drawer = new DrawerMenuManager(this, true);
+        drawer = new DrawerMenuManager(this);
         drawer.initializeDrawer();
 
     }
@@ -95,11 +97,26 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         drawer.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        searchMenuItem = menu.findItem(R.id.menu_search);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     // CONFIGURATIONS
     private void configureLogoutOption() {
         boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT);
         btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         btnExpandProfileOptions.setVisibility(logoutVisible ? View.VISIBLE : View.GONE); // TODO Edit profile feature.
+        if (!logoutVisible) {
+            setupProfileOptionsView(false);
+        }
+    }
+
+    private void setupProfileOptionsView(boolean visible) {
+        viewProfileOptions.setVisibility(visible ? View.VISIBLE : View.GONE);
+        btnExpandProfileOptions.setRotation(visible ? 180f : 0f);
     }
 
     // INTERACTIONS
@@ -114,15 +131,18 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 break;
 
             case R.id.nav_bottom_scorecard:
-                fragment = GlobalScorecardFragment.newInstance();
+                fragment = MainScorecardFragment.newInstance();
                 break;
 
             case R.id.nav_bottom_points:
-                fragment = PointsFragment.newInstance(null);
+                fragment = MainPointsFragment.newInstance();
                 break;
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, fragment).commit();
+
+        searchMenuItem.setVisible(menuItem.getItemId() == R.id.nav_bottom_home);
+
         return true;
     }
 
@@ -132,8 +152,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
             case R.id.btn_expand_profile_options:
                 boolean isProfileOptionsViewVisible = viewProfileOptions.getVisibility() == View.VISIBLE;
-                viewProfileOptions.setVisibility(isProfileOptionsViewVisible ? View.GONE : View.VISIBLE);
-                btnExpandProfileOptions.setRotation(!isProfileOptionsViewVisible ? 180f : 0f);
+                setupProfileOptionsView(!isProfileOptionsViewVisible);
                 break;
 
             case R.id.btn_edit_profile:
@@ -144,6 +163,16 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 drawer.logout();
                 break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_search:
+                drawer.launchIntentForActivity(SearchActivity.class);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

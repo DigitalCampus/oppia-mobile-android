@@ -41,7 +41,6 @@ import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
-import org.digitalcampus.oppia.activity.SearchActivity;
 import org.digitalcampus.oppia.activity.SyncActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
@@ -58,15 +57,13 @@ public class DrawerMenuManager {
     }
 
     private AppActivity drawerAct;
-    private boolean isRootActivity;
 
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
     private Map<Integer, MenuOption> customOptions = new HashMap<>();
 
-    public DrawerMenuManager(AppActivity act, boolean isRootActivity) {
+    public DrawerMenuManager(AppActivity act) {
         drawerAct = act;
-        this.isRootActivity = isRootActivity;
     }
 
     public void initializeDrawer() {
@@ -159,8 +156,8 @@ public class DrawerMenuManager {
                     launchIntentForActivity(AboutActivity.class);
                 } else if (itemId == R.id.menu_scorecard) {
                     launchIntentForActivity(ScorecardActivity.class);
-                } else if (itemId == R.id.menu_search) {
-                    launchIntentForActivity(SearchActivity.class);
+//                } else if (itemId == R.id.menu_search) {
+//                    launchIntentForActivity(SearchActivity.class);
                 } else if (itemId == R.id.menu_settings) {
                     launchIntentForActivity(PrefsActivity.class);
                 } else if (itemId == R.id.menu_sync) {
@@ -174,10 +171,6 @@ public class DrawerMenuManager {
 
     public void launchIntentForActivity(Class<?> activityClass) {
         Intent i = new Intent(drawerAct, activityClass);
-        if (!this.isRootActivity) {
-            //If the activity was not the root one, we close it
-            drawerAct.finish();
-        }
         drawerAct.overridePendingTransition(
                 android.R.anim.slide_in_left,
                 android.R.anim.fade_out);
