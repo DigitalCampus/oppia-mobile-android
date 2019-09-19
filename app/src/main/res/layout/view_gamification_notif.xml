@@ -38,7 +38,7 @@
         android:layout_toLeftOf="@+id/tv_gamification_notif_points"
         android:layout_toRightOf="@+id/img_gamification_notif"
         android:text="Activity created!"
-        android:textColor="@color/ap_white"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:gravity="center_vertical"/>
 
@@ -53,6 +53,6 @@
         android:background="@drawable/bg_points_gamification_notif"
         android:gravity="center"
         android:text="50"
-        android:textColor="@color/ap_white"
+        android:textColor="@color/white"
         android:textSize="30sp" />
 </RelativeLayout>
