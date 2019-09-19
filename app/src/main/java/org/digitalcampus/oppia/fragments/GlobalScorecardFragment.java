@@ -60,7 +60,7 @@ public class GlobalScorecardFragment extends AppFragment implements AdapterView.
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_scorecards, container, false);
+        return inflater.inflate(R.layout.fragment_global_scorecard, container, false);
     }
 
     @Override

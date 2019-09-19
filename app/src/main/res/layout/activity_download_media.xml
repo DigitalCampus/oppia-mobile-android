@@ -36,7 +36,7 @@
         android:id="@+id/home_messages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tab_bg_color"
+        android:background="@color/subtitle_bar"
         android:orientation="horizontal"
         android:padding="17dp"
         android:weightSum="1.0"
@@ -50,7 +50,7 @@
             android:gravity="center_vertical|left"
             android:textSize="14sp"
             android:textAllCaps="true"
-            android:textColor="@color/highlight_light"
+            android:textColor="@color/text_light"
             />
 
         <TextView
