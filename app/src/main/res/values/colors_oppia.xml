@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="pressed_om">#4bb7d6</color>
-    <color name="highlight_light">#4bb7d6</color>
-    <color name="highlight_mid">#4dd5ee</color>
-    <color name="highlight_dark">#193948</color>
+    <color name="pressed_om">#B2B2B2</color>
+    <color name="highlight_light">#B2B2B2</color>
+    <color name="highlight_mid">#C5C9F7</color>
+    <color name="highlight_dark">#6F79EA</color>
     <color name="highlight_shadow">#1c84a1</color>
     <color name="highlight_secondary">#229cbe</color>
     <color name="activity_completed_filter">#1939483c</color>
