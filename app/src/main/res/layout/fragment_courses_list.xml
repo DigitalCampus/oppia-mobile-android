@@ -86,6 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding_medium"
+                android:layout_marginStart="@dimen/padding_medium"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
@@ -100,10 +101,12 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/message_action_button"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/message_action_button"
                 android:gravity="center_vertical"
-                android:text="Blablab lbablabl balbalblblbalbaalbb babab"
                 android:textColor="@color/text_dark"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                 />
 
         </RelativeLayout>
     </FrameLayout>

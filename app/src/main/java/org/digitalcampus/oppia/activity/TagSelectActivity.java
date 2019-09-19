@@ -54,7 +54,13 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
     private ArrayList<Tag> tags;
 
 	@Inject TagRepository tagRepository;
-	
+
+	@Override
+	public void onStart(){
+		super.onStart();
+		initialize();
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

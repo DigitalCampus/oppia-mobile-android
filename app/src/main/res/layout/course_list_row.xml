@@ -47,7 +47,7 @@
                 app:cpb_progressbar_width="7dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/course_image"
                 android:layout_alignTop="@+id/course_image"
