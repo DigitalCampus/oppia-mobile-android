@@ -78,6 +78,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     @Override
     public void onStart() {
         super.onStart();
+        initialize();
         drawer = new DrawerMenuManager(this);
         drawer.initializeDrawer();
 

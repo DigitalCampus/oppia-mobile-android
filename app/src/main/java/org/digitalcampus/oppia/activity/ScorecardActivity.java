@@ -53,6 +53,7 @@ public class ScorecardActivity extends AppActivity {
 
     private String targetTabOnLoad;
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,6 +74,7 @@ public class ScorecardActivity extends AppActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
+		initialize();
 
 		List<Fragment> fragments = new ArrayList<>();
         List<String> tabTitles = new ArrayList<>();

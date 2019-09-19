@@ -92,6 +92,7 @@ public class SearchActivity extends AppActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
+        initialize();
 
 		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("preUsername", ""));

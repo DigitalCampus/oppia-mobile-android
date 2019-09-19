@@ -120,6 +120,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     @Override
     public void onStart() {
         super.onStart();
+        initialize();
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
     }
 

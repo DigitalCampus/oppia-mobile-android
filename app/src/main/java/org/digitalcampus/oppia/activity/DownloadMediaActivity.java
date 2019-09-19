@@ -82,6 +82,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     public enum DownloadMode { INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        initialize();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {

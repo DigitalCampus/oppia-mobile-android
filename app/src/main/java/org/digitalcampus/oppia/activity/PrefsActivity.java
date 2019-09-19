@@ -130,6 +130,12 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     private ProgressDialog pDialog;
     private PreferencesFragment mPrefsFragment;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        initialize();
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
