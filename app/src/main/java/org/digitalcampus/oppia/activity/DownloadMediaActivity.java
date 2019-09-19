@@ -65,6 +65,8 @@ import java.util.ArrayList;
 
 public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener {
 
+    public static final String MISSING_MEDIA = "missing_media";
+
     private SharedPreferences prefs;
     private ArrayList<Media> missingMedia;
 	private DownloadMediaListAdapter dmla;
@@ -89,7 +91,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
-			missingMedia = (ArrayList<Media>) bundle.getSerializable(TAG);
+			missingMedia = (ArrayList<Media>) bundle.getSerializable(MISSING_MEDIA);
 		}
         else{
             missingMedia = new ArrayList<>();
