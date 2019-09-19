@@ -50,7 +50,6 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
 	private Course course = null;
     private boolean firstTimeOpened = true;
     private GridView quizzesGrid;
-    private PieChart scorecardPieChart;
     private ArrayList<QuizStats> quizStats = new ArrayList<>();
     private CourseQuizzesGridAdapter quizzesAdapter;
     ParseCourseXMLTask xmlTask;
@@ -65,8 +64,9 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
     private View quizzesContainer;
 
     private ProgressBar loadingSpinner;
+    private PieChart scorecardPieChart;
 
-	public static CourseScorecardFragment newInstance(Course course) {
+    public static CourseScorecardFragment newInstance(Course course) {
 		CourseScorecardFragment myFragment = new CourseScorecardFragment();
 		Bundle args = new Bundle();
 	    args.putSerializable(Course.TAG, course);
