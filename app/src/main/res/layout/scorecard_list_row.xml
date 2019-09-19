@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -13,63 +13,64 @@
         <com.androidplot.pie.PieChart
             android:id="@+id/scorecard_pie_chart"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
-            />
+            android:layout_height="170dp" />
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
             <TextView
+                android:id="@+id/scorecard_activities_completed"
                 style="@style/Highlight.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/scorecard_activities_completed"
-                android:text="15"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:text="15" />
 
             <TextView
+                android:id="@+id/textView8"
                 style="@style/ScorecardPie.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/scorecard_activities_completed"
-                android:id="@+id/textView8"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:text="@string/scorecard_activities_completed" />
 
             <View
+                style="@style/ScorecardPie.Label.Separator"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#000000"
-                style="@style/ScorecardPie.Label.Separator"/>
+                android:background="#000000" />
+
             <TextView
+                android:id="@+id/scorecard_activities_total"
                 style="@style/Highlight.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/scorecard_activities_total"
-                android:text="240"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="-5dp"/>
+                android:layout_marginTop="-5dp"
+                android:text="240" />
 
             <TextView
+                android:id="@+id/textView9"
                 style="@style/ScorecardPie.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/scorecard_activities_total"
-                android:id="@+id/textView9"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:text="@string/scorecard_activities_total" />
         </LinearLayout>
     </FrameLayout>
 
     <TextView
-            android:id="@+id/course_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
-            android:textSize="15sp"
-            android:textStyle="normal" 
-            android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"/>
+        android:id="@+id/course_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textColor="@color/text_dark"
+        android:textSize="15sp"
+        android:textStyle="normal" />
 
 </LinearLayout>
