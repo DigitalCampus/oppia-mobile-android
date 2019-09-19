@@ -21,7 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,9 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TransferFragment extends Fragment implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener {
-
-    public static final String TAG = TransferFragment.class.getSimpleName();
+public class TransferFragment extends AppFragment implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener {
 
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
@@ -554,7 +551,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     }
 
     //static inner class doesn't hold an implicit reference to the outer class
-    private static class BluetoothTransferHandler extends Handler {
+    private class BluetoothTransferHandler extends Handler {
         //Using a weak reference means you won't prevent garbage collection
         private final WeakReference<TransferFragment> fragment;
 

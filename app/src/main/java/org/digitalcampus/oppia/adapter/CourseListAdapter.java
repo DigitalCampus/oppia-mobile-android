@@ -21,21 +21,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.squareup.picasso.Picasso;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
+import org.digitalcampus.oppia.utils.CircleTransform;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,11 +58,10 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 	}
 
     static class CourseViewHolder{
+        CircularProgressBar circularProgressBar;
         TextView courseTitle;
         TextView courseDescription;
-        ProgressBar courseProgress;
         ImageView courseImage;
-        ProgressBarAnimator barAnimator;
     }
 
 	@Override
@@ -75,9 +75,8 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
             viewHolder = new CourseViewHolder();
             viewHolder.courseTitle = convertView.findViewById(R.id.course_title);
             viewHolder.courseDescription = convertView.findViewById(R.id.course_description);
-            viewHolder.courseProgress = convertView.findViewById(R.id.course_progress_bar);
             viewHolder.courseImage = convertView.findViewById(R.id.course_image);
-            viewHolder.barAnimator = new ProgressBarAnimator(viewHolder.courseProgress);
+            viewHolder.circularProgressBar = convertView.findViewById(R.id.circularProgressBar);
             convertView.setTag(viewHolder);
         }
         else{
@@ -88,20 +87,19 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         viewHolder.courseTitle.setText(c.getTitle(lang));
         String description = c.getDescription(lang);
-	    if ((description != null) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)){
+	    if (!TextUtils.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)){
             viewHolder.courseDescription.setText(description);
+            viewHolder.courseDescription.setVisibility(View.VISIBLE);
 	    } else {
             viewHolder.courseDescription.setVisibility(View.GONE);
 	    }
 
 	    if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)){
             int courseProgress = (int) c.getProgressPercent();
-            viewHolder.courseProgress.setProgress(courseProgress);
-            viewHolder.barAnimator.animate(courseProgress);
-            //Set the value to true so it doesn' t get animated again
-            viewHolder.barAnimator.setAnimated(true);
+            viewHolder.circularProgressBar.setVisibility(View.VISIBLE);
+            viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000l);
 	    } else {
-            viewHolder.courseProgress.setVisibility(View.GONE);
+            viewHolder.circularProgressBar.setVisibility(View.GONE);
 	    }
 	    
 		// set image
@@ -109,6 +107,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 			String image = c.getImageFileFromRoot();
             Picasso.get().load(new File(image))
                     .placeholder(R.drawable.default_course)
+                    .transform(new CircleTransform())
                     .into(viewHolder.courseImage);
 		}
         else{

@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +39,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class GlobalScorecardFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class GlobalScorecardFragment extends AppFragment implements AdapterView.OnItemClickListener {
 
-    public static final String TAG = CourseScorecardFragment.class.getSimpleName();
     private ScorecardListAdapter scorecardListAdapter;
 
     @Inject
@@ -113,6 +111,5 @@ public class GlobalScorecardFragment extends Fragment implements AdapterView.OnI
         tb.putSerializable(Course.TAG, selectedCourse);
         i.putExtras(tb);
         startActivity(i);
-        super.getActivity().finish();
     }
 }

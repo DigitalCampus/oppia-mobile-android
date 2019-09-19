@@ -14,7 +14,6 @@ import org.digitalcampus.oppia.model.Course;
 
 public class ViewDigestActivity extends AppActivity {
 
-    public static final String TAG = ViewDigestActivity.class.getSimpleName();
     public static final String ACTIVITY_DIGEST_PARAM = "digest";
 
     private TextView errorText;

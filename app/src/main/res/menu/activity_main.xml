@@ -2,7 +2,7 @@
       xmlns:oppiamobile="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/points"
-        oppiamobile:actionLayout="@layout/points"
+        oppiamobile:actionLayout="@layout/menu_gamification"
         oppiamobile:showAsAction="always"
         android:title=""/>
     <!--<item

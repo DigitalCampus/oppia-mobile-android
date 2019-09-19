@@ -1,66 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@color/highlight_mid"
-    android:layout_height="180dp">
+    android:layout_height="wrap_content"
+    android:background="@color/highlight_mid">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/drawer_header_bg"
         android:id="@+id/imageView8"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_gravity="top"
         android:padding="0dp"
         android:scaleType="centerCrop"
-        android:layout_gravity="top"/>
+        android:src="@drawable/drawer_header_bg" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/view_user_info"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/dc_logo" />
 
     <RelativeLayout
+        android:id="@+id/view_user_info"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="18dp"
-        >
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView8"
+        android:background="@color/highlight_mid"
+        android:paddingLeft="15dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="5dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/drawer_username"
-            android:gravity="left"
-            android:textSize="14sp"
-            android:textColor="#fff"
-            android:layout_above="@+id/drawer_user_fullname"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="#FFF"
-            android:textStyle="bold"
-            android:gravity="left"
-            android:paddingBottom="4dp"
+            android:layout_alignParentLeft="true"
+            android:text="User name"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <TextView
             android:id="@+id/drawer_user_fullname"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/version_name"
-            android:id="@+id/drawer_version_name"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_below="@id/drawer_username"
+            android:layout_alignParentLeft="true"
+            android:text="User full name"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
 
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/imageView9"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/dc_logo"
-            android:layout_above="@+id/drawer_username"
-            android:paddingBottom="5dp"
-            android:layout_marginTop="@dimen/tool_bar_top_padding"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn_expand_profile_options"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            app:srcCompat="@drawable/ic_expand"
+            android:background="@drawable/bg_pressable"
+            app:tint="@color/white" />
+
     </RelativeLayout>
-</FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/view_profile_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_user_info"
+        android:background="@color/grey_light"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/btn_edit_profile"
+            style="@style/MenuItemLayout">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                style="@style/MenuIcon"
+                app:srcCompat="@drawable/ic_profile" />
+
+            <TextView
+                style="@style/TextMenuItem"
+                android:text="@string/edit_profile" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_logout"
+            style="@style/MenuItemLayout">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                style="@style/MenuIcon"
+                app:srcCompat="@drawable/ic_action_logout" />
+
+            <TextView
+                style="@style/TextMenuItem"
+                android:text="@string/logout" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

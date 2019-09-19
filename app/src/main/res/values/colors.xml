@@ -28,4 +28,9 @@
     <color name="chart_line_course_downloaded">#E53935</color>
     <color name="chart_line_quiz_attempt">#8E24AA</color>
 
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
+    <color name="grey_light">#e2e2e2</color>
+    <color name="grey_dark">#7E7E7E</color>
+
 </resources>

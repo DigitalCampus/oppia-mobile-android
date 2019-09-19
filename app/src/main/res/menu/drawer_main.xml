@@ -14,10 +14,6 @@
             android:id="@+id/menu_language"
             android:icon="@drawable/ic_menu_start_conversation"
             android:title="@string/menu_language"/>
-        <item
-            android:id="@+id/menu_scorecard"
-            android:icon="@drawable/ic_scorecard"
-            android:title="@string/menu_scorecard"/>
 
     </group>
 
@@ -25,7 +21,7 @@
         <item
             android:id="@+id/menu_settings"
             android:icon="@android:drawable/ic_menu_preferences"
-            android:title="@string/menu_settings"/>
+            android:title="@string/menu_settings" />
         <item
             android:id="@+id/menu_sync"
             android:icon="@drawable/ic_cached"
@@ -34,9 +30,5 @@
             android:id="@+id/menu_about"
             android:icon="@android:drawable/ic_menu_info_details"
             android:title="@string/menu_about"/>
-        <item
-            android:id="@+id/menu_logout"
-            android:icon="@drawable/ic_action_logout"
-            android:title="@string/menu_logout"/>
     </group>
 </menu>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:fillViewport="true"
                 android:layout_height="wrap_content"
                 android:gravity="center">
@@ -49,7 +49,7 @@
 
                     <EditText
                         android:id="@+id/register_form_username_edittext"
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_username_title"
                         android:inputType="text"
@@ -68,7 +68,7 @@
                     app:cantContainSpaces="true">
 
                     <EditText
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_password_title"
                         android:inputType="textPassword"
@@ -83,7 +83,7 @@
                     app:cantContainSpaces="true">
 
                     <EditText
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_password_again_title"
                         android:inputType="textPassword"
@@ -99,7 +99,7 @@
 
                     <EditText
 
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_email_title"
                         android:inputType="textEmailAddress"
@@ -115,7 +115,7 @@
 
                     <EditText
 
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_firstname_title"
                         android:inputType="text"
@@ -130,7 +130,7 @@
 
                     <EditText
 
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_lastname_title"
                         android:inputType="text"
@@ -146,7 +146,7 @@
 
                     <EditText
 
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_phoneno_title"
                         android:inputType="phone"
@@ -162,7 +162,7 @@
 
                     <EditText
 
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_organisation_title"
                         android:inputType="text"
@@ -176,7 +176,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:layout_width="fill_parent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_jobtitle_title"
                         android:inputType="text"
