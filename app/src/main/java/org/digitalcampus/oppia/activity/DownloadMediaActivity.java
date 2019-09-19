@@ -89,10 +89,10 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         setContentView(R.layout.activity_download_media);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		Bundle bundle = this.getIntent().getExtras();
-		if (bundle != null) {
-			missingMedia = (ArrayList<Media>) bundle.getSerializable(MISSING_MEDIA);
-		}
+	Bundle bundle = this.getIntent().getExtras();
+	if (bundle != null) {
+		missingMedia = (ArrayList<Media>) bundle.getSerializable(TAG);
+	}
         else{
             missingMedia = new ArrayList<>();
         }
