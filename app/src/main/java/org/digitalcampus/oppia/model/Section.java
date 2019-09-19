@@ -64,4 +64,13 @@ public class Section extends MultiLangInfoModel implements Serializable  {
 		this.activities = activities;
 	}
 
+	public int getCompletedActivities(){
+		int completed = 0;
+		for (Activity activity : this.activities){
+			if (activity.getCompleted())
+				completed++;
+		}
+		return completed;
+	}
+
 }

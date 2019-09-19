@@ -17,9 +17,16 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TagListAdapter;
@@ -32,22 +39,13 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.splunk.mint.Mint;
-
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 public class TagSelectActivity extends AppActivity implements APIRequestListener {
-
-	public static final String TAG = TagSelectActivity.class.getSimpleName();
 
 	private ProgressDialog pDialog;
 	private JSONObject json;

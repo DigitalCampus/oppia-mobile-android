@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/course_title"
-    style="@style/PageHeadingText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/course_title_bar"
+    android:padding="@dimen/padding_medium"
+    >
 
-    android:layout_gravity="center"
-    android:background="@color/highlight_dark"
-    android:padding="@dimen/activity_vertical_margin"
-    android:text="@string/loading_course"
-    tools:layout_editor_absoluteY="235dp"/>
+    <ImageView
+        android:layout_width="@dimen/course_icon_size"
+        android:layout_height="@dimen/course_icon_size"
+        android:src="@drawable/default_course"
+        android:layout_centerVertical="true"
+        android:id="@+id/course_icon"
+    />
+
+    <TextView
+        android:id="@+id/course_title"
+        style="@style/CourseTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:text="@string/loading_course"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_toRightOf="@id/course_icon"
+        android:layout_toEndOf="@id/course_icon"
+        android:layout_marginStart="@dimen/margin_medium" />
+
+</RelativeLayout>

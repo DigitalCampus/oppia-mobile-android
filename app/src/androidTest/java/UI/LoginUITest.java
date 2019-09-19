@@ -4,7 +4,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.junit.Rule;
 import org.junit.Test;
@@ -75,6 +75,6 @@ public class LoginUITest {
        onView(withId(R.id.login_btn))
                .perform(scrollTo(), click());
 
-       assertEquals(OppiaMobileActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
+       assertEquals(MainActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
 }

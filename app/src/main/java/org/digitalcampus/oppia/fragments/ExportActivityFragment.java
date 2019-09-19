@@ -29,7 +29,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,9 +50,7 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-public class ExportActivityFragment extends Fragment implements TrackerServiceListener, ExportActivityListener {
-
-    public static final String TAG = ExportActivityFragment.class.getSimpleName();
+public class ExportActivityFragment extends AppFragment implements TrackerServiceListener, ExportActivityListener {
 
     private Button exportBtn;
     private Button submitBtn;

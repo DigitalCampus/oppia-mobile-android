@@ -1,11 +1,13 @@
 package org.digitalcampus.oppia.activity;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
+import android.view.View;
+
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
-import android.view.View;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
@@ -17,7 +19,6 @@ import java.util.List;
 
 public class SyncActivity extends AppActivity {
 
-    public static final String TAG = SyncActivity.class.getSimpleName();
     public static final String TAB_ACTIVE = "TAB_ACTIVE";
 
     public static final int TAB_TRANSFER = 0;

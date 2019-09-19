@@ -38,7 +38,6 @@ import java.util.Locale;
 
 public class CourseMetaPageActivity extends AppActivity {
 
-	public static final String TAG = CourseMetaPageActivity.class.getSimpleName();
 	private Course course;
 	private CourseMetaPage cmp;
 	

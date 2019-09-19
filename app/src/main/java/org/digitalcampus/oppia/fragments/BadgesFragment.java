@@ -44,7 +44,6 @@ import javax.inject.Inject;
 
 public class BadgesFragment extends AppFragment implements APIRequestListener {
 
-	public static final String TAG = BadgesFragment.class.getSimpleName();
 	private JSONObject json;
     private BadgesListAdapter badgesAdapter;
 

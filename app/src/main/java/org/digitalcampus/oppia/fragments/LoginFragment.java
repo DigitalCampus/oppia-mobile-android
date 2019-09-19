@@ -28,21 +28,20 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.GCMRegistrationService;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.LoginTask;
+import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
 
 public class LoginFragment extends AppFragment implements SubmitListener {
 
-	public static final String TAG = LoginFragment.class.getSimpleName();
     private EditText usernameField;
 	private EditText passwordField;
 	private ProgressDialog pDialog;
@@ -150,7 +149,7 @@ public class LoginFragment extends AppFragment implements SubmitListener {
             getActivity().startService(intent);
 	    	
 			// return to main activity
-	    	startActivity(new Intent(super.getActivity(), OppiaMobileActivity.class));
+	    	startActivity(new Intent(super.getActivity(), MainActivity.class));
 	    	super.getActivity().finish();
 		} else {
             Context ctx = super.getActivity();

@@ -6,8 +6,8 @@
 
     <LinearLayout
         android:id="@+id/layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@android:color/transparent"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical"
@@ -25,7 +25,7 @@
 
         <LinearLayout
             android:id="@+id/splash_default"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical"
@@ -46,8 +46,8 @@
             <TextView
                 android:id="@+id/start_up_progress"
                 style="@style/SmallTextDark"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center_horizontal"
                 android:paddingTop="10dip"
                 android:text="@string/loading"

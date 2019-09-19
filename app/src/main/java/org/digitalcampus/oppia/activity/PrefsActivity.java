@@ -27,18 +27,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -54,15 +53,12 @@ import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
-import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
-	
-	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
 	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
 	
@@ -133,7 +129,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
     private PreferencesFragment mPrefsFragment;
-    private DrawerMenuManager drawer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
@@ -152,11 +147,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
 	}
 
-	protected void onStart(){
-        super.onStart();
-        drawer = new DrawerMenuManager(this, false);
-        drawer.initializeDrawer();
-    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -398,23 +388,4 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        drawer.onPrepareOptionsMenu(menu, R.id.menu_settings);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawer.onPostCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggle
-        drawer.onConfigurationChanged(newConfig);
-    }
 }

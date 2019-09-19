@@ -23,10 +23,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.splunk.mint.Mint;
 
@@ -135,7 +136,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         // launch new activity and close splash screen
         startActivity(new Intent(StartUpActivity.this,
                 SessionManager.isLoggedIn(this)
-                        ? OppiaMobileActivity.class
+                        ? MainActivity.class
                         : WelcomeActivity.class));
         this.finish();
     }

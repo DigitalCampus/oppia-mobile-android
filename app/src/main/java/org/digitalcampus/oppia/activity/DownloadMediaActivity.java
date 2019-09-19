@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -37,6 +36,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.splunk.mint.Mint;
 
@@ -64,7 +65,7 @@ import java.util.ArrayList;
 
 public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener {
 
-	public static final String TAG = DownloadMediaActivity.class.getSimpleName();
+    public static final String MISSING_MEDIA = "missing_media";
 
     private SharedPreferences prefs;
     private ArrayList<Media> missingMedia;
@@ -90,7 +91,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
-			missingMedia = (ArrayList<Media>) bundle.getSerializable(DownloadMediaActivity.TAG);
+			missingMedia = (ArrayList<Media>) bundle.getSerializable(MISSING_MEDIA);
 		}
         else{
             missingMedia = new ArrayList<>();

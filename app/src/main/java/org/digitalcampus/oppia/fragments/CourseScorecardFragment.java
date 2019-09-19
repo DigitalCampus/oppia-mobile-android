@@ -19,7 +19,6 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +45,8 @@ import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
 
 import java.util.ArrayList;
 
-public class CourseScorecardFragment extends Fragment implements ParseCourseXMLTask.OnParseXmlListener, AdapterView.OnItemClickListener {
+public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener, AdapterView.OnItemClickListener {
 
-	public static final String TAG = CourseScorecardFragment.class.getSimpleName();
 	private Course course = null;
     private boolean firstTimeOpened = true;
     private GridView quizzesGrid;
