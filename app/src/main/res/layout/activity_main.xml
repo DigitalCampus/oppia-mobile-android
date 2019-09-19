@@ -52,7 +52,7 @@
                 android:id="@+id/drawer_version_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/HeaderText"
+                style="@style/SubheaderText"
                 android:text="@string/version_name" />
         </LinearLayout>
 

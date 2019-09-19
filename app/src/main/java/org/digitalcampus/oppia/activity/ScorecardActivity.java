@@ -18,11 +18,9 @@
 package org.digitalcampus.oppia.activity;
 
 import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -37,7 +35,6 @@ import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
 import org.digitalcampus.oppia.fragments.LeaderboardFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +91,7 @@ public class ScorecardActivity extends AppActivity {
 		fragments.add(fScorecard);
         tabTitles.add(this.getString(R.string.tab_title_scorecard));
 
-		fragments.add(ActivitiesFragment.newInstance());
+		fragments.add(ActivitiesFragment.newInstance(course));
 		tabTitles.add(this.getString(R.string.tab_title_activity));
 
 		boolean scoringEnabled = prefs.getBoolean(PrefsActivity.PREF_SCORING_ENABLED, true);
