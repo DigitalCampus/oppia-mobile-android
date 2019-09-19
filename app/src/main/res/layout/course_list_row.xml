@@ -16,7 +16,7 @@
         app:contentPaddingRight="10dp"
         app:contentPaddingLeft="10dp"
         android:layout_marginRight="15dp"
-        app:cardBackgroundColor="@color/bg_pressable">
+        android:foreground="?android:attr/selectableItemBackground">
 
         <RelativeLayout
             android:layout_width="match_parent"

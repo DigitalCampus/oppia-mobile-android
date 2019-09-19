@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.activity;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -137,9 +138,9 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         onStart(overrideTitle, true);
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onStart() {
-        super.onStart();
         onStart(true, true);
     }
 
