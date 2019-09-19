@@ -37,7 +37,7 @@
     <View
         android:layout_width="match_parent"
         android:background="@color/course_title_bar"
-        android:layout_height="74dp"
+        android:layout_height="80dp"
         android:layout_below="@id/toolbar"
         />
 

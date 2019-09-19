@@ -19,9 +19,7 @@
         <FrameLayout
             android:id="@+id/activity_icon"
             android:layout_width="60dp"
-            android:layout_height="40dp"
-
-            >
+            android:layout_height="40dp">
 
             <ImageView
                 android:id="@+id/icon"
