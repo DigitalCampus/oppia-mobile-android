@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/scrollView"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
     android:orientation="vertical">
+
     <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:descendantFocusability="beforeDescendants"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        >
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -23,191 +22,190 @@
             <com.androidplot.pie.PieChart
                 android:id="@+id/scorecard_pie_chart"
                 android:layout_width="match_parent"
-                android:layout_height="245dp"
-            />
+                android:layout_height="245dp" />
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
                 <TextView
+                    android:id="@+id/scorecard_activities_completed"
                     style="@style/Highlight.Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/scorecard_activities_completed"
-                    android:text="15"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    android:text="15" />
 
                 <TextView
+                    android:id="@+id/textView8"
                     style="@style/ScorecardPie.Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/scorecard_activities_completed"
-                    android:id="@+id/textView8"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/scorecard_activities_completed" />
 
                 <View
+                    style="@style/ScorecardPie.Label.Separator"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#000000"
-                    style="@style/ScorecardPie.Label.Separator"/>
+                    android:background="#000000" />
+
                 <TextView
+                    android:id="@+id/scorecard_activities_total"
                     style="@style/Highlight.Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/scorecard_activities_total"
-                    android:text="240"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="-5dp"/>
+                    android:layout_marginTop="-5dp"
+                    android:text="240" />
 
                 <TextView
+                    android:id="@+id/textView9"
                     style="@style/ScorecardPie.Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/scorecard_activities_total"
-                    android:id="@+id/textView9"
-                    android:layout_gravity="center_horizontal"/>
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/scorecard_activities_total" />
             </LinearLayout>
         </FrameLayout>
 
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/scorecard_quizzes_container"
-            >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <ProgressBar
+                android:id="@+id/loading_spinner"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/loading_spinner"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
 
             <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/card"
-            android:visibility="invisible"
-            android:id="@+id/quizzes_view"
-            android:layout_marginLeft="7dp"
-            android:layout_marginRight="7dp">
-
-            <TextView
-                style="@style/Highlight.Title"
+                android:id="@+id/quizzes_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/scorecard_quizzes_title"
-                android:id="@+id/quizzes_title" />
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:background="@drawable/card"
+                android:orientation="vertical"
+                android:visibility="invisible">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_medium"
-                android:layout_marginLeft="@dimen/padding_medium">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/quizzes_title"
+                    style="@style/Highlight.Title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:visibility="visible">
+                    android:text="@string/scorecard_quizzes_title" />
 
-                    <TextView
-                        style="@style/Highlight.Text"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_medium"
+                    android:layout_marginBottom="@dimen/padding_medium"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tv_ranking" />
+                        android:layout_weight="1"
+                        android:visibility="visible">
 
-                    <TextView
-                        style="@style/Highlight.Label"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/scorecard_quizzes_highlight_pretest"
-                        android:id="@+id/textView5"
-                        android:layout_below="@+id/tv_ranking"
-                        />
+                        <TextView
+                            android:id="@+id/tv_ranking"
+                            style="@style/Highlight.Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
 
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/textView5"
+                            style="@style/Highlight.Label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv_ranking"
+                            android:text="@string/scorecard_quizzes_highlight_pretest" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    style="@style/Highlight.Separator"/>
+                    </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    <View
+                        style="@style/Highlight.Separator"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                    <TextView
-                        style="@style/Highlight.Text"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/highlight_attempted"
-                        android:textColor="@color/highlight_secondary" />
+                        android:layout_weight="1">
 
-                    <TextView
-                        style="@style/Highlight.Label"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/scorecard_quizzes_highlight_attempted"
-                        android:id="@+id/textView6"
-                        android:layout_below="@+id/highlight_attempted" />
+                        <TextView
+                            android:id="@+id/highlight_attempted"
+                            style="@style/Highlight.Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/highlight_secondary" />
 
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/textView6"
+                            style="@style/Highlight.Label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/highlight_attempted"
+                            android:text="@string/scorecard_quizzes_highlight_attempted" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    style="@style/Highlight.Separator"/>
+                    </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    <View
+                        style="@style/Highlight.Separator"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                    <TextView
-                        style="@style/Highlight.Text"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/highlight_passed"
-                        android:textColor="@color/highlight_light"/>
+                        android:layout_weight="1">
 
-                    <TextView
-                        style="@style/Highlight.Label"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/scorecard_quizzes_highlight_passed"
-                        android:id="@+id/textView7"
-                        android:layout_below="@+id/highlight_passed" />
+                        <TextView
+                            android:id="@+id/highlight_passed"
+                            style="@style/Highlight.Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/highlight_light" />
 
-                </RelativeLayout>
+                        <TextView
+                            android:id="@+id/textView7"
+                            style="@style/Highlight.Label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/highlight_passed"
+                            android:text="@string/scorecard_quizzes_highlight_passed" />
 
-            </LinearLayout>
+                    </RelativeLayout>
+
+                </LinearLayout>
 
                 <ProgressBar
+                    android:id="@+id/progress_quizzes"
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="15dp"
-                    android:id="@+id/progress_quizzes"
                     android:layout_marginLeft="17dp"
-                    android:layout_marginRight="17dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginRight="17dp"
                     android:progress="0"
-                    style="?android:attr/progressBarStyleHorizontal"
                     android:progressDrawable="@drawable/progress_bar_light"
-                    android:secondaryProgress="0"/>
+                    android:secondaryProgress="0" />
 
                 <org.digitalcampus.oppia.utils.ui.StaticGridView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/scorecard_grid_quizzes"
-                android:numColumns="6"
-                tools:listitem="@layout/scorecard_quiz_item"
-                android:padding="13dp"/>
+                    android:id="@+id/scorecard_grid_quizzes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numColumns="6"
+                    android:padding="13dp"
+                    tools:listitem="@layout/scorecard_quiz_item" />
 
-        </LinearLayout>
+            </LinearLayout>
 
         </FrameLayout>
 

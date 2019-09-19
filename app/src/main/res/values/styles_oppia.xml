@@ -119,7 +119,7 @@
         <item name="background">@drawable/tab_indicator_ab_om</item>
     </style>
 
-    
+
     <style name="OM.Light.TabText.Style" parent="android:Widget.ActionBar.TabText">
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
         <item name="android:textSize">12sp</item>
