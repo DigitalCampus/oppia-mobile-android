@@ -34,10 +34,17 @@
             android:text="@string/loading_course" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/course_title_bar"
+        android:layout_height="74dp"
+        android:layout_below="@id/toolbar"
+        />
+
     <org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView
         android:id="@+id/section_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
         android:cacheColorHint="#00000000"
         android:divider="@color/list_divider"

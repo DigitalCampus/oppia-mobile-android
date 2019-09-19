@@ -191,7 +191,9 @@ public class ExpandableRecyclerView extends RecyclerView
                     position += getChildItemCount(i);
             }
             position++; // this for percent group
-
+            if (headerVisible){
+                position++;
+            }
             notifyItemRangeInserted(position, getChildItemCount(group)); // notify recycler view for expanding
             expanded.put(group, true); // save expanding in sparce array
         }
@@ -202,13 +204,16 @@ public class ExpandableRecyclerView extends RecyclerView
                 return;
 
             int position = 0;
-            for (int i = 0; i < group; i++)
+            for (int i = position; i < group; i++)
             {
                 position++;
                 if (isExpanded(i))
                     position += getChildItemCount(i); // item
             }
             position++;
+            if (headerVisible){
+                position++;
+            }
             notifyItemRangeRemoved(position, getChildItemCount(group));
             expanded.put(group, false);
         }

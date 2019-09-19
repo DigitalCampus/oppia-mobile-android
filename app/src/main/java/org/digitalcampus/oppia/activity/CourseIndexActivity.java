@@ -80,10 +80,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     @Override
     public void onStart() {
-        super.onStart();
         super.onStart(false);
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -248,7 +246,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private void createLanguageDialog() {
         UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() throws Exception {
-                CourseIndexActivity.this.onStart();
+                CourseIndexActivity.this.onStart(false);
                 return true;
             }
         });
@@ -282,8 +280,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             animator.setDuration(700);
             animator.start();
             loadingCourseView.startAnimation(fadeOutAnimation);
-
-
 
         } else {
             loadingCourseView.setVisibility(View.GONE);
