@@ -1,4 +1,7 @@
 <resources>
+
+    <bool name="is_tablet">false</bool>
+
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="quiz_response_margin">12dp</dimen>
     <dimen name="margin_medium">13dp</dimen>
@@ -35,5 +38,9 @@
 
     <dimen name="activity_thumbnail_width">60dp</dimen>
     <dimen name="activity_thumbnail_height">40dp</dimen>
+
+    <dimen name="text_tab_time_plots">15sp</dimen>
+    <dimen name="height_plot">150dp</dimen>
+    <dimen name="padding_course_list_item_circular_progress">8dp</dimen>
 
 </resources>

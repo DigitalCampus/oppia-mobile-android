@@ -76,6 +76,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
 //        startActivity(new Intent(this, ScorecardActivity.class));
 
+        Log.i(TAG, "Screen width: " + getResources().getConfiguration().screenWidthDp);
 
 
     }

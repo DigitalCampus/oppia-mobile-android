@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="is_tablet">true</bool>
+
+    <dimen name="height_plot">350dp</dimen>
+
+    <dimen name="course_icon_size">120dp</dimen>
+    <dimen name="padding_course_list_item_circular_progress">13dp</dimen>
+</resources>

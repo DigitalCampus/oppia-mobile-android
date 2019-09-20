@@ -145,11 +145,6 @@
     <style name="TabText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:background">@drawable/bg_tab_text</item>
-        <item name="android:textColor">@color/text_tab</item>
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="NormalTextDark">
@@ -277,7 +272,12 @@
     <style name="TabLayoutAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/text_tab_time_plots</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:background">@drawable/bg_tab_text</item>
+        <item name="android:textColor">@color/text_tab</item>
+        <item name="android:layout_margin">0dp</item>
     </style>
 
     <style name="Oppia.Theme.CardTitle" parent="NormalTextDark">

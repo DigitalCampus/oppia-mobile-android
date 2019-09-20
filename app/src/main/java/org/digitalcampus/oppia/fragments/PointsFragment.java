@@ -64,9 +64,9 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     private static final String ARG_COURSE = "arg_course";
 
-    private final int POSITION_TAB_LAST_YEAR = 0;
+    private final int POSITION_TAB_LAST_WEEK = 0;
     private final int POSITION_TAB_LAST_MONTH = 1;
-    private final int POSITION_TAB_LAST_WEEK = 2;
+    private final int POSITION_TAB_LAST_YEAR = 2;
 
     @Inject
     List<Points> pointsFull;
@@ -120,7 +120,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         pointsAdapter = new PointsListAdapter(super.getActivity(), pointsFiltered);
         listView.setAdapter(pointsAdapter);
 
-        showPointsFiltered(POSITION_TAB_LAST_YEAR);
+        showPointsFiltered(POSITION_TAB_LAST_WEEK);
 
 
     }
