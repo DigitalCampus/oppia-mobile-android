@@ -1,45 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@color/white"
-    android:paddingBottom="@dimen/padding_medium">
+    android:paddingBottom="@dimen/margin_medium">
 
-
-    <FrameLayout
-        android:id="@+id/activity_icon"
-        android:layout_width="60dp"
-        android:layout_height="40dp">
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/default_icon_activity" />
-
-        <ImageView
-            android:id="@+id/badge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
-            app:srcCompat="@drawable/completed_badge" />
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/title"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/padding_medium"
-        android:layout_marginLeft="@dimen/padding_medium"
-        android:layout_toEndOf="@id/activity_icon"
-        android:layout_toRightOf="@id/activity_icon"
-        android:textColor="@color/text_dark"
-        android:textStyle="bold" />
+        android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground">
 
-</RelativeLayout>
+        <FrameLayout
+            android:id="@+id/activity_icon"
+            android:layout_width="@dimen/activity_thumbnail_width"
+            android:layout_height="@dimen/activity_thumbnail_height"
+            android:layout_marginLeft="6dp">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@color/tab_bg_color"
+                app:srcCompat="@drawable/default_icon_activity" />
+
+            <ImageView
+                android:id="@+id/badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                app:srcCompat="@drawable/completed_badge" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginLeft="@dimen/padding_medium"
+            android:layout_toEndOf="@id/activity_icon"
+            android:layout_toRightOf="@id/activity_icon"
+            android:textColor="@color/text_dark"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+

@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
-
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
@@ -36,8 +35,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:background="@color/course_title_bar"
-        android:layout_height="74dp"
+        android:background="@color/subtitle_bar"
+        android:layout_height="80dp"
         android:layout_below="@id/toolbar"
         />
 
@@ -50,6 +49,7 @@
         android:divider="@color/list_divider"
         android:foreground="?android:windowContentOverlay"
         android:orientation="vertical"
+        android:background="@color/white"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/section_item" />
 

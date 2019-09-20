@@ -16,6 +16,7 @@
     <color name="stroke">#dfdfdf</color>
     <color name="quiz_navigation_bar">#d2d2d2</color>
     <color name="quiz_navigation_button">#FF5A595B</color>
+    <color name="cardlist_badge">#6D6B6D</color>
 
     <color name="listitem_icon_tint">@color/highlight_light</color>
     <color name="design_snackbar_background_color" tools:override="true">@color/highlight_light</color>

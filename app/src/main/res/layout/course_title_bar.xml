@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/course_title_bar"
-    android:padding="@dimen/margin_medium"
+    android:background="@color/subtitle_bar"
+    android:padding="@dimen/padding_medium"
     >
 
     <ImageView

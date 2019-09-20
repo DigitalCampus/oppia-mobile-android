@@ -100,9 +100,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         }
     }
 
-    protected void onStart(boolean overrideTitle, boolean configureActionBar) {
-        super.onStart();
-
+    protected void initialize(boolean overrideTitle, boolean configureActionBar) {
         if (!configureActionBar)
             return;
 
@@ -130,18 +128,15 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                     actionBar.setTitle(title);
                 }
             }
-
         }
     }
 
-    protected void onStart(boolean overrideTitle) {
-        onStart(overrideTitle, true);
+    protected void initialize(boolean overrideTitle) {
+        initialize(overrideTitle, true);
     }
 
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onStart() {
-        onStart(true, true);
+    protected void initialize() {
+        initialize(true, true);
     }
 
     @Override

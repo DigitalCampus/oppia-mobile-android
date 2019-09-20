@@ -26,6 +26,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -70,6 +71,12 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     @Inject CourseInstallRepository courseInstallRepository;
     @Inject CourseInstallerServiceDelegate courseInstallerServiceDelegate;
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        initialize();
+    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,10 +91,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             Tag t = (Tag) bundle.getSerializable(Tag.TAG);
             if (t != null){
                 this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
-                Toolbar toolbar = findViewById(R.id.toolbar);
-                if (toolbar != null){
-                    toolbar.setSubtitle(t.getName());
-                }
+                TextView tagTitle = findViewById(R.id.category_title);
+                tagTitle.setVisibility(View.VISIBLE);
+                tagTitle.setText(t.getName());
             }
 
         } else {
@@ -102,8 +108,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         if (listView != null) {
             listView.setAdapter(dla);
         }
-
-
 
     }
 

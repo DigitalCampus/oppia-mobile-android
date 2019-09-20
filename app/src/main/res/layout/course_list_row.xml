@@ -10,13 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="@dimen/list_card_horizontal_margin"
+        android:layout_marginRight="@dimen/list_card_horizontal_margin"
+        android:layout_marginBottom="7dp"
         android:foreground="?android:attr/selectableItemBackground"
-        app:contentPaddingBottom="5dp"
-        app:contentPaddingLeft="10dp"
-        app:contentPaddingRight="10dp"
-        app:contentPaddingTop="5dp">
+        app:contentPaddingBottom="@dimen/list_card_vertical_padding"
+        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
+        app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +33,7 @@
                     android:id="@+id/course_image"
                     android:layout_width="@dimen/course_icon_size"
                     android:layout_height="@dimen/course_icon_size"
-                    android:layout_margin="5dp"
+                    android:layout_marginRight="@dimen/list_card_icon_margin"
                     android:contentDescription="@string/app_logo_alt"
                     android:padding="8dp"
                     android:src="@drawable/default_course" />
@@ -55,9 +56,9 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/list_card_icon_margin"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -65,9 +66,7 @@
                     android:id="@+id/course_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_dark"
-                    android:textSize="18sp"
-                    android:text="asdfasdfasfd"/>
+                    android:textAppearance="@style/Oppia.Theme.CardTitle"/>
 
                 <TextView
                     android:id="@+id/course_description"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -18,14 +19,27 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/category_title"
+        style="@style/CourseTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:background="@color/subtitle_bar"
+        android:padding="@dimen/margin_medium"
+        tools:visibility="gone" />
 
     <ListView
         android:id="@+id/tag_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:divider="@color/list_divider_light"
-        android:dividerHeight="1dp"/>
+        android:layout_below="@+id/category_title"
+        android:dividerHeight="0dp"
+        android:divider="@color/transparent"
+        android:listSelector="@color/transparent" />
 
 </RelativeLayout>

@@ -122,7 +122,7 @@
             android:text="@string/widget_quiz_prev"
             android:drawableLeft="@drawable/ic_arrow_left"
             android:drawableTint="@color/quiz_navigation_button"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/mquiz_next_btn"
@@ -133,7 +133,7 @@
             android:text="@string/widget_quiz_next"
             android:drawableRight="@drawable/ic_arrow_right"
             android:drawableTint="@color/quiz_navigation_button"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
     </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

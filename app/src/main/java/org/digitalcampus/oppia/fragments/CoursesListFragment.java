@@ -372,7 +372,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
                         ArrayList<Object> m = (ArrayList<Object>) view.getTag();
                         Intent i = new Intent(getActivity(), DownloadMediaActivity.class);
                         Bundle tb = new Bundle();
-                        tb.putSerializable(TAG, m);
+                        tb.putSerializable(DownloadMediaActivity.MISSING_MEDIA, m);
                         i.putExtras(tb);
                         startActivity(i);
                     }

@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.splunk.mint.Mint;
 
@@ -53,12 +54,19 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
     private ArrayList<Tag> tags;
 
 	@Inject TagRepository tagRepository;
-	
+
+	@Override
+	public void onStart(){
+		super.onStart();
+		initialize();
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_download);
-
+		TextView tagTitle = findViewById(R.id.category_title);
+		tagTitle.setVisibility(View.GONE);
 		initializeDagger();
 
         tags = new ArrayList<>();

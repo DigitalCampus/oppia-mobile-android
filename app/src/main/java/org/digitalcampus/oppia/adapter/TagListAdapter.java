@@ -31,6 +31,7 @@ import com.squareup.picasso.Picasso;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Tag;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -50,7 +51,8 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
     static class TagViewHolder{
         TextView tagName;
         TextView tagDescription;
-        ImageView tagIcon;
+        TextView tagCount;
+        //ImageView tagIcon;
     }
 
 	@Override
@@ -64,7 +66,8 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
             viewHolder = new TagViewHolder();
             viewHolder.tagName = convertView.findViewById(R.id.tag_name);
             viewHolder.tagDescription = convertView.findViewById(R.id.tag_description);
-            viewHolder.tagIcon = convertView.findViewById(R.id.tag_icon);
+            viewHolder.tagCount = convertView.findViewById(R.id.tag_count);
+            //viewHolder.tagIcon = convertView.findViewById(R.id.tag_icon);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (TagViewHolder) convertView.getTag();
@@ -72,7 +75,8 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 
 	    Tag t = tagList.get(position);
 
-        viewHolder.tagName.setText(ctx.getString(R.string.tag_label,t.getName(),t.getCount()));
+        viewHolder.tagName.setText(t.getName());
+        viewHolder.tagCount.setText(String.valueOf(t.getCount()));
 	    if(t.isHighlight()){ 
 	    	viewHolder.tagName.setTypeface(null, Typeface.BOLD); 
 	    } else {
@@ -84,12 +88,12 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 	    } else {
 	    	viewHolder.tagDescription.setVisibility(View.GONE);
 	    }
-	    if(t.getIcon() != null){
+		/*if(t.getIcon() != null){
             Picasso.get().load(t.getIcon()).into(viewHolder.tagIcon);
             viewHolder.tagIcon.setVisibility(View.VISIBLE);
 	    } else {
 	    	viewHolder.tagIcon.setVisibility(View.GONE);
-	    }
+	    }*/
 
 	    return convertView;
 	}

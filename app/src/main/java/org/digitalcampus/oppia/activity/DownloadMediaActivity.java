@@ -65,6 +65,8 @@ import java.util.ArrayList;
 
 public class DownloadMediaActivity extends AppActivity implements DownloadMediaListener {
 
+    public static final String MISSING_MEDIA = "missing_media";
+
     private SharedPreferences prefs;
     private ArrayList<Media> missingMedia;
     private DownloadMediaListAdapter dmla;
@@ -80,6 +82,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     public enum DownloadMode { INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        initialize();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,10 +95,10 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         setContentView(R.layout.activity_download_media);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Bundle bundle = this.getIntent().getExtras();
-        if (bundle != null) {
-            missingMedia = (ArrayList<Media>) bundle.getSerializable(TAG);
-        }
+	Bundle bundle = this.getIntent().getExtras();
+	if (bundle != null) {
+		missingMedia = (ArrayList<Media>) bundle.getSerializable(MISSING_MEDIA);
+	}
         else{
             missingMedia = new ArrayList<>();
         }

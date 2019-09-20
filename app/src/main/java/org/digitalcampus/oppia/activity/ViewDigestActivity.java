@@ -22,6 +22,12 @@ public class ViewDigestActivity extends AppActivity {
     private Course activityCourse;
 
     @Override
+    public void onStart() {
+        super.onStart();
+        initialize();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_digest);
