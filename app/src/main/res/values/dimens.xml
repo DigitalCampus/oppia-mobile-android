@@ -27,4 +27,7 @@
     <dimen name="expandable_margin">16dp</dimen>
     <dimen name="expandable_iconSize">28dp</dimen>
 
+    <dimen name="text_tab_time_plots">15sp</dimen>
+    <dimen name="height_plot">150dp</dimen>
+
 </resources>
