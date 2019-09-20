@@ -63,9 +63,9 @@
                 android:id="@+id/search_results_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@color/list_divider_light"
-                android:dividerHeight="1dp"
-                android:listSelector="@drawable/background_change_pressed" />
+                android:dividerHeight="0dp"
+                android:divider="@color/transparent"
+                android:listSelector="@color/transparent" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
