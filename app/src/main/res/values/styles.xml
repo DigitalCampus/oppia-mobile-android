@@ -285,5 +285,11 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Oppia.Theme.CardBadge" parent="SmallTextDarkItalic">
+        <item name="android:textColor">@color/text_light</item>
+        <item name="fontPath">fonts/montserrat.ttf</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 
 </resources>

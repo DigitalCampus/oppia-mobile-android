@@ -43,6 +43,7 @@ public class CourseMetaPageActivity extends AppActivity {
 
 	@Override
 	public void onStart() {
+		super.onStart();
 		initialize();
 	}
 

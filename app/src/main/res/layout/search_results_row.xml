@@ -23,23 +23,24 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/course_image"
-                android:layout_width="@dimen/course_icon_size_small"
-                android:layout_height="@dimen/course_icon_size_small"
+                android:id="@+id/activity_icon"
+                android:layout_width="@dimen/activity_thumbnail_width"
+                android:layout_height="@dimen/activity_thumbnail_height"
+                android:scaleType="centerCrop"
                 android:layout_alignParentLeft="true"
-                android:layout_marginRight="@dimen/list_card_icon_margin"
                 android:layout_centerVertical="true"
+                android:background="@color/tab_bg_color"
+                android:layout_marginRight="@dimen/list_card_icon_margin"
+                android:layout_marginEnd="@dimen/padding_medium"
                 android:contentDescription="@string/app_logo_alt"
-                android:src="@drawable/default_course"
-                android:layout_alignParentStart="true"
-                android:layout_marginEnd="@dimen/padding_medium" />
+                app:srcCompat="@drawable/default_icon_activity" />
 
             <TextView
                 android:id="@+id/activity_title"
                 style="@style/Oppia.Theme.CardTitle"
                 android:layout_width="wrap_content"
-                android:layout_toRightOf="@+id/course_image"
-                android:layout_toEndOf="@+id/course_image"
+                android:layout_toRightOf="@+id/activity_icon"
+                android:layout_toEndOf="@+id/activity_icon"
                 android:layout_height="wrap_content" />
 
             <TextView
@@ -48,16 +49,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/activity_title"
-                android:layout_toRightOf="@+id/course_image"
-                android:layout_toEndOf="@+id/course_image" />
+                android:layout_toRightOf="@+id/activity_icon"
+                android:layout_toEndOf="@+id/activity_icon" />
 
             <TextView
                 android:id="@+id/section_title"
                 style="@style/MediumTextDarkItalic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/course_image"
-                android:layout_toEndOf="@+id/course_image"
+                android:layout_toRightOf="@+id/activity_icon"
+                android:layout_toEndOf="@+id/activity_icon"
                 android:layout_below="@+id/course_title" />
 
 

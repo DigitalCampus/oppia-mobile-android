@@ -33,4 +33,7 @@
     <dimen name="list_card_horizontal_margin">8dp</dimen>
     <dimen name="list_card_icon_margin">10dp</dimen>
 
+    <dimen name="activity_thumbnail_width">60dp</dimen>
+    <dimen name="activity_thumbnail_height">40dp</dimen>
+
 </resources>
