@@ -11,22 +11,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.DownloadMediaActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
-import org.digitalcampus.oppia.adapter.CourseListAdapter;
+import org.digitalcampus.oppia.adapter.CoursesListAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -47,7 +48,6 @@ import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.ScanMediaTask;
 import org.digitalcampus.oppia.task.UpdateCourseActivityTask;
 import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.ui.CourseContextMenuCustom;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -60,8 +60,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         ScanMediaListener,
         DeleteCourseListener,
         CourseInstallerListener,
-        UpdateActivityListener,
-        CourseContextMenuCustom.OnContextMenuListener {
+        UpdateActivityListener, CoursesListAdapter.OnItemClickListener {
 
     private ArrayList<Course> courses;
     private Course tempCourse;
@@ -70,10 +69,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private TextView messageText;
     private Button messageButton;
     private View messageContainer;
-    private ListView courseList;
     private View noCoursesView;
 
-    private CourseListAdapter courseListAdapter;
     private ProgressDialog progressDialog;
     private InstallerBroadcastReceiver receiver;
 
@@ -82,13 +79,15 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     private LinearLayout llLoading;
     private TextView tvManageCourses;
     private Button manageBtn;
+    private RecyclerView recyclerCourses;
+    private CoursesListAdapter adapterListCourses;
 
     private void findViews(View layout) {
 
         messageContainer = layout.findViewById(R.id.home_messages);
         messageText = layout.findViewById(R.id.home_message);
         messageButton = layout.findViewById(R.id.message_action_button);
-        courseList = layout.findViewById(R.id.course_list);
+        recyclerCourses = layout.findViewById(R.id.recycler_courses);
         noCoursesView = layout.findViewById(R.id.no_courses);
         llLoading = layout.findViewById(R.id.loading_courses);
 
@@ -106,7 +105,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         initializeDagger();
 
-
         prefs.registerOnSharedPreferenceChangeListener(this);
 
         // set preferred lang to the default lang
@@ -114,27 +112,18 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
             prefs.edit().putString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()).apply();
         }
 
+        if (getResources().getBoolean(R.bool.is_tablet)) {
+            recyclerCourses.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        } else {
+            recyclerCourses.setLayoutManager(new LinearLayoutManager(getActivity()));
+        }
 
         courses = new ArrayList<>();
-        courseListAdapter = new CourseListAdapter(getActivity(), courses);
-        courseList.setAdapter(courseListAdapter);
+        adapterListCourses = new CoursesListAdapter(getActivity(), courses);
+        adapterListCourses.setOnItemClickListener(this);
+        recyclerCourses.setAdapter(adapterListCourses);
 
-        CourseContextMenuCustom courseMenu = new CourseContextMenuCustom(getActivity());
-        courseMenu.registerForContextMenu(courseList, this);
-
-        courseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Course selectedCourse = courses.get(position);
-                Intent i = new Intent(getActivity(), CourseIndexActivity.class);
-                Bundle tb = new Bundle();
-                tb.putSerializable(Course.TAG, selectedCourse);
-                i.putExtras(tb);
-                startActivity(i);
-            }
-        });
-
-        initialCourseListPadding = courseList.getPaddingTop();
+        initialCourseListPadding = recyclerCourses.getPaddingTop();
 
         return layout;
     }
@@ -160,8 +149,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(receiver, broadcastFilter);
 
-        if (courseListAdapter != null) {
-            courseListAdapter.notifyDataSetChanged();
+        if (adapterListCourses != null) {
+            adapterListCourses.notifyDataSetChanged();
         }
     }
 
@@ -184,7 +173,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
             noCoursesView.setVisibility(View.GONE);
         }
 
-        courseListAdapter.notifyDataSetChanged();
+        adapterListCourses.notifyDataSetChanged();
         this.scanMedia();
     }
 
@@ -216,7 +205,19 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         });
     }
 
-    //@Override
+
+    // Recycler callbacks
+    @Override
+    public void onItemClick(int position) {
+        Course selectedCourse = courses.get(position);
+        Intent i = new Intent(getActivity(), CourseIndexActivity.class);
+        Bundle tb = new Bundle();
+        tb.putSerializable(Course.TAG, selectedCourse);
+        i.putExtras(tb);
+        startActivity(i);
+    }
+
+    @Override
     public void onContextMenuItemSelected(final int position, final int itemId) {
         AdminSecurityManager.checkAdminPermission(getActivity(), itemId, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {
@@ -337,8 +338,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                courseList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-                courseList.setSelectionAfterHeaderView();
+                recyclerCourses.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
+//                recyclerCourses.setSelectionAfterHeaderView();
             }
         });
         animator.setStartDelay(200);
@@ -348,7 +349,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void hideScanMediaMessage(){
         messageContainer.setVisibility(View.GONE);
-        courseList.setPadding(0, initialCourseListPadding, 0, 0);
+        recyclerCourses.setPadding(0, initialCourseListPadding, 0, 0);
     }
 
     /* ScanMediaListener implementation */

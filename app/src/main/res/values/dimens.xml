@@ -32,5 +32,6 @@
 
     <dimen name="text_tab_time_plots">15sp</dimen>
     <dimen name="height_plot">150dp</dimen>
+    <dimen name="padding_course_list_item_circular_progress">8dp</dimen>
 
 </resources>

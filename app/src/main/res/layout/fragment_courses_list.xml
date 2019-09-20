@@ -31,15 +31,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ListView
-                android:id="@+id/course_list"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_courses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:cacheColorHint="#00000000"
-                android:divider="@color/list_divider"
-                android:dividerHeight="0dp"
-                android:listSelector="@color/transparent"
-                android:scrollingCache="false" />
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
 
             <LinearLayout
                 android:id="@+id/no_courses"
