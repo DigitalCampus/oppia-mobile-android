@@ -97,7 +97,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
 	Bundle bundle = this.getIntent().getExtras();
 	if (bundle != null) {
-		missingMedia = (ArrayList<Media>) bundle.getSerializable(TAG);
+		missingMedia = (ArrayList<Media>) bundle.getSerializable(MISSING_MEDIA);
 	}
         else{
             missingMedia = new ArrayList<>();

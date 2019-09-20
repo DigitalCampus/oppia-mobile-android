@@ -60,7 +60,6 @@ public class WelcomeActivity extends AppActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		initialize();
 
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		toolbar.getMenu().clear();

@@ -39,6 +39,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/category_title"
         android:dividerHeight="0dp"
+        android:divider="@color/transparent"
         android:listSelector="@color/transparent" />
 
 </RelativeLayout>

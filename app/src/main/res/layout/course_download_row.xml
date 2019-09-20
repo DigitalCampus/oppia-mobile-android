@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/course_row"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tag_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp" >
+    android:orientation="vertical">
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="7dp"
+    app:contentPaddingTop="5dp"
+    app:contentPaddingBottom="5dp"
+    app:contentPaddingRight="10dp"
+    app:contentPaddingLeft="10dp"
+    android:foreground="?android:attr/selectableItemBackground">
+
+<RelativeLayout
+    android:id="@+id/course_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/course_title"
@@ -22,6 +38,9 @@
         android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
         android:layout_below="@+id/course_title"
+        android:background="@drawable/notification_badge"
+        android:textAppearance="@style/PointsText"
+        android:textSize="13sp"
         android:layout_toLeftOf="@+id/download_course_btn" />
 
     <TextView
@@ -80,3 +99,5 @@
 
 
 </RelativeLayout>
+</androidx.cardview.widget.CardView>
+</LinearLayout>

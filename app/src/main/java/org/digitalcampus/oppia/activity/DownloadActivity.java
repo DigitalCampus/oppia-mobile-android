@@ -71,6 +71,12 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
     @Inject CourseInstallRepository courseInstallRepository;
     @Inject CourseInstallerServiceDelegate courseInstallerServiceDelegate;
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        initialize();
+    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
