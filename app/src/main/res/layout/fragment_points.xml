@@ -16,7 +16,7 @@
         app:tabGravity="center"
         app:tabBackground="@drawable/bg_tab_text"
         app:tabTextAppearance="@style/TabLayoutAppearance"
-        app:tabTextColor="@color/text_grey">
+        app:tabIndicatorHeight="0dp">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_last_week"
