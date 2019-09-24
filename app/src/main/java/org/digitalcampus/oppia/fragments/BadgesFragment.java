@@ -90,9 +90,10 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
         badges.clear();
 		try {
-			TextView tv = this.getView().findViewById(R.id.fragment_badges_title);
+			this.getView().findViewById(R.id.empty_state).setVisibility(View.GONE);
 			if(json.getJSONArray("objects").length() == 0){
-				tv.setText(R.string.info_no_badges);
+				//tv.setText(R.string.info_no_badges);
+				this.getView().findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
 				return;
 			}
 			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
@@ -102,7 +103,8 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 				b.setDateTime(json_obj.getString("award_date"));
 				badges.add(b);
 			}
-			tv.setVisibility(View.GONE);
+			this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
+
             badgesAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
 			Mint.logException(e);
@@ -127,9 +129,8 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 				Log.d(TAG, "Error connecting to server: ", e);
 			}
 		} else {
-			TextView tv = this.getView().findViewById(R.id.fragment_badges_title);
-			tv.setVisibility(View.VISIBLE);
-			tv.setText(R.string.error_connection_required);
+			this.getView().findViewById(R.id.empty_state).setVisibility(View.GONE);
+			this.getView().findViewById(R.id.error_state).setVisibility(View.VISIBLE);
 		} 		
 	}
 

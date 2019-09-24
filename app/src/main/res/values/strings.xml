@@ -277,7 +277,7 @@
     <string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
     <string name="download_via_pc_extenal_storage">You need to set an external storage option to be able to place the files downloaded from your PC inside the app directory. Please, go to "Settings" and change your storage option.</string>
 
-    <string name="course_draft">(Draft version)</string>
+    <string name="course_draft">Draft version</string>
 
     <string name="search.activity_title">Search</string>
     <string name="search.result_summary">%1$d results for \"%2$s\"</string>

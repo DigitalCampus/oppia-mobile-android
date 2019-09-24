@@ -22,14 +22,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
-import org.digitalcampus.oppia.adapter.ScorecardListAdapter;
+import org.digitalcampus.oppia.adapter.ScorecardsGridAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
@@ -39,12 +39,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class GlobalScorecardFragment extends AppFragment implements AdapterView.OnItemClickListener {
+public class GlobalScorecardFragment extends AppFragment implements ScorecardsGridAdapter.OnItemClickListener {
 
-    private ScorecardListAdapter scorecardListAdapter;
+    private ScorecardsGridAdapter adapterScorecards;
 
     @Inject
     CoursesRepository coursesRepository;
+    private RecyclerView recyclerScorecards;
+    private View emptyState;
 
     public static GlobalScorecardFragment newInstance() {
         return new GlobalScorecardFragment();
@@ -58,10 +60,20 @@ public class GlobalScorecardFragment extends AppFragment implements AdapterView.
         app.getComponent().inject(this);
     }
 
+    private void findViews(View layout) {
+        recyclerScorecards = layout.findViewById(R.id.recycler_scorecards);
+        emptyState = layout.findViewById(R.id.empty_state);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_global_scorecard, container, false);
+        View layout = inflater.inflate(R.layout.fragment_global_scorecard, container, false);
+        findViews(layout);
+
+
+        return layout;
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -71,12 +83,10 @@ public class GlobalScorecardFragment extends AppFragment implements AdapterView.
 
         List<Course> courses = coursesRepository.getCourses(getActivity());
 
-        GridView scorecardList = super.getActivity().findViewById(R.id.scorecards_list);
-        View emptyState = this.getActivity().findViewById(R.id.empty_state);
 
         if (courses.isEmpty()){
             //If there are now courses, display the empty state
-            scorecardList.setVisibility(View.GONE);
+            recyclerScorecards.setVisibility(View.GONE);
             emptyState.setVisibility(View.VISIBLE);
 
             Button download = emptyState.findViewById(R.id.btn_download_courses);
@@ -92,20 +102,21 @@ public class GlobalScorecardFragment extends AppFragment implements AdapterView.
             });
         }
         else{
-            scorecardList.setVisibility(View.VISIBLE);
+            recyclerScorecards.setVisibility(View.VISIBLE);
             emptyState.setVisibility(View.GONE);
 
-            scorecardListAdapter = new ScorecardListAdapter(super.getActivity(), courses);
-            scorecardList.setAdapter(scorecardListAdapter);
-            scorecardList.setOnItemClickListener(this);
+            adapterScorecards = new ScorecardsGridAdapter(getActivity(), courses);
+            adapterScorecards.setOnItemClickListener(this);
+            recyclerScorecards.setAdapter(adapterScorecards);
+
         }
 
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(View view, int position) {
 
-        Course selectedCourse = scorecardListAdapter.getItem(position);
+        Course selectedCourse = adapterScorecards.getItemAtPosition(position);
         Intent i = new Intent(super.getActivity(), CourseIndexActivity.class);
         Bundle tb = new Bundle();
         tb.putSerializable(Course.TAG, selectedCourse);

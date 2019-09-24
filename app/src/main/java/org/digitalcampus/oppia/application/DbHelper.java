@@ -1877,6 +1877,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         parsed = cxr.getParsedCourse();
                         fetchedXMLCourses.put(courseId, parsed);
                         result.setSection(parsed.getSection(sectionOrderId));
+                        result.setActivity(parsed.getSection(sectionOrderId).getActivity(activity.getDigest()));
                         results.add(result);
                     } catch (InvalidXMLException ixmle) {
                         Log.d(TAG,"Invalid course xml file", ixmle);

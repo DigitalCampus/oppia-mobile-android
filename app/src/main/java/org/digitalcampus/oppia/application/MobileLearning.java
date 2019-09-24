@@ -18,12 +18,12 @@
 package org.digitalcampus.oppia.application;
 
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import androidx.multidex.MultiDexApplication;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -50,7 +50,7 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 
-public class MobileLearning extends MultiDexApplication {
+public class MobileLearning extends Application {
 
 	public static final String TAG = MobileLearning.class.getSimpleName();
 	
@@ -99,7 +99,7 @@ public class MobileLearning extends MultiDexApplication {
 	public static final String USER_AGENT = "OppiaMobile Android: ";
     public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_EXTERNAL;
 
-    public static final int SCORECARD_ANIM_DURATION = 800;
+    public static final long SCORECARD_ANIM_DURATION = 800;
     public static final long MEDIA_SCAN_TIME_LIMIT = 3600;
     public static final long LEADERBOARD_FETCH_EXPIRATION = 3600;
 

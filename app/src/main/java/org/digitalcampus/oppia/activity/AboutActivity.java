@@ -68,6 +68,7 @@ public class AboutActivity extends AppActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
+		initialize();
 
 		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		List<Fragment> fragments = new ArrayList<>();

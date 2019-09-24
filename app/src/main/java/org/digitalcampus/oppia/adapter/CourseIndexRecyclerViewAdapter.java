@@ -1,13 +1,11 @@
 package org.digitalcampus.oppia.adapter;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,7 +50,7 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         showSectionNumbers = prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false);
         highlightCompleted = prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED);
         courseLocation = course.getLocation();
-        highlightColor = ContextCompat.getColor(ctx, R.color.highlight_secondary);
+        highlightColor = ContextCompat.getColor(ctx, R.color.theme_secondary);
         normalColor = ContextCompat.getColor(ctx, R.color.text_dark);
 
         courseTitle = course.getTitle(prefLang);

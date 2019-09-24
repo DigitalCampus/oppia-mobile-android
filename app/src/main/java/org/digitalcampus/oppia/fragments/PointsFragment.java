@@ -20,6 +20,7 @@ package org.digitalcampus.oppia.fragments;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,9 +64,9 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     private static final String ARG_COURSE = "arg_course";
 
-    private final int POSITION_TAB_LAST_YEAR = 0;
+    private final int POSITION_TAB_LAST_WEEK = 0;
     private final int POSITION_TAB_LAST_MONTH = 1;
-    private final int POSITION_TAB_LAST_WEEK = 2;
+    private final int POSITION_TAB_LAST_YEAR = 2;
 
     @Inject
     List<Points> pointsFull;
@@ -119,7 +120,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         pointsAdapter = new PointsListAdapter(super.getActivity(), pointsFiltered);
         listView.setAdapter(pointsAdapter);
 
-        showPointsFiltered(POSITION_TAB_LAST_YEAR);
+        showPointsFiltered(POSITION_TAB_LAST_WEEK);
 
 
     }
@@ -219,10 +220,12 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         }
 
         LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
-        dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.highlight_light));
+        dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.theme_primary));
         dataSet.setDrawValues(false);
         dataSet.setDrawFilled(true);
-        dataSet.setFillDrawable(getGradientDrawable());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            dataSet.setFillDrawable(getGradientDrawable());
+        }
 
         LineData lineData = new LineData(dataSet);
 
@@ -239,7 +242,6 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                Log.i(TAG, "getFormattedValue: enter. value: " + (int)value);
                 try {
                     return labels.get((int) value);
                 } catch (IndexOutOfBoundsException e) {
@@ -255,8 +257,8 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     private Drawable getGradientDrawable() {
 
-        int colorStart = ContextCompat.getColor(getActivity(), R.color.highlight_light);
-        int colorEnd = ContextCompat.getColor(getActivity(), R.color.highlight_mid);
+        int colorStart = ContextCompat.getColor(getActivity(), R.color.theme_primary);
+        int colorEnd = ContextCompat.getColor(getActivity(), R.color.theme_secondary_light);
 
         int alpha = 128;
         int colorStartAlpha = Color.argb(alpha, Color.red(colorStart), Color.green(colorStart), Color.blue(colorStart));

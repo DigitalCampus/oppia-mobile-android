@@ -100,9 +100,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         }
     }
 
-    protected void onStart(boolean overrideTitle, boolean configureActionBar) {
-        super.onStart();
-
+    protected void initialize(boolean overrideTitle, boolean configureActionBar) {
         if (!configureActionBar)
             return;
 
@@ -130,18 +128,15 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                     actionBar.setTitle(title);
                 }
             }
-
         }
     }
 
-    protected void onStart(boolean overrideTitle) {
-        onStart(overrideTitle, true);
+    protected void initialize(boolean overrideTitle) {
+        initialize(overrideTitle, true);
     }
 
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onStart() {
-        onStart(true, true);
+    protected void initialize() {
+        initialize(true, true);
     }
 
     @Override
@@ -222,6 +217,13 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
         if (notifEnabled) {
+
+            if (true) {
+                updatePoints(points);
+                return;
+            }
+            // Probably we will redesign this cool animation with new Points location, lets keep it.
+
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
             Snackbar snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE);
@@ -278,6 +280,10 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             snackbar.show();
 
         }
+    }
+
+    public void updatePoints(int points) {
+        // Let subclass to extend this
     }
 
 

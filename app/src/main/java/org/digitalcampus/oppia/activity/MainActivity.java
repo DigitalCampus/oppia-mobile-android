@@ -1,16 +1,21 @@
 package org.digitalcampus.oppia.activity;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -19,12 +24,13 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.MainPointsFragment;
 import org.digitalcampus.oppia.fragments.MainScorecardFragment;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
 
-    private BottomNavigationView navView;
+    private BottomNavigationView navBottomView;
     private DrawerMenuManager drawer;
     private View btnEditProfile;
     private View btnLogout;
@@ -32,10 +38,11 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private View btnExpandProfileOptions;
     private View viewProfileOptions;
     private MenuItem searchMenuItem;
+    private TextView tvBadgeNumber;
 
     private void findViews() {
 
-        navView = findViewById(R.id.nav_bottom_view);
+        navBottomView = findViewById(R.id.nav_bottom_view);
         navDrawerView = findViewById(R.id.navigation_view);
 
         View headerDrawer = navDrawerView.getHeaderView(0);
@@ -48,15 +55,18 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         btnEditProfile.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
 
-        navView.setOnNavigationItemSelectedListener(this);
+        navBottomView.setOnNavigationItemSelectedListener(this);
     }
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
+
+        configureBadgePointsView();
 
         viewProfileOptions.setVisibility(View.GONE);
 
@@ -66,6 +76,30 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
 //        startActivity(new Intent(this, ScorecardActivity.class));
 
+        Log.i(TAG, "Screen width: " + getResources().getConfiguration().screenWidthDp);
+
+
+    }
+
+    private void configureBadgePointsView() {
+
+        // Not available yet. It cannot let you customize text size of badge
+//        BadgeDrawable badge = navBottomView.getOrCreateBadge(R.id.nav_bottom_points);
+//        badge.setMaxCharacterCount(8);
+//        badge.setNumber(5003);
+
+
+        // Workaround alternative:
+
+        BottomNavigationMenuView bottomNavigationMenuView =
+                (BottomNavigationMenuView) navBottomView.getChildAt(0);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(2);
+
+        View badgeView = LayoutInflater.from(this).inflate(R.layout.view_badge, null);
+
+        tvBadgeNumber = (TextView)badgeView.findViewById(R.id.tv_badge_number);
+
+        itemView.addView(badgeView);
     }
 
     @Override
@@ -73,11 +107,21 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         super.onResume();
 
         configureLogoutOption();
+        updateUserTotalPoints();
+    }
+
+    private void updateUserTotalPoints() {
+
+        MobileLearning app = (MobileLearning) getApplicationContext();
+        User u = app.getComponent().getUser();
+
+        tvBadgeNumber.setText(String.valueOf(u.getPoints()));
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        initialize();
         drawer = new DrawerMenuManager(this);
         drawer.initializeDrawer();
 
