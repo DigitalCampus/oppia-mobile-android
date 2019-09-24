@@ -34,6 +34,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -41,7 +42,6 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
-import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
 
 import java.util.ArrayList;
 
@@ -112,9 +112,10 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        ScorecardPieChart spc = new ScorecardPieChart(super.getActivity(), cpbScorecard, this.course);
-        spc.configureChart(0, 0.55f);
-        spc.animate();
+        int totalActivities = course.getNoActivities();
+        int completedActivities = course.getNoActivitiesCompleted();
+        cpbScorecard.setProgressMax(totalActivities);
+        cpbScorecard.setProgressWithAnimation(completedActivities, MobileLearning.SCORECARD_ANIM_DURATION);
 
         firstTimeOpened = false;
         activitiesTotal.setText(""+course.getNoActivities());

@@ -6,6 +6,4 @@
 
     <dimen name="course_icon_size">120dp</dimen>
     <dimen name="padding_course_list_item_circular_progress">13dp</dimen>
-    <dimen name="size_circularprogressbar_scorecard_course">245dp</dimen>
-    <dimen name="size_circularprogressbar_scorecard_list">170dp</dimen>
 </resources>

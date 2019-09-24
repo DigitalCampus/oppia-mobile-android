@@ -18,12 +18,12 @@
 package org.digitalcampus.oppia.application;
 
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import androidx.multidex.MultiDexApplication;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -50,7 +50,7 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 
-public class MobileLearning extends MultiDexApplication {
+public class MobileLearning extends Application {
 
 	public static final String TAG = MobileLearning.class.getSimpleName();
 	

@@ -18,7 +18,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <com.mikhaellopez.circularprogressbar.CircularProgressBar
                 android:id="@+id/cpb_scorecard"
@@ -26,11 +27,11 @@
                 android:layout_height="@dimen/size_circularprogressbar_scorecard_course"
                 android:layout_centerInParent="true"
                 app:cpb_background_progressbar_color="@color/grey_light"
-                app:cpb_background_progressbar_width="7dp"
+                app:cpb_background_progressbar_width="20dp"
                 app:cpb_progress_direction="to_right"
                 app:cpb_progress_max="100"
                 app:cpb_progressbar_color="@color/highlight_mid"
-                app:cpb_progressbar_width="7dp" />
+                app:cpb_progressbar_width="20dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
