@@ -102,7 +102,7 @@ public class UIUtils {
 
         if (animateBgPoints) {
             int colorFrom = ContextCompat.getColor(ctx, R.color.ap_white);
-            int colorTo = ContextCompat.getColor(ctx, R.color.highlight_dark);
+            int colorTo = ContextCompat.getColor(ctx, R.color.points_badge);
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
             colorAnimation.setDuration(1000); // milliseconds
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

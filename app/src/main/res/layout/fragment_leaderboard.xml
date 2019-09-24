@@ -53,7 +53,7 @@
             android:layout_alignStart="@+id/tv_ranking"
             android:layout_below="@+id/tv_ranking"
             android:layout_marginTop="-10dp"
-            android:textColor="@color/highlight_shadow"/>
+            android:textColor="@color/theme_primary_dark"/>
 
     </RelativeLayout>
 

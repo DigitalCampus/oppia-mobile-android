@@ -54,7 +54,7 @@
         
         <TextView
             android:drawableLeft="@android:drawable/ic_dialog_info"
-            android:background="@color/highlight_light"
+            android:background="@color/theme_primary"
             android:textColor="@color/text_light"
             android:id="@+id/quiz_availability_message"
             android:layout_width="match_parent"

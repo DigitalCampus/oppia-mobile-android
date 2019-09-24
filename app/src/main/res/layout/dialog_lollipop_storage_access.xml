@@ -16,7 +16,7 @@
             android:id="@+id/imageView4"
             android:src="@drawable/storage_title"
             android:adjustViewBounds="true"
-            android:background="@color/highlight_light"/>
+            android:background="@color/theme_primary"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageView5"
             android:src="@drawable/storage_step1"
-            android:background="@color/highlight_light"
+            android:background="@color/theme_primary"
             android:adjustViewBounds="true"
             android:padding="0dp"/>
 
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageView6"
             android:src="@drawable/storage_step2"
-            android:background="@color/highlight_light"
+            android:background="@color/theme_primary"
             android:adjustViewBounds="true"
             android:padding="0dp"/>
 
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageView7"
             android:src="@drawable/storage_step3"
-            android:background="@color/highlight_light"
+            android:background="@color/theme_primary"
             android:adjustViewBounds="true"
             android:padding="0dp"/>
 

@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   	<color name="pressed_om">#CC9ACA3C</color>
-    <color name="highlight_light">#74b042</color>
-    <color name="highlight_mid">#9aca3c</color>
-    <color name="highlight_dark">#495525</color>
-    <color name="highlight_shadow">#597725</color>
-    <color name="highlight_secondary">#689e3a</color>
-    <color name="activity_completed_filter">#999aca3c</color>
 
+    <!-- Main color for actionBar, buttons, main scorecard color, etc -->
+    <color name="theme_primary">#74b042</color>
+    <color name="theme_primary_dark">#597725</color>
+
+    <!-- Secondary color: input tint, tab selector, secondary scorecard color, etc -->
+    <color name="theme_secondary">#689e3a</color>
+    <color name="theme_secondary_light">#9aca3c</color>
+
+    <!-- Color used for dropdown menus, it is "theme_secondary_light" with transparency -->
+    <color name="theme_secondary_semi_transparent">#cc9aca3c</color>
+
+    <!-- Color used for highlight dark text and points badge -->
+    <color name="theme_dark">#495525</color>
+
+    <!-- Tab color theme -->
     <color name="tab_bg_color">#e0dde2</color>
     <color name="tab_text_color">@color/text_dark</color>
     <color name="tab_selected_text_color">@color/text_dark</color>
-    <color name="subtitle_bar">@color/highlight_mid</color>
+
+    <!-- Colors for activity chart lines -->
+    <color name="chart_line_activity_all">#000000</color>
+    <color name="chart_line_activity_completed">#43A047</color>
+    <color name="chart_line_media_watched">#1E88E5</color>
+    <color name="chart_line_course_downloaded">#E53935</color>
+    <color name="chart_line_quiz_attempt">#8E24AA</color>
 
 </resources>

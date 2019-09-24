@@ -220,7 +220,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         }
 
         LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
-        dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.highlight_light));
+        dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.theme_primary));
         dataSet.setDrawValues(false);
         dataSet.setDrawFilled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -258,8 +258,8 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     private Drawable getGradientDrawable() {
 
-        int colorStart = ContextCompat.getColor(getActivity(), R.color.highlight_light);
-        int colorEnd = ContextCompat.getColor(getActivity(), R.color.highlight_mid);
+        int colorStart = ContextCompat.getColor(getActivity(), R.color.theme_primary);
+        int colorEnd = ContextCompat.getColor(getActivity(), R.color.theme_secondary_light);
 
         int alpha = 128;
         int colorStartAlpha = Color.argb(alpha, Color.red(colorStart), Color.green(colorStart), Color.blue(colorStart));

@@ -340,8 +340,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
             html = html.replace("##page_title##", getString(R.string.download_via_pc_title));
             html = html.replace("##app_name##", getString(R.string.app_name));
-            html = html.replace("##primary_color##", "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.highlight_light) & 0x00ffffff));
-            html = html.replace("##secondary_color##", "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.highlight_dark) & 0x00ffffff));
+            html = html.replace("##primary_color##", "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.theme_primary) & 0x00ffffff));
+            html = html.replace("##secondary_color##", "#" + Integer.toHexString(ContextCompat.getColor(this, R.color.theme_dark) & 0x00ffffff));
             html = html.replace("##download_via_pc_title##", getString(R.string.download_via_pc_title));
             html = html.replace("##download_via_pc_intro##", getString(R.string.download_via_pc_intro));
             html = html.replace("##download_via_pc_final##", getString(R.string.download_via_pc_final, path));

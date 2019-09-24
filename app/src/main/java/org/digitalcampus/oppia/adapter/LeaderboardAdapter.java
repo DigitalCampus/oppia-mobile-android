@@ -45,7 +45,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     public LeaderboardAdapter(Context ctx, List<LeaderboardPosition> leaderboard){
         this.leaderboard = leaderboard;
         normalBgColor = ContextCompat.getColor(ctx, R.color.text_light);
-        highlightBgColor = ContextCompat.getColor(ctx, R.color.highlight_mid);
+        highlightBgColor = ContextCompat.getColor(ctx, R.color.theme_secondary_light);
         normalTextColor = ContextCompat.getColor(ctx, R.color.text_dark);
         highlightTextColor = ContextCompat.getColor(ctx, R.color.text_light);
     }

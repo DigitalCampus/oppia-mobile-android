@@ -64,7 +64,7 @@ public class OppiaNotificationUtils {
 
         //Notification styles changed since Lollipop
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int color = ctx.getResources().getColor(R.color.highlight_light);
+            int color = ctx.getResources().getColor(R.color.theme_primary);
             notifBuilder.setColor(color);
         } else {
             //in older versions, we show the App logo
