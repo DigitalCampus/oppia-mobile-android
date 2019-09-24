@@ -28,13 +28,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.splunk.mint.Mint;
 
@@ -101,7 +102,7 @@ public class UIUtils {
         }
 
         if (animateBgPoints) {
-            int colorFrom = ContextCompat.getColor(ctx, R.color.ap_white);
+            int colorFrom = ContextCompat.getColor(ctx, R.color.white);
             int colorTo = ContextCompat.getColor(ctx, R.color.points_badge);
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
             colorAnimation.setDuration(1000); // milliseconds

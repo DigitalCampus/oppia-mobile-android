@@ -10,7 +10,7 @@
         android:id="@+id/tabs_filter_points"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         app:tabGravity="center"

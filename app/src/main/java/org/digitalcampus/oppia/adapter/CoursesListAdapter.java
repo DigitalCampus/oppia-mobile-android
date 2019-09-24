@@ -111,7 +111,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public View rootView;
-        CircularProgressBar circularProgressBar;
+            CircularProgressBar circularProgressBar;
         TextView courseTitle;
         TextView courseDescription;
         ImageView courseImage;

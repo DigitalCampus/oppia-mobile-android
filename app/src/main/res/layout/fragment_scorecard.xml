@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,18 +16,27 @@
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-            <com.androidplot.pie.PieChart
-                android:id="@+id/scorecard_pie_chart"
-                android:layout_width="match_parent"
-                android:layout_height="245dp" />
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/cpb_scorecard"
+                android:layout_width="@dimen/size_circularprogressbar_scorecard_course"
+                android:layout_height="@dimen/size_circularprogressbar_scorecard_course"
+                android:layout_centerInParent="true"
+                app:cpb_background_progressbar_color="@color/grey_light"
+                app:cpb_background_progressbar_width="20dp"
+                app:cpb_progress_direction="to_right"
+                app:cpb_progress_max="100"
+                app:cpb_progressbar_color="@color/theme_secondary"
+                app:cpb_progressbar_width="20dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:orientation="vertical">
 
@@ -69,7 +79,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/scorecard_activities_total" />
             </LinearLayout>
-        </FrameLayout>
+        </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/scorecard_quizzes_container"

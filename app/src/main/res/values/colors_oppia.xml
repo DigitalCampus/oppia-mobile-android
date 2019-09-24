@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Main color for actionBar, buttons, main scorecard color, etc -->
+    <!-- Main color for actionBar, buttons, etc -->
     <color name="theme_primary">#74b042</color>
     <color name="theme_primary_dark">#597725</color>
 
-    <!-- Secondary color: input tint, tab selector, secondary scorecard color, etc -->
+    <!-- Secondary color: input tint, tab selector, scorecard color, etc -->
     <color name="theme_secondary">#689e3a</color>
     <color name="theme_secondary_light">#9aca3c</color>
 
