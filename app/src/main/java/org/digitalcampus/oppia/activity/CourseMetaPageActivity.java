@@ -40,7 +40,13 @@ public class CourseMetaPageActivity extends AppActivity {
 
 	private Course course;
 	private CourseMetaPage cmp;
-	
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		initialize();
+	}
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -16,7 +16,7 @@
         android:gravity="right|center_vertical"
         android:text="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/highlight_light"/>
+        android:textColor="@color/theme_primary"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/user_card"

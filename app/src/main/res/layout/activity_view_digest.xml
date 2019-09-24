@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/activity_completed"
                     android:src="@drawable/ic_action_accept"
-                    android:tint="@color/highlight_light"
+                    android:tint="@color/theme_primary"
                     android:baselineAlignBottom="false"
                     android:cropToPadding="false"
                     android:adjustViewBounds="false"

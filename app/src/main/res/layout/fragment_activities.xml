@@ -11,19 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         app:tabGravity="center"
-        app:tabTextColor="@color/text_grey"
-        app:tabSelectedTextColor="@color/white"
         app:tabBackground="@drawable/bg_tab_text"
         app:tabTextAppearance="@style/TabLayoutAppearance"
         app:tabIndicatorHeight="0dp">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_last_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/last_year" />
+            android:id="@+id/tab_last_week"
+            style="@style/TabText"
+            android:text="@string/last_week"/>
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_last_month"
@@ -31,15 +30,15 @@
             android:text="@string/last_month"/>
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_last_week"
+            android:id="@+id/tab_last_year"
             style="@style/TabText"
-            android:text="@string/last_week"/>
+            android:text="@string/last_year" />
 
     </com.google.android.material.tabs.TabLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="@dimen/height_plot">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"

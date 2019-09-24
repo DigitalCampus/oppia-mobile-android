@@ -7,25 +7,26 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@color/white"
-    android:paddingBottom="@dimen/padding_medium">
+    android:paddingBottom="@dimen/margin_medium">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/padding_medium"
         android:background="?attr/selectableItemBackground">
 
         <FrameLayout
             android:id="@+id/activity_icon"
-            android:layout_width="60dp"
-            android:layout_height="40dp">
+            android:layout_width="@dimen/activity_thumbnail_width"
+            android:layout_height="@dimen/activity_thumbnail_height"
+            android:layout_marginLeft="6dp">
 
             <ImageView
                 android:id="@+id/icon"
-                android:layout_width="60dp"
-                android:layout_height="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
+                android:background="@color/tab_bg_color"
                 app:srcCompat="@drawable/default_icon_activity" />
 
             <ImageView

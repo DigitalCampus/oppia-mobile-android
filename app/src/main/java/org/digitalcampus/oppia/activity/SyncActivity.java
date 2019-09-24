@@ -46,6 +46,7 @@ public class SyncActivity extends AppActivity {
     @Override
     public void onStart() {
         super.onStart();
+        initialize();
 
         // Make the Toolbar back button call the back press (to close possible bluetooth connection)
         Toolbar toolbar = findViewById(R.id.toolbar);

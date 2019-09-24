@@ -38,7 +38,6 @@ import androidx.work.WorkManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
-import org.digitalcampus.oppia.adapter.SectionListAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -80,7 +79,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     @Override
     public void onStart() {
-        super.onStart(false);
+        super.onStart();
+        initialize(false);
     }
 
     @Override
@@ -246,7 +246,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private void createLanguageDialog() {
         UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() throws Exception {
-                CourseIndexActivity.this.onStart(false);
+                CourseIndexActivity.this.initialize(false);
                 return true;
             }
         });
@@ -318,7 +318,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                         section.addActivity(CourseIndexActivity.this.baselineActivity);
                         tb.putSerializable(Section.TAG, section);
                         tb.putSerializable(CourseActivity.BASELINE_TAG, true);
-                        tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, 0);
+                        tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, 0);
                         tb.putSerializable(Course.TAG, CourseIndexActivity.this.course);
                         intent.putExtras(tb);
                         startActivity(intent);
@@ -353,7 +353,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                         Bundle tb = new Bundle();
                         tb.putSerializable(Section.TAG, section);
                         tb.putSerializable(Course.TAG, course);
-                        tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, i);
+                        tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, i);
                         intent.putExtras(tb);
                         startActivity(intent);
                     }
@@ -371,7 +371,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void showErrorMessage() {
         UIUtils.showAlert(CourseIndexActivity.this, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 CourseIndexActivity.this.finish();
                 return true;
             }

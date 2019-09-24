@@ -103,7 +103,7 @@
         android:id="@+id/home_messages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/message_background"
+        android:background="@color/subtitle_bar"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingTop="5dp"
