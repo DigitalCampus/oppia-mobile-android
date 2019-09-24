@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.splunk.mint.Mint;
 
@@ -90,7 +89,11 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
         badges.clear();
 		try {
+
 			this.getView().findViewById(R.id.empty_state).setVisibility(View.GONE);
+			this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
+			this.getView().findViewById(R.id.error_state).setVisibility(View.GONE);
+
 			if(json.getJSONArray("objects").length() == 0){
 				//tv.setText(R.string.info_no_badges);
 				this.getView().findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
@@ -103,7 +106,6 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 				b.setDateTime(json_obj.getString("award_date"));
 				badges.add(b);
 			}
-			this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
 
             badgesAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
@@ -123,15 +125,19 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 				json = new JSONObject(response.getResultResponse());
 				Log.d(TAG,json.toString(4));
 				refreshBadgesList();
+				return;
+
 			} catch (JSONException e) {
 				Mint.logException(e);
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
 				Log.d(TAG, "Error connecting to server: ", e);
 			}
-		} else {
-			this.getView().findViewById(R.id.empty_state).setVisibility(View.GONE);
-			this.getView().findViewById(R.id.error_state).setVisibility(View.VISIBLE);
-		} 		
+		}
+
+		//If we reach this statement there was some error
+		this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
+		this.getView().findViewById(R.id.empty_state).setVisibility(View.GONE);
+		this.getView().findViewById(R.id.error_state).setVisibility(View.VISIBLE);
 	}
 
 
