@@ -42,5 +42,7 @@
     <dimen name="text_tab_time_plots">15sp</dimen>
     <dimen name="height_plot">150dp</dimen>
     <dimen name="padding_course_list_item_circular_progress">8dp</dimen>
+    <dimen name="size_circularprogressbar_scorecard_course">245dp</dimen>
+    <dimen name="size_circularprogressbar_scorecard_list">140dp</dimen>
 
 </resources>

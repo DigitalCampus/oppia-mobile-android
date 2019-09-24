@@ -186,7 +186,6 @@ dependencies {
     androidTestImplementation 'com.github.fabioCollini.daggermock:daggermock:0.8.5'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.androidplot:androidplot-core:1.5.6'
 
     implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
 

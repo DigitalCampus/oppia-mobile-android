@@ -28,7 +28,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.androidplot.pie.PieChart;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
@@ -64,7 +64,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
     private View quizzesContainer;
 
     private ProgressBar loadingSpinner;
-    private PieChart scorecardPieChart;
+    private CircularProgressBar cpbScorecard;
 
     public static CourseScorecardFragment newInstance(Course course) {
 		CourseScorecardFragment myFragment = new CourseScorecardFragment();
@@ -92,7 +92,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         this.course = db.getCourse(this.course.getCourseId(), userId);
 
         quizzesGrid = vv.findViewById(R.id.scorecard_grid_quizzes);
-        scorecardPieChart = vv.findViewById(R.id.scorecard_pie_chart);
+        cpbScorecard = vv.findViewById(R.id.cpb_scorecard);
 
         highlightPretest = vv.findViewById(R.id.tv_ranking);
         highlightAttempted = vv.findViewById(R.id.highlight_attempted);
@@ -112,8 +112,10 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        ScorecardPieChart spc = new ScorecardPieChart(super.getActivity(), scorecardPieChart, this.course);
-        spc.drawChart(0, 0.55f, false, firstTimeOpened);
+        ScorecardPieChart spc = new ScorecardPieChart(super.getActivity(), cpbScorecard, this.course);
+        spc.configureChart(0, 0.55f);
+        spc.animate();
+
         firstTimeOpened = false;
         activitiesTotal.setText(""+course.getNoActivities());
         activitiesCompleted.setText(""+course.getNoActivitiesCompleted());

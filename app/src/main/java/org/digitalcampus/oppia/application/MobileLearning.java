@@ -99,7 +99,7 @@ public class MobileLearning extends MultiDexApplication {
 	public static final String USER_AGENT = "OppiaMobile Android: ";
     public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_EXTERNAL;
 
-    public static final int SCORECARD_ANIM_DURATION = 800;
+    public static final long SCORECARD_ANIM_DURATION = 800;
     public static final long MEDIA_SCAN_TIME_LIMIT = 3600;
     public static final long LEADERBOARD_FETCH_EXPIRATION = 3600;
 
