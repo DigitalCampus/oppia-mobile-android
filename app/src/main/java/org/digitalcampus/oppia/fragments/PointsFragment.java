@@ -242,7 +242,6 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                Log.i(TAG, "getFormattedValue: enter. value: " + (int)value);
                 try {
                     return labels.get((int) value);
                 } catch (IndexOutOfBoundsException e) {
