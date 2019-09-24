@@ -40,7 +40,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
-import org.digitalcampus.oppia.adapter.SectionListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -66,6 +65,8 @@ import java.util.concurrent.Callable;
 public class CourseActivity extends AppActivity implements OnInitListener, TabLayout.OnTabSelectedListener {
 
     public static final String BASELINE_TAG = "BASELINE";
+    public static final String NUM_ACTIVITY_TAG = "num_activity";
+
     private Section section;
     private Course course;
 
@@ -99,7 +100,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             course = (Course) bundle.getSerializable(Course.TAG);
 
             activities = section.getActivities();
-            currentActivityNo = bundle.getInt(SectionListAdapter.TAG_PLACEHOLDER);
+            currentActivityNo = bundle.getInt(NUM_ACTIVITY_TAG);
             if (bundle.getSerializable(CourseActivity.BASELINE_TAG) != null) {
                 this.isBaseline = bundle.getBoolean(CourseActivity.BASELINE_TAG);
             }

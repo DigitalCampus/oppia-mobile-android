@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="background_dark">#333333</color>
     <color name="background_light">#eeeeee</color>
-    <color name="list_divider">#222222</color>
+    <color name="list_divider">#888</color>
     <color name="list_divider_light">#cccccc</color>
     <color name="text_dark">#222222</color>
     <color name="text_grey">#666666</color>

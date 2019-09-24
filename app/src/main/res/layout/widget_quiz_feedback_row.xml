@@ -3,54 +3,71 @@
     android:id="@+id/quiz_feedback_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp" >
+    android:orientation="vertical"
+    android:padding="@dimen/padding_medium" >
 
-        <ImageView
-            android:id="@+id/quiz_question_feedback_image"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_margin="10dp" />
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/quiz_question_feedback_image"
+                android:layout_width="@dimen/listitem_icon_size"
+                android:layout_height="@dimen/listitem_icon_size"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/list_card_icon_margin"
+                android:layout_marginLeft="@dimen/list_card_icon_margin"
+                android:layout_marginTop="@dimen/list_card_icon_margin"
+                android:layout_marginEnd="@dimen/list_card_icon_margin"
+                android:layout_marginRight="@dimen/list_card_icon_margin"
+                android:layout_marginBottom="@dimen/list_card_icon_margin" />
 
             <TextView
                 android:id="@+id/quiz_question_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/quiz_question_feedback_image"
+                android:layout_toRightOf="@id/quiz_question_feedback_image"
                 android:ellipsize="end"
-                android:maxLines="2" />
+                android:maxLines="3"
+                android:textAppearance="@style/Oppia.Theme.CardTitle" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/quiz_question_user_response_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/widget_quiz_feedback_response_title"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/quiz_question_user_response_text"
+                android:textColor="@color/text_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
 
-                <TextView
-                    android:id="@+id/quiz_question_user_response_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/widget_quiz_feedback_response_title"
-                    android:textStyle="bold|italic" />
+            <TextView
+                android:id="@+id/quiz_question_user_feedback_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/widget_quiz_feedback_feedback_title"
+                android:textStyle="bold|italic" />
 
-                <TextView
-                    android:id="@+id/quiz_question_user_response_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-                <TextView
-                    android:id="@+id/quiz_question_user_feedback_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/widget_quiz_feedback_feedback_title"
-                    android:textStyle="bold|italic" />
-
-                <TextView
-                    android:id="@+id/quiz_question_user_feedback_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/quiz_question_user_feedback_text"
+                android:textColor="@color/text_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
+
+
 
 </LinearLayout>
