@@ -128,6 +128,12 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        drawer.onPrepareOptionsMenu(menu, null);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.

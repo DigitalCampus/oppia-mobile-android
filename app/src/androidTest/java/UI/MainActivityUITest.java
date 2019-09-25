@@ -2,16 +2,23 @@ package UI;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.View;
 
-import androidx.test.espresso.ViewInteraction;
+import androidx.annotation.NonNull;
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.contrib.DrawerActions;
 import androidx.test.espresso.contrib.NavigationViewActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
@@ -33,6 +40,8 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,11 +56,10 @@ import java.util.ArrayList;
 import Utils.CourseUtils;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.longClick;
-import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
@@ -64,7 +72,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -75,15 +82,17 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
-public class OppiaMobileActivityUITest {
+public class MainActivityUITest {
 
 
-    @Rule public DaggerMockRule<AppComponent> daggerRule =
+    @Rule
+    public DaggerMockRule<AppComponent> daggerRule =
             new DaggerMockRule<>(AppComponent.class, new AppModule((MobileLearning) InstrumentationRegistry.getInstrumentation()
-                                                                                    .getTargetContext()
-                                                                                    .getApplicationContext())).set(
+                    .getTargetContext()
+                    .getApplicationContext())).set(
                     new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override public void setComponent(AppComponent component) {
+                        @Override
+                        public void setComponent(AppComponent component) {
                             MobileLearning app =
                                     (MobileLearning) InstrumentationRegistry.getInstrumentation()
                                             .getTargetContext()
@@ -93,27 +102,32 @@ public class OppiaMobileActivityUITest {
                     });
 
     @Rule
-    public ActivityTestRule<MainActivity> oppiaMobileActivityTestRule =
+    public ActivityTestRule<MainActivity> mainActivityTestRule =
             new ActivityTestRule<>(MainActivity.class, false, false);
 
 
-    
-
-    @Mock CoursesRepository coursesRepository;
-    @Mock CompleteCourseProvider completeCourseProvider;
-    @Mock SharedPreferences prefs;
-    @Mock SharedPreferences.Editor editor;
-    @Mock User user;
-    @Mock ArrayList<Points> pointList;
-    @Mock ArrayList<Badges> badgesList;
+    @Mock
+    CoursesRepository coursesRepository;
+    @Mock
+    CompleteCourseProvider completeCourseProvider;
+    @Mock
+    SharedPreferences prefs;
+    @Mock
+    SharedPreferences.Editor editor;
+    @Mock
+    User user;
+    @Mock
+    ArrayList<Points> pointList;
+    @Mock
+    ArrayList<Badges> badgesList;
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         initMockEditor();
         when(prefs.edit()).thenReturn(editor);
     }
 
-    private void initMockEditor(){
+    private void initMockEditor() {
         when(editor.putString(anyString(), anyString())).thenReturn(editor);
         when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
         when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
@@ -123,44 +137,45 @@ public class OppiaMobileActivityUITest {
 
         ArrayList<Course> courses = new ArrayList<>();
 
-        for(int i = 0; i < numberOfCourses; i++){
+        for (int i = 0; i < numberOfCourses; i++) {
             courses.add(CourseUtils.createMockCourse());
         }
 
         when(coursesRepository.getCourses((Context) any())).thenReturn(courses);
 
     }
-    private int getCoursesCount(){
+
+    private int getCoursesCount() {
         return coursesRepository.getCourses((Context) any()).size();
     }
 
 
     @Test
-    public void showsManageCoursesButtonIfThereAreNoCourses() throws Exception{
+    public void showsManageCoursesButtonIfThereAreNoCourses() throws Exception {
         givenThereAreSomeCourses(0);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.manage_courses_btn))
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void doesNotShowManageCoursesButtonIfThereAreCourses() throws Exception{
+    public void doesNotShowManageCoursesButtonIfThereAreCourses() throws Exception {
         givenThereAreSomeCourses(2);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.manage_courses_btn))
                 .check(matches(not(isDisplayed())));
     }
 
     @Test
-    public void showsTagSelectActivityOnClickManageCourses() throws Exception{
+    public void showsTagSelectActivityOnClickManageCourses() throws Exception {
 
         givenThereAreSomeCourses(0);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.manage_courses_btn))
                 .perform(click());
@@ -170,8 +185,7 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void showsCourseIndexOnCourseClick() throws Exception{
-
+    public void showsCourseIndexOnCourseClick() throws Exception {
 
         final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
         Mockito.doAnswer(new Answer() {
@@ -179,34 +193,36 @@ public class OppiaMobileActivityUITest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Context ctx = (Context) invocation.getArguments()[0];
                 ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
+
+                givenThereAreSomeCourses(1);
+
+                mainActivityTestRule.launchActivity(null);
+
+                Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                        .inRoot(RootMatchers.withDecorView(
+                                Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                        .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+                checkCorrectActivity(CourseIndexActivity.class);
+
                 return null;
+
             }
         }).when(completeCourseProvider).getCompleteCourseAsync((Context) any(), (Course) any());
 
 
-        givenThereAreSomeCourses(1);
-
-        oppiaMobileActivityTestRule.launchActivity(null);
-
-        onData(anything())
-                .inAdapterView(withId(R.id.course_list))
-                .atPosition(0)
-                .perform(click());
-
-        checkCorrectActivity(CourseIndexActivity.class);
-
     }
 
     @Test
-    public void showsContextMenuOnCourseLongClick() throws Exception{
+    public void showsContextMenuOnCourseLongClick() throws Exception {
         givenThereAreSomeCourses(1);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        onData(anything())
-                .inAdapterView(withId(R.id.course_list))
-                .atPosition(0)
-                .perform(longClick());
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
         onView(withChild(withId(R.id.course_context_reset)))
                 .check(matches(isDisplayed()));
@@ -220,37 +236,35 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void showsCurrentActivityOnLogoutClickNo() throws Exception{
+    public void showsCurrentActivityOnLogoutClickNo() throws Exception {
 
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         openDrawer();
 
-        onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
+        onView(withId(R.id.btn_expand_profile_options)).perform(click());
 
-        onView(withText(R.string.menu_logout))
-                .perform(click());
+        onView(withText(R.string.menu_logout)).perform(click());
 
-        onView(withText(R.string.no))
-                .perform(click());
+        onView(withText(R.string.no)).perform(click());
 
         checkCorrectActivity(MainActivity.class);
 
     }
 
     @Test
-    public void showsWelcomeActivityOnLogoutClickYes() throws Exception{
+    public void showsWelcomeActivityOnLogoutClickYes() throws Exception {
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         openDrawer();
 
-        onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
+        onView(withId(R.id.btn_expand_profile_options)).perform(click());
 
         onView(withText(R.string.menu_logout))
                 .perform(click());
@@ -263,84 +277,117 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void doesNotShowLogoutItemOnPrefsValueFalse() throws Exception{
-        
+    public void doesNotShowLogoutItemOnPrefsValueFalse() throws Exception {
+
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(false);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         openDrawer();
 
-        onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
-
-        onView(withText(R.string.logout))
+        onView(
+                allOf(
+                        withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                        withId(R.id.btn_expand_profile_options)))
                 .check(doesNotExist());
+
+        // when added Edit profile option, uncomment this and remove previous line
+//        onView(withId(R.id.btn_expand_profile_options)).perform(click());
+//        onView(withText(R.string.logout)).check(matches(not(isDisplayed())));
     }
 
     @Test
-    public void showsLogoutItemOnPrefsValueTrue() throws Exception{
+    public void showsLogoutItemOnPrefsValueTrue() throws Exception {
 
+        // NOT WORKING!
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         openDrawer();
 
-        onView(isAssignableFrom(NavigationView.class)).perform(swipeUp());
+        onView(withId(R.id.btn_expand_profile_options)).perform(click());
 
-        onView(withText(R.string.logout))
-                .check(matches(isDisplayed()));
+        onView(withText(R.string.logout)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void doesNotShowPointsListWhenThereAreNoPoints() throws Exception{
+    public void doesNotShowPointsListWhenThereAreNoPoints() throws Exception {
 
         when(user.getPoints()).thenReturn(0);
 
         doReturn(true).when(pointList).add((Points) any());
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.userpoints))
-                .perform(click());
+        onView(withId(R.id.nav_bottom_points)).perform(click());
 
         assertEquals(0, pointList.size());
 
-        onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                withId(R.id.points_list))).check(matches(not(isDisplayed())));
     }
 
     @Test
-    public void doesNotShowBadgesListWhenThereAreNoBadges() throws Exception{
+    public void doesNotShowBadgesListWhenThereAreNoBadges() throws Exception {
 
         when(user.getBadges()).thenReturn(0);
 
         doReturn(true).when(badgesList).add((Badges) any());
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        onView(withId(R.id.userbadges))
-                .perform(click());
+        onView(withId(R.id.nav_bottom_points)).perform(click());
+        onView(withId(R.id.tabs)).perform(selectTabAtPosition(2));
+
+//        onView(allOf(
+//                withText(R.string.tab_title_badges),
+//                isDescendantOfA(withId(R.id.tabs))))
+//                .perform(click());
+
+//        onView(withText(R.string.tab_title_badges)).perform(click());
 
         assertEquals(0, badgesList.size());
 
-        onView(withId(R.id.fragment_badges_title))
-            .check(matches(withText(R.string.info_no_badges)));
+    }
 
+    @NonNull
+    private static ViewAction selectTabAtPosition(final int position) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return allOf(isDisplayed(), isAssignableFrom(TabLayout.class));
+            }
+
+            @Override
+            public String getDescription() {
+                return "with tab at index" + position;
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                if (view instanceof TabLayout) {
+                    TabLayout tabLayout = (TabLayout) view;
+                    TabLayout.Tab tab = tabLayout.getTabAt(position);
+
+                    if (tab != null) {
+                        tab.select();
+                    }
+                }
+            }
+        };
     }
 
     @Test
-    public void deleteCourseOnContextMenuDeleteClickNo() throws Exception{
+    public void deleteCourseOnContextMenuDeleteClickNo() throws Exception {
         givenThereAreSomeCourses(1);
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_DELETE_COURSE_ENABLED), anyBoolean())).thenReturn(true);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        onData(anything())
-                .inAdapterView(withId(R.id.course_list))
-                .atPosition(0)
-                .perform(longClick());
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
         onView(withId(R.id.course_context_delete))
                 .perform(click());
@@ -354,17 +401,23 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void deleteCourseOnContextMenuDeleteClickYes() throws Exception{
+    public void deleteCourseOnContextMenuDeleteClickYes() throws Exception {
         givenThereAreSomeCourses(3);
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_DELETE_COURSE_ENABLED), anyBoolean())).thenReturn(true);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        onData(anything())
-                .inAdapterView(withId(R.id.course_list))
-                .atPosition(0)
-                .perform(longClick());
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+//        onData(anything())
+//                .inAdapterView(withId(R.id.recycler_courses))
+//                .atPosition(0)
+//                .perform(longClick());
 
         onView(withId(R.id.course_context_delete))
                 .perform(click());
@@ -374,21 +427,20 @@ public class OppiaMobileActivityUITest {
                 .perform(click());
 
         //TODO: Check
-
     }
 
     @Test
-    public void doesNotDeleteCourseOnContextMenuDelete() throws Exception{
+    public void doesNotDeleteCourseOnContextMenuDelete() throws Exception {
         givenThereAreSomeCourses(3);
 
         when(prefs.getBoolean(eq(PrefsActivity.PREF_DELETE_COURSE_ENABLED), anyBoolean())).thenReturn(false);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        onData(anything())
-                .inAdapterView(withId(R.id.course_list))
-                .atPosition(0)
-                .perform(longClick());
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
         onView(withId(R.id.course_context_delete))
                 .perform(click());
@@ -399,15 +451,15 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void resetCourseOnContextMenuResetClickYes() throws Exception{
+    public void resetCourseOnContextMenuResetClickYes() throws Exception {
         givenThereAreSomeCourses(3);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        onData(anything())
-                .inAdapterView(withId(R.id.course_list))
-                .atPosition(0)
-                .perform(longClick());
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
         onView(withId(R.id.course_context_reset))
                 .perform(click());
@@ -421,15 +473,15 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void resetCourseOnContextMenuResetClickNo() throws Exception{
+    public void resetCourseOnContextMenuResetClickNo() throws Exception {
         givenThereAreSomeCourses(3);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        onData(anything())
-                .inAdapterView(withId(R.id.course_list))
-                .atPosition(0)
-                .perform(longClick());
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
         onView(withId(R.id.course_context_reset))
                 .perform(click());
@@ -443,15 +495,15 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void updateCourseActivityOnContextMenu() throws Exception{
+    public void updateCourseActivityOnContextMenu() throws Exception {
         givenThereAreSomeCourses(1);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        onData(anything())
-                .inAdapterView(withId(R.id.course_list))
-                .atPosition(0)
-                .perform(longClick());
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
         onView(withChild(withId(R.id.course_context_update_activity)))
                 .perform(click());
@@ -463,26 +515,27 @@ public class OppiaMobileActivityUITest {
 
     //Drawer Tests
 
-    private void openDrawer(){
+    private void openDrawer() {
         onView(withId(R.id.drawer))
                 .perform(DrawerActions.open());
 
         onView(withId(R.id.drawer)).check(matches(isOpen()));
     }
 
-    private void performClickDrawerItem(int itemId){
+    private void performClickDrawerItem(int itemId) {
         onView(withId(R.id.navigation_view)).perform(NavigationViewActions.navigateTo(itemId));
     }
 
-    private void checkCorrectActivity(Class activity){
+    private void checkCorrectActivity(Class activity) {
         assertEquals(activity, Utils.TestUtils.getCurrentActivity().getClass());
     }
 
 
-    @Test
-    public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception{
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+    @Test
+    public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception {
+
+        mainActivityTestRule.launchActivity(null);
 
         openDrawer();
         performClickDrawerItem(R.id.menu_download);
@@ -491,25 +544,30 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void showsSearchActivityOnDrawerClickSearch() throws Exception{
+    public void showsSearchActivityOnMenuClickSearch() throws Exception {
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        openDrawer();
-        performClickDrawerItem(R.id.menu_search);
+        try {
+            onView(withId(R.id.menu_search)).perform(click());
+        } catch (NoMatchingViewException e) {
+            openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
+            onView(withText(R.string.menu_search)).perform(click());
+        }
+
         checkCorrectActivity(SearchActivity.class);
 
     }
 
     @Test
-    public void showsChangeLanguageDialogIfACourseHasAtLeastOneLang() throws Exception{
+    public void showsChangeLanguageDialogIfACourseHasAtLeastOneLang() throws Exception {
 
         givenThereAreSomeCourses(1);
-        coursesRepository.getCourses((Context) any()).get(0).setLangs(new ArrayList<Lang>(){{
+        coursesRepository.getCourses((Context) any()).get(0).setLangs(new ArrayList<Lang>() {{
             add(new Lang("en", "English"));
         }});
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         openDrawer();
         performClickDrawerItem(R.id.menu_language);
@@ -518,36 +576,35 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void doesNotShowChangeLanguageDialogIfThereAreNoCoursesWithLangs() throws Exception{
+    public void doesNotShowChangeLanguageDialogIfThereAreNoCoursesWithLangs() throws Exception {
 
         givenThereAreSomeCourses(1);
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         openDrawer();
         performClickDrawerItem(R.id.menu_language);
 
-        ViewInteraction dialog = onView(withText(R.string.change_language));
-
-        dialog.check(doesNotExist());
+        onView(withText(R.string.change_language)).check(doesNotExist());
     }
 
     @Test
-    public void showsScorecardsOnDrawerClickScorecard() throws Exception{
+    public void showsScorecardsOnBottomNavClickScorecard() throws Exception {
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
-        openDrawer();
-        performClickDrawerItem(R.id.menu_scorecard);
+        onView(withId(R.id.nav_bottom_scorecard)).perform(click());
 
-        onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-                withId(R.id.activity_scorecard_pager))).check(matches(isDisplayed()));
+        onView(allOf(
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                withId(R.id.tabs)))
+                .check(matches(isDisplayed()));
     }
 
     @Test
-    public void showsPrefsActivityOnDrawerClickSettings() throws Exception{
+    public void showsPrefsActivityOnDrawerClickSettings() throws Exception {
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         openDrawer();
         performClickDrawerItem(R.id.menu_settings);
@@ -556,13 +613,13 @@ public class OppiaMobileActivityUITest {
     }
 
     @Test
-    public void showsAboutActivityOnDrawerClickAbout() throws Exception{
+    public void showsAboutActivityOnDrawerClickAbout() throws Exception {
 
-        oppiaMobileActivityTestRule.launchActivity(null);
+        mainActivityTestRule.launchActivity(null);
 
         openDrawer();
         performClickDrawerItem(R.id.menu_about);
-        checkCorrectActivity(AboutActivity.class); 
+        checkCorrectActivity(AboutActivity.class);
 
         onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 withId(R.id.about_versionno))).check(matches(isDisplayed()));
@@ -599,7 +656,6 @@ public class OppiaMobileActivityUITest {
 
 
     }*/
-
 
 
 }
