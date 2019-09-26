@@ -134,7 +134,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             //If we are in a course-related activity, we show its title
             if (overrideTitle) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 Bundle bundle = this.getIntent().getExtras();
                 if (bundle != null) {
                     Course course = (Course) bundle.getSerializable(Course.TAG);

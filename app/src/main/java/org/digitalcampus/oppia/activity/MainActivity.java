@@ -24,8 +24,20 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.MainPointsFragment;
 import org.digitalcampus.oppia.fragments.MainScorecardFragment;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 public class MainActivity extends AppActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
@@ -39,6 +51,9 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private View viewProfileOptions;
     private MenuItem searchMenuItem;
     private TextView tvBadgeNumber;
+
+    @Inject
+    CoursesRepository coursesRepository;
 
     private void findViews() {
 
@@ -65,6 +80,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
+        initializeDagger();
 
         configureBadgePointsView();
 
@@ -79,6 +95,11 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         Log.i(TAG, "Screen width: " + getResources().getConfiguration().screenWidthDp);
 
 
+    }
+
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
     }
 
     private void configureBadgePointsView() {
@@ -129,8 +150,44 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        drawer.onPrepareOptionsMenu(menu, null);
+        Map<Integer, DrawerMenuManager.MenuOption> options = new HashMap<>();
+        options.put(R.id.menu_language, new DrawerMenuManager.MenuOption() {
+            @Override
+            public void onOptionSelected() {
+                showLanguageSelectDialog();
+            }
+        });
+
+        drawer.onPrepareOptionsMenu(menu, options);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void showLanguageSelectDialog() {
+
+        ArrayList<Lang> langs = new ArrayList<>();
+        List<Course> courses = coursesRepository.getCourses(this);
+
+        for (Course course : courses) {
+            for (Lang courseLang : course.getLangs()) {
+                if (!langs.contains(courseLang)) {
+                    langs.add(courseLang);
+                }
+            }
+        }
+
+        UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_main);
+                if (fragment instanceof CoursesListFragment) {
+                    // Refresh courses list
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
+                }
+
+                return null;
+            }
+        });
     }
 
     @Override
