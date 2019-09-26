@@ -67,10 +67,10 @@ public class LoginUITest {
                .perform(scrollTo(), click());
 
        onView(withId(R.id.login_username_field))
-               .perform(closeSoftKeyboard(), scrollTo(), typeText("aaaaaaa"));
+               .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_username"));
 
        onView(withId(R.id.login_password_field))
-               .perform(closeSoftKeyboard(), scrollTo(), typeText("aaaaaaa"));
+               .perform(closeSoftKeyboard(), scrollTo(), typeText("valid_password"));
 
        onView(withId(R.id.login_btn))
                .perform(scrollTo(), click());

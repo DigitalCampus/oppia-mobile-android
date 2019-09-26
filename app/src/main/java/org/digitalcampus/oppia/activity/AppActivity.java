@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.activity;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -39,6 +38,7 @@ import android.view.animation.AnticipateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -61,6 +61,8 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 
@@ -70,6 +72,20 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     GamificationBroadcastReceiver gamificationReceiver;
     private Menu optionsMenu;
+
+    @Inject
+    SharedPreferences prefs;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initializeDagger();
+    }
+
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -85,7 +101,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     public SharedPreferences getPrefs() {
-        return PreferenceManager.getDefaultSharedPreferences(this);
+        return prefs;
     }
 
     @Override

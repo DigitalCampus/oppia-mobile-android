@@ -1,18 +1,36 @@
 package org.digitalcampus.oppia.fragments;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import org.digitalcampus.oppia.activity.AppActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
+
+import javax.inject.Inject;
 
 public class AppFragment extends Fragment implements APIKeyRequestListener{
 
     public final String TAG = this.getClass().getSimpleName();
+
+    @Inject
+    SharedPreferences prefs;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initializeDagger();
+    }
+
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getActivity().getApplication();
+        app.getComponent().inject(this);
+    }
 
     @Override
     public void apiKeyInvalidated() {
@@ -32,6 +50,8 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
 
 
     public SharedPreferences getPrefs() {
-        return PreferenceManager.getDefaultSharedPreferences(getActivity());
+        return prefs;
     }
+
+
 }
