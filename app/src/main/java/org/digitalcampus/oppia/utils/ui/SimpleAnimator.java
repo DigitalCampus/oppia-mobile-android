@@ -22,9 +22,9 @@ import android.view.View;
 
 public class SimpleAnimator {
 
-    public static int DEFAULT_ANIM_DURATION = 700;
-    public static boolean FADE_IN = true;
-    public static boolean FADE_OUT = false;
+    public static final int DEFAULT_ANIM_DURATION = 700;
+    public static final boolean FADE_IN = true;
+    public static final boolean FADE_OUT = false;
 
     public static void fade(final View view, boolean visible, int duration){
         ValueAnimator animator = ValueAnimator.ofFloat(visible?1f:0f, visible?0f:1f);
