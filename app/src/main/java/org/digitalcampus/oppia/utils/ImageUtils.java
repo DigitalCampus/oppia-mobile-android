@@ -53,9 +53,4 @@ public class ImageUtils {
 			return new BitmapDrawable(res, bmp);
 		}
 	}
-
-	public static  Drawable getDrawableFromUrl(String url, String src_name) throws java.net.MalformedURLException, java.io.IOException {
-		return Drawable.createFromStream(((java.io.InputStream) new java.net.URL(url).getContent()), src_name);
-	}
-
 }
