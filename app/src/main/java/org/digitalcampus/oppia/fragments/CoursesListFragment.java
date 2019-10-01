@@ -392,7 +392,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         }
     }
 
-    //@Override
+    @Override
     public void onCourseDeletionComplete(Payload response) {
         if (response.isResult()){
             Media.resetMediaScan(prefs);
@@ -403,6 +403,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         toast(response.isResult()? R.string.course_deleting_success : R.string.course_deleting_error);
         displayCourses();
+        getActivity().invalidateOptionsMenu();
     }
 
     /* CourseInstallerListener implementation */

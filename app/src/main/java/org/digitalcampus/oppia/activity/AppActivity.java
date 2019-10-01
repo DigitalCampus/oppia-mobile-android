@@ -233,12 +233,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
         if (notifEnabled) {
 
-            if (true) {
-                updatePoints(points);
-                return;
-            }
-            // Probably we will redesign this cool animation with new Points location, lets keep it.
-
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
             Snackbar snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE);
@@ -295,10 +289,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             snackbar.show();
 
         }
-    }
-
-    public void updatePoints(int points) {
-        // Let subclass to extend this
     }
 
 

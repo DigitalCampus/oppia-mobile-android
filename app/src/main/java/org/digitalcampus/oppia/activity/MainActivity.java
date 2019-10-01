@@ -150,21 +150,20 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        Map<Integer, DrawerMenuManager.MenuOption> options = new HashMap<>();
-        options.put(R.id.menu_language, new DrawerMenuManager.MenuOption() {
-            @Override
-            public void onOptionSelected() {
-                showLanguageSelectDialog();
-            }
-        });
 
+        Map<Integer, DrawerMenuManager.MenuOption> options = getMenuOptions();
         drawer.onPrepareOptionsMenu(menu, options);
+
+        configureSearchButtonVisibility(navBottomView.getSelectedItemId());
+
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void showLanguageSelectDialog() {
+    private Map<Integer, DrawerMenuManager.MenuOption> getMenuOptions() {
 
-        ArrayList<Lang> langs = new ArrayList<>();
+        Map<Integer, DrawerMenuManager.MenuOption> options = new HashMap<>();
+
+        final ArrayList<Lang> langs = new ArrayList<>();
         List<Course> courses = coursesRepository.getCourses(this);
 
         for (Course course : courses) {
@@ -174,6 +173,21 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 }
             }
         }
+
+        // Change language menu option only should be visible if there are more than one language
+        if (langs.size() > 1) {
+            options.put(R.id.menu_language, new DrawerMenuManager.MenuOption() {
+                @Override
+                public void onOptionSelected() {
+                    showLanguageSelectDialog(langs);
+                }
+            });
+        }
+
+        return options;
+    }
+
+    private void showLanguageSelectDialog(ArrayList<Lang> langs) {
 
         UIUtils.createLanguageDialog(this, langs, prefs, new Callable<Boolean>() {
             @Override
@@ -248,9 +262,13 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, fragment).commit();
 
-        searchMenuItem.setVisible(menuItem.getItemId() == R.id.nav_bottom_home);
+        configureSearchButtonVisibility(menuItem.getItemId());
 
         return true;
+    }
+
+    private void configureSearchButtonVisibility(int itemId) {
+        searchMenuItem.setVisible(itemId == R.id.nav_bottom_home);
     }
 
     @Override
