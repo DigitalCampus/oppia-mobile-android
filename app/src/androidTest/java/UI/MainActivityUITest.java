@@ -299,7 +299,6 @@ public class MainActivityUITest {
     @Test
     public void showsLogoutItemOnPrefsValueTrue() throws Exception {
 
-        // NOT WORKING!
         when(prefs.getBoolean(eq(PrefsActivity.PREF_LOGOUT_ENABLED), anyBoolean())).thenReturn(true);
 
         mainActivityTestRule.launchActivity(null);
@@ -560,7 +559,27 @@ public class MainActivityUITest {
     }
 
     @Test
-    public void showsChangeLanguageDialogIfACourseHasAtLeastOneLang() throws Exception {
+    public void showsChangeLanguageMenuOptionIfACoursesHasMoreThanOneLanguage() throws Exception {
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED), anyBoolean())).thenReturn(true);
+
+        givenThereAreSomeCourses(1);
+
+        coursesRepository.getCourses((Context) any()).get(0).setLangs(new ArrayList<Lang>() {{
+            add(new Lang("en", "English"));
+            add(new Lang("es", "Spanish"));
+        }});
+
+        mainActivityTestRule.launchActivity(null);
+
+        openDrawer();
+        onView(withText(R.string.change_language)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void hidesChangeLanguageMenuOptionIfACoursesHasOnlyOneLanguage() throws Exception {
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED), anyBoolean())).thenReturn(true);
 
         givenThereAreSomeCourses(1);
         coursesRepository.getCourses((Context) any()).get(0).setLangs(new ArrayList<Lang>() {{
@@ -570,13 +589,13 @@ public class MainActivityUITest {
         mainActivityTestRule.launchActivity(null);
 
         openDrawer();
-        performClickDrawerItem(R.id.menu_language);
-
-        onView(withText(R.string.change_language)).check(matches(isDisplayed()));
+        onView(withText(R.string.change_language)).check(doesNotExist());
     }
 
     @Test
-    public void doesNotShowChangeLanguageDialogIfThereAreNoCoursesWithLangs() throws Exception {
+    public void hidesChangeLanguageMenuOptionIfThereAreNoCoursesWithLangs() throws Exception {
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED), anyBoolean())).thenReturn(true);
 
         givenThereAreSomeCourses(1);
 
@@ -585,6 +604,25 @@ public class MainActivityUITest {
         openDrawer();
         performClickDrawerItem(R.id.menu_language);
 
+        onView(withText(R.string.change_language)).check(doesNotExist());
+    }
+
+
+    @Test
+    public void hidesChangeLanguageMenuOptionWhenPrefIsDisabled() throws Exception {
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED), anyBoolean())).thenReturn(false);
+
+        givenThereAreSomeCourses(1);
+
+        coursesRepository.getCourses((Context) any()).get(0).setLangs(new ArrayList<Lang>() {{
+            add(new Lang("en", "English"));
+            add(new Lang("es", "Spanish"));
+        }});
+
+        mainActivityTestRule.launchActivity(null);
+
+        openDrawer();
         onView(withText(R.string.change_language)).check(doesNotExist());
     }
 
@@ -624,6 +662,35 @@ public class MainActivityUITest {
         onView(allOf(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 withId(R.id.about_versionno))).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void showsSearchCoursesActionButtonCoursesListScreen() throws Exception {
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.menu_search)).check(matches(isDisplayed()));
+        openDrawer();
+        performClickDrawerItem(R.id.menu_settings);
+        Utils.TestUtils.getCurrentActivity().finish();
+        Utils.TestUtils.getCurrentActivity().invalidateOptionsMenu();
+        onView(withId(R.id.menu_search)).check(matches(isDisplayed()));
+
+    }
+
+    @Test
+    public void hidesSearchCoursesActionButtonOutsideCoursesListScreen() throws Exception {
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.nav_bottom_scorecard)).perform(click());
+        onView(withId(R.id.menu_search)).check(doesNotExist());
+        openDrawer();
+        performClickDrawerItem(R.id.menu_settings);
+        Utils.TestUtils.getCurrentActivity().finish();
+        onView(withId(R.id.menu_search)).check(doesNotExist());
+
+    }
+
 
 
    /* @Test

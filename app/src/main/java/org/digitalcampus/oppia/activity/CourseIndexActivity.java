@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,7 +65,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private Course course;
     private CompleteCourse parsedCourse;
     private ArrayList<Section> sections;
-    private SharedPreferences prefs;
+    @Inject SharedPreferences prefs;
     private Activity baselineActivity;
     //	private AlertDialog aDialog;
     private View loadingCourseView;
@@ -89,7 +88,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         setContentView(R.layout.activity_course_index);
         initializeDagger();
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
         loadingCourseView = findViewById(R.id.loading_course);
 

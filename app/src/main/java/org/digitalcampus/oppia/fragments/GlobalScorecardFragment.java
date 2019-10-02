@@ -35,6 +35,7 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,6 +48,7 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
     CoursesRepository coursesRepository;
     private RecyclerView recyclerScorecards;
     private View emptyState;
+    private List<Course> courses = new ArrayList<>();
 
     public static GlobalScorecardFragment newInstance() {
         return new GlobalScorecardFragment();
@@ -70,6 +72,9 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
         View layout = inflater.inflate(R.layout.fragment_global_scorecard, container, false);
         findViews(layout);
 
+        adapterScorecards = new ScorecardsGridAdapter(getActivity(), courses);
+        adapterScorecards.setOnItemClickListener(this);
+        recyclerScorecards.setAdapter(adapterScorecards);
 
         return layout;
     }
@@ -80,12 +85,25 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
         super.onActivityCreated(savedInstanceState);
         initializeDagger();
 
+    }
 
-        List<Course> courses = coursesRepository.getCourses(getActivity());
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
-        if (courses.isEmpty()){
-            //If there are now courses, display the empty state
+        courses.clear();
+        courses.addAll(coursesRepository.getCourses(getActivity()));
+
+        showEmptyStateView(courses.isEmpty());
+
+        adapterScorecards.notifyDataSetChanged();
+
+    }
+
+    private void showEmptyStateView(boolean show) {
+
+        if (show) {
             recyclerScorecards.setVisibility(View.GONE);
             emptyState.setVisibility(View.VISIBLE);
 
@@ -100,17 +118,10 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
                     });
                 }
             });
-        }
-        else{
+        } else {
             recyclerScorecards.setVisibility(View.VISIBLE);
             emptyState.setVisibility(View.GONE);
-
-            adapterScorecards = new ScorecardsGridAdapter(getActivity(), courses);
-            adapterScorecards.setOnItemClickListener(this);
-            recyclerScorecards.setAdapter(adapterScorecards);
-
         }
-
     }
 
     @Override

@@ -134,7 +134,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             //If we are in a course-related activity, we show its title
             if (overrideTitle) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 Bundle bundle = this.getIntent().getExtras();
                 if (bundle != null) {
                     Course course = (Course) bundle.getSerializable(Course.TAG);
@@ -234,12 +233,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
         if (notifEnabled) {
 
-            if (true) {
-                updatePoints(points);
-                return;
-            }
-            // Probably we will redesign this cool animation with new Points location, lets keep it.
-
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
             Snackbar snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE);
@@ -296,10 +289,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             snackbar.show();
 
         }
-    }
-
-    public void updatePoints(int points) {
-        // Let subclass to extend this
     }
 
 
