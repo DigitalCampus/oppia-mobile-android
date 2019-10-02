@@ -68,7 +68,7 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 
-    public final String TAG = this.getClass().getSimpleName();
+    public static final String TAG = AppActivity.class.getSimpleName();
 
     GamificationBroadcastReceiver gamificationReceiver;
     private Menu optionsMenu;
@@ -134,7 +134,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             //If we are in a course-related activity, we show its title
             if (overrideTitle) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 Bundle bundle = this.getIntent().getExtras();
                 if (bundle != null) {
                     Course course = (Course) bundle.getSerializable(Course.TAG);
@@ -230,7 +230,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     public void onGamificationEvent(String message, int points) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
         if (notifEnabled) {
 
@@ -247,7 +247,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.setClickable(false);
 
             // Hide the text
-            TextView textView = (TextView) layout.findViewById(com.google.android.material.R.id.snackbar_text);
+            TextView textView = layout.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setVisibility(View.INVISIBLE);
 
             // Inflate our custom view
@@ -322,8 +322,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
         if (optionsMenu != null && optionsMenu.findItem(R.id.points) != null) {
 
-            AnimatorSet animXY = new AnimatorSet();
-
             ObjectAnimator animY = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "y",
                     tvGamificationNotifPoints.getTop(), 50);
             animY.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -338,7 +336,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             ObjectAnimator animX = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "x",
                     tvGamificationNotifPoints.getLeft(), itemX);
 
-            animXY = new AnimatorSet();
+            AnimatorSet animXY = new AnimatorSet();
             animXY.playTogether(animX, animY);
             animXY.setDuration(1200);
 
