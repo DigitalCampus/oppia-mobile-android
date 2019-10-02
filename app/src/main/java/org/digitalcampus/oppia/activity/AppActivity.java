@@ -68,7 +68,7 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 
-    public static final String TAG = AppActivity.class.getSimpleName();
+    public final String TAG = this.getClass().getSimpleName();
 
     GamificationBroadcastReceiver gamificationReceiver;
     private Menu optionsMenu;
@@ -134,7 +134,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             //If we are in a course-related activity, we show its title
             if (overrideTitle) {
-                prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 Bundle bundle = this.getIntent().getExtras();
                 if (bundle != null) {
                     Course course = (Course) bundle.getSerializable(Course.TAG);
@@ -230,15 +229,9 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     @Override
     public void onGamificationEvent(String message, int points) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
         if (notifEnabled) {
-
-            if (true) {
-                updatePoints(points);
-                return;
-            }
-            // Probably we will redesign this cool animation with new Points location, lets keep it.
 
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
@@ -247,7 +240,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.setClickable(false);
 
             // Hide the text
-            TextView textView = layout.findViewById(com.google.android.material.R.id.snackbar_text);
+            TextView textView = (TextView) layout.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setVisibility(View.INVISIBLE);
 
             // Inflate our custom view
@@ -298,10 +291,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         }
     }
 
-    public void updatePoints(int points) {
-        // Let subclass to extend this
-    }
-
 
     private void animatePoints(final Snackbar snackbar, boolean withSound) {
 
@@ -322,6 +311,8 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
         if (optionsMenu != null && optionsMenu.findItem(R.id.points) != null) {
 
+            AnimatorSet animXY = new AnimatorSet();
+
             ObjectAnimator animY = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "y",
                     tvGamificationNotifPoints.getTop(), 50);
             animY.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -336,7 +327,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             ObjectAnimator animX = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "x",
                     tvGamificationNotifPoints.getLeft(), itemX);
 
-            AnimatorSet animXY = new AnimatorSet();
+            animXY = new AnimatorSet();
             animXY.playTogether(animX, animY);
             animXY.setDuration(1200);
 
