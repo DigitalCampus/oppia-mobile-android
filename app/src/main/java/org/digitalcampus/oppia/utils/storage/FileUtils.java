@@ -48,6 +48,9 @@ public class FileUtils {
 	// placed in the destination directory
 	// destination directory should be created first
 	public static boolean unzipFiles(String srcDirectory, String srcFile, String destDirectory) {
+		FileInputStream fis = null;
+		ZipInputStream zis = null;
+
 		try {
 			// first make sure that all the arguments are valid and not null
 			if (srcDirectory == null) {
@@ -85,8 +88,8 @@ public class FileUtils {
 
 			// now start with unzip process
 			BufferedOutputStream dest;
-			FileInputStream fis = new FileInputStream(sourceFile);
-			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
+			fis = new FileInputStream(sourceFile);
+			zis = new ZipInputStream(new BufferedInputStream(fis));
 			ZipEntry entry;
 
 			while ((entry = zis.getNextEntry()) != null) {
@@ -124,14 +127,16 @@ public class FileUtils {
 				}
 			}
 
-			// we are done with all the files
-			// close the zip file
-			zis.close();
-
 		} catch (Exception e) {
 			Mint.logException(e);
 			Log.d(TAG, "Exception:", e);
 			return false;
+		} finally {
+			try {
+				fis.close();
+				zis.close();
+			} catch (Exception e) {
+			}
 		}
 
 		return true;

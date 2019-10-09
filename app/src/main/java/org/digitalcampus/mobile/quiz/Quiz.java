@@ -100,6 +100,8 @@ public class Quiz implements Serializable {
     private String propsSerialized;
     private String defaultLang;
 
+    Random generator = new Random();
+
     public Quiz() {
         this.setInstanceID();
     }
@@ -156,7 +158,6 @@ public class Quiz implements Serializable {
     }
 
     private void generateQuestionSet(JSONArray questionChoices, int randomSelect){
-        Random generator = new Random();
         while(this.questions.size() < randomSelect){
             int randomNum = generator.nextInt(questionChoices.length());
             boolean found = false;

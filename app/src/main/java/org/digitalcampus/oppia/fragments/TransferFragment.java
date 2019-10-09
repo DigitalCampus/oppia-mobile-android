@@ -379,7 +379,7 @@ public class TransferFragment extends AppFragment implements InstallCourseListen
         }
         String[] children = dir.list();
         boolean pending = children != null && children.length > 0;
-        Log.d(TAG, "Activity" + children.length);
+        Log.d(TAG, "Activity. dir list: " + (children != null ? children.length : "null"));
         pendingLogsMessage.setVisibility(
                 ( BluetoothConnectionManager.isConnected() && pending ) ? View.VISIBLE : View.GONE
         );

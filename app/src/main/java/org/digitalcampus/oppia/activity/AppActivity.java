@@ -79,10 +79,10 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializeDagger();
+        initializeDaggerBase();
     }
 
-    private void initializeDagger() {
+    private void initializeDaggerBase() {
         MobileLearning app = (MobileLearning) getApplication();
         app.getComponent().inject(this);
     }

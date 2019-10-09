@@ -244,7 +244,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        Fragment fragment = null;
+        Fragment fragment;
 
         switch (menuItem.getItemId()) {
             case R.id.nav_bottom_home:
@@ -258,6 +258,9 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             case R.id.nav_bottom_points:
                 fragment = MainPointsFragment.newInstance();
                 break;
+
+                default:
+                    throw new IllegalArgumentException("menuItem not valid: " + menuItem.toString());
         }
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, fragment).commit();
