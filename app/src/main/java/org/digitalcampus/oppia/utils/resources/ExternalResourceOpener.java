@@ -15,7 +15,7 @@ import java.io.File;
 
 public class ExternalResourceOpener {
 
-    public static String FILEPROVIDER_AUTHORITY = BuildConfig.APPLICATION_ID  + ".provider";
+    private static final String FILEPROVIDER_AUTHORITY = BuildConfig.APPLICATION_ID  + ".provider";
 
     public static Intent getIntentToOpenResource(Context ctx, File resourceFile){
 

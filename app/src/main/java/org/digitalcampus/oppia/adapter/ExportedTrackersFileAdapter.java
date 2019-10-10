@@ -1,11 +1,12 @@
 package org.digitalcampus.oppia.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
@@ -17,14 +18,13 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
 
     public static final String TAG = ExportedTrackersFileAdapter.class.getSimpleName();
     private List<File> fileList;
-    private final ListInnerBtnOnClickListener listener;
+    private ListInnerBtnOnClickListener listener;
 
-    public static class EtfaViewHolder extends RecyclerView.ViewHolder {
+    public class EtfaViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        TextView fileName;
-        TextView fileSize;
-        ImageButton btnShare;
-        public ListInnerBtnOnClickListener listener;
+        private TextView fileName;
+        private TextView fileSize;
+        private ImageButton btnShare;
 
         public EtfaViewHolder(View v) {
             super(v);
@@ -62,9 +62,7 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
         File current = fileList.get(position);
         holder.fileName.setText(current.getName());
         holder.fileSize.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));
-        if (listener!=null){
-            holder.listener = this.listener;
-        }
+
     }
 
     @Override

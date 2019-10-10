@@ -55,7 +55,7 @@ public class DeviceListActivity extends Activity {
 
     private static final String TAG = "DeviceListActivity";
 
-    public static String EXTRA_DEVICE_ADDRESS = "device_address";
+    public static final String EXTRA_DEVICE_ADDRESS = "device_address";
     private static final List<String> BLUETOOTH_PERMISSIONS = Arrays.asList(
             //Remember to update this when the Manifest permissions change!
             Manifest.permission.ACCESS_COARSE_LOCATION,

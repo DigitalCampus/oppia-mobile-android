@@ -15,10 +15,10 @@ public class JSInterfaceForResourceImages {
     private static final String TAG = JSInterfaceForResourceImages.class.getSimpleName();
 
     //Name of the JS interface to add to the webView
-    public static String InterfaceExposedName = "OppiaAndroid";
+    public static final String InterfaceExposedName = "OppiaAndroid";
 
     //Script to inject in the webView after load
-    public static String JSInjection = "javascript: (function(){var imgs = document.querySelectorAll('img'); Array.prototype.forEach.call(imgs, function(img, i){if (img.parentNode.nodeName.toLowerCase()!=='a'){img.addEventListener('click', function(){"+InterfaceExposedName+".openFile(img.getAttribute('src'));});}});})();";
+    public static final String JSInjection = "javascript: (function(){var imgs = document.querySelectorAll('img'); Array.prototype.forEach.call(imgs, function(img, i){if (img.parentNode.nodeName.toLowerCase()!=='a'){img.addEventListener('click', function(){"+InterfaceExposedName+".openFile(img.getAttribute('src'));});}});})();";
     Context _ctx;
     String resourcesLocation;
 

@@ -74,8 +74,8 @@ public class FeedbackWidget extends WidgetFactory {
 	private ViewGroup container;
 	private Quiz feedback;
 	private String feedbackContent;
-	public Button prevBtn;
-	public Button nextBtn;
+	private Button prevBtn;
+	private Button nextBtn;
 	private TextView qText;
 	private LinearLayout questionImage;
 	private boolean isOnResultsPage = false;

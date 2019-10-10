@@ -58,10 +58,10 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 	}
 
     static class SearchResultsViewHolder{
-        TextView activityTitle;
-        TextView sectionTitle;
-        TextView courseTitle;
-        ImageView activityImage;
+        private TextView activityTitle;
+        private TextView sectionTitle;
+        private TextView courseTitle;
+        private ImageView activityImage;
     }
 
 	@Override

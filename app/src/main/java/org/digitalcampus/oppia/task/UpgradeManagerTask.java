@@ -17,10 +17,17 @@
 
 package org.digitalcampus.oppia.task;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import androidx.core.content.ContextCompat;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -43,20 +50,15 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import androidx.core.content.ContextCompat;
-import android.util.Log;
-
-import com.splunk.mint.Mint;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
 	public static final String TAG = UpgradeManagerTask.class.getSimpleName();
+
 	private Context ctx;
 	private SharedPreferences prefs;
 	private UpgradeListener mUpgradeListener;
@@ -410,9 +412,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	}
 	
 	private class v54UpgradeQuizObj{
-		public int id;
-		public String digest;
-		public int threshold;
+		private int id;
+		private String digest;
+		private int threshold;
 	}
 	
 	protected void upgradeV54a(){

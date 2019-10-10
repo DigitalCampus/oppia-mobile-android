@@ -114,7 +114,7 @@ public class CourseInstall {
             ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
         } catch (InvalidXMLException e) {
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
-            listener.onError(e.getMessage());
+            listener.onError("Error: " + e.getMessage());
             return;
         }
 

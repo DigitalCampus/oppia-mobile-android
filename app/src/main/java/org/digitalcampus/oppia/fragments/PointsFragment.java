@@ -163,7 +163,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
         currentDatesRangePosition = position;
 
-        DateTime initialDateTime = new DateTime();
+        DateTime initialDateTime;
         DateTime initialNowAtEndOfDay = new DateTime();
         initialNowAtEndOfDay.withHourOfDay(23);
         initialNowAtEndOfDay.withMinuteOfHour(59);
@@ -182,7 +182,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 break;
 
             default:
-                throw new IllegalStateException("Tab position invalid");
+                throw new IllegalStateException("Tab position invalid: " + currentDatesRangePosition);
         }
 
         pointsFiltered.clear();
@@ -245,7 +245,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 try {
                     return labels.get((int) value);
                 } catch (IndexOutOfBoundsException e) {
-                    Log.i(TAG, "getFormattedValue: exception. value: " + (int)value);
+                    Log.i(TAG, "getFormattedValue: exception. value: " + (int) value);
                     return "MAL";
                 }
 //                return String.valueOf(value);
@@ -266,7 +266,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
         GradientDrawable gd = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[] {colorStartAlpha, colorEndAlpha});
+                new int[]{colorStartAlpha, colorEndAlpha});
         gd.setCornerRadius(0f);
 
         return gd;
@@ -285,7 +285,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         calendarNow.set(Calendar.MINUTE, 59);
         calendarNow.set(Calendar.SECOND, 59);
 
-        DateTimeFormatter datetimeFormatter = null;
+        DateTimeFormatter datetimeFormatter;
 
         switch (currentDatesRangePosition) {
             case POSITION_TAB_LAST_WEEK:
@@ -318,6 +318,9 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 }
 
                 break;
+
+            default:
+                throw new IllegalArgumentException("currentDatesRangePosition not valid: " + currentDatesRangePosition);
         }
 
         for (Points point : pointsFiltered) {

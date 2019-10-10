@@ -69,14 +69,14 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         viewHolder.courseTitle.setText(c.getTitle(lang));
         String description = c.getDescription(lang);
-        if (!TextUtils.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)){
+        if (!TextUtils.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)) {
             viewHolder.courseDescription.setText(description);
             viewHolder.courseDescription.setVisibility(View.VISIBLE);
         } else {
             viewHolder.courseDescription.setVisibility(View.GONE);
         }
 
-        if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)){
+        if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)) {
             int courseProgress = (int) c.getProgressPercent();
             viewHolder.circularProgressBar.setVisibility(View.VISIBLE);
             viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000l);
@@ -85,14 +85,13 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         }
 
         // set image
-        if(c.getImageFile() != null){
+        if (c.getImageFile() != null) {
             String image = c.getImageFileFromRoot();
             Picasso.get().load(new File(image))
                     .placeholder(R.drawable.default_course)
                     .transform(new CircleTransform())
                     .into(viewHolder.courseImage);
-        }
-        else{
+        } else {
             viewHolder.courseImage.setImageResource(R.drawable.default_course);
         }
 
@@ -110,17 +109,17 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
-            CircularProgressBar circularProgressBar;
-        TextView courseTitle;
-        TextView courseDescription;
-        ImageView courseImage;
-        
+        private View rootView;
+        private CircularProgressBar circularProgressBar;
+        private TextView courseTitle;
+        private TextView courseDescription;
+        private ImageView courseImage;
+
 
         public ViewHolder(View itemView) {
 
             super(itemView);
-            
+
             courseTitle = itemView.findViewById(R.id.course_title);
             courseDescription = itemView.findViewById(R.id.course_description);
             courseImage = itemView.findViewById(R.id.course_image);
@@ -136,7 +135,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
                     }
                 }
             });
-            
+
             rootView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -147,12 +146,12 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
                 }
             });
 
-                
+
         }
 
     }
 
-    private void createDialog(){
+    private void createDialog() {
         contextMenuDialog = new Dialog(context);
         contextMenuDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -172,7 +171,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         });
     }
 
-    private void registerMenuClick(final int id){
+    private void registerMenuClick(final int id) {
         contextMenuDialog.findViewById(id).setOnClickListener(new View.OnClickListener() {
             //@Override
             public void onClick(View view) {

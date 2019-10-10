@@ -23,8 +23,6 @@ import okhttp3.Response;
 
 public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Object, Payload> {
 
-    public static final String TAG = UpdateLeaderboardFromServerTask.class.getSimpleName();
-
     private SubmitListener listener;
     public UpdateLeaderboardFromServerTask(Context ctx) {
         super(ctx);

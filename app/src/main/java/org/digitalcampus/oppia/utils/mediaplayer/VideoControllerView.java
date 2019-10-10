@@ -36,11 +36,11 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import org.digitalcampus.mobile.learning.R;
+
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
 import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
 
 
 /**
@@ -671,7 +671,7 @@ public class VideoControllerView extends FrameLayout {
                     pos = view.setProgress();
                     if (!view.mDragging && view.mShowing && view.mPlayer.isPlaying()) {
                         msg = obtainMessage(SHOW_PROGRESS);
-                        sendMessageDelayed(msg, 1000 - (pos % 1000));
+                        sendMessageDelayed(msg, 1000l - ((long)pos % 1000l));
                     }
                     break;
             }
