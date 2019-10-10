@@ -93,13 +93,13 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
         } catch (IOException e) {
             result.put("result", "error");
             result.put(ERROR_MESSAGE, e.getMessage());
-            e.printStackTrace();
+            Log.e(TAG, "doInBackground: ", e);
             return result;
 
         } catch (JSONException e) {
             result.put("result", "error");
             result.put(ERROR_MESSAGE, ctx.getString(R.string.error_processing_response));
-            e.printStackTrace();
+            Log.e(TAG, "doInBackground: ", e);
         }
 
         if (!validServer){

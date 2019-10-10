@@ -1,13 +1,14 @@
 package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.LeaderboardPosition;
@@ -24,11 +25,11 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     private int normalTextColor;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView points;
-        TextView pos;
-        TextView username;
-        TextView fullname;
-        CardView userCard;
+        private TextView points;
+        private TextView pos;
+        private TextView username;
+        private TextView fullname;
+        private CardView userCard;
 
 
         ViewHolder(View v) {

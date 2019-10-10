@@ -41,8 +41,6 @@ import okhttp3.Response;
 
 public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
 
-	public static final String TAG = ResetTask.class.getSimpleName();
-
 	private SubmitListener mStateListener;
 
     public ResetTask(Context ctx) { super(ctx); }

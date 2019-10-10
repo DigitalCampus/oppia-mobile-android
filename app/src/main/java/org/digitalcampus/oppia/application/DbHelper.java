@@ -153,8 +153,8 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_USERNAME = "username";
 	private static final String USER_C_FIRSTNAME = "firstname";
 	private static final String USER_C_LASTNAME = "lastname";
-	private static final String USER_C_PASSWORDENCRYPTED = "passwordencrypted";
-	private static final String USER_C_PASSWORDPLAIN = "passwordplain";
+	private static final String USER_C_PASSWORDENCRYPTED = "passwordencrypted"; //NOSONAR
+	private static final String USER_C_PASSWORDPLAIN = "passwordplain"; //NOSONAR
 	private static final String USER_C_APIKEY = "apikey";
 	private static final String USER_C_LAST_LOGIN_DATE = "lastlogin";
 	private static final String USER_C_NO_LOGINS = "nologins";

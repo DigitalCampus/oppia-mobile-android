@@ -44,8 +44,6 @@ import okhttp3.Response;
 
 public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payload> {
 
-	public final static String TAG = SubmitQuizAttemptsTask.class.getSimpleName();
-
 	public SubmitQuizAttemptsTask(Context ctx) { super(ctx); }
 	public SubmitQuizAttemptsTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 

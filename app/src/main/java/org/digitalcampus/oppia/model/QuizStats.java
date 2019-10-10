@@ -30,7 +30,7 @@ public class QuizStats {
     private int quizId;
     private String digest;
     private int numAttempts;
-    public boolean attempted;
+    private boolean attempted;
     private float maxScore = -1;
     private float userScore = -1;
     private boolean passed;

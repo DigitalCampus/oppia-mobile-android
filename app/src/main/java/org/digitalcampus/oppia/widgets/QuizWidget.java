@@ -26,7 +26,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +40,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.splunk.mint.Mint;
 
@@ -91,9 +92,9 @@ public class QuizWidget extends WidgetFactory {
 	private static final int PROGRESS_ANIM_DURATION = 600;
 	private Quiz quiz;
 	private QuestionWidget qw;
-	public Button prevBtn;
-	public Button nextBtn;
-	public ImageView playAudioBtn;
+	private Button prevBtn;
+	private Button nextBtn;
+	private ImageView playAudioBtn;
 	private TextView qText;
 	private String quizContent;
 	private LinearLayout questionImage;

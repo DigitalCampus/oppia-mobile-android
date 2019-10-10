@@ -68,7 +68,7 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 
-    public static final String TAG = AppActivity.class.getSimpleName();
+    protected final String TAG = this.getClass().getSimpleName();
 
     GamificationBroadcastReceiver gamificationReceiver;
     private Menu optionsMenu;
@@ -382,7 +382,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     private void waitAndClose(final Snackbar snackbar) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int durationViewPoints = Integer.parseInt(prefs.getString(PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW,
                 String.valueOf(Gamification.DURATION_GAMIFICATION_POINTS_VIEW)));
 

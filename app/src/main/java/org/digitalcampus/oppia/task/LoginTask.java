@@ -45,8 +45,6 @@ import okhttp3.Response;
 
 public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 
-	public static final String TAG = LoginTask.class.getSimpleName();
-
 	private SubmitListener mStateListener;
 
 

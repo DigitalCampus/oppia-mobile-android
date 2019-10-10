@@ -22,7 +22,7 @@ import okhttp3.Request;
 
 public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
-    public static final String TAG = APIRequestTask.class.getSimpleName();
+    public final String TAG = this.getClass().getSimpleName();
 
     private APIRequestFinishListener listener;
 

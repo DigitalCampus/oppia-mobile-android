@@ -41,8 +41,8 @@ public class MultiLangInfoModel implements Serializable {
     private ArrayList<Lang> titles = new ArrayList<>();
     private ArrayList<Lang> descriptions = new ArrayList<>();
 
-    public static String DEFAULT_NOTITLE = "No title set";
-    public static String DEFAULT_NODESCRIPTION = "No description set";
+    public static final String DEFAULT_NOTITLE = "No title set";
+    public static final String DEFAULT_NODESCRIPTION = "No description set";
 
     public String getTitle(String lang) {
         String title = getInfo(lang, titles);

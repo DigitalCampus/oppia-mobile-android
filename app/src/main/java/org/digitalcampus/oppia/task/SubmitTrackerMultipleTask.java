@@ -53,7 +53,6 @@ import okhttp3.Response;
 
 public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, Payload> {
 
-    public final static String TAG = SubmitTrackerMultipleTask.class.getSimpleName();
 
     private final static String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
 
