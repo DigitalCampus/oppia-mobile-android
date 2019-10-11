@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    
     <!-- Main color for actionBar, buttons, etc -->
-    <color name="theme_primary">#74b042</color>
-    <color name="theme_primary_dark">#597725</color>
+    <color name="theme_primary">#6F79EA</color>
+    <color name="theme_primary_dark">#5A60BE</color>
 
     <!-- Secondary color: input tint, tab selector, scorecard color, etc -->
-    <color name="theme_secondary">#689e3a</color>
-    <color name="theme_secondary_light">#9aca3c</color>
+    <color name="theme_secondary">#8E90C5</color>
+    <color name="theme_secondary_light">#C5C9F7</color>
 
     <!-- Color used for dropdown menus, it is "theme_secondary_light" with transparency -->
-    <color name="theme_secondary_semi_transparent">#cc9aca3c</color>
+    <color name="theme_secondary_semi_transparent">#ccC5C9F7</color>
 
     <!-- Color used for highlight dark text and points badge -->
-    <color name="theme_dark">#495525</color>
+    <color name="theme_dark">#413E6F</color>
 
     <!-- Tab color theme -->
     <color name="tab_bg_color">#e0dde2</color>

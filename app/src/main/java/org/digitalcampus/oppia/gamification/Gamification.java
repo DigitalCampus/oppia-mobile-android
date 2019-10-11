@@ -54,7 +54,7 @@ public class Gamification {
     public static final GamificationEvent GAMIFICATION_MEDIA_PLAYING_INTERVAL =  new GamificationEvent(EVENT_NAME_MEDIA_PLAYING_INTERVAL,30);
     public static final GamificationEvent GAMIFICATION_MEDIA_PLAYING_POINTS_PER_INTERVAL =  new GamificationEvent(EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL,10);
     public static final GamificationEvent GAMIFICATION_MEDIA_MAX_POINTS =  new GamificationEvent(EVENT_NAME_MEDIA_MAX_POINTS,200);
-    public static final GamificationEvent GAMIFICATION_COURSE_DOWNLOADED =  new GamificationEvent(EVENT_NAME_COURSE_DOWNLOADED,50);
+    public static final GamificationEvent GAMIFICATION_COURSE_DOWNLOADED =  new GamificationEvent(EVENT_NAME_COURSE_DOWNLOADED,750);
     public static final GamificationEvent GAMIFICATION_SEARCH_PERFORMED =  new GamificationEvent(EVENT_NAME_SEARCH_PERFORMED,0);
     public static final GamificationEvent GAMIFICATION_MEDIA_MISSING =  new GamificationEvent(EVENT_NAME_MEDIA_MISSING,0);
     public static final GamificationEvent GAMIFICATION_MEDIA_THRESHOLD_PASSED =  new GamificationEvent(EVENT_NAME_MEDIA_THRESHOLD_PASSED,150);

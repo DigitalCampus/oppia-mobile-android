@@ -24,6 +24,7 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
     </style>
 
     <style name="PrimaryButton" parent="Widget.AppCompat.Button.Colored">
