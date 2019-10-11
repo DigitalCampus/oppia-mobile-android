@@ -17,11 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Badges;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -29,6 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.model.Badges;
+
+import java.util.ArrayList;
 
 public class BadgesListAdapter extends ArrayAdapter<Badges>{
 
@@ -44,8 +44,8 @@ public class BadgesListAdapter extends ArrayAdapter<Badges>{
 	}
 
     static class BadgeViewHolder{
-        TextView badgeDescription;
-        TextView badgeDate;
+        private TextView badgeDescription;
+        private TextView badgeDate;
     }
 
 	@Override

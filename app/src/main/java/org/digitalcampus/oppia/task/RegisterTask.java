@@ -44,7 +44,6 @@ import okhttp3.Response;
 
 public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
 
-	public static final String TAG = RegisterTask.class.getSimpleName();
 	private static final String SUBMIT_ERROR = "submit_error";
 
 	private RegisterListener mStateListener;

@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.activity;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -39,6 +38,7 @@ import android.view.animation.AnticipateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -61,15 +61,31 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 
-    public final String TAG = this.getClass().getSimpleName();
+    protected final String TAG = this.getClass().getSimpleName();
 
     GamificationBroadcastReceiver gamificationReceiver;
     private Menu optionsMenu;
+
+    @Inject
+    SharedPreferences prefs;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initializeDaggerBase();
+    }
+
+    private void initializeDaggerBase() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -85,7 +101,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     public SharedPreferences getPrefs() {
-        return PreferenceManager.getDefaultSharedPreferences(this);
+        return prefs;
     }
 
     @Override
@@ -118,7 +134,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             //If we are in a course-related activity, we show its title
             if (overrideTitle) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 Bundle bundle = this.getIntent().getExtras();
                 if (bundle != null) {
                     Course course = (Course) bundle.getSerializable(Course.TAG);
@@ -218,12 +233,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
         if (notifEnabled) {
 
-            if (true) {
-                updatePoints(points);
-                return;
-            }
-            // Probably we will redesign this cool animation with new Points location, lets keep it.
-
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
             Snackbar snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE);
@@ -280,10 +289,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             snackbar.show();
 
         }
-    }
-
-    public void updatePoints(int points) {
-        // Let subclass to extend this
     }
 
 
@@ -377,7 +382,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     private void waitAndClose(final Snackbar snackbar) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int durationViewPoints = Integer.parseInt(prefs.getString(PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW,
                 String.valueOf(Gamification.DURATION_GAMIFICATION_POINTS_VIEW)));
 

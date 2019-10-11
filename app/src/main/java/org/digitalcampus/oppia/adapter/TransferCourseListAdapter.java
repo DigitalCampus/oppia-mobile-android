@@ -1,13 +1,14 @@
 package org.digitalcampus.oppia.adapter;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
@@ -22,15 +23,13 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
     private ArrayList<CourseTransferableFile> courseFiles = new ArrayList<>();
     private final ListInnerBtnOnClickListener listener;
 
-    public static class TclaViewHolder extends RecyclerView.ViewHolder {
+    public class TclaViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        TextView courseTitle;
-        TextView courseFilesize;
-        TextView courseDescription;
-        ImageButton actionBtn;
-        ImageView icon;
-
-        public ListInnerBtnOnClickListener listener;
+        private TextView courseTitle;
+        private TextView courseFilesize;
+        private TextView courseDescription;
+        private ImageButton actionBtn;
+        private ImageView icon;
 
         public TclaViewHolder(View v) {
             super(v);
@@ -112,9 +111,7 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
                         R.drawable.ic_notification : R.drawable.default_icon_video);
 
         holder.courseFilesize.setText( current.getDisplayFileSize() );
-        if (listener!=null){
-            holder.listener = this.listener;
-        }
+
     }
 
     @Override

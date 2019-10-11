@@ -114,4 +114,9 @@ public class CourseTransferableFile implements Serializable {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return filename != null ? filename.hashCode() : 0;
+    }
 }

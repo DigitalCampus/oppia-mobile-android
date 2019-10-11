@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.widgets.quiz;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;

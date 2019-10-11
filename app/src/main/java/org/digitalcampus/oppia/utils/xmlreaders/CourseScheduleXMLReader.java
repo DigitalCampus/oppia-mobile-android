@@ -17,15 +17,6 @@
 
 package org.digitalcampus.oppia.utils.xmlreaders;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.ActivitySchedule;
@@ -37,6 +28,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
+
 public class CourseScheduleXMLReader {
 
 	public static final String TAG = CourseScheduleXMLReader.class.getSimpleName();
@@ -45,10 +44,8 @@ public class CourseScheduleXMLReader {
 	public CourseScheduleXMLReader(File courseXML) throws InvalidXMLException {
 		if (courseXML.exists()) {
 
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder;
 			try {
-				builder = factory.newDocumentBuilder();
+				DocumentBuilder builder = XMLSecurityHelper.getNewSecureDocumentBuilder();
 				document = builder.parse(courseXML);
 			} catch (ParserConfigurationException e) {
 				throw new InvalidXMLException(e);
@@ -61,11 +58,10 @@ public class CourseScheduleXMLReader {
 	}
 
 	public CourseScheduleXMLReader(String xmlContent) throws InvalidXMLException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
+
 
 		try {
-			builder = factory.newDocumentBuilder();
+			DocumentBuilder builder = XMLSecurityHelper.getNewSecureDocumentBuilder();
 			InputSource is = new InputSource(new StringReader(xmlContent));
 			document = builder.parse(is);
 		} catch (ParserConfigurationException e) {

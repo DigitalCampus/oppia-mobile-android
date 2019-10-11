@@ -55,8 +55,6 @@ import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
 	
@@ -91,10 +89,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_HIGHLIGHT_COMPLETED = "prefHighlightCompleted";
 	public static final String PREF_TEXT_SIZE = "prefTextSize";
 
-    public static final List<String> USER_STRING_PREFS =  Arrays.asList(
-        PREF_PHONE_NO, PREF_LANGUAGE, PREF_NO_SCHEDULE_REMINDERS, PREF_TEXT_SIZE);
-    public static final List<String> USER_BOOLEAN_PREFS = Arrays.asList(
-        PREF_SHOW_SCHEDULE_REMINDERS,  PREF_SHOW_COURSE_DESC, PREF_SHOW_PROGRESS_BAR, PREF_SHOW_SECTION_NOS, PREF_HIGHLIGHT_COMPLETED );
+    public static final String PREF_DISABLE_NOTIFICATIONS = "prefDisableNotifications";
+    public static final String PREF_SHOW_GAMIFICATION_EVENTS = "prefShowGamificationEvents";
+    public static final String PREF_GAMIFICATION_POINTS_ANIMATION = "prefGamificationPointsAnimation";
+    public static final String PREF_DURATION_GAMIFICATION_POINTS_VIEW = "prefDurationGamificationPointsView";
+
 	/*
 	 * End personal prefs
 	 */
@@ -104,10 +103,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_CHANGE_LANGUAGE_ENABLED = "prefChangeLanguageEnabled";
 	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
-    public static final String PREF_DISABLE_NOTIFICATIONS = "prefDisableNotifications";
-    public static final String PREF_SHOW_GAMIFICATION_EVENTS = "prefShowGamificationEvents";
-    public static final String PREF_GAMIFICATION_POINTS_ANIMATION = "prefGamificationPointsAnimation";
-    public static final String PREF_DURATION_GAMIFICATION_POINTS_VIEW = "prefDurationGamificationPointsView";
 
     public static final String PREF_LAST_LEADERBOARD_FETCH = "prefLastLeaderboardFetch";
 
@@ -117,7 +112,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String STORAGE_NEEDS_PERMISSIONS = "storageNeedsPermissions";
 
     public static final String PREF_ADMIN_PROTECTION = "prefAdminProtection";
-    public static final String PREF_ADMIN_PASSWORD = "prefAdminPassword";
+    public static final String PREF_ADMIN_PASSWORD = "prefAdminPassword"; //NOSONAR
     public static final String LAST_ACTIVE_TIME = "prefLastActiveTime";
 
     //Google Cloud Messaging preferences

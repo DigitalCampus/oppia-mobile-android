@@ -222,7 +222,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         calendarNow.set(Calendar.MINUTE, 59);
         calendarNow.set(Calendar.SECOND, 59);
 
-        DateTimeFormatter datetimeFormatter = null;
+        DateTimeFormatter datetimeFormatter;
 
         switch (currentDatesRangePosition) {
             case POSITION_TAB_LAST_WEEK:
@@ -255,6 +255,9 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
                 }
 
                 break;
+
+                default:
+                    throw new IllegalArgumentException("currentDatesRangePosition not valid: " + currentDatesRangePosition);
         }
 
         for (Points point : pointsFiltered) {

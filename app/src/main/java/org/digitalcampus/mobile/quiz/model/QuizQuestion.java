@@ -38,8 +38,8 @@ public class QuizQuestion implements Serializable {
 
     protected int id;
     protected float userscore = 0;
-    protected Map<String, String> title = new HashMap<>();
-    protected Map<String, String> props = new HashMap<>();
+    private Map<String, String> title = new HashMap<>();
+    private Map<String, String> props = new HashMap<>();
     protected boolean feedbackDisplayed = false;
     protected List<Response> responseOptions = new ArrayList<>();
     protected List<String> userResponses = new ArrayList<>();
@@ -62,10 +62,6 @@ public class QuizQuestion implements Serializable {
 
     public List<String> getUserResponses() {
         return this.userResponses;
-    }
-
-    public void setResponseOptions(List<Response> responses) {
-        this.responseOptions = responses;
     }
 
     public void mark(String lang) {
@@ -124,6 +120,10 @@ public class QuizQuestion implements Serializable {
         this.props = props;
     }
 
+    public Map<String, String> getProps() {
+        return this.props;
+    }
+
     public String getProp(String key) {
         return props.get(key);
     }
@@ -150,7 +150,7 @@ public class QuizQuestion implements Serializable {
     }
 
     public boolean responseExpected() {
-        if (this.props.containsKey(Quiz.JSON_PROPERTY_REQUIRED)) {
+        if (props.containsKey(Quiz.JSON_PROPERTY_REQUIRED)) {
             return Boolean.parseBoolean(this.getProp(Quiz.JSON_PROPERTY_REQUIRED));
         }
         return true;

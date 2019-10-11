@@ -26,8 +26,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.core.app.NotificationCompat;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
@@ -44,11 +45,11 @@ public class AdminGCMListener extends GcmListenerService {
     private static final int NOTIFICATION_ID = 100;
     private static final String MESSAGE_TYPE = "type";
     private static final String MESSAGE_ACTION = "action";
-    private static final String MESSAGE_PASSWORD = "password";
+    private static final String MESSAGE_PASSWORD = "password"; //NOSONAR
     private static final String TYPE_ADMIN = "admin";
     private static final String ACTION_DISABLE_CAMERA = "disable_camera";
     private static final String ACTION_ENABLE_CAMERA = "enable_camera";
-    private static final String ACTION_PASSWORD_LOCK = "password_lock";
+    private static final String ACTION_PASSWORD_LOCK = "password_lock"; //NOSONAR
     private static final String BUILD_FLAVOUR_ADMIN = "admin";
 
     @Override

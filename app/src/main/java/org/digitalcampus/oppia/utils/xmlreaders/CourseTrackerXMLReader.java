@@ -19,15 +19,6 @@ package org.digitalcampus.oppia.utils.xmlreaders;
 
 import android.util.Log;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.gamification.Gamification;
@@ -39,6 +30,14 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class CourseTrackerXMLReader {
 	
@@ -60,10 +59,8 @@ public class CourseTrackerXMLReader {
 	public CourseTrackerXMLReader(File courseXML) throws InvalidXMLException {
 		if (courseXML.exists()) {
 
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder;
 			try {
-				builder = factory.newDocumentBuilder();
+				DocumentBuilder builder = XMLSecurityHelper.getNewSecureDocumentBuilder();
 				document = builder.parse(courseXML);
 			} catch (ParserConfigurationException e) {
 				throw new InvalidXMLException(e);
@@ -76,11 +73,9 @@ public class CourseTrackerXMLReader {
 	}
 
 	public CourseTrackerXMLReader(String xmlContent) throws InvalidXMLException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
 
 		try {
-			builder = factory.newDocumentBuilder();
+			DocumentBuilder builder = XMLSecurityHelper.getNewSecureDocumentBuilder();
 			InputSource is = new InputSource(new StringReader(xmlContent));
 			document = builder.parse(is);
 		} catch (ParserConfigurationException e) {

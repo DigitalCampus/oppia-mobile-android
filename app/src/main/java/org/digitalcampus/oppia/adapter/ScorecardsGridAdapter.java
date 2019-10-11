@@ -78,11 +78,11 @@ public class ScorecardsGridAdapter extends RecyclerView.Adapter<ScorecardsGridAd
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
-        TextView courseTitle;
-        TextView activitiesCompleted;
-        TextView activitiesTotal;
-        CircularProgressBar circularProgressBar;
+        private View rootView;
+        private TextView courseTitle;
+        private TextView activitiesCompleted;
+        private TextView activitiesTotal;
+        private CircularProgressBar circularProgressBar;
 
         public ViewHolder(final View itemView) {
 

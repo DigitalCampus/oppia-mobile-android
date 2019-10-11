@@ -22,7 +22,6 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 
 import org.digitalcampus.mobile.quiz.Quiz;

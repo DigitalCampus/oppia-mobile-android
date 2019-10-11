@@ -47,11 +47,11 @@ public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
 	}
 
     static class QuizFeedbackViewHolder{
-        TextView quizQuestion;
-        TextView quizUserResponse;
-        TextView quizFeedbackTitle;
-        TextView quizFeedbackText;
-        ImageView quizFeedbackIcon;
+        private TextView quizQuestion;
+        private TextView quizUserResponse;
+        private TextView quizFeedbackTitle;
+        private TextView quizFeedbackText;
+        private ImageView quizFeedbackIcon;
     }
 	
 	@Override

@@ -4,12 +4,13 @@ package org.digitalcampus.oppia.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.ActivityType;
@@ -78,7 +79,7 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
 
         private final TextView tvActivityType;
         private final AppCompatImageButton imgShowHide;
-        public View rootView;
+        private View rootView;
 
         public ViewHolder(View itemView) {
 

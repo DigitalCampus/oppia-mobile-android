@@ -24,14 +24,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.Tag;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -49,10 +45,10 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 	}
 
     static class TagViewHolder{
-        TextView tagName;
-        TextView tagDescription;
-        TextView tagCount;
-        //ImageView tagIcon;
+		private TextView tagName;
+		private TextView tagDescription;
+		private TextView tagCount;
+        //private ImageView tagIcon;
     }
 
 	@Override

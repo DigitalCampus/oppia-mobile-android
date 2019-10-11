@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +39,6 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AboutActivity;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.activity.SyncActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
@@ -124,7 +122,7 @@ public class DrawerMenuManager {
             }
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(drawerAct);
+        SharedPreferences prefs = drawerAct.getPrefs();
         itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS);
         itemCourseDownload.setVisible(prefs.getBoolean(PrefsActivity.PREF_DOWNLOAD_ENABLED, MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD));
         itemLanguageDialog.setVisible(customOptions.containsKey(R.id.menu_language) && prefs.getBoolean(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED, MobileLearning.MENU_ALLOW_LANGUAGE));
@@ -154,8 +152,8 @@ public class DrawerMenuManager {
                     launchIntentForActivity(TagSelectActivity.class);
                 } else if (itemId == R.id.menu_about) {
                     launchIntentForActivity(AboutActivity.class);
-                } else if (itemId == R.id.menu_scorecard) {
-                    launchIntentForActivity(ScorecardActivity.class);
+//                } else if (itemId == R.id.menu_scorecard) {
+//                    launchIntentForActivity(ScorecardActivity.class);
 //                } else if (itemId == R.id.menu_search) {
 //                    launchIntentForActivity(SearchActivity.class);
                 } else if (itemId == R.id.menu_settings) {
