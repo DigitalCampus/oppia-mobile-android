@@ -53,7 +53,7 @@ import java.util.concurrent.Callable;
 
 public class UIUtils {
 
-    public final static String TAG = UIUtils.class.getSimpleName();
+    public static final String TAG = UIUtils.class.getSimpleName();
     private static int pointsToSubstractForAnimationSaved;
 
     /**

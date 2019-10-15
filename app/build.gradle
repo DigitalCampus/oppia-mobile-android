@@ -5,24 +5,24 @@ plugins {
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "com.medium.androidCodeCoverage"
-        property "sonar.projectName", "Android-MediumCodeCoverage"
+        property "sonar.projectKey", "org.digitalcampus.mobile.learning"
+        property "sonar.projectName", "Oppia-Android"
         property "sonar.projectVersion", "1.0"
         property "sonar.exclusions", "robospice/**/*"
-        property "sonar.host.url", "http://192.168.0.1:9000" // TODO: - Setup your Sonarqube server address
+        property "sonar.host.url", "https://sonarcloud.io" // TODO: - Setup your Sonarqube server address
 
         property "sonar.sources", "src/main/java"
-        property "sonar.binaries", "build/intermediates/classes/debug"
-        property "sonar.java.binaries", "build/intermediates/classes/debug"
+        property "sonar.binaries", "build/intermediates/app_classes/normalDebug"
+        property "sonar.java.binaries", "build/intermediates/app_classes/normalDebug"
         property "sonar.tests", "src/test/java, src/androidTest/java"
-        property "sonar.java.test.binaries", "build/intermediates/classes/debug"
+        property "sonar.java.test.binaries", "build/intermediates/app_classes/normalDebug"
 
         def unit = fileTree(dir: project.projectDir, includes: ['**/*.exec']).files;
         def ui = fileTree(dir: project.projectDir, includes: ['**/*.ec']).files;
         unit.addAll(ui);
         def files = unit.join(", ");
 
-        property "sonar.jacoco.reportPaths", files
+        property "sonar.coverage.jacoco.xmlReportPaths", files
         property "sonar.java.coveragePlugin", "jacoco-android"
         property "sonar.junit.reportsPath", "build/test-results/testDebugUnitTest"
         property "sonar.android.lint.report", "build/reports/lint-results.xml"
@@ -177,6 +177,7 @@ jacocoAndroidUnitTestReport {
     csv.enabled false
     html.enabled true
     xml.enabled true
+
 }
 
 dependencies {

@@ -6,7 +6,7 @@ import android.net.NetworkInfo;
 
 public class ConnectionUtils {
 
-	public final static String TAG = ConnectionUtils.class.getSimpleName();
+	public static final String TAG = ConnectionUtils.class.getSimpleName();
 
 	public static boolean isOnWifi(Context ctx) {
 		ConnectivityManager conMan = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);

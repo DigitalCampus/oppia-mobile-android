@@ -27,7 +27,7 @@ public class CourseMetaPage implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -1597711519611488890L;
-	public final static String TAG = CourseMetaPage.class.getSimpleName();
+	public static final String TAG = CourseMetaPage.class.getSimpleName();
 	private int id;
 	private ArrayList<Lang> langs = new ArrayList<>();
 	
