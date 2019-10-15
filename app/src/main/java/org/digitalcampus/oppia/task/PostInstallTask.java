@@ -33,7 +33,7 @@ import android.util.Log;
 
 public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
-	public final static String TAG = PostInstallTask.class.getSimpleName();
+	public static final String TAG = PostInstallTask.class.getSimpleName();
 	private Context ctx;
 	private PostInstallListener mStateListener;
 	

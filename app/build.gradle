@@ -1,9 +1,36 @@
+
 plugins {
-    id "org.sonarqube" version "2.6.1"
+    id "org.sonarqube" version "2.8"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "org.digitalcampus.mobile.learning"
+        property "sonar.projectName", "Oppia-Android"
+        property "sonar.projectVersion", "1.0"
+        property "sonar.exclusions", "robospice/**/*"
+        property "sonar.host.url", "https://sonarcloud.io" // TODO: - Setup your Sonarqube server address
+
+        property "sonar.sources", "src/main/java"
+        property "sonar.binaries", "build/intermediates/app_classes/normalDebug"
+        property "sonar.java.binaries", "build/intermediates/app_classes/normalDebug"
+        property "sonar.tests", "src/test/java, src/androidTest/java"
+        property "sonar.java.test.binaries", "build/intermediates/app_classes/normalDebug"
+
+        def unit = fileTree(dir: project.projectDir, includes: ['**/*.exec']).files;
+        def ui = fileTree(dir: project.projectDir, includes: ['**/*.ec']).files;
+        unit.addAll(ui);
+        def files = unit.join(", ");
+
+        property "sonar.coverage.jacoco.xmlReportPaths", files
+        property "sonar.java.coveragePlugin", "jacoco-android"
+        property "sonar.junit.reportsPath", "build/test-results/testDebugUnitTest"
+        property "sonar.android.lint.report", "build/reports/lint-results.xml"
+    }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
+apply plugin: 'jacoco-android'
 //apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: "org.sonarqube"
 
@@ -119,6 +146,11 @@ android {
         unitTests.includeAndroidResources = true
         animationsDisabled = true
 
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
     }
 
 
@@ -135,6 +167,18 @@ android {
 
 }
 
+// Setup Jacoco version. It's recomended way to exclude conflicts beetwen components
+jacoco {
+    toolVersion = "0.8.3"
+}
+
+// Setup jacoco report format. We need xml for Sonarqube
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled true
+    xml.enabled true
+
+}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -227,4 +271,45 @@ tasks.whenTaskAdded { task ->
             task.name.startsWith('assembleAndroidTest')) {
         task.dependsOn grantPermissions
     }
+}
+
+// Test coverage tasks
+def androidExclusion = [
+        '**/databinding/**/*.*',
+        '**/android/databinding/*Binding.*',
+        '**/BR.*',
+        '**/R.*',
+        '**/R$*.*',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*_MembersInjector.*',
+        '**/Dagger*Component.*',
+        '**/Dagger*Component$Builder.*',
+        '**/*Module_*Factory.*',
+        '**/*Fragment*.*',
+        '**/*Activity*.*',
+        '**/*Adapter*.*',
+        '**/*ViewPager*.*',
+        '**/*ViewHolder*.*',
+        '**/*Module*.*'
+]
+
+task codeCoverageReport(type: JacocoReport, dependsOn: 'testNormalDebugUnitTest') {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+    classDirectories = fileTree(
+            dir: 'build/intermediates/classes/normal/debug/org/digitalcampus',
+            excludes: androidExclusion
+    )
+    sourceDirectories = files('src/main/java/org/digitalcampus')
+    executionData = files('build/jacoco/testNormalDebugUnitTest.exec')
+}
+
+task getCoverage(type: Exec, dependsOn: 'codeCoverageReport') {
+    group = "Reporting"
+    //commandLine "open", "$buildDir/reports/jacoco/codeCoverageReport/html/index.html"
 }

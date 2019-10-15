@@ -227,7 +227,7 @@ public class PageWidget extends WidgetFactory {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(TAG, "getContentToRead: ", e);
 			return "";
 		} finally {
 			try { br.close();}catch (Exception e) {}

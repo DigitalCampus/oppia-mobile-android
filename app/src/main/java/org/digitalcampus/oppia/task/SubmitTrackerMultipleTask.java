@@ -54,7 +54,7 @@ import okhttp3.Response;
 public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, Payload> {
 
 
-    private final static String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
+    private static final String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
 
     private TrackerServiceListener trackerServiceListener;
 

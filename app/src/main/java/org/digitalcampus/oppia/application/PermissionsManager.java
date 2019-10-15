@@ -38,7 +38,7 @@ import java.util.List;
 
 public class PermissionsManager {
 
-    public final static String TAG = PermissionsManager.class.getSimpleName();
+    public static final String TAG = PermissionsManager.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST = 1246;
     private static final List<String> PERMISSIONS_REQUIRED = Arrays.asList(
         //Remember to update this when the Manifest permisssions change!

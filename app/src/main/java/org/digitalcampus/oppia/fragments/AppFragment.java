@@ -24,10 +24,10 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializeDagger();
+        initializeDaggerBase();
     }
 
-    private void initializeDagger() {
+    private void initializeDaggerBase() {
         MobileLearning app = (MobileLearning) getActivity().getApplication();
         app.getComponent().inject(this);
     }

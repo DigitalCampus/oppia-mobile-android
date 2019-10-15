@@ -134,10 +134,10 @@ public class FileUtils {
 			Log.d(TAG, "Exception:", e);
 			return false;
 		} finally {
-			try { fis.close(); } catch (Exception e) { }
-			try { zis.close(); } catch (Exception e) { }
-            try { fos.close(); } catch (Exception e) { }
-            try { dest.close(); } catch (Exception e) { }
+			try { if(fis != null) fis.close(); } catch (Exception e) { }
+			try { if(zis != null) zis.close(); } catch (Exception e) { }
+            try { if(fos != null) fos.close(); } catch (Exception e) { }
+            try { if(dest != null) dest.close(); } catch (Exception e) { }
 		}
 
 		return true;
@@ -174,10 +174,10 @@ public class FileUtils {
 			Log.d(TAG, "Exception:", e);
 			return false;
 		} finally {
-			try { dest.close(); } catch (Exception e) { }
-			try { out.close(); } catch (Exception e) { }
-			try { fi.close(); } catch (Exception e) { }
-			try { origin.close(); } catch (Exception e) { }
+			try { if(dest != null) dest.close(); } catch (Exception e) { }
+			try { if(out != null) out.close(); } catch (Exception e) { }
+			try { if(fi != null) fi.close(); } catch (Exception e) { }
+			try { if(origin != null) origin.close(); } catch (Exception e) { }
 		}
 		return true;
 	}
@@ -215,12 +215,12 @@ public class FileUtils {
 					}
 
 				} catch (IOException e) {
-					e.printStackTrace();
+					Log.e(TAG, "zipSubFolder: ", e);
 
 				} finally {
-					try { fi.close(); } catch (Exception e) { }
-					try { origin.close(); } catch (Exception e) { }
-					try { out.close(); } catch (Exception e) { }
+					try { if(fi != null) fi.close(); } catch (Exception e) { }
+					try { if(origin != null) origin.close(); } catch (Exception e) { }
+					try { if(out != null) out.close(); } catch (Exception e) { }
 				}
 			}
 		}

@@ -13,7 +13,7 @@ import java.io.File;
 
 public class DeleteCourseTask extends AsyncTask<Payload, String, Payload> {
 
-    public final static String TAG = ScanMediaTask.class.getSimpleName();
+    public static final String TAG = ScanMediaTask.class.getSimpleName();
     private DeleteCourseListener mStateListener;
     private Context ctx;
 

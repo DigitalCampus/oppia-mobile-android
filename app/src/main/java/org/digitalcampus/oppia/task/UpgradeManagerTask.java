@@ -63,13 +63,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	private SharedPreferences prefs;
 	private UpgradeListener mUpgradeListener;
 	
-	private final static String PREF_API_KEY = "prefApiKey";
-	private final static String PREF_BADGES = "prefBadges";
-	private final static String PREF_POINTS = "prefPoints";
+	private static final String PREF_API_KEY = "prefApiKey";
+	private static final String PREF_BADGES = "prefBadges";
+	private static final String PREF_POINTS = "prefPoints";
 
-	private final static String MSG_DELETE_FAIL = "failed to delete: ";
-	private final static String MSG_COMPLETED = "completed";
-	private final static String MSG_FAILED = "failed";
+	private static final String MSG_DELETE_FAIL = "failed to delete: ";
+	private static final String MSG_COMPLETED = "completed";
+	private static final String MSG_FAILED = "failed";
 
 	public UpgradeManagerTask(Context ctx){
 		this.ctx = ctx;

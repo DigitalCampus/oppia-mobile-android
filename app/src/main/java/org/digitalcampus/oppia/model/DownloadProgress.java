@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 public class DownloadProgress implements Serializable {
 
-	public final static String TAG = DownloadProgress.class.getSimpleName();
+	public static final String TAG = DownloadProgress.class.getSimpleName();
 	private static final long serialVersionUID = -1408102165581810183L;
 	private String message = "";
 	private int progress = 0;
