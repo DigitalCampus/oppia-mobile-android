@@ -220,10 +220,10 @@ public class FileUtils {
 				} finally {
 					try { if(fi != null) fi.close(); } catch (Exception e) { }
 					try { if(origin != null) origin.close(); } catch (Exception e) { }
-					try { if(out != null) out.close(); } catch (Exception e) { }
 				}
 			}
 		}
+
 	}
 
 	/*
@@ -256,13 +256,15 @@ public class FileUtils {
     public static boolean cleanDir(File dir){
         if (dir.isDirectory()) {
             String[] children = dir.list();
-            for (String dirFiles : children) {
-                File fileToDelete = new File(dir, dirFiles);
-                boolean success = deleteDir(fileToDelete);
-                if (!success) {
-                    return false;
-                }
-            }
+			if (children != null) {
+				for (String dirFiles : children) {
+					File fileToDelete = new File(dir, dirFiles);
+					boolean success = deleteDir(fileToDelete);
+					if (!success) {
+						return false;
+					}
+				}
+			}
         }
         return true;
     }

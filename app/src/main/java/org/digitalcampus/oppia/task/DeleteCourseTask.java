@@ -13,7 +13,8 @@ import java.io.File;
 
 public class DeleteCourseTask extends AsyncTask<Payload, String, Payload> {
 
-    public static final String TAG = ScanMediaTask.class.getSimpleName();
+    public static final String TAG = DeleteCourseTask.class.getSimpleName();
+
     private DeleteCourseListener mStateListener;
     private Context ctx;
 
@@ -35,7 +36,8 @@ public class DeleteCourseTask extends AsyncTask<Payload, String, Payload> {
             // remove files
             String courseLocation = course.getLocation();
             File f = new File(courseLocation);
-            boolean success = FileUtils.deleteDir(f);
+            boolean exists = f.exists();
+            boolean success = exists && FileUtils.deleteDir(f);
 
             File courseBackup = CourseInstall.savedBackupCourse(ctx, course.getShortname());
             if (success && courseBackup != null){

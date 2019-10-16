@@ -57,7 +57,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
         String storageType = (String)payload.getData().get(0);
         String location = (payload.getData().size() > 1) ? (String)payload.getData().get(1) : null;
 
-        String previousLocation = PreferenceManager.getDefaultSharedPreferences(ctx).getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+        String previousLocation = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
         StorageAccessStrategy previousStrategy = Storage.getStorageStrategy();
         String sourcePath = previousStrategy.getStorageLocation(ctx);
         StorageAccessStrategy newStrategy = StorageAccessStrategyFactory.createStrategy(storageType);
@@ -131,6 +131,9 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
             }
 
         }
+
+        prefs.edit().putString(PrefsActivity.PREF_STORAGE_OPTION, storageType).commit();
+
 
         return payload;
     }
