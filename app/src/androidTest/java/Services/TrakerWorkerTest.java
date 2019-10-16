@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.work.Configuration;
 import androidx.work.ListenableWorker;
+import androidx.work.testing.SynchronousExecutor;
 import androidx.work.testing.TestListenableWorkerBuilder;
 import androidx.work.testing.WorkManagerTestInitHelper;
 
@@ -34,7 +35,7 @@ public class TrakerWorkerTest {
                 // make it easier to see why tests failed
                 .setMinimumLoggingLevel(Log.DEBUG)
                 // Use a SynchronousExecutor to make it easier to write tests
-//                .setExecutor(new SynchronousExecutor())
+                .setExecutor(new SynchronousExecutor())
                 .build();
 
         // Initialize WorkManager for instrumentation tests.
