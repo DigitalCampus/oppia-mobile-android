@@ -573,7 +573,7 @@ public class MainActivityUITest {
         mainActivityTestRule.launchActivity(null);
 
         openDrawer();
-        onView(withText(R.string.change_language)).check(matches(isDisplayed()));
+        onView(withText(R.string.menu_language)).check(matches(isDisplayed()));
     }
 
     @Test
