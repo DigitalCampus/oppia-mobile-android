@@ -42,7 +42,7 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
 
 
     public CourseIndexRecyclerViewAdapter(Context ctx, List<Section> sectionList, Course course){
-        super();
+        super(true);
         this.sectionList = sectionList;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
