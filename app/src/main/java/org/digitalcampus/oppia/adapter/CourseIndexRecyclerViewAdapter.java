@@ -42,13 +42,16 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
 
 
     public CourseIndexRecyclerViewAdapter(Context ctx, List<Section> sectionList, Course course){
-        super(true);
+        super();
         this.sectionList = sectionList;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         showSectionNumbers = prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false);
         highlightCompleted = prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED);
+        boolean startCollapsed = prefs.getBoolean(PrefsActivity.PREF_START_COURSEINDEX_COLLAPSED, false);
+
+        this.startExpanded = !startCollapsed;
         courseLocation = course.getLocation();
         highlightColor = ContextCompat.getColor(ctx, R.color.theme_secondary);
         normalColor = ContextCompat.getColor(ctx, R.color.text_dark);

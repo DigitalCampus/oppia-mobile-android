@@ -115,11 +115,12 @@ android {
             buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
             buildConfigField "String", "GAMIFICATION_POINTS_ANIMATION", "\"" + runtimeProps['GAMIFICATION_POINTS_ANIMATION'] + "\""
             buildConfigField "int", "DURATION_GAMIFICATION_POINTS_VIEW", runtimeProps['DURATION_GAMIFICATION_POINTS_VIEW']
-
+            buildConfigField "boolean", "START_COURSEINDEX_COLLAPSED", runtimeProps['START_COURSEINDEX_COLLAPSED']
 
             resValue "string", "MENU_ALLOW_LOGOUT_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LOGOUT']
             resValue "string", "MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
             resValue "string", "MENU_ALLOW_LANGUAGE_DEFAULT_VALUE", runtimeProps['MENU_ALLOW_LANGUAGE']
+            resValue "string", "START_COURSEINDEX_COLLAPSED", runtimeProps['START_COURSEINDEX_COLLAPSED']
             resValue "string", "prefServerDefault", runtimeProps['OPPIA_SERVER_DEFAULT']
             resValue "string", "oppiaServerHost", runtimeProps['OPPIA_SERVER_HOST']
             resValue "string", "prefAdminPasswordDefault", runtimeProps['ADMIN_PROTECT_INITIAL_PASSWORD']

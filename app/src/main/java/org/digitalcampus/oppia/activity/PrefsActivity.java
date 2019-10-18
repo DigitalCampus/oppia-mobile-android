@@ -84,6 +84,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_SHOW_SCHEDULE_REMINDERS = "prefShowScheduleReminders";
 	public static final String PREF_NO_SCHEDULE_REMINDERS = "prefNoScheduleReminders";
 	public static final String PREF_SHOW_COURSE_DESC = "prefShowCourseDescription";
+    public static final String PREF_START_COURSEINDEX_COLLAPSED = "prefStartCourseIndexCollapsed";
 	public static final String PREF_SHOW_PROGRESS_BAR = "prefShowProgressBar";
 	public static final String PREF_SHOW_SECTION_NOS = "prefShowSectionNumbers";
 	public static final String PREF_HIGHLIGHT_COMPLETED = "prefHighlightCompleted";
