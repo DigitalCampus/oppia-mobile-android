@@ -149,7 +149,7 @@ public class ExpandableRecyclerView extends RecyclerView
 
         private OnChildItemClickedListener onChildItemClickedListener;
         private boolean headerVisible = false;
-
+        protected boolean startExpanded = false;
 
         private static final int TYPE_GROUP_HEADER = 0;
         private static final int TYPE_HEADER = 1;
@@ -161,7 +161,7 @@ public class ExpandableRecyclerView extends RecyclerView
         }
 
         boolean isExpanded(int group) {
-            return expanded.get(group);
+            return expanded.get(group, startExpanded);
         }
 
         SparseBooleanArray getExpandedGroups() {
