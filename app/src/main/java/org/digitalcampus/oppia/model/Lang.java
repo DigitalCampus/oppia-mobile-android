@@ -70,6 +70,17 @@ public class Lang implements Serializable {
 
 	@Override
 	public boolean equals(@Nullable Object obj) {
+		if (obj == null)
+			return false;
+
+		if (this.getClass() != obj.getClass())
+			return false;
+
 		return TextUtils.equals(getLang(), ((Lang) obj).getLang());
+	}
+
+	@Override
+	public int hashCode() {
+		return getLang() != null ? getLang().hashCode() : 0;
 	}
 }

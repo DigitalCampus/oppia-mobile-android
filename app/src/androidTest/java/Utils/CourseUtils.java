@@ -1,6 +1,8 @@
 package Utils;
 
 import android.content.Context;
+import android.util.Log;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.application.DbHelper;
@@ -21,6 +23,8 @@ import static org.mockito.Mockito.when;
 
 public class CourseUtils {
 
+    private static final String TAG = "CourseUtils";
+
     public static Course getCourseFromDatabase(Context ctx, String shortTitle){
         DbHelper db = DbHelper.getInstance(ctx);
         long courseId = db.getCourseID(shortTitle);
@@ -39,9 +43,10 @@ public class CourseUtils {
         Storage.createFolderStructure(ctx);
 
         //Clean temp folder
-        File tempFolder = new File(Storage.getStorageLocationRoot(ctx) + "temp/");
+        File tempFolder = new File(Storage.getStorageLocationRoot(ctx), "temp/");
         if (tempFolder.exists()) {
-            FileUtils.deleteDir(tempFolder);
+            boolean ok = FileUtils.deleteDir(tempFolder);
+            Log.i(TAG, "cleanUp. temp dir delete: " + ok);
         }
 
         //Clean database

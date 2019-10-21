@@ -36,7 +36,7 @@ import java.util.HashMap;
 
 public abstract class WidgetFactory extends Fragment {
 	
-	public final static String TAG = WidgetFactory.class.getSimpleName();
+	public static final String TAG = WidgetFactory.class.getSimpleName();
 
 	protected static final String QUIZ_EXCEPTION_MESSAGE = "Invalid Quiz Error: ";
 

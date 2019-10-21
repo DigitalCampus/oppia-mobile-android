@@ -8,7 +8,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:650899919285:android:7a5999343929f4a4",
         "android_client_info": {
-          "package_name": "org.lastmilehealth.oppiamobile"
+          "package_name": "org.digitalcampus.mobile.learning"
         }
       },
       "oauth_client": [],

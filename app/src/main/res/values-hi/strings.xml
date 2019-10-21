@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-	<!ENTITY appName "Academy">
-	<!ENTITY companyName "Last Mile Health"> ]>
+	<!ENTITY appName "OppiaMobile">
+	<!ENTITY companyName "Digital Campus"> ]>
 
 <resources>
     <string name="app_name">&appName;</string>

@@ -45,6 +45,11 @@
         android:title="@string/prefShowCourseDescription" />
 
     <CheckBoxPreference
+        android:defaultValue="@string/START_COURSEINDEX_COLLAPSED"
+        android:key="prefStartCourseIndexCollapsed"
+        android:title="@string/prefStartCourseIndexCollapsed" />
+
+    <CheckBoxPreference
         android:defaultValue="false"
         android:key="prefDisableNotifications"
         android:title="@string/prefDisableNotifications" />

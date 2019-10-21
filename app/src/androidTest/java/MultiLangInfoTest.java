@@ -1,9 +1,9 @@
 
 import android.content.Context;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.digitalcampus.mobile.learning.R;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.junit.Before;
@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -51,7 +50,7 @@ public class MultiLangInfoTest {
     public void MultiLangInfo_NoTitles() throws Exception {
         MultiLangInfoConcreteModel multiLangInfo = new MultiLangInfoConcreteModel();
 
-        assertEquals(context.getString(R.string.no_title_set), multiLangInfo.getTitle("en"));
+        assertEquals(MultiLangInfoModel.DEFAULT_NOTITLE, multiLangInfo.getTitle("en"));
     }
 
     @Test
@@ -78,7 +77,7 @@ public class MultiLangInfoTest {
 
         multiLangInfo.setTitlesFromJSONString(malformedJSONString);
 
-        assertEquals(context.getString(R.string.no_title_set), multiLangInfo.getTitle("en"));
+        assertEquals(MultiLangInfoModel.DEFAULT_NOTITLE, multiLangInfo.getTitle("en"));
     }
 
     @Test
@@ -102,7 +101,7 @@ public class MultiLangInfoTest {
         String wellFormedJSONString = "[]";
         multiLangInfo.setTitlesFromJSONString(wellFormedJSONString);
 
-        assertEquals(context.getString(R.string.no_title_set), multiLangInfo.getTitle("en"));
+        assertEquals(MultiLangInfoModel.DEFAULT_NOTITLE, multiLangInfo.getTitle("en"));
     }
 
     @Test

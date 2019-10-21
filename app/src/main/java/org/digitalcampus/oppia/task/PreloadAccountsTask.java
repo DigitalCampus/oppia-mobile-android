@@ -38,7 +38,7 @@ import java.io.IOException;
 
 public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
-    public final static String TAG = PreloadAccountsTask.class.getSimpleName();
+    public static final String TAG = PreloadAccountsTask.class.getSimpleName();
     private Context ctx;
     private PreloadAccountsListener mListener;
 

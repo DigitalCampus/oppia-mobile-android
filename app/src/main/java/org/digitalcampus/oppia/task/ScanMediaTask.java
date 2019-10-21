@@ -37,7 +37,7 @@ import com.splunk.mint.Mint;
 
 public class ScanMediaTask extends AsyncTask<Payload, String, Payload>{
 
-	public final static String TAG = ScanMediaTask.class.getSimpleName();
+	public static final String TAG = ScanMediaTask.class.getSimpleName();
 	private ScanMediaListener mStateListener;
 	private Context ctx;
 	

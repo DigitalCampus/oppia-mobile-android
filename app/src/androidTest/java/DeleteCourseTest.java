@@ -1,8 +1,11 @@
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import androidx.test.platform.app.InstrumentationRegistry;
 import android.util.Log;
+
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -19,6 +22,7 @@ import org.digitalcampus.oppia.utils.storage.InternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -32,10 +36,10 @@ import Utils.CourseUtils;
 import Utils.FileUtils;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(Parameterized.class)
 public class DeleteCourseTest {
@@ -48,13 +52,21 @@ public class DeleteCourseTest {
     private Payload response;
     private StorageAccessStrategy storageStrategy;
 
+    @Rule
+    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule.grant(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE
+    );
+
+
     public DeleteCourseTest(StorageAccessStrategy storageStrategy) {
         this.storageStrategy = storageStrategy;
     }
 
     @Parameterized.Parameters
     public static StorageAccessStrategy[] storageStrategies() {
-        return new StorageAccessStrategy[]{ new InternalStorageStrategy(), new ExternalStorageStrategy()};
+        return new StorageAccessStrategy[]{new InternalStorageStrategy(), new ExternalStorageStrategy()};
     }
 
     @Before
@@ -66,7 +78,7 @@ public class DeleteCourseTest {
     }
 
     //Run test once for every StorageStrategy (Internal, External)
-    public void setStorageStrategy(){
+    public void setStorageStrategy() {
 
         Log.v(TAG, "Using Strategy: " + storageStrategy.getStorageType());
         Storage.setStorageStrategy(storageStrategy);
@@ -78,12 +90,17 @@ public class DeleteCourseTest {
     }
 
     @Test
-    public void deleteCourse_success() throws Exception{
+    public void deleteCourse_success() throws Exception {
+
+        if (!Storage.getStorageStrategy().isStorageAvailable(context)) {
+            return;
+        }
+
         CourseUtils.cleanUp();
 
         installTestCourse();
 
-        File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
+        File modulesPath = new File(Storage.getCoursesPath(context));
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
@@ -98,17 +115,20 @@ public class DeleteCourseTest {
 
         deleteTestCourse(c);
 
-        //assertTrue(response.isResult());
+//        assertTrue(response.isResult());
 
         c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
+
+        File finalPath = new File(modulesPath, children[0]);
+        assertFalse(finalPath.exists());
 
         assertEquals(0, modulesPath.list().length);    //Check that the course does not exists in the "modules" directory
 
     }
 
     @Test
-    public void deleteCourse_nonExistingCourse() throws Exception{
+    public void deleteCourse_nonExistingCourse() throws Exception {
 
         CourseUtils.cleanUp();
 
@@ -143,9 +163,6 @@ public class DeleteCourseTest {
         assertTrue(modulesPath.exists());
         String[] children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
-        File finalPath = new File(modulesPath, children[0]);
-        org.digitalcampus.oppia.utils.storage.FileUtils.deleteDir(finalPath);  //Remove course folder
-        assertFalse(finalPath.exists());
 
 
         DbHelper db = DbHelper.getInstance(context);
@@ -161,12 +178,15 @@ public class DeleteCourseTest {
         assertNull(c);   //Check that the course does not exists in the database
 
 
+        File finalPath = new File(modulesPath, children[0]);
+        assertFalse(finalPath.exists());
+
         assertEquals(0, modulesPath.list().length);    //Check that the course does not exists in the "modules" directory
 
 
     }
 
-    private void installTestCourse(){
+    private void installTestCourse() {
         //Proceed with the installation of the course
 
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
@@ -181,9 +201,13 @@ public class DeleteCourseTest {
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
         imTask.setInstallerListener(new InstallCourseListener() {
             @Override
-            public void downloadComplete(Payload p) {  }
+            public void downloadComplete(Payload p) {
+            }
+
             @Override
-            public void downloadProgressUpdate(DownloadProgress dp) {  }
+            public void downloadProgressUpdate(DownloadProgress dp) {
+            }
+
             @Override
             public void installComplete(Payload r) {
                 response = r;
@@ -191,7 +215,8 @@ public class DeleteCourseTest {
             }
 
             @Override
-            public void installProgressUpdate(DownloadProgress dp) {  }
+            public void installProgressUpdate(DownloadProgress dp) {
+            }
         });
         imTask.execute(payload);
 
@@ -203,7 +228,7 @@ public class DeleteCourseTest {
 
     }
 
-    private void deleteTestCourse(Course course){
+    private void deleteTestCourse(Course course) {
 
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
 

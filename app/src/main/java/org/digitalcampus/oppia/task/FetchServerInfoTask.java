@@ -24,9 +24,9 @@ import okhttp3.Response;
 public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<String, String>> {
 
 
-    private final static String SERVER_NAME = "name";
-    private final static String SERVER_VERSION = "version";
-    private final static String ERROR_MESSAGE = "errorMessage";
+    private static final String SERVER_NAME = "name";
+    private static final String SERVER_VERSION = "version";
+    private static final String ERROR_MESSAGE = "errorMessage";
 
     public interface FetchServerInfoListener{
         void onError(String message);

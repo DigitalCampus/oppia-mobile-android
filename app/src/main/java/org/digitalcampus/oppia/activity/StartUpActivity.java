@@ -56,7 +56,7 @@ import java.util.ArrayList;
 
 public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener, PreloadAccountsListener, ImportLeaderboardsTask.ImportLeaderboardListener {
 
-	public final static String TAG = StartUpActivity.class.getSimpleName();
+	public static final String TAG = StartUpActivity.class.getSimpleName();
 	private TextView tvProgress;
 	private SharedPreferences prefs;
 	
