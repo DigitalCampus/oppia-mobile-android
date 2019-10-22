@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:background="@drawable/actionbar_background_gradient"
+                android:background="@color/theme_dark"
                 android:paddingLeft="30dp"
                 android:paddingTop="@android:dimen/notification_large_icon_height"
                 android:paddingBottom="@dimen/padding_large"
@@ -45,7 +45,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:required="true"
-                    app:cantContainSpaces="true">
+                    app:cantContainSpaces="true"
+                    app:helperText="Use your family name and your ID number as username. For example, MenyonJTP5-04"
+                    app:helperTextEnabled="true">
 
                     <EditText
                         android:id="@+id/register_form_username_edittext"
@@ -53,9 +55,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_username_title"
                         android:inputType="text"
-                        android:textSize="15sp"
-
-                        />
+                        android:textSize="15sp" />
 
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
 
@@ -71,7 +71,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_password_title"
-                        android:inputType="textPassword"
+                        android:inputType="text"
                         android:textSize="15sp"/>
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
 
@@ -86,25 +86,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_password_again_title"
-                        android:inputType="textPassword"
+                        android:inputType="text"
                         android:textSize="15sp"/>
-                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
-
-                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
-                    android:id="@+id/register_form_email_field"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:required="true"
-                    app:cantContainSpaces="true">
-
-                    <EditText
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/register_form_email_title"
-                        android:inputType="textEmailAddress"
-                        android:textSize="15sp"/>
-
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
 
                 <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
@@ -137,7 +120,22 @@
                         android:textSize="15sp"/>
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
 
+                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                    android:id="@+id/register_form_email_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <EditText
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/register_form_email_title"
+                        android:inputType="textEmailAddress"
+                        android:textSize="15sp"/>
+
+                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+
+                <!--
                 <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
                     android:id="@+id/register_form_phoneno_field"
                     android:layout_width="match_parent"
@@ -152,7 +150,7 @@
                         android:inputType="phone"
                         android:textSize="15sp"/>
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
-
+                -->
 
                 <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
                     android:id="@+id/register_form_organisation_field"
@@ -207,7 +205,8 @@
         android:paddingBottom="@dimen/padding_medium"
         android:weightSum="2">
 
-        <LinearLayout
+
+        <!--<LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -228,7 +227,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:text="@string/tab_title_login"/>
-        </LinearLayout>
+        </LinearLayout> -->
+
 
         <Button
             android:id="@+id/register_btn"

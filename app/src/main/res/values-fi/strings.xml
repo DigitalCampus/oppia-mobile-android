@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY appName "OppiaMobile">
-    <!ENTITY companyName "Digital Campus"> ]>
+    <!ENTITY appName "Academy">
+    <!ENTITY companyName "Last Mile Health"> ]>
 <resources>
     <string name="app_name">&appName;</string>
     <string name="app_logo_alt">&companyName; Liikemerkki</string>
