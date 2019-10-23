@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 
 import com.splunk.mint.Mint;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -144,6 +145,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v54a"));
 			payload.setResult(true);
 		}
+
+		overrideAdminPasswordTask();
 		
 		return payload;
 	}
@@ -409,6 +412,21 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			Log.d(TAG, "passed: " + qa.isPassed());
 		}
 		
+	}
+
+	private void overrideAdminPasswordTask(){
+		if (BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION == BuildConfig.VERSION_CODE){
+			String overrideConfig = "password_overriden_" + BuildConfig.VERSION_CODE;
+			boolean already_overriden = prefs.getBoolean(overrideConfig, false);
+			if (!already_overriden){
+				publishProgress(ctx.getString(R.string.info_override_password));
+				prefs.edit()
+					.putString(PrefsActivity.PREF_ADMIN_PASSWORD, BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD)
+					.putBoolean(overrideConfig, true)
+					.apply();
+			}
+		}
+
 	}
 	
 	private class v54UpgradeQuizObj{
