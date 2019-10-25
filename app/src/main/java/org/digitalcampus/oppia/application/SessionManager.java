@@ -40,15 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_HIGHLIGHT_COMPLETED;
-import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_LANGUAGE;
-import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_NO_SCHEDULE_REMINDERS;
 import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_PHONE_NO;
-import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_SHOW_COURSE_DESC;
-import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_SHOW_PROGRESS_BAR;
-import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS;
-import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_SHOW_SECTION_NOS;
-import static org.digitalcampus.oppia.activity.PrefsActivity.PREF_TEXT_SIZE;
 
 public class SessionManager {
 
@@ -58,10 +50,22 @@ public class SessionManager {
     public static final String APIKEY_VALID = "prefApiKeyInvalid";
 
     private static final List<String> USER_STRING_PREFS = Arrays.asList(
-            PREF_PHONE_NO, PREF_LANGUAGE, PREF_NO_SCHEDULE_REMINDERS, PREF_TEXT_SIZE);
+            PrefsActivity.PREF_PHONE_NO,
+            PrefsActivity.PREF_LANGUAGE,
+            PrefsActivity.PREF_NO_SCHEDULE_REMINDERS,
+            PrefsActivity.PREF_TEXT_SIZE,
+            PrefsActivity.PREF_GAMIFICATION_POINTS_ANIMATION,
+            PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW);
 
     private static final List<String> USER_BOOLEAN_PREFS = Arrays.asList(
-            PREF_SHOW_SCHEDULE_REMINDERS, PREF_SHOW_COURSE_DESC, PREF_SHOW_PROGRESS_BAR, PREF_SHOW_SECTION_NOS, PREF_HIGHLIGHT_COMPLETED);
+            PrefsActivity.PREF_SHOW_SCHEDULE_REMINDERS,
+            PrefsActivity.PREF_SHOW_COURSE_DESC,
+            PrefsActivity.PREF_SHOW_PROGRESS_BAR,
+            PrefsActivity.PREF_SHOW_SECTION_NOS,
+            PrefsActivity.PREF_HIGHLIGHT_COMPLETED,
+            PrefsActivity.PREF_DISABLE_NOTIFICATIONS,
+            PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS);
+
 
     public static boolean isLoggedIn(Context ctx) {
         String username = getUsername(ctx);
@@ -155,6 +159,7 @@ public class SessionManager {
                 userPrefs.add(userPref);
             }
         }
+
 
         DbHelper db = DbHelper.getInstance(ctx);
         db.insertUserPreferences(username, userPrefs);
