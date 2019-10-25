@@ -40,7 +40,7 @@
         android:title="@string/prefShowProgressBar" />
 
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="@string/SHOW_COURSE_DESCRIPTION"
         android:key="prefShowCourseDescription"
         android:title="@string/prefShowCourseDescription" />
 
