@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.squareup.picasso.Picasso;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -69,7 +70,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         viewHolder.courseTitle.setText(c.getTitle(lang));
         String description = c.getDescription(lang);
-        if (!TextUtils.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, true)) {
+        if (!TextUtils.isEmpty(description) && prefs.getBoolean(PrefsActivity.PREF_SHOW_COURSE_DESC, BuildConfig.SHOW_COURSE_DESCRIPTION)) {
             viewHolder.courseDescription.setText(description);
             viewHolder.courseDescription.setVisibility(View.VISIBLE);
         } else {
