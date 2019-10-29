@@ -92,8 +92,11 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
 //        startActivity(new Intent(this, ScorecardActivity.class));
 
-        Log.i(TAG, "Screen width: " + getResources().getConfiguration().screenWidthDp);
-
+//        Log.i(TAG, "Screen width: " + getResources().getConfiguration().screenWidthDp);
+//        Log.i(TAG, "Screen height: " + getResources().getConfiguration().screenHeightDp);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//            Log.i(TAG, "Screen density: " + getResources().getConfiguration().densityDpi);
+//        }
 
     }
 

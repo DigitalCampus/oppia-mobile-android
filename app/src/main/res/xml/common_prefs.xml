@@ -104,13 +104,13 @@
             android:defaultValue="@string/prefServerTimeoutConnectionDefault"
             android:key="prefServerTimeoutConnection"
             android:title="@string/prefServerTimeoutConnection"
-            android:numeric="integer" >
+            android:inputType="number" >
         </EditTextPreference>
         <EditTextPreference
             android:defaultValue="@string/prefServerTimeoutResponseDefault"
             android:key="prefServerTimeoutResponse"
             android:title="@string/prefServerTimeoutResponse"
-            android:numeric="integer">
+            android:inputType="number">
         </EditTextPreference>
 
         <CheckBoxPreference
