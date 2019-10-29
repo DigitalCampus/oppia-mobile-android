@@ -2,9 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
     <LinearLayout
         android:id="@+id/bottom_control_bar"
@@ -22,25 +24,26 @@
     </LinearLayout>
 
     <ListView
-        android:layout_below="@id/toolbar"
         android:id="@+id/missing_media_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_control_bar"
-        android:divider="@color/list_divider_light"
-        android:listSelector="@drawable/background_change_selected"
-        android:dividerHeight="1dp" />
+        android:layout_above="@+id/bottom_control_bar"
+        android:layout_below="@+id/toolbar"
+        android:divider="@color/transparent"
+        android:dividerHeight="0dp"
+        android:listSelector="@drawable/background_transparent"
+        android:layout_marginTop="15dp"/>
 
     <LinearLayout
-        android:layout_below="@id/toolbar"
         android:id="@+id/home_messages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
         android:background="@color/subtitle_bar"
         android:orientation="horizontal"
         android:padding="17dp"
-        android:weightSum="1.0"
-        android:visibility="gone" >
+        android:visibility="gone"
+        android:weightSum="1.0">
 
         <TextView
             android:id="@+id/download_selected"
@@ -48,10 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_weight=".6"
             android:gravity="center_vertical|left"
-            android:textSize="14sp"
             android:textAllCaps="true"
             android:textColor="@color/text_light"
-            />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/unselect_all"
@@ -59,27 +61,26 @@
             android:layout_height="wrap_content"
             android:layout_weight=".4"
             android:gravity="center_vertical|right"
-            android:textSize="14sp"
             android:textAllCaps="true"
             android:textColor="@color/text_dark"
-            />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <TextView
+        android:id="@+id/empty_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/empty_state_media"
-        android:id="@+id/empty_state"
-        android:layout_gravity="center"
-        android:layout_centerInParent="true"
         android:layout_above="@id/bottom_control_bar"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:drawableTop="@drawable/empty_state_check"
         android:drawablePadding="@dimen/activity_vertical_margin"
         android:gravity="center"
         android:paddingBottom="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:visibility="gone"/>
+        android:text="@string/empty_state_media"
+        android:visibility="gone" />
 
 
 </RelativeLayout>
