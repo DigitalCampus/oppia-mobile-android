@@ -6,6 +6,64 @@
 
     <include android:id="@+id/toolbar" layout="@layout/toolbar" />
 
+    <ListView
+        android:layout_below="@id/toolbar"
+        android:id="@+id/missing_media_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_control_bar"
+        android:divider="@color/list_divider_light"
+        android:listSelector="@drawable/background_change_selected"
+        android:dividerHeight="1dp" />
+
+    <LinearLayout
+        android:layout_below="@id/toolbar"
+        android:id="@+id/home_messages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/subtitle_bar"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_medium"
+        android:weightSum="1.0"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/download_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/missing_media_download_selected"
+            />
+
+        <TextView
+            android:id="@+id/unselect_all"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:gravity="center_vertical|right"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:textColor="@color/text_dark"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_state_media"
+        android:id="@+id/empty_state"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_above="@+id/bottom_control_bar"
+        android:drawableTop="@drawable/empty_state_check"
+        android:drawablePadding="@dimen/activity_vertical_margin"
+        android:gravity="center"
+        android:paddingBottom="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/bottom_control_bar"
         android:layout_width="match_parent"
@@ -20,66 +78,5 @@
             android:layout_gravity="center"
             android:text="@string/scan_media_download_via_pc_button" />
     </LinearLayout>
-
-    <ListView
-        android:layout_below="@id/toolbar"
-        android:id="@+id/missing_media_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_control_bar"
-        android:divider="@color/list_divider_light"
-        android:listSelector="@drawable/background_change_selected"
-        android:dividerHeight="1dp" />
-
-    <LinearLayout
-        android:layout_below="@id/toolbar"
-        android:id="@+id/home_messages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/subtitle_bar"
-        android:orientation="horizontal"
-        android:padding="17dp"
-        android:weightSum="1.0"
-        android:visibility="gone" >
-
-        <TextView
-            android:id="@+id/download_selected"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".6"
-            android:gravity="center_vertical|left"
-            android:textSize="14sp"
-            android:textAllCaps="true"
-            android:textColor="@color/text_light"
-            />
-
-        <TextView
-            android:id="@+id/unselect_all"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".4"
-            android:gravity="center_vertical|right"
-            android:textSize="14sp"
-            android:textAllCaps="true"
-            android:textColor="@color/text_dark"
-            />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/empty_state_media"
-        android:id="@+id/empty_state"
-        android:layout_gravity="center"
-        android:layout_centerInParent="true"
-        android:layout_above="@id/bottom_control_bar"
-        android:drawableTop="@drawable/empty_state_check"
-        android:drawablePadding="@dimen/activity_vertical_margin"
-        android:gravity="center"
-        android:paddingBottom="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:visibility="gone"/>
-
 
 </RelativeLayout>
