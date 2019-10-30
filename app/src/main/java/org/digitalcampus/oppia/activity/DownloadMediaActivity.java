@@ -89,12 +89,24 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         initialize();
     }
 
+    private void findViews() {
+
+        missingMediaContainer = findViewById(R.id.home_messages);
+        downloadSelected = findViewById(R.id.download_selected);
+        unselectAll = findViewById(R.id.unselect_all);
+        downloadViaPCBtn = findViewById(R.id.download_media_via_pc_btn);
+        emptyState = findViewById(R.id.empty_state);
+        mediaList = findViewById(R.id.missing_media_list);
+
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_media);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        findViews();
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
@@ -108,7 +120,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         dmla = new DownloadMediaListAdapter(this, missingMedia);
         dmla.setOnClickListener(new DownloadMediaListener());
 
-        mediaList = findViewById(R.id.missing_media_list);
         mediaList.setAdapter(dmla);
 
         mediaList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -140,8 +151,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
                 onPrepareOptionsMenu(menu);
                 mode.setTitle(R.string.title_download_media);
-
-                actionMode = mode;
 
                 if (missingMediaContainer.getVisibility() != View.VISIBLE) {
                     missingMediaContainer.setVisibility(View.VISIBLE);
@@ -227,12 +236,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
         });
 
-        missingMediaContainer = this.findViewById(R.id.home_messages);
-        downloadSelected = this.findViewById(R.id.download_selected);
-        unselectAll = this.findViewById(R.id.unselect_all);
-
-
-        downloadViaPCBtn = this.findViewById(R.id.download_media_via_pc_btn);
         downloadViaPCBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 downloadViaPC();
@@ -241,8 +244,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         Media.resetMediaScan(prefs);
 
-        emptyState = findViewById(R.id.empty_state);
     }
+
 
     @Override
     public void onResume() {
@@ -311,32 +314,24 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         int itemId = item.getItemId();
         switch (itemId) {
-//            case R.id.menu_sort_by: {
-//                if (isSortByCourse) {
-//                    dmla.sortByFilename();
-//                    isSortByCourse = false;
-//                } else {
-//                    dmla.sortByCourse();
-//                    isSortByCourse = true;
-//                }
-//                invalidateOptionsMenu();
-//                return true;
-//            }
-//            case R.id.menu_select_all:
-//                for (int i = 0; i < mediaList.getAdapter().getCount(); i++) {
-//                    if (!mediaList.isItemChecked(i)) {
-//                        mediaList.setItemChecked(i, true);
-//                    }
-//                }
-//                return true;
-//
-//            case R.id.menu_unselect_all:
-//                if (actionMode != null) {
-//                    actionMode.finish();
-//                }
-//
-//                return true;
-
+            case R.id.menu_sort_by: {
+                if (isSortByCourse) {
+                    dmla.sortByFilename();
+                    isSortByCourse = false;
+                } else {
+                    dmla.sortByCourse();
+                    isSortByCourse = true;
+                }
+                invalidateOptionsMenu();
+                return true;
+            }
+            case R.id.menu_select_all:
+                for (int i = 0; i < mediaList.getAdapter().getCount(); i++) {
+                    if (!mediaList.isItemChecked(i)) {
+                        mediaList.setItemChecked(i, true);
+                    }
+                }
+                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
