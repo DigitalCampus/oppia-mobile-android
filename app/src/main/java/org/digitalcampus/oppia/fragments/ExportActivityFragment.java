@@ -65,12 +65,13 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
     private RecyclerView.Adapter filesAdapter;
     private ArrayList<File> files = new ArrayList<>();
     private SubmitTrackerMultipleTask omSubmitTrackerMultipleTask;
+    private boolean showCompleteExportMessage;
 
     public static ExportActivityFragment newInstance() {
         return new ExportActivityFragment();
     }
 
-    public ExportActivityFragment(){
+    public ExportActivityFragment() {
         // Required empty public constructor
     }
 
@@ -88,6 +89,10 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
         unexportedTrackers = vv.findViewById(R.id.highlight_to_export);
         submittedTrackers = vv.findViewById(R.id.highlight_submitted);
 
+
+        showCompleteExportMessage = false;
+        exportActivities();
+
         return vv;
 
     }
@@ -101,8 +106,8 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
             public void onClick(View v) {
                 Activity parent = ExportActivityFragment.this.getActivity();
 //                MobileLearning app = (MobileLearning) parent.getApplication();
-                if(omSubmitTrackerMultipleTask == null){
-                    Log.d(TAG,"Sumitting trackers multiple task");
+                if (omSubmitTrackerMultipleTask == null) {
+                    Log.d(TAG, "Sumitting trackers multiple task");
                     updateActions(false);
                     omSubmitTrackerMultipleTask = new SubmitTrackerMultipleTask(parent);
                     omSubmitTrackerMultipleTask.setTrackerServiceListener(ExportActivityFragment.this);
@@ -114,21 +119,15 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
         exportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Check the user has permissions to export activity data
-                AdminSecurityManager.checkAdminPermission(getActivity(), R.id.action_export_activity, new AdminSecurityManager.AuthListener() {
-                    public void onPermissionGranted() {
-                        ExportActivityTask task = new ExportActivityTask(ExportActivityFragment.this.getActivity());
-                        task.setListener(ExportActivityFragment.this);
-                        updateActions(false);
-                        task.execute();
-                    }
-                });
+
+                showCompleteExportMessage = true;
+                exportActivities();
 
             }
         });
 
         exportedFilesRecyclerView.setHasFixedSize(true);
-        exportedFilesRecyclerView.setLayoutManager( new LinearLayoutManager(this.getContext()));
+        exportedFilesRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         filesAdapter = new ExportedTrackersFileAdapter(files, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
@@ -145,10 +144,22 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
         updateActions(true);
     }
 
+    private void exportActivities() {
+        //Check the user has permissions to export activity data
+        AdminSecurityManager.checkAdminPermission(getActivity(), R.id.action_export_activity, new AdminSecurityManager.AuthListener() {
+            public void onPermissionGranted() {
+                ExportActivityTask task = new ExportActivityTask(ExportActivityFragment.this.getActivity());
+                task.setListener(ExportActivityFragment.this);
+                updateActions(false);
+                task.execute();
+            }
+        });
+    }
+
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser){
+    public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if( (getView() != null) && isVisibleToUser){
+        if ((getView() != null) && isVisibleToUser) {
             // Your fragment is visible
             refreshFileList();
             refreshStats();
@@ -156,14 +167,13 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
         }
     }
 
-    private void updateActions(boolean enable){
-        if (enable){
+    private void updateActions(boolean enable) {
+        if (enable) {
             progressContainer.setVisibility(View.GONE);
             actionsContainer.setVisibility(View.VISIBLE);
             refreshFileList();
             refreshStats();
-        }
-        else{
+        } else {
             progressContainer.setVisibility(View.VISIBLE);
             actionsContainer.setVisibility(View.GONE);
         }
@@ -179,14 +189,14 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
         submittedTrackers.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
 
         Log.d(TAG, "files " + files.size());
-        submitBtn.setEnabled( (unsent > 0) || files.size()>0 );
-        exportBtn.setEnabled( (unexported > 0) );
+        submitBtn.setEnabled((unsent > 0) || files.size() > 0);
+        exportBtn.setEnabled((unexported > 0));
 
     }
 
-    private void refreshFileList(){
+    private void refreshFileList() {
         File activityFolder = new File(Storage.getActivityPath(this.getContext()));
-        if (activityFolder.exists()){
+        if (activityFolder.exists()) {
             files.clear();
             String[] children = activityFolder.list();
             for (String dirFiles : children) {
@@ -201,12 +211,11 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
     @Override
     public void trackerComplete(boolean success, String message) {
 
-        if (message != null && message.length()>0){
+        if (message != null && message.length() > 0) {
             Toast.makeText(getContext(),
                     message,
                     Toast.LENGTH_LONG).show();
-        }
-        else{
+        } else {
             Toast.makeText(getContext(),
                     success ? R.string.submit_trackers_success : R.string.error_connection,
                     Toast.LENGTH_LONG).show();
@@ -221,16 +230,20 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
 
     @Override
     public void onExportComplete(String filename) {
-        if (filename != null){
-            UIUtils.showAlert(getActivity(),
-                    R.string.export_task_completed,
-                    getString(R.string.export_task_completed_text, filename)
-            );
-        }
-        else{
-            Toast.makeText(getContext(),
-                    R.string.export_task_no_activities,
-                    Toast.LENGTH_LONG).show();
+
+        if (showCompleteExportMessage) {
+
+            if (filename != null) {
+                UIUtils.showAlert(getActivity(),
+                        R.string.export_task_completed,
+                        getString(R.string.export_task_completed_text, filename)
+                );
+            } else {
+                Toast.makeText(getContext(),
+                        R.string.export_task_no_activities,
+                        Toast.LENGTH_LONG).show();
+            }
+
         }
         updateActions(true);
     }
