@@ -84,8 +84,7 @@
         android:key="prefAdminPassword"
         android:title="@string/prefAdminPassword"
         android:inputType="textPassword"
-        android:dependency="prefAdminProtection"
-        android:maxLength="2"/>
+        android:dependency="prefAdminProtection" />
 
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
