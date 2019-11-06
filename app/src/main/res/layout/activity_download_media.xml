@@ -8,31 +8,16 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <LinearLayout
-        android:id="@+id/bottom_control_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/download_media_via_pc_btn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:text="@string/scan_media_download_via_pc_button" />
-    </LinearLayout>
-
     <ListView
         android:id="@+id/missing_media_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_control_bar"
         android:layout_below="@+id/toolbar"
+        android:layout_marginTop="5dp"
         android:divider="@color/transparent"
         android:dividerHeight="0dp"
-        android:listSelector="@drawable/background_transparent"
-        android:layout_marginTop="15dp"/>
+        android:listSelector="@drawable/background_transparent" />
 
     <LinearLayout
         android:id="@+id/home_messages"
@@ -42,7 +27,7 @@
         android:background="@color/subtitle_bar"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="17dp"
+        android:padding="@dimen/padding_medium"
         android:visibility="gone"
         android:weightSum="1.0">
 
@@ -50,21 +35,21 @@
             android:id="@+id/download_selected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".6"
+            android:layout_gravity="left"
             android:gravity="center_vertical|left"
             android:textAllCaps="true"
-            android:textColor="@color/text_light"
-            android:textSize="14sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/unselect_all"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".4"
-            android:gravity="center_vertical|right"
+            android:layout_marginLeft="5dp"
+            android:gravity="center|right|center_horizontal|center_vertical"
             android:textAllCaps="true"
             android:textColor="@color/text_dark"
-            android:textSize="14sp" />
+            android:textSize="13sp" />
+
     </LinearLayout>
 
     <TextView
