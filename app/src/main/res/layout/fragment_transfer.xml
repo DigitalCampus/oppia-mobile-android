@@ -73,20 +73,21 @@
             android:text="@string/bluetooth.no_device_connected"
             android:theme="@style/SubheaderText"/>
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/discover_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"
-
             android:layout_alignParentTop="true"
             android:layout_marginBottom="@dimen/padding_medium"
             android:layout_toLeftOf="@+id/bluetooth_btn"
             android:adjustViewBounds="false"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_wifi_tethering"
-            android:tint="@color/text_dark"/>
+            app:backgroundTint="@color/theme_secondary_semi_transparent"
+            android:elevation="3dp"
+            app:tint="@color/text_dark"/>
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/bluetooth_btn"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
@@ -96,7 +97,9 @@
             android:layout_marginBottom="@dimen/padding_medium"
             android:layout_marginRight="@dimen/padding_medium"
             android:src="@drawable/ic_bluetooth"
-            android:tint="@color/text_dark"/>
+            app:backgroundTint="@color/theme_secondary_semi_transparent"
+            android:elevation="3dp"
+            app:tint="@color/text_dark"/>
     </RelativeLayout>
 
     <LinearLayout

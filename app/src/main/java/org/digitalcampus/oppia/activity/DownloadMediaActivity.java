@@ -79,13 +79,25 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     private View missingMediaContainer;
     private ListView mediaList;
     private ArrayList<Media> mediaSelected;
+    private ActionMode actionMode;
 
-    public enum DownloadMode { INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL }
+    public enum DownloadMode {INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL}
 
     @Override
     public void onStart() {
         super.onStart();
         initialize();
+    }
+
+    private void findViews() {
+
+        missingMediaContainer = findViewById(R.id.home_messages);
+        downloadSelected = findViewById(R.id.download_selected);
+        unselectAll = findViewById(R.id.unselect_all);
+        downloadViaPCBtn = findViewById(R.id.download_media_via_pc_btn);
+        emptyState = findViewById(R.id.empty_state);
+        mediaList = findViewById(R.id.missing_media_list);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -94,12 +106,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_media);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        findViews();
 
-	Bundle bundle = this.getIntent().getExtras();
-	if (bundle != null) {
-		missingMedia = (ArrayList<Media>) bundle.getSerializable(MISSING_MEDIA);
-	}
-        else{
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle != null) {
+            missingMedia = (ArrayList<Media>) bundle.getSerializable(MISSING_MEDIA);
+        } else {
             missingMedia = new ArrayList<>();
         }
 
@@ -108,7 +120,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         dmla = new DownloadMediaListAdapter(this, missingMedia);
         dmla.setOnClickListener(new DownloadMediaListener());
 
-        mediaList = findViewById(R.id.missing_media_list);
         mediaList.setAdapter(dmla);
 
         mediaList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -117,17 +128,17 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 Log.v(TAG, "Count: " + mediaList.getCheckedItemCount());
-                if(checked){
+                if (checked) {
                     mediaSelected.add(missingMedia.get(position));
-                }else{
+                } else {
                     mediaSelected.remove(missingMedia.get(position));
                 }
 
                 int count = mediaSelected.size();
                 mode.setSubtitle(count == 1 ? count + " item selected" : count + " items selected");
 
-                for(Media m: mediaSelected){
-                    if(!m.isDownloading()){
+                for (Media m : mediaSelected) {
+                    if (!m.isDownloading()) {
                         downloadSelected.setText(getString(R.string.missing_media_download_selected));
                         break;
                     }
@@ -141,7 +152,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 onPrepareOptionsMenu(menu);
                 mode.setTitle(R.string.title_download_media);
 
-                if (missingMediaContainer.getVisibility() != View.VISIBLE){
+                if (missingMediaContainer.getVisibility() != View.VISIBLE) {
                     missingMediaContainer.setVisibility(View.VISIBLE);
                     downloadSelected.setOnClickListener(new OnClickListener() {
 
@@ -153,13 +164,14 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                                     .equals(getString(R.string.missing_media_download_selected)) ? getString(R.string.missing_media_stop_selected)
                                     : getString(R.string.missing_media_download_selected));
 
-                            for(Media m : mediaSelected){
+                            for (Media m : mediaSelected) {
                                 downloadMedia(m, downloadMode);
                             }
 
                             mode.finish();
                         }
                     });
+
                     unselectAll.setOnClickListener(new OnClickListener() {
 
                         public void onClick(View view) {
@@ -178,17 +190,19 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
 
             @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {return false; }
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch(item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.menu_sort_by: {
-                        if(isSortByCourse){
+                        if (isSortByCourse) {
                             dmla.sortByFilename();
                             isSortByCourse = false;
                             item.setTitle(getString(R.string.menu_sort_by_course));
-                        }else{
+                        } else {
                             dmla.sortByCourse();
                             isSortByCourse = true;
                             item.setTitle(getString(R.string.menu_sort_by_filename));
@@ -197,12 +211,17 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                         return true;
                     }
                     case R.id.menu_select_all:
-                        for(int i= 0; i < mediaList.getAdapter().getCount(); i++){
-                            if(!mediaList.isItemChecked(i)) {
+                        for (int i = 0; i < mediaList.getAdapter().getCount(); i++) {
+                            if (!mediaList.isItemChecked(i)) {
                                 mediaList.setItemChecked(i, true);
                             }
                         }
                         return true;
+
+                    case R.id.menu_unselect_all:
+                        mode.finish();
+                        return true;
+
                     default:
                         return false;
                 }
@@ -217,12 +236,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
         });
 
-        missingMediaContainer = this.findViewById(R.id.home_messages);
-        downloadSelected = this.findViewById(R.id.download_selected);
-        unselectAll = this.findViewById(R.id.unselect_all);
-
-
-        downloadViaPCBtn = this.findViewById(R.id.download_media_via_pc_btn);
         downloadViaPCBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 downloadViaPC();
@@ -231,11 +244,11 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         Media.resetMediaScan(prefs);
 
-        emptyState = findViewById(R.id.empty_state);
     }
 
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         if ((missingMedia != null) && !missingMedia.isEmpty()) {
             //We already have loaded media (coming from orientationchange)
@@ -244,7 +257,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             dmla.notifyDataSetChanged();
             emptyState.setVisibility(View.GONE);
             downloadViaPCBtn.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             emptyState.setVisibility(View.VISIBLE);
             downloadViaPCBtn.setVisibility(View.GONE);
         }
@@ -258,7 +271,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
     }
@@ -283,12 +296,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         menu.clear();
         getMenuInflater().inflate(R.menu.missing_media_sortby, menu);
         MenuItem selectAll = menu.findItem(R.id.menu_select_all);
-        if(selectAll != null) {
+        if (selectAll != null) {
             selectAll.setVisible(!missingMedia.isEmpty());
         }
 
         MenuItem sortBy = menu.findItem(R.id.menu_sort_by);
-        if(sortBy != null){
+        if (sortBy != null) {
             sortBy.setVisible(!missingMedia.isEmpty());
             sortBy.setTitle(isSortByCourse ? getString(R.string.menu_sort_by_filename)
                     : getString(R.string.menu_sort_by_course));
@@ -300,12 +313,12 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int itemId = item.getItemId();
-        switch(itemId){
+        switch (itemId) {
             case R.id.menu_sort_by: {
-                if(isSortByCourse){
+                if (isSortByCourse) {
                     dmla.sortByFilename();
                     isSortByCourse = false;
-                }else{
+                } else {
                     dmla.sortByCourse();
                     isSortByCourse = true;
                 }
@@ -313,20 +326,23 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 return true;
             }
             case R.id.menu_select_all:
-                for(int i= 0; i < mediaList.getAdapter().getCount(); i++){
-                    if(!mediaList.isItemChecked(i)) {
+                for (int i = 0; i < mediaList.getAdapter().getCount(); i++) {
+                    if (!mediaList.isItemChecked(i)) {
                         mediaList.setItemChecked(i, true);
                     }
                 }
                 return true;
-            case android.R.id.home: onBackPressed(); return true;
-            default: return super.onOptionsItemSelected(item);
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
-    private void downloadViaPC(){
+    private void downloadViaPC() {
 
-        if (Storage.getStorageStrategy().getStorageType().equals(PrefsActivity.STORAGE_OPTION_INTERNAL)){
+        if (Storage.getStorageStrategy().getStorageType().equals(PrefsActivity.STORAGE_OPTION_INTERNAL)) {
             UIUtils.showAlert(this, R.string.prefStorageLocation, this.getString(R.string.download_via_pc_extenal_storage));
             return;
         }
@@ -347,18 +363,18 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             html = html.replace("##download_via_pc_final##", getString(R.string.download_via_pc_final, path));
 
             String downloadData = "";
-            for(Media m : missingMedia){
-                downloadData += "<li><a href='"+m.getDownloadUrl()+"'>"+m.getFilename()+"</a></li>";
+            for (Media m : missingMedia) {
+                downloadData += "<li><a href='" + m.getDownloadUrl() + "'>" + m.getFilename() + "</a></li>";
             }
             html = html.replace("##download_files##", downloadData);
 
-            File file = new File(Environment.getExternalStorageDirectory(),filename);
+            File file = new File(Environment.getExternalStorageDirectory(), filename);
             f = new FileOutputStream(file);
             out = new OutputStreamWriter(new FileOutputStream(file));
             out.write(html);
             out.close();
             f.close();
-            UIUtils.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message,filename));
+            UIUtils.showAlert(this, R.string.info, this.getString(R.string.download_via_pc_message, filename));
         } catch (FileNotFoundException fnfe) {
             Mint.logException(fnfe);
             Log.d(TAG, "File not found", fnfe);
@@ -366,14 +382,14 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             Mint.logException(ioe);
             Log.d(TAG, "IOException", ioe);
         } finally {
-            if(out != null){
+            if (out != null) {
                 try {
                     out.close();
                 } catch (IOException ioe) {
                     Log.d(TAG, "couldn't close OutputStreamWriter object", ioe);
                 }
             }
-            if(f != null){
+            if (f != null) {
                 try {
                     f.close();
                 } catch (IOException ioe) {
@@ -386,7 +402,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     @Override
     public void onDownloadProgress(String fileUrl, int progress) {
         Media mediaFile = findMedia(fileUrl);
-        if (mediaFile != null){
+        if (mediaFile != null) {
             mediaFile.setProgress(progress);
             dmla.notifyDataSetChanged();
         }
@@ -395,7 +411,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     @Override
     public void onDownloadFailed(String fileUrl, String message) {
         Media mediaFile = findMedia(fileUrl);
-        if (mediaFile != null){
+        if (mediaFile != null) {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
             mediaFile.setDownloading(false);
@@ -407,8 +423,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     @Override
     public void onDownloadComplete(String fileUrl) {
         Media mediaFile = findMedia(fileUrl);
-        if (mediaFile != null){
-            Toast.makeText(this,  this.getString(R.string.download_complete), Toast.LENGTH_LONG).show();
+        if (mediaFile != null) {
+            Toast.makeText(this, this.getString(R.string.download_complete), Toast.LENGTH_LONG).show();
 
             missingMedia.remove(mediaFile);
             dmla.notifyDataSetChanged();
@@ -418,10 +434,10 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         }
     }
 
-    private Media findMedia(String fileUrl){
-        if (!missingMedia.isEmpty()){
-            for (Media mediaFile : missingMedia){
-                if (mediaFile.getDownloadUrl().equals(fileUrl)){
+    private Media findMedia(String fileUrl) {
+        if (!missingMedia.isEmpty()) {
+            for (Media mediaFile : missingMedia) {
+                if (mediaFile.getDownloadUrl().equals(fileUrl)) {
                     return mediaFile;
                 }
             }
@@ -429,19 +445,19 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         return null;
     }
 
-    private void downloadMedia(Media mediaToDownload, DownloadMode mode){
-        if(!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)){
+    private void downloadMedia(Media mediaToDownload, DownloadMode mode) {
+        if (!ConnectionUtils.isOnWifi(DownloadMediaActivity.this) && !DownloadMediaActivity.this.prefs.getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, false)) {
             UIUtils.showAlert(DownloadMediaActivity.this, R.string.warning, R.string.warning_wifi_required);
             return;
         }
 
-        if(!mediaToDownload.isDownloading()){
-            if(mode.equals(DownloadMode.DOWNLOAD_ALL) ||
+        if (!mediaToDownload.isDownloading()) {
+            if (mode.equals(DownloadMode.DOWNLOAD_ALL) ||
                     mode.equals(DownloadMode.INDIVIDUALLY)) {
                 startDownload(mediaToDownload);
             }
-        }else{
-            if(mode.equals(DownloadMode.STOP_ALL) ||
+        } else {
+            if (mode.equals(DownloadMode.STOP_ALL) ||
                     mode.equals(DownloadMode.INDIVIDUALLY)) {
                 stopDownload(mediaToDownload);
             }
@@ -450,7 +466,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     }
 
-    private void startDownload(Media mediaToDownload){
+    private void startDownload(Media mediaToDownload) {
         Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
         mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_DOWNLOAD);
         mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
@@ -463,14 +479,15 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         dmla.notifyDataSetChanged();
 
         downloadSelected.setText(getString(R.string.missing_media_download_selected));
-        for(Media m: mediaSelected){
-            if(m.isDownloading()){
+        for (Media m : mediaSelected) {
+            if (m.isDownloading()) {
                 downloadSelected.setText(getString(R.string.missing_media_stop_selected));
                 break;
             }
         }
     }
-    private void stopDownload(Media mediaToDownload){
+
+    private void stopDownload(Media mediaToDownload) {
         Intent mServiceIntent = new Intent(DownloadMediaActivity.this, DownloadService.class);
         mServiceIntent.putExtra(DownloadService.SERVICE_ACTION, DownloadService.ACTION_CANCEL);
         mServiceIntent.putExtra(DownloadService.SERVICE_URL, mediaToDownload.getDownloadUrl());
@@ -480,15 +497,15 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         mediaToDownload.setProgress(0);
         dmla.notifyDataSetChanged();
 
-        for(Media m: mediaSelected){
-            if(!m.isDownloading()){
+        for (Media m : mediaSelected) {
+            if (!m.isDownloading()) {
                 downloadSelected.setText(getString(R.string.missing_media_download_selected));
                 break;
             }
         }
     }
 
-    private void showDownloadMediaMessage(){
+    private void showDownloadMediaMessage() {
         TranslateAnimation anim = new TranslateAnimation(0, 0, -200, 0);
         anim.setDuration(900);
         missingMediaContainer.startAnimation(anim);
@@ -507,7 +524,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         animator.start();
     }
 
-    private void hideDownloadMediaMessage(){
+    private void hideDownloadMediaMessage() {
 
         TranslateAnimation anim = new TranslateAnimation(0, 0, 0, -200);
         anim.setDuration(900);
