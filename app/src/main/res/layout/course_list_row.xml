@@ -20,6 +20,7 @@
         app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
         <LinearLayout
+            android:id="@+id/ll_card_layout_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
