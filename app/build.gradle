@@ -106,7 +106,6 @@ android {
             buildConfigField "boolean", "MENU_ALLOW_LANGUAGE", runtimeProps['MENU_ALLOW_LANGUAGE']
             buildConfigField "boolean", "MENU_ALLOW_SYNC", runtimeProps['MENU_ALLOW_SYNC']
             buildConfigField "boolean", "MENU_ALLOW_COURSE_DOWNLOAD", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
-            buildConfigField "boolean", "DEVICEADMIN_ENABLED", runtimeProps['DEVICEADMIN_ENABLED']
             buildConfigField "boolean", "SESSION_EXPIRATION_ENABLED", runtimeProps['SESSION_EXPIRATION_ENABLED']
             buildConfigField "boolean", "OFFLINE_REGISTER_ENABLED", runtimeProps['OFFLINE_REGISTER_ENABLED']
             buildConfigField "int", "SESSION_EXPIRATION_TIMEOUT", runtimeProps['SESSION_EXPIRATION_TIMEOUT']
