@@ -91,13 +91,13 @@ public class MobileLearning extends Application {
 
 
     // tracker metadata settings
-    public static final boolean INCLUDE_METADATA_NETWORK = false;
-    public static final boolean INCLUDE_METADATA_DEVICE_ID = false;
-    public static final boolean INCLUDE_METADATA_SIM_SERIAL = false;
-    public static final boolean INCLUDE_METADATA_WIFI_ON = false;
-    public static final boolean INCLUDE_METADATA_NETWORK_CONNECTED = false;
-    public static final boolean INCLUDE_METADATA_BATTERY_LEVEL = false;
-    public static final boolean INCLUDE_METADATA_GPS = false;
+    public static final boolean METADATA_INCLUDE_NETWORK = BuildConfig.METADATA_INCLUDE_NETWORK;
+    public static final boolean METADATA_INCLUDE_DEVICE_ID = BuildConfig.METADATA_INCLUDE_DEVICE_ID;
+    public static final boolean METADATA_INCLUDE_SIM_SERIAL = BuildConfig.METADATA_INCLUDE_SIM_SERIAL;
+    public static final boolean METADATA_INCLUDE_WIFI_ON = BuildConfig.METADATA_INCLUDE_WIFI_ON;
+    public static final boolean METADATA_INCLUDE_NETWORK_CONNECTED = BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED;
+    public static final boolean METADATA_INCLUDE_BATTERY_LEVEL = BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL;
+    public static final boolean METADATA_INCLUDE_GPS = BuildConfig.METADATA_INCLUDE_GPS;
 
     // general other settings
     public static final String MINT_API_KEY = BuildConfig.MINT_API_KEY;

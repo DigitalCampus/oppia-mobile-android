@@ -105,25 +105,25 @@ public class MetaDataUtils {
 
     public JSONObject getMetaData(JSONObject json) throws JSONException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), MobileLearning.INCLUDE_METADATA_NETWORK)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), MobileLearning.METADATA_INCLUDE_NETWORK)) {
             json.put("network", this.getNetworkProvider());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_DEVICE_ID), MobileLearning.INCLUDE_METADATA_DEVICE_ID)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_DEVICE_ID), MobileLearning.METADATA_INCLUDE_DEVICE_ID)) {
             json.put("deviceid", this.getDeviceId());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_SIM_SERIAL), MobileLearning.INCLUDE_METADATA_SIM_SERIAL)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_SIM_SERIAL), MobileLearning.METADATA_INCLUDE_SIM_SERIAL)) {
             json.put("simserial", this.getSimSerial());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_WIFI_ON), MobileLearning.INCLUDE_METADATA_WIFI_ON)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_WIFI_ON), MobileLearning.METADATA_INCLUDE_WIFI_ON)) {
             json.put("wifion", ConnectionUtils.isOnWifi(ctx));
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK_CONNECTED), MobileLearning.INCLUDE_METADATA_NETWORK_CONNECTED)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK_CONNECTED), MobileLearning.METADATA_INCLUDE_NETWORK_CONNECTED)) {
             json.put("netconnected", ConnectionUtils.isNetworkConnected(ctx));
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_BATTERY_LEVEL), MobileLearning.INCLUDE_METADATA_BATTERY_LEVEL)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_BATTERY_LEVEL), MobileLearning.METADATA_INCLUDE_BATTERY_LEVEL)) {
             json.put("battery", this.getBatteryLevel());
         }
-        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_GPS), MobileLearning.INCLUDE_METADATA_GPS)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_GPS), MobileLearning.METADATA_INCLUDE_GPS)) {
             json.put("gps", "0,0");
         }
         return json;
