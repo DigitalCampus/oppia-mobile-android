@@ -29,6 +29,7 @@ import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,7 +57,6 @@ public class MetaDataUtils {
                     return;
                 }
             }
-
 
             deviceId = manager.getDeviceId();
             simSerial = manager.getSimSerialNumber();
@@ -94,32 +94,36 @@ public class MetaDataUtils {
         Iterator<?> keys = metadata.keys();
         while (keys.hasNext()) {
             String key = (String) keys.next();
-            editor.putBoolean(PrefsActivity.PREF_METADATA + "_" + key, metadata.getBoolean(key));
+            editor.putBoolean(getMetadataPref(key), metadata.getBoolean(key));
         }
         editor.apply();
     }
 
+    private String getMetadataPref(String metadataKey){
+        return PrefsActivity.PREF_METADATA + "_" + metadataKey;
+    }
+
     public JSONObject getMetaData(JSONObject json) throws JSONException {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        if (prefs.getBoolean(PrefsActivity.PREF_METADATA + "_NETWORK", false)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), MobileLearning.INCLUDE_METADATA_NETWORK)) {
             json.put("network", this.getNetworkProvider());
         }
-        if (prefs.getBoolean(PrefsActivity.PREF_METADATA + "_DEVICE_ID", false)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_DEVICE_ID), MobileLearning.INCLUDE_METADATA_DEVICE_ID)) {
             json.put("deviceid", this.getDeviceId());
         }
-        if (prefs.getBoolean(PrefsActivity.PREF_METADATA + "_SIM_SERIAL", false)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_SIM_SERIAL), MobileLearning.INCLUDE_METADATA_SIM_SERIAL)) {
             json.put("simserial", this.getSimSerial());
         }
-        if (prefs.getBoolean(PrefsActivity.PREF_METADATA + "_WIFI_ON", false)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_WIFI_ON), MobileLearning.INCLUDE_METADATA_WIFI_ON)) {
             json.put("wifion", ConnectionUtils.isOnWifi(ctx));
         }
-        if (prefs.getBoolean(PrefsActivity.PREF_METADATA + "_NETWORK_CONNECTED", false)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK_CONNECTED), MobileLearning.INCLUDE_METADATA_NETWORK_CONNECTED)) {
             json.put("netconnected", ConnectionUtils.isNetworkConnected(ctx));
         }
-        if (prefs.getBoolean(PrefsActivity.PREF_METADATA + "_BATTERY_LEVEL", false)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_BATTERY_LEVEL), MobileLearning.INCLUDE_METADATA_BATTERY_LEVEL)) {
             json.put("battery", this.getBatteryLevel());
         }
-        if (prefs.getBoolean(PrefsActivity.PREF_METADATA + "_GPS", false)) {
+        if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_GPS), MobileLearning.INCLUDE_METADATA_GPS)) {
             json.put("gps", "0,0");
         }
         return json;

@@ -89,6 +89,16 @@ public class MobileLearning extends Application {
     public static final boolean ADMIN_PROTECT_ACTIVITY_SYNC = BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC;
     public static final boolean ADMIN_PROTECT_ACTIVITY_EXPORT = BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT;
 
+
+    // tracker metadata settings
+    public static final boolean INCLUDE_METADATA_NETWORK = false;
+    public static final boolean INCLUDE_METADATA_DEVICE_ID = false;
+    public static final boolean INCLUDE_METADATA_SIM_SERIAL = false;
+    public static final boolean INCLUDE_METADATA_WIFI_ON = false;
+    public static final boolean INCLUDE_METADATA_NETWORK_CONNECTED = false;
+    public static final boolean INCLUDE_METADATA_BATTERY_LEVEL = false;
+    public static final boolean INCLUDE_METADATA_GPS = false;
+
     // general other settings
     public static final String MINT_API_KEY = BuildConfig.MINT_API_KEY;
     public static final int DOWNLOAD_COURSES_DISPLAY = BuildConfig.DOWNLOAD_COURSES_DISPLAY; //this no of courses must be displayed for the 'download more courses' option to disappear
