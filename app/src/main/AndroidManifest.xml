@@ -19,14 +19,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- GCM permissions -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission
-        android:name="${applicationId}.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <uses-permission android:name="${applicationId}.C2D_MESSAGE" />
 
     <application
         android:name="org.digitalcampus.oppia.application.MobileLearning"
@@ -167,35 +162,8 @@
         <service
             android:name="org.digitalcampus.oppia.gamification.GamificationService"
             android:exported="false"
-            android:icon="@drawable/dc_logo" /> <!-- Google Cloud Messaging part -->
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            android:icon="@drawable/dc_logo" />
 
-                <category android:name="org.digitalcampus.mobile.learning" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="org.digitalcampus.oppia.application.AdminGCMListener"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
-        <service
-            android:name="org.digitalcampus.oppia.service.GCMUpdatedIIDService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
-            </intent-filter>
-        </service>
-        <service
-            android:name="org.digitalcampus.oppia.service.GCMRegistrationService"
-            android:exported="false"></service>
 
         <provider
             android:name="androidx.core.content.FileProvider"
