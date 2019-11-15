@@ -138,7 +138,6 @@ public class MobileLearning extends Application {
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v", "video/mp4", "audio/mpeg", "video/3gp", "video/3gpp"}; //NOSONAR
 
     public static final String DEVICEADMIN_ADD_PATH = OPPIAMOBILE_API + "device/register/";
-    public static final boolean DEVICEADMIN_ENABLED = BuildConfig.DEVICEADMIN_ENABLED;
 
     // only used in case a course doesn't have any lang specified
     public static final String DEFAULT_LANG = "en";

@@ -106,7 +106,6 @@ android {
             buildConfigField "boolean", "MENU_ALLOW_LANGUAGE", runtimeProps['MENU_ALLOW_LANGUAGE']
             buildConfigField "boolean", "MENU_ALLOW_SYNC", runtimeProps['MENU_ALLOW_SYNC']
             buildConfigField "boolean", "MENU_ALLOW_COURSE_DOWNLOAD", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
-            buildConfigField "boolean", "DEVICEADMIN_ENABLED", runtimeProps['DEVICEADMIN_ENABLED']
             buildConfigField "boolean", "SESSION_EXPIRATION_ENABLED", runtimeProps['SESSION_EXPIRATION_ENABLED']
             buildConfigField "boolean", "OFFLINE_REGISTER_ENABLED", runtimeProps['OFFLINE_REGISTER_ENABLED']
             buildConfigField "int", "SESSION_EXPIRATION_TIMEOUT", runtimeProps['SESSION_EXPIRATION_TIMEOUT']
@@ -205,7 +204,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation 'com.splunk.mint:mint:5.0.0'
-    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
     implementation 'com.google.android:flexbox:0.2.5'
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
     implementation 'io.github.inflationx:viewpump:1.0.0'
