@@ -110,8 +110,15 @@ android {
             buildConfigField "boolean", "OFFLINE_REGISTER_ENABLED", runtimeProps['OFFLINE_REGISTER_ENABLED']
             buildConfigField "int", "SESSION_EXPIRATION_TIMEOUT", runtimeProps['SESSION_EXPIRATION_TIMEOUT']
             buildConfigField "int", "DOWNLOAD_COURSES_DISPLAY", runtimeProps['DOWNLOAD_COURSES_DISPLAY']
-
             buildConfigField "boolean", "SHOW_COURSE_DESCRIPTION", runtimeProps['SHOW_COURSE_DESCRIPTION']
+
+            buildConfigField "boolean", "METADATA_INCLUDE_NETWORK", runtimeProps['METADATA_INCLUDE_NETWORK']
+            buildConfigField "boolean", "METADATA_INCLUDE_DEVICE_ID", runtimeProps['METADATA_INCLUDE_DEVICE_ID']
+            buildConfigField "boolean", "METADATA_INCLUDE_SIM_SERIAL", runtimeProps['METADATA_INCLUDE_SIM_SERIAL']
+            buildConfigField "boolean", "METADATA_INCLUDE_WIFI_ON", runtimeProps['METADATA_INCLUDE_WIFI_ON']
+            buildConfigField "boolean", "METADATA_INCLUDE_NETWORK_CONNECTED", runtimeProps['METADATA_INCLUDE_NETWORK_CONNECTED']
+            buildConfigField "boolean", "METADATA_INCLUDE_BATTERY_LEVEL", runtimeProps['METADATA_INCLUDE_BATTERY_LEVEL']
+            buildConfigField "boolean", "METADATA_INCLUDE_GPS", runtimeProps['METADATA_INCLUDE_GPS']
 
             buildConfigField "String", "GAMIFICATION_MEDIA_CRITERIA", "\"" + runtimeProps['GAMIFICATION_MEDIA_CRITERIA'] + "\""
             buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
