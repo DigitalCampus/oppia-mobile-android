@@ -75,7 +75,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     private TextView emptyState;
     private boolean isSortByCourse;
     private TextView downloadSelected;
-    private TextView unselectAll;
     private View missingMediaContainer;
     private ListView mediaList;
     private ArrayList<Media> mediaSelected;
@@ -93,7 +92,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         missingMediaContainer = findViewById(R.id.home_messages);
         downloadSelected = findViewById(R.id.download_selected);
-        unselectAll = findViewById(R.id.unselect_all);
         downloadViaPCBtn = findViewById(R.id.download_media_via_pc_btn);
         emptyState = findViewById(R.id.empty_state);
         mediaList = findViewById(R.id.missing_media_list);
@@ -172,12 +170,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                         }
                     });
 
-                    unselectAll.setOnClickListener(new OnClickListener() {
-
-                        public void onClick(View view) {
-                            mode.finish();
-                        }
-                    });
                     showDownloadMediaMessage();
                 }
 
@@ -185,7 +177,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 dmla.notifyDataSetChanged();
 
                 downloadSelected.setText(getString(R.string.missing_media_stop_selected));
-                unselectAll.setText(getString(R.string.missing_media_unselect_all));
                 return true;
             }
 
