@@ -260,7 +260,6 @@ dependencies {
     //debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 }
 
-apply plugin: 'com.google.gms.google-services'
 
 task grantPermissions(type: Exec, dependsOn: 'installDebug') {
     group = 'test'
