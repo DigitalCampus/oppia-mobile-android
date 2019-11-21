@@ -49,17 +49,17 @@
                     android:id="@+id/manage_courses_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dip"
+                    android:layout_margin="5dp"
                     android:gravity="center"
                     android:text="@string/no_courses"
-                    android:textColor="@color/text_light"
+                    android:textColor="@color/text_dark"
                     android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/manage_courses_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     android:gravity="center"
                     android:text="@string/title_download_activity" />
             </LinearLayout>

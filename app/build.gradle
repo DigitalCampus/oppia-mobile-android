@@ -44,8 +44,8 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        versionCode 71
-        versionName "7.0.1"
+        versionCode 72
+        versionName "7.0.2"
 
         applicationId "org.lastmilehealth.oppiamobile"
         minSdkVersion 14
@@ -106,13 +106,19 @@ android {
             buildConfigField "boolean", "MENU_ALLOW_LANGUAGE", runtimeProps['MENU_ALLOW_LANGUAGE']
             buildConfigField "boolean", "MENU_ALLOW_SYNC", runtimeProps['MENU_ALLOW_SYNC']
             buildConfigField "boolean", "MENU_ALLOW_COURSE_DOWNLOAD", runtimeProps['MENU_ALLOW_COURSE_DOWNLOAD']
-            buildConfigField "boolean", "DEVICEADMIN_ENABLED", runtimeProps['DEVICEADMIN_ENABLED']
             buildConfigField "boolean", "SESSION_EXPIRATION_ENABLED", runtimeProps['SESSION_EXPIRATION_ENABLED']
             buildConfigField "boolean", "OFFLINE_REGISTER_ENABLED", runtimeProps['OFFLINE_REGISTER_ENABLED']
             buildConfigField "int", "SESSION_EXPIRATION_TIMEOUT", runtimeProps['SESSION_EXPIRATION_TIMEOUT']
             buildConfigField "int", "DOWNLOAD_COURSES_DISPLAY", runtimeProps['DOWNLOAD_COURSES_DISPLAY']
-
             buildConfigField "boolean", "SHOW_COURSE_DESCRIPTION", runtimeProps['SHOW_COURSE_DESCRIPTION']
+
+            buildConfigField "boolean", "METADATA_INCLUDE_NETWORK", runtimeProps['METADATA_INCLUDE_NETWORK']
+            buildConfigField "boolean", "METADATA_INCLUDE_DEVICE_ID", runtimeProps['METADATA_INCLUDE_DEVICE_ID']
+            buildConfigField "boolean", "METADATA_INCLUDE_SIM_SERIAL", runtimeProps['METADATA_INCLUDE_SIM_SERIAL']
+            buildConfigField "boolean", "METADATA_INCLUDE_WIFI_ON", runtimeProps['METADATA_INCLUDE_WIFI_ON']
+            buildConfigField "boolean", "METADATA_INCLUDE_NETWORK_CONNECTED", runtimeProps['METADATA_INCLUDE_NETWORK_CONNECTED']
+            buildConfigField "boolean", "METADATA_INCLUDE_BATTERY_LEVEL", runtimeProps['METADATA_INCLUDE_BATTERY_LEVEL']
+            buildConfigField "boolean", "METADATA_INCLUDE_GPS", runtimeProps['METADATA_INCLUDE_GPS']
 
             buildConfigField "String", "GAMIFICATION_MEDIA_CRITERIA", "\"" + runtimeProps['GAMIFICATION_MEDIA_CRITERIA'] + "\""
             buildConfigField "int", "GAMIFICATION_DEFAULT_MEDIA_THRESHOLD", runtimeProps['GAMIFICATION_DEFAULT_MEDIA_THRESHOLD']
@@ -198,7 +204,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
     implementation 'com.splunk.mint:mint:5.0.0'
-    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
     implementation 'com.google.android:flexbox:0.2.5'
     implementation 'io.github.inflationx:calligraphy3:3.0.0'
     implementation 'io.github.inflationx:viewpump:1.0.0'
@@ -255,7 +260,6 @@ dependencies {
     //debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 }
 
-apply plugin: 'com.google.gms.google-services'
 
 task grantPermissions(type: Exec, dependsOn: 'installDebug') {
     group = 'test'

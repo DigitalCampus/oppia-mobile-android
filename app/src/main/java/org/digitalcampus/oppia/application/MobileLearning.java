@@ -89,6 +89,16 @@ public class MobileLearning extends Application {
     public static final boolean ADMIN_PROTECT_ACTIVITY_SYNC = BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC;
     public static final boolean ADMIN_PROTECT_ACTIVITY_EXPORT = BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT;
 
+
+    // tracker metadata settings
+    public static final boolean METADATA_INCLUDE_NETWORK = BuildConfig.METADATA_INCLUDE_NETWORK;
+    public static final boolean METADATA_INCLUDE_DEVICE_ID = BuildConfig.METADATA_INCLUDE_DEVICE_ID;
+    public static final boolean METADATA_INCLUDE_SIM_SERIAL = BuildConfig.METADATA_INCLUDE_SIM_SERIAL;
+    public static final boolean METADATA_INCLUDE_WIFI_ON = BuildConfig.METADATA_INCLUDE_WIFI_ON;
+    public static final boolean METADATA_INCLUDE_NETWORK_CONNECTED = BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED;
+    public static final boolean METADATA_INCLUDE_BATTERY_LEVEL = BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL;
+    public static final boolean METADATA_INCLUDE_GPS = BuildConfig.METADATA_INCLUDE_GPS;
+
     // general other settings
     public static final String MINT_API_KEY = BuildConfig.MINT_API_KEY;
     public static final int DOWNLOAD_COURSES_DISPLAY = BuildConfig.DOWNLOAD_COURSES_DISPLAY; //this no of courses must be displayed for the 'download more courses' option to disappear
@@ -128,7 +138,6 @@ public class MobileLearning extends Application {
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v", "video/mp4", "audio/mpeg", "video/3gp", "video/3gpp"}; //NOSONAR
 
     public static final String DEVICEADMIN_ADD_PATH = OPPIAMOBILE_API + "device/register/";
-    public static final boolean DEVICEADMIN_ENABLED = BuildConfig.DEVICEADMIN_ENABLED;
 
     // only used in case a course doesn't have any lang specified
     public static final String DEFAULT_LANG = "en";

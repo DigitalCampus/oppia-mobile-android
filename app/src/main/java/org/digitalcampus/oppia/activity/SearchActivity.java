@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -164,7 +165,13 @@ public class SearchActivity extends AppActivity {
     }
 
     private void performSearch(){
-        String newSearch = searchText.getText().toString();
+        String newSearch = searchText.getText().toString().trim();
+
+        if (TextUtils.isEmpty(newSearch)) {
+            searchText.setText("");
+            return;
+        }
+
         if (!newSearch.equals(currentSearch)){
             currentSearch = newSearch;
 

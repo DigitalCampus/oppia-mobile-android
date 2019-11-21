@@ -72,7 +72,17 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_BADGING_ENABLED = "prefBadgingEnabled";
 	public static final String PREF_SERVER_TIMEOUT_CONN = "prefServerTimeoutConnection";
 	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
+
 	public static final String PREF_METADATA = "prefMetadata";
+	public static final String PREF_METADATA_NETWORK = "NETWORK";
+    public static final String PREF_METADATA_DEVICE_ID = "DEVICE_ID";
+    public static final String PREF_METADATA_SIM_SERIAL = "SIM_SERIAL";
+    public static final String PREF_METADATA_WIFI_ON = "WIFI_ON";
+    public static final String PREF_METADATA_NETWORK_CONNECTED = "NETWORK_CONNECTED";
+    public static final String PREF_METADATA_BATTERY_LEVEL = "BATTERY_LEVEL";
+    public static final String PREF_METADATA_GPS = "GPS";
+
+
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
 
     public static final String PREF_APPLICATION_FIRST_RUN = "prefFirstRun";
