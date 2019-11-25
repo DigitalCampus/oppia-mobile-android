@@ -663,7 +663,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 	
 	public long isUser(String username){
-		String s = USER_C_USERNAME + "=?";
+		String s = USER_C_USERNAME + "=? COLLATE NOCASE";
 		String[] args = new String[] { username };
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
