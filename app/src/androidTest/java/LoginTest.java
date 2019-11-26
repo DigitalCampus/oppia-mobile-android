@@ -1,14 +1,16 @@
 import android.content.Context;
 
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.RegisterTask;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 import okhttp3.mockwebserver.MockResponse;
@@ -38,6 +41,7 @@ public class LoginTest{
     private MockWebServer mockServer;
     private Context context;
     private Payload response;
+    private boolean registerOK;
 
    /* @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
@@ -48,6 +52,7 @@ public class LoginTest{
         context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         //DbHelper.getInstance(context).resetDatabase();
         signal = new CountDownLatch(1);
+        mockServer = new MockWebServer();
     }
 
     @After
@@ -59,7 +64,6 @@ public class LoginTest{
     @Test
     public void userLogin_EmptyResponse()throws Exception {
         try {
-            mockServer = new MockWebServer();
 
             mockServer.enqueue(new MockResponse()
                     .setBody(""));
@@ -107,7 +111,6 @@ public class LoginTest{
     @Test
     public void userLogin_OKResponse()throws Exception {
         try {
-            mockServer = new MockWebServer();
 
             String filename = "responses/response_201_login.json";
 
@@ -159,7 +162,6 @@ public class LoginTest{
     @Test
     public void userLogin_WrongPassword()throws Exception {
         try {
-            mockServer = new MockWebServer();
 
             String filename = "responses/response_400_login.json";
 
@@ -207,4 +209,56 @@ public class LoginTest{
 
     }
 
+    @Test
+    public void registerOfflineAvoidRegisterSameUsernameCaseInsensitive() throws Exception {
+
+        String username1 = "test1";
+
+        DbHelper db = DbHelper.getInstance(context);
+        db.deleteUser(username1);
+
+        User u = new User();
+        u.setUsername(username1);
+        u.setPassword("testPass1");
+        u.setOfflineRegister(true);
+
+        performRegister(u);
+        signal.await();
+        assertTrue(registerOK);
+
+        signal = new CountDownLatch(1);
+        u.setUsername(username1.toUpperCase());
+        performRegister(u);
+        signal.await();
+        assertFalse(registerOK);
+
+    }
+
+    private void performRegister(User u) {
+
+        Payload p = new Payload(Arrays.asList(u));
+        RegisterTask rt = new RegisterTask(context);
+        rt.setRegisterListener(new RegisterTask.RegisterListener() {
+            @Override
+            public void onSubmitComplete(User u) {
+                registerOK = true;
+                signal.countDown();
+            }
+
+            @Override
+            public void onSubmitError(String error) {
+                registerOK = false;
+                signal.countDown();
+
+            }
+
+            @Override
+            public void onConnectionError(String error, User u) {
+                registerOK = false;
+                signal.countDown();
+
+            }
+        });
+        rt.execute(p);
+    }
 }

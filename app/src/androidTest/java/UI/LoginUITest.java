@@ -77,4 +77,6 @@ public class LoginUITest {
 
        assertEquals(MainActivity.class, Utils.TestUtils.getCurrentActivity().getClass());
     }
+
+
 }
