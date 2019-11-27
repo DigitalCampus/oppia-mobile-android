@@ -26,6 +26,7 @@ import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SearchActivity;
+import org.digitalcampus.oppia.activity.StartUpActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -72,6 +73,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -272,7 +274,7 @@ public class MainActivityUITest {
         onView(withText(R.string.yes))
                 .perform(click());
 
-        checkCorrectActivity(WelcomeActivity.class);
+        checkCorrectActivities(WelcomeActivity.class, StartUpActivity.class);
 
     }
 
@@ -527,6 +529,10 @@ public class MainActivityUITest {
 
     private void checkCorrectActivity(Class activity) {
         assertEquals(activity, Utils.TestUtils.getCurrentActivity().getClass());
+    }
+
+    private void checkCorrectActivities(Class activity1, Class activity2) {
+        assertThat(Utils.TestUtils.getCurrentActivity().getClass(), Matchers.either(Matchers.equalTo(activity1)).or(Matchers.equalTo(activity2)));
     }
 
 

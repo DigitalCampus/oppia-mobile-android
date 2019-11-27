@@ -101,11 +101,12 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
         viewHolder.mediaPath.setText(m.getDownloadUrl());
 		if(m.getFileSize() != 0){
             viewHolder.mediaFileSize.setText(ctx.getString(R.string.media_file_size,m.getFileSize()/(1024*1024)));
+            viewHolder.mediaFileSize.setVisibility(View.VISIBLE);
 		} else {
-            viewHolder.mediaFileSize.setVisibility(View.GONE);
+            viewHolder.mediaFileSize.setVisibility(View.INVISIBLE);
 		}
         
-        viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.GONE : View.VISIBLE);
+        viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
 
         viewHolder.downloadBtn.setTag(position); //For passing the list item index
         viewHolder.downloadBtn.setOnClickListener(new View.OnClickListener() {
