@@ -103,7 +103,16 @@ public class MetaDataUtils {
         return PrefsActivity.PREF_METADATA + "_" + metadataKey;
     }
 
+    public JSONObject getMetaData() throws JSONException{
+        JSONObject json = new JSONObject();
+        return getMetaData(json);
+    }
+
     public JSONObject getMetaData(JSONObject json) throws JSONException {
+
+        if (json == null){
+            json = new JSONObject();
+        }
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), MobileLearning.METADATA_INCLUDE_NETWORK)) {
             json.put("network", this.getNetworkProvider());
