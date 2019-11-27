@@ -6,7 +6,6 @@ import org.digitalcampus.mobile.learning.test.BuildConfig;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.utils.MetaDataUtils;
 import org.json.JSONObject;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +15,6 @@ import java.util.Map;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import okhttp3.mockwebserver.MockWebServer;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -81,9 +79,10 @@ public class MetadataUtilsTest {
     public void metadataUtils_overridesJSON() throws Exception{
         JSONObject eventData = new JSONObject();
         eventData.put("network", "initial_value");
-        prefs.edit().putBoolean(PrefsActivity.PREF_METADATA_NETWORK, true);
 
-        eventData = new MetaDataUtils(context).getMetaData(eventData);
+        MetaDataUtils mdu = new MetaDataUtils(context);
+        prefs.edit().putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), true).commit();
+        eventData = mdu.getMetaData(eventData);
 
         Map<String, Boolean> expectedValues = new HashMap<String, Boolean>() {{
             put("network", true);
@@ -96,12 +95,15 @@ public class MetadataUtilsTest {
     @Test
     public void metadataUtils_fromPreferences() throws Exception{
 
-        prefs.edit().putBoolean(PrefsActivity.PREF_METADATA_NETWORK, true);
-        prefs.edit().putBoolean(PrefsActivity.PREF_METADATA_DEVICE_ID, true);
-        prefs.edit().putBoolean(PrefsActivity.PREF_METADATA_WIFI_ON, false);
-        prefs.edit().putBoolean(PrefsActivity.PREF_METADATA_GPS, false);
+        MetaDataUtils mdu = new MetaDataUtils(context);
+        prefs.edit()
+                .putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), true)
+                .putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_DEVICE_ID), true)
+                .putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_WIFI_ON), false)
+                .putBoolean(mdu.getMetadataPref(PrefsActivity.PREF_METADATA_GPS), false)
+                .commit();
 
-        JSONObject eventData = new MetaDataUtils(context).getMetaData();
+        JSONObject eventData = mdu.getMetaData();
 
         Map<String, Boolean> expectedValues = new HashMap<String, Boolean>() {{
             put("network", true);

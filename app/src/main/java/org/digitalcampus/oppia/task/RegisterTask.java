@@ -70,10 +70,20 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
         }
 
         if (saveUser){
-            // add or update user in db
-            DbHelper.getInstance(ctx).addOrUpdateUser(user);
-            payload.setResult(true);
-            payload.setResultResponse(ctx.getString(R.string.register_complete));
+
+            DbHelper db = DbHelper.getInstance(ctx);
+
+            boolean usernameExists = db.isUser(user.getUsername()) != -1;
+            if (!usernameExists) {
+                // add or update user in db
+                db.addOrUpdateUser(user);
+                payload.setResult(true);
+                payload.setResultResponse(ctx.getString(R.string.register_complete));
+            } else {
+                payload.setResult(false);
+                payload.setResultResponseDataError(SUBMIT_ERROR, ctx.getString(R.string.register_username_exists));
+            }
+
         }
 
 		return payload;
