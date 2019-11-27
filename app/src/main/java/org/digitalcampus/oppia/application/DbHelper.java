@@ -661,9 +661,16 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 		return userId;
 	}
-	
-	public long isUser(String username){
+
+	public void deleteUser(String username) {
+		// delete activities
 		String s = USER_C_USERNAME + "=?";
+		String[] args = new String[]{String.valueOf(username)};
+		db.delete(USER_TABLE, s, args);
+	}
+
+	public long isUser(String username){
+		String s = USER_C_USERNAME + "=? COLLATE NOCASE";
 		String[] args = new String[] { username };
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		if(c.getCount() == 0){
@@ -996,8 +1003,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.delete(COURSE_TABLE, s, args);
 
 	}
-	
-	public boolean isInstalled(String shortname){
+
+
+		public boolean isInstalled(String shortname){
 		String s = COURSE_C_SHORTNAME + "=?";
 		String[] args = new String[] { shortname };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
@@ -1093,7 +1101,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	public User getOneRegisteredUser() throws UserNotFoundException {
 		String s = USER_C_OFFLINE_REGISTER + "=? ";
-		String[] args = new String[] { "1" };
+		String[] args = new String[] { "0" };
 
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		return getUser(c);

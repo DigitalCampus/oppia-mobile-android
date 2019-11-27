@@ -418,10 +418,9 @@
     <string name="nav_points">Points</string>
     <string name="edit_profile">Edit profile</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="prefStartCourseIndexCollapsed">Start course index with sections collapsed</string>
     <string name="info_override_password">Overriding admin password</string>
+    <string name="register_username_exists">Username already exists</string>
 
 </resources>
 

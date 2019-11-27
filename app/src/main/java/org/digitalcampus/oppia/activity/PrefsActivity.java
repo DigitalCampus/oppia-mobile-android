@@ -42,9 +42,13 @@ import androidx.appcompat.app.AlertDialog;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.AdminReceiver;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -55,6 +59,9 @@ import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
 	
@@ -138,21 +145,36 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     private ProgressDialog pDialog;
     private PreferencesFragment mPrefsFragment;
 
+    @Inject
+    CoursesRepository coursesRepository;
+
     @Override
     public void onStart() {
         super.onStart();
         initialize();
     }
 
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
+        initializeDagger();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentManager mFragmentManager = getFragmentManager();
         FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
         mPrefsFragment = PreferencesFragment.newInstance();
+
+        ArrayList<Lang> langsCourses = getLanguagesCourses();
+        Bundle args = new Bundle();
+        args.putSerializable("langs", langsCourses);
+        mPrefsFragment.setArguments(args);
+
         mFragmentTransaction.replace(R.id.root_layout, mPrefsFragment);
         mFragmentTransaction.commit();
 
@@ -161,8 +183,24 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
 	}
 
+    private ArrayList<Lang> getLanguagesCourses() {
 
-	@Override
+        final ArrayList<Lang> langs = new ArrayList<>();
+        List<Course> courses = coursesRepository.getCourses(this);
+
+        for (Course course : courses) {
+            for (Lang courseLang : course.getLangs()) {
+                if (!langs.contains(courseLang)) {
+                    langs.add(courseLang);
+                }
+            }
+        }
+
+        return langs;
+    }
+
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
