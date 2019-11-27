@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ExportActivityFragment extends AppFragment implements TrackerServiceListener, ExportActivityListener {
 
@@ -209,17 +211,24 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
     }
 
     @Override
-    public void trackerComplete(boolean success, String message) {
+    public void trackerComplete(boolean success, String message, List<String> failures) {
 
+        String msg;
         if (message != null && message.length() > 0) {
+            msg = message;
             Toast.makeText(getContext(),
                     message,
                     Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getContext(),
-                    success ? R.string.submit_trackers_success : R.string.error_connection,
-                    Toast.LENGTH_LONG).show();
+            msg = getContext().getString(success ?  R.string.submit_trackers_success : R.string.error_connection);
         }
+
+        if (failures.size() > 0){
+            msg += "\nErrors: \n";
+            msg += TextUtils.join("\n", failures);
+        }
+
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
         updateActions(true);
     }
 

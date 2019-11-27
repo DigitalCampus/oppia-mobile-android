@@ -1101,7 +1101,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	public User getOneRegisteredUser() throws UserNotFoundException {
 		String s = USER_C_OFFLINE_REGISTER + "=? ";
-		String[] args = new String[] { "1" };
+		String[] args = new String[] { "0" };
 
 		Cursor c = db.query(USER_TABLE, null, s, args, null, null, null);
 		return getUser(c);
