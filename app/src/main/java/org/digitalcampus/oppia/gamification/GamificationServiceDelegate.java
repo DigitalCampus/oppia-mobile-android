@@ -2,13 +2,16 @@ package org.digitalcampus.oppia.gamification;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.widgets.PageWidget;
 
 public class GamificationServiceDelegate {
 
+    public static final String TAG = GamificationServiceDelegate.class.getSimpleName();
     private Intent serviceIntent;
     private Context ctx;
 

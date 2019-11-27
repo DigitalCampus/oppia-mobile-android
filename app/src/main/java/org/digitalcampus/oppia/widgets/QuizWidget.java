@@ -98,9 +98,12 @@ public class QuizWidget extends WidgetFactory {
 	private TextView qText;
 	private String quizContent;
 	private LinearLayout questionImage;
-	private boolean isOnResultsPage = false;
 	private ViewGroup container;
 	private MediaPlayer mp;
+
+
+	private boolean isOnResultsPage = false;
+	private boolean quizAttemptSaved = false;
 
 	private ProgressBar progressBar;
 	private ProgressBarAnimator barAnim;
@@ -568,6 +571,7 @@ public class QuizWidget extends WidgetFactory {
 		this.quiz = new Quiz();
 		this.quiz.load(quizContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		this.isOnResultsPage = false;
+		this.quizAttemptSaved = false;
 		
 		// reload quiz layout
 		View C = getView().findViewById(R.id.widget_quiz_results);
@@ -597,7 +601,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void saveTracker() {
 		long timetaken = this.getSpentTime();
-		if(activity == null || !isOnResultsPage){
+		if(activity == null || !isOnResultsPage || quizAttemptSaved){
 			return;
 		}
 
@@ -605,6 +609,7 @@ public class QuizWidget extends WidgetFactory {
 		new GamificationServiceDelegate(getActivity())
 			.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
 			.registerQuizAttemptEvent(timetaken, quiz, this.getPercent());
+		quizAttemptSaved = true;
 	}
 
 	@Override
@@ -613,6 +618,7 @@ public class QuizWidget extends WidgetFactory {
 		config.put("quiz", this.quiz);
 		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
 		config.put(WidgetFactory.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
+		config.put(WidgetFactory.PROPERTY_ATTEMPT_SAVED, this.quizAttemptSaved);
 		return config;
 	}
 
@@ -626,6 +632,9 @@ public class QuizWidget extends WidgetFactory {
 		}
 		if (config.containsKey(WidgetFactory.PROPERTY_ON_RESULTS_PAGE)) {
 			this.isOnResultsPage = (Boolean) config.get(WidgetFactory.PROPERTY_ON_RESULTS_PAGE);
+		}
+		if (config.containsKey(WidgetFactory.PROPERTY_ATTEMPT_SAVED)) {
+			this.quizAttemptSaved = (Boolean) config.get(WidgetFactory.PROPERTY_ATTEMPT_SAVED);
 		}
 	}
 
