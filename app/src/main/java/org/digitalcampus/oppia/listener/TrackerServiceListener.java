@@ -18,7 +18,9 @@
 package org.digitalcampus.oppia.listener;
 
 
+import java.util.List;
+
 public interface TrackerServiceListener {
-	void trackerComplete(boolean success, String message);
+	void trackerComplete(boolean success, String message, List<String> failures);
 	void trackerProgressUpdate();
 }
