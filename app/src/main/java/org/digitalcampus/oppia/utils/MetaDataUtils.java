@@ -42,9 +42,11 @@ public class MetaDataUtils {
     private String deviceId;
     private String simSerial;
     private Context ctx;
+    private SharedPreferences prefs;
 
     public MetaDataUtils(Context ctx) {
         this.ctx = ctx;
+        setPrefs(PreferenceManager.getDefaultSharedPreferences(ctx));
         TelephonyManager manager = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
         if (manager != null) {
             networkProvider = manager.getNetworkOperatorName();
@@ -62,6 +64,10 @@ public class MetaDataUtils {
             simSerial = manager.getSimSerialNumber();
         }
 
+    }
+
+    public void setPrefs(SharedPreferences prefs){
+        this.prefs = prefs;
     }
 
     private String getNetworkProvider() {
@@ -99,7 +105,7 @@ public class MetaDataUtils {
         editor.apply();
     }
 
-    private String getMetadataPref(String metadataKey){
+    public String getMetadataPref(String metadataKey){
         return PrefsActivity.PREF_METADATA + "_" + metadataKey;
     }
 
@@ -113,7 +119,7 @@ public class MetaDataUtils {
         if (json == null){
             json = new JSONObject();
         }
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
         if (prefs.getBoolean(getMetadataPref(PrefsActivity.PREF_METADATA_NETWORK), MobileLearning.METADATA_INCLUDE_NETWORK)) {
             json.put("network", this.getNetworkProvider());
         }
