@@ -29,7 +29,7 @@
                 android:id="@+id/media_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/media_file_size"
+                android:layout_toLeftOf="@+id/action_btn"
                 android:orientation="vertical">
 
                 <TextView
@@ -79,7 +79,7 @@
                 android:layout_below="@+id/media_info"
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="center_vertical"
-                android:layout_toLeftOf="@+id/media_file_size"
+                android:layout_toLeftOf="@+id/action_btn"
                 android:indeterminate="true"
                 android:indeterminateOnly="false"
                 android:progress="0" />

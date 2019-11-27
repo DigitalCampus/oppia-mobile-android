@@ -101,11 +101,13 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	
 	private void endStartUpScreen() {
         // launch new activity and close splash screen
+
         startActivity(new Intent(StartUpActivity.this,
-                SessionManager.isLoggedIn(this)
+                SessionManager.isLoggedIn(StartUpActivity.this)
                         ? MainActivity.class
                         : WelcomeActivity.class));
-        this.finish();
+
+        finish();
     }
 
 	private void installCourses(){
