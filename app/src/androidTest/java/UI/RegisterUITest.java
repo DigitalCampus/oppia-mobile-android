@@ -23,7 +23,6 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
@@ -72,7 +71,7 @@ public class RegisterUITest {
 
 
     @Test
-    public void showErrorMessageWhenTheEmailIsWrong() throws Exception {
+    public void showErrorMessageWhenTheEmailContainsSpaces() throws Exception {
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
 
@@ -80,7 +79,7 @@ public class RegisterUITest {
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("NoValidEmail"));
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("email with spaces@gmail.com"));
 
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
@@ -94,10 +93,8 @@ public class RegisterUITest {
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        // LMH_custom_start
-        // onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-        //        .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
-        // LMH_custom_end
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
 
         onView(withId(R.id.register_btn))
                 .perform(click());
