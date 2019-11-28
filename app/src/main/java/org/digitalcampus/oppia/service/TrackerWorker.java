@@ -93,7 +93,7 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
 
             prefs.edit().putLong("lastCourseUpdateCheck", now).apply();
         } else {
-            pendingTasks--;
+            onRequestFinish(null);
         } 
 
         // send activity trackers
@@ -114,7 +114,7 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
             omSubmitQuizAttemptsTask.setAPIRequestFinishListener(this, "SubmitQuizAttemptsTask");
             omSubmitQuizAttemptsTask.execute(p2);
         } else {
-            pendingTasks--;
+            onRequestFinish(null);
         } 
 
 

@@ -209,12 +209,17 @@ public class MobileLearning extends Application {
     private void setupPeriodicTrackerWorker() {
 
         boolean backgroundData = getPrefs(this).getBoolean(PrefsActivity.PREF_BACKGROUND_DATA_CONNECT, true);
+        boolean isLoggedIn = SessionManager.isLoggedIn(this);
 
-        if (backgroundData) {
+        if (backgroundData && isLoggedIn) {
             scheduleTrackerWork();
         } else {
             cancelTrackerWork();
         }
+
+        // To test worker alone
+//        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(TrackerWorker.class).build();
+//        WorkManager.getInstance(this).enqueue(oneTimeWorkRequest);
     }
 
 
