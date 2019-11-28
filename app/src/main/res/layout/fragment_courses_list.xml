@@ -43,14 +43,6 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <Button
-                    android:id="@+id/manage_courses_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:text="@string/title_download_activity" />
-
                 <ImageView
                     android:id="@+id/empty_state_img"
                     android:layout_width="match_parent"
@@ -65,6 +57,14 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:text="@string/no_courses" />
+
+                <Button
+                    android:id="@+id/manage_courses_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:text="@string/title_download_activity" />
 
             </LinearLayout>
 
