@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThat;
 
 
 @RunWith(AndroidJUnit4.class)
-public class TrakerWorkerTest {
+public class TrackerWorkerTest {
 
     private Context context;
 
@@ -50,8 +50,8 @@ public class TrakerWorkerTest {
 
 
         // FOR LISTENABLE WORKERS: (https://stackoverflow.com/a/56200464/1365440)
-        TestListenableWorkerBuilder<TrackerWorker> testTrackerWorker = TestListenableWorkerBuilder.from(context, TrackerWorker.class);
-        ListenableWorker.Result result = testTrackerWorker.build().startWork().get();
+        ListenableWorker testTrackerWorker = TestListenableWorkerBuilder.from(context, TrackerWorker.class).build();
+        ListenableWorker.Result result = testTrackerWorker.startWork().get();
         assertThat(result, is(ListenableWorker.Result.success()));
 
 
