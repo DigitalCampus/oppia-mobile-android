@@ -32,4 +32,6 @@
     <color name="grey_dark">#7E7E7E</color>
     <color name="red">#E53935</color>
 
+    <color name="chart_points_circle_color">@color/theme_primary</color>
+
 </resources>

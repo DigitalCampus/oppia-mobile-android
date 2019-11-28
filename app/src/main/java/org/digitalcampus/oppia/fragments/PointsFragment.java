@@ -223,6 +223,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.theme_primary));
         dataSet.setDrawValues(false);
         dataSet.setDrawFilled(true);
+        dataSet.setCircleColor(ContextCompat.getColor(getActivity(), R.color.chart_points_circle_color));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             dataSet.setFillDrawable(getGradientDrawable());
         }
