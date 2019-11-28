@@ -96,7 +96,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 		return vv;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);

@@ -17,6 +17,9 @@
 
 package org.digitalcampus.oppia.task;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +65,15 @@ public class Payload {
 
 	public void setResultResponse(String resultResponse) {
 		this.resultResponse = resultResponse;
+	}
+
+	public void setResultResponseDataError(String data, String errorMessage) {
+		try {
+			this.resultResponse = new JSONObject().put("error", errorMessage).toString();
+			this.responseData.add(data);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList<Object> getResponseData() {

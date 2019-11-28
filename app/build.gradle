@@ -257,7 +257,8 @@ dependencies {
 
 //    implementation 'androidx.multidex:multidex:2.0.1'
 
-    //debugImplementation 'im.dino:dbinspector:3.4.1@aar'
+//    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
+
 }
 
 

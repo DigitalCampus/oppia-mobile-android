@@ -44,6 +44,7 @@ public abstract class WidgetFactory extends Fragment {
     protected static final String PROPERTY_FEEDBACK = "feedback";
     protected static final String PROPERTY_ACTIVITY_STARTTIME = "Activity_StartTime";
     protected static final String PROPERTY_ON_RESULTS_PAGE = "OnResultsPage";
+    protected static final String PROPERTY_ATTEMPT_SAVED = "attemptSaved";
     protected static final String PROPERTY_COURSE = "Course";
     protected static final String PROPERTY_ACTIVITY = "Activity";
 
