@@ -102,10 +102,9 @@ public class RegisterUITest {
         onView(withId(R.id.register_btn))
                 .perform(click());
 
-        onView(withText("Error"))   //String "Please enter a valid e-mail address."
-                .check(matches(isDisplayed()));
+        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                .check(matches(withText(R.string.field_spaces_error)));
     }
-
 
     @Test
     public void showsErrorMessageWhenThePasswordIsTooShort() throws Exception {
