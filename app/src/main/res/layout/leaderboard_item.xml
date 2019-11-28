@@ -57,7 +57,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/leaderboard_fullname"
                 android:fitsSystemWindows="true"
-                android:text="username "/>
+                android:text="username "
+                android:visibility="gone"/>
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

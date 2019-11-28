@@ -47,7 +47,7 @@ android {
         versionCode 72
         versionName "7.0.2"
 
-        applicationId "org.digitalcampus.mobile.learning"
+        applicationId "org.lastmilehealth.oppiamobile"
         minSdkVersion 14
         targetSdkVersion 28
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

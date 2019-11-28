@@ -78,6 +78,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View vv = inflater.inflate(R.layout.fragment_register, container, false);
+
 		usernameField = vv.findViewById(R.id.register_form_username_field);
 		emailField = vv.findViewById(R.id.register_form_email_field);
 		passwordField = vv.findViewById(R.id.register_form_password_field);
@@ -86,12 +87,12 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		lastnameField = vv.findViewById(R.id.register_form_lastname_field);
 		jobTitleField = vv.findViewById(R.id.register_form_jobtitle_field);
 		organisationField = vv.findViewById(R.id.register_form_organisation_field);
-		phoneNoField = vv.findViewById(R.id.register_form_phoneno_field);
+		//phoneNoField = vv.findViewById(R.id.register_form_phoneno_field);
 		registerButton = vv.findViewById(R.id.register_btn);
-		loginButton = vv.findViewById(R.id.action_login_btn);
+		//loginButton = vv.findViewById(R.id.action_login_btn);
 
 		fields = Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
-				firstnameField, lastnameField, jobTitleField, organisationField, phoneNoField);
+				firstnameField, lastnameField, jobTitleField, organisationField);
 
 		return vv;
 	}
@@ -105,16 +106,19 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 				onRegisterClick();
 			}
 		});
-		loginButton.setOnClickListener(new View.OnClickListener() {
+
+		for (ValidableTextInputLayout field : fields){
+			field.initialize();
+		}
+
+		/*loginButton.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
 				WelcomeActivity wa = (WelcomeActivity) RegisterFragment.super.getActivity();
 				wa.switchTab(WelcomeActivity.TAB_LOGIN);
 			}
-		});
-		for (ValidableTextInputLayout field : fields){
-			field.initialize();
-		}
+		});*/
+
 	}
 
 	public void submitComplete(Payload response) {
@@ -146,13 +150,14 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 	public void onRegisterClick() {
 		// get form fields
+
 		String username = usernameField.getCleanedValue();
 		String email = emailField.getCleanedValue();
 		String password = passwordField.getCleanedValue();
 		String passwordAgain = passwordAgainField.getCleanedValue();
 		String firstname = firstnameField.getCleanedValue();
 		String lastname = lastnameField.getCleanedValue();
-		String phoneNo = phoneNoField.getCleanedValue();
+		//String phoneNo = phoneNoField.getCleanedValue();
 		String jobTitle = jobTitleField.getCleanedValue();
 		String organisation = organisationField.getCleanedValue();
 
@@ -160,6 +165,11 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		for (ValidableTextInputLayout field : fields){
 			valid = field.validate() && valid;
 		}
+
+		/*if (email.length() == 0) {
+			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_email);
+			return;
+		}*/
 
 		// check password length
 		if (password.length() < MobileLearning.PASSWORD_MIN_LENGTH) {
@@ -178,12 +188,13 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		}
 
 		// check phone no
-		if (phoneNo.length() < 8) {
+		/*if (phoneNo.length() < 8) {
             phoneNoField.setErrorEnabled(true);
             phoneNoField.setError(getString(R.string.error_register_no_phoneno ));
 			phoneNoField.requestFocus();
+
 			return;
-		}
+		}*/
 
 		if (valid){
             User u = new User();
@@ -195,7 +206,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
             u.setEmail(email);
             u.setJobTitle(jobTitle);
             u.setOrganisation(organisation);
-            u.setPhoneNo(phoneNo);
+            //u.setPhoneNo(phoneNo);
             executeRegisterTask(u);
         }
 
