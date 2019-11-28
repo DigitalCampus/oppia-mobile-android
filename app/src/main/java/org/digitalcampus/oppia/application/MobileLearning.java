@@ -217,6 +217,7 @@ public class MobileLearning extends Application {
             cancelTrackerWork();
         }
 
+
         // To test worker alone
 //        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(TrackerWorker.class).build();
 //        WorkManager.getInstance(this).enqueue(oneTimeWorkRequest);
