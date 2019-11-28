@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/loading_courses"
@@ -35,25 +31,17 @@
                 android:id="@+id/recycler_courses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:listitem="@layout/course_list_row" />
 
             <LinearLayout
                 android:id="@+id/no_courses"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/manage_courses_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:text="@string/no_courses"
-                    android:textColor="@color/text_dark"
-                    android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/manage_courses_btn"
@@ -62,6 +50,22 @@
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:text="@string/title_download_activity" />
+
+                <ImageView
+                    android:id="@+id/empty_state_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/empty_state_add"
+                    android:contentDescription="@string/no_courses" />
+
+                <TextView
+                    android:id="@+id/manage_courses_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:text="@string/no_courses" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -105,6 +109,5 @@
                  />
 
         </RelativeLayout>
-    </FrameLayout>
 
-</LinearLayout>
+</FrameLayout>
