@@ -1,8 +1,22 @@
-//@RunWith(AndroidJUnit4.class)
-public class BuildChecksOppiaCore {
 
 
-    /* USED ONLY IN CORE REPOSITORY. SEE BuildChecksOppiaLMH file
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import org.digitalcampus.mobile.learning.BuildConfig;
+import org.digitalcampus.mobile.learning.R;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static org.junit.Assert.assertEquals;
+
+@RunWith(AndroidJUnit4.class)
+public class BuildChecksOppiaLMH {
 
     private Context context;
     private SharedPreferences prefs;
@@ -13,7 +27,6 @@ public class BuildChecksOppiaCore {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-
     @Test
     public void checkDefaultSettingsParameters() {
 
@@ -21,24 +34,26 @@ public class BuildChecksOppiaCore {
         String oppiaServerDefault = prefs.getString("prefServer", null);
         String oppiaServerHost = context.getString(R.string.oppiaServerHost);
 
-        assertEquals(oppiaServerDefault, "https://demo.oppia-mobile.org/");
-        assertEquals(oppiaServerHost, "demo.oppia-mobile.org");
+        assertEquals(oppiaServerDefault, "https://cmedata.org/");
+        assertEquals(oppiaServerHost, "cmedata.org");
 
         assertEquals(BuildConfig.ADMIN_PROTECT_SETTINGS, false);
         assertEquals(BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC, false);
         assertEquals(BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT, false);
-        assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_DELETE, false);
+        assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_DELETE, true);
         assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_RESET, false);
         assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_INSTALL, false);
         assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_UPDATE, false);
+        assertEquals(BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD, "1234");
+        assertEquals(BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION, 72);
 
 
         assertEquals(BuildConfig.MENU_ALLOW_MONITOR, true);
         assertEquals(BuildConfig.MENU_ALLOW_SETTINGS, true);
-        assertEquals(BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD, true);
+        assertEquals(BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD, false);
         assertEquals(BuildConfig.MENU_ALLOW_SYNC, true);
-        assertEquals(BuildConfig.MENU_ALLOW_LOGOUT, true);
-        assertEquals(BuildConfig.MENU_ALLOW_LANGUAGE, true);
+        assertEquals(BuildConfig.MENU_ALLOW_LOGOUT, false);
+        assertEquals(BuildConfig.MENU_ALLOW_LANGUAGE, false);
         assertEquals(BuildConfig.DOWNLOAD_COURSES_DISPLAY, 1);
 
         assertEquals(BuildConfig.START_COURSEINDEX_COLLAPSED, false);
@@ -68,7 +83,4 @@ public class BuildChecksOppiaCore {
 
 
     }
-
-     */
-
 }

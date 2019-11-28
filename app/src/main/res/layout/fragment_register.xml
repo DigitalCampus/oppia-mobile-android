@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     app:required="true"
                     app:cantContainSpaces="true"
-                    app:helperText="Use your family name and your ID number as username. For example, MenyonJTP5-04"
+                    app:helperText="@string/username_field_helper_text"
                     app:helperTextEnabled="true">
 
                     <EditText

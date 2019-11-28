@@ -21,7 +21,7 @@
     <string name="service_tracker">&appName; - Seguimiento</string>
     
     <string name="fragment_welcome_title">Bienvenido a &appName;</string>
-    <string name="fragment_welcome_desc">&appName; es una plataforma de aprendizaje móvil de código abierto para la entrega de contenido de aprendizaje, vídeo y cuestionarios.\n\n\'Oppia\' viene del verbo \'aprender\' en finés.</string>
+    <string name="fragment_welcome_desc">&appName; es una plataforma de aprendizaje móvil de código abierto para la entrega de contenido de aprendizaje, vídeo y cuestionarios.</string>
     <string name="fragment_welcome_login_info">Para empezar a utilizar &appName;, necesitarás registrarte o iniciar sesión.</string>
     <string name="fragment_welcome_privacy">Nos tomamos tu privacidad en serio, <a href="http://digital-campus.org/privacy/">descubre más acerca de la política de privacidad de &companyName;</a></string>
     

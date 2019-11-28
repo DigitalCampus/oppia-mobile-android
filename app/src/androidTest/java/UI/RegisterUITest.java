@@ -70,24 +70,6 @@ public class RegisterUITest {
 
     }
 
-    @Test
-    public void showsErrorMessageWhenThereIsNoEmail() throws  Exception {
-
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("UsernameWithoutSpaces"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
-
-        onView(withId(R.id.register_btn))
-                .perform(click());
-
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .check(matches(withText(R.string.field_required)));
-    }
 
     @Test
     public void showErrorMessageWhenTheEmailIsWrong() throws Exception {
@@ -124,40 +106,6 @@ public class RegisterUITest {
                 .check(matches(isDisplayed()));
     }
 
-    @Test
-    public void showErrorMessageWhenTheEmailContainsSpaces() throws Exception {
-        onView(withId(R.id.welcome_register))
-                .perform(scrollTo(), click());
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_username_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Username"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("email with spaces@gmail.com"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_password_again_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("password1"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_firstname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("First Name"));
-
-        onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
-                .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
-
-        // LMH_custom_start
-        // onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-        //        .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
-        // LMH_custom_end
-
-        onView(withId(R.id.register_btn))
-                .perform(click());
-
-        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
-                .check(matches(withText(R.string.field_spaces_error)));
-    }
 
     @Test
     public void showsErrorMessageWhenThePasswordIsTooShort() throws Exception {
@@ -308,10 +256,10 @@ public class RegisterUITest {
         // onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
         //        .perform(closeSoftKeyboard(), scrollTo(), typeText("1234567"));
         // LMH_custom_end
-
-        onView(withId(R.id.register_btn))
-                .perform(click());
-
+//
+//        onView(withId(R.id.register_btn))
+//                .perform(click());
+//
         // LMH_custom_start
         // onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
         //        .check(matches(withText(R.string.error_register_no_phoneno)));

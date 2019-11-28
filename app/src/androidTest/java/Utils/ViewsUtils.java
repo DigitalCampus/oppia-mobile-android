@@ -1,16 +1,17 @@
 package Utils;
 
+import android.widget.EditText;
+
 import androidx.annotation.IdRes;
 import androidx.test.espresso.ViewInteraction;
-import android.widget.EditText;
-import android.widget.TextView;
+
+import org.digitalcampus.mobile.learning.R;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.not;
 
 public class ViewsUtils {
 
@@ -28,7 +29,7 @@ public class ViewsUtils {
      * Use this method to find the error view within the TextInputLayout. Useful for asseting that certain errors are displayed to the user
      */
     public static ViewInteraction onErrorViewWithinTextInputLayoutWithId(@IdRes int textInputLayoutId) {
-        return onView(allOf(isDescendantOfA(withId(textInputLayoutId)), not(isAssignableFrom(EditText.class)), isAssignableFrom(TextView.class)));
+        return onView(allOf(isDescendantOfA(withId(textInputLayoutId)), withId(R.id.textinput_error)));
     }
 
 }
