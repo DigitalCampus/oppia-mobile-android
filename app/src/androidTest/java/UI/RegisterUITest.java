@@ -112,10 +112,8 @@ public class RegisterUITest {
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        // LMH_custom_start
-        // onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-        //        .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
-        // LMH_custom_end
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
 
         onView(withId(R.id.register_btn))
                 .perform(click());
@@ -147,10 +145,8 @@ public class RegisterUITest {
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        // LMH_custom_start
-        // onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-        //        .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
-        // LMH_custom_end
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("123456789"));
 
         onView(withId(R.id.register_btn))
                 .perform(click());
@@ -292,30 +288,24 @@ public class RegisterUITest {
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        // LMH_custom_start
-        // onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-        //        .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
-        // LMH_custom_end
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(""));
 
         onView(withId(R.id.register_btn))
                 .perform(click());
 
 
-        // LMH_custom_start
-        // onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-        //        .check(matches(withText(R.string.error_register_no_phoneno)));
+        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                .check(matches(withText(R.string.error_register_no_phoneno)));
 
-        // onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-        //        .perform(closeSoftKeyboard(), scrollTo(), typeText("1234567"));
-        // LMH_custom_end
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("1234567"));
 
         onView(withId(R.id.register_btn))
                 .perform(click());
 
-        // LMH_custom_start
-        // onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-        //        .check(matches(withText(R.string.error_register_no_phoneno)));
-        // LMH_custom_end
+        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                .check(matches(withText(R.string.error_register_no_phoneno)));
     }
 
     @Test
@@ -342,10 +332,8 @@ public class RegisterUITest {
         onEditTextWithinTextInputLayoutWithId(R.id.register_form_lastname_field)
                 .perform(closeSoftKeyboard(), scrollTo(), typeText("Last Name"));
 
-        // LMH_custom_start
-        // onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
-        //        .perform(closeSoftKeyboard(), scrollTo(), typeText("12345678"));
-        // LMH_custom_end
+        onEditTextWithinTextInputLayoutWithId(R.id.register_form_phoneno_field)
+                .perform(closeSoftKeyboard(), scrollTo(), typeText("12345678"));
 
         onView(withId(R.id.register_btn))
                 .perform( click());

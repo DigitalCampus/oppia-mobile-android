@@ -19,21 +19,21 @@ body {
 h1 {
 	margin: 10px 5px;
 	text-align:center;
-	color: #245c7d;
+	color: #495525;
 	font-size: 160%;
 }
 
 h2 {
 	margin: 10px 5px;
 	text-align:center;
-	color: #245c7d;
+	color: #495525;
 	font-size: 140%;
 }
 
 h3 {
 	margin: 10px 5px;
 	text-align:center;
-	color: #245c7d;
+	color: #495525;
 	font-size: 120%;
 }
 
@@ -61,12 +61,12 @@ li:before {
       max-height: 0px;
       left: -20px;
       top: -0px;
-      color: #229cbe;
+      color: #77A240;
       font-size: 30px;
     }
   
 a {
-	color: #1f455c;
+	color: #495525;
 	text-decoration: underline;
 }
 
@@ -74,7 +74,7 @@ a {
 	margin:10px 5px;
 	padding: 5px;
 	font-weight: bold;
-	border: 2px solid #1c84a1;
+	border: 2px solid #77A240;
 	border-radius: 0.5em;
 	-moz-border-radius: 0.5em;
 	-webkit-border-radius: 0.5em;

@@ -22,7 +22,6 @@
     <color name="design_snackbar_background_color" tools:override="true">@color/theme_primary</color>
     <color name="subtitle_bar">@color/theme_secondary_light</color>
     <color name="points_badge">@color/theme_dark</color>
-    <color name="piechart_primary">@color/theme_primary_dark</color>
 
     <color name="background_cover">#c6333333</color>
     <color name="transparent">#00ffffff</color>
