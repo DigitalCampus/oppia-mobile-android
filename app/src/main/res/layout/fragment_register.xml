@@ -53,9 +53,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/register_form_username_title"
                         android:inputType="text"
-                        android:textSize="15sp"
-
-                        />
+                        android:textSize="15sp" />
 
                 </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
 
