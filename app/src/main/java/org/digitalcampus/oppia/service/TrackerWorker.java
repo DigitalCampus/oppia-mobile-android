@@ -58,7 +58,14 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
 
         future = SettableFuture.create();
 
-        updateTracking();
+
+        boolean isLoggedIn = SessionManager.isLoggedIn(getApplicationContext());
+        if (isLoggedIn) {
+            updateTracking();
+        } else {
+            Log.i(TAG, "startWork: user not logged in. exiting TrakerWorker");
+            future.set(Result.success());
+        }
 
         return future;
     }
