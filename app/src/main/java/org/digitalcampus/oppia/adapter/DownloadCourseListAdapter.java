@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,9 +117,9 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 	    } else {
             viewHolder.courseDescription.setVisibility(View.GONE);
 	    }
-        
-        String author = c.getDisplayAuthorName();
-        if ((author != null) && !(c.isDownloading() || c.isInstalling())){
+
+        String author = c.getOrganizationName();
+        if (!TextUtils.isEmpty(author) && !(c.isDownloading() || c.isInstalling())){
             viewHolder.labelAuthor.setVisibility(View.VISIBLE);
             viewHolder.courseAuthor.setVisibility(View.VISIBLE);
             viewHolder.courseAuthor.setText(author);
