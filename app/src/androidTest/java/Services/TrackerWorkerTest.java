@@ -54,6 +54,5 @@ public class TrackerWorkerTest {
         ListenableWorker.Result result = testTrackerWorker.startWork().get();
         assertThat(result, is(ListenableWorker.Result.success()));
 
-
     }
 }

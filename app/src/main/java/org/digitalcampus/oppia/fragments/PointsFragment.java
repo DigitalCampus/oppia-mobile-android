@@ -26,10 +26,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -42,7 +43,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.PointsListAdapter;
+import org.digitalcampus.oppia.adapter.PointsAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -73,8 +74,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     List<Points> pointsFiltered = new ArrayList<>();
     private Map<String, Integer> pointsGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
     private int totalPoints;
-    private PointsListAdapter pointsAdapter;
-    private ListView listView;
+    private RecyclerView recyclerPoints;
     private TextView tvTotalPoints;
     private TabLayout tabsFilterPoints;
     private LineChart chart;
@@ -82,6 +82,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     List<String> labels = new ArrayList<>();
     private int currentDatesRangePosition;
     private Course course;
+    private PointsAdapter adapterPoints;
 
     public static PointsFragment newInstance(Course course) {
         PointsFragment pointsFragment = new PointsFragment();
@@ -92,7 +93,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     }
 
     private void findViews() {
-        listView = getView().findViewById(R.id.points_list);
+        recyclerPoints = getView().findViewById(R.id.recycler_points);
         tvTotalPoints = getView().findViewById(R.id.tv_total_points);
         tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
         chart = getView().findViewById(R.id.chart);
@@ -117,8 +118,10 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
         loadPoints();
 
-        pointsAdapter = new PointsListAdapter(super.getActivity(), pointsFiltered);
-        listView.setAdapter(pointsAdapter);
+        recyclerPoints.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+
+        adapterPoints = new PointsAdapter(getActivity(), pointsFiltered);
+        recyclerPoints.setAdapter(adapterPoints);
 
         showPointsFiltered(POSITION_TAB_LAST_WEEK);
 
@@ -197,7 +200,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
         tvTotalPoints.setText(String.valueOf(totalPoints));
 
-        pointsAdapter.notifyDataSetChanged();
+        adapterPoints.notifyDataSetChanged();
 
         loadPlot();
     }
