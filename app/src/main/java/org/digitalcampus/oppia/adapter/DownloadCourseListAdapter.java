@@ -118,11 +118,11 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
             viewHolder.courseDescription.setVisibility(View.GONE);
 	    }
 
-        String author = c.getOrganizationName();
-        if (!TextUtils.isEmpty(author) && !(c.isDownloading() || c.isInstalling())){
+        String organisation = c.getOrganisationName();
+        if (!TextUtils.isEmpty(organisation) && !(c.isDownloading() || c.isInstalling())){
             viewHolder.labelAuthor.setVisibility(View.VISIBLE);
             viewHolder.courseAuthor.setVisibility(View.VISIBLE);
-            viewHolder.courseAuthor.setText(author);
+            viewHolder.courseAuthor.setText(organisation);
         }
         else{
             viewHolder.labelAuthor.setVisibility(View.GONE);

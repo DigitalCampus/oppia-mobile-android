@@ -222,6 +222,7 @@ public class DownloadActivityUITest {
         CourseIntallViewAdapter c = getBaseCourse();
         String authorName = "Mock Author";
         c.setAuthorName(authorName);
+        c.setOrganisationName(authorName);
 
         givenThereAreSomeCourses(2, c);
 

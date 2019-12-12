@@ -45,7 +45,7 @@ public class BuildChecksOppiaCore {
         assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_INSTALL, false);
         assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_UPDATE, false);
         assertEquals(BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD, "");
-        assertEquals(BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION, 72);
+        assertEquals(BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION, 68);
 
 
         assertEquals(BuildConfig.MENU_ALLOW_MONITOR, true);
