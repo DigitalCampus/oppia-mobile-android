@@ -194,7 +194,7 @@ public class PreferencesFragment extends PreferenceFragment {
 
     private void protectAdminPreferences(){
         final CheckBoxPreference adminEnabled = (CheckBoxPreference) findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
-        final EditTextPreference adminPassword = (EditTextPreference) findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);
+        protectAdminEditTextPreferences(PrefsActivity.PREF_ADMIN_PASSWORD, PrefsActivity.PREF_SERVER);
 
         adminEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -215,19 +215,33 @@ public class PreferencesFragment extends PreferenceFragment {
             }
         });
 
-        adminPassword.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
-                    @Override
-                    public void onPermissionGranted() {
-                        adminPassword.setText((String) newValue);
-                        preference.getEditor().putString(preference.getKey(), (String) newValue);
+    }
+
+    private void protectAdminEditTextPreferences(String... prefsKeys) {
+
+        for (String prefKey : prefsKeys) {
+
+            final EditTextPreference editTextPreference = (EditTextPreference) findPreference(prefKey);
+
+            editTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+
+                    if (!MobileLearning.getPrefs(getActivity()).getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
+                        return true;
                     }
-                });
-                return false;
-            }
-        });
+
+                    AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
+                        @Override
+                        public void onPermissionGranted() {
+                            editTextPreference.setText((String) newValue);
+                            preference.getEditor().putString(preference.getKey(), (String) newValue);
+                        }
+                    });
+                    return false;
+                }
+            });
+        }
     }
 
     public class MaxIntOnStringPreferenceListener implements Preference.OnPreferenceChangeListener{
