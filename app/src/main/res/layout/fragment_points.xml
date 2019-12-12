@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ap="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:ap="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs_filter_points"
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        app:tabGravity="center"
         app:tabBackground="@drawable/bg_tab_text"
-        app:tabTextAppearance="@style/TabLayoutAppearance"
-        app:tabIndicatorHeight="0dp">
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabTextAppearance="@style/TabLayoutAppearance">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_last_week"
             style="@style/TabText"
-            android:text="@string/last_week"/>
+            android:text="@string/last_week" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_last_month"
@@ -35,55 +35,67 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <RelativeLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_plot">
+        android:layout_height="match_parent"
+        android:layout_marginTop="7dp">
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-
-        <TextView
-            android:id="@+id/tv_total_points"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/text_dark"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:text="@string/points"
-            android:textColor="@color/text_dark"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_plot">
 
-    </LinearLayout>
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </RelativeLayout>
 
-    <ListView
-        android:id="@+id/points_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/list_divider_light"
-        android:dividerHeight="1dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingTop="10dp">
 
+                <TextView
+                    android:id="@+id/tv_total_points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/text_dark"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/points"
+                    android:textColor="@color/text_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_points"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:nestedScrollingEnabled="false"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

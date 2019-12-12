@@ -47,6 +47,7 @@ public class CourseIntallViewAdapter extends Course {
 
     private String authorUsername;
     private String authorName;
+    private String organizationName;
 
     private static final String JSON_PROPERTY_DESCRIPTION = "description";
     private static final String JSON_PROPERTY_TITLE = "title";
@@ -58,6 +59,7 @@ public class CourseIntallViewAdapter extends Course {
     private static final String JSON_PROPERTY_USERNAME = "username";
     private static final String JSON_PROPERTY_SCHEDULE_URI = "schedule_uri";
     private static final String JSON_PROPERTY_SCHEDULE = "schedule";
+    private static final String JSON_PROPERTY_ORGANIZATION = "organization";
 
     public boolean isDownloading() {
         return downloading;
@@ -173,14 +175,27 @@ public class CourseIntallViewAdapter extends Course {
                         db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
             }
 
+            if (json_obj.has(JSON_PROPERTY_ORGANIZATION)) {
+                course.setOrganizationName(json.getString(JSON_PROPERTY_ORGANIZATION));
+            }
+
             if (downloadingCourses != null && downloadingCourses.contains(course.getDownloadUrl())) {
                 course.setDownloading(true);
             }
             if (!onlyAddUpdates || course.isToUpdate()) {
                 courses.add(course);
             }
+
         }
 
         return courses;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
     }
 }
