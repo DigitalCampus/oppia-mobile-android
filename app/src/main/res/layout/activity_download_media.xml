@@ -8,16 +8,13 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/missing_media_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_control_bar"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="5dp"
-        android:divider="@color/transparent"
-        android:dividerHeight="0dp"
-        android:listSelector="@drawable/background_transparent" />
+        android:layout_marginTop="5dp" />
 
     <LinearLayout
         android:id="@+id/home_messages"

@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.splunk.mint.Mint;
 
@@ -76,7 +77,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     private boolean isSortByCourse;
     private TextView downloadSelected;
     private View missingMediaContainer;
-    private ListView mediaList;
+    private RecyclerView mediaList;
     private ArrayList<Media> mediaSelected;
     private ActionMode actionMode;
 
