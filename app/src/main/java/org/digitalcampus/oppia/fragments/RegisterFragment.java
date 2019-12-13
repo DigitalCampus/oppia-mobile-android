@@ -22,15 +22,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.appcompat.app.AlertDialog;
+
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.OppiaMobileActivity;
+import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -49,8 +50,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
-
-	public static final String TAG = RegisterFragment.class.getSimpleName();
 
 
 	private ValidableTextInputLayout usernameField;
@@ -96,7 +95,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 		return vv;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -128,7 +127,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			gamificationEngine.processEventRegister();
             //Save the search tracker
             new Tracker(super.getActivity()).saveRegisterTracker();
-	    	startActivity(new Intent(getActivity(), OppiaMobileActivity.class));
+	    	startActivity(new Intent(getActivity(), MainActivity.class));
 	    	super.getActivity().finish();
 		} else {
 			Context ctx = super.getActivity();
@@ -212,7 +211,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 
 		//Save the search tracker
 		new Tracker(super.getActivity()).saveRegisterTracker();
-		startActivity(new Intent(getActivity(), OppiaMobileActivity.class));
+		startActivity(new Intent(getActivity(), MainActivity.class));
 		super.getActivity().finish();
 	}
 

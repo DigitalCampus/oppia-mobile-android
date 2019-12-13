@@ -182,13 +182,14 @@ public class PreferencesFragment extends PreferenceFragment {
         }
 
         ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE);
-        if (!entryValues.isEmpty()){
+        if (entries.size() > 1){
             langsList.setEntries( entries.toArray(new CharSequence[0]) );
             langsList.setEntryValues( entryValues.toArray(new CharSequence[0]) );
         }
         else{
             getPreferenceScreen().removePreference(langsList);
         }
+
     }
 
     private void protectAdminPreferences(){

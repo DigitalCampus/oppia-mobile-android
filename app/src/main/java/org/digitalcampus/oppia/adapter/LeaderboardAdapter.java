@@ -1,13 +1,14 @@
 package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.LeaderboardPosition;
@@ -24,11 +25,11 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     private int normalTextColor;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView points;
-        TextView pos;
-        TextView username;
-        TextView fullname;
-        CardView userCard;
+        private TextView points;
+        private TextView pos;
+        private TextView username;
+        private TextView fullname;
+        private CardView userCard;
 
 
         ViewHolder(View v) {
@@ -45,7 +46,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     public LeaderboardAdapter(Context ctx, List<LeaderboardPosition> leaderboard){
         this.leaderboard = leaderboard;
         normalBgColor = ContextCompat.getColor(ctx, R.color.text_light);
-        highlightBgColor = ContextCompat.getColor(ctx, R.color.highlight_mid);
+        highlightBgColor = ContextCompat.getColor(ctx, R.color.theme_secondary_light);
         normalTextColor = ContextCompat.getColor(ctx, R.color.text_dark);
         highlightTextColor = ContextCompat.getColor(ctx, R.color.text_light);
     }

@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [
-    <!ENTITY appName "OppiaMobile">
-    <!ENTITY companyName "Digital Campus"> ]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "OppiaMobile"><!ENTITY companyName "Digital Campus"> ]>
 <resources>
     <string name="app_name">&appName;</string>
     <string name="app_logo_alt">&companyName; Logo</string>
@@ -280,7 +277,7 @@
     <string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
     <string name="download_via_pc_extenal_storage">You need to set an external storage option to be able to place the files downloaded from your PC inside the app directory. Please, go to "Settings" and change your storage option.</string>
 
-    <string name="course_draft">(Draft version)</string>
+    <string name="course_draft">Draft version</string>
 
     <string name="search.activity_title">Search</string>
     <string name="search.result_summary">%1$d results for \"%2$s\"</string>
@@ -327,7 +324,8 @@
     <string name="permissions.phone_state.title">read phone state and identity</string>
     <string name="permissions.phone_state.description">&appName; needs access to the phone identity to get information about your device model and Android version</string>
     <string name="permissions.allow_btn_text">Allow permissions</string>
-    <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings | Apps | &appName; | Permissions to grant access to these permissions</string>
+    <string name="permissions.not_askable.message">The app does not have the permissions needed to run. Please, go to Settings | Apps | &appName;
+        | Permissions to grant access to these permissions</string>
     <string name="permissions.not_askable.info">You see this message because permissions were prompted before and you denied them and checked \"Don\'t ask again\"</string>
     <string name="permissions.bluetooth.message">The app needs some additional permissions to scan for Bluetooth devices.</string>
     <string name="error_apikey_expired">Your API key expired. Please, log in again.</string>
@@ -388,6 +386,8 @@
     <string name="register_offline">Register offline</string>
     <string name="field_required">This field cannot be empty</string>
     <string name="field_spaces_error">Cannot contain spaces</string>
+    <string name="permissions.location.title">access location</string>
+    <string name="permissions.location.description">In new Android devices, this permission is needed to be able to pair with other devices using Bluetooth</string>
     <string name="points">points</string>
     <string name="last_year">last year</string>
     <string name="last_month">last month</string>
@@ -407,6 +407,20 @@
     <string name="prefGamificationPointsViewTypeNone">None</string>
 
     <string name="prefDurationAnimationTypeGamificationPointsView">Duration of gamification points view (seconds)</string>
+    <string name="device_name">This device name: %s</string>
+
+    <string name="channel_notif_internal_name">Internal notifications</string>
+    <string name="channel_notif_internal_description">This channel shows useful notifications in many process like Bluetooth transfers, course downloads or sync tasks</string>
+
+
+    <string name="nav_home">Home</string>
+    <string name="nav_scorecard">Scorecard</string>
+    <string name="nav_points">Points</string>
+    <string name="edit_profile">Edit profile</string>
+
+    <string name="prefStartCourseIndexCollapsed">Start course index with sections collapsed</string>
+    <string name="info_override_password">Overriding admin password</string>
+    <string name="register_username_exists">Username already exists</string>
 
 </resources>
 

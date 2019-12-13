@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,229 +28,229 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class Course extends MultiLangInfoModel implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4412987572522420704L;
-	public static final String SEQUENCING_MODE_NONE = "none";
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4412987572522420704L;
+    public static final String SEQUENCING_MODE_NONE = "none";
     public static final String SEQUENCING_MODE_SECTION = "section";
     public static final String SEQUENCING_MODE_COURSE = "course";
 
-	public static final String TAG = Course.class.getSimpleName();
-	private int courseId;
-	private String shortname;
-	private Double versionId;
-	private boolean installed;
-	private boolean toUpdate;
-	private boolean toUpdateSchedule;
-	private String downloadUrl;
-	private String imageFile;
-	private ArrayList<Media> media = new ArrayList<>();
-	private ArrayList<CourseMetaPage> metaPages = new ArrayList<>();
-	private Double scheduleVersionID;
-	private String scheduleURI;
-	private boolean isDraft = false;
-	private int priority = 0;
-	private int noActivities = 0;
-	private int noActivitiesCompleted = 0;
-	private int noActivitiesStarted = 0;
+    public static final String TAG = Course.class.getSimpleName();
+    private int courseId;
+    private String shortname;
+    private Double versionId;
+    private boolean installed;
+    private boolean toUpdate;
+    private boolean toUpdateSchedule;
+    private String downloadUrl;
+    private String imageFile;
+    private ArrayList<Media> media = new ArrayList<>();
+    private ArrayList<CourseMetaPage> metaPages = new ArrayList<>();
+    private Double scheduleVersionID;
+    private String scheduleURI;
+    private boolean isDraft = false;
+    private int priority = 0;
+    private int noActivities = 0;
+    private int noActivitiesCompleted = 0;
+    private int noActivitiesStarted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
-	private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<>();
+    private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<>();
 
-	private String root;
-	
-	public Course(String root) {
-		this.root = root;
-	}	
-	
-	public boolean validate() throws CourseNotFoundException{
-		File courseXML = new File(this.getCourseXMLLocation());
-		if(!courseXML.exists()){
-			throw new CourseNotFoundException();
-		} else {
-			return true;
-		}
-	}
-	
-	public Double getScheduleVersionID() {
-		return scheduleVersionID;
-	}
+    private String root;
 
-	public void setScheduleVersionID(Double scheduleVersionID) {
-		this.scheduleVersionID = scheduleVersionID;
-	}
+    public Course(String root) {
+        this.root = root;
+    }
 
-	public ArrayList<Media> getMedia() {
-		return media;
-	}
+    public boolean validate() throws CourseNotFoundException {
+        File courseXML = new File(this.getCourseXMLLocation());
+        if (!courseXML.exists()) {
+            throw new CourseNotFoundException();
+        } else {
+            return true;
+        }
+    }
 
-	public void setMedia(ArrayList<Media> media) {
-		this.media = media;
-	}
+    public Double getScheduleVersionID() {
+        return scheduleVersionID;
+    }
 
-	public String getImageFile() {
-		return imageFile;
-	}
+    public void setScheduleVersionID(Double scheduleVersionID) {
+        this.scheduleVersionID = scheduleVersionID;
+    }
 
-	public String getImageFileFromRoot() {
-		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + imageFile;
-	}
-	
-	public void setImageFile(String imageFile) {
-		this.imageFile = imageFile;
-	}
-	
-	public String getDownloadUrl() {
-		return downloadUrl;
-	}
+    public ArrayList<Media> getMedia() {
+        return media;
+    }
 
-	public void setDownloadUrl(String downloadUrl) {
-		this.downloadUrl = downloadUrl;
-	}
-	
-	public String getTrackerLogUrl(){
-		return String.format(MobileLearning.COURSE_ACTIVITY_PATH, this.getShortname());
-	}
+    public void setMedia(ArrayList<Media> media) {
+        this.media = media;
+    }
 
-	public Double getVersionId() {
-		return versionId;
-	}
+    public String getImageFile() {
+        return imageFile;
+    }
 
-	public void setVersionId(Double versionId) {
-		this.versionId = versionId;
-	}
+    public String getImageFileFromRoot() {
+        return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + imageFile;
+    }
 
-	public boolean isInstalled() {
-		return installed;
-	}
+    public void setImageFile(String imageFile) {
+        this.imageFile = imageFile;
+    }
 
-	public void setInstalled(boolean installed) {
-		this.installed = installed;
-	}
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
 
-	public boolean isToUpdate() {
-		return toUpdate;
-	}
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
 
-	public void setToUpdate(boolean toUpdate) {
-		this.toUpdate = toUpdate;
-	}
+    public String getTrackerLogUrl() {
+        return String.format(MobileLearning.COURSE_ACTIVITY_PATH, this.getShortname());
+    }
 
-	public float getProgressPercent() {
-		// prevent divide by zero errors
-		if (this.noActivities != 0){
-			return this.noActivitiesCompleted*100/this.noActivities;
-		} else {
-			return 0;
-		}
-	}
+    public Double getVersionId() {
+        return versionId;
+    }
 
-	public String getShortname() {
-		return shortname.toLowerCase(Locale.US);
-	}
+    public void setVersionId(Double versionId) {
+        this.versionId = versionId;
+    }
 
-	public void setShortname(String shortname) {
-		this.shortname = shortname.toLowerCase(Locale.US);
-	}
+    public boolean isInstalled() {
+        return installed;
+    }
 
-	public int getCourseId() {
-		return courseId;
-	}
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
+    }
 
-	public void setCourseId(int courseId) {
-		this.courseId = courseId;
-	}
+    public boolean isToUpdate() {
+        return toUpdate;
+    }
 
-	public String getLocation() {
-		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator;
-		
-	}
+    public void setToUpdate(boolean toUpdate) {
+        this.toUpdate = toUpdate;
+    }
 
-	public String getCourseXMLLocation(){
-		return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
-	}
-	
-	public boolean hasMedia(){
-		return media.size() != 0;
-	}
-	
-	public void setMetaPages(ArrayList<CourseMetaPage> ammp){
-		this.metaPages = ammp;
-	}
-	
-	public ArrayList<CourseMetaPage> getMetaPages(){
-		return this.metaPages;
-	}
-	
-	public CourseMetaPage getMetaPage(int id){
-		for(CourseMetaPage mmp: this.metaPages){
-			if(id == mmp.getId()){
-				return mmp;
-			}
-		}
-		return null;
-	}
+    public float getProgressPercent() {
+        // prevent divide by zero errors
+        if (this.noActivities != 0) {
+            return (float) this.noActivitiesCompleted * 100 / (float) this.noActivities;
+        } else {
+            return 0;
+        }
+    }
 
-	public boolean isToUpdateSchedule() {
-		return toUpdateSchedule;
-	}
+    public String getShortname() {
+        return shortname.toLowerCase(Locale.US);
+    }
 
-	public void setToUpdateSchedule(boolean toUpdateSchedule) {
-		this.toUpdateSchedule = toUpdateSchedule;
-	}
+    public void setShortname(String shortname) {
+        this.shortname = shortname.toLowerCase(Locale.US);
+    }
 
-	public String getScheduleURI() {
-		return scheduleURI;
-	}
+    public int getCourseId() {
+        return courseId;
+    }
 
-	public void setScheduleURI(String scheduleURI) {
-		this.scheduleURI = scheduleURI;
-	}
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 
-	public boolean isDraft() {
-		return isDraft;
-	}
+    public String getLocation() {
+        return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator;
 
-	public void setDraft(boolean isDraft) {
-		this.isDraft = isDraft;
-	}
+    }
 
-	public int getPriority() {
-		return priority;
-	}
+    public String getCourseXMLLocation() {
+        return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + MobileLearning.COURSE_XML;
+    }
 
-	public void setPriority(int priority) {
-		this.priority = priority;
-	}
+    public boolean hasMedia() {
+        return media.size() != 0;
+    }
 
-	public int getNoActivities() {
-		return noActivities;
-	}
+    public void setMetaPages(ArrayList<CourseMetaPage> ammp) {
+        this.metaPages = ammp;
+    }
 
-	public void setNoActivities(int noActivities) {
-		this.noActivities = noActivities;
-	}
+    public ArrayList<CourseMetaPage> getMetaPages() {
+        return this.metaPages;
+    }
 
-	public int getNoActivitiesCompleted() {
-		return noActivitiesCompleted;
-	}
+    public CourseMetaPage getMetaPage(int id) {
+        for (CourseMetaPage mmp : this.metaPages) {
+            if (id == mmp.getId()) {
+                return mmp;
+            }
+        }
+        return null;
+    }
 
-	public void setNoActivitiesCompleted(int noActivitiesCompleted) {
-		this.noActivitiesCompleted = noActivitiesCompleted;
-	}
+    public boolean isToUpdateSchedule() {
+        return toUpdateSchedule;
+    }
 
-	public int getNoActivitiesStarted() {
-		return noActivitiesStarted;
-	}
+    public void setToUpdateSchedule(boolean toUpdateSchedule) {
+        this.toUpdateSchedule = toUpdateSchedule;
+    }
 
-	public void setNoActivitiesStarted(int noActivitiesStarted) {
-		this.noActivitiesStarted = noActivitiesStarted;
-	}
-	
-	public int getNoActivitiesNotStarted(){
-		return this.getNoActivities() - this.getNoActivitiesCompleted() - this.getNoActivitiesStarted();
-	}
+    public String getScheduleURI() {
+        return scheduleURI;
+    }
+
+    public void setScheduleURI(String scheduleURI) {
+        this.scheduleURI = scheduleURI;
+    }
+
+    public boolean isDraft() {
+        return isDraft;
+    }
+
+    public void setDraft(boolean isDraft) {
+        this.isDraft = isDraft;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public int getNoActivities() {
+        return noActivities;
+    }
+
+    public void setNoActivities(int noActivities) {
+        this.noActivities = noActivities;
+    }
+
+    public int getNoActivitiesCompleted() {
+        return noActivitiesCompleted;
+    }
+
+    public void setNoActivitiesCompleted(int noActivitiesCompleted) {
+        this.noActivitiesCompleted = noActivitiesCompleted;
+    }
+
+    public int getNoActivitiesStarted() {
+        return noActivitiesStarted;
+    }
+
+    public void setNoActivitiesStarted(int noActivitiesStarted) {
+        this.noActivitiesStarted = noActivitiesStarted;
+    }
+
+    public int getNoActivitiesNotStarted() {
+        return this.getNoActivities() - this.getNoActivitiesCompleted() - this.getNoActivitiesStarted();
+    }
 
     public String getSequencingMode() {
         return sequencingMode;
@@ -260,21 +260,21 @@ public class Course extends MultiLangInfoModel implements Serializable {
         this.sequencingMode = sequencingMode;
     }
 
-	public static String getLocalFilename(String shortname, Double versionID){
-		return shortname+"-"+String.format("%.0f",versionID)+".zip";
-	}
-
-	public void addGamificationEvent(GamificationEvent ge){
-	    gamificationEvents.add(ge);
+    public static String getLocalFilename(String shortname, Double versionID) {
+        return shortname + "-" + String.format("%.0f", versionID) + ".zip";
     }
 
-	public void setGamificationEvents(ArrayList<GamificationEvent> events){
-		gamificationEvents = events;
-	}
+    public void addGamificationEvent(GamificationEvent ge) {
+        gamificationEvents.add(ge);
+    }
+
+    public void setGamificationEvents(ArrayList<GamificationEvent> events) {
+        gamificationEvents = events;
+    }
 
     public GamificationEvent findGamificationEvent(String event) throws GamificationEventNotFound {
-        for(GamificationEvent ge: gamificationEvents){
-            if(ge.getEvent().equals(event)){
+        for (GamificationEvent ge : gamificationEvents) {
+            if (ge.getEvent().equals(event)) {
                 return ge;
             }
         }

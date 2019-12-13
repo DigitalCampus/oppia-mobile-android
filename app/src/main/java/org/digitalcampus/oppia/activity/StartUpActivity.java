@@ -23,10 +23,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.splunk.mint.Mint;
 
@@ -41,13 +42,11 @@ import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.service.GCMRegistrationService;
 import org.digitalcampus.oppia.task.ImportLeaderboardsTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PostInstallTask;
 import org.digitalcampus.oppia.task.UpgradeManagerTask;
-import org.digitalcampus.oppia.utils.GooglePlayUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
@@ -55,7 +54,7 @@ import java.util.ArrayList;
 
 public class StartUpActivity extends Activity implements UpgradeListener, PostInstallListener, InstallCourseListener, PreloadAccountsListener, ImportLeaderboardsTask.ImportLeaderboardListener {
 
-	public final static String TAG = StartUpActivity.class.getSimpleName();
+	public static final String TAG = StartUpActivity.class.getSimpleName();
 	private TextView tvProgress;
 	private SharedPreferences prefs;
 	
@@ -65,18 +64,6 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
         Mint.disableNetworkMonitoring();
         Mint.initAndStartSession(this, MobileLearning.MINT_API_KEY);
         setContentView(R.layout.start_up);
-
-        if (MobileLearning.DEVICEADMIN_ENABLED){
-            boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
-                    new GooglePlayUtils.DialogListener() {
-                        @Override
-                        public void onErrorDialogClosed() {
-                            //If Google play is not available, we need to close the app
-                            StartUpActivity.this.finish();
-                        }
-                    });
-            if (!isGooglePlayAvailable) return;
-        }
 
         tvProgress = this.findViewById(R.id.start_up_progress);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -90,25 +77,6 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 
         boolean shouldContinue = PermissionsManager.CheckPermissionsAndInform(this);
         if (!shouldContinue) return;
-
-        if (MobileLearning.DEVICEADMIN_ENABLED) {
-            //We need to check again the Google Play API availability
-            boolean isGooglePlayAvailable = GooglePlayUtils.checkPlayServices(this,
-                    new GooglePlayUtils.DialogListener() {
-                        @Override
-                        public void onErrorDialogClosed() {
-                            //If Google play is not available, we need to close the app
-                            StartUpActivity.this.finish();
-                        }
-                    });
-            if (!isGooglePlayAvailable) {
-                this.finish();
-                return;
-            }
-            // Start IntentService to register the phone with GCM.
-            Intent intent = new Intent(this, GCMRegistrationService.class);
-            startService(intent);
-        }
 
         UpgradeManagerTask umt = new UpgradeManagerTask(this);
         umt.setUpgradeListener(this);
@@ -133,11 +101,13 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
 	
 	private void endStartUpScreen() {
         // launch new activity and close splash screen
+
         startActivity(new Intent(StartUpActivity.this,
-                SessionManager.isLoggedIn(this)
-                        ? OppiaMobileActivity.class
+                SessionManager.isLoggedIn(StartUpActivity.this)
+                        ? MainActivity.class
                         : WelcomeActivity.class));
-        this.finish();
+
+        finish();
     }
 
 	private void installCourses(){

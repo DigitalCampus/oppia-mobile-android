@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
         android:orientation="vertical"
@@ -35,7 +35,7 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 app:hintTextAppearance="@style/Oppia.TextLabel"
                 android:id="@+id/input_layout_username"
                 android:layout_width="match_parent"
@@ -43,23 +43,23 @@
 
                 <EditText
                     android:id="@+id/login_username_field"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:layout_marginLeft="@dimen/padding_large"
                     android:layout_marginRight="@dimen/padding_large"
                     android:hint="@string/login_username_title"
                     android:inputType="text"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_layout_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/login_password_field"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:layout_marginLeft="@dimen/padding_large"
@@ -67,11 +67,11 @@
                     android:hint="@string/login_password_title"
                     android:inputType="textPassword"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/login_btn"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding_large"
                 android:layout_marginTop="@dimen/padding_medium"

@@ -24,9 +24,9 @@ import okhttp3.Response;
 public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<String, String>> {
 
 
-    private final static String SERVER_NAME = "name";
-    private final static String SERVER_VERSION = "version";
-    private final static String ERROR_MESSAGE = "errorMessage";
+    private static final String SERVER_NAME = "name";
+    private static final String SERVER_VERSION = "version";
+    private static final String ERROR_MESSAGE = "errorMessage";
 
     public interface FetchServerInfoListener{
         void onError(String message);
@@ -93,13 +93,13 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
         } catch (IOException e) {
             result.put("result", "error");
             result.put(ERROR_MESSAGE, e.getMessage());
-            e.printStackTrace();
+            Log.e(TAG, "doInBackground: ", e);
             return result;
 
         } catch (JSONException e) {
             result.put("result", "error");
             result.put(ERROR_MESSAGE, ctx.getString(R.string.error_processing_response));
-            e.printStackTrace();
+            Log.e(TAG, "doInBackground: ", e);
         }
 
         if (!validServer){

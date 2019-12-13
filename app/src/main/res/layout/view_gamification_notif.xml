@@ -14,7 +14,7 @@
         android:background="@drawable/gradient_green"
         android:layout_alignParentBottom="true"/>
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_gamification_notif"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -38,7 +38,7 @@
         android:layout_toLeftOf="@+id/tv_gamification_notif_points"
         android:layout_toRightOf="@+id/img_gamification_notif"
         android:text="Activity created!"
-        android:textColor="@color/ap_white"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:gravity="center_vertical"/>
 
@@ -53,6 +53,6 @@
         android:background="@drawable/bg_points_gamification_notif"
         android:gravity="center"
         android:text="50"
-        android:textColor="@color/ap_white"
+        android:textColor="@color/white"
         android:textSize="30sp" />
 </RelativeLayout>

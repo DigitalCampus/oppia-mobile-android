@@ -41,6 +41,7 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 public class CourseInstall {
 
@@ -114,7 +115,7 @@ public class CourseInstall {
             ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
         } catch (InvalidXMLException e) {
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
-            listener.onError(e.getMessage());
+            listener.onError("Error: " + e.getMessage());
             return;
         }
 
@@ -146,7 +147,7 @@ public class CourseInstall {
 
             // move from temp to courses dir
             try {
-                org.apache.commons.io.FileUtils.copyDirectory(src, new File(dest, src.getName()));
+                org.apache.commons.io.FileUtils.copyDirectory(src, new File(dest, src.getName().toLowerCase(Locale.US)));
                 success = true;
             } catch (IOException e) {
                 Mint.logException(e);

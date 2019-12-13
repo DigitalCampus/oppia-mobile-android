@@ -17,6 +17,10 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
+
 import java.io.Serializable;
 
 public class Lang implements Serializable {
@@ -63,5 +67,20 @@ public class Lang implements Serializable {
 	public String getLocation() {
 		return location;
 	}
-	
+
+	@Override
+	public boolean equals(@Nullable Object obj) {
+		if (obj == null)
+			return false;
+
+		if (this.getClass() != obj.getClass())
+			return false;
+
+		return TextUtils.equals(getLang(), ((Lang) obj).getLang());
+	}
+
+	@Override
+	public int hashCode() {
+		return getLang() != null ? getLang().hashCode() : 0;
+	}
 }

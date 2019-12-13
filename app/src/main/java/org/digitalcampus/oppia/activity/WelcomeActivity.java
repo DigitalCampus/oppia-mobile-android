@@ -19,12 +19,15 @@ package org.digitalcampus.oppia.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.LoginFragment;
@@ -38,7 +41,6 @@ import java.util.List;
 
 public class WelcomeActivity extends AppActivity {
 
-	public static final String TAG = WelcomeActivity.class.getSimpleName();
 	public static final int TAB_WELCOME = 0;
     public static final int TAB_LOGIN = 1;
     public static final int TAB_REGISTER = 2;
@@ -57,7 +59,8 @@ public class WelcomeActivity extends AppActivity {
 	
 	@Override
 	public void onStart() {
-		super.onStart(true, false);
+		super.onStart();
+
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		toolbar.getMenu().clear();
 		toolbar.inflateMenu(R.menu.activity_welcome);

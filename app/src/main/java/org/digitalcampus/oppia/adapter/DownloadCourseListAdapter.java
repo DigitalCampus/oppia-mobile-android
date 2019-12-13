@@ -17,13 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -35,6 +28,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdapter>{
 
@@ -66,13 +66,13 @@ public class DownloadCourseListAdapter extends ArrayAdapter<CourseIntallViewAdap
 	}
 
     static class DownloadCourseViewHolder{
-        TextView courseTitle;
-        TextView courseDraft;
-        TextView courseDescription;
-        ImageButton actionBtn;
-        ProgressBar actionProgress;
-        TextView courseAuthor;
-        TextView labelAuthor;
+        private TextView courseTitle;
+        private TextView courseDraft;
+        private TextView courseDescription;
+        private ImageButton actionBtn;
+        private ProgressBar actionProgress;
+        private TextView courseAuthor;
+        private TextView labelAuthor;
     }
 
 	@Override

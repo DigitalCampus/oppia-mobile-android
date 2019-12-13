@@ -27,25 +27,28 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.AdminReceiver;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.task.ChangeStorageOptionTask;
 import org.digitalcampus.oppia.task.FetchServerInfoTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -54,15 +57,13 @@ import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
-import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MoveStorageListener {
-	
-	public static final String TAG = PrefsActivity.class.getSimpleName();
 	
 	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
 	
@@ -78,9 +79,21 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_BADGING_ENABLED = "prefBadgingEnabled";
 	public static final String PREF_SERVER_TIMEOUT_CONN = "prefServerTimeoutConnection";
 	public static final String PREF_SERVER_TIMEOUT_RESP = "prefServerTimeoutResponse";
+
 	public static final String PREF_METADATA = "prefMetadata";
+	public static final String PREF_METADATA_NETWORK = "NETWORK";
+    public static final String PREF_METADATA_DEVICE_ID = "DEVICE_ID";
+    public static final String PREF_METADATA_SIM_SERIAL = "SIM_SERIAL";
+    public static final String PREF_METADATA_WIFI_ON = "WIFI_ON";
+    public static final String PREF_METADATA_NETWORK_CONNECTED = "NETWORK_CONNECTED";
+    public static final String PREF_METADATA_BATTERY_LEVEL = "BATTERY_LEVEL";
+    public static final String PREF_METADATA_GPS = "GPS";
+
+
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
+
     public static final String PREF_APPLICATION_FIRST_RUN = "prefFirstRun";
+    public static final String PREF_UPDATE_OVERRIDE_SHOW_DESCRIPTION = "prefUpdateOverrideShowDescription";
 
     /*
 	 * Start personal prefs - move these to UserProps table
@@ -90,15 +103,17 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 	public static final String PREF_SHOW_SCHEDULE_REMINDERS = "prefShowScheduleReminders";
 	public static final String PREF_NO_SCHEDULE_REMINDERS = "prefNoScheduleReminders";
 	public static final String PREF_SHOW_COURSE_DESC = "prefShowCourseDescription";
+    public static final String PREF_START_COURSEINDEX_COLLAPSED = "prefStartCourseIndexCollapsed";
 	public static final String PREF_SHOW_PROGRESS_BAR = "prefShowProgressBar";
 	public static final String PREF_SHOW_SECTION_NOS = "prefShowSectionNumbers";
 	public static final String PREF_HIGHLIGHT_COMPLETED = "prefHighlightCompleted";
 	public static final String PREF_TEXT_SIZE = "prefTextSize";
 
-    public static final List<String> USER_STRING_PREFS =  Arrays.asList(
-        PREF_PHONE_NO, PREF_LANGUAGE, PREF_NO_SCHEDULE_REMINDERS, PREF_TEXT_SIZE);
-    public static final List<String> USER_BOOLEAN_PREFS = Arrays.asList(
-        PREF_SHOW_SCHEDULE_REMINDERS,  PREF_SHOW_COURSE_DESC, PREF_SHOW_PROGRESS_BAR, PREF_SHOW_SECTION_NOS, PREF_HIGHLIGHT_COMPLETED );
+    public static final String PREF_DISABLE_NOTIFICATIONS = "prefDisableNotifications";
+    public static final String PREF_SHOW_GAMIFICATION_EVENTS = "prefShowGamificationEvents";
+    public static final String PREF_GAMIFICATION_POINTS_ANIMATION = "prefGamificationPointsAnimation";
+    public static final String PREF_DURATION_GAMIFICATION_POINTS_VIEW = "prefDurationGamificationPointsView";
+
 	/*
 	 * End personal prefs
 	 */
@@ -108,10 +123,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_CHANGE_LANGUAGE_ENABLED = "prefChangeLanguageEnabled";
 	public static final String PREF_DELETE_COURSE_ENABLED = "prefDeleteCourseEnabled";
 	public static final String PREF_DOWNLOAD_VIA_CELLULAR_ENABLED = "prefDownloadViaCellularEnabled";
-    public static final String PREF_DISABLE_NOTIFICATIONS = "prefDisableNotifications";
-    public static final String PREF_SHOW_GAMIFICATION_EVENTS = "prefShowGamificationEvents";
-    public static final String PREF_GAMIFICATION_POINTS_ANIMATION = "prefGamificationPointsAnimation";
-    public static final String PREF_DURATION_GAMIFICATION_POINTS_VIEW = "prefDurationGamificationPointsView";
 
     public static final String PREF_LAST_LEADERBOARD_FETCH = "prefLastLeaderboardFetch";
 
@@ -121,7 +132,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String STORAGE_NEEDS_PERMISSIONS = "storageNeedsPermissions";
 
     public static final String PREF_ADMIN_PROTECTION = "prefAdminProtection";
-    public static final String PREF_ADMIN_PASSWORD = "prefAdminPassword";
+    public static final String PREF_ADMIN_PASSWORD = "prefAdminPassword"; //NOSONAR
     public static final String LAST_ACTIVE_TIME = "prefLastActiveTime";
 
     //Google Cloud Messaging preferences
@@ -133,17 +144,37 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
     private PreferencesFragment mPrefsFragment;
-    private DrawerMenuManager drawer;
+
+    @Inject
+    CoursesRepository coursesRepository;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initialize();
+    }
+
+    private void initializeDagger() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
+        initializeDagger();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentManager mFragmentManager = getFragmentManager();
         FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
         mPrefsFragment = PreferencesFragment.newInstance();
+
+        ArrayList<Lang> langsCourses = getLanguagesCourses();
+        Bundle args = new Bundle();
+        args.putSerializable("langs", langsCourses);
+        mPrefsFragment.setArguments(args);
+
         mFragmentTransaction.replace(R.id.root_layout, mPrefsFragment);
         mFragmentTransaction.commit();
 
@@ -152,13 +183,24 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
 	}
 
-	protected void onStart(){
-        super.onStart();
-        drawer = new DrawerMenuManager(this, false);
-        drawer.initializeDrawer();
+    private ArrayList<Lang> getLanguagesCourses() {
+
+        final ArrayList<Lang> langs = new ArrayList<>();
+        List<Course> courses = coursesRepository.getCourses(this);
+
+        for (Course course : courses) {
+            for (Lang courseLang : course.getLangs()) {
+                if (!langs.contains(courseLang)) {
+                    langs.add(courseLang);
+                }
+            }
+        }
+
+        return langs;
     }
 
-	@Override
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
@@ -398,23 +440,4 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        drawer.onPrepareOptionsMenu(menu, R.id.menu_settings);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawer.onPostCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggle
-        drawer.onConfigurationChanged(newConfig);
-    }
 }

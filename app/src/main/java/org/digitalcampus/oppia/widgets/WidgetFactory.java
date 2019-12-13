@@ -20,8 +20,8 @@ package org.digitalcampus.oppia.widgets;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,7 +36,7 @@ import java.util.HashMap;
 
 public abstract class WidgetFactory extends Fragment {
 	
-	public final static String TAG = WidgetFactory.class.getSimpleName();
+	public static final String TAG = WidgetFactory.class.getSimpleName();
 
 	protected static final String QUIZ_EXCEPTION_MESSAGE = "Invalid Quiz Error: ";
 
@@ -44,6 +44,7 @@ public abstract class WidgetFactory extends Fragment {
     protected static final String PROPERTY_FEEDBACK = "feedback";
     protected static final String PROPERTY_ACTIVITY_STARTTIME = "Activity_StartTime";
     protected static final String PROPERTY_ON_RESULTS_PAGE = "OnResultsPage";
+    protected static final String PROPERTY_ATTEMPT_SAVED = "attemptSaved";
     protected static final String PROPERTY_COURSE = "Course";
     protected static final String PROPERTY_ACTIVITY = "Activity";
 

@@ -17,29 +17,15 @@
 
 package org.digitalcampus.oppia.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.listener.DBListener;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.SearchResult;
-import org.digitalcampus.oppia.utils.ui.DrawerMenuManager;
-import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -50,9 +36,19 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class SearchActivity extends AppActivity {
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.SearchResultsListAdapter;
+import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.Tracker;
+import org.digitalcampus.oppia.listener.DBListener;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.SearchResult;
+import org.digitalcampus.oppia.utils.ui.SimpleAnimator;
 
-	public static final String TAG = SearchActivity.class.getSimpleName();
+import java.util.ArrayList;
+import java.util.List;
+
+public class SearchActivity extends AppActivity {
 
     private SharedPreferences prefs;
     private long userId = 0;
@@ -66,8 +62,6 @@ public class SearchActivity extends AppActivity {
 	private String currentSearch;
     private SearchResultsListAdapter srla;
     protected ArrayList<SearchResult> results = new ArrayList<>();
-
-    private DrawerMenuManager drawer;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,9 +93,7 @@ public class SearchActivity extends AppActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-
-        drawer = new DrawerMenuManager(this, false);
-        drawer.initializeDrawer();
+        initialize();
 
 		DbHelper db = DbHelper.getInstance(this);
 		userId = db.getUserId(prefs.getString("preUsername", ""));
@@ -173,7 +165,13 @@ public class SearchActivity extends AppActivity {
     }
 
     private void performSearch(){
-        String newSearch = searchText.getText().toString();
+        String newSearch = searchText.getText().toString().trim();
+
+        if (TextUtils.isEmpty(newSearch)) {
+            searchText.setText("");
+            return;
+        }
+
         if (!newSearch.equals(currentSearch)){
             currentSearch = newSearch;
 
@@ -229,23 +227,4 @@ public class SearchActivity extends AppActivity {
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        drawer.onPrepareOptionsMenu(menu, R.id.menu_search);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawer.onPostCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
-        drawer.onConfigurationChanged(newConfig);
-    }
 }

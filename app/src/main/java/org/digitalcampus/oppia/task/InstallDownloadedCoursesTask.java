@@ -31,7 +31,7 @@ import java.io.File;
 
 public class InstallDownloadedCoursesTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 	
-	public final static String TAG = InstallDownloadedCoursesTask.class.getSimpleName();
+	public static final String TAG = InstallDownloadedCoursesTask.class.getSimpleName();
 	private Context ctx;
 	private InstallCourseListener mStateListener;
 	

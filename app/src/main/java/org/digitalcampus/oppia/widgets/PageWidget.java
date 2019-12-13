@@ -217,16 +217,20 @@ public class PageWidget extends WidgetFactory {
 				+ activity.getLocation(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
 						.getLanguage())));
 		StringBuilder text = new StringBuilder();
+		BufferedReader br = null;
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(f));
+			br = new BufferedReader(new FileReader(f));
 			String line;
 
 			while ((line = br.readLine()) != null) {
 				text.append(line);
 			}
-			br.close();
+
 		} catch (IOException e) {
+			Log.e(TAG, "getContentToRead: ", e);
 			return "";
+		} finally {
+			try { br.close();}catch (Exception e) {}
 		}
 		return android.text.Html.fromHtml(text.toString()).toString();
 	}

@@ -1,5 +1,39 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="TextBase">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- Menu Drawer -->
+    <style name="TextMenuItem" parent="TextBase">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginLeft">30dp</item>
+    </style>
+
+    <style name="MenuItemLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/bg_pressable</item>
+    </style>
+
+    <style name="MenuIcon">
+        <item name="android:layout_width">23dp</item>
+        <item name="android:layout_height">23dp</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="tint">@color/black</item>
+    </style>
+    <!-- Menu Drawer -->
+
+
     <style name="Header">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -62,7 +96,7 @@
     <style name="MediumTextDarkItalic">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textColor">@color/text_grey</item>
     </style>
 
     <style name="MediumTextItalic">
@@ -105,28 +139,23 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_light</item>
+        <item name="fontPath">fonts/montserrat.ttf</item>
     </style>
 
     <style name="TabText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:background">@drawable/bg_tab_text</item>
-        <item name="android:textColor">@color/text_tab</item>
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="NormalTextDark">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_dark</item>
     </style>
 
-    <style name="NormalTextBoldDark">
+    <style name="NormalTextBoldDark" parent="NormalTextDark">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/text_dark</item>
     </style>
 
     <style name="TwoWayView">
@@ -155,6 +184,12 @@
         <item name="android:layout_alignParentLeft">false</item>
         <item name="android:layout_alignParentRight">false</item>
         <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="CourseTitle" parent="android:TextAppearance">
+        <item name="android:textSize">17sp</item>
+        <item name="fontPath">fonts/lato.ttf</item>
+        <item name="android:textColor">@color/text_dark</item>
     </style>
 
     <style name="Highlight.Title" parent="android:TextAppearance.Medium">
@@ -220,6 +255,7 @@
         <item name="fontPath">fonts/lato.ttf</item>
     </style>
 
+
     <style name="CollapsedToolbarHeader" parent="android:TextAppearance">
         <item name="fontPath">fonts/lato.ttf</item>
     </style>
@@ -236,7 +272,23 @@
     <style name="TabLayoutAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_tab_time_plots</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:background">@drawable/bg_tab_text</item>
+        <item name="android:textColor">@color/text_tab</item>
+        <item name="android:layout_margin">0dp</item>
+    </style>
+
+    <style name="Oppia.Theme.CardTitle" parent="NormalTextDark">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Oppia.Theme.CardBadge" parent="SmallTextDarkItalic">
+        <item name="android:textColor">@color/text_light</item>
+        <item name="fontPath">fonts/montserrat.ttf</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
 

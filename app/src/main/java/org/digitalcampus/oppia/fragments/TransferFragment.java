@@ -10,11 +10,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +20,11 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DeviceListActivity;
@@ -49,9 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TransferFragment extends Fragment implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener {
-
-    public static final String TAG = TransferFragment.class.getSimpleName();
+public class TransferFragment extends AppFragment implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener {
 
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
@@ -82,6 +80,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     private BluetoothTransferServiceDelegate btServiceDelegate = null;
     private BluetoothBroadcastReceiver receiver;
     private boolean isReceiving = false;
+    private TextView tvDeviceName;
 
 
     public TransferFragment() {
@@ -149,6 +148,10 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         getActivity().registerReceiver(receiver, broadcastFilter);
 
         updateStatus(true);
+
+        if (bluetoothAdapter != null) {
+            tvDeviceName.setText(String.format(getString(R.string.device_name), bluetoothAdapter.getName()));
+        }
     }
 
     @Override
@@ -184,6 +187,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         pendingFiles = vv.findViewById(R.id.transfer_pending_files);
         pendingSize = vv.findViewById(R.id.transfer_pending_size);
         receivingCover = vv.findViewById(R.id.receiving_progress);
+        tvDeviceName = vv.findViewById(R.id.tv_device_name);
         return vv;
     }
 
@@ -286,6 +290,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         if (connectedDevice == null){
             statusSubtitle.setText(R.string.bluetooth_no_device_connected);
             notConnectedInfo.setVisibility(View.VISIBLE);
+            tvDeviceName.setVisibility(View.VISIBLE);
             pendingLogsMessage.setVisibility(View.GONE);
             coursesRecyclerView.setVisibility(View.GONE);
             discoverBtn.setVisibility(View.VISIBLE);
@@ -295,6 +300,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
             updateActivityTransferBar();
             statusSubtitle.setText(connectedDevice);
             notConnectedInfo.setVisibility(View.GONE);
+            tvDeviceName.setVisibility(View.GONE);
             coursesRecyclerView.setVisibility(View.VISIBLE);
             discoverBtn.setVisibility(View.GONE);
             bluetoothBtn.setImageResource(R.drawable.ic_bluetooth_disabled);
@@ -373,7 +379,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
         }
         String[] children = dir.list();
         boolean pending = children != null && children.length > 0;
-        Log.d(TAG, "Activity" + children.length);
+        Log.d(TAG, "Activity. dir list: " + (children != null ? children.length : "null"));
         pendingLogsMessage.setVisibility(
                 ( BluetoothConnectionManager.isConnected() && pending ) ? View.VISIBLE : View.GONE
         );
@@ -545,7 +551,7 @@ public class TransferFragment extends Fragment implements InstallCourseListener,
     }
 
     //static inner class doesn't hold an implicit reference to the outer class
-    private static class BluetoothTransferHandler extends Handler {
+    private class BluetoothTransferHandler extends Handler {
         //Using a weak reference means you won't prevent garbage collection
         private final WeakReference<TransferFragment> fragment;
 

@@ -44,10 +44,10 @@ public class PointsListAdapter extends ArrayAdapter<Points>{
 	}
 
     static class PointsViewHolder{
-        TextView pointsDescription;
-        TextView pointsTime;
-        TextView pointsDate;
-        TextView pointsPoints;
+        private  TextView pointsDescription;
+        private TextView pointsTime;
+        private TextView pointsDate;
+        private TextView pointsPoints;
 
     }
 

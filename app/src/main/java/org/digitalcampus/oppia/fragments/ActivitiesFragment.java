@@ -18,13 +18,13 @@
 package org.digitalcampus.oppia.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -35,9 +35,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.adapter.ActivityTypesAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -61,13 +61,13 @@ import javax.inject.Inject;
 
 public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
 
-    public static final String TAG = ActivitiesFragment.class.getSimpleName();
+    private static final String ARG_COURSE = "arg_course";
 
     private static final int DURATION_CHART_Y_VALUES_ANIMATION = 1000;
 
-    private final int POSITION_TAB_LAST_YEAR = 0;
+    private final int POSITION_TAB_LAST_WEEK = 0;
     private final int POSITION_TAB_LAST_MONTH = 1;
-    private final int POSITION_TAB_LAST_WEEK = 2;
+    private final int POSITION_TAB_LAST_YEAR = 2;
 
     @Inject
     List<Points> pointsFull;
@@ -82,8 +82,12 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
     private ActivityTypesAdapter adapterActivityTypes;
     private ArrayList<ActivityType> activityTypes;
 
-    public static ActivitiesFragment newInstance() {
-        return new ActivitiesFragment();
+    public static ActivitiesFragment newInstance(Course course) {
+        ActivitiesFragment fragment = new ActivitiesFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_COURSE, course);
+        fragment.setArguments(args);
+        return fragment ;
     }
 
     private void findViews() {
@@ -108,11 +112,11 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         configureActivityTypes();
         configureChart();
 
-        course = ((ScorecardActivity) getActivity()).getCourse();
+        course = (Course) getArguments().getSerializable(ARG_COURSE);
 
         loadPoints();
 
-        showPointsFiltered(POSITION_TAB_LAST_YEAR);
+        showPointsFiltered(POSITION_TAB_LAST_WEEK);
 
 
     }
@@ -218,7 +222,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         calendarNow.set(Calendar.MINUTE, 59);
         calendarNow.set(Calendar.SECOND, 59);
 
-        DateTimeFormatter datetimeFormatter = null;
+        DateTimeFormatter datetimeFormatter;
 
         switch (currentDatesRangePosition) {
             case POSITION_TAB_LAST_WEEK:
@@ -251,6 +255,9 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
                 }
 
                 break;
+
+                default:
+                    throw new IllegalArgumentException("currentDatesRangePosition not valid: " + currentDatesRangePosition);
         }
 
         for (Points point : pointsFiltered) {

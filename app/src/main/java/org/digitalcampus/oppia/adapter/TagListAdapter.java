@@ -17,11 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Tag;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -29,10 +24,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.model.Tag;
+
+import java.util.ArrayList;
 
 public class TagListAdapter extends ArrayAdapter<Tag> {
 
@@ -48,9 +45,10 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 	}
 
     static class TagViewHolder{
-        TextView tagName;
-        TextView tagDescription;
-        ImageView tagIcon;
+		private TextView tagName;
+		private TextView tagDescription;
+		private TextView tagCount;
+        //private ImageView tagIcon;
     }
 
 	@Override
@@ -64,7 +62,8 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
             viewHolder = new TagViewHolder();
             viewHolder.tagName = convertView.findViewById(R.id.tag_name);
             viewHolder.tagDescription = convertView.findViewById(R.id.tag_description);
-            viewHolder.tagIcon = convertView.findViewById(R.id.tag_icon);
+            viewHolder.tagCount = convertView.findViewById(R.id.tag_count);
+            //viewHolder.tagIcon = convertView.findViewById(R.id.tag_icon);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (TagViewHolder) convertView.getTag();
@@ -72,7 +71,8 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 
 	    Tag t = tagList.get(position);
 
-        viewHolder.tagName.setText(ctx.getString(R.string.tag_label,t.getName(),t.getCount()));
+        viewHolder.tagName.setText(t.getName());
+        viewHolder.tagCount.setText(String.valueOf(t.getCount()));
 	    if(t.isHighlight()){ 
 	    	viewHolder.tagName.setTypeface(null, Typeface.BOLD); 
 	    } else {
@@ -84,12 +84,12 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 	    } else {
 	    	viewHolder.tagDescription.setVisibility(View.GONE);
 	    }
-	    if(t.getIcon() != null){
-            Picasso.with(ctx).load(t.getIcon()).into(viewHolder.tagIcon);
+		/*if(t.getIcon() != null){
+            Picasso.get().load(t.getIcon()).into(viewHolder.tagIcon);
             viewHolder.tagIcon.setVisibility(View.VISIBLE);
 	    } else {
 	    	viewHolder.tagIcon.setVisibility(View.GONE);
-	    }
+	    }*/
 
 	    return convertView;
 	}

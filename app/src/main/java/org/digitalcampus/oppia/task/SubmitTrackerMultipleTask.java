@@ -23,6 +23,7 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -53,9 +54,8 @@ import okhttp3.Response;
 
 public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, Payload> {
 
-    public final static String TAG = SubmitTrackerMultipleTask.class.getSimpleName();
 
-    private final static String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
+    private static final String JSON_EXCEPTION_MESSAGE = "JSON Exception: ";
 
     private TrackerServiceListener trackerServiceListener;
 
@@ -140,8 +140,11 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             }
 
             if (!user.isOfflineRegister()){
-                boolean success = sendTrackers(user, dataToSend, true);
+                boolean success = sendTrackers(user, dataToSend, true, payload);
                 payload.setResult(success);
+                if (!success){
+                    payload.addResponseData(activityLog.getName());
+                }
                 if (success){
                     Log.d(TAG, "Success sending " + activityLog.getName());
                     // If the logs were sent successfully, we can delete the file
@@ -156,7 +159,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
     }
 
-    private boolean sendTrackers(User user, String dataToSend, boolean isRaw){
+    private boolean sendTrackers(User user, String dataToSend, boolean isRaw, Payload p){
         Log.d(TAG, dataToSend);
         DbHelper db = DbHelper.getInstance(ctx);
 
@@ -200,7 +203,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 if (response.code() == 400) {
                     // submitted but invalid digest - returned 400 Bad Request -
                     // so record as submitted so doesn't keep trying
-                    return true;
+                    return true; //TODO: Have more meaningful bad request handling
                 } else{
                     Log.d(TAG, "Error sending trackers:" + response.code());
                     Log.d(TAG, "Msg:" + response.body().string());
@@ -217,6 +220,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             return false;
         } catch (IOException e) {
             Mint.logException(e);
+            p.setResultResponse(ctx.getString(R.string.error_connection));
             return false;
         } catch (JSONException e) {
             Log.d(TAG, JSON_EXCEPTION_MESSAGE, e);
@@ -245,7 +249,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
         p.setResult(true);
         for (Collection<TrackerLog> trackerBatch : trackers) {
             String dataToSend = createDataString(trackerBatch);
-            boolean success = sendTrackers(user, dataToSend, false);
+            boolean success = sendTrackers(user, dataToSend, false, p);
             p.setResult(success);
 
             if (success){
@@ -268,14 +272,20 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
 
     @Override
     protected void onPostExecute(Payload p) {
+        super.onPostExecute(p);
         synchronized (this) {
             if (trackerServiceListener != null) {
-                trackerServiceListener.trackerComplete(p.isResult(), p.getResultResponse());
+                List<Object> response = p.getResponseData();
+                List<String> failures = new ArrayList<>();
+                for (Object r : response){
+                    failures.add((String)r);
+                }
+                trackerServiceListener.trackerComplete(p.isResult(), p.getResultResponse(), failures);
             }
         }
         // reset submittask back to null after completion - so next call can run properly
-        MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-        app.omSubmitTrackerMultipleTask = null;
+//        MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+//        app.omSubmitTrackerMultipleTask = null;
 
     }
 

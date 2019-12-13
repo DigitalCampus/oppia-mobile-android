@@ -23,11 +23,13 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.splunk.mint.Mint;
 
@@ -56,8 +58,6 @@ import javax.inject.Inject;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
 	
-	public static final String TAG = DownloadActivity.class.getSimpleName();
-	
 	private SharedPreferences prefs;
 	private ProgressDialog progressDialog;
 	private JSONObject json;
@@ -70,6 +70,12 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     @Inject CourseInstallRepository courseInstallRepository;
     @Inject CourseInstallerServiceDelegate courseInstallerServiceDelegate;
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        initialize();
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,10 +91,9 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             Tag t = (Tag) bundle.getSerializable(Tag.TAG);
             if (t != null){
                 this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
-                Toolbar toolbar = findViewById(R.id.toolbar);
-                if (toolbar != null){
-                    toolbar.setSubtitle(t.getName());
-                }
+                TextView tagTitle = findViewById(R.id.category_title);
+                tagTitle.setVisibility(View.VISIBLE);
+                tagTitle.setText(t.getName());
             }
 
         } else {
@@ -103,8 +108,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         if (listView != null) {
             listView.setAdapter(dla);
         }
-
-
 
     }
 

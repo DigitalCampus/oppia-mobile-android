@@ -1,45 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
-    <include android:id="@+id/toolbar" layout="@layout/toolbar" />
+    <View
+        android:id="@+id/subtitle_placeholder"
+        android:layout_width="match_parent"
+        android:background="@color/subtitle_bar"
+        android:layout_height="80dp"
+        android:layout_below="@id/toolbar"
+        />
+
+    <org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView
+        android:id="@+id/section_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:cacheColorHint="#00000000"
+        android:divider="@color/list_divider"
+        android:foreground="?android:windowContentOverlay"
+        android:orientation="vertical"
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/section_item" />
 
     <LinearLayout
         android:id="@+id/loading_course"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:layout_below="@id/subtitle_placeholder"
         android:gravity="center"
         android:orientation="vertical">
 
         <ProgressBar
             android:id="@+id/progressBar2"
             style="?android:attr/progressBarStyleLarge"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:id="@+id/textView"
-            style="@style/SmallTextLight"
+            style="@style/SmallTextDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/loading_course"/>
+            android:text="@string/loading_course" />
     </LinearLayout>
-
-    <ListView
-        android:layout_below="@id/toolbar"
-        android:id="@+id/section_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/list_divider"
-        android:dividerHeight="1dp"
-        android:listSelector="@drawable/background_change_pressed"
-        android:cacheColorHint="#00000000"
-        android:foreground="?android:windowContentOverlay"
-        />
 
 </RelativeLayout>

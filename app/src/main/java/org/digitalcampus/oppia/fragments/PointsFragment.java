@@ -20,15 +20,16 @@ package org.digitalcampus.oppia.fragments;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -38,9 +39,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.adapter.PointsListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -61,11 +62,11 @@ import javax.inject.Inject;
 
 public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener {
 
-    public static final String TAG = PointsFragment.class.getSimpleName();
+    private static final String ARG_COURSE = "arg_course";
 
-    private final int POSITION_TAB_LAST_YEAR = 0;
+    private final int POSITION_TAB_LAST_WEEK = 0;
     private final int POSITION_TAB_LAST_MONTH = 1;
-    private final int POSITION_TAB_LAST_WEEK = 2;
+    private final int POSITION_TAB_LAST_YEAR = 2;
 
     @Inject
     List<Points> pointsFull;
@@ -82,8 +83,12 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private int currentDatesRangePosition;
     private Course course;
 
-    public static PointsFragment newInstance() {
-        return new PointsFragment();
+    public static PointsFragment newInstance(Course course) {
+        PointsFragment pointsFragment = new PointsFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_COURSE, course);
+        pointsFragment.setArguments(args);
+        return pointsFragment;
     }
 
     private void findViews() {
@@ -108,14 +113,14 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         initializeDagger();
         configureChart();
 
-        course = ((ScorecardActivity) getActivity()).getCourse();
+        course = (Course) getArguments().getSerializable(ARG_COURSE);
 
         loadPoints();
 
         pointsAdapter = new PointsListAdapter(super.getActivity(), pointsFiltered);
         listView.setAdapter(pointsAdapter);
 
-        showPointsFiltered(POSITION_TAB_LAST_YEAR);
+        showPointsFiltered(POSITION_TAB_LAST_WEEK);
 
 
     }
@@ -158,7 +163,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
         currentDatesRangePosition = position;
 
-        DateTime initialDateTime = new DateTime();
+        DateTime initialDateTime;
         DateTime initialNowAtEndOfDay = new DateTime();
         initialNowAtEndOfDay.withHourOfDay(23);
         initialNowAtEndOfDay.withMinuteOfHour(59);
@@ -177,7 +182,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 break;
 
             default:
-                throw new IllegalStateException("Tab position invalid");
+                throw new IllegalStateException("Tab position invalid: " + currentDatesRangePosition);
         }
 
         pointsFiltered.clear();
@@ -215,10 +220,12 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         }
 
         LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
-        dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.highlight_light));
+        dataSet.setColor(ContextCompat.getColor(getActivity(), R.color.theme_primary));
         dataSet.setDrawValues(false);
         dataSet.setDrawFilled(true);
-        dataSet.setFillDrawable(getGradientDrawable());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            dataSet.setFillDrawable(getGradientDrawable());
+        }
 
         LineData lineData = new LineData(dataSet);
 
@@ -235,11 +242,10 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                Log.i(TAG, "getFormattedValue: enter. value: " + (int)value);
                 try {
                     return labels.get((int) value);
                 } catch (IndexOutOfBoundsException e) {
-                    Log.i(TAG, "getFormattedValue: exception. value: " + (int)value);
+                    Log.i(TAG, "getFormattedValue: exception. value: " + (int) value);
                     return "MAL";
                 }
 //                return String.valueOf(value);
@@ -251,8 +257,8 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     private Drawable getGradientDrawable() {
 
-        int colorStart = ContextCompat.getColor(getActivity(), R.color.highlight_light);
-        int colorEnd = ContextCompat.getColor(getActivity(), R.color.highlight_mid);
+        int colorStart = ContextCompat.getColor(getActivity(), R.color.theme_primary);
+        int colorEnd = ContextCompat.getColor(getActivity(), R.color.theme_secondary_light);
 
         int alpha = 128;
         int colorStartAlpha = Color.argb(alpha, Color.red(colorStart), Color.green(colorStart), Color.blue(colorStart));
@@ -260,7 +266,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
         GradientDrawable gd = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[] {colorStartAlpha, colorEndAlpha});
+                new int[]{colorStartAlpha, colorEndAlpha});
         gd.setCornerRadius(0f);
 
         return gd;
@@ -279,7 +285,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         calendarNow.set(Calendar.MINUTE, 59);
         calendarNow.set(Calendar.SECOND, 59);
 
-        DateTimeFormatter datetimeFormatter = null;
+        DateTimeFormatter datetimeFormatter;
 
         switch (currentDatesRangePosition) {
             case POSITION_TAB_LAST_WEEK:
@@ -312,6 +318,9 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 }
 
                 break;
+
+            default:
+                throw new IllegalArgumentException("currentDatesRangePosition not valid: " + currentDatesRangePosition);
         }
 
         for (Points point : pointsFiltered) {

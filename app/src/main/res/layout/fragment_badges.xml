@@ -1,23 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/background_light">
 
-    <TextView
-        android:id="@+id/fragment_badges_title"
+    <LinearLayout
+        android:id="@+id/loading_badges"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/loading_badges"
-        style="@style/HeaderText"
         android:gravity="center"
-        android:padding="5dp" />
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dip"
+            android:gravity="center"
+            android:text="@string/loading_badges"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginLeft="@dimen/padding_large"
+        android:layout_marginRight="@dimen/padding_large"
+        android:layout_marginBottom="@dimen/padding_large"
+        android:id="@+id/empty_state">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView10"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:src="@drawable/empty_state_badges"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/info_no_badges"
+            android:id="@+id/textView11"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginLeft="@dimen/padding_large"
+        android:layout_marginRight="@dimen/padding_large"
+        android:layout_marginBottom="@dimen/padding_large"
+        android:id="@+id/error_state">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView11"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:src="@drawable/empty_state_scorecard"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/error_connection_required"
+            android:id="@+id/textView12"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    </LinearLayout>
+
 
     <ListView
         android:id="@+id/badges_list"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/list_divider_light"
-        android:dividerHeight="1dp" />
+        android:divider="@color/transparent"
+        android:dividerHeight="0dp" />
 
-</LinearLayout>
+</FrameLayout>

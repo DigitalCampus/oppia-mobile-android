@@ -1,48 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/course_row"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="5dp" >
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="@dimen/list_card_horizontal_margin"
+        android:layout_marginRight="@dimen/list_card_horizontal_margin"
+        android:layout_marginBottom="7dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:contentPaddingBottom="@dimen/list_card_vertical_padding"
+        app:contentPaddingLeft="@dimen/list_card_horizontal_padding"
+        app:contentPaddingRight="@dimen/list_card_horizontal_padding"
+        app:contentPaddingTop="@dimen/list_card_vertical_padding">
 
-        <ImageView
-            android:id="@+id/course_image"
-            android:layout_width="@dimen/course_icon_size"
-            android:layout_height="@dimen/course_icon_size"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/app_logo_alt"
-            android:src="@drawable/default_course" />
-
-        <TextView
-            android:id="@+id/course_title"
+        <LinearLayout
+            android:id="@+id/ll_card_layout_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/course_image"
-            android:textColor="@color/text_light"
-            android:textSize="18sp"
-            android:layout_marginTop="10dp"
-            android:textStyle="normal" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/course_description"
-            style="@style/MediumTextItalic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/course_title"
-            android:layout_toRightOf="@+id/course_image" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-    <ProgressBar
-        android:id="@+id/course_progress_bar"
-        style="@style/ProgressBar.Om"
-        android:layout_width="fill_parent"
-        android:layout_height="5dp"
-        android:layout_margin="5dp"
-        android:progressDrawable="@drawable/progress_bar" />
+                <ImageView
+                    android:id="@+id/course_image"
+                    android:layout_width="@dimen/course_icon_size"
+                    android:layout_height="@dimen/course_icon_size"
+                    android:layout_marginRight="@dimen/list_card_icon_margin"
+                    android:contentDescription="@string/app_logo_alt"
+                    android:padding="8dp"
+                    android:src="@drawable/default_course" />
 
+                <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                    android:id="@+id/circularProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/course_image"
+                    android:layout_alignTop="@+id/course_image"
+                    android:layout_alignRight="@+id/course_image"
+                    android:layout_alignBottom="@+id/course_image"
+                    app:cpb_background_progressbar_color="@color/grey_light"
+                    app:cpb_background_progressbar_width="7dp"
+                    app:cpb_progress_direction="to_right"
+                    app:cpb_progress_max="100"
+                    app:cpb_progressbar_color="@color/theme_secondary_light"
+                    app:cpb_progressbar_width="7dp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/list_card_icon_margin"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/course_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Oppia.Theme.CardTitle"/>
+
+                <TextView
+                    android:id="@+id/course_description"
+                    style="@style/MediumTextDarkItalic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>

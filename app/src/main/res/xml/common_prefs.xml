@@ -40,9 +40,14 @@
         android:title="@string/prefShowProgressBar" />
 
     <CheckBoxPreference
-        android:defaultValue="true"
+        android:defaultValue="@string/SHOW_COURSE_DESCRIPTION"
         android:key="prefShowCourseDescription"
         android:title="@string/prefShowCourseDescription" />
+
+    <CheckBoxPreference
+        android:defaultValue="@string/START_COURSEINDEX_COLLAPSED"
+        android:key="prefStartCourseIndexCollapsed"
+        android:title="@string/prefStartCourseIndexCollapsed" />
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -79,8 +84,7 @@
         android:key="prefAdminPassword"
         android:title="@string/prefAdminPassword"
         android:inputType="textPassword"
-        android:dependency="prefAdminProtection"
-        android:maxLength="2"/>
+        android:dependency="prefAdminProtection" />
 
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
@@ -99,13 +103,13 @@
             android:defaultValue="@string/prefServerTimeoutConnectionDefault"
             android:key="prefServerTimeoutConnection"
             android:title="@string/prefServerTimeoutConnection"
-            android:numeric="integer" >
+            android:inputType="number" >
         </EditTextPreference>
         <EditTextPreference
             android:defaultValue="@string/prefServerTimeoutResponseDefault"
             android:key="prefServerTimeoutResponse"
             android:title="@string/prefServerTimeoutResponse"
-            android:numeric="integer">
+            android:inputType="number">
         </EditTextPreference>
 
         <CheckBoxPreference

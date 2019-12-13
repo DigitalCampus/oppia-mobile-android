@@ -6,40 +6,38 @@
     xmlns:ap="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs_filter_points"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         app:tabGravity="center"
-        app:tabTextColor="@color/text_grey"
-        app:tabSelectedTextColor="@color/ap_white"
         app:tabBackground="@drawable/bg_tab_text"
         app:tabTextAppearance="@style/TabLayoutAppearance"
         app:tabIndicatorHeight="0dp">
 
-        <android.support.design.widget.TabItem
-            android:id="@+id/tab_last_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/last_year" />
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/tab_last_month"
-            style="@style/TabText"
-            android:text="@string/last_month"/>
-
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_last_week"
             style="@style/TabText"
             android:text="@string/last_week"/>
 
-    </android.support.design.widget.TabLayout>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_last_month"
+            style="@style/TabText"
+            android:text="@string/last_month" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_last_year"
+            style="@style/TabText"
+            android:text="@string/last_year" />
+
+    </com.google.android.material.tabs.TabLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="@dimen/height_plot">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"
@@ -50,26 +48,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:gravity="center_horizontal|bottom"
         android:paddingTop="10dp">
 
         <TextView
             android:id="@+id/tv_total_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/text_dark"
             android:textSize="26sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_dark"/>
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="@color/text_dark"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             android:text="@string/points"
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp"/>
+            android:textColor="@color/text_dark"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -79,6 +82,8 @@
         android:layout_height="wrap_content"
         android:divider="@color/list_divider_light"
         android:dividerHeight="1dp"
-        android:padding="10dp"/>
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 
 </LinearLayout>

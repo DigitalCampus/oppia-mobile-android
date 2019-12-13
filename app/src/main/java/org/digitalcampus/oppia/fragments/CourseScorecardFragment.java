@@ -19,23 +19,22 @@ package org.digitalcampus.oppia.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.androidplot.pie.PieChart;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -43,17 +42,14 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
-import org.digitalcampus.oppia.utils.ui.ScorecardPieChart;
 
 import java.util.ArrayList;
 
-public class CourseScorecardFragment extends Fragment implements ParseCourseXMLTask.OnParseXmlListener, AdapterView.OnItemClickListener {
+public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener, AdapterView.OnItemClickListener {
 
-	public static final String TAG = CourseScorecardFragment.class.getSimpleName();
 	private Course course = null;
     private boolean firstTimeOpened = true;
     private GridView quizzesGrid;
-    private PieChart scorecardPieChart;
     private ArrayList<QuizStats> quizStats = new ArrayList<>();
     private CourseQuizzesGridAdapter quizzesAdapter;
     ParseCourseXMLTask xmlTask;
@@ -68,8 +64,9 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
     private View quizzesContainer;
 
     private ProgressBar loadingSpinner;
+    private CircularProgressBar cpbScorecard;
 
-	public static CourseScorecardFragment newInstance(Course course) {
+    public static CourseScorecardFragment newInstance(Course course) {
 		CourseScorecardFragment myFragment = new CourseScorecardFragment();
 		Bundle args = new Bundle();
 	    args.putSerializable(Course.TAG, course);
@@ -95,7 +92,7 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
         this.course = db.getCourse(this.course.getCourseId(), userId);
 
         quizzesGrid = vv.findViewById(R.id.scorecard_grid_quizzes);
-        scorecardPieChart = vv.findViewById(R.id.scorecard_pie_chart);
+        cpbScorecard = vv.findViewById(R.id.cpb_scorecard);
 
         highlightPretest = vv.findViewById(R.id.tv_ranking);
         highlightAttempted = vv.findViewById(R.id.highlight_attempted);
@@ -115,8 +112,11 @@ public class CourseScorecardFragment extends Fragment implements ParseCourseXMLT
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        ScorecardPieChart spc = new ScorecardPieChart(super.getActivity(), scorecardPieChart, this.course);
-        spc.drawChart(0, 0.55f, false, firstTimeOpened);
+        int totalActivities = course.getNoActivities();
+        int completedActivities = course.getNoActivitiesCompleted();
+        cpbScorecard.setProgressMax(totalActivities);
+        cpbScorecard.setProgressWithAnimation(completedActivities, MobileLearning.SCORECARD_ANIM_DURATION);
+
         firstTimeOpened = false;
         activitiesTotal.setText(""+course.getNoActivities());
         activitiesCompleted.setText(""+course.getNoActivitiesCompleted());

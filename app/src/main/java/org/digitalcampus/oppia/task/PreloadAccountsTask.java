@@ -38,13 +38,13 @@ import java.io.IOException;
 
 public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Payload>{
 
-    public final static String TAG = PreloadAccountsTask.class.getSimpleName();
+    public static final String TAG = PreloadAccountsTask.class.getSimpleName();
     private Context ctx;
     private PreloadAccountsListener mListener;
 
     private static final String CSV_SEPARATOR = ",";
     private static final String CSV_USERNAME_COLUMN = "username";
-    private static final String CSV_PASSWORD_COLUMN = "password";
+    private static final String CSV_PASSWORD_COLUMN = "password"; //NOSONAR
     private static final String CSV_APIKEY_COLUMN = "apikey";
     private static final String CSV_EMAIL_COLUMN = "email";
     private static final String CSV_FIRSTNAME_COLUMN = "first_name";

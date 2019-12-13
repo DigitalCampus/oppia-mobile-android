@@ -24,17 +24,19 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.widget.ListView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.SectionListAdapter;
+import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -43,9 +45,10 @@ import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Section;
-import org.digitalcampus.oppia.service.TrackerService;
+import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.UIUtils;
+import org.digitalcampus.oppia.utils.ui.ExpandableRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -56,19 +59,17 @@ import javax.inject.Inject;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
-    public static final String TAG = CourseIndexActivity.class.getSimpleName();
     public static final String JUMPTO_TAG = "JumpTo";
     public static final int RESULT_JUMPTO = 99;
 
     private Course course;
     private CompleteCourse parsedCourse;
     private ArrayList<Section> sections;
-    private SharedPreferences prefs;
+    @Inject SharedPreferences prefs;
     private Activity baselineActivity;
     //	private AlertDialog aDialog;
     private View loadingCourseView;
-    private SectionListAdapter sla;
-
+    private CourseIndexRecyclerViewAdapter adapter;
     private String digestJumpTo;
 
     @Inject
@@ -76,12 +77,17 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private AlertDialog aDialog;
 
     @Override
+    public void onStart() {
+        super.onStart();
+        initialize(false);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_index);
         initializeDagger();
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
         loadingCourseView = findViewById(R.id.loading_course);
 
@@ -128,13 +134,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             return;
         }
 
-        // start a new tracker service
-        Intent service = new Intent(this, TrackerService.class);
-
-        Bundle tb = new Bundle();
-        tb.putBoolean("backgroundData", true);
-        service.putExtras(tb);
-        this.startService(service);
+        sendTrackers();
 
         // remove any saved state info from shared prefs in case they interfere with subsequent page views
         Editor editor = prefs.edit();
@@ -150,12 +150,25 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         checkParsedCourse();
     }
 
+    private void sendTrackers() {
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        OneTimeWorkRequest trackerSendWork = new OneTimeWorkRequest.Builder(TrackerWorker.class)
+                .setConstraints(constraints)
+                .build();
+
+        WorkManager.getInstance(this).enqueue(trackerSendWork);
+    }
+
     private void checkParsedCourse() {
 
         if ((parsedCourse != null) && (sections != null) && (!sections.isEmpty())) {
             parsedCourse.setCourseId(course.getCourseId());
             parsedCourse.updateCourseActivity(this);
-            sla.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
             if (!isBaselineCompleted()) {
                 showBaselineMessage(null);
             } else {
@@ -231,7 +244,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private void createLanguageDialog() {
         UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() throws Exception {
-                CourseIndexActivity.this.onStart();
+                CourseIndexActivity.this.initialize(false);
                 return true;
             }
         });
@@ -239,13 +252,13 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void initializeCourseIndex(boolean animate) {
 
-        final ListView listView = findViewById(R.id.section_list);
-        if (listView == null) return;
-        ViewCompat.setNestedScrollingEnabled(listView, true);
-        sla = new SectionListAdapter(CourseIndexActivity.this, course, sections, new SectionListAdapter.CourseClickListener() {
+        final ExpandableRecyclerView listView = findViewById(R.id.section_list);
+        adapter = new CourseIndexRecyclerViewAdapter(this, sections, course);
+        adapter.setOnChildItemClickedListener(new ExpandableRecyclerView.OnChildItemClickedListener() {
             @Override
-            public void onActivityClicked(String activityDigest) {
-                startCourseActivityByDigest(activityDigest);
+            public void onChildItemClicked(int section, int position) {
+                Activity act = sections.get(section).getActivities().get(position);
+                startCourseActivityByDigest(act.getDigest());
             }
         });
 
@@ -270,8 +283,8 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             loadingCourseView.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
         }
+        listView.setAdapter(adapter);
 
-        listView.setAdapter(sla);
     }
 
     private boolean isBaselineCompleted() {
@@ -303,7 +316,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                         section.addActivity(CourseIndexActivity.this.baselineActivity);
                         tb.putSerializable(Section.TAG, section);
                         tb.putSerializable(CourseActivity.BASELINE_TAG, true);
-                        tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, 0);
+                        tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, 0);
                         tb.putSerializable(Course.TAG, CourseIndexActivity.this.course);
                         intent.putExtras(tb);
                         startActivity(intent);
@@ -338,7 +351,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                         Bundle tb = new Bundle();
                         tb.putSerializable(Section.TAG, section);
                         tb.putSerializable(Course.TAG, course);
-                        tb.putSerializable(SectionListAdapter.TAG_PLACEHOLDER, i);
+                        tb.putSerializable(CourseActivity.NUM_ACTIVITY_TAG, i);
                         intent.putExtras(tb);
                         startActivity(intent);
                     }
@@ -356,7 +369,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void showErrorMessage() {
         UIUtils.showAlert(CourseIndexActivity.this, R.string.error, R.string.error_reading_xml, new Callable<Boolean>() {
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 CourseIndexActivity.this.finish();
                 return true;
             }

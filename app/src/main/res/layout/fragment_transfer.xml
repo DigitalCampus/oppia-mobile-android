@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
               android:orientation="vertical" >
 
 
@@ -73,20 +73,21 @@
             android:text="@string/bluetooth.no_device_connected"
             android:theme="@style/SubheaderText"/>
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/discover_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"
-
             android:layout_alignParentTop="true"
             android:layout_marginBottom="@dimen/padding_medium"
             android:layout_toLeftOf="@+id/bluetooth_btn"
             android:adjustViewBounds="false"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_wifi_tethering"
-            android:tint="@color/text_dark"/>
+            app:backgroundTint="@color/theme_secondary_semi_transparent"
+            android:elevation="3dp"
+            app:tint="@color/text_dark"/>
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/bluetooth_btn"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
@@ -96,14 +97,16 @@
             android:layout_marginBottom="@dimen/padding_medium"
             android:layout_marginRight="@dimen/padding_medium"
             android:src="@drawable/ic_bluetooth"
-            android:tint="@color/text_dark"/>
+            app:backgroundTint="@color/theme_secondary_semi_transparent"
+            android:elevation="3dp"
+            app:tint="@color/text_dark"/>
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/home_messages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/message_background"
+        android:background="@color/subtitle_bar"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingTop="5dp"
@@ -138,7 +141,7 @@
         android:layout_height="match_parent"
         tools:context="org.digitalcampus.oppia.fragments.TransferFragment">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/course_backups_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -173,6 +176,15 @@
                     android:gravity="center"
                     android:text="@string/bluetooth.info_connect"/>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_device_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                style="@style/ButtonText"
+                android:layout_margin="10dp"/>
 
         </RelativeLayout>
 

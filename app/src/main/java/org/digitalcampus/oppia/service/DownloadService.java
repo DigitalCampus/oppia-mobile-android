@@ -23,8 +23,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.splunk.mint.Mint;
 
@@ -342,7 +343,9 @@ public class DownloadService extends IntentService {
 
     private void deleteFile(File file){
         if ((file != null) && file.exists() && !file.isDirectory()){
-            file.delete();
+            if (!file.delete()) {
+                Log.e(TAG, "deleteFile: File could not be deleted: " + file.getAbsolutePath());
+            }
         }
     }
 

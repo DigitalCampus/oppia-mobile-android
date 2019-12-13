@@ -2,10 +2,11 @@ package org.digitalcampus.oppia.utils.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.design.widget.TextInputLayout;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.AttributeSet;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.digitalcampus.mobile.learning.R;
 
@@ -74,6 +75,11 @@ public class ValidableTextInputLayout extends TextInputLayout {
 
     public String getCleanedValue(){
         return getEditText().getText().toString().trim();
+    }
+
+    public void setText(String text) {
+
+        getEditText().setText(text);
     }
 
 

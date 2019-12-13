@@ -17,11 +17,19 @@
 
 package org.digitalcampus.oppia.task;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
+import com.splunk.mint.Mint;
+
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
@@ -43,31 +51,26 @@ import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-
-import com.splunk.mint.Mint;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	
 	public static final String TAG = UpgradeManagerTask.class.getSimpleName();
+
 	private Context ctx;
 	private SharedPreferences prefs;
 	private UpgradeListener mUpgradeListener;
 	
-	private final static String PREF_API_KEY = "prefApiKey";
-	private final static String PREF_BADGES = "prefBadges";
-	private final static String PREF_POINTS = "prefPoints";
+	private static final String PREF_API_KEY = "prefApiKey";
+	private static final String PREF_BADGES = "prefBadges";
+	private static final String PREF_POINTS = "prefPoints";
 
-	private final static String MSG_DELETE_FAIL = "failed to delete: ";
-	private final static String MSG_COMPLETED = "completed";
-	private final static String MSG_FAILED = "failed";
+	private static final String MSG_DELETE_FAIL = "failed to delete: ";
+	private static final String MSG_COMPLETED = "completed";
+	private static final String MSG_FAILED = "failed";
 
 	public UpgradeManagerTask(Context ctx){
 		this.ctx = ctx;
@@ -142,6 +145,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v54a"));
 			payload.setResult(true);
 		}
+
+		overrideAdminPasswordTask();
 		
 		return payload;
 	}
@@ -408,11 +413,26 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		}
 		
 	}
+
+	private void overrideAdminPasswordTask(){
+		if (BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION == BuildConfig.VERSION_CODE){
+			String overrideConfig = "password_overriden_" + BuildConfig.VERSION_CODE;
+			boolean already_overriden = prefs.getBoolean(overrideConfig, false);
+			if (!already_overriden){
+				publishProgress(ctx.getString(R.string.info_override_password));
+				prefs.edit()
+					.putString(PrefsActivity.PREF_ADMIN_PASSWORD, BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD)
+					.putBoolean(overrideConfig, true)
+					.apply();
+			}
+		}
+
+	}
 	
 	private class v54UpgradeQuizObj{
-		public int id;
-		public String digest;
-		public int threshold;
+		private int id;
+		private String digest;
+		private int threshold;
 	}
 	
 	protected void upgradeV54a(){

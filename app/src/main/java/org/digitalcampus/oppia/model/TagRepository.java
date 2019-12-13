@@ -31,16 +31,16 @@ import java.util.ArrayList;
 
 public class TagRepository {
 
-    public final static String TAG = TagRepository.class.getSimpleName();
+    public static final String TAG = TagRepository.class.getSimpleName();
 
-    private final static String JSON_PROPERTY_TAGS = "tags";
-    private final static String JSON_PROPERTY_NAME = "name";
-    private final static String JSON_PROPERTY_ID = "id";
-    private final static String JSON_PROPERTY_COUNT = "count";
-    private final static String JSON_PROPERTY_DESCRIPTION = "description";
-    private final static String JSON_PROPERTY_ICON = "icon";
-    private final static String JSON_PROPERTY_HIGHLIGHT = "highlight";
-    private final static String JSON_PROPERTY_ORDER_PRIORITY = "order_priority";
+    private static final String JSON_PROPERTY_TAGS = "tags";
+    private static final String JSON_PROPERTY_NAME = "name";
+    private static final String JSON_PROPERTY_ID = "id";
+    private static final String JSON_PROPERTY_COUNT = "count";
+    private static final String JSON_PROPERTY_DESCRIPTION = "description";
+    private static final String JSON_PROPERTY_ICON = "icon";
+    private static final String JSON_PROPERTY_HIGHLIGHT = "highlight";
+    private static final String JSON_PROPERTY_ORDER_PRIORITY = "order_priority";
 
     public void getTagList(Context ctx){
         APIUserRequestTask task = new APIUserRequestTask(ctx);

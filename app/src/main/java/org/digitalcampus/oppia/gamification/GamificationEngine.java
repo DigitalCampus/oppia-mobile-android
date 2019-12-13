@@ -193,7 +193,7 @@ public class GamificationEngine {
                         totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_STARTED).getPoints();
                     }
                     // add points for length of time the media has been playing
-                    totalPoints += this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor(timeTaken/this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints());
+                    totalPoints += (int)(this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_POINTS_PER_INTERVAL).getPoints() * Math.floor((double)timeTaken / (double)this.getEventFromHierarchy(course,activity, Gamification.EVENT_NAME_MEDIA_PLAYING_INTERVAL).getPoints()));
 
                     // make sure can't exceed max points
                     totalPoints = Math.min(totalPoints, getEventFromHierarchy(course,activity,

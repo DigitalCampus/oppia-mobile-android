@@ -20,7 +20,7 @@ import java.util.Date;
 
 public class Leaderboard {
 
-    public final static String TAG = Leaderboard.class.getSimpleName();
+    public static final String TAG = Leaderboard.class.getSimpleName();
 
     public static int importLeaderboardJSON(Context ctx, String json) throws JSONException, ParseException, WrongServerException {
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_badge_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:background="@drawable/notification_badge"
+        android:gravity="center"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:text="9+"
+        android:textAppearance="@style/PointsText"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+</FrameLayout>

@@ -5,8 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="10dp">
-
+    android:padding="@dimen/padding_medium">
 
     <TextView
         android:id="@+id/points_date"
@@ -21,17 +20,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_weight="0.13" />
-
+        android:layout_weight="0.15"
+        android:layout_marginStart="10dp" />
 
     <TextView
         android:id="@+id/points_points"
         style="@style/PointsText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_weight="0.15"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="0.17"
         android:background="@drawable/points_background_frame"
         android:gravity="center|center_vertical"
         android:textColor="@color/listitem_icon_tint" />
@@ -40,7 +39,7 @@
         android:id="@+id/points_description"
         style="@style/SmallTextDark"
         android:layout_width="0dp"
-        android:layout_weight="0.75"
+        android:layout_weight="0.72"
         android:layout_height="wrap_content"
         android:gravity="center_vertical" />
 

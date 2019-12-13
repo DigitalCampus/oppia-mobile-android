@@ -17,18 +17,11 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Locale;
 
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.model.SearchResult;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,26 +31,37 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.SearchResult;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Locale;
+
 public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
 
 	public static final String TAG = SearchResultsListAdapter.class.getSimpleName();
 	
 	private final Context ctx;
 	private final ArrayList<SearchResult> searchResultList;
-	private SharedPreferences prefs;
+    private String prefLang;
 	
-	public SearchResultsListAdapter(Activity context, ArrayList<SearchResult> searchResultList) {
+	public SearchResultsListAdapter(Context context, ArrayList<SearchResult> searchResultList) {
 		super(context, R.layout.search_results_row, searchResultList);
 		this.ctx = context;
 		this.searchResultList = searchResultList;
-		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 	}
 
     static class SearchResultsViewHolder{
-        TextView activityTitle;
-        TextView sectionTitle;
-        TextView courseTitle;
-        ImageView courseImage;
+        private TextView activityTitle;
+        private TextView sectionTitle;
+        private TextView courseTitle;
+        private ImageView activityImage;
     }
 
 	@Override
@@ -72,32 +76,39 @@ public class SearchResultsListAdapter  extends ArrayAdapter<SearchResult>{
             viewHolder.activityTitle = convertView.findViewById(R.id.activity_title);
             viewHolder.sectionTitle = convertView.findViewById(R.id.section_title);
             viewHolder.courseTitle = convertView.findViewById(R.id.course_title);
-            viewHolder.courseImage = convertView.findViewById(R.id.course_image);
+            viewHolder.activityImage = convertView.findViewById(R.id.activity_icon);
             convertView.setTag(viewHolder);
         }
         else{
             viewHolder = (SearchResultsViewHolder) convertView.getTag();
         }
 
-	    SearchResult sr = searchResultList.get(position);
 
-        String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-	    String cTitle = sr.getCourse().getTitle(prefLang);
+	    SearchResult sr = searchResultList.get(position);
+        Activity activity = sr.getActivity();
+        Course course = sr.getCourse();
+
+	    String cTitle = course.getTitle(prefLang);
 	    String sTitle = sr.getSection().getTitle(prefLang);
-	    String aTitle = sr.getActivity().getTitle(prefLang);
+	    String aTitle = activity.getTitle(prefLang);
 
         viewHolder.activityTitle.setText(aTitle);
         viewHolder.sectionTitle.setText(sTitle);
         viewHolder.courseTitle.setText(cTitle);
+        Log.d(TAG, course.getLocation());
+        convertView.setTag(R.id.TAG_COURSE, course);
+        convertView.setTag(R.id.TAG_ACTIVITY_DIGEST, activity.getDigest());
 
-        convertView.setTag(R.id.TAG_COURSE,sr.getCourse());
-        convertView.setTag(R.id.TAG_ACTIVITY_DIGEST,sr.getActivity().getDigest());
+        Log.d(TAG, activity.getImageFilePath(""));
+        if (activity.hasCustomImage()){
 
-        if(sr.getCourse().getImageFile() != null){
-            String image = sr.getCourse().getImageFileFromRoot();
-            Picasso.with(ctx).load(new File(image))
-                    .placeholder(R.drawable.default_course)
-                    .into(viewHolder.courseImage);
+            String image = activity.getImageFilePath(course.getLocation());
+            Log.d(TAG, new File(image).exists() ? "Exists" : "Noooo");
+            Picasso.get().load(new File(image)).into(viewHolder.activityImage);
+        }
+        else {
+            int defaultActivityDrawable = activity.getDefaultResourceImage();
+            viewHolder.activityImage.setImageResource(defaultActivityDrawable);
         }
 	   
 	    return convertView;

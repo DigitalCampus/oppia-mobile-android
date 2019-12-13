@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,18 +27,19 @@ import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
-import org.digitalcampus.oppia.adapter.SectionListAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -63,8 +64,9 @@ import java.util.concurrent.Callable;
 
 public class CourseActivity extends AppActivity implements OnInitListener, TabLayout.OnTabSelectedListener {
 
-    public static final String TAG = CourseActivity.class.getSimpleName();
     public static final String BASELINE_TAG = "BASELINE";
+    public static final String NUM_ACTIVITY_TAG = "num_activity";
+
     private Section section;
     private Course course;
 
@@ -98,12 +100,12 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             course = (Course) bundle.getSerializable(Course.TAG);
 
             activities = section.getActivities();
-            currentActivityNo = bundle.getInt(SectionListAdapter.TAG_PLACEHOLDER);
+            currentActivityNo = bundle.getInt(NUM_ACTIVITY_TAG);
             if (bundle.getSerializable(CourseActivity.BASELINE_TAG) != null) {
                 this.isBaseline = bundle.getBoolean(CourseActivity.BASELINE_TAG);
             }
             // set image
-            if (actionBar != null){
+            if (actionBar != null) {
                 BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), MobileLearning.APP_LOGO);
                 actionBar.setHomeAsUpIndicator(bm);
                 actionBar.setDisplayShowHomeEnabled(true);
@@ -119,6 +121,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     @Override
     public void onStart() {
         super.onStart();
+        initialize();
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
     }
 
@@ -146,7 +149,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         currentWidget.saveTracker();
     }
 
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
         currentWidget.resumeTimeTracking();
@@ -224,16 +227,16 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         }
     }
 
-    private void loadActivities(){
+    private void loadActivities() {
         String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         String actionBarTitle = section.getTitle(currentLang);
-        if ((actionBarTitle != null) && ( !actionBarTitle.equals(MultiLangInfoModel.DEFAULT_NOTITLE)) ){
+        if (actionBarTitle != null && !actionBarTitle.equals(MultiLangInfoModel.DEFAULT_NOTITLE)) {
             setTitle(actionBarTitle);
         } else {
             ArrayList<Activity> sectionActivities = section.getActivities();
             String preTestTitle = getString(R.string.alert_pretest);
             setTitle(!sectionActivities.isEmpty() && sectionActivities.get(0).getTitle(currentLang).equalsIgnoreCase(preTestTitle) ?
-                    preTestTitle : isBaseline ? getString(R.string.title_baseline): "");
+                    preTestTitle : isBaseline ? getString(R.string.title_baseline) : "");
         }
 
         List<Fragment> fragments = new ArrayList<>();
@@ -242,27 +245,27 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         for (int i = 0; i < activities.size(); i++) {
             Activity activity = activities.get(i);
             //Fragment creation
-            if (activity.getActType().equalsIgnoreCase("page")){
-                fragments.add( PageWidget.newInstance(activity, course, isBaseline) );
+            if (activity.getActType().equalsIgnoreCase("page")) {
+                fragments.add(PageWidget.newInstance(activity, course, isBaseline));
             } else if (activity.getActType().equalsIgnoreCase("quiz")) {
                 QuizWidget newQuiz = QuizWidget.newInstance(activity, course, isBaseline);
-                if (apAdapter != null){
+                if (apAdapter != null) {
                     //If there was a previous quizWidget, we apply its current config to the new one
                     QuizWidget previousQuiz = (QuizWidget) apAdapter.getItem(i);
                     newQuiz.setWidgetConfig(previousQuiz.getWidgetConfig());
                 }
                 fragments.add(newQuiz);
             } else if (activity.getActType().equalsIgnoreCase("resource")) {
-                fragments.add( ResourceWidget.newInstance(activity, course, isBaseline) );
-            } else if  (activity.getActType().equalsIgnoreCase("feedback")){
+                fragments.add(ResourceWidget.newInstance(activity, course, isBaseline));
+            } else if (activity.getActType().equalsIgnoreCase("feedback")) {
                 FeedbackWidget newFeedback = FeedbackWidget.newInstance(activity, course, isBaseline);
-                if (apAdapter != null){
+                if (apAdapter != null) {
                     //If there was a previous feedbackWidget, we apply its current config to the new one
                     FeedbackWidget previousWidget = (FeedbackWidget) apAdapter.getItem(i);
                     newFeedback.setWidgetConfig(previousWidget.getWidgetConfig());
                 }
                 fragments.add(newFeedback);
-            }  else if (activities.get(i).getActType().equalsIgnoreCase("url")) {
+            } else if (activities.get(i).getActType().equalsIgnoreCase("url")) {
                 UrlWidget f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
                 fragments.add(f);
             }
@@ -272,7 +275,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         apAdapter = new ActivityPagerAdapter(this, getSupportFragmentManager(), fragments, titles);
         viewPager.setAdapter(apAdapter);
         tabs.setupWithViewPager(viewPager);
-        tabs.setTabMode( activities.size()>1 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
+        tabs.setTabMode(activities.size() > 1 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
         tabs.addOnTabSelectedListener(this);
         apAdapter.updateTabViews(tabs);
         viewPager.setCurrentItem(currentActivityNo);
@@ -292,20 +295,21 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         int tabSelected = tab.getPosition();
         Log.d(TAG, "Tab selected " + tabSelected + " current act " + currentActivityNo);
 
-        if (canNavigateTo(tabSelected)){
+        if (canNavigateTo(tabSelected)) {
             viewPager.setCurrentItem(tabSelected);
             currentActivityNo = tabSelected;
             this.stopReading();
             WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
             currentWidget.resetTimeTracking();
-        }
-        else{
-            Runnable setPreviousTab = new Runnable(){
+        } else {
+            Runnable setPreviousTab = new Runnable() {
                 @Override
                 public void run() {
                     UIUtils.showAlert(CourseActivity.this, R.string.sequencing_dialog_title, R.string.sequencing_section_message);
                     TabLayout.Tab target = tabs.getTabAt(currentActivityNo);
-                    if (target != null){ target.select(); }
+                    if (target != null) {
+                        target.select();
+                    }
                 }
             };
             new Handler().post(setPreviousTab);
@@ -327,7 +331,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
 
-    private boolean canNavigateTo(int newTab){
+    private boolean canNavigateTo(int newTab) {
         //If the course does not have a sequencing mode, we can navigate freely
         if (course.getSequencingMode().equals(Course.SEQUENCING_MODE_NONE)) return true;
         // if it is a previous activity (or the first), no need for further checks
@@ -344,22 +348,24 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             ttsRunning = true;
             ((WidgetFactory) apAdapter.getItem(currentActivityNo)).setReadAloud(true);
             supportInvalidateOptionsMenu();
-            HashMap<String,String> params = new HashMap<>();
-            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,TAG);
+            HashMap<String, String> params = new HashMap<>();
+            params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, TAG);
             myTTS.speak(((WidgetFactory) apAdapter.getItem(currentActivityNo)).getContentToRead(), TextToSpeech.QUEUE_FLUSH, params);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 myTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                     @Override
-                    public void onDone(String utteranceId){
+                    public void onDone(String utteranceId) {
                         CourseActivity.this.ttsRunning = false;
                         myTTS = null;
                     }
+
                     @Override
-                    public void onError(String utteranceId){
+                    public void onError(String utteranceId) {
                         // does not need completing
                     }
+
                     @Override
-                    public void onStart(String utteranceId){
+                    public void onStart(String utteranceId) {
                         // does not need completing
                     }
                 });

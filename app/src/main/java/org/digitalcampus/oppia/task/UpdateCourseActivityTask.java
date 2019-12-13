@@ -43,7 +43,6 @@ import okhttp3.Response;
 
 public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadProgress, Payload> {
 
-	public final static String TAG = UpdateCourseActivityTask.class.getSimpleName();
 	private UpdateActivityListener mStateListener;
     private boolean APIKeyInvalidated = false;
 	private long userId;

@@ -70,8 +70,7 @@ public class Tracker {
     public void saveSearchTracker(String searchTerm, int count){
 
 		try {
-			JSONObject searchData = new JSONObject();
-			searchData = new MetaDataUtils(ctx).getMetaData(searchData);
+			JSONObject searchData = new MetaDataUtils(ctx).getMetaData();
 			searchData.put("query", searchTerm);
 			searchData.put("results_count", count);
 
@@ -86,8 +85,7 @@ public class Tracker {
 	public void saveMissingMediaTracker(String filename){
 
 		try {
-			JSONObject missingMedia = new JSONObject();
-			missingMedia = new MetaDataUtils(ctx).getMetaData(missingMedia);
+			JSONObject missingMedia = new MetaDataUtils(ctx).getMetaData();
 			missingMedia.put("filename", filename);
 			saveTracker(0, "", missingMedia, MISSING_MEDIA_TYPE, true, Gamification.GAMIFICATION_MEDIA_MISSING);
 
@@ -100,9 +98,7 @@ public class Tracker {
 	public void saveRegisterTracker(){
 
 		try {
-			JSONObject registerData = new JSONObject();
-            registerData = new MetaDataUtils(ctx).getMetaData(registerData);
-
+			JSONObject registerData = new MetaDataUtils(ctx).getMetaData();
 			saveTracker(0, "", registerData, Gamification.EVENT_NAME_REGISTER, true, Gamification.GAMIFICATION_REGISTER);
 
 		} catch (JSONException e) {

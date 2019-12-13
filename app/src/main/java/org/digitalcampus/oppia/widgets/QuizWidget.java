@@ -26,7 +26,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +40,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.splunk.mint.Mint;
 
@@ -91,15 +92,18 @@ public class QuizWidget extends WidgetFactory {
 	private static final int PROGRESS_ANIM_DURATION = 600;
 	private Quiz quiz;
 	private QuestionWidget qw;
-	public Button prevBtn;
-	public Button nextBtn;
-	public ImageView playAudioBtn;
+	private Button prevBtn;
+	private Button nextBtn;
+	private ImageView playAudioBtn;
 	private TextView qText;
 	private String quizContent;
 	private LinearLayout questionImage;
-	private boolean isOnResultsPage = false;
 	private ViewGroup container;
 	private MediaPlayer mp;
+
+
+	private boolean isOnResultsPage = false;
+	private boolean quizAttemptSaved = false;
 
 	private ProgressBar progressBar;
 	private ProgressBarAnimator barAnim;
@@ -524,6 +528,7 @@ public class QuizWidget extends WidgetFactory {
 		
 		// Show restart or continue button
 		Button restartBtn = getView().findViewById(R.id.quiz_results_button);
+		Button exitBtn = (Button) getView().findViewById(R.id.quiz_exit_button);
 
         int quizAvailability = checkQuizAvailability();
         boolean quizAvailable = quizAvailability == QUIZ_AVAILABLE;
@@ -534,6 +539,11 @@ public class QuizWidget extends WidgetFactory {
             availabilityMsg.setVisibility(View.VISIBLE);
         }
 
+		exitBtn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				QuizWidget.this.getActivity().finish();
+			}
+		});
 		if (this.isBaseline) {
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_baseline_goto_course));
 			restartBtn.setOnClickListener(new View.OnClickListener() {
@@ -541,13 +551,9 @@ public class QuizWidget extends WidgetFactory {
 					QuizWidget.this.getActivity().finish();
 				}
 			});
+			exitBtn.setVisibility(View.GONE);
 		} else if (this.getActivityCompleted() || !quizAvailable){
-            restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_continue));
-            restartBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    QuizWidget.this.getActivity().finish();
-                }
-            });
+			restartBtn.setVisibility(View.GONE);
         } else{
 			restartBtn.setText(super.getActivity().getString(R.string.widget_quiz_results_restart));
 			restartBtn.setOnClickListener(new View.OnClickListener() {
@@ -565,6 +571,7 @@ public class QuizWidget extends WidgetFactory {
 		this.quiz = new Quiz();
 		this.quiz.load(quizContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 		this.isOnResultsPage = false;
+		this.quizAttemptSaved = false;
 		
 		// reload quiz layout
 		View C = getView().findViewById(R.id.widget_quiz_results);
@@ -594,7 +601,7 @@ public class QuizWidget extends WidgetFactory {
 	@Override
 	public void saveTracker() {
 		long timetaken = this.getSpentTime();
-		if(activity == null || !isOnResultsPage){
+		if(activity == null || !isOnResultsPage || quizAttemptSaved){
 			return;
 		}
 
@@ -602,6 +609,7 @@ public class QuizWidget extends WidgetFactory {
 		new GamificationServiceDelegate(getActivity())
 			.createActivityIntent(course, activity, getActivityCompleted(), isBaseline)
 			.registerQuizAttemptEvent(timetaken, quiz, this.getPercent());
+		quizAttemptSaved = true;
 	}
 
 	@Override
@@ -610,6 +618,7 @@ public class QuizWidget extends WidgetFactory {
 		config.put("quiz", this.quiz);
 		config.put(WidgetFactory.PROPERTY_ACTIVITY_STARTTIME, this.getStartTime());
 		config.put(WidgetFactory.PROPERTY_ON_RESULTS_PAGE, this.isOnResultsPage);
+		config.put(WidgetFactory.PROPERTY_ATTEMPT_SAVED, this.quizAttemptSaved);
 		return config;
 	}
 
@@ -623,6 +632,9 @@ public class QuizWidget extends WidgetFactory {
 		}
 		if (config.containsKey(WidgetFactory.PROPERTY_ON_RESULTS_PAGE)) {
 			this.isOnResultsPage = (Boolean) config.get(WidgetFactory.PROPERTY_ON_RESULTS_PAGE);
+		}
+		if (config.containsKey(WidgetFactory.PROPERTY_ATTEMPT_SAVED)) {
+			this.quizAttemptSaved = (Boolean) config.get(WidgetFactory.PROPERTY_ATTEMPT_SAVED);
 		}
 	}
 

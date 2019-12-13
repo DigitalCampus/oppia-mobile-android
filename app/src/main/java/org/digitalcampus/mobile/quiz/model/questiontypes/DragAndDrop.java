@@ -136,7 +136,7 @@ public class DragAndDrop extends QuizQuestion implements Serializable {
 
     @Override
     public boolean responseExpected() {
-        if (this.props.containsKey(Quiz.JSON_PROPERTY_REQUIRED)){
+        if (this.getProps().containsKey(Quiz.JSON_PROPERTY_REQUIRED)){
             return Boolean.parseBoolean(this.getProp(Quiz.JSON_PROPERTY_REQUIRED));
         }
         return true;

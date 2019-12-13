@@ -28,13 +28,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.splunk.mint.Mint;
 
@@ -52,7 +53,7 @@ import java.util.concurrent.Callable;
 
 public class UIUtils {
 
-    public final static String TAG = UIUtils.class.getSimpleName();
+    public static final String TAG = UIUtils.class.getSimpleName();
     private static int pointsToSubstractForAnimationSaved;
 
     /**
@@ -96,13 +97,13 @@ public class UIUtils {
         final TextView points = pointsItem.getActionView().findViewById(R.id.userpoints);
         TextView badges = pointsItem.getActionView().findViewById(R.id.userbadges);
 
-        if (points == null || badges == null) {
+        if (points == null) {
             return;
         }
 
         if (animateBgPoints) {
-            int colorFrom = ContextCompat.getColor(ctx, R.color.ap_white);
-            int colorTo = ContextCompat.getColor(ctx, R.color.highlight_dark);
+            int colorFrom = ContextCompat.getColor(ctx, R.color.white);
+            int colorTo = ContextCompat.getColor(ctx, R.color.points_badge);
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
             colorAnimation.setDuration(1000); // milliseconds
             colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -136,6 +137,10 @@ public class UIUtils {
             });
         } else {
             points.setVisibility(View.GONE);
+        }
+
+        if (badges == null){
+            return;
         }
 
         boolean badgingEnabled = prefs.getBoolean(PrefsActivity.PREF_BADGING_ENABLED, true);

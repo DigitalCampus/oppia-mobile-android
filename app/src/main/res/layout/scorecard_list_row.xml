@@ -1,75 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/course_row"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp">
 
-    <FrameLayout
-        android:layout_width="fill_parent"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.androidplot.pie.PieChart
-            android:id="@+id/scorecard_pie_chart"
-            android:layout_width="fill_parent"
-            android:layout_height="170dp"
-            />
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:id="@+id/cpb_scorecard"
+            android:layout_width="@dimen/size_circularprogressbar_scorecard_list"
+            android:layout_height="@dimen/size_circularprogressbar_scorecard_list"
+            android:layout_centerInParent="true"
+            app:cpb_background_progressbar_color="@color/grey_light"
+            app:cpb_background_progressbar_width="10dp"
+            app:cpb_progress_direction="to_right"
+            app:cpb_progress_max="100"
+            app:cpb_progressbar_color="@color/theme_secondary"
+            app:cpb_progressbar_width="10dp" />
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
             <TextView
+                android:id="@+id/scorecard_activities_completed"
                 style="@style/Highlight.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/scorecard_activities_completed"
-                android:text="15"
-                android:layout_gravity="center_horizontal"/>
+                android:text="15" />
 
             <TextView
                 style="@style/ScorecardPie.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/scorecard_activities_completed"
-                android:id="@+id/textView8"
-                android:layout_gravity="center_horizontal"/>
+                android:text="@string/scorecard_activities_completed" />
 
             <View
+                style="@style/ScorecardPie.Label.Separator"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#000000"
-                style="@style/ScorecardPie.Label.Separator"/>
+                android:background="#000000" />
+
             <TextView
+                android:id="@+id/scorecard_activities_total"
                 style="@style/Highlight.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/scorecard_activities_total"
-                android:text="240"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="-5dp"/>
+                android:layout_marginTop="-5dp"
+                android:text="240" />
 
             <TextView
                 style="@style/ScorecardPie.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/scorecard_activities_total"
-                android:id="@+id/textView9"
-                android:layout_gravity="center_horizontal"/>
+                android:text="@string/scorecard_activities_total" />
         </LinearLayout>
-    </FrameLayout>
+    </RelativeLayout>
 
     <TextView
-            android:id="@+id/course_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_dark"
-            android:textSize="15sp"
-            android:textStyle="normal" 
-            android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"/>
+        android:id="@+id/course_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textColor="@color/text_dark"
+        android:textSize="15sp"
+        android:textStyle="normal" />
 
 </LinearLayout>

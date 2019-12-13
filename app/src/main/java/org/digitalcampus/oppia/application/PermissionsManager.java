@@ -43,7 +43,9 @@ public class PermissionsManager {
     private static final List<String> PERMISSIONS_REQUIRED = Arrays.asList(
         //Remember to update this when the Manifest permisssions change!
         Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
     );
 
     private static boolean isFirstTimeAsked(SharedPreferences prefs, String permission){
@@ -63,9 +65,9 @@ public class PermissionsManager {
         final List<String> permissionsToAsk = filterNotGrantedPermissions(act, PERMISSIONS_REQUIRED);
 
         ViewGroup container = act.findViewById(R.id.permissions_explanation);
-        if (!permissionsToAsk.isEmpty()){
+        if (!permissionsToAsk.isEmpty()) {
             //Show the permissions informative view
-            LayoutInflater layoutInflater = (LayoutInflater)act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) act.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             container.removeAllViews();
             View explanation = layoutInflater.inflate(R.layout.view_permissions_explanation, container);
             container.setVisibility(View.VISIBLE);
@@ -73,7 +75,7 @@ public class PermissionsManager {
             Button reqPermsBtn = explanation.findViewById(R.id.btn_permissions);
             View permsNotAskable = explanation.findViewById(R.id.not_askable_description);
             //Check the user has not selected the "Don't ask again" option for any permission yet
-            if (canAskForAllPermissions(act, permissionsToAsk)){
+            if (canAskForAllPermissions(act, permissionsToAsk)) {
                 //First, set the permissions as asked
                 reqPermsBtn.setVisibility(View.VISIBLE);
                 permsNotAskable.setVisibility(View.GONE);

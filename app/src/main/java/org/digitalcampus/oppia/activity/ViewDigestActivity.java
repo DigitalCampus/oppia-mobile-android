@@ -14,13 +14,18 @@ import org.digitalcampus.oppia.model.Course;
 
 public class ViewDigestActivity extends AppActivity {
 
-    public static final String TAG = ViewDigestActivity.class.getSimpleName();
     public static final String ACTIVITY_DIGEST_PARAM = "digest";
 
     private TextView errorText;
     private View activityDetail;
     private Activity activity;
     private Course activityCourse;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        initialize();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

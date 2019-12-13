@@ -28,11 +28,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +36,16 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnticipateInterpolator;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -56,19 +61,47 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 
-    public static final String TAG = AppActivity.class.getSimpleName();
+    protected final String TAG = this.getClass().getSimpleName();
 
     GamificationBroadcastReceiver gamificationReceiver;
     private Menu optionsMenu;
 
+    @Inject
+    SharedPreferences prefs;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initializeDaggerBase();
+    }
+
+    private void initializeDaggerBase() {
+        MobileLearning app = (MobileLearning) getApplication();
+        app.getComponent().inject(this);
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+    }
+
+    public void toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    public void toast(int stringId) {
+        toast(getString(stringId));
+    }
+
+    public SharedPreferences getPrefs() {
+        return prefs;
     }
 
     @Override
@@ -83,9 +116,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         }
     }
 
-    protected void onStart(boolean overrideTitle, boolean configureActionBar) {
-        super.onStart();
-
+    protected void initialize(boolean overrideTitle, boolean configureActionBar) {
         if (!configureActionBar)
             return;
 
@@ -103,7 +134,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             //If we are in a course-related activity, we show its title
             if (overrideTitle) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 Bundle bundle = this.getIntent().getExtras();
                 if (bundle != null) {
                     Course course = (Course) bundle.getSerializable(Course.TAG);
@@ -113,18 +143,15 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                     actionBar.setTitle(title);
                 }
             }
-
         }
     }
 
-    protected void onStart(boolean overrideTitle) {
-        onStart(overrideTitle, true);
+    protected void initialize(boolean overrideTitle) {
+        initialize(overrideTitle, true);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        onStart(true, true);
+    protected void initialize() {
+        initialize(true, true);
     }
 
     @Override
@@ -205,6 +232,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean notifEnabled = prefs.getBoolean(PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS, true);
         if (notifEnabled) {
+
             final View rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
 
             Snackbar snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE);
@@ -212,7 +240,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             layout.setClickable(false);
 
             // Hide the text
-            TextView textView = (TextView) layout.findViewById(android.support.design.R.id.snackbar_text);
+            TextView textView = (TextView) layout.findViewById(com.google.android.material.R.id.snackbar_text);
             textView.setVisibility(View.INVISIBLE);
 
             // Inflate our custom view
@@ -237,7 +265,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 UIUtils.showUserData(optionsMenu, AppActivity.this, null, false, points);
             }
 
-            snackbar.setDuration(Snackbar.LENGTH_INDEFINITE);
+            snackbar.setDuration(BaseTransientBottomBar.LENGTH_INDEFINITE);
 
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override
@@ -354,7 +382,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
     private void waitAndClose(final Snackbar snackbar) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int durationViewPoints = Integer.parseInt(prefs.getString(PrefsActivity.PREF_DURATION_GAMIFICATION_POINTS_VIEW,
                 String.valueOf(Gamification.DURATION_GAMIFICATION_POINTS_VIEW)));
 

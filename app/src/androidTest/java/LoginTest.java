@@ -1,30 +1,33 @@
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.MockApiEndpoint;
+import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.LoginTask;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.task.RegisterTask;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
-import TestRules.DisableAnimationsRule;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest{
@@ -38,6 +41,7 @@ public class LoginTest{
     private MockWebServer mockServer;
     private Context context;
     private Payload response;
+    private boolean registerOK;
 
    /* @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
@@ -45,9 +49,10 @@ public class LoginTest{
 
     @Before
     public void setUp() throws Exception { 
-        context = InstrumentationRegistry.getTargetContext();
+        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         //DbHelper.getInstance(context).resetDatabase();
         signal = new CountDownLatch(1);
+        mockServer = new MockWebServer();
     }
 
     @After
@@ -59,7 +64,6 @@ public class LoginTest{
     @Test
     public void userLogin_EmptyResponse()throws Exception {
         try {
-            mockServer = new MockWebServer();
 
             mockServer.enqueue(new MockResponse()
                     .setBody(""));
@@ -107,13 +111,12 @@ public class LoginTest{
     @Test
     public void userLogin_OKResponse()throws Exception {
         try {
-            mockServer = new MockWebServer();
 
             String filename = "responses/response_201_login.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(201)
-                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename)));
 
             mockServer.start();
 
@@ -159,13 +162,12 @@ public class LoginTest{
     @Test
     public void userLogin_WrongPassword()throws Exception {
         try {
-            mockServer = new MockWebServer();
 
             String filename = "responses/response_400_login.json";
 
             mockServer.enqueue(new MockResponse()
                     .setResponseCode(400)
-                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getContext(), filename)));
+                    .setBody(Utils.FileUtils.getStringFromFile(InstrumentationRegistry.getInstrumentation().getContext(), filename)));
 
             mockServer.start();
 
@@ -207,4 +209,56 @@ public class LoginTest{
 
     }
 
+    @Test
+    public void registerOfflineAvoidRegisterSameUsernameCaseInsensitive() throws Exception {
+
+        String username1 = "test1";
+
+        DbHelper db = DbHelper.getInstance(context);
+        db.deleteUser(username1);
+
+        User u = new User();
+        u.setUsername(username1);
+        u.setPassword("testPass1");
+        u.setOfflineRegister(true);
+
+        performRegister(u);
+        signal.await();
+        assertTrue(registerOK);
+
+        signal = new CountDownLatch(1);
+        u.setUsername(username1.toUpperCase());
+        performRegister(u);
+        signal.await();
+        assertFalse(registerOK);
+
+    }
+
+    private void performRegister(User u) {
+
+        Payload p = new Payload(Arrays.asList(u));
+        RegisterTask rt = new RegisterTask(context);
+        rt.setRegisterListener(new RegisterTask.RegisterListener() {
+            @Override
+            public void onSubmitComplete(User u) {
+                registerOK = true;
+                signal.countDown();
+            }
+
+            @Override
+            public void onSubmitError(String error) {
+                registerOK = false;
+                signal.countDown();
+
+            }
+
+            @Override
+            public void onConnectionError(String error, User u) {
+                registerOK = false;
+                signal.countDown();
+
+            }
+        });
+        rt.execute(p);
+    }
 }

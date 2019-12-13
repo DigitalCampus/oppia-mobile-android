@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.splunk.mint.Mint;
 
@@ -44,7 +43,6 @@ import javax.inject.Inject;
 
 public class BadgesFragment extends AppFragment implements APIRequestListener {
 
-	public static final String TAG = BadgesFragment.class.getSimpleName();
 	private JSONObject json;
     private BadgesListAdapter badgesAdapter;
 
@@ -91,9 +89,14 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
         badges.clear();
 		try {
-			TextView tv = this.getView().findViewById(R.id.fragment_badges_title);
+
+			this.getView().findViewById(R.id.empty_state).setVisibility(View.GONE);
+			this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
+			this.getView().findViewById(R.id.error_state).setVisibility(View.GONE);
+
 			if(json.getJSONArray("objects").length() == 0){
-				tv.setText(R.string.info_no_badges);
+				//tv.setText(R.string.info_no_badges);
+				this.getView().findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
 				return;
 			}
 			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
@@ -103,7 +106,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 				b.setDateTime(json_obj.getString("award_date"));
 				badges.add(b);
 			}
-			tv.setVisibility(View.GONE);
+
             badgesAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
 			Mint.logException(e);
@@ -122,16 +125,19 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 				json = new JSONObject(response.getResultResponse());
 				Log.d(TAG,json.toString(4));
 				refreshBadgesList();
+				return;
+
 			} catch (JSONException e) {
 				Mint.logException(e);
 				UIUtils.showAlert(super.getActivity(), R.string.loading, R.string.error_connection);
 				Log.d(TAG, "Error connecting to server: ", e);
 			}
-		} else {
-			TextView tv = this.getView().findViewById(R.id.fragment_badges_title);
-			tv.setVisibility(View.VISIBLE);
-			tv.setText(R.string.error_connection_required);
-		} 		
+		}
+
+		//If we reach this statement there was some error
+		this.getView().findViewById(R.id.loading_badges).setVisibility(View.GONE);
+		this.getView().findViewById(R.id.empty_state).setVisibility(View.GONE);
+		this.getView().findViewById(R.id.error_state).setVisibility(View.VISIBLE);
 	}
 
 

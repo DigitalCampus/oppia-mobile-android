@@ -17,17 +17,6 @@
 
 package org.digitalcampus.oppia.adapter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Locale;
-
-import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
-import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.Media;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -39,6 +28,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
+import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Media;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Locale;
 
 public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 
@@ -57,12 +57,12 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
 	}
 
     static class DownloadMediaViewHolder{
-        TextView mediaCourses;
-        TextView mediaTitle;
-        TextView mediaPath;
-        TextView mediaFileSize;
-        ImageButton downloadBtn;
-        ProgressBar downloadProgress;
+        private TextView mediaCourses;
+        private TextView mediaTitle;
+        private TextView mediaPath;
+        private TextView mediaFileSize;
+        private ImageButton downloadBtn;
+        private ProgressBar downloadProgress;
     }
 
 	@Override
@@ -101,11 +101,12 @@ public class DownloadMediaListAdapter extends ArrayAdapter<Media> {
         viewHolder.mediaPath.setText(m.getDownloadUrl());
 		if(m.getFileSize() != 0){
             viewHolder.mediaFileSize.setText(ctx.getString(R.string.media_file_size,m.getFileSize()/(1024*1024)));
+            viewHolder.mediaFileSize.setVisibility(View.VISIBLE);
 		} else {
-            viewHolder.mediaFileSize.setVisibility(View.GONE);
+            viewHolder.mediaFileSize.setVisibility(View.INVISIBLE);
 		}
         
-        viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.GONE : View.VISIBLE);
+        viewHolder.downloadBtn.setVisibility(isMultiChoiceMode ? View.INVISIBLE : View.VISIBLE);
 
         viewHolder.downloadBtn.setTag(position); //For passing the list item index
         viewHolder.downloadBtn.setOnClickListener(new View.OnClickListener() {

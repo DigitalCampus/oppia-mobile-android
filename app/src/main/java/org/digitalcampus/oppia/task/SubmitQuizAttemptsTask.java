@@ -44,8 +44,6 @@ import okhttp3.Response;
 
 public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payload> {
 
-	public final static String TAG = SubmitQuizAttemptsTask.class.getSimpleName();
-
 	public SubmitQuizAttemptsTask(Context ctx) { super(ctx); }
 	public SubmitQuizAttemptsTask(Context ctx, ApiEndpoint api) { super(ctx, api); }
 
@@ -116,10 +114,11 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 
 	@Override
 	protected void onPostExecute(Payload p) {
+		super.onPostExecute(p);
 		// reset submittask back to null after completion - so next call can run
 		// properly
-		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
-		app.omSubmitQuizAttemptsTask = null;
+//		MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+//		app.omSubmitQuizAttemptsTask = null;
 	}
 
 }

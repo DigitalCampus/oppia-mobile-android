@@ -43,8 +43,8 @@ public class CourseQuizzesGridAdapter  extends ArrayAdapter<QuizStats> {
     }
 
     static class QuizStatsViewHolder{
-        TextView percent;
-        View baseView;
+        private TextView percent;
+        private View baseView;
     }
 
     @Override

@@ -38,10 +38,15 @@ import java.util.Locale;
 
 public class CourseMetaPageActivity extends AppActivity {
 
-	public static final String TAG = CourseMetaPageActivity.class.getSimpleName();
 	private Course course;
 	private CourseMetaPage cmp;
-	
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		initialize();
+	}
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

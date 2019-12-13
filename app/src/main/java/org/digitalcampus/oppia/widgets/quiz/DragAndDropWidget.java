@@ -200,7 +200,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
     }
 
 
-    class Draggable extends android.support.v7.widget.AppCompatImageView {
+    class Draggable extends androidx.appcompat.widget.AppCompatImageView {
 
         private String dragID;
         private boolean infinite = false;

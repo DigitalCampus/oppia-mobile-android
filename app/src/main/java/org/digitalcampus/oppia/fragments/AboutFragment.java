@@ -21,7 +21,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,9 +36,8 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.Locale;
 
-public class AboutFragment extends Fragment{
+public class AboutFragment extends AppFragment {
 
-	public static final String TAG = AboutFragment.class.getSimpleName();
 	private SharedPreferences prefs;
 	
 	public static AboutFragment newInstance() {

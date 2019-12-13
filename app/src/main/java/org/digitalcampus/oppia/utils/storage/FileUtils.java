@@ -1,16 +1,16 @@
-/* 
+/*
  * This file is part of OppiaMobile - https://digital-campus.org/
- * 
+ *
  * OppiaMobile is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OppiaMobile is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -48,6 +48,12 @@ public class FileUtils {
 	// placed in the destination directory
 	// destination directory should be created first
 	public static boolean unzipFiles(String srcDirectory, String srcFile, String destDirectory) {
+		FileInputStream fis = null;
+		ZipInputStream zis = null;
+
+		FileOutputStream fos = null;
+		BufferedOutputStream dest = null;
+
 		try {
 			// first make sure that all the arguments are valid and not null
 			if (srcDirectory == null) {
@@ -84,9 +90,8 @@ public class FileUtils {
 			}
 
 			// now start with unzip process
-			BufferedOutputStream dest;
-			FileInputStream fis = new FileInputStream(sourceFile);
-			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
+			fis = new FileInputStream(sourceFile);
+			zis = new ZipInputStream(new BufferedInputStream(fis));
 			ZipEntry entry;
 
 			while ((entry = zis.getNextEntry()) != null) {
@@ -102,7 +107,7 @@ public class FileUtils {
 
 				// write the file to the disk
 				if (!f.isDirectory()) {
-					FileOutputStream fos = new FileOutputStream(f);
+					fos = new FileOutputStream(f);
 					dest = new BufferedOutputStream(fos, BUFFER_SIZE);
 
 					// this counter is a hack to prevent getting stuck when
@@ -124,14 +129,15 @@ public class FileUtils {
 				}
 			}
 
-			// we are done with all the files
-			// close the zip file
-			zis.close();
-
 		} catch (Exception e) {
 			Mint.logException(e);
 			Log.d(TAG, "Exception:", e);
 			return false;
+		} finally {
+			try { if(fis != null) fis.close(); } catch (Exception e) { }
+			try { if(zis != null) zis.close(); } catch (Exception e) { }
+            try { if(fos != null) fos.close(); } catch (Exception e) { }
+            try { if(dest != null) dest.close(); } catch (Exception e) { }
 		}
 
 		return true;
@@ -140,15 +146,20 @@ public class FileUtils {
 	public static boolean zipFileAtPath(File sourceFile, File zipDestination) {
 		final int BUFFER = 2048;
 		Log.d(TAG, "Zipping " + sourceFile + " into " + zipDestination);
+
+		FileOutputStream dest = null;
+		ZipOutputStream out = null;
+		FileInputStream fi = null;
+		BufferedInputStream origin = null;
+
 		try {
-			BufferedInputStream origin = null;
-			FileOutputStream dest = new FileOutputStream(zipDestination);
-			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+			dest = new FileOutputStream(zipDestination);
+			out = new ZipOutputStream(new BufferedOutputStream(dest));
 			if (sourceFile.isDirectory()) {
 				zipSubFolder(out, sourceFile, sourceFile.getParent().length());
 			} else {
 				byte data[] = new byte[BUFFER];
-				FileInputStream fi = new FileInputStream(zipDestination);
+				fi = new FileInputStream(zipDestination);
 				origin = new BufferedInputStream(fi, BUFFER);
 				ZipEntry entry = new ZipEntry(getLastPathComponent(zipDestination.getPath()));
 				out.putNextEntry(entry);
@@ -157,44 +168,62 @@ public class FileUtils {
 					out.write(data, 0, count);
 				}
 			}
-			out.close();
+
 		} catch (Exception e) {
 			Mint.logException(e);
 			Log.d(TAG, "Exception:", e);
 			return false;
+		} finally {
+			try { if(dest != null) dest.close(); } catch (Exception e) { }
+			try { if(out != null) out.close(); } catch (Exception e) { }
+			try { if(fi != null) fi.close(); } catch (Exception e) { }
+			try { if(origin != null) origin.close(); } catch (Exception e) { }
 		}
 		return true;
 	}
 
 
-	private static void zipSubFolder(ZipOutputStream out, File folder,
-							  int basePathLength) throws IOException {
+	private static void zipSubFolder(ZipOutputStream out, File folder, int basePathLength) {
 
 		final int BUFFER = 2048;
 
 		Log.d(TAG, "Zipping folder " + folder.getPath());
 
 		File[] fileList = folder.listFiles();
-		BufferedInputStream origin = null;
+
 		for (File file : fileList) {
 			if (file.isDirectory()) {
 				zipSubFolder(out, file, basePathLength);
 			} else {
-				byte data[] = new byte[BUFFER];
-				String unmodifiedFilePath = file.getPath();
-				String relativePath = unmodifiedFilePath
-						.substring(basePathLength);
-				FileInputStream fi = new FileInputStream(unmodifiedFilePath);
-				origin = new BufferedInputStream(fi, BUFFER);
-				ZipEntry entry = new ZipEntry(relativePath);
-				out.putNextEntry(entry);
-				int count;
-				while ((count = origin.read(data, 0, BUFFER)) != -1) {
-					out.write(data, 0, count);
+
+				BufferedInputStream origin = null;
+				FileInputStream fi = null;
+
+				try {
+
+					byte data[] = new byte[BUFFER];
+					String unmodifiedFilePath = file.getPath();
+					String relativePath = unmodifiedFilePath
+							.substring(basePathLength);
+					fi = new FileInputStream(unmodifiedFilePath);
+					origin = new BufferedInputStream(fi, BUFFER);
+					ZipEntry entry = new ZipEntry(relativePath);
+					out.putNextEntry(entry);
+					int count;
+					while ((count = origin.read(data, 0, BUFFER)) != -1) {
+						out.write(data, 0, count);
+					}
+
+				} catch (IOException e) {
+					Log.e(TAG, "zipSubFolder: ", e);
+
+				} finally {
+					try { if(fi != null) fi.close(); } catch (Exception e) { }
+					try { if(origin != null) origin.close(); } catch (Exception e) { }
 				}
-				origin.close();
 			}
 		}
+
 	}
 
 	/*
@@ -227,13 +256,15 @@ public class FileUtils {
     public static boolean cleanDir(File dir){
         if (dir.isDirectory()) {
             String[] children = dir.list();
-            for (String dirFiles : children) {
-                File fileToDelete = new File(dir, dirFiles);
-                boolean success = deleteDir(fileToDelete);
-                if (!success) {
-                    return false;
-                }
-            }
+			if (children != null) {
+				for (String dirFiles : children) {
+					File fileToDelete = new File(dir, dirFiles);
+					boolean success = deleteDir(fileToDelete);
+					if (!success) {
+						return false;
+					}
+				}
+			}
         }
         return true;
     }
@@ -273,7 +304,10 @@ public class FileUtils {
 
 		// delete zip file from download dir
 		File zip = new File(path);
-		zip.delete();
+		if (!zip.delete()) {
+			Log.e(TAG, "cleanUp: File could not be deleted: " + zip.getAbsolutePath());
+		}
+
 	}
 
 	public static String readFile(String file) throws IOException {
