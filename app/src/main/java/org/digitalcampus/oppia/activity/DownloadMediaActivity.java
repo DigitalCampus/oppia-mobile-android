@@ -33,7 +33,6 @@ import android.view.View.OnClickListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,13 +42,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.DownloadMediaListAdapter;
+import org.digitalcampus.oppia.adapter.DownloadMediaAdapter;
 import org.digitalcampus.oppia.listener.DownloadMediaListener;
-import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.service.DownloadBroadcastReceiver;
 import org.digitalcampus.oppia.service.DownloadService;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
+import org.digitalcampus.oppia.utils.MultiChoiceHelper;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.ExternalStorageStrategy;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
@@ -70,16 +69,18 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     private SharedPreferences prefs;
     private ArrayList<Media> missingMedia;
-    private DownloadMediaListAdapter dmla;
+//    private DownloadMediaListAdapter dmla;
     private DownloadBroadcastReceiver receiver;
     Button downloadViaPCBtn;
     private TextView emptyState;
     private boolean isSortByCourse;
     private TextView downloadSelected;
     private View missingMediaContainer;
-    private RecyclerView mediaList;
+    private RecyclerView recyclerMedia;
     private ArrayList<Media> mediaSelected;
     private ActionMode actionMode;
+    private DownloadMediaAdapter adapterMedia;
+    private MultiChoiceHelper multiChoiceHelper;
 
     public enum DownloadMode {INDIVIDUALLY, DOWNLOAD_ALL, STOP_ALL}
 
@@ -95,7 +96,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         downloadSelected = findViewById(R.id.download_selected);
         downloadViaPCBtn = findViewById(R.id.download_media_via_pc_btn);
         emptyState = findViewById(R.id.empty_state);
-        mediaList = findViewById(R.id.missing_media_list);
+        recyclerMedia = findViewById(R.id.missing_media_list);
 
     }
 
@@ -116,17 +117,149 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         mediaSelected = new ArrayList<>();
 
+        adapterMedia = new DownloadMediaAdapter(this, missingMedia);
+        multiChoiceHelper = adapterMedia.getMultiChoiceHelper();
+
+        multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceHelper.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(androidx.appcompat.view.ActionMode mode, int position, long id, boolean checked) {
+                Log.v(TAG, "Count: " + multiChoiceHelper.getCheckedItemCount());
+                if (checked) {
+                    mediaSelected.add(missingMedia.get(position));
+                } else {
+                    mediaSelected.remove(missingMedia.get(position));
+                }
+
+                int count = mediaSelected.size();
+                mode.setSubtitle(count == 1 ? count + " item selected" : count + " items selected");
+
+                for (Media m : mediaSelected) {
+                    if (!m.isDownloading()) {
+                        downloadSelected.setText(getString(R.string.missing_media_download_selected));
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public boolean onCreateActionMode(final androidx.appcompat.view.ActionMode mode, Menu menu) {
+
+                onPrepareOptionsMenu(menu);
+                mode.setTitle(R.string.title_download_media);
+
+                if (missingMediaContainer.getVisibility() != View.VISIBLE) {
+                    missingMediaContainer.setVisibility(View.VISIBLE);
+                    downloadSelected.setOnClickListener(new OnClickListener() {
+
+                        public void onClick(View v) {
+                            DownloadMode downloadMode = downloadSelected.getText()
+                                    .equals(getString(R.string.missing_media_download_selected)) ? DownloadMode.DOWNLOAD_ALL
+                                    : DownloadMode.STOP_ALL;
+                            downloadSelected.setText(downloadSelected.getText()
+                                    .equals(getString(R.string.missing_media_download_selected)) ? getString(R.string.missing_media_stop_selected)
+                                    : getString(R.string.missing_media_download_selected));
+
+                            for (Media m : mediaSelected) {
+                                downloadMedia(m, downloadMode);
+                            }
+
+                            mode.finish();
+                        }
+                    });
+
+                    showDownloadMediaMessage();
+                }
+
+                adapterMedia.setEnterOnMultiChoiceMode(true);
+                adapterMedia.notifyDataSetChanged();
+
+                downloadSelected.setText(getString(R.string.missing_media_stop_selected));
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(androidx.appcompat.view.ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(androidx.appcompat.view.ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_sort_by: {
+                        if (isSortByCourse) {
+//                            dmla.sortByFilename();
+                            isSortByCourse = false;
+                            item.setTitle(getString(R.string.menu_sort_by_course));
+                        } else {
+//                            dmla.sortByCourse();
+                            isSortByCourse = true;
+                            item.setTitle(getString(R.string.menu_sort_by_filename));
+                        }
+                        invalidateOptionsMenu();
+                        return true;
+                    }
+                    case R.id.menu_select_all:
+                        for (int i = 0; i < adapterMedia.getItemCount(); i++) {
+                            if (!multiChoiceHelper.isItemChecked(i)) {
+                                multiChoiceHelper.setItemChecked(i, true, true);
+                            }
+                        }
+                        return true;
+
+                    case R.id.menu_unselect_all:
+                        mode.finish();
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(androidx.appcompat.view.ActionMode mode) {
+
+                mediaSelected.clear();
+                hideDownloadMediaMessage();
+                adapterMedia.setEnterOnMultiChoiceMode(false);
+                adapterMedia.notifyDataSetChanged();
+            }
+        });
+
+        recyclerMedia.setAdapter(adapterMedia);
+
+
+        adapterMedia.setOnItemClickListener(new DownloadMediaAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onDownloadClickListener(int position) {
+
+                Log.d(TAG, "Clicked " + position);
+                Media mediaToDownload = missingMedia.get(position);
+
+                downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
+            }
+        });
+
+        /*
         dmla = new DownloadMediaListAdapter(this, missingMedia);
         dmla.setOnClickListener(new DownloadMediaListener());
 
-        mediaList.setAdapter(dmla);
 
-        mediaList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
-        mediaList.setMultiChoiceModeListener(new ListView.MultiChoiceModeListener() {
+        recyclerMedia.setAdapter(dmla);
+
+        recyclerMedia.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+
+
+        recyclerMedia.setMultiChoiceModeListener(new ListView.MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                Log.v(TAG, "Count: " + mediaList.getCheckedItemCount());
+                Log.v(TAG, "Count: " + recyclerMedia.getCheckedItemCount());
                 if (checked) {
                     mediaSelected.add(missingMedia.get(position));
                 } else {
@@ -203,9 +336,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                         return true;
                     }
                     case R.id.menu_select_all:
-                        for (int i = 0; i < mediaList.getAdapter().getCount(); i++) {
-                            if (!mediaList.isItemChecked(i)) {
-                                mediaList.setItemChecked(i, true);
+                        for (int i = 0; i < recyclerMedia.getAdapter().getCount(); i++) {
+                            if (!recyclerMedia.isItemChecked(i)) {
+                                recyclerMedia.setItemChecked(i, true);
                             }
                         }
                         return true;
@@ -228,6 +361,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             }
         });
 
+        */
+
         downloadViaPCBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 downloadViaPC();
@@ -244,9 +379,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         super.onResume();
         if ((missingMedia != null) && !missingMedia.isEmpty()) {
             //We already have loaded media (coming from orientationchange)
-            dmla.sortByFilename();
+//            dmla.sortByFilename();
             isSortByCourse = false;
-            dmla.notifyDataSetChanged();
+            adapterMedia.notifyDataSetChanged();
             emptyState.setVisibility(View.GONE);
             downloadViaPCBtn.setVisibility(View.VISIBLE);
         } else {
@@ -306,24 +441,24 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.menu_sort_by: {
-                if (isSortByCourse) {
-                    dmla.sortByFilename();
-                    isSortByCourse = false;
-                } else {
-                    dmla.sortByCourse();
-                    isSortByCourse = true;
-                }
-                invalidateOptionsMenu();
-                return true;
-            }
-            case R.id.menu_select_all:
-                for (int i = 0; i < mediaList.getAdapter().getCount(); i++) {
-                    if (!mediaList.isItemChecked(i)) {
-                        mediaList.setItemChecked(i, true);
-                    }
-                }
-                return true;
+//            case R.id.menu_sort_by: {
+//                if (isSortByCourse) {
+//                    dmla.sortByFilename();
+//                    isSortByCourse = false;
+//                } else {
+//                    dmla.sortByCourse();
+//                    isSortByCourse = true;
+//                }
+//                invalidateOptionsMenu();
+//                return true;
+//            }
+//            case R.id.menu_select_all:
+//                for (int i = 0; i < recyclerMedia.getAdapter().getCount(); i++) {
+//                    if (!recyclerMedia.isItemChecked(i)) {
+//                        recyclerMedia.setItemChecked(i, true);
+//                    }
+//                }
+//                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -396,7 +531,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         Media mediaFile = findMedia(fileUrl);
         if (mediaFile != null) {
             mediaFile.setProgress(progress);
-            dmla.notifyDataSetChanged();
+            adapterMedia.notifyDataSetChanged();
         }
     }
 
@@ -408,7 +543,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
             mediaFile.setDownloading(false);
             mediaFile.setProgress(0);
-            dmla.notifyDataSetChanged();
+            adapterMedia.notifyDataSetChanged();
         }
     }
 
@@ -419,7 +554,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             Toast.makeText(this, this.getString(R.string.download_complete), Toast.LENGTH_LONG).show();
 
             missingMedia.remove(mediaFile);
-            dmla.notifyDataSetChanged();
+            adapterMedia.notifyDataSetChanged();
             emptyState.setVisibility((missingMedia.isEmpty()) ? View.VISIBLE : View.GONE);
             downloadViaPCBtn.setVisibility((missingMedia.isEmpty()) ? View.GONE : View.VISIBLE);
             invalidateOptionsMenu();
@@ -468,7 +603,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         mediaToDownload.setDownloading(true);
         mediaToDownload.setProgress(0);
-        dmla.notifyDataSetChanged();
+        adapterMedia.notifyDataSetChanged();
 
         downloadSelected.setText(getString(R.string.missing_media_download_selected));
         for (Media m : mediaSelected) {
@@ -487,7 +622,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         mediaToDownload.setDownloading(false);
         mediaToDownload.setProgress(0);
-        dmla.notifyDataSetChanged();
+        adapterMedia.notifyDataSetChanged();
 
         for (Media m : mediaSelected) {
             if (!m.isDownloading()) {
@@ -507,8 +642,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mediaList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-                mediaList.setSelectionAfterHeaderView();
+                recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
+//                recyclerMedia.setSelectionAfterHeaderView();
             }
         });
         animator.setStartDelay(200);
@@ -527,8 +662,8 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mediaList.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-                mediaList.setSelectionAfterHeaderView();
+                recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
+//                recyclerMedia.setSelectionAfterHeaderView();
             }
         });
         animator.setStartDelay(0);
@@ -539,14 +674,14 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         missingMediaContainer.setVisibility(View.GONE);
     }
 
-    private class DownloadMediaListener implements ListInnerBtnOnClickListener {
-
-        //@Override
-        public void onClick(int position) {
-            Log.d(DownloadMediaListener.class.getSimpleName(), "Clicked " + position);
-            Media mediaToDownload = missingMedia.get(position);
-
-            downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
-        }
-    }
+//    private class DownloadMediaListener implements ListInnerBtnOnClickListener {
+//
+//        //@Override
+//        public void onClick(int position) {
+//            Log.d(DownloadMediaListener.class.getSimpleName(), "Clicked " + position);
+//            Media mediaToDownload = missingMedia.get(position);
+//
+//            downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
+//        }
+//    }
 }
