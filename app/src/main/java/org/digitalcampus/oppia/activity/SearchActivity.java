@@ -62,6 +62,7 @@ public class SearchActivity extends AppActivity {
     protected ArrayList<SearchResult> results = new ArrayList<>();
     private SearchResultsAdapter adapterResults;
 
+
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
