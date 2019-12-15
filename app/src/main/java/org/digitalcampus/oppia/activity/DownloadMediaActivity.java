@@ -118,6 +118,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         mediaSelected = new ArrayList<>();
 
         adapterMedia = new DownloadMediaAdapter(this, missingMedia);
+        adapterMedia.sortByFilename();
         multiChoiceHelper = adapterMedia.getMultiChoiceHelper(); //https://medium.com/@BladeCoder/implementing-a-modal-selection-helper-for-recyclerview-1e888b4cd5b9
 
         multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceHelper.MultiChoiceModeListener() {
@@ -174,6 +175,9 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 adapterMedia.notifyDataSetChanged();
 
                 downloadSelected.setText(getString(R.string.missing_media_stop_selected));
+
+                menu.findItem(R.id.menu_sort_by).setVisible(false);
+
                 return true;
             }
 
@@ -185,19 +189,19 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             @Override
             public boolean onActionItemClicked(androidx.appcompat.view.ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.menu_sort_by: {
-                        if (isSortByCourse) {
-//                            dmla.sortByFilename();
-                            isSortByCourse = false;
-                            item.setTitle(getString(R.string.menu_sort_by_course));
-                        } else {
-//                            dmla.sortByCourse();
-                            isSortByCourse = true;
-                            item.setTitle(getString(R.string.menu_sort_by_filename));
-                        }
-                        invalidateOptionsMenu();
-                        return true;
-                    }
+//                    case R.id.menu_sort_by:
+//                        if (isSortByCourse) {
+////                            dmla.sortByFilename();
+//                            isSortByCourse = false;
+//                            item.setTitle(getString(R.string.menu_sort_by_course));
+//                        } else {
+////                            dmla.sortByCourse();
+//                            isSortByCourse = true;
+//                            item.setTitle(getString(R.string.menu_sort_by_filename));
+//                        }
+//                        invalidateOptionsMenu();
+//                        return true;
+
                     case R.id.menu_select_all:
                         for (int i = 0; i < adapterMedia.getItemCount(); i++) {
                             if (!multiChoiceHelper.isItemChecked(i)) {
@@ -222,11 +226,13 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 hideDownloadMediaMessage();
                 adapterMedia.setEnterOnMultiChoiceMode(false);
                 adapterMedia.notifyDataSetChanged();
+                multiChoiceHelper.clearChoices();
+
+                mode.getMenu().findItem(R.id.menu_sort_by).setVisible(true);
             }
         });
 
         recyclerMedia.setAdapter(adapterMedia);
-
 
         adapterMedia.setOnItemClickListener(new DownloadMediaAdapter.OnItemClickListener() {
             @Override
@@ -243,125 +249,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
                 downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
             }
         });
-
-        /*
-        dmla = new DownloadMediaListAdapter(this, missingMedia);
-        dmla.setOnClickListener(new DownloadMediaListener());
-
-
-
-        recyclerMedia.setAdapter(dmla);
-
-        recyclerMedia.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-
-
-
-        recyclerMedia.setMultiChoiceModeListener(new ListView.MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-                Log.v(TAG, "Count: " + recyclerMedia.getCheckedItemCount());
-                if (checked) {
-                    mediaSelected.add(missingMedia.get(position));
-                } else {
-                    mediaSelected.remove(missingMedia.get(position));
-                }
-
-                int count = mediaSelected.size();
-                mode.setSubtitle(count == 1 ? count + " item selected" : count + " items selected");
-
-                for (Media m : mediaSelected) {
-                    if (!m.isDownloading()) {
-                        downloadSelected.setText(getString(R.string.missing_media_download_selected));
-                        break;
-                    }
-                }
-
-            }
-
-            @Override
-            public boolean onCreateActionMode(final ActionMode mode, Menu menu) {
-
-                onPrepareOptionsMenu(menu);
-                mode.setTitle(R.string.title_download_media);
-
-                if (missingMediaContainer.getVisibility() != View.VISIBLE) {
-                    missingMediaContainer.setVisibility(View.VISIBLE);
-                    downloadSelected.setOnClickListener(new OnClickListener() {
-
-                        public void onClick(View v) {
-                            DownloadMode downloadMode = downloadSelected.getText()
-                                    .equals(getString(R.string.missing_media_download_selected)) ? DownloadMode.DOWNLOAD_ALL
-                                    : DownloadMode.STOP_ALL;
-                            downloadSelected.setText(downloadSelected.getText()
-                                    .equals(getString(R.string.missing_media_download_selected)) ? getString(R.string.missing_media_stop_selected)
-                                    : getString(R.string.missing_media_download_selected));
-
-                            for (Media m : mediaSelected) {
-                                downloadMedia(m, downloadMode);
-                            }
-
-                            mode.finish();
-                        }
-                    });
-
-                    showDownloadMediaMessage();
-                }
-
-                dmla.setEnterOnMultiChoiceMode(true);
-                dmla.notifyDataSetChanged();
-
-                downloadSelected.setText(getString(R.string.missing_media_stop_selected));
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_sort_by: {
-                        if (isSortByCourse) {
-                            dmla.sortByFilename();
-                            isSortByCourse = false;
-                            item.setTitle(getString(R.string.menu_sort_by_course));
-                        } else {
-                            dmla.sortByCourse();
-                            isSortByCourse = true;
-                            item.setTitle(getString(R.string.menu_sort_by_filename));
-                        }
-                        invalidateOptionsMenu();
-                        return true;
-                    }
-                    case R.id.menu_select_all:
-                        for (int i = 0; i < recyclerMedia.getAdapter().getCount(); i++) {
-                            if (!recyclerMedia.isItemChecked(i)) {
-                                recyclerMedia.setItemChecked(i, true);
-                            }
-                        }
-                        return true;
-
-                    case R.id.menu_unselect_all:
-                        mode.finish();
-                        return true;
-
-                    default:
-                        return false;
-                }
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                mediaSelected.clear();
-                hideDownloadMediaMessage();
-                dmla.setEnterOnMultiChoiceMode(false);
-                dmla.notifyDataSetChanged();
-            }
-        });
-
-        */
 
         downloadViaPCBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -441,24 +328,24 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         int itemId = item.getItemId();
         switch (itemId) {
-//            case R.id.menu_sort_by: {
-//                if (isSortByCourse) {
-//                    dmla.sortByFilename();
-//                    isSortByCourse = false;
-//                } else {
-//                    dmla.sortByCourse();
-//                    isSortByCourse = true;
-//                }
-//                invalidateOptionsMenu();
-//                return true;
-//            }
-//            case R.id.menu_select_all:
-//                for (int i = 0; i < recyclerMedia.getAdapter().getCount(); i++) {
-//                    if (!recyclerMedia.isItemChecked(i)) {
-//                        recyclerMedia.setItemChecked(i, true);
-//                    }
-//                }
-//                return true;
+            case R.id.menu_sort_by: {
+                if (isSortByCourse) {
+                    adapterMedia.sortByFilename();
+                    isSortByCourse = false;
+                } else {
+                    adapterMedia.sortByCourse();
+                    isSortByCourse = true;
+                }
+                invalidateOptionsMenu();
+                return true;
+            }
+            case R.id.menu_select_all:
+                for (int i = 0; i < recyclerMedia.getAdapter().getItemCount(); i++) {
+                    if (!multiChoiceHelper.isItemChecked(i)) {
+                        multiChoiceHelper.setItemChecked(i, true, true);
+                    }
+                }
+                return true;
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -674,14 +561,4 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         missingMediaContainer.setVisibility(View.GONE);
     }
 
-//    private class DownloadMediaListener implements ListInnerBtnOnClickListener {
-//
-//        //@Override
-//        public void onClick(int position) {
-//            Log.d(DownloadMediaListener.class.getSimpleName(), "Clicked " + position);
-//            Media mediaToDownload = missingMedia.get(position);
-//
-//            downloadMedia(mediaToDownload, DownloadMode.INDIVIDUALLY);
-//        }
-//    }
 }

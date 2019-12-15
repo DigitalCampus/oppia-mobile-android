@@ -15,26 +15,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.MultiChoiceHelper;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdapter.ViewHolder> {
 
 
     private final SharedPreferences prefs;
     private final MultiChoiceHelper multiChoiceHelper;
-    private List<Media> medias;
+    private List<Media> mediaList;
     private Context context;
     private OnItemClickListener itemClickListener;
     private boolean isMultiChoiceMode;
 
 
-    public DownloadMediaAdapter(Context context, List<Media> medias) {
+    public DownloadMediaAdapter(Context context, List<Media> mediaList) {
         this.context = context;
-        this.medias = medias;
+        this.mediaList = mediaList;
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -58,7 +62,7 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
         final Media m = getItemAtPosition(position);
 
         String courses = "";
-        for(int i = 0; i < m.getCourses().size(); i++){
+        for (int i = 0; i < m.getCourses().size(); i++) {
             Course c = m.getCourses().get(i);
             String title = c.getTitle(prefs);
             courses += i != 0 ? ", " + title : title;
@@ -67,8 +71,8 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
         viewHolder.mediaCourses.setText(courses);
         viewHolder.mediaTitle.setText(m.getFilename());
         viewHolder.mediaPath.setText(m.getDownloadUrl());
-        if(m.getFileSize() != 0){
-            viewHolder.mediaFileSize.setText(context.getString(R.string.media_file_size,m.getFileSize()/(1024*1024)));
+        if (m.getFileSize() != 0) {
+            viewHolder.mediaFileSize.setText(context.getString(R.string.media_file_size, m.getFileSize() / (1024 * 1024)));
             viewHolder.mediaFileSize.setVisibility(View.VISIBLE);
         } else {
             viewHolder.mediaFileSize.setVisibility(View.INVISIBLE);
@@ -79,37 +83,65 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
         viewHolder.downloadBtn.setTag(position); //For passing the list item index
 
 
-        if (m.isDownloading()){
+        if (m.isDownloading()) {
             viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_cancel);
             viewHolder.downloadProgress.setVisibility(View.VISIBLE);
             viewHolder.mediaPath.setVisibility(View.GONE);
-            if (m.getProgress()>0){
+            if (m.getProgress() > 0) {
                 viewHolder.downloadProgress.setIndeterminate(false);
                 viewHolder.downloadProgress.setProgress(m.getProgress());
-            }
-            else {
+            } else {
                 viewHolder.downloadProgress.setIndeterminate(true);
             }
-        }
-        else{
+        } else {
             viewHolder.downloadBtn.setImageResource(R.drawable.ic_action_download);
             viewHolder.downloadProgress.setVisibility(View.GONE);
             viewHolder.mediaPath.setVisibility(View.VISIBLE);
         }
 
+        viewHolder.updateCheckedState(position);
     }
 
     @Override
     public int getItemCount() {
-        return medias.size();
+        return mediaList.size();
     }
 
     public Media getItemAtPosition(int position) {
-        return medias.get(position);
+        return mediaList.get(position);
     }
 
     public void setEnterOnMultiChoiceMode(boolean multiChoiceModeActive) {
         this.isMultiChoiceMode = multiChoiceModeActive;
+
+    }
+
+    public void sortByCourse() {
+        //Sort the media list by filename
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        Collections.sort(this.mediaList, new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                String titleCourse1 = ((Media) o1).getCourses().get(0).getTitle(lang);
+                String titleCourse2 = ((Media) o2).getCourses().get(0).getTitle(lang);
+                return (titleCourse1.compareTo(titleCourse2));
+            }
+        });
+
+        notifyDataSetChanged();
+    }
+
+    public void sortByFilename() {
+        //Sort the media list by filename
+        Collections.sort(this.mediaList, new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return ((Media) o1).getFilename().compareTo(((Media) o2).getFilename());
+            }
+        });
+
+        notifyDataSetChanged();
     }
 
 

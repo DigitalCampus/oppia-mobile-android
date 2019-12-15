@@ -70,7 +70,7 @@ public class MultiChoiceHelper {
             });
         }
 
-        void updateCheckedState(int position) {
+        public void updateCheckedState(int position) {
             final boolean isChecked = multiChoiceHelper.isItemChecked(position);
             if (itemView instanceof Checkable) {
                 ((Checkable) itemView).setChecked(isChecked);
@@ -190,6 +190,7 @@ public class MultiChoiceHelper {
             if (choiceActionMode != null) {
                 choiceActionMode.finish();
             }
+
         }
     }
 
