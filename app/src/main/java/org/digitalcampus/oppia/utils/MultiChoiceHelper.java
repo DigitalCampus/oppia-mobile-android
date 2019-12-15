@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
  * Compatible with API 7+.
  * Declare and use this class from inside your Adapter.
  *
+ * https://medium.com/@BladeCoder/implementing-a-modal-selection-helper-for-recyclerview-1e888b4cd5b9
+ *
  * @author Christophe Beyls
  */
 public class MultiChoiceHelper {

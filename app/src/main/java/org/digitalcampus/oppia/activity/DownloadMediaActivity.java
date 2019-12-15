@@ -118,7 +118,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         mediaSelected = new ArrayList<>();
 
         adapterMedia = new DownloadMediaAdapter(this, missingMedia);
-        multiChoiceHelper = adapterMedia.getMultiChoiceHelper();
+        multiChoiceHelper = adapterMedia.getMultiChoiceHelper(); //https://medium.com/@BladeCoder/implementing-a-modal-selection-helper-for-recyclerview-1e888b4cd5b9
 
         multiChoiceHelper.setMultiChoiceModeListener(new MultiChoiceHelper.MultiChoiceModeListener() {
             @Override
