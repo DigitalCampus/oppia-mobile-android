@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:background="@color/background_light">
 
@@ -93,11 +94,11 @@
     </LinearLayout>
 
 
-    <ListView
-        android:id="@+id/badges_list"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_badges"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/transparent"
-        android:dividerHeight="0dp" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"/>
 
 </FrameLayout>
