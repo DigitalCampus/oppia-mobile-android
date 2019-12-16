@@ -3,6 +3,7 @@ package UI;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -17,6 +18,7 @@ import org.digitalcampus.oppia.model.Lang;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+@RunWith(AndroidJUnit4.class)
 public class PrefsActivityUITest {
 
 
