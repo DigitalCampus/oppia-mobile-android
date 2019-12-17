@@ -238,6 +238,12 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             case R.id.menu_collapse_all_sections:
                 adapter.expandCollapseAllSections(false);
                 return true;
+
+            default:
+                i = new Intent(this, CourseMetaPageActivity.class);
+                tb.putSerializable(Course.TAG, course);
+                tb.putInt(CourseMetaPage.TAG, item.getItemId());
+                break;
         }
 
         if (i != null) {
