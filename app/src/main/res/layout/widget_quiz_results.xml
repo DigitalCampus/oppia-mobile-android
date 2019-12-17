@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/widget_quiz_results">
 
     <LinearLayout
@@ -85,12 +85,14 @@
             android:visibility="gone" />
     </LinearLayout>
     
-    <ListView
-        android:id="@+id/quiz_results_feedback"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_quiz_results_feedback"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/quiz_results_top_control_bar"
         android:layout_above="@id/quiz_results_bottom_control_bar"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
         android:cacheColorHint="#00000000"
         android:divider="@color/background_light"
         android:dividerHeight="1dp" />

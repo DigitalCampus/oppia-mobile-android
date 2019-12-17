@@ -424,6 +424,8 @@
     <string name="prefStartCourseIndexCollapsed">Start course index with sections collapsed</string>
     <string name="info_override_password">Overriding admin password</string>
     <string name="register_username_exists">Username already exists</string>
+    <string name="collapse_all_sections">Collapse all sections</string>
+    <string name="expand_all_sections">Expand all sections</string>
 
 </resources>
 

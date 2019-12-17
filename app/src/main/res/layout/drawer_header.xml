@@ -41,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="User name"
-            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <TextView
