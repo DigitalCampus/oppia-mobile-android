@@ -12,6 +12,16 @@
         oppiamobile:actionLayout="@layout/menu_points"
         android:title=""/>
     <item
+        android:id="@+id/menu_expand_all_sections"
+        android:icon="@drawable/ic_expand_sections"
+        oppiamobile:showAsAction="never"
+        android:title="@string/expand_all_sections"/>
+    <item
+        android:id="@+id/menu_collapse_all_sections"
+        android:icon="@drawable/ic_collapse_sections"
+        oppiamobile:showAsAction="never"
+        android:title="@string/collapse_all_sections"/>
+    <item
         android:id="@+id/menu_language"
         android:icon="@drawable/ic_menu_start_conversation"
         android:title="@string/menu_language"/>
