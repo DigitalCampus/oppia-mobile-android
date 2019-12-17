@@ -1,80 +1,51 @@
-/* 
- * This file is part of OppiaMobile - https://digital-campus.org/
- * 
- * OppiaMobile is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * OppiaMobile is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.digitalcampus.oppia.adapter;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.model.QuizFeedback;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
+public class QuizFeedbackAdapter extends RecyclerView.Adapter<QuizFeedbackAdapter.ViewHolder> {
 
-	public static final String TAG = QuizFeedbackAdapter.class.getSimpleName();
 
-	private final Context ctx;
-	private final ArrayList<QuizFeedback> quizFeedbackList;
-	
-	public QuizFeedbackAdapter(Activity context, ArrayList<QuizFeedback> quizFeedbackList) {
-		super(context, R.layout.widget_quiz_feedback_row, quizFeedbackList);
-		this.ctx = context;
-		this.quizFeedbackList = quizFeedbackList;
-	}
+    private List<QuizFeedback> quizFeedbacks;
+    private Context context;
+    private OnItemClickListener itemClickListener;
 
-    static class QuizFeedbackViewHolder{
-        private TextView quizQuestion;
-        private TextView quizUserResponse;
-        private TextView quizFeedbackTitle;
-        private TextView quizFeedbackText;
-        private ImageView quizFeedbackIcon;
+
+    public QuizFeedbackAdapter(Context context, List<QuizFeedback> quizFeedbacks) {
+        this.context = context;
+        this.quizFeedbacks = quizFeedbacks;
     }
-	
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
 
-        QuizFeedbackViewHolder viewHolder;
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView  = inflater.inflate(R.layout.widget_quiz_feedback_row, parent, false);
-            viewHolder = new QuizFeedbackViewHolder();
-            viewHolder.quizQuestion = convertView.findViewById(R.id.quiz_question_text);
-            viewHolder.quizUserResponse = convertView.findViewById(R.id.quiz_question_user_response_text);
-            viewHolder.quizFeedbackText = convertView.findViewById(R.id.quiz_question_user_feedback_text);
-            viewHolder.quizFeedbackTitle = convertView.findViewById(R.id.quiz_question_user_feedback_title);
-            viewHolder.quizFeedbackIcon = convertView.findViewById(R.id.quiz_question_feedback_image);
-            convertView.setTag(viewHolder);
-        }
-        else{
-            viewHolder = (QuizFeedbackViewHolder) convertView.getTag();
-        }
+        View contactView = LayoutInflater.from(context).inflate(R.layout.widget_quiz_feedback_row, parent, false);
 
-	    QuizFeedback qf = quizFeedbackList.get(position);
+        // Return a new holder instance
+        ViewHolder viewHolder = new ViewHolder(contactView);
+        return viewHolder;
+    }
+
+
+    @Override
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+
+        final QuizFeedback qf = getItemAtPosition(position);
+
         String userResponseText = "";
         for (int i=0; i<qf.getUserResponse().size();i++){
             userResponseText += qf.getUserResponse().get(i);
@@ -86,22 +57,74 @@ public class QuizFeedbackAdapter extends ArrayAdapter<QuizFeedback> {
         viewHolder.quizQuestion.setText(Html.fromHtml(qf.getQuestionText()));
         viewHolder.quizUserResponse.setText(Html.fromHtml(userResponseText));
 
-	    if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
+        if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
             viewHolder.quizFeedbackTitle.setVisibility(View.VISIBLE);
             viewHolder.quizFeedbackText.setVisibility(View.VISIBLE);
             viewHolder.quizFeedbackText.setText(Html.fromHtml(qf.getFeedbackText()));
-	    } else {
+        } else {
             //If there's no feedback to show, hide both text and title
             viewHolder.quizFeedbackTitle.setVisibility(View.GONE);
             viewHolder.quizFeedbackText.setVisibility(View.GONE);
-	    }
+        }
 
         viewHolder.quizFeedbackIcon.setImageResource(
                 (qf.getScore() >= Quiz.QUIZ_QUESTION_PASS_THRESHOLD)?
-                R.drawable.quiz_tick:
-                R.drawable.quiz_cross
+                        R.drawable.quiz_tick:
+                        R.drawable.quiz_cross
         );
-		
-	    return convertView;
-	}
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return quizFeedbacks.size();
+    }
+
+    public QuizFeedback getItemAtPosition(int position) {
+        return quizFeedbacks.get(position);
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public View rootView;
+        private TextView quizQuestion;
+        private TextView quizUserResponse;
+        private TextView quizFeedbackTitle;
+        private TextView quizFeedbackText;
+        private ImageView quizFeedbackIcon;
+
+        public ViewHolder(View itemView) {
+
+            super(itemView);
+
+            quizQuestion = itemView.findViewById(R.id.quiz_question_text);
+            quizUserResponse = itemView.findViewById(R.id.quiz_question_user_response_text);
+            quizFeedbackText = itemView.findViewById(R.id.quiz_question_user_feedback_text);
+            quizFeedbackTitle = itemView.findViewById(R.id.quiz_question_user_feedback_title);
+            quizFeedbackIcon = itemView.findViewById(R.id.quiz_question_feedback_image);
+            rootView = itemView;
+
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null) {
+                        itemClickListener.onItemClick(v, getAdapterPosition());
+                    }
+                }
+            });
+        }
+
+    }
+
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
 }
+ 
+

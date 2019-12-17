@@ -25,7 +25,16 @@ public class Badges {
 	private DateTime datetime;
 	private String description;
 	private String icon;
-	
+
+	public Badges(){
+
+	}
+
+	public Badges(DateTime datetime, String description) {
+		this.datetime = datetime;
+		this.description = description;
+	}
+
 	public String getDateAsString() {
 		return MobileLearning.DATE_FORMAT.print(datetime);
 	}

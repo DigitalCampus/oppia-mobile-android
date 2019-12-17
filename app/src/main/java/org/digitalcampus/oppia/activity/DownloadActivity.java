@@ -25,21 +25,19 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
-import org.digitalcampus.oppia.adapter.DownloadCourseListAdapter;
+import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
-import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
@@ -61,7 +59,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	private SharedPreferences prefs;
 	private ProgressDialog progressDialog;
 	private JSONObject json;
-	private DownloadCourseListAdapter dla;
 	private String url;
 	private ArrayList<CourseIntallViewAdapter> courses;
 	private boolean showUpdatesOnly = false;
@@ -70,6 +67,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     @Inject CourseInstallRepository courseInstallRepository;
     @Inject CourseInstallerServiceDelegate courseInstallerServiceDelegate;
+    private DownloadCoursesAdapter adapterDownloadCourses;
 
     @Override
     public void onStart(){
@@ -102,11 +100,50 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         }
 
         courses = new ArrayList<>();
-        dla = new DownloadCourseListAdapter(this, courses);
-        dla.setOnClickListener(new CourseListListener());
-        ListView listView = findViewById(R.id.tag_list);
-        if (listView != null) {
-            listView.setAdapter(dla);
+        adapterDownloadCourses = new DownloadCoursesAdapter(this, courses);
+        adapterDownloadCourses.setOnItemClickListener(new DownloadCoursesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onDownloadButtonClick(View view, int position) {
+
+                Log.d("course-download", "Clicked " + position);
+                CourseIntallViewAdapter courseSelected = courses.get(position);
+
+                // When installing, don't do anything on click
+                if (courseSelected.isInstalling()) return;
+
+
+                Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
+
+                if (!courseSelected.isDownloading()){
+                    if(!courseSelected.isInstalled() || courseSelected.isToUpdate()){
+                        courseInstallerServiceDelegate.installCourse(DownloadActivity.this, mServiceIntent, courseSelected);
+
+                        resetCourseProgress(courseSelected, true, false);
+                    }
+                    else if(courseSelected.isToUpdateSchedule()){
+                        courseInstallerServiceDelegate.updateCourse(DownloadActivity.this, mServiceIntent, courseSelected);
+
+                        resetCourseProgress(courseSelected, false, true);
+                    }
+                }
+                else{
+                    //If it's already downloading, send an intent to cancel the task
+                    courseInstallerServiceDelegate.cancelCourseInstall(DownloadActivity.this, mServiceIntent, courseSelected);
+
+                    resetCourseProgress(courseSelected, false, false);
+                }
+            }
+        });
+
+
+        RecyclerView recyclerCourses = findViewById(R.id.recycler_tags);
+        if (recyclerCourses != null) {
+            recyclerCourses.setAdapter(adapterDownloadCourses);
         }
 
     }
@@ -124,7 +161,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 			getCourseList();
 		} else if ((courses != null) && !courses.isEmpty()) {
             // We already have loaded JSON and courses (coming from orientationchange)
-            dla.notifyDataSetChanged();
+            adapterDownloadCourses.notifyDataSetChanged();
         }
         else{
             // The JSON is downloaded but course list is not
@@ -197,7 +234,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
             courseInstallRepository.refreshCourseList(this, courses, json, storage, showUpdatesOnly);
 
-            dla.notifyDataSetChanged();
+            adapterDownloadCourses.notifyDataSetChanged();
             findViewById(R.id.empty_state).setVisibility((courses.isEmpty()) ? View.VISIBLE : View.GONE);
 
 		} catch (Exception e) {
@@ -242,7 +279,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             course.setDownloading(true);
             course.setInstalling(false);
             course.setProgress(progress);
-            dla.notifyDataSetChanged();
+            adapterDownloadCourses.notifyDataSetChanged();
         }
     }
 
@@ -253,7 +290,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             course.setDownloading(false);
             course.setInstalling(true);
             course.setProgress(progress);
-            dla.notifyDataSetChanged();
+            adapterDownloadCourses.notifyDataSetChanged();
         }
     }
 
@@ -295,41 +332,8 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         courseSelected.setDownloading(downloading);
         courseSelected.setInstalling(installing);
         courseSelected.setProgress(0);
-        dla.notifyDataSetChanged();
+        adapterDownloadCourses.notifyDataSetChanged();
     }
 
-    private class CourseListListener implements ListInnerBtnOnClickListener {
-        @Override
-        public void onClick(int position) {
-            Log.d("course-download", "Clicked " + position);
-            CourseIntallViewAdapter courseSelected = courses.get(position);
-
-            // When installing, don't do anything on click
-            if (courseSelected.isInstalling()) return;
-
-
-            Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
-
-            if (!courseSelected.isDownloading()){
-                if(!courseSelected.isInstalled() || courseSelected.isToUpdate()){
-                    courseInstallerServiceDelegate.installCourse(DownloadActivity.this, mServiceIntent, courseSelected);
-
-                    resetCourseProgress(courseSelected, true, false);
-                }
-                else if(courseSelected.isToUpdateSchedule()){
-                    courseInstallerServiceDelegate.updateCourse(DownloadActivity.this, mServiceIntent, courseSelected);
-
-                    resetCourseProgress(courseSelected, false, true);
-                }
-            }
-            else{
-                //If it's already downloading, send an intent to cancel the task
-                courseInstallerServiceDelegate.cancelCourseInstall(DownloadActivity.this, mServiceIntent, courseSelected);
-
-                resetCourseProgress(courseSelected, false, false);
-            }
-
-        }
-    }
 
 }

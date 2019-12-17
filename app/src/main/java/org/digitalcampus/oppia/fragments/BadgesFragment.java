@@ -22,12 +22,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.BadgesListAdapter;
+import org.digitalcampus.oppia.adapter.BadgesAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badges;
@@ -44,7 +45,7 @@ import javax.inject.Inject;
 public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	private JSONObject json;
-    private BadgesListAdapter badgesAdapter;
+    private BadgesAdapter adapterBadges;
 
 	@Inject ArrayList<Badges> badges;
 	
@@ -66,9 +67,9 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		super.onActivityCreated(savedInstanceState);
 		initializeDagger();
 
-        badgesAdapter = new BadgesListAdapter(super.getActivity(), badges);
-        ListView listView = this.getView().findViewById(R.id.badges_list);
-        listView.setAdapter(badgesAdapter);
+        adapterBadges = new BadgesAdapter(super.getActivity(), badges);
+		RecyclerView recyclerBadges = this.getView().findViewById(R.id.recycler_badges);
+		recyclerBadges.setAdapter(adapterBadges);
 
 		getBadges();
 	}
@@ -107,7 +108,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 				badges.add(b);
 			}
 
-            badgesAdapter.notifyDataSetChanged();
+            adapterBadges.notifyDataSetChanged();
 		} catch (Exception e) {
 			Mint.logException(e);
 			Log.d(TAG, "Error refreshing badges list: ", e);
