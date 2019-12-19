@@ -6,6 +6,7 @@ import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
+import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.fragments.ActivitiesFragment;
 import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
@@ -34,6 +35,8 @@ public interface AppComponent {
     void inject(BadgesFragment fragment);
     void inject(CoursesListFragment fragment);
     void inject(AppFragment fragment);
+
+    void inject(AdminSecurityManager adminSecurityManager);
 
     User getUser();
 }

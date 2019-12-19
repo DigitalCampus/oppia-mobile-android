@@ -59,6 +59,7 @@ import it.cosenonjaviste.daggermock.DaggerMockRule;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -536,7 +537,6 @@ public class MainActivityUITest {
     }
 
 
-
     @Test
     public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception {
 
@@ -697,38 +697,205 @@ public class MainActivityUITest {
 
     }
 
+    private void checkAdminPasswordDialogIsDisplayed() {
+        onView(withText(R.string.admin_password_required))
+                .check(matches(isDisplayed()));
+    }
 
+    private void checkAdminPasswordDialogIsNOTDisplayed() {
+        onView(withText(R.string.admin_password_required))
+                .check(doesNotExist());
+    }
 
-   /* @Test
-    public void downloadCourse(){
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
+    @Test
+    public void requestAdminPasswordOnManageCoursesClickWhenAdminProtectionEnabledAndActionProtected() throws Exception {
+        givenThereAreSomeCourses(0);
 
-        onView(withText(R.string.menu_download))
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(true);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("true");
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.manage_courses_btn))
                 .perform(click());
 
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
+        checkAdminPasswordDialogIsDisplayed();
+    }
+
+    @Test
+    public void DONTrequestAdminPasswordOnManageCoursesClickWhenAdminProtectionDISABLEDAndActionProtected() throws Exception {
+        givenThereAreSomeCourses(0);
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("true");
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.manage_courses_btn))
                 .perform(click());
 
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.download_course_btn))
-                .perform(click(), pressBack());
+        checkAdminPasswordDialogIsNOTDisplayed();
+    }
 
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .perform(pressBack());
+    @Test
+    public void DONTrequestAdminPasswordOnManageCoursesClickWhenAdminProtectionEnabledAndActionNOTProtected() throws Exception {
+        givenThereAreSomeCourses(0);
 
-        int coursesCount = getCoursesCount();
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(true);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("false");
 
-        assertTrue(coursesCount > 0);
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.manage_courses_btn))
+                .perform(click());
+
+        checkAdminPasswordDialogIsNOTDisplayed();
+    }
 
 
-    }*/
+    @Test
+    public void requestAdminPasswordOnCourseOptionsClickWhenAdminProtectionEnabledAndActionsProtected() throws Exception {
+
+        givenThereAreSomeCourses(3);
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(true);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("true");
+
+        mainActivityTestRule.launchActivity(null);
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withId(R.id.course_context_reset))
+                .perform(click());
+
+        checkAdminPasswordDialogIsDisplayed();
+
+        pressBack();
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withId(R.id.course_context_delete))
+                .perform(click());
+
+        checkAdminPasswordDialogIsDisplayed();
+
+        pressBack();
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withId(R.id.course_context_update_activity))
+                .perform(click());
+
+        checkAdminPasswordDialogIsDisplayed();
+
+    }
+
+    @Test
+    public void DONTrequestAdminPasswordOnCourseOptionsClickWhenAdminProtectionDISABLEDAndActionsProtected() throws Exception {
+
+        FINISH THIS
+        givenThereAreSomeCourses(3);
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("true");
+
+        mainActivityTestRule.launchActivity(null);
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withId(R.id.course_context_reset))
+                .perform(click());
+
+        checkAdminPasswordDialogIsNOTDisplayed();
+
+        pressBack();
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withId(R.id.course_context_delete))
+                .perform(click());
+
+        checkAdminPasswordDialogIsNOTDisplayed();
+
+        pressBack();
+
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withId(R.id.course_context_update_activity))
+                .perform(click());
+
+        checkAdminPasswordDialogIsNOTDisplayed();
+
+    }
+
+    @Test
+    public void requestAdminPasswordOnGlobalScorecardManageCoursesClickWhenAdminProtectionEnabledAndActionProtected() throws Exception {
+        givenThereAreSomeCourses(0);
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(true);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("true");
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.nav_bottom_scorecard)).perform(click());
+
+        onView(withId(R.id.btn_download_courses))
+                .perform(click());
+
+        checkAdminPasswordDialogIsDisplayed();
+    }
+
+    @Test
+    public void DONTRequestAdminPasswordOnGlobalScorecardManageCoursesClickWhenAdminProtectionDISABLEDAndActionProtected() throws Exception {
+        givenThereAreSomeCourses(0);
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(false);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("true");
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.nav_bottom_scorecard)).perform(click());
+
+        onView(withId(R.id.btn_download_courses))
+                .perform(click());
+
+        checkAdminPasswordDialogIsNOTDisplayed();
+    }
+
+    @Test
+    public void DONTRequestAdminPasswordOnGlobalScorecardManageCoursesClickWhenAdminProtectionEnabledAndActionNOTProtected() throws Exception {
+        givenThereAreSomeCourses(0);
+
+        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(true);
+        when(prefs.getString(eq(PrefsActivity.PREF_TEST_ACTION_PROTECTED), anyString())).thenReturn("false");
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.nav_bottom_scorecard)).perform(click());
+
+        onView(withId(R.id.btn_download_courses))
+                .perform(click());
+
+        checkAdminPasswordDialogIsNOTDisplayed();
+    }
 
 
 }

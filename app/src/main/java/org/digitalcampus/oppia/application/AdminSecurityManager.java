@@ -18,31 +18,49 @@
 package org.digitalcampus.oppia.application;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.fragments.PasswordDialogFragment;
+
+import javax.inject.Inject;
 
 
 public class AdminSecurityManager {
 
     public static final String TAG = AdminSecurityManager.class.getSimpleName();
 
+    @Inject
+    SharedPreferences prefs;
+
+    Activity context;
+
     public interface AuthListener{
         void onPermissionGranted();
     }
 
-    public static boolean isAdminProtectionEnabled(Context ctx){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+    public AdminSecurityManager(Activity context) {
+        this.context = context;
+        initializeDaggerBase();
+    }
+
+    public static AdminSecurityManager with(Activity context) {
+        return new AdminSecurityManager(context);
+    }
+
+    private void initializeDaggerBase() {
+        MobileLearning app = (MobileLearning) context.getApplication();
+        app.getComponent().inject(this);
+    }
+
+    public boolean isAdminProtectionEnabled(){
         return prefs.getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false);
     }
 
-    public static void checkAdminPermission(Activity ctx, int actionId, AdminSecurityManager.AuthListener authListener){
-        if (AdminSecurityManager.isActionProtected(ctx, actionId)) {
-            promptAdminPassword(ctx, authListener);
+    public void checkAdminPermission(int actionId, AdminSecurityManager.AuthListener authListener){
+        if (isActionProtected(actionId)) {
+            promptAdminPassword(authListener);
         }
         else{
             //If the admin password is not needed, we simply call the listener method
@@ -50,15 +68,18 @@ public class AdminSecurityManager {
         }
     }
 
-    public static void promptAdminPassword(Activity ctx, AdminSecurityManager.AuthListener authListener){
+    public void promptAdminPassword(AdminSecurityManager.AuthListener authListener){
         PasswordDialogFragment passDialog = new PasswordDialogFragment();
         passDialog.setListener(authListener);
-        passDialog.show(ctx.getFragmentManager(), TAG);
+        passDialog.show(context.getFragmentManager(), TAG);
     }
 
-    public static boolean isActionProtected(Context ctx, int actionId) {
+    public boolean isActionProtected(int actionId) {
 
-        if (!isAdminProtectionEnabled(ctx)) return false;
+        if (!isAdminProtectionEnabled()) return false;
+
+        // Only for automated testing. Only way I could "mock" BuildConfig fields
+        if(testForzeActionProtected()) return getTestActionProtectedValue();
 
         switch (actionId){
             case R.id.course_context_delete: return MobileLearning.ADMIN_PROTECT_COURSE_DELETE;
@@ -72,10 +93,18 @@ public class AdminSecurityManager {
         }
     }
 
-    public static boolean checkAdminPassword(Context ctx, String pass) {
 
-        if (!isAdminProtectionEnabled(ctx)) return false;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+    public boolean testForzeActionProtected(){
+        return prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null) != null;
+    }
+
+    private boolean getTestActionProtectedValue() {
+        return Boolean.parseBoolean(prefs.getString(PrefsActivity.PREF_TEST_ACTION_PROTECTED, null));
+    }
+
+    public boolean checkAdminPassword(String pass) {
+
+        if (!isAdminProtectionEnabled()) return false;
         String adminPass = prefs.getString(PrefsActivity.PREF_ADMIN_PASSWORD, "");
 
         return ((pass != null) && (adminPass.equals("") || adminPass.equals(pass)));

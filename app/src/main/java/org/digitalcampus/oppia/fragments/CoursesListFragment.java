@@ -184,7 +184,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         manageBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                AdminSecurityManager.checkAdminPermission(getActivity(), R.id.menu_download, new AdminSecurityManager.AuthListener() {
+                AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, new AdminSecurityManager.AuthListener() {
                     public void onPermissionGranted() {
                         startActivity(new Intent(getActivity(), TagSelectActivity.class));
                     }
@@ -219,7 +219,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     @Override
     public void onContextMenuItemSelected(final int position, final int itemId) {
-        AdminSecurityManager.checkAdminPermission(getActivity(), itemId, new AdminSecurityManager.AuthListener() {
+        AdminSecurityManager.with(getActivity()).checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {
                 tempCourse = courses.get(position);
                 if (itemId == R.id.course_context_delete) {
