@@ -197,6 +197,7 @@ public class AdminProtectedUITest {
 
     // --- TESTS ---
 
+    /*
     @Test
     public void checkAdminProtectionToEnterSettingsScreen() throws Exception {
 
@@ -220,7 +221,7 @@ public class AdminProtectedUITest {
         }
 
     }
-
+    */
     @Test
     public void checkAdminProtectionOnPrefsCheckboxAdminProtectionClick() throws Exception {
 
@@ -306,6 +307,7 @@ public class AdminProtectedUITest {
     }
 
 
+    /*
     @Test
     public void checkAdminProtectionOnManageCoursesClick() throws Exception {
         givenThereAreSomeCourses(0);
@@ -328,8 +330,9 @@ public class AdminProtectedUITest {
                 break;
         }
     }
+    */
 
-
+    /*
     @Test
     public void checkAdminProtectionOnCourseOptionsClick() throws Exception {
 
@@ -375,6 +378,8 @@ public class AdminProtectedUITest {
 
     }
 
+     */
+
     private void clickOptionInCourseContextMenu(int optionId) {
 
         Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
@@ -387,6 +392,7 @@ public class AdminProtectedUITest {
     }
 
 
+    /*
     @Test
     public void checkAdminProtectionOnGlobalScorecardManageCoursesClick() throws Exception {
         givenThereAreSomeCourses(0);
@@ -411,6 +417,6 @@ public class AdminProtectedUITest {
                 break;
         }
     }
-
+    */
 
 }
