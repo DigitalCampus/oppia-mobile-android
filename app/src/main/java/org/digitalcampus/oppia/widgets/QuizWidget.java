@@ -134,7 +134,7 @@ public class QuizWidget extends WidgetFactory {
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
-		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(
+		quizContent = activity.getContents(prefs.getString(
 				PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
 		vv.setId(activity.getActId());

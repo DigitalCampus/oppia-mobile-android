@@ -17,10 +17,10 @@ sonarqube {
         property "sonar.tests", "src/test/java, src/androidTest/java"
         property "sonar.java.test.binaries", "build/intermediates/app_classes/normalDebug"
 
-        def unit = fileTree(dir: project.projectDir, includes: ['**/*.exec']).files;
-        def ui = fileTree(dir: project.projectDir, includes: ['**/*.ec']).files;
-        unit.addAll(ui);
-        def files = unit.join(", ");
+        def unit = fileTree(dir: project.projectDir, includes: ['**/*.exec']).files
+        def ui = fileTree(dir: project.projectDir, includes: ['**/*.ec']).files
+        unit.addAll(ui)
+        def files = unit.join(", ")
 
         property "sonar.coverage.jacoco.xmlReportPaths", files
         property "sonar.java.coveragePlugin", "jacoco-android"
@@ -76,7 +76,7 @@ android {
     }
 
 
-    def Properties runtimeProps = new Properties()
+    Properties runtimeProps = new Properties()
     runtimeProps.load(new FileInputStream(rootProject.file('oppia-default.properties')))
 
     def oppiaPropsFile = rootProject.file('custom.properties')
@@ -210,17 +210,17 @@ dependencies {
 
     //JUnit Dependencies
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.0.0'
     implementation 'androidx.navigation:navigation-ui:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.3.1'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     //Espresso Dependencies
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0') {
@@ -229,13 +229,28 @@ dependencies {
         exclude module: 'support-v13'
         exclude module: 'recyclerview-v7'
         exclude module: 'appcompat-v7'
-        exclude module: 'design'
     }
 
+    // Fragment testing
+    def fragment_version = "1.1.0"
+    implementation "androidx.fragment:fragment:$fragment_version"
+    debugImplementation ("androidx.fragment:fragment-testing:$fragment_version") {
+        // exclude androidx.test:core while fragment_testing depends on 1.1.0
+        exclude group: 'androidx.test', module: 'core'
+    }
     //Mockito Dependencies
     androidTestImplementation 'org.mockito:mockito-core:1.10.19'
     androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    testImplementation 'org.mockito:mockito-core:2.4.0'
+    testImplementation 'org.powermock:powermock-core:1.7.0RC2'
+    testImplementation 'org.powermock:powermock-module-junit4:1.7.0RC2'
+    testImplementation 'org.powermock:powermock-api-mockito2:1.7.0RC2'
+
+//    androidTestImplementation 'org.powermock:powermock-mockito-release-full:1.6.4'
+//    testImplementation 'org.powermock:powermock:1.6.6'
+
     //Dagger Dependencies
     implementation "com.google.dagger:dagger:2.11"
     implementation "com.google.dagger:dagger-android-support:2.11"
@@ -253,13 +268,12 @@ dependencies {
 
     def work_version = "2.2.0"
     implementation "androidx.work:work-runtime:$work_version"
-    implementation 'androidx.concurrent:concurrent-futures:1.0.0-rc01'
+    implementation 'androidx.concurrent:concurrent-futures:1.1.0-alpha01'
     androidTestImplementation "androidx.work:work-testing:$work_version"
 
     implementation 'javax.xml.stream:stax-api:1.0-2'
 
 //    implementation 'androidx.multidex:multidex:2.0.1'
-
 //    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 
 }

@@ -536,7 +536,6 @@ public class MainActivityUITest {
     }
 
 
-
     @Test
     public void showsTagSelectActivityOnDrawerClickDownloadCourses() throws Exception {
 
@@ -696,39 +695,6 @@ public class MainActivityUITest {
         onView(withId(R.id.menu_search)).check(doesNotExist());
 
     }
-
-
-
-   /* @Test
-    public void downloadCourse(){
-        onView(withId(R.id.drawer))
-                .perform(DrawerActions.open());
-
-        onView(withText(R.string.menu_download))
-                .perform(click());
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .perform(click());
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.download_course_btn))
-                .perform(click(), pressBack());
-
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .perform(pressBack());
-
-        int coursesCount = getCoursesCount();
-
-        assertTrue(coursesCount > 0);
-
-
-    }*/
 
 
 }

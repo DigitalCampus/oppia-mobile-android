@@ -111,7 +111,7 @@ public class GlobalScorecardFragment extends AppFragment implements ScorecardsGr
             download.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AdminSecurityManager.checkAdminPermission(getActivity(), R.id.menu_download, new AdminSecurityManager.AuthListener() {
+                    AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, new AdminSecurityManager.AuthListener() {
                         public void onPermissionGranted() {
                             startActivity(new Intent(getActivity(), TagSelectActivity.class));
                         }
