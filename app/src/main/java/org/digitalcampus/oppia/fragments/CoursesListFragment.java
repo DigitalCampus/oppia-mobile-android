@@ -239,7 +239,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseDelete() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-        builder.setCancelable(false);
+//        builder.setCancelable(false);
         builder.setTitle(R.string.course_context_delete);
         builder.setMessage(R.string.course_context_delete_confirm);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -268,7 +268,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseReset() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-        builder.setCancelable(false);
+//        builder.setCancelable(false);
         builder.setTitle(R.string.course_context_reset);
         builder.setMessage(R.string.course_context_reset_confirm);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
