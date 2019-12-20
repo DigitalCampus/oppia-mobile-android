@@ -126,13 +126,13 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         activityTypes.add(new ActivityType(getString(R.string.event_activity_all), ActivityType.ALL,
                 ContextCompat.getColor(getActivity(), R.color.chart_line_activity_all), true));
         activityTypes.add(new ActivityType(getString(R.string.event_activity_completed), Gamification.EVENT_NAME_ACTIVITY_COMPLETED,
-                ContextCompat.getColor(getActivity(), R.color.chart_line_activity_completed), true));
+                ContextCompat.getColor(getActivity(), R.color.chart_line_activity_completed), false));
         activityTypes.add(new ActivityType(getString(R.string.event_media_watched), Gamification.EVENT_NAME_MEDIA_PLAYED,
-                ContextCompat.getColor(getActivity(), R.color.chart_line_media_watched), true));
+                ContextCompat.getColor(getActivity(), R.color.chart_line_media_watched), false));
         activityTypes.add(new ActivityType(getString(R.string.event_course_downloaded), Gamification.EVENT_NAME_COURSE_DOWNLOADED,
-                ContextCompat.getColor(getActivity(), R.color.chart_line_course_downloaded), true));
+                ContextCompat.getColor(getActivity(), R.color.chart_line_course_downloaded), false));
         activityTypes.add(new ActivityType(getString(R.string.event_quiz_attempt), Gamification.EVENT_NAME_QUIZ_ATTEMPT,
-                ContextCompat.getColor(getActivity(), R.color.chart_line_quiz_attempt), true));
+                ContextCompat.getColor(getActivity(), R.color.chart_line_quiz_attempt), false));
 
         adapterActivityTypes = new ActivityTypesAdapter(getActivity(), activityTypes);
         adapterActivityTypes.setOnItemClickListener(this);

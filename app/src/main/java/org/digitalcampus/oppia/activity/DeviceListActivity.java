@@ -30,16 +30,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.DevicesBTAdapter;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.utils.UIUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -66,7 +67,9 @@ public class DeviceListActivity extends Activity {
     private View scanningMessage;
 
     private BluetoothAdapter mBtAdapter;
-    private ArrayAdapter<String> mNewDevicesArrayAdapter;
+    private DevicesBTAdapter adapterNewDevices;
+    private List<String> newDevicesNames = new ArrayList<>();
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +89,8 @@ public class DeviceListActivity extends Activity {
             public void onClick(View v) {
 
                 final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
-                if (notGrantedPerms.size() > 0){
-                    if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)){
+                if (notGrantedPerms.size() > 0) {
+                    if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
                         UIUtils.showAlert(
                                 DeviceListActivity.this,
                                 R.string.permissions_simple_title,
@@ -102,15 +105,13 @@ public class DeviceListActivity extends Activity {
                                     }
                                 }
                         );
-                    }
-                    else{
+                    } else {
                         UIUtils.showAlert(
                                 DeviceListActivity.this,
                                 R.string.permissions_simple_title,
-                                R.string.permissions_not_askable_message );
+                                R.string.permissions_not_askable_message);
                     }
-                }
-                else {
+                } else {
                     scanButton.setVisibility(View.GONE);
                     doDiscovery();
                 }
@@ -118,21 +119,42 @@ public class DeviceListActivity extends Activity {
             }
         });
 
+
+        // Get the local Bluetooth adapter
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // Get a set of currently paired devices
+        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+        List<String> pairedDevicesNames = new ArrayList<>();
+
+        // If there are paired devices, add each one to the ArrayAdapter
+        if (!pairedDevices.isEmpty()) {
+            findViewById(R.id.paired_devices_title).setVisibility(View.VISIBLE);
+            for (BluetoothDevice device : pairedDevices) {
+                pairedDevicesNames.add(device.getName() + "\n" + device.getAddress());
+            }
+        } else {
+            String noDevices = getResources().getText(R.string.bluetooth_none_paired).toString();
+            pairedDevicesNames.add(noDevices);
+        }
+
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
-        ArrayAdapter<String> pairedDevicesArrayAdapter =
-                new ArrayAdapter<>(this, R.layout.device_row);
-        mNewDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.device_row);
+        DevicesBTAdapter adapterPairedDevices = new DevicesBTAdapter(this, pairedDevicesNames);
 
-        // Find and set up the ListView for paired devices
-        ListView pairedListView = findViewById(R.id.paired_devices);
-        pairedListView.setAdapter(pairedDevicesArrayAdapter);
-        pairedListView.setOnItemClickListener(mDeviceClickListener);
+        // Find and set up the RecyclerView for paired devices
+        RecyclerView recyclerPairedDevices = findViewById(R.id.recycler_paired_devices);
+        adapterPairedDevices.setOnItemClickListener(mDeviceClickListener);
+        recyclerPairedDevices.setAdapter(adapterPairedDevices);
 
-        // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = findViewById(R.id.new_devices);
-        newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
-        newDevicesListView.setOnItemClickListener(mDeviceClickListener);
+        // Find and set up the RecyclerView for newly discovered devices
+
+        newDevicesNames.clear();
+        adapterNewDevices = new DevicesBTAdapter(this, newDevicesNames);
+
+        RecyclerView recyclerNewDevices = findViewById(R.id.recycler_new_devices);
+        adapterNewDevices.setOnItemClickListener(mDeviceClickListener);
+        recyclerNewDevices.setAdapter(adapterNewDevices);
 
         // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -142,22 +164,6 @@ public class DeviceListActivity extends Activity {
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(mReceiver, filter);
 
-        // Get the local Bluetooth adapter
-        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        // Get a set of currently paired devices
-        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
-
-        // If there are paired devices, add each one to the ArrayAdapter
-        if (!pairedDevices.isEmpty()) {
-            findViewById(R.id.paired_devices_title).setVisibility(View.VISIBLE);
-            for (BluetoothDevice device : pairedDevices) {
-                pairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-            }
-        } else {
-            String noDevices = getResources().getText(R.string.bluetooth_none_paired).toString();
-            pairedDevicesArrayAdapter.add(noDevices);
-        }
     }
 
     @Override
@@ -188,7 +194,7 @@ public class DeviceListActivity extends Activity {
 
         // Turn on sub-title for new devices
         findViewById(R.id.new_devices_title).setVisibility(View.VISIBLE);
-        findViewById(R.id.new_devices).setVisibility(View.VISIBLE);
+        findViewById(R.id.recycler_new_devices).setVisibility(View.VISIBLE);
 
         // If we're already discovering, stop it
         if (mBtAdapter.isDiscovering()) {
@@ -199,7 +205,7 @@ public class DeviceListActivity extends Activity {
         mBtAdapter.startDiscovery();
     }
 
-    private String getAddress(String device){
+    private String getAddress(String device) {
         // Get the device MAC address, which is the last 17 chars in the View
         return device.substring(device.length() - 17);
     }
@@ -207,10 +213,10 @@ public class DeviceListActivity extends Activity {
     /**
      * The on-click listener for all devices in the ListViews
      */
-    private AdapterView.OnItemClickListener mDeviceClickListener
-            = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
-            // Cancel discovery because it's costly and we're about to connect
+    private DevicesBTAdapter.OnItemClickListener mDeviceClickListener
+            = new DevicesBTAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(View v, int position) {
             if (mBtAdapter.isDiscovering()) {
                 mBtAdapter.cancelDiscovery();
             }
@@ -246,15 +252,15 @@ public class DeviceListActivity extends Activity {
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     //Check if the device is already added
                     boolean added = false;
-                    for (int i=0; i<mNewDevicesArrayAdapter.getCount(); i++){
-                        String item = mNewDevicesArrayAdapter.getItem(i);
-                        if (device.getAddress().equals(getAddress(item))){
+                    for (int i = 0; i < newDevicesNames.size(); i++) {
+                        String item = newDevicesNames.get(i);
+                        if (device.getAddress().equals(getAddress(item))) {
                             added = true;
                         }
                     }
-                    if (!added){
+                    if (!added) {
                         String deviceName = device.getName();
-                        mNewDevicesArrayAdapter.add( (deviceName==null?"Unknown":deviceName) + "\n" + device.getAddress());
+                        newDevicesNames.add((deviceName == null ? "Unknown" : deviceName) + "\n" + device.getAddress());
                     }
 
                 }
@@ -262,12 +268,14 @@ public class DeviceListActivity extends Activity {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
                 setTitle(R.string.bluetooth_select_device);
-                if (mNewDevicesArrayAdapter.getCount() == 0) {
+                if (newDevicesNames.size() == 0) {
                     String noDevices = getResources().getText(R.string.bluetooth_no_devices_found).toString();
-                    mNewDevicesArrayAdapter.add(noDevices);
+                    newDevicesNames.add(noDevices);
                 }
                 scanningMessage.setVisibility(View.GONE);
             }
+
+            adapterNewDevices.notifyDataSetChanged();
 
         }
     };
@@ -275,7 +283,7 @@ public class DeviceListActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults)){
+        if (PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
             doDiscovery();
         }
     }

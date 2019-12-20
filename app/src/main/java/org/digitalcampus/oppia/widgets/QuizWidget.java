@@ -36,12 +36,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.splunk.mint.Mint;
 
@@ -133,7 +134,7 @@ public class QuizWidget extends WidgetFactory {
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
-		quizContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(
+		quizContent = activity.getContents(prefs.getString(
 				PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
 
 		vv.setId(activity.getActId());
@@ -508,7 +509,8 @@ public class QuizWidget extends WidgetFactory {
 		
 		// Show the detail of which questions were right/wrong
 		if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ATEND){
-			ListView questionFeedbackLV = getView().findViewById(R.id.quiz_results_feedback);
+			RecyclerView recyclerQuestionFeedbackLV = getView().findViewById(R.id.recycler_quiz_results_feedback);
+			recyclerQuestionFeedbackLV.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 			ArrayList<QuizFeedback> quizFeedback = new ArrayList<>();
 			List<QuizQuestion> questions = this.quiz.getQuestions();
 			for(QuizQuestion q: questions){
@@ -522,8 +524,9 @@ public class QuizWidget extends WidgetFactory {
 					quizFeedback.add(qf);
 				}
 			}
-			QuizFeedbackAdapter qfa = new QuizFeedbackAdapter(super.getActivity(), quizFeedback);
-			questionFeedbackLV.setAdapter(qfa);
+
+			QuizFeedbackAdapter adapterQuizFeedback = new QuizFeedbackAdapter(getActivity(), quizFeedback);
+			recyclerQuestionFeedbackLV.setAdapter(adapterQuizFeedback);
 		}
 		
 		// Show restart or continue button

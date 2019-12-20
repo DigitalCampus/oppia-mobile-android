@@ -6,14 +6,20 @@ import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.work.Configuration;
+import androidx.work.ListenableWorker;
 import androidx.work.testing.SynchronousExecutor;
+import androidx.work.testing.TestListenableWorkerBuilder;
 import androidx.work.testing.WorkManagerTestInitHelper;
 
+import org.digitalcampus.oppia.service.TrackerWorker;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.concurrent.ExecutionException;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -44,10 +50,9 @@ public class TrackerWorkerTest {
 
 
         // FOR LISTENABLE WORKERS: (https://stackoverflow.com/a/56200464/1365440)
-//        ListenableWorker testTrackerWorker = TestListenableWorkerBuilder.from(context, TrackerWorker.class).build();
-//        ListenableWorker.Result result = testTrackerWorker.startWork().get();
-//        assertThat(result, is(ListenableWorker.Result.success()));
-
+        ListenableWorker testTrackerWorker = TestListenableWorkerBuilder.from(context, TrackerWorker.class).build();
+        ListenableWorker.Result result = testTrackerWorker.startWork().get();
+        assertThat(result, is(ListenableWorker.Result.success()));
 
     }
 }

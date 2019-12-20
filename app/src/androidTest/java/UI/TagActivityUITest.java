@@ -1,10 +1,10 @@
 package UI;
 
 import android.content.Context;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.espresso.assertion.ViewAssertions;
-import androidx.test.rule.ActivityTestRule;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
@@ -26,14 +26,10 @@ import java.util.ArrayList;
 
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 
-import static androidx.test.espresso.Espresso.onData;
+import static Utils.RecyclerViewMatcher.withRecyclerView;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -93,11 +89,10 @@ public class TagActivityUITest {
 
         tagSelectActivityTestRule.launchActivity(null);
 
-        onData(anything())
-                .inAdapterView(withId(R.id.tag_list))
-                .atPosition(0)
-                .onChildView(withId(R.id.tag_name))
+        onView(withRecyclerView(R.id.recycler_tags)
+                .atPositionOnView(0, R.id.tag_name))
                 .check(matches(withText(startsWith("Mocked Course Name"))));
+
     }
 
 }

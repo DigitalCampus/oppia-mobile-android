@@ -213,32 +213,46 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_language) {
-            createLanguageDialog();
-            return true;
-        } else if (itemId == android.R.id.home) {
-            this.finish();
-            return true;
-        } else {
-            Intent i;
-            Bundle tb = new Bundle();
+        Intent i = null;
+        Bundle tb = new Bundle();
 
-            if (itemId == R.id.menu_help) {
+        switch (item.getItemId()) {
+            case R.id.menu_language:
+                createLanguageDialog();
+                return true;
+
+            case R.id.menu_help:
                 i = new Intent(this, AboutActivity.class);
                 tb.putSerializable(AboutActivity.TAB_ACTIVE, AboutActivity.TAB_HELP);
-            } else if (itemId == R.id.menu_scorecard) {
+                break;
+
+            case R.id.menu_scorecard:
                 i = new Intent(this, ScorecardActivity.class);
                 tb.putSerializable(Course.TAG, course);
-            } else {
+                break;
+
+            case R.id.menu_expand_all_sections:
+                adapter.expandCollapseAllSections(true);
+                return true;
+
+            case R.id.menu_collapse_all_sections:
+                adapter.expandCollapseAllSections(false);
+                return true;
+
+            default:
                 i = new Intent(this, CourseMetaPageActivity.class);
                 tb.putSerializable(Course.TAG, course);
                 tb.putInt(CourseMetaPage.TAG, item.getItemId());
-            }
+                break;
+        }
+
+        if (i != null) {
             i.putExtras(tb);
             startActivityForResult(i, 1);
-            return true;
         }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
     private void createLanguageDialog() {
