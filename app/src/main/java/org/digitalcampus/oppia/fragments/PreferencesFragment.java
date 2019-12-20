@@ -204,7 +204,7 @@ public class PreferencesFragment extends PreferenceFragment {
                     //If we are going to re-enable the preference, there is no need to prompt for the previous password
                     return true;
                 }
-                AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
+                AdminSecurityManager.with(getActivity()).promptAdminPassword(new AdminSecurityManager.AuthListener() {
                     @Override
                     public void onPermissionGranted() {
                         adminEnabled.setChecked(enableProtection);
@@ -231,7 +231,7 @@ public class PreferencesFragment extends PreferenceFragment {
                         return true;
                     }
 
-                    AdminSecurityManager.promptAdminPassword(PreferencesFragment.this.getActivity(), new AdminSecurityManager.AuthListener() {
+                    AdminSecurityManager.with(getActivity()).promptAdminPassword( new AdminSecurityManager.AuthListener() {
                         @Override
                         public void onPermissionGranted() {
                             editTextPreference.setText((String) newValue);

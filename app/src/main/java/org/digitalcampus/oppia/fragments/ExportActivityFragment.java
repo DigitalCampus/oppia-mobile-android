@@ -148,7 +148,7 @@ public class ExportActivityFragment extends AppFragment implements TrackerServic
 
     private void exportActivities() {
         //Check the user has permissions to export activity data
-        AdminSecurityManager.checkAdminPermission(getActivity(), R.id.action_export_activity, new AdminSecurityManager.AuthListener() {
+        AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.action_export_activity, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {
                 ExportActivityTask task = new ExportActivityTask(ExportActivityFragment.this.getActivity());
                 task.setListener(ExportActivityFragment.this);
