@@ -20,11 +20,12 @@ package org.digitalcampus.oppia.fragments;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
@@ -64,7 +65,7 @@ public class PasswordDialogFragment extends DialogFragment {
                     //If the user leave the input blank, we don't perform any action
                     if (password.equals("")) return;
 
-                    boolean passCorrect = AdminSecurityManager.checkAdminPassword(PasswordDialogFragment.this.getActivity(), password);
+                    boolean passCorrect = AdminSecurityManager.with(getActivity()).checkAdminPassword(password);
                     if(passCorrect) {
                         d.dismiss();
                         if (listener != null) {

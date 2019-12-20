@@ -140,6 +140,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String GCM_TOKEN_ID = "prefGCMRegistration_id";
     public static final String PREF_REMOTE_ADMIN = "prefRemoteAdminEnabled";
     public static final int ADMIN_ACTIVATION_REQUEST = 45;
+    public static final String PREF_TEST_ACTION_PROTECTED = "prefTestActionProtected";
 
     private SharedPreferences prefs;
     private ProgressDialog pDialog;

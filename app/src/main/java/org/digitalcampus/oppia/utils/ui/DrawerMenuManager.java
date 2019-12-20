@@ -143,7 +143,7 @@ public class DrawerMenuManager {
         if (item.isChecked()) return false;
 
         final int itemId = item.getItemId();
-        AdminSecurityManager.checkAdminPermission(drawerAct, itemId, new AdminSecurityManager.AuthListener() {
+        AdminSecurityManager.with(drawerAct).checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {
                 // Check if the option has custom manager
                 if (customOptions.containsKey(itemId)) {

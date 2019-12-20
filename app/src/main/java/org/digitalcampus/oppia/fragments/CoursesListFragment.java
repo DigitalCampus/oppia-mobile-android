@@ -184,7 +184,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         manageBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                AdminSecurityManager.checkAdminPermission(getActivity(), R.id.menu_download, new AdminSecurityManager.AuthListener() {
+                AdminSecurityManager.with(getActivity()).checkAdminPermission(R.id.menu_download, new AdminSecurityManager.AuthListener() {
                     public void onPermissionGranted() {
                         startActivity(new Intent(getActivity(), TagSelectActivity.class));
                     }
@@ -219,7 +219,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     @Override
     public void onContextMenuItemSelected(final int position, final int itemId) {
-        AdminSecurityManager.checkAdminPermission(getActivity(), itemId, new AdminSecurityManager.AuthListener() {
+        AdminSecurityManager.with(getActivity()).checkAdminPermission(itemId, new AdminSecurityManager.AuthListener() {
             public void onPermissionGranted() {
                 tempCourse = courses.get(position);
                 if (itemId == R.id.course_context_delete) {
@@ -239,7 +239,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseDelete() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-        builder.setCancelable(false);
+//        builder.setCancelable(false);
         builder.setTitle(R.string.course_context_delete);
         builder.setMessage(R.string.course_context_delete_confirm);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -268,7 +268,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseReset() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-        builder.setCancelable(false);
+//        builder.setCancelable(false);
         builder.setTitle(R.string.course_context_reset);
         builder.setMessage(R.string.course_context_reset_confirm);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
