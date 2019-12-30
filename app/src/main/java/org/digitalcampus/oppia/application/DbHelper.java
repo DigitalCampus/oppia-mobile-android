@@ -79,7 +79,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String STR_CREATE_TABLE = "create table ";
 	private static final String STR_ALTER_TABLE = "ALTER TABLE ";
 	private static final String STR_INT_PRIMARY_KEY_AUTO = " integer primary key autoincrement, ";
-	
+	private static final String STR_INT_COMMA = " int, ";
+	private static final String STR_TEXT_COMMA = " text, ";
+
+			
 	private static final String COURSE_TABLE = "Module";
 	private static final String COURSE_C_ID = BaseColumns._ID;
 	private static final String COURSE_C_VERSIONID = "versionid";
@@ -231,12 +234,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private void createCourseTable(SQLiteDatabase db){
 		String mSql = STR_CREATE_TABLE + COURSE_TABLE + " (" + COURSE_C_ID + STR_INT_PRIMARY_KEY_AUTO
-				+ COURSE_C_VERSIONID + " int, " + COURSE_C_TITLE + " text, " + COURSE_C_LOCATION + " text, "
-				+ COURSE_C_SHORTNAME + " text," + COURSE_C_SCHEDULE + " int,"
-				+ COURSE_C_IMAGE + " text,"
-				+ COURSE_C_DESC + " text,"
+				+ COURSE_C_VERSIONID + STR_INT_COMMA + COURSE_C_TITLE + STR_TEXT_COMMA + COURSE_C_LOCATION + STR_TEXT_COMMA
+				+ COURSE_C_SHORTNAME + STR_TEXT_COMMA + COURSE_C_SCHEDULE + STR_INT_COMMA
+				+ COURSE_C_IMAGE + STR_TEXT_COMMA
+				+ COURSE_C_DESC + STR_TEXT_COMMA
 				+ COURSE_C_ORDER_PRIORITY + " integer default 0, " 
-				+ COURSE_C_LANGS + " text, "
+				+ COURSE_C_LANGS + STR_TEXT_COMMA
                 + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "' )";
 		db.execSQL(mSql);
 	}
@@ -244,13 +247,13 @@ public class DbHelper extends SQLiteOpenHelper {
 	private void createActivityTable(SQLiteDatabase db){
 		String aSql = STR_CREATE_TABLE + ACTIVITY_TABLE + " (" +
 									ACTIVITY_C_ID + STR_INT_PRIMARY_KEY_AUTO + 
-									ACTIVITY_C_COURSEID + " int, " + 
-									ACTIVITY_C_SECTIONID + " int, " + 
-									ACTIVITY_C_ACTID + " int, " + 
-									ACTIVITY_C_ACTTYPE + " text, " + 
+									ACTIVITY_C_COURSEID + STR_INT_COMMA + 
+									ACTIVITY_C_SECTIONID + STR_INT_COMMA + 
+									ACTIVITY_C_ACTID + STR_INT_COMMA + 
+									ACTIVITY_C_ACTTYPE + STR_TEXT_COMMA + 
 									ACTIVITY_C_STARTDATE + " datetime null, " + 
 									ACTIVITY_C_ENDDATE + " datetime null, " + 
-									ACTIVITY_C_ACTIVITYDIGEST + " text, "+
+									ACTIVITY_C_ACTIVITYDIGEST + STR_TEXT_COMMA+
 									ACTIVITY_C_TITLE + " text)";
 		db.execSQL(aSql);
 	}
@@ -260,15 +263,15 @@ public class DbHelper extends SQLiteOpenHelper {
 				TRACKER_LOG_C_ID + STR_INT_PRIMARY_KEY_AUTO + 
 				TRACKER_LOG_C_COURSEID + " integer, " + 
 				TRACKER_LOG_C_DATETIME + " datetime default current_timestamp, " + 
-				TRACKER_LOG_C_ACTIVITYDIGEST + " text, " + 
-				TRACKER_LOG_C_DATA + " text, " + 
+				TRACKER_LOG_C_ACTIVITYDIGEST + STR_TEXT_COMMA + 
+				TRACKER_LOG_C_DATA + STR_TEXT_COMMA + 
 				TRACKER_LOG_C_SUBMITTED + " integer default 0, " + 
 				TRACKER_LOG_C_INPROGRESS + " integer default 0, " +
 				TRACKER_LOG_C_COMPLETED + " integer default 0, " + 
 				TRACKER_LOG_C_USERID + " integer default 0, " +
-				TRACKER_LOG_C_TYPE + " text, " +
+				TRACKER_LOG_C_TYPE + STR_TEXT_COMMA +
 				TRACKER_LOG_C_EXPORTED + " integer default 0, " +
-                TRACKER_LOG_C_EVENT + " text, " +
+                TRACKER_LOG_C_EVENT + STR_TEXT_COMMA +
                 TRACKER_LOG_C_POINTS + " integer default 0 " +
 				")";
 		db.execSQL(lSql);
@@ -278,8 +281,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		String sql = STR_CREATE_TABLE + QUIZATTEMPTS_TABLE + " (" +
 							QUIZATTEMPTS_C_ID + STR_INT_PRIMARY_KEY_AUTO + 
 							QUIZATTEMPTS_C_DATETIME + " datetime default current_timestamp, " + 
-							QUIZATTEMPTS_C_DATA + " text, " +  
-							QUIZATTEMPTS_C_ACTIVITY_DIGEST + " text, " + 
+							QUIZATTEMPTS_C_DATA + STR_TEXT_COMMA +  
+							QUIZATTEMPTS_C_ACTIVITY_DIGEST + STR_TEXT_COMMA + 
 							QUIZATTEMPTS_C_SENT + " integer default 0, "+
 							QUIZATTEMPTS_C_COURSEID + " integer, " +
 							QUIZATTEMPTS_C_USERID + " integer default 0, " +
@@ -287,16 +290,16 @@ public class DbHelper extends SQLiteOpenHelper {
 							QUIZATTEMPTS_C_MAXSCORE + " real default 0, " +
 							QUIZATTEMPTS_C_PASSED + " integer default 0, " +
 							QUIZATTEMPTS_C_EXPORTED + " integer default 0," +
-                            QUIZATTEMPTS_C_EVENT + " text, " +
+                            QUIZATTEMPTS_C_EVENT + STR_TEXT_COMMA +
                             QUIZATTEMPTS_C_POINTS + " integer default 0 )";
 		db.execSQL(sql);
 	}
 	
 	private void createSearchTable(SQLiteDatabase db){
 		String sql = "CREATE VIRTUAL TABLE "+SEARCH_TABLE+" USING FTS3 (" +
-                SEARCH_C_TEXT + " text, " +
-                SEARCH_C_COURSETITLE + " text, " +
-                SEARCH_C_SECTIONTITLE + " text, " +
+                SEARCH_C_TEXT + STR_TEXT_COMMA +
+                SEARCH_C_COURSETITLE + STR_TEXT_COMMA +
+                SEARCH_C_SECTIONTITLE + STR_TEXT_COMMA +
                 SEARCH_C_ACTIVITYTITLE + " text " +
             ")";
 		db.execSQL(sql);
@@ -305,7 +308,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private void createUserTable(SQLiteDatabase db){
 		String sql = "CREATE TABLE ["+USER_TABLE+"] (" +
                 "["+USER_C_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
-                "["+USER_C_USERNAME +"]" + " TEXT, "+
+                "["+USER_C_USERNAME +"]" + STR_TEXT_COMMA+
                 "["+USER_C_FIRSTNAME +"] TEXT, " +
                 "["+USER_C_LASTNAME+"] TEXT, " +
                 "["+USER_C_PASSWORDENCRYPTED +"] TEXT, " +
@@ -328,7 +331,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String mSql = STR_CREATE_TABLE + USER_PREFS_TABLE + " ("
                 + USER_PREFS_C_USERNAME + " text not null, "
                 + USER_PREFS_C_PREFKEY + " text not null, "
-                + USER_PREFS_C_PREFVALUE + " text, "
+                + USER_PREFS_C_PREFVALUE + STR_TEXT_COMMA
                 + "primary key (" + USER_PREFS_C_USERNAME + ", " + USER_PREFS_C_PREFKEY + ") "
                 +  ")";
         db.execSQL(mSql);
@@ -338,7 +341,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String mSql = STR_CREATE_TABLE + COURSE_GAME_TABLE + " ("
                 + COURSE_GAME_C_ID + STR_INT_PRIMARY_KEY_AUTO
                 + COURSE_GAME_C_COURSEID + " integer,"
-                + COURSE_GAME_C_EVENT + " text,"
+                + COURSE_GAME_C_EVENT + STR_TEXT_COMMA
                 + COURSE_GAME_C_POINTS + " integer default 0 )";
         db.execSQL(mSql);
     }
@@ -347,15 +350,15 @@ public class DbHelper extends SQLiteOpenHelper {
 		String mSql = STR_CREATE_TABLE + ACTIVITY_GAME_TABLE + " ("
 				+ ACTIVITY_GAME_C_ID + STR_INT_PRIMARY_KEY_AUTO
 				+ ACTIVITY_GAME_C_ACTIVITYID + " integer,"
-				+ ACTIVITY_GAME_C_EVENT + " text,"
+				+ ACTIVITY_GAME_C_EVENT + STR_TEXT_COMMA
 				+ ACTIVITY_GAME_C_POINTS + " integer default 0 )";
 		db.execSQL(mSql);
 	}
 
 	private void createLeaderboardTable(SQLiteDatabase db){
 		String sql = STR_CREATE_TABLE + LEADERBOARD_TABLE + " (" +
-				LEADERBOARD_C_USERNAME + " text, " +
-				LEADERBOARD_C_FULLNAME + " text, " +
+				LEADERBOARD_C_USERNAME + STR_TEXT_COMMA +
+				LEADERBOARD_C_FULLNAME + STR_TEXT_COMMA +
 				LEADERBOARD_C_POINTS + " integer default 0, " +
 				LEADERBOARD_C_LASTUPDATE + " datetime default current_timestamp )";
 		db.execSQL(sql);
