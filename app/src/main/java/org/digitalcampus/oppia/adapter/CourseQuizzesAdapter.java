@@ -21,17 +21,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.model.QuizStats;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdapter.ViewHolder> {
@@ -74,7 +71,7 @@ public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdap
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(ctx).inflate(R.layout.scorecard_quiz_item, parent, false);
         return new ViewHolder(v);
     }

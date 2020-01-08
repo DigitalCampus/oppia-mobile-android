@@ -23,8 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -52,11 +50,10 @@ import androidx.recyclerview.widget.RecyclerView;
 public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener, CourseQuizzesAdapter.OnItemClickListener {
 
 	private Course course = null;
-    private boolean firstTimeOpened = true;
     private RecyclerView quizzesGrid;
     private ArrayList<QuizStats> quizStats = new ArrayList<>();
     private CourseQuizzesAdapter quizzesAdapter;
-    ParseCourseXMLTask xmlTask;
+    private ParseCourseXMLTask xmlTask;
 
     private TextView highlightPretest;
     private TextView highlightAttempted;
@@ -121,9 +118,8 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         cpbScorecard.setProgressMax(totalActivities);
         cpbScorecard.setProgressWithAnimation(completedActivities, MobileLearning.SCORECARD_ANIM_DURATION);
 
-        firstTimeOpened = false;
-        activitiesTotal.setText(""+course.getNoActivities());
-        activitiesCompleted.setText(""+course.getNoActivitiesCompleted());
+        activitiesTotal.setText(String.valueOf(course.getNoActivities()));
+        activitiesCompleted.setText(String.valueOf(course.getNoActivitiesCompleted()));
 
         quizzesAdapter = new CourseQuizzesAdapter(getActivity(), quizStats);
         quizzesGrid.setAdapter(quizzesAdapter);
@@ -177,8 +173,8 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         }
         
         highlightPretest.setText(pretestScore >= 0 ? (pretestScore + "%") : "-");
-        highlightAttempted.setText("" + quizzesAttempted);
-        highlightPassed.setText("" + quizzesPassed);
+        highlightAttempted.setText(String.valueOf(quizzesAttempted));
+        highlightPassed.setText(String.valueOf(quizzesPassed));
         quizzesAdapter.notifyDataSetChanged();
 
         loadingSpinner.setVisibility(View.GONE);

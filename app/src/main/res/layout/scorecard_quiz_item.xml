@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     android:paddingTop="4dp"
-    android:paddingRight="@dimen/padding_medium"
     android:paddingBottom="4dp">
 
     <TextView
@@ -17,7 +15,7 @@
         android:ellipsize="end"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/score"
-        tools:text="sdfdsfdsaf" />
+        android:layout_toEndOf="@id/score" />
 
     <TextView
         android:id="@+id/quiz_title"
@@ -26,8 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_below="@id/section_title"
+        android:layout_marginTop="-3dp"
         android:layout_toRightOf="@id/score"
-        tools:text="adsfdsafdsafdsa" />
+        android:layout_toEndOf="@id/score" />
 
     <include
         android:id="@+id/score"

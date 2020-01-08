@@ -45,8 +45,7 @@
                     style="@style/Highlight.Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="15" />
+                    android:layout_gravity="center_horizontal" />
 
                 <TextView
                     android:id="@+id/textView8"
@@ -68,8 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="-5dp"
-                    android:text="240" />
+                    android:layout_marginTop="-5dp" />
 
                 <TextView
                     android:id="@+id/textView9"
@@ -116,7 +114,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding_medium"
                     android:layout_marginBottom="@dimen/padding_medium"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/padding_medium">
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
