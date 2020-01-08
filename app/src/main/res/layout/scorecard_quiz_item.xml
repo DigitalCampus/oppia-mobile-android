@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:padding="5dp"
-             android:descendantFocusability="blocksDescendants">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingTop="4dp"
+    android:paddingRight="@dimen/padding_medium"
+    android:paddingBottom="4dp">
 
     <TextView
+        android:id="@+id/section_title"
+        style="@style/MediumTextDarkItalic"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/percent_label"
-        android:layout_gravity="center"
-        android:background="@drawable/scorecard_quiz_item"
-        android:gravity="center"
-        android:textSize="12sp"
-        android:focusable="false"/>
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_gravity="center_vertical"
+        android:layout_toRightOf="@id/score"
+        tools:text="sdfdsfdsaf" />
+
+    <TextView
+        android:id="@+id/quiz_title"
+        style="@style/NormalTextBoldDark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@id/section_title"
+        android:layout_toRightOf="@id/score"
+        tools:text="adsfdsafdsafdsa" />
+
+    <include
+        android:id="@+id/score"
+        layout="@layout/quiz_score_badge" />
+
+
+</RelativeLayout>

@@ -32,7 +32,8 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
-import org.digitalcampus.oppia.adapter.CourseQuizzesGridAdapter;
+import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -44,14 +45,17 @@ import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.digitalcampus.oppia.utils.ui.ProgressBarAnimator;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener, AdapterView.OnItemClickListener {
+import androidx.recyclerview.widget.RecyclerView;
+
+public class CourseScorecardFragment extends AppFragment implements ParseCourseXMLTask.OnParseXmlListener, CourseQuizzesAdapter.OnItemClickListener {
 
 	private Course course = null;
     private boolean firstTimeOpened = true;
-    private GridView quizzesGrid;
+    private RecyclerView quizzesGrid;
     private ArrayList<QuizStats> quizStats = new ArrayList<>();
-    private CourseQuizzesGridAdapter quizzesAdapter;
+    private CourseQuizzesAdapter quizzesAdapter;
     ParseCourseXMLTask xmlTask;
 
     private TextView highlightPretest;
@@ -121,23 +125,29 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         activitiesTotal.setText(""+course.getNoActivities());
         activitiesCompleted.setText(""+course.getNoActivitiesCompleted());
 
-        quizzesAdapter = new CourseQuizzesGridAdapter(getActivity(), quizStats);
+        quizzesAdapter = new CourseQuizzesAdapter(getActivity(), quizStats);
         quizzesGrid.setAdapter(quizzesAdapter);
-        quizzesGrid.setOnItemClickListener(this);
+        quizzesGrid.setNestedScrollingEnabled(false);
+        quizzesAdapter.setOnItemClickListener(this);
 	}
 
     //@Override
-    public void onParseComplete(CompleteCourse parsed) {
+    public void onParseComplete(CompleteCourse parsedCourse) {
 
-        ArrayList<Activity> baseline = parsed.getBaselineActivities();
+        ArrayList<Activity> baseline = parsedCourse.getBaselineActivities();
         
     	DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
         ArrayList<Activity> quizActs = db.getCourseQuizzes(course.getCourseId());
         ArrayList<QuizStats> quizzes = new ArrayList<>();
+
+        String prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+
         for (Activity a: quizActs){
         	// get the max score for the quiz for the user
         	QuizStats qs = db.getQuizAttempt(a.getDigest(), userId);
+        	qs.setQuizTitle(a.getTitle(prefLang));
+        	qs.setSectionTitle(parsedCourse.getSectionByActivityDigest(a.getDigest()).getTitle(prefLang));
         	quizzes.add(qs);
         }
 
@@ -201,8 +211,8 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         // no need to do anything
     }
 
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        QuizStats quiz = quizzesAdapter.getItem(i);
+    public void onItemClick(int i) {
+        QuizStats quiz = quizzesAdapter.getItemAtPosition(i);
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra(CourseIndexActivity.JUMPTO_TAG, quiz.getDigest());
