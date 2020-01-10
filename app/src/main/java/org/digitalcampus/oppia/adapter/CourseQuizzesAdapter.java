@@ -21,33 +21,89 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.model.QuizStats;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class CourseQuizzesGridAdapter  extends ArrayAdapter<QuizStats> {
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdapter.ViewHolder> {
 
     private static final int NUM_COLUMNS = 6;
     private final Context ctx;
-    private final ArrayList<QuizStats> quizzesList;
+    private final List<QuizStats> quizzesList;
 
-    public CourseQuizzesGridAdapter(Context context, ArrayList<QuizStats> quizzesList) {
-        super(context, R.layout.scorecard_quiz_item, quizzesList);
+    private OnItemClickListener itemClickListener;
+
+
+    public CourseQuizzesAdapter(Context context, List<QuizStats> quizzesList) {
         this.ctx = context;
         this.quizzesList = quizzesList;
     }
 
-    static class QuizStatsViewHolder{
-        private TextView percent;
-        private View baseView;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView title;
+        private TextView section;
+        private TextView score;
+
+        public ViewHolder(View itemView) {
+
+            super(itemView);
+            section = itemView.findViewById(R.id.section_title);
+            title = itemView.findViewById(R.id.quiz_title);
+            score = itemView.findViewById(R.id.score);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null) {
+                        itemClickListener.onItemClick(getAdapterPosition());
+                    }
+                }
+            });
+
+        }
     }
 
     @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(ctx).inflate(R.layout.scorecard_quiz_item, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+
+        final QuizStats quiz = getItemAtPosition(position);
+
+        viewHolder.title.setText(quiz.getQuizTitle());
+        viewHolder.section.setText(quiz.getSectionTitle());
+
+        if (quiz.isAttempted()){
+            viewHolder.score.setText(""+quiz.getPercent()+"%");
+            viewHolder.score.setVisibility(View.VISIBLE);
+            if (quiz.isPassed()){
+                viewHolder.score.setBackgroundResource(R.drawable.scorecard_quiz_item_passed);
+            }
+            else{
+                viewHolder.score.setBackgroundResource(R.drawable.scorecard_quiz_item_attempted);
+            }
+        }
+        else{
+            viewHolder.score.setText("");
+            viewHolder.score.setBackgroundResource(R.drawable.scorecard_quiz_item);
+        }
+
+
+    }
+
+
+    /*@Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         QuizStatsViewHolder viewHolder;
@@ -87,10 +143,23 @@ public class CourseQuizzesGridAdapter  extends ArrayAdapter<QuizStats> {
 
         return convertView;
 
+    }*/
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 
     @Override
-    public QuizStats getItem(int position){
+    public int getItemCount() {
+        return quizzesList.size();
+    }
+
+    public QuizStats getItemAtPosition(int position) {
         return quizzesList.get(position);
     }
+
 }
