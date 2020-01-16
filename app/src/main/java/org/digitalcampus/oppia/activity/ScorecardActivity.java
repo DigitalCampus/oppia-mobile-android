@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -46,6 +47,8 @@ public class ScorecardActivity extends AppActivity {
     public static final String TAB_TARGET_POINTS = "tab_points";
     public static final String TAB_TARGET_BADGES = "tab_badges";
 
+	public static final int RESULT_SCORECARD = 25;
+
 	private TabLayout tabs;
 	private ViewPager viewPager;
 	private SharedPreferences prefs;
@@ -68,6 +71,23 @@ public class ScorecardActivity extends AppActivity {
 		if (bundle != null) {
 			this.course = (Course) bundle.getSerializable(Course.TAG);
             this.targetTabOnLoad = bundle.getString(TAB_TARGET);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		// If we come back from another child activity that wants to jump to an activity,
+		// pass back the digest to the course index activity
+		if (resultCode == CourseIndexActivity.RESULT_JUMPTO) {
+
+			String digest = data.getStringExtra(CourseIndexActivity.JUMPTO_TAG);
+			Intent returnIntent = new Intent();
+			returnIntent.putExtra(CourseIndexActivity.JUMPTO_TAG,digest);
+			setResult(CourseIndexActivity.RESULT_JUMPTO, returnIntent);
+			finish();
+
 		}
 	}
 

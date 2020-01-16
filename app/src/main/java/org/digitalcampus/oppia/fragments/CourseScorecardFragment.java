@@ -32,6 +32,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.QuizAttemptsActivity;
+import org.digitalcampus.oppia.activity.ScorecardActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -215,6 +216,6 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         Bundle tb = new Bundle();
         tb.putSerializable(QuizStats.TAG, quiz);
         i.putExtras(tb);
-        startActivity(i);
+        startActivityForResult(i, 1);
     }
 }

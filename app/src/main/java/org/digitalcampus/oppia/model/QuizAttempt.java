@@ -24,6 +24,7 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 public class QuizAttempt {
 
@@ -42,6 +43,7 @@ public class QuizAttempt {
 	private User user;
 	private String event;
     private int points;
+    private int timetaken;
 
 	public DateTime getDatetime() {
 		return datetime;
@@ -168,5 +170,18 @@ public class QuizAttempt {
     public void setPoints(int points) {
         this.points = points;
     }
-	
+
+	public int getTimetaken() {
+		return timetaken;
+	}
+
+	public void setTimetaken(int timetaken) {
+		this.timetaken = timetaken;
+	}
+
+	public String getHumanTimetaken(){
+		return String.format("%d min %ds",
+				TimeUnit.MILLISECONDS.toSeconds(timetaken)/60,
+				TimeUnit.MILLISECONDS.toSeconds(timetaken) % 60 );
+	}
 }

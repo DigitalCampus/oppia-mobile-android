@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
@@ -57,17 +58,25 @@ public class QuizAttemptsActivity extends AppActivity {
         stats = (QuizStats) bundle.getSerializable(QuizStats.TAG);
 
         loadingView = findViewById(R.id.loading_attempts);
-
         TextView average = findViewById(R.id.highlight_average);
         TextView best = findViewById(R.id.highlight_best);
         TextView numAttempts = findViewById(R.id.highlight_attempted);
-        TextView quizTitle = findViewById(R.id.quiz_title);
 
         setTitle(stats.getSectionTitle() + " > " + stats.getQuizTitle());
-        quizTitle.setText(stats.getSectionTitle() + " > " + stats.getQuizTitle());
         average.setText(stats.getAveragePercent() + "%");
         best.setText(stats.getPercent() + "%");
         numAttempts.setText(String.valueOf(stats.getNumAttempts()));
+
+        Button retakeQuizBtn = findViewById(R.id.retake_quiz_btn);
+        retakeQuizBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra(CourseIndexActivity.JUMPTO_TAG, stats.getDigest());
+                setResult(CourseIndexActivity.RESULT_JUMPTO, returnIntent);
+                finish();
+            }
+        });
 
         attempts = attemptsRepository.getQuizAttempts(this, stats);
         adapter = new QuizAttemptAdapter(this.getBaseContext(), attempts);

@@ -9,32 +9,50 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <TextView
-        android:id="@+id/quiz_title"
-        style="@style/CourseTitle"
+    <LinearLayout
+        android:id="@+id/action_bar_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:background="@color/subtitle_bar"
-        android:padding="@dimen/margin_medium"
-        tools:visibility="gone" />
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_medium">
+
+        <TextView
+            style="@style/CourseTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_medium"
+            android:layout_weight="1"
+            android:text="@string/quiz_attempts.title"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/retake_quiz_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/quiz_attempts.retake_quiz" />
+
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/quiz_title"
+        android:layout_below="@id/action_bar_subtitle"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/padding_medium"
             android:layout_marginLeft="@dimen/padding_medium"
-            android:layout_marginBottom="@dimen/padding_medium"
-            android:orientation="horizontal"
-            android:layout_marginStart="@dimen/padding_medium">
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:orientation="horizontal">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -58,11 +76,6 @@
 
             </RelativeLayout>
 
-            <View
-                style="@style/Highlight.Separator"
-                android:layout_width="1dp"
-                android:layout_height="match_parent" />
-
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,13 +96,6 @@
                     android:text="@string/quiz_attempts.best" />
 
             </RelativeLayout>
-
-            <View
-                style="@style/Highlight.Separator"
-                android:layout_width="1dp"
-                android:layout_height="match_parent" />
-
-
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -112,14 +118,23 @@
 
             </RelativeLayout>
 
+            <View
+                style="@style/Highlight.Separator"
+                android:layout_width="1dp"
+                android:layout_height="match_parent" />
+
+
+            <View
+                style="@style/Highlight.Separator"
+                android:layout_width="1dp"
+                android:layout_height="match_parent" />
+
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/attempts_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
             android:cacheColorHint="#00000000"
             android:divider="@color/list_divider"
             android:foreground="?android:windowContentOverlay"
@@ -135,7 +150,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_below="@id/quiz_title"
+        android:layout_below="@id/action_bar_subtitle"
         android:gravity="center"
         android:orientation="vertical">
 
