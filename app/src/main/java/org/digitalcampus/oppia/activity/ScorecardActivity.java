@@ -47,8 +47,6 @@ public class ScorecardActivity extends AppActivity {
     public static final String TAB_TARGET_POINTS = "tab_points";
     public static final String TAB_TARGET_BADGES = "tab_badges";
 
-	public static final int RESULT_SCORECARD = 25;
-
 	private TabLayout tabs;
 	private ViewPager viewPager;
 	private SharedPreferences prefs;
@@ -87,7 +85,6 @@ public class ScorecardActivity extends AppActivity {
 			returnIntent.putExtra(CourseIndexActivity.JUMPTO_TAG,digest);
 			setResult(CourseIndexActivity.RESULT_JUMPTO, returnIntent);
 			finish();
-
 		}
 	}
 
