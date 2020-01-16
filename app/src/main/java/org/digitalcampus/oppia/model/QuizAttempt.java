@@ -50,7 +50,11 @@ public class QuizAttempt {
 	public void setDatetime(DateTime datetime) {
 		this.datetime = datetime;
 	}
-	
+
+	public void setDateTime(String date) {
+		this.datetime = MobileLearning.DATETIME_FORMAT.parseDateTime(date);
+	}
+
 	public String getDateTimeString() {
 		return MobileLearning.DATETIME_FORMAT.print(datetime);
 	}

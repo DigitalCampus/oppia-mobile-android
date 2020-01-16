@@ -66,7 +66,7 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.TagSelectActivity"
             android:label="@string/title_tag_select_activity"
-            android:theme="@style/Oppia.ToolbarTheme"></activity>
+            android:theme="@style/Oppia.ToolbarTheme" />
         <activity
             android:name="org.digitalcampus.oppia.activity.PrefsActivity"
             android:label="@string/title_prefs"
@@ -90,6 +90,10 @@
         <activity
             android:name="org.digitalcampus.oppia.activity.ScorecardActivity"
             android:label="@string/title_scorecard"
+            android:theme="@style/Oppia.ToolbarTheme" />
+        <activity
+            android:name="org.digitalcampus.oppia.activity.QuizAttemptsActivity"
+            android:label="@string/quiz_attempts.title"
             android:theme="@style/Oppia.ToolbarTheme" />
         <activity
             android:name="org.digitalcampus.oppia.activity.SearchActivity"

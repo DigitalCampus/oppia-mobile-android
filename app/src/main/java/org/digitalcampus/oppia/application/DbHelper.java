@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -950,25 +951,61 @@ public class DbHelper extends SQLiteOpenHelper {
 		// find if attempted
 		String s1 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=?";
 		String[] args1 = new String[] { String.valueOf(userId), digest };
-		Cursor c1 = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
-        qs.setNumAttempts(c1.getCount());
-		if (c1.getCount() == 0){ return qs; }
-		c1.moveToFirst();
-		while (!c1.isAfterLast()) {
-			float userScore = c1.getFloat(c1.getColumnIndex(QUIZATTEMPTS_C_SCORE));
+		Cursor query = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
+        qs.setNumAttempts(query.getCount());
+		if (query.getCount() == 0){ return qs; }
+
+		qs.setNumAttempts(query.getCount());
+		float scoreSum = 0;
+		query.moveToFirst();
+		while (!query.isAfterLast()) {
+			float userScore = query.getFloat(query.getColumnIndex(QUIZATTEMPTS_C_SCORE));
 			if (userScore > qs.getUserScore()){
 				qs.setUserScore(userScore);
 			}
-			if (c1.getInt(c1.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0){
+			if (query.getInt(query.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0){
 				qs.setPassed(true);
 			}
-			qs.setMaxScore(c1.getFloat(c1.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
-			c1.moveToNext();
+			scoreSum += userScore;
+			qs.setMaxScore(query.getFloat(query.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
+			query.moveToNext();
 		}
-		c1.close();
+		query.close();
+
+		qs.setAverageScore(scoreSum/qs.getNumAttempts());
 		qs.setAttempted(true);
 		
 		return qs;
+	}
+
+
+	public List<QuizAttempt> getQuizAttempts(String digest, long userId){
+
+		// find if attempted
+		String s1 = QUIZATTEMPTS_C_USERID + "=? AND " + QUIZATTEMPTS_C_ACTIVITY_DIGEST +"=?";
+		String[] args1 = new String[] { String.valueOf(userId), digest };
+		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, null);
+
+		ArrayList<QuizAttempt> attempts = new ArrayList<>();
+
+		float scoreSum = 0;
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			QuizAttempt qa = new QuizAttempt();
+			qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
+			qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
+			qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
+			qa.setDateTime(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
+			qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
+			qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
+			qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
+			qa.setPassed(Boolean.parseBoolean(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_PASSED))));
+			attempts.add(qa);
+			c.moveToNext();
+		}
+		c.close();
+
+		return attempts;
 	}
 
 	public void insertTracker(int courseId, String digest, String data, String type, boolean completed, String event, int points){
