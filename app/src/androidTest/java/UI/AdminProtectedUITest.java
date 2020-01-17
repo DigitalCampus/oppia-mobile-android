@@ -21,6 +21,7 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
@@ -99,6 +100,8 @@ public class AdminProtectedUITest {
     SharedPreferences prefs;
     @Mock
     SharedPreferences.Editor editor;
+    @Mock
+    User user;
 
 
     // --- INITIALIZATIONS ---
@@ -119,6 +122,7 @@ public class AdminProtectedUITest {
     public void setUp() throws Exception {
         initMockEditor();
         when(prefs.edit()).thenReturn(editor);
+        when(user.getPoints()).thenReturn(0);
 
         switch (adminProtectionOption) {
 
