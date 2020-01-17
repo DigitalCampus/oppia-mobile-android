@@ -1004,7 +1004,6 @@ public class DbHelper extends SQLiteOpenHelper {
 			qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
 			qa.setPassed(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0);
 
-			attempts.add(qa);
 			c.moveToNext();
 
 			long courseId = qa.getCourseId();
@@ -1041,6 +1040,9 @@ public class DbHelper extends SQLiteOpenHelper {
 			else{
 				qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
 			}
+
+			attempts.add(qa);
+
 
 		}
 		c.close();
