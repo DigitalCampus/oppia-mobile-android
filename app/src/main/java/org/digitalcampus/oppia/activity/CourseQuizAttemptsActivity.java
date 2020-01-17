@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
 import org.digitalcampus.oppia.adapter.QuizAttemptAdapter;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.QuizAttempt;
@@ -19,7 +20,7 @@ import javax.inject.Inject;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class QuizAttemptsActivity extends AppActivity {
+public class CourseQuizAttemptsActivity extends AppActivity {
 
     private QuizStats stats;
 
@@ -75,8 +76,21 @@ public class QuizAttemptsActivity extends AppActivity {
             });
         }
 
-        List<QuizAttempt> attempts = attemptsRepository.getQuizAttempts(this, stats);
+        final List<QuizAttempt> attempts = attemptsRepository.getQuizAttempts(this, stats);
         QuizAttemptAdapter adapter = new QuizAttemptAdapter(this.getBaseContext(), attempts);
+        adapter.setOnItemClickListener(new CourseQuizzesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent i = new Intent(CourseQuizAttemptsActivity.this, QuizAttemptActivity.class);
+                Bundle tb = new Bundle();
+                QuizAttempt attempt = attempts.get(position);
+                attempt.setSectionTitle(stats.getSectionTitle());
+                attempt.setQuizTitle(stats.getQuizTitle());
+                tb.putSerializable(QuizAttempt.TAG, attempt);
+                i.putExtras(tb);
+                startActivity(i);
+            }
+        });
         attemptsList.setAdapter(adapter);
     }
 

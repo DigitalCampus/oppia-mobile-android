@@ -24,11 +24,12 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-public class QuizAttempt {
+public class QuizAttempt implements Serializable {
 
 	public static final String TAG = QuizAttempt.class.getSimpleName();
 	
@@ -121,6 +122,10 @@ public class QuizAttempt {
 	
 	public float getScoreAsPercent(){
 		return this.score*100/this.maxscore;
+	}
+
+	public String getScorePercentLabel(){
+		return Math.round(getScoreAsPercent()) + "%";
 	}
 	
 	public void setScore(float score) {

@@ -75,7 +75,7 @@ public class QuizAttemptAdapter extends RecyclerView.Adapter<QuizAttemptAdapter.
 
         viewHolder.timetaken.setText(quiz.getHumanTimetaken());
         viewHolder.date.setText(MobileLearning.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
-        viewHolder.score.setText(Math.round(quiz.getScoreAsPercent()) + "%");
+        viewHolder.score.setText(quiz.getScorePercentLabel());
         viewHolder.score.setBackgroundResource(
                 quiz.isPassed()
                         ? R.drawable.scorecard_quiz_item_passed

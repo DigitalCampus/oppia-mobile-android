@@ -2,10 +2,10 @@ package org.digitalcampus.oppia.di;
 
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.activity.CourseIndexActivity;
+import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.QuizAttemptsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.fragments.ActivitiesFragment;
@@ -30,7 +30,7 @@ public interface AppComponent {
     void inject(DownloadActivity activity);
     void inject(AppActivity activity);
     void inject(PrefsActivity activity);
-    void inject(QuizAttemptsActivity activity);
+    void inject(CourseQuizAttemptsActivity activity);
 
     void inject(GlobalScorecardFragment fragment);
     void inject(PointsFragment fragment);

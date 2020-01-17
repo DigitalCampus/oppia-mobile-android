@@ -80,7 +80,7 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
         viewHolder.course_title.setText(course == null ? ctx.getString(R.string.quiz_attempts_unkwnown_course) : course);
         //viewHolder.timetaken.setText(quiz.getHumanTimetaken());
         viewHolder.date.setText(MobileLearning.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
-        viewHolder.score.setText(Math.round(quiz.getScoreAsPercent()) + "%");
+        viewHolder.score.setText(quiz.getScorePercentLabel());
         viewHolder.score.setBackgroundResource(
                 quiz.isPassed()
                         ? R.drawable.scorecard_quiz_item_passed

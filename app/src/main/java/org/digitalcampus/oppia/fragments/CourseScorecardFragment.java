@@ -29,10 +29,8 @@ import android.widget.TextView;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CourseIndexActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.activity.QuizAttemptsActivity;
-import org.digitalcampus.oppia.activity.ScorecardActivity;
+import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -212,7 +210,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
     public void onItemClick(int position) {
         QuizStats quiz = quizzesAdapter.getItemAtPosition(position);
 
-        Intent i = new Intent(getActivity(), QuizAttemptsActivity.class);
+        Intent i = new Intent(getActivity(), CourseQuizAttemptsActivity.class);
         Bundle tb = new Bundle();
         tb.putSerializable(QuizStats.TAG, quiz);
         i.putExtras(tb);
