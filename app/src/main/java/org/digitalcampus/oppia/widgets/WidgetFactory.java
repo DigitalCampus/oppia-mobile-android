@@ -22,10 +22,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.mediaplayer.VideoPlayerActivity;
@@ -33,6 +36,7 @@ import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 public abstract class WidgetFactory extends Fragment {
 	
@@ -53,10 +57,12 @@ public abstract class WidgetFactory extends Fragment {
 	protected SharedPreferences prefs;
 	protected boolean isBaseline = false;
     protected boolean readAloud = false;
+    protected String prefLang;
 
 	protected long startTime = 0;
     protected long spentTime = 0;
 	protected boolean currentTimeAccounted = false;
+
 	
 	public abstract boolean getActivityCompleted();
 	public abstract void saveTracker();
@@ -68,8 +74,10 @@ public abstract class WidgetFactory extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Log.i(TAG, "onCreate WidgetFactory: " + this.getClass().getSimpleName());
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
+        prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
     }
 
     public void setReadAloud(boolean readAloud){

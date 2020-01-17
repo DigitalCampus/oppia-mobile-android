@@ -68,7 +68,6 @@ public class UrlWidget extends WidgetFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = (org.digitalcampus.oppia.model.Activity) getArguments().getSerializable(org.digitalcampus.oppia.model.Activity.TAG);
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
@@ -85,9 +84,8 @@ public class UrlWidget extends WidgetFactory {
 	public void onActivityCreated(Bundle savedInstanceState) { 
 		super.onActivityCreated(savedInstanceState);
 
-		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		// show description if any
-		String desc = activity.getDescription(lang);
+		String desc = activity.getDescription(prefLang);
 		TextView descTV = getView().findViewById(R.id.widget_url_description);
 		if ((desc != null) && desc.length() > 0){
 			descTV.setText(desc);
@@ -106,7 +104,7 @@ public class UrlWidget extends WidgetFactory {
 	            return false;
 	        }
 	    });
-		wv.loadUrl(activity.getLocation(lang));
+		wv.loadUrl(activity.getLocation(prefLang));
 
 	}
 	
@@ -130,8 +128,7 @@ public class UrlWidget extends WidgetFactory {
 			MetaDataUtils mdu = new MetaDataUtils(super.getActivity());
 			obj.put("timetaken", timetaken);
 			obj = mdu.getMetaData(obj);
-			String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
-			obj.put("lang", lang);
+			obj.put("lang", prefLang);
 
 			GamificationEngine gamificationEngine = new GamificationEngine(getActivity());
 			GamificationEvent gamificationEvent = gamificationEngine.processEventURLActivity(this.course, this.activity);

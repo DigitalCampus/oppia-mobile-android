@@ -90,7 +90,6 @@ public class ResourceWidget extends WidgetFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = (org.digitalcampus.oppia.model.Activity) getArguments().getSerializable(org.digitalcampus.oppia.model.Activity.TAG);
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
@@ -113,12 +112,11 @@ public class ResourceWidget extends WidgetFactory {
 	public void onActivityCreated(Bundle savedInstanceState) { 
 		super.onActivityCreated(savedInstanceState);
 
-		String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
 		LinearLayout ll = getView().findViewById(R.id.widget_resource_object);
-		String fileUrl = course.getLocation() + activity.getLocation(lang);
+		String fileUrl = course.getLocation() + activity.getLocation(prefLang);
 
 		// show description if any
-		String desc = activity.getDescription(lang);
+		String desc = activity.getDescription(prefLang);
 		TextView descTV = getView().findViewById(R.id.widget_resource_description);
 		if ((desc != null) && desc.length() > 0){
 			descTV.setText(desc);
@@ -204,9 +202,7 @@ public class ResourceWidget extends WidgetFactory {
 				data.put("resource", "viewed");
 				data.put("resourcefile", getResourceFileName());
 				data.put("timetaken", timeTaken);
-				String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault()
-						.getLanguage());
-				data.put("lang", lang);
+				data.put("lang", prefLang);
 			} catch (JSONException e) {
 				Mint.logException(e);
 				Log.d(TAG, "JSONException", e);
