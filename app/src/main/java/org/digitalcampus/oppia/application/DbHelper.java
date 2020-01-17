@@ -979,6 +979,68 @@ public class DbHelper extends SQLiteOpenHelper {
 	}
 
 
+	public List<QuizAttempt> getGlobalQuizAttempts(long userId, String prefLang){
+
+		// find if attempted
+		String s1 = QUIZATTEMPTS_C_USERID + "=?";
+		String order = QUIZATTEMPTS_C_DATETIME + " DESC";
+		String[] args1 = new String[] { String.valueOf(userId) };
+		Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, order);
+
+		ArrayList<QuizAttempt> attempts = new ArrayList<>();
+		long startTime = System.currentTimeMillis();
+		Map<Long, Course> fetchedCourses = new HashMap<>();
+		Map<Long, CompleteCourse> fetchedXMLCourses = new HashMap<>();
+
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			QuizAttempt qa = new QuizAttempt();
+			qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
+			qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
+			qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
+			qa.setDateTime(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
+			qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
+			qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
+			qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
+			qa.setPassed(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0);
+
+			long courseId = qa.getCourseId();
+			Course course = fetchedCourses.get(courseId);
+			if (course == null){
+				course = this.getCourse(courseId, userId);
+				fetchedCourses.put(courseId, course);
+			}
+			qa.setCourseTitle(course.getTitle(prefLang));
+
+			Activity activity = this.getActivityByDigest(qa.getActivityDigest());
+			qa.setQuizTitle(activity.getTitle(prefLang));
+
+			int sectionOrderId = activity.getSectionId();
+			CompleteCourse parsed = fetchedXMLCourses.get(courseId);
+			if (parsed == null){
+				try {
+					CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
+					cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+					parsed = cxr.getParsedCourse();
+					fetchedXMLCourses.put(courseId, parsed);
+					qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
+				} catch (InvalidXMLException ixmle) {
+					Log.d(TAG,"Invalid course xml file", ixmle);
+					Mint.logException(ixmle);
+				}
+			}
+			else{
+				qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
+			}
+
+			attempts.add(qa);
+			c.moveToNext();
+		}
+		c.close();
+
+		return attempts;
+	}
+
 	public List<QuizAttempt> getQuizAttempts(String digest, long userId){
 
 		// find if attempted

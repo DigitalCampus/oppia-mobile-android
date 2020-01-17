@@ -12,6 +12,7 @@ import org.digitalcampus.oppia.fragments.ActivitiesFragment;
 import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.fragments.BadgesFragment;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
+import org.digitalcampus.oppia.fragments.GlobalQuizAttemptsFragment;
 import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.model.User;
@@ -37,6 +38,7 @@ public interface AppComponent {
     void inject(BadgesFragment fragment);
     void inject(CoursesListFragment fragment);
     void inject(AppFragment fragment);
+    void inject(GlobalQuizAttemptsFragment fragment);
 
     void inject(AdminSecurityManager adminSecurityManager);
 

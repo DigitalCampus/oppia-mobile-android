@@ -45,6 +45,10 @@ public class QuizAttempt {
     private int points;
     private int timetaken;
 
+    private String courseTitle;
+    private String quizTitle;
+    private String sectionTitle;
+
 	public DateTime getDatetime() {
 		return datetime;
 	}
@@ -183,5 +187,29 @@ public class QuizAttempt {
 		return String.format("%d min %ds",
 				TimeUnit.MILLISECONDS.toSeconds(timetaken)/60,
 				TimeUnit.MILLISECONDS.toSeconds(timetaken) % 60 );
+	}
+
+	public String getCourseTitle() {
+		return courseTitle;
+	}
+
+	public void setCourseTitle(String courseTitle) {
+		this.courseTitle = courseTitle;
+	}
+
+	public String getQuizTitle() {
+		return quizTitle;
+	}
+
+	public void setQuizTitle(String quizTitle) {
+		this.quizTitle = quizTitle;
+	}
+
+	public String getSectionTitle() {
+		return sectionTitle;
+	}
+
+	public void setSectionTitle(String sectionTitle) {
+		this.sectionTitle = sectionTitle;
 	}
 }
