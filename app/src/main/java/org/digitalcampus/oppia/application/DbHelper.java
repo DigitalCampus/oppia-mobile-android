@@ -1004,17 +1004,26 @@ public class DbHelper extends SQLiteOpenHelper {
 			qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
 			qa.setPassed(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_PASSED)) != 0);
 
+			attempts.add(qa);
+			c.moveToNext();
+
 			long courseId = qa.getCourseId();
 			Course course = fetchedCourses.get(courseId);
 			if (course == null){
 				course = this.getCourse(courseId, userId);
 				fetchedCourses.put(courseId, course);
 			}
+			if (course == null){
+				continue;
+			}
 			qa.setCourseTitle(course.getTitle(prefLang));
 
-			Activity activity = this.getActivityByDigest(qa.getActivityDigest());
+			String digest = qa.getActivityDigest();
+			Activity activity = this.getActivityByDigest(digest);
+			if (activity == null){
+				continue;
+			}
 			qa.setQuizTitle(activity.getTitle(prefLang));
-
 			int sectionOrderId = activity.getSectionId();
 			CompleteCourse parsed = fetchedXMLCourses.get(courseId);
 			if (parsed == null){
@@ -1033,8 +1042,6 @@ public class DbHelper extends SQLiteOpenHelper {
 				qa.setSectionTitle(parsed.getSection(sectionOrderId).getTitle(prefLang));
 			}
 
-			attempts.add(qa);
-			c.moveToNext();
 		}
 		c.close();
 

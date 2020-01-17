@@ -377,6 +377,8 @@
     <string name="quiz_attempts.empty_state">You have not attempted\nthis quiz yet.</string>
     <string name="quiz_attempts.retake_quiz">Retake this quiz</string>
     <string name="quiz_attempts.take_quiz">Take this quiz</string>
+    <string name="quiz_attempts.unkwnown_course">Unkwnown/removed course</string>
+    <string name="quiz_attempts.unkwnown_quiz">Unkwnown/removed quiz</string>
     <string name="quiz_attempts.global_empty_state">You have not attempted\nany quiz yet.</string>
 
     <!-- Strings for point events -->

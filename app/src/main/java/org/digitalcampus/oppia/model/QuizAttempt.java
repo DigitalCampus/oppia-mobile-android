@@ -17,8 +17,10 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.content.Context;
 import android.text.TextUtils;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.joda.time.DateTime;
 
@@ -212,4 +214,11 @@ public class QuizAttempt {
 	public void setSectionTitle(String sectionTitle) {
 		this.sectionTitle = sectionTitle;
 	}
+
+	public String getDisplayTitle(Context ctx){
+	    if (sectionTitle == null || quizTitle == null){
+	        return ctx.getString(R.string.quiz_attempts_unkwnown_quiz);
+        }
+	    return sectionTitle + " > " + quizTitle;
+    }
 }
