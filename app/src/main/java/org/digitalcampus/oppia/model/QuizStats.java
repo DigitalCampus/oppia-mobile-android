@@ -19,7 +19,9 @@ package org.digitalcampus.oppia.model;
 
 import android.util.Log;
 
-public class QuizStats {
+import java.io.Serializable;
+
+public class QuizStats implements Serializable {
 
 	public static final String TAG = QuizStats.class.getSimpleName();
 	
@@ -33,6 +35,7 @@ public class QuizStats {
     private boolean attempted;
     private float maxScore = -1;
     private float userScore = -1;
+    private float averageScore = -1;
     private boolean passed;
 
     private String quizTitle;
@@ -57,6 +60,11 @@ public class QuizStats {
     public float getUserScore() { return userScore; }
     public void setUserScore(float userScore) { this.userScore = userScore; }
 
+    public float getAverageScore() { return averageScore; }
+    public void setAverageScore(float averageScore) {
+        this.averageScore = averageScore;
+    }
+
     public boolean isAttempted(){ return attempted; }
     public void setAttempted(boolean a){
         attempted = a;
@@ -68,6 +76,10 @@ public class QuizStats {
     	int percent =  Math.round(userScore * 100.0f / Math.max(1,maxScore));
     	Log.d(TAG, "percent:" + percent);
         return percent;
+    }
+
+    public int getAveragePercent(){
+        return  Math.round(averageScore * 100.0f / Math.max(1,maxScore));
     }
 
     public boolean isPassed(){

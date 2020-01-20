@@ -367,6 +367,21 @@
     <string name="bluetooth.files_pending">%1$d files pending</string>
     <string name="bluetooth_all_transfers_complete">All Bluetooth pending transfers were completed</string>
 
+
+    <!-- Strings for quiz attempts -->
+    <string name="quiz_attempts.title">Quiz attempts</string>
+    <string name="quiz_attempts.loading">Loading quiz attempts…</string>
+    <string name="quiz_attempts.number">Attempts</string>
+    <string name="quiz_attempts.best">Best</string>
+    <string name="quiz_attempts.average">Average</string>
+    <string name="quiz_attempts.empty_state">You have not attempted\nthis quiz yet.</string>
+    <string name="quiz_attempts.retake_quiz">Retake this quiz</string>
+    <string name="quiz_attempts.take_quiz">Take this quiz</string>
+    <string name="quiz_attempts.unkwnown_course">Unknown/removed course</string>
+    <string name="quiz_attempts.unkwnown_quiz">Unknown/removed quiz</string>
+    <string name="quiz_attempts.global_empty_state">You have not attempted\nany quiz yet.</string>
+    <string name="quiz_attempt.title">Quiz attempt</string>
+
     <!-- Strings for point events -->
     <string name="points_event_activity_completed">Activity completed \'%1$s - %2$s\'</string>
     <string name="points_event_media_played">Media played \'%1$s\'</string>
@@ -423,6 +438,7 @@
     <string name="register_username_exists">Username already exists</string>
     <string name="collapse_all_sections">Collapse all sections</string>
     <string name="expand_all_sections">Expand all sections</string>
+
 
 </resources>
 

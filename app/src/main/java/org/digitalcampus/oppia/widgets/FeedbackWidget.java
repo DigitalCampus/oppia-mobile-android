@@ -100,14 +100,12 @@ public class FeedbackWidget extends WidgetFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
 		View vv = inflater.inflate(R.layout.widget_quiz, container, false);
 		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
-		feedbackContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefs.getString(
-				PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+		feedbackContent = ((Activity) getArguments().getSerializable(Activity.TAG)).getContents(prefLang);
 
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		vv.setLayoutParams(lp);
@@ -144,7 +142,7 @@ public class FeedbackWidget extends WidgetFactory {
     private void loadFeedback(){
         if (this.feedback == null) {
             this.feedback = new Quiz();
-            this.feedback.load(feedbackContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            this.feedback.load(feedbackContent, prefLang);
         }
         if (this.isOnResultsPage) {
             this.showResults();
@@ -165,7 +163,7 @@ public class FeedbackWidget extends WidgetFactory {
 		}
 		qText.setVisibility(View.VISIBLE);
 		// convert in case has any html special chars
-		qText.setText(Html.fromHtml(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()))));
+		qText.setText(Html.fromHtml(q.getTitle(prefLang)));
 
 		if (q.getProp("image") == null) {
 			questionImage.setVisibility(View.GONE);
@@ -328,7 +326,7 @@ public class FeedbackWidget extends WidgetFactory {
 		// Get the current question text
 		String toRead = "";
 		try {
-			toRead = feedback.getCurrentQuestion().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+			toRead = feedback.getCurrentQuestion().getTitle(prefLang);
 		} catch (InvalidQuizException e) {
             Mint.logException(e);
             Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
