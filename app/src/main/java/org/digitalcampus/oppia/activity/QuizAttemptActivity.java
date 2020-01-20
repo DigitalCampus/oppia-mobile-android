@@ -21,7 +21,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.splunk.mint.Mint;
@@ -37,18 +36,13 @@ import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
-import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizFeedback;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,12 +52,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class QuizAttemptActivity extends AppActivity {
-
-	private Course course;
-	private CourseMetaPage cmp;
-
-	public final static String COURSE_TITLE = "course_title";
-	public final static String QUIZ_TITLE = "quiz_title";
 
 	@Override
 	public void onStart() {
@@ -123,7 +111,6 @@ public class QuizAttemptActivity extends AppActivity {
 		}
 
 		quiz.load(act.getContents(prefLang), prefLang);
-
 		JSONObject jsonData;
 		try {
 			jsonData = new JSONObject(quizAttempt.getData());
@@ -153,13 +140,19 @@ public class QuizAttemptActivity extends AppActivity {
 
 	private void updateQuizResponse(QuizQuestion q, JSONObject data){
 		try {
-			for (int i = 0; i < data.getJSONArray("responses").length(); i++) {
-				JSONObject response = data.getJSONArray("responses").getJSONObject(i);
-				if (response.getInt("question_id") == q.getID()){
-					String r = response.getString("text");
-					ArrayList<String> responses = new ArrayList<>();
-					responses.add(r);
-					q.setUserResponses(responses);
+			JSONArray responses =  data.getJSONArray(Quiz.JSON_PROPERTY_RESPONSES);
+			for (int i = 0; i < responses.length(); i++) {
+				JSONObject response = responses.getJSONObject(i);
+				if (response.getInt(Quiz.JSON_PROPERTY_QUESTION_ID) == q.getID()){
+					String r = response.getString(Quiz.JSON_PROPERTY_TEXT);
+					List<String> userResponses = new ArrayList<>();
+					if (r.contains(Quiz.RESPONSE_SEPARATOR)){
+						userResponses = Arrays.asList(r.split(Quiz.RESPONSE_SEPARATOR));
+					}
+					else{
+						userResponses.add(r);
+					}
+					q.setUserResponses(userResponses);
 				}
 			}
 

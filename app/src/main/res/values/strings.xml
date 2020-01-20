@@ -380,6 +380,7 @@
     <string name="quiz_attempts.unkwnown_course">Unknown/removed course</string>
     <string name="quiz_attempts.unkwnown_quiz">Unknown/removed quiz</string>
     <string name="quiz_attempts.global_empty_state">You have not attempted\nany quiz yet.</string>
+    <string name="quiz_attempt.title">Quiz attempt</string>
 
     <!-- Strings for point events -->
     <string name="points_event_activity_completed">Activity completed \'%1$s - %2$s\'</string>

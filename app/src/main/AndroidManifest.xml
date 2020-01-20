@@ -95,7 +95,7 @@
             android:theme="@style/Oppia.ToolbarTheme" />
         <activity
             android:name="org.digitalcampus.oppia.activity.QuizAttemptActivity"
-            android:label="@string/quiz_attempts.title"
+            android:label="@string/quiz_attempt.title"
             android:theme="@style/Oppia.ToolbarTheme" />
         <activity
             android:name="org.digitalcampus.oppia.activity.SearchActivity"
