@@ -31,7 +31,6 @@ sonarqube {
 
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
-//apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: "org.sonarqube"
 
 repositories {
@@ -44,8 +43,8 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        versionCode 73
-        versionName "7.0.3"
+        versionCode 74
+        versionName "7.0.4"
 
         applicationId "org.lastmilehealth.oppiamobile"
         minSdkVersion 14

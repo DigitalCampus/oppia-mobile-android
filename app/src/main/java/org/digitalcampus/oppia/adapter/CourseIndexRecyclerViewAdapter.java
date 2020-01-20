@@ -114,7 +114,7 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
     @Override
     public void onBindHeaderViewHolder(HeaderViewHolder holder) {
         holder.title.setText(courseTitle);
-        Picasso.get().load(new File(courseIcon)).into(holder.courseImage);
+        Picasso.get().load(new File(courseIcon)).error(R.drawable.default_course).into(holder.courseImage);
     }
 
     @Override

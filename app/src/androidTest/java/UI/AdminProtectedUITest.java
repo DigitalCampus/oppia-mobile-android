@@ -21,6 +21,7 @@ import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
+import org.digitalcampus.oppia.model.User;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
@@ -99,6 +100,8 @@ public class AdminProtectedUITest {
     SharedPreferences prefs;
     @Mock
     SharedPreferences.Editor editor;
+    @Mock
+    User user;
 
 
     // --- INITIALIZATIONS ---
@@ -119,6 +122,7 @@ public class AdminProtectedUITest {
     public void setUp() throws Exception {
         initMockEditor();
         when(prefs.edit()).thenReturn(editor);
+        when(user.getPoints()).thenReturn(0);
 
         switch (adminProtectionOption) {
 
@@ -197,7 +201,7 @@ public class AdminProtectedUITest {
 
     // --- TESTS ---
 
-    /*
+
     @Test
     public void checkAdminProtectionToEnterSettingsScreen() throws Exception {
 
@@ -221,7 +225,7 @@ public class AdminProtectedUITest {
         }
 
     }
-    */
+
     @Test
     public void checkAdminProtectionOnPrefsCheckboxAdminProtectionClick() throws Exception {
 
@@ -307,7 +311,7 @@ public class AdminProtectedUITest {
     }
 
 
-    /*
+
     @Test
     public void checkAdminProtectionOnManageCoursesClick() throws Exception {
         givenThereAreSomeCourses(0);
@@ -330,9 +334,9 @@ public class AdminProtectedUITest {
                 break;
         }
     }
-    */
 
-    /*
+
+
     @Test
     public void checkAdminProtectionOnCourseOptionsClick() throws Exception {
 
@@ -378,8 +382,6 @@ public class AdminProtectedUITest {
 
     }
 
-     */
-
     private void clickOptionInCourseContextMenu(int optionId) {
 
         Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
@@ -392,7 +394,7 @@ public class AdminProtectedUITest {
     }
 
 
-    /*
+
     @Test
     public void checkAdminProtectionOnGlobalScorecardManageCoursesClick() throws Exception {
         givenThereAreSomeCourses(0);
@@ -417,6 +419,6 @@ public class AdminProtectedUITest {
                 break;
         }
     }
-    */
+
 
 }

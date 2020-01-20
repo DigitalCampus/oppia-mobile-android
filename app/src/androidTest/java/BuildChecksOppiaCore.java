@@ -23,48 +23,49 @@ public class BuildChecksOppiaCore {
 
         assertEquals(oppiaServerDefault, "https://demo.oppia-mobile.org/");
         assertEquals(oppiaServerHost, "demo.oppia-mobile.org");
-
-        assertEquals(BuildConfig.ADMIN_PROTECT_SETTINGS, false);
-        assertEquals(BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC, false);
-        assertEquals(BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT, false);
-        assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_DELETE, false);
-        assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_RESET, false);
-        assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_INSTALL, false);
-        assertEquals(BuildConfig.ADMIN_PROTECT_COURSE_UPDATE, false);
-
-
-        assertEquals(BuildConfig.MENU_ALLOW_MONITOR, true);
-        assertEquals(BuildConfig.MENU_ALLOW_SETTINGS, true);
-        assertEquals(BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD, true);
-        assertEquals(BuildConfig.MENU_ALLOW_SYNC, true);
-        assertEquals(BuildConfig.MENU_ALLOW_LOGOUT, true);
-        assertEquals(BuildConfig.MENU_ALLOW_LANGUAGE, true);
-        assertEquals(BuildConfig.DOWNLOAD_COURSES_DISPLAY, 1);
-
-        assertEquals(BuildConfig.START_COURSEINDEX_COLLAPSED, false);
-
-        assertEquals(BuildConfig.METADATA_INCLUDE_NETWORK, true);
-        assertEquals(BuildConfig.METADATA_INCLUDE_DEVICE_ID, true);
-        assertEquals(BuildConfig.METADATA_INCLUDE_SIM_SERIAL, true);
-        assertEquals(BuildConfig.METADATA_INCLUDE_WIFI_ON, true);
-        assertEquals(BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED, true);
-        assertEquals(BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL, true);
-        assertEquals(BuildConfig.METADATA_INCLUDE_GPS, true);
-
-        assertEquals(BuildConfig.OFFLINE_REGISTER_ENABLED, true);
-        assertEquals(BuildConfig.SESSION_EXPIRATION_ENABLED, false);
-        assertEquals(BuildConfig.SESSION_EXPIRATION_TIMEOUT, 600);
-
-        assertEquals(BuildConfig.SHOW_COURSE_DESCRIPTION, false);
+        assertEquals(false, BuildConfig.ADMIN_PROTECT_SETTINGS);
+        assertEquals(false, BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC);
+        assertEquals(false, BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT);
+        assertEquals(false, BuildConfig.ADMIN_PROTECT_COURSE_DELETE);
+        assertEquals(false, BuildConfig.ADMIN_PROTECT_COURSE_RESET);
+        assertEquals(false, BuildConfig.ADMIN_PROTECT_COURSE_INSTALL);
+        assertEquals(false, BuildConfig.ADMIN_PROTECT_COURSE_UPDATE);
+        assertEquals("", BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD);
+        assertEquals(68, BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION);
 
 
-        assertEquals(BuildConfig.GAMIFICATION_MEDIA_CRITERIA, "threshold");
+        assertEquals(true, BuildConfig.MENU_ALLOW_MONITOR);
+        assertEquals(true, BuildConfig.MENU_ALLOW_SETTINGS);
+        assertEquals(true, BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD);
+        assertEquals(true, BuildConfig.MENU_ALLOW_SYNC);
+        assertEquals(true, BuildConfig.MENU_ALLOW_LOGOUT);
+        assertEquals(true, BuildConfig.MENU_ALLOW_LANGUAGE);
+        assertEquals(1, BuildConfig.DOWNLOAD_COURSES_DISPLAY);
 
-        assertEquals(BuildConfig.GAMIFICATION_DEFAULT_MEDIA_THRESHOLD, 80);
+        assertEquals(false, BuildConfig.START_COURSEINDEX_COLLAPSED);
+
+        assertEquals(true, BuildConfig.METADATA_INCLUDE_NETWORK);
+        assertEquals(true, BuildConfig.METADATA_INCLUDE_DEVICE_ID);
+        assertEquals(true, BuildConfig.METADATA_INCLUDE_SIM_SERIAL);
+        assertEquals(true, BuildConfig.METADATA_INCLUDE_WIFI_ON);
+        assertEquals(true, BuildConfig.METADATA_INCLUDE_NETWORK_CONNECTED);
+        assertEquals(true, BuildConfig.METADATA_INCLUDE_BATTERY_LEVEL);
+        assertEquals(true, BuildConfig.METADATA_INCLUDE_GPS);
+
+        assertEquals(true, BuildConfig.OFFLINE_REGISTER_ENABLED);
+        assertEquals(false, BuildConfig.SESSION_EXPIRATION_ENABLED);
+        assertEquals(600, BuildConfig.SESSION_EXPIRATION_TIMEOUT);
+
+        assertEquals(false, BuildConfig.SHOW_COURSE_DESCRIPTION);
 
 
-        assertEquals(BuildConfig.GAMIFICATION_POINTS_ANIMATION, "3");
-        assertEquals(BuildConfig.DURATION_GAMIFICATION_POINTS_VIEW, 2);
+        assertEquals("threshold", BuildConfig.GAMIFICATION_MEDIA_CRITERIA);
+
+        assertEquals(80, BuildConfig.GAMIFICATION_DEFAULT_MEDIA_THRESHOLD);
+
+
+        assertEquals("3", BuildConfig.GAMIFICATION_POINTS_ANIMATION);
+        assertEquals(2, BuildConfig.DURATION_GAMIFICATION_POINTS_VIEW);
 
 
     }

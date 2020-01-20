@@ -35,6 +35,9 @@ public class QuizStats {
     private float userScore = -1;
     private boolean passed;
 
+    private String quizTitle;
+    private String sectionTitle;
+
     public QuizStats(int quizId){ this.quizId = quizId; }
     public QuizStats(){ }
 
@@ -75,5 +78,19 @@ public class QuizStats {
     public int getNumAttempts() { return numAttempts; }
     public void setNumAttempts(int numAttempts) { this.numAttempts = numAttempts; }
 
+    public String getQuizTitle() {
+        return quizTitle;
+    }
 
+    public void setQuizTitle(String quizTitle) {
+        this.quizTitle = quizTitle;
+    }
+
+    public String getSectionTitle() {
+        return sectionTitle;
+    }
+
+    public void setSectionTitle(String sectionTitle) {
+        this.sectionTitle = sectionTitle;
+    }
 }

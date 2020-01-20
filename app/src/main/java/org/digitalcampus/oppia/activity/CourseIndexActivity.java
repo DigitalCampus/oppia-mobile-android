@@ -213,7 +213,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Intent i = null;
+        Intent i;
         Bundle tb = new Bundle();
 
         switch (item.getItemId()) {
@@ -246,10 +246,9 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 break;
         }
 
-        if (i != null) {
-            i.putExtras(tb);
-            startActivityForResult(i, 1);
-        }
+        i.putExtras(tb);
+        startActivityForResult(i, 1);
+
 
         return super.onOptionsItemSelected(item);
 
@@ -257,7 +256,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     private void createLanguageDialog() {
         UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 CourseIndexActivity.this.initialize(false);
                 return true;
             }
@@ -419,6 +418,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_JUMPTO) {
             String digest = data.getStringExtra(JUMPTO_TAG);
             startCourseActivityByDigest(digest);
