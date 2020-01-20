@@ -231,7 +231,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         super.onDestroy();
 
         if (fetchServerInfoTask != null && !fetchServerInfoTask.isCancelled()) {
-            fetchServerInfoTask.cancel(true);
+            fetchServerInfoTask.setListener(null);
         }
     }
 
