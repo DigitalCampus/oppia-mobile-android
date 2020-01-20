@@ -21,7 +21,6 @@ import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.view.Menu;
@@ -137,7 +136,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
         sendTrackers();
 
         // remove any saved state info from shared prefs in case they interfere with subsequent page views
-        Editor editor = prefs.edit();
+        SharedPreferences.Editor editor = prefs.edit();
         Map<String, ?> keys = prefs.getAll();
 
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
@@ -402,6 +401,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     //@Override
     public void onParseComplete(CompleteCourse parsed) {
+        loadingCourseView.setVisibility(View.GONE);
         parsedCourse = parsed;
         course.setMetaPages(parsedCourse.getMetaPages());
         course.setMedia(parsedCourse.getMedia());
@@ -417,6 +417,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
 
     //@Override
     public void onParseError() {
+        loadingCourseView.setVisibility(View.GONE);
         showErrorMessage();
     }
 
