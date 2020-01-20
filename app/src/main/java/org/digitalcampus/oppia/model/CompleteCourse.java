@@ -59,6 +59,15 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
         return null;
     }
 
+    public Activity getActivityByDigest(String digest){
+        for (Section section : sections){
+            for (Activity act : section.getActivities())
+                if (act.getDigest().equals(digest))
+                    return act;
+        }
+        return null;
+    }
+
     public Section getSectionByActivityDigest(String digest){
         for (Section section : sections){
             for (Activity act : section.getActivities())

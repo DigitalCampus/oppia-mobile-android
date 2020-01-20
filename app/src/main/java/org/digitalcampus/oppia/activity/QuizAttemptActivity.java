@@ -27,21 +27,30 @@ import android.widget.TextView;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Description;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.exception.InvalidXMLException;
+import org.digitalcampus.oppia.model.Activity;
+import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseMetaPage;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizFeedback;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -94,23 +103,69 @@ public class QuizAttemptActivity extends AppActivity {
 
 		RecyclerView recyclerQuestionFeedbackLV = findViewById(R.id.recycler_quiz_results_feedback);
 		recyclerQuestionFeedbackLV.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-		ArrayList<QuizFeedback> quizFeedback = new ArrayList<>();
-		List<QuizQuestion> questions = this.quiz.getQuestions();
+		Quiz quiz = new Quiz();
+		Activity act = DbHelper.getInstance(this).getActivityByDigest(quizAttempt.getActivityDigest());
+
+		CompleteCourse parsed;
+		try {
+			CourseXMLReader cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), this);
+			cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
+			parsed = cxr.getParsedCourse();
+			act = parsed.getActivityByDigest(quizAttempt.getActivityDigest());
+
+		} catch (InvalidXMLException ixmle) {
+			Log.d(TAG,"Invalid course xml file", ixmle);
+			Mint.logException(ixmle);
+		}
+
+		if (quizAttempt.getData() == null){
+			return;
+		}
+
+		quiz.load(act.getContents(prefLang), prefLang);
+
+		JSONObject jsonData;
+		try {
+			jsonData = new JSONObject(quizAttempt.getData());
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return;
+		}
+		List<QuizFeedback> quizFeedback = new ArrayList<>();
+		List<QuizQuestion> questions = quiz.getQuestions();
 		for(QuizQuestion q: questions){
 			if(!(q instanceof Description)){
+				updateQuizResponse(q, jsonData);
+				q.mark(prefLang);
 				QuizFeedback qf = new QuizFeedback();
 				qf.setScore(q.getScoreAsPercent());
-				qf.setQuestionText(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+				qf.setQuestionText(q.getTitle(prefLang));
 				qf.setUserResponse(q.getUserResponses());
-				String feedbackText = q.getFeedback(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-				qf.setFeedbackText(feedbackText);
+				qf.setFeedbackText(q.getFeedback(prefLang));
 				quizFeedback.add(qf);
 			}
 		}
 
-		QuizFeedbackAdapter adapterQuizFeedback = new QuizFeedbackAdapter(getActivity(), quizFeedback);
+		QuizFeedbackAdapter adapterQuizFeedback = new QuizFeedbackAdapter(this, quizFeedback);
 		recyclerQuestionFeedbackLV.setAdapter(adapterQuizFeedback);
 	    
+	}
+
+	private void updateQuizResponse(QuizQuestion q, JSONObject data){
+		try {
+			for (int i = 0; i < data.getJSONArray("responses").length(); i++) {
+				JSONObject response = data.getJSONArray("responses").getJSONObject(i);
+				if (response.getInt("question_id") == q.getID()){
+					String r = response.getString("text");
+					ArrayList<String> responses = new ArrayList<>();
+					responses.add(r);
+					q.setUserResponses(responses);
+				}
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
