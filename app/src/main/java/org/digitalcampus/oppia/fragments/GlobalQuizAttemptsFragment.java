@@ -1,11 +1,15 @@
 package org.digitalcampus.oppia.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
+import org.digitalcampus.oppia.activity.QuizAttemptActivity;
+import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
 import org.digitalcampus.oppia.adapter.GlobalQuizAttemptsAdapter;
 import org.digitalcampus.oppia.adapter.QuizAttemptAdapter;
 import org.digitalcampus.oppia.adapter.ScorecardsGridAdapter;
@@ -40,6 +44,17 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
         GlobalQuizAttemptsAdapter adapter = new GlobalQuizAttemptsAdapter(this.getContext(), attempts);
         RecyclerView attemptsList = layout.findViewById(R.id.attempts_list);
         attemptsList.setAdapter(adapter);
+        adapter.setOnItemClickListener(new CourseQuizzesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent i = new Intent(getActivity(), QuizAttemptActivity.class);
+                Bundle tb = new Bundle();
+                QuizAttempt attempt = attempts.get(position);
+                tb.putSerializable(QuizAttempt.TAG, attempt);
+                i.putExtras(tb);
+                startActivity(i);
+            }
+        });
 
         layout.findViewById(R.id.empty_state).setVisibility(attempts.isEmpty() ? View.VISIBLE : View.GONE);
 
