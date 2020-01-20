@@ -239,6 +239,10 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
                 adapter.expandCollapseAllSections(false);
                 return true;
 
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
             default:
                 i = new Intent(this, CourseMetaPageActivity.class);
                 tb.putSerializable(Course.TAG, course);
@@ -420,7 +424,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_JUMPTO) {
-            String digest = data.getStringExtra(JUMPTO_TAG);
+            String digest = data.getStringExtra( JUMPTO_TAG);
             startCourseActivityByDigest(digest);
         }
     }

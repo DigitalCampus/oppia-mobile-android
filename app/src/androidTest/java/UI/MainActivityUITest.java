@@ -33,14 +33,11 @@ import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Badges;
-import org.digitalcampus.oppia.model.CompleteCourse;
-import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.ParseCourseXMLTask;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -48,9 +45,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 
@@ -110,8 +104,8 @@ public class MainActivityUITest {
 
     @Mock
     CoursesRepository coursesRepository;
-    @Mock
-    CompleteCourseProvider completeCourseProvider;
+    //    @Mock
+//    CompleteCourseProvider completeCourseProvider;
     @Mock
     SharedPreferences prefs;
     @Mock
@@ -189,30 +183,30 @@ public class MainActivityUITest {
     @Test
     public void showsCourseIndexOnCourseClick() throws Exception {
 
-        final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
-        Mockito.doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Context ctx = (Context) invocation.getArguments()[0];
-                ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
 
-                givenThereAreSomeCourses(1);
+//        final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
+//        Mockito.doAnswer(new Answer<Void>() {
+//            @Override
+//            public Void answer(InvocationOnMock invocation) throws Throwable {
+//                Context ctx = (Context) invocation.getArguments()[0];
+//                ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
+//
+//                return null;
+//
+//            }
+//        }).when(completeCourseProvider).getCompleteCourseAsync(any(Context.class), any(Course.class));
 
-                mainActivityTestRule.launchActivity(null);
+        givenThereAreSomeCourses(1);
 
-                Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                        .inRoot(RootMatchers.withDecorView(
-                                Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                        .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        mainActivityTestRule.launchActivity(null);
 
-                checkCorrectActivity(CourseIndexActivity.class);
-
-                return null;
-
-            }
-        }).when(completeCourseProvider).getCompleteCourseAsync((Context) any(), (Course) any());
+        Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
 
+        checkCorrectActivity(CourseIndexActivity.class);
     }
 
     @Test
@@ -696,5 +690,36 @@ public class MainActivityUITest {
 
     }
 
+    @Test
+    public void returnsToMainScreenWhenBackArrowButtonInCourseIndexScreenIsClicked() throws Exception {
+
+//        final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
+//        Mockito.doAnswer(new Answer() {
+//            @Override
+//            public Object answer(InvocationOnMock invocation) throws Throwable {
+//                Context ctx = (Context) invocation.getArguments()[0];
+//                ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
+//
+//                givenThereAreSomeCourses(1);
+//
+//                mainActivityTestRule.launchActivity(null);
+//
+//                Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
+//                        .inRoot(RootMatchers.withDecorView(
+//                                Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+//                        .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+//
+//                checkCorrectActivity(CourseIndexActivity.class);
+//
+//                onView(withId(android.R.id.home)).perform(click());
+//
+//                checkCorrectActivity(MainActivity.class);
+//
+//                return null;
+//
+//            }
+//        }).when(completeCourseProvider).getCompleteCourseAsync((Context) any(), (Course) any());
+
+    }
 
 }
