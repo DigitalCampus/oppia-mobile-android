@@ -19,12 +19,12 @@
         app:tabTextAppearance="@style/TabLayoutAppearance">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_last_week"
+            android:id="@+id/tab_activitylog"
             style="@style/TabText"
             android:text="@string/last_week" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_last_month"
+            android:id="@+id/tab_course"
             style="@style/TabText"
             android:text="@string/last_month" />
 
