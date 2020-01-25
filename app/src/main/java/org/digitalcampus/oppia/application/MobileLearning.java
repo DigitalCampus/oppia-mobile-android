@@ -158,7 +158,6 @@ public class MobileLearning extends Application {
     public void onCreate() {
         super.onCreate();
 
-
         // this method fires once at application start
         Log.d(TAG, "Application start");
 

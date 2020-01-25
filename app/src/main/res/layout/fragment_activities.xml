@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs_filter"
+        android:id="@+id/tabs_filter_points"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:orientation="horizontal"
@@ -20,12 +20,12 @@
         app:tabIndicatorHeight="0dp">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_activitylog"
+            android:id="@+id/tab_last_week"
             style="@style/TabText"
             android:text="@string/last_week"/>
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_course"
+            android:id="@+id/tab_last_month"
             style="@style/TabText"
             android:text="@string/last_month"/>
 

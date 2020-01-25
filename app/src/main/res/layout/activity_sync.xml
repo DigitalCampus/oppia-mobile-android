@@ -33,30 +33,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/transfer_pending_size"
-                android:layout_alignLeft="@id/message_action_button"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/padding_medium"
-                android:layout_marginRight="@dimen/padding_medium"
+                android:layout_marginRight="@dimen/padding_large"
                 android:layout_toStartOf="@+id/bluetooth_btn"
-                android:layout_toLeftOf="@+id/bluetooth_btn"
+                android:layout_toRightOf="@id/status_subtitle"
                 android:gravity="end"
                 android:theme="@style/SubheaderText"
-                android:visibility="visible" />
+                android:visibility="gone"
+                tools:text="2 files pending" />
 
             <TextView
                 android:id="@+id/transfer_pending_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/message_action_button"
+                android:layout_alignRight="@id/transfer_pending_files"
                 android:layout_alignBottom="@+id/status_subtitle"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/padding_medium"
-                android:layout_marginRight="@dimen/padding_medium"
                 android:layout_toStartOf="@+id/bluetooth_btn"
-                android:layout_toLeftOf="@+id/bluetooth_btn"
+                android:layout_toLeftOf="@id/send_all_button"
                 android:gravity="end"
-                android:visibility="visible" />
+                android:visibility="gone"
+                tools:text="2.4 MB" />
 
             <Button
-                android:id="@+id/message_action_button"
+                android:id="@+id/send_all_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -91,37 +94,13 @@
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/home_messages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/subtitle_bar"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:visibility="gone"
-            android:weightSum="1.0">
-
-            <TextView
-                android:id="@+id/home_message"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.65"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:text="@string/activity_not_transferred_message"
-                android:textColor="@color/text_dark"
-                android:textSize="14sp"/>
-
-        </LinearLayout>
-
-        <FrameLayout
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="org.digitalcampus.oppia.fragments.TransferFragment">
 
             <LinearLayout
+                android:id="@+id/connected_panel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -133,7 +112,6 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:layout_marginRight="10dp"
-                    android:visibility="gone"
                     app:tabBackground="@drawable/bg_tab_text"
                     app:tabGravity="center"
                     app:tabIndicatorHeight="0dp"
@@ -156,7 +134,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="vertical"
-                    android:visibility="gone" />
+                    tools:itemCount="4"
+                    tools:listitem="@layout/course_transfer_row" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/activitylogs_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/course_transfer_row" />
+
             </LinearLayout>
 
             <RelativeLayout

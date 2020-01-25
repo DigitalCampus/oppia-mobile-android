@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/course_row"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/course_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_medium">
@@ -19,7 +20,7 @@
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:contentDescription="@string/bluetooth.transferable_type"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -30,27 +31,34 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/course_title"
+            android:id="@+id/file_title"
             style="@style/NormalTextBoldDark"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            tools:text="alexlittle" />
 
         <TextView
-            android:id="@+id/course_description"
+            android:id="@+id/file_subtitle"
             style="@style/MediumTextDarkItalic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/file_title"
             android:layout_gravity="center_vertical"
-            android:visibility="gone"/>
+            android:visibility="visible"
+            tools:text="73 KB" />
 
         <TextView
-            android:id="@+id/course_filesize"
+            android:id="@+id/file_aside"
             style="@style/SubheaderText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-    </LinearLayout>
+            android:layout_alignBaseline="@id/file_title"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/padding_medium"
+            android:layout_toRightOf="@id/file_title"
+            tools:text="73 KB" />
+    </RelativeLayout>
 
     <ImageButton
         android:id="@+id/download_course_btn"
