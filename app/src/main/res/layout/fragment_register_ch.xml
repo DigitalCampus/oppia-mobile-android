@@ -1,0 +1,170 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_medium"
+    tools:context="org.digitalcampus.oppia.fragments.register.RegisterCHFragment">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/view_register_ch_page_controls">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_explanation_reg_screen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="Explanation Register CH screen 1" />
+
+            <LinearLayout
+                android:id="@+id/view_reg_ch_screen_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                    android:id="@+id/edit_reg_ch_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:required="true">
+
+                    <EditText
+                        style="@style/EditValidableForm"
+                        android:hint="@string/first_name"
+                        android:inputType="textCapWords" />
+
+                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+
+                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                    android:id="@+id/edit_reg_ch_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:required="true">
+
+                    <EditText
+                        style="@style/EditValidableForm"
+                        android:hint="@string/last_name"
+                        android:inputType="textCapWords" />
+
+                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+
+                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                    android:id="@+id/edit_reg_ch_employee_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cantContainSpaces="true"
+                    app:required="true">
+
+                    <EditText
+                        style="@style/EditValidableForm"
+                        android:hint="@string/employee_id"
+                        android:inputType="text" />
+
+                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/view_reg_ch_screen_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                    android:id="@+id/edit_reg_ch_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:required="true">
+
+                    <EditText
+                        style="@style/EditValidableForm"
+                        android:hint="@string/register_form_password_title"
+                        android:inputType="textPassword" />
+
+                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+
+                <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
+                    android:id="@+id/edit_reg_ch_password_again"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:required="true">
+
+                    <EditText
+                        style="@style/EditValidableForm"
+                        android:hint="@string/register_form_password_again_title"
+                        android:inputType="textPassword" />
+
+                </org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/view_reg_ch_screen_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/selector_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/countries"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/selector_district"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:entries="@array/districts"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/view_register_ch_page_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_register_ch_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/tv_register_page_indicator"
+            android:text="@string/previous" />
+
+        <TextView
+            android:id="@+id/tv_register_page_indicator"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="1/3"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_register_ch_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/tv_register_page_indicator"
+            android:text="@string/next" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

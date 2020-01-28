@@ -31,7 +31,7 @@ import com.google.android.material.tabs.TabLayout;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
 import org.digitalcampus.oppia.fragments.LoginFragment;
-import org.digitalcampus.oppia.fragments.RegisterFragment;
+import org.digitalcampus.oppia.fragments.register.RegisterMainFragment;
 import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.fragments.WelcomeFragment;
 import org.digitalcampus.oppia.model.Lang;
@@ -49,7 +49,8 @@ public class WelcomeActivity extends AppActivity {
     private ViewPager viewPager;
     private TabLayout tabs;
     private int currentTab = TAB_WELCOME;
-	
+	private RegisterMainFragment fRegister;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,7 +83,7 @@ public class WelcomeActivity extends AppActivity {
 		fragments.add(fLogin);
         tabTitles.add(this.getString(R.string.tab_title_login));
 
-		Fragment fRegister = RegisterFragment.newInstance();
+		fRegister = RegisterMainFragment.newInstance();
 		fragments.add(fRegister);
         tabTitles.add(this.getString(R.string.tab_title_register));
 
@@ -97,7 +98,7 @@ public class WelcomeActivity extends AppActivity {
         //tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
 		viewPager.setCurrentItem(currentTab);
-        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 	}
 	
 	@Override
@@ -135,12 +136,21 @@ public class WelcomeActivity extends AppActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (currentTab == TAB_WELCOME){
-			super.onBackPressed();
+
+		switch (currentTab) {
+			case TAB_WELCOME:
+				super.onBackPressed();
+				return;
+
+			case TAB_REGISTER:
+				if (fRegister.goBack()) {
+					return;
+				}
+				break;
 		}
-		else{
-			switchTab(TAB_WELCOME);
-		}
+
+		switchTab(TAB_WELCOME);
+
 	}
 }
 

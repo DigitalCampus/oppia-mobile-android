@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [
-    <!ENTITY appName "Academy">
-    <!ENTITY companyName "Last Mile Health"> ]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appName "Academy"><!ENTITY companyName "Last Mile Health"> ]>
 <resources>
     <string name="app_name">&appName;</string>
     <string name="app_logo_alt">&companyName; Logo</string>
@@ -426,6 +423,14 @@
     <string name="register_username_exists">Username already exists</string>
     <string name="collapse_all_sections">Collapse all sections</string>
     <string name="expand_all_sections">Expand all sections</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="employee_id">Employee ID</string>
 
 </resources>
 

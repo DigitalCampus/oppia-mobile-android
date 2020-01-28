@@ -15,7 +15,7 @@
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.digitalcampus.oppia.fragments;
+package org.digitalcampus.oppia.fragments.register;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,14 +25,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
@@ -49,7 +47,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 
-public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
+public class RegisterOtherFragment extends RegisterBaseFragment implements SubmitListener, RegisterTask.RegisterListener {
 
 
 	private ValidableTextInputLayout usernameField;
@@ -60,24 +58,21 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private ValidableTextInputLayout lastnameField;
 	private ValidableTextInputLayout jobTitleField;
 	private ValidableTextInputLayout organisationField;
-	private ValidableTextInputLayout phoneNoField;
 	private List<ValidableTextInputLayout> fields;
 
-	private Button registerButton;
-	private Button loginButton;
 	private ProgressDialog pDialog;
-	
-	public static RegisterFragment newInstance() {
-	    return new RegisterFragment();
+
+	public static RegisterOtherFragment newInstance() {
+	    return new RegisterOtherFragment();
 	}
 
-	public RegisterFragment(){
+	public RegisterOtherFragment(){
 		// Required empty public constructor
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = inflater.inflate(R.layout.fragment_register, container, false);
+		View vv = inflater.inflate(R.layout.fragment_register_other, container, false);
 
 		usernameField = vv.findViewById(R.id.register_form_username_field);
 		emailField = vv.findViewById(R.id.register_form_email_field);
@@ -87,9 +82,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		lastnameField = vv.findViewById(R.id.register_form_lastname_field);
 		jobTitleField = vv.findViewById(R.id.register_form_jobtitle_field);
 		organisationField = vv.findViewById(R.id.register_form_organisation_field);
-		//phoneNoField = vv.findViewById(R.id.register_form_phoneno_field);
-		registerButton = vv.findViewById(R.id.register_btn);
-		//loginButton = vv.findViewById(R.id.action_login_btn);
 
 		fields = Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
 				firstnameField, lastnameField, jobTitleField, organisationField);
@@ -100,24 +92,10 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		registerButton.setOnClickListener(new View.OnClickListener() {
-			
-			public void onClick(View v) {
-				onRegisterClick();
-			}
-		});
 
 		for (ValidableTextInputLayout field : fields){
 			field.initialize();
 		}
-
-		/*loginButton.setOnClickListener(new View.OnClickListener() {
-
-			public void onClick(View v) {
-				WelcomeActivity wa = (WelcomeActivity) RegisterFragment.super.getActivity();
-				wa.switchTab(WelcomeActivity.TAB_LOGIN);
-			}
-		});*/
 
 	}
 
@@ -147,9 +125,8 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	}
 
 
-
-	public void onRegisterClick() {
-		// get form fields
+	@Override
+	public User getUser() {
 
 		String username = usernameField.getCleanedValue();
 		String email = emailField.getCleanedValue();
@@ -176,40 +153,33 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			passwordField.setErrorEnabled(true);
 			passwordField.setError(getString(R.string.error_register_password,  MobileLearning.PASSWORD_MIN_LENGTH ));
 			passwordField.requestFocus();
-		    return;
+			return null;
 		}
-		
+
 		// check password match
 		if (!password.equals(passwordAgain)) {
-            passwordField.setErrorEnabled(true);
-            passwordField.setError(getString(R.string.error_register_password_no_match ));
+			passwordField.setErrorEnabled(true);
+			passwordField.setError(getString(R.string.error_register_password_no_match ));
 			passwordField.requestFocus();
-            return;
+			return null;
 		}
 
-		// check phone no
-		/*if (phoneNo.length() < 8) {
-            phoneNoField.setErrorEnabled(true);
-            phoneNoField.setError(getString(R.string.error_register_no_phoneno ));
-			phoneNoField.requestFocus();
-
-			return;
-		}*/
 
 		if (valid){
-            User u = new User();
-            u.setUsername(username);
-            u.setPassword(password);
-            u.setPasswordAgain(passwordAgain);
-            u.setFirstname(firstname);
-            u.setLastname(lastname);
-            u.setEmail(email);
-            u.setJobTitle(jobTitle);
-            u.setOrganisation(organisation);
-            //u.setPhoneNo(phoneNo);
-            executeRegisterTask(u);
-        }
+			User u = new User();
+			u.setUsername(username);
+			u.setPassword(password);
+			u.setPasswordAgain(passwordAgain);
+			u.setFirstname(firstname);
+			u.setLastname(lastname);
+			u.setEmail(email);
+			u.setJobTitle(jobTitle);
+			u.setOrganisation(organisation);
+			//u.setPhoneNo(phoneNo);
+			return u;
+		}
 
+		return null;
 	}
 
 	@Override
@@ -274,4 +244,6 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		rt.setRegisterListener(this);
 		rt.execute(p);
 	}
+
+
 }
