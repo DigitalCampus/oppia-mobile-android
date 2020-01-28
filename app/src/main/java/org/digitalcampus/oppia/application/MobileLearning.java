@@ -133,6 +133,8 @@ public class MobileLearning extends Application {
     public static final DateTimeFormatter DATE_FORMAT_DAY_MONTH = DateTimeFormat.forPattern("d MMM");
     public static final DateTimeFormatter TIME_FORMAT_HOURS_MINUTES = DateTimeFormat.forPattern("HH:mm");
 
+    public static final DateTimeFormatter DISPLAY_DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
+
     public static final int MAX_TRACKER_SUBMIT = 10;
     //	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v", "video/mp4", "audio/mpeg", "video/3gp", "video/3gpp"}; //NOSONAR

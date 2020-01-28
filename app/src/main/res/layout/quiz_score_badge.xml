@@ -7,7 +7,7 @@
         android:layout_gravity="center"
         android:background="@drawable/scorecard_quiz_item"
         android:gravity="center"
-        android:textSize="13sp"
+        android:textSize="15sp"
         android:layout_marginRight="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_centerVertical="true"

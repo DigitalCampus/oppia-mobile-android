@@ -102,7 +102,6 @@ public class QuizWidget extends WidgetFactory {
 	private ViewGroup container;
 	private MediaPlayer mp;
 
-
 	private boolean isOnResultsPage = false;
 	private boolean quizAttemptSaved = false;
 
@@ -128,14 +127,13 @@ public class QuizWidget extends WidgetFactory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		prefs = PreferenceManager.getDefaultSharedPreferences(super.getActivity());
+
 		View vv = inflater.inflate(R.layout.widget_quiz, container, false);
 		this.container = container;
 		course = (Course) getArguments().getSerializable(Course.TAG);
 		activity = ((Activity) getArguments().getSerializable(Activity.TAG));
 		this.setIsBaseline(getArguments().getBoolean(CourseActivity.BASELINE_TAG));
-		quizContent = activity.getContents(prefs.getString(
-				PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+		quizContent = activity.getContents(prefLang);
 
 		vv.setId(activity.getActId());
 		if ((savedInstanceState != null) && (savedInstanceState.getSerializable(WidgetFactory.WIDGET_CONFIG) != null)){
@@ -181,8 +179,7 @@ public class QuizWidget extends WidgetFactory {
     public void loadQuiz(){
         if (this.quiz == null) {
             this.quiz = new Quiz();
-            this.quiz.load(quizContent,prefs.getString(
-                    PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+            this.quiz.load(quizContent, prefLang);
         }
 
         if (this.isOnResultsPage) {
@@ -314,7 +311,7 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private String stripAudioFromText(QuizQuestion q) {
-		String questionText = q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+		String questionText = q.getTitle(prefLang);
 		Pattern p = Pattern.compile("[a-zA-Z0-9\\-_]+\\.mp3");
 		Matcher m = p.matcher(questionText);
 		if (m.find()){
@@ -375,7 +372,7 @@ public class QuizWidget extends WidgetFactory {
 				if (saveAnswer()) {
 					String feedback;
 					try {
-						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+						feedback = QuizWidget.this.quiz.getCurrentQuestion().getFeedback(prefLang);
 					
 						if (!feedback.equals("") && 
 								quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS 
@@ -484,7 +481,7 @@ public class QuizWidget extends WidgetFactory {
 		clearMediaPlayer();
 		// log the activity as complete
 		isOnResultsPage = true;
-		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+		quiz.mark(prefLang);
 
 		//Check if quiz results layout is already loaded
         View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
@@ -517,9 +514,9 @@ public class QuizWidget extends WidgetFactory {
 				if(!(q instanceof Description)){
 					QuizFeedback qf = new QuizFeedback();
 					qf.setScore(q.getScoreAsPercent());
-					qf.setQuestionText(q.getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage())));
+					qf.setQuestionText(q.getTitle(prefLang));
 					qf.setUserResponse(q.getUserResponses());
-					String feedbackText = q.getFeedback(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+					String feedbackText = q.getFeedback(prefLang);
 					qf.setFeedbackText(feedbackText);
 					quizFeedback.add(qf);
 				}
@@ -572,7 +569,7 @@ public class QuizWidget extends WidgetFactory {
 		this.setStartTime(System.currentTimeMillis() / 1000);
 		
 		this.quiz = new Quiz();
-		this.quiz.load(quizContent,prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+		this.quiz.load(quizContent, prefLang);
 		this.isOnResultsPage = false;
 		this.quizAttemptSaved = false;
 		
@@ -646,7 +643,7 @@ public class QuizWidget extends WidgetFactory {
 		// Get the current question text
 		String toRead = "";
 		try {
-			toRead = quiz.getCurrentQuestion().getTitle(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
+			toRead = quiz.getCurrentQuestion().getTitle(prefLang);
 		} catch (InvalidQuizException e) {
 			Mint.logException(e);
 			Log.d(TAG, QUIZ_EXCEPTION_MESSAGE, e);
@@ -655,9 +652,8 @@ public class QuizWidget extends WidgetFactory {
 	}
 
 	private float getPercent() {
-		quiz.mark(prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage()));
-		float percent = quiz.getUserscore() * 100 / quiz.getMaxscore();
-		return percent;
+		quiz.mark(prefLang);
+		return quiz.getUserscore() * 100 / quiz.getMaxscore();
 	}
 
 	private void clearMediaPlayer(){

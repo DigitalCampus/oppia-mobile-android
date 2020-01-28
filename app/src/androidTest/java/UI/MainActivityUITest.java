@@ -67,6 +67,7 @@ import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withChild;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -190,29 +191,28 @@ public class MainActivityUITest {
     public void showsCourseIndexOnCourseClick() throws Exception {
 
         final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
-        Mockito.doAnswer(new Answer() {
+        Mockito.doAnswer(new Answer<Void>() {
             @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
+            public Void answer(InvocationOnMock invocation) throws Throwable {
                 Context ctx = (Context) invocation.getArguments()[0];
                 ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
-
-                givenThereAreSomeCourses(1);
-
-                mainActivityTestRule.launchActivity(null);
-
-                Espresso.onView(ViewMatchers.withId(R.id.recycler_courses))
-                        .inRoot(RootMatchers.withDecorView(
-                                Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
-                        .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-
-                checkCorrectActivity(CourseIndexActivity.class);
 
                 return null;
 
             }
-        }).when(completeCourseProvider).getCompleteCourseAsync((Context) any(), (Course) any());
+        }).when(completeCourseProvider).getCompleteCourseAsync(any(Context.class), any(Course.class));
+
+        givenThereAreSomeCourses(1);
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
 
+        checkCorrectActivity(CourseIndexActivity.class);
     }
 
     @Test
@@ -696,5 +696,38 @@ public class MainActivityUITest {
 
     }
 
+    @Test
+    public void returnsToMainScreenWhenBackArrowButtonInCourseIndexScreenIsClicked() throws Exception {
+
+
+        final CompleteCourse completeCourse = CourseUtils.createMockCompleteCourse(5, 7);
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                Context ctx = (Context) invocation.getArguments()[0];
+                ((ParseCourseXMLTask.OnParseXmlListener) ctx).onParseComplete(completeCourse);
+
+                return null;
+
+            }
+        }).when(completeCourseProvider).getCompleteCourseAsync(any(Context.class), any(Course.class));
+
+        givenThereAreSomeCourses(1);
+
+        mainActivityTestRule.launchActivity(null);
+
+        onView(withId(R.id.recycler_courses))
+                .inRoot(RootMatchers.withDecorView(
+                        Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+
+        checkCorrectActivity(CourseIndexActivity.class);
+
+        onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+
+        checkCorrectActivity(MainActivity.class);
+
+    }
 
 }
