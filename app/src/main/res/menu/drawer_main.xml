@@ -23,6 +23,10 @@
             android:icon="@drawable/ic_cached"
             android:title="@string/menu_sync"/>
         <item
+            android:id="@+id/menu_activitylog"
+            android:icon="@drawable/ic_file_account"
+            android:title="@string/title_activitylog"/>
+        <item
             android:id="@+id/menu_about"
             android:icon="@android:drawable/ic_menu_info_details"
             android:title="@string/menu_about"/>

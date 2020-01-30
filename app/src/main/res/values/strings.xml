@@ -445,6 +445,7 @@
     <string name="bluetooth.send_all">Send all</string>
     <string name="bluetooth.btn_disconnect">Disconnect</string>
     <string name="bluetooth.enable_discovery">Enable discovery mode</string>
+    <string name="title_activitylog">Activity log</string>
 
 
 </resources>
