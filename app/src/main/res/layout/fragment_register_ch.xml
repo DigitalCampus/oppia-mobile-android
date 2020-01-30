@@ -3,26 +3,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_medium"
     tools:context="org.digitalcampus.oppia.fragments.register.RegisterCHFragment">
 
+    <FrameLayout
+        android:id="@+id/frame_stepper_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme_secondary_light"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingTop="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_large"
+        android:paddingBottom="@dimen/padding_medium">
+
+        <com.badoualy.stepperindicator.StepperIndicator
+            android:id="@+id/stepper_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:stpi_circleColor="@color/theme_primary"
+            app:stpi_indicatorColor="@color/theme_primary"
+            app:stpi_stepCount="3" />
+    </FrameLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/view_register_ch_page_controls">
+        android:layout_above="@+id/view_register_ch_page_controls"
+        android:layout_below="@+id/frame_stepper_indicator"
+        android:layout_marginTop="@dimen/margin_medium">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/padding_medium">
 
             <TextView
                 android:id="@+id/tv_explanation_reg_screen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="Explanation Register CH screen 1" />
+                android:text="Explanation Register CH screen 1"
+                android:textSize="17sp" />
 
             <LinearLayout
                 android:id="@+id/view_reg_ch_screen_1"
@@ -112,19 +133,17 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/selector_country"
+                    android:id="@+id/spinner_countries"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/countries"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/selector_district"
+                    android:id="@+id/spinner_districts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:entries="@array/districts"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp" />
 
@@ -132,39 +151,49 @@
         </LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
+
+    <LinearLayout
         android:id="@+id/view_register_ch_page_controls"
+        style="?android:buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@color/quiz_navigation_bar"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_medium"
+        android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_register_ch_previous"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/tv_register_page_indicator"
+            android:layout_height="50dp"
+            android:drawableLeft="@drawable/ic_arrow_left_small"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/quiz_navigation_button"
             android:text="@string/previous" />
 
-        <TextView
-            android:id="@+id/tv_register_page_indicator"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="1/3"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        <View style="@style/ExpansorHoriz" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_register_ch_next"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/tv_register_page_indicator"
+            android:layout_height="50dp"
+            android:drawableRight="@drawable/ic_arrow_right_small"
+            android:drawablePadding="5dp"
+            android:drawableTint="@color/quiz_navigation_button"
             android:text="@string/next" />
 
-    </RelativeLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_register_perform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_btn_text"
+            android:theme="@style/PrimaryButton"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

@@ -52,18 +52,21 @@ import java.util.Arrays;
 public class RegisterMainFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener, View.OnClickListener {
 
 
-    private LinearLayout viewRegisterType;
+    private LinearLayout viewRegisterRoleSelection;
     private AppCompatButton btnRegCha;
     private AppCompatButton btnRegChss;
     private AppCompatButton btnRegOther;
+    private Button loginButton;
+    private ProgressDialog pDialog;
+    private View formBottom;
 
     private void findViews(View layout) {
-        viewRegisterType = layout.findViewById(R.id.view_register_type);
+        viewRegisterRoleSelection = layout.findViewById(R.id.view_register_role_selection);
+        formBottom = layout.findViewById(R.id.form_bottom);
         btnRegCha = layout.findViewById(R.id.btn_reg_cha);
         btnRegChss = layout.findViewById(R.id.btn_reg_chss);
         btnRegOther = layout.findViewById(R.id.btn_reg_other);
 
-        registerButton = layout.findViewById(R.id.register_btn);
         loginButton = layout.findViewById(R.id.action_login_btn);
 
         btnRegCha.setOnClickListener(this);
@@ -71,37 +74,7 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
         btnRegOther.setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
 
-        switch (v.getId()) {
-
-            case R.id.btn_reg_cha:
-                setFragment(new RegisterCHFragment());
-                break;
-
-            case R.id.btn_reg_chss:
-                setFragment(new RegisterCHFragment());
-                break;
-
-            case R.id.btn_reg_other:
-                setFragment(new RegisterOtherFragment());
-                registerButton.setVisibility(View.VISIBLE);
-                break;
-        }
-
-
-        viewRegisterType.setVisibility(View.GONE);
-    }
-
-    private void setFragment(RegisterBaseFragment fragment) {
-        getChildFragmentManager().beginTransaction().replace(R.id.frame_register_main, fragment).addToBackStack(null).commit();
-    }
-
-
-    private Button registerButton;
-    private Button loginButton;
-    private ProgressDialog pDialog;
 
     public static RegisterMainFragment newInstance() {
         return new RegisterMainFragment();
@@ -123,12 +96,6 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                onRegisterClick();
-            }
-        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -139,6 +106,34 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
         });
 
     }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+            case R.id.btn_reg_cha:
+                setFragment(RegisterCHFragment.getInstance("CHA"));
+                break;
+
+            case R.id.btn_reg_chss:
+                setFragment(RegisterCHFragment.getInstance("CHSS"));
+                break;
+
+            case R.id.btn_reg_other:
+                setFragment(new RegisterOtherFragment());
+                break;
+        }
+
+
+        viewRegisterRoleSelection.setVisibility(View.GONE);
+        formBottom.setVisibility(View.GONE);
+    }
+
+    private void setFragment(RegisterBaseFragment fragment) {
+        getChildFragmentManager().beginTransaction().replace(R.id.frame_register_main, fragment).addToBackStack(null).commit();
+    }
+
 
     public void submitComplete(Payload response) {
         pDialog.dismiss();
@@ -165,18 +160,6 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
         }
     }
 
-
-    public void onRegisterClick() {
-
-        RegisterBaseFragment registerBaseFragment = (RegisterBaseFragment)
-                getChildFragmentManager().findFragmentById(R.id.frame_register_main);
-        User user = registerBaseFragment.getUser();
-
-        if (user != null) {
-            executeRegisterTask(user);
-        }
-
-    }
 
     @Override
     public void onSubmitComplete(User registeredUser) {
@@ -243,14 +226,18 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
     public boolean goBack() {
         if (getChildFragmentManager().getBackStackEntryCount() > 0) {
             getChildFragmentManager().popBackStack();
-            viewRegisterType.setVisibility(View.VISIBLE);
+            viewRegisterRoleSelection.setVisibility(View.VISIBLE);
+            formBottom.setVisibility(View.VISIBLE);
             return true;
         }
 
         return false;
     }
 
-    public void showRegisterButton(boolean show) {
-        registerButton.setVisibility(show ? View.VISIBLE : View.GONE);
+
+    public void registerUser(User user) {
+        if (user != null) {
+            executeRegisterTask(user);
+        }
     }
 }

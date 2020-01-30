@@ -17,37 +17,23 @@
 
 package org.digitalcampus.oppia.fragments.register;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatButton;
 
-import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.application.Tracker;
-import org.digitalcampus.oppia.gamification.GamificationEngine;
-import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.task.RegisterTask;
-import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class RegisterOtherFragment extends RegisterBaseFragment implements SubmitListener, RegisterTask.RegisterListener {
+public class RegisterOtherFragment extends RegisterBaseFragment implements View.OnClickListener {
 
 
 	private ValidableTextInputLayout usernameField;
@@ -60,7 +46,8 @@ public class RegisterOtherFragment extends RegisterBaseFragment implements Submi
 	private ValidableTextInputLayout organisationField;
 	private List<ValidableTextInputLayout> fields;
 
-	private ProgressDialog pDialog;
+	private AppCompatButton btnPrevious;
+	private AppCompatButton btnRegisterPerform;
 
 	public static RegisterOtherFragment newInstance() {
 	    return new RegisterOtherFragment();
@@ -72,21 +59,33 @@ public class RegisterOtherFragment extends RegisterBaseFragment implements Submi
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View vv = inflater.inflate(R.layout.fragment_register_other, container, false);
+		View layout = inflater.inflate(R.layout.fragment_register_other, container, false);
 
-		usernameField = vv.findViewById(R.id.register_form_username_field);
-		emailField = vv.findViewById(R.id.register_form_email_field);
-		passwordField = vv.findViewById(R.id.register_form_password_field);
-		passwordAgainField = vv.findViewById(R.id.register_form_password_again_field);
-		firstnameField = vv.findViewById(R.id.register_form_firstname_field);
-		lastnameField = vv.findViewById(R.id.register_form_lastname_field);
-		jobTitleField = vv.findViewById(R.id.register_form_jobtitle_field);
-		organisationField = vv.findViewById(R.id.register_form_organisation_field);
+		findViews(layout);
+
+
+		return layout;
+	}
+
+	private void findViews(View layout) {
+
+		usernameField = layout.findViewById(R.id.register_form_username_field);
+		emailField = layout.findViewById(R.id.register_form_email_field);
+		passwordField = layout.findViewById(R.id.register_form_password_field);
+		passwordAgainField = layout.findViewById(R.id.register_form_password_again_field);
+		firstnameField = layout.findViewById(R.id.register_form_firstname_field);
+		lastnameField = layout.findViewById(R.id.register_form_lastname_field);
+		jobTitleField = layout.findViewById(R.id.register_form_jobtitle_field);
+		organisationField = layout.findViewById(R.id.register_form_organisation_field);
 
 		fields = Arrays.asList(usernameField, emailField, passwordField, passwordAgainField,
 				firstnameField, lastnameField, jobTitleField, organisationField);
 
-		return vv;
+		btnPrevious = layout.findViewById(R.id.btn_register_previous);
+		btnRegisterPerform = layout.findViewById(R.id.btn_register_perform);
+
+		btnPrevious.setOnClickListener(this);
+		btnRegisterPerform.setOnClickListener(this);
 	}
 
 	@Override
@@ -99,34 +98,8 @@ public class RegisterOtherFragment extends RegisterBaseFragment implements Submi
 
 	}
 
-	public void submitComplete(Payload response) {
-		pDialog.dismiss();
-		if (response.isResult()) {
-			User user = (User) response.getData().get(0);
-            SessionManager.loginUser(getActivity(), user);
-			// registration gamification
-			GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
-			gamificationEngine.processEventRegister();
-            //Save the search tracker
-            new Tracker(super.getActivity()).saveRegisterTracker();
-	    	startActivity(new Intent(getActivity(), MainActivity.class));
-	    	super.getActivity().finish();
-		} else {
-			Context ctx = super.getActivity();
-			if (ctx != null){
-				try {
-					JSONObject jo = new JSONObject(response.getResultResponse());
-					UIUtils.showAlert(ctx,R.string.error,jo.getString("error"));
-				} catch (JSONException je) {
-					UIUtils.showAlert(ctx,R.string.error,response.getResultResponse());
-				}
-			}
-		}
-	}
 
-
-	@Override
-	public User getUser() {
+	public User getUserData() {
 
 		String username = usernameField.getCleanedValue();
 		String email = emailField.getCleanedValue();
@@ -143,10 +116,12 @@ public class RegisterOtherFragment extends RegisterBaseFragment implements Submi
 			valid = field.validate() && valid;
 		}
 
-		/*if (email.length() == 0) {
-			UIUtils.showAlert(super.getActivity(),R.string.error,R.string.error_register_no_email);
-			return;
-		}*/
+		if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+			emailField.setErrorEnabled(true);
+			emailField.setError(getString(R.string.error_register_email ));
+			emailField.requestFocus();
+			return null;
+		}
 
 		// check password length
 		if (password.length() < MobileLearning.PASSWORD_MIN_LENGTH) {
@@ -182,68 +157,20 @@ public class RegisterOtherFragment extends RegisterBaseFragment implements Submi
 		return null;
 	}
 
-	@Override
-	public void onSubmitComplete(User registeredUser) {
-		pDialog.dismiss();
-		SessionManager.loginUser(getActivity(), registeredUser);
-		// registration gamification
-		GamificationEngine gamificationEngine = new GamificationEngine(super.getActivity());
-		gamificationEngine.processEventRegister();
-
-		//Save the search tracker
-		new Tracker(super.getActivity()).saveRegisterTracker();
-		startActivity(new Intent(getActivity(), MainActivity.class));
-		super.getActivity().finish();
-	}
 
 	@Override
-	public void onSubmitError(String error) {
-		pDialog.dismiss();
-		Context ctx = super.getActivity();
-		if (ctx != null){
-			UIUtils.showAlert(getActivity(), R.string.error, error);
-		}
-	}
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.btn_register_previous:
+				((RegisterMainFragment) getParentFragment()).goBack();
+				break;
 
-	@Override
-	public void onConnectionError(String error, final User u) {
-		pDialog.dismiss();
-		Context ctx = super.getActivity();
-		if (ctx == null){
-			return;
-		}
-		if (BuildConfig.OFFLINE_REGISTER_ENABLED){
-			AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-			builder.setCancelable(false);
-			builder.setTitle(error);
-			builder.setMessage(R.string.offline_register_confirm);
-			builder.setPositiveButton(R.string.register_offline, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					u.setOfflineRegister(true);
-					executeRegisterTask(u);
+			case R.id.btn_register_perform:
+				User user = getUserData();
+				if (user != null) {
+					((RegisterMainFragment) getParentFragment()).registerUser(user);
 				}
-			});
-			builder.setNegativeButton(R.string.cancel, null);
-			builder.show();
-		}
-		else{
-			UIUtils.showAlert(ctx,R.string.error,error);
+				 break;
 		}
 	}
-
-	private void executeRegisterTask(User u){
-
-		pDialog = new ProgressDialog(super.getActivity());
-		pDialog.setTitle(R.string.register_alert_title);
-		pDialog.setMessage(getString(R.string.register_process));
-		pDialog.setCancelable(true);
-		pDialog.show();
-
-		Payload p = new Payload(Arrays.asList(u));
-		RegisterTask rt = new RegisterTask(super.getActivity());
-		rt.setRegisterListener(this);
-		rt.execute(p);
-	}
-
-
 }

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_medium"
     android:fillViewport="true"
     android:gravity="center">
 
@@ -11,7 +10,7 @@
         android:id="@+id/register_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/form_bottom"
+        android:layout_above="@+id/view_register_page_controls"
         android:layout_alignParentTop="true"
         android:visibility="visible">
 
@@ -20,8 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/padding_large"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:padding="@dimen/padding_medium">
 
             <org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout
                 android:id="@+id/register_form_username_field"
@@ -168,6 +166,42 @@
 
         </LinearLayout>
     </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/view_register_page_controls"
+        style="?android:buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/quiz_navigation_bar"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_medium"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_register_previous"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:drawableLeft="@drawable/ic_arrow_left_small"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/quiz_navigation_button"
+            android:text="@string/previous" />
+
+        <View style="@style/ExpansorHoriz" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_register_perform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_btn_text"
+            android:theme="@style/PrimaryButton"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
 
 
 </RelativeLayout>

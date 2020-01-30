@@ -38,6 +38,11 @@ public class User {
 	private int points = 0;
 	private int badges = 0;
 	private boolean offlineRegister = false;
+
+	private String employeeID;
+	private String country;
+	private String district;
+
 	
 	public String getUsername() {
 		return username;
@@ -163,4 +168,34 @@ public class User {
 	public void setOfflineRegister(boolean offlineRegister) {
 		this.offlineRegister = offlineRegister;
 	}
+
+	public String getEmployeeID() {
+		return employeeID;
+	}
+
+	public void setEmployeeID(String employeeID) {
+		this.employeeID = employeeID;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+
+	public void autogenerateUsername() {
+		this.username = (getFirstname() + getLastname() + getEmployeeID()).replace(" ", "").toLowerCase();
+	}
+
+
 }

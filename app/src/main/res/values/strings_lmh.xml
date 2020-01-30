@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="username_field_helper_text">Use your family name and your ID number as username. For example, MenyonJTP5-04</string>
+
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="employee_id">Employee ID</string>
+    <string name="select_country">Select country …</string>
+    <string name="select_district">Select district …</string>
+    <string name="please_select_country_district">Please select country and district</string>
+    <string name="back">Back</string>
+
+    <string name="register_select_role_explanation">Please select your role</string>
+    <string name="error_register_email">Email not valid</string>
 </resources>

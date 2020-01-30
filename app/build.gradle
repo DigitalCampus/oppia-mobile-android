@@ -264,6 +264,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
+    implementation 'com.github.badoualy:stepper-indicator:1.0.7'
 
     def work_version = "2.2.0"
     implementation "androidx.work:work-runtime:$work_version"
@@ -273,7 +274,7 @@ dependencies {
     implementation 'javax.xml.stream:stax-api:1.0-2'
 
 //    implementation 'androidx.multidex:multidex:2.0.1'
-//    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
+    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 
 }
 
