@@ -75,6 +75,11 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
     private RecyclerView exportedFilesRecyclerView;
     private RecyclerView.Adapter filesAdapter;
     private ArrayList<File> files = new ArrayList<>();
+
+    private RecyclerView archivedFilesRecyclerView;
+    private RecyclerView.Adapter archivedFilesAdapter;
+    private ArrayList<File> archivedFiles = new ArrayList<>();
+
     private SubmitTrackerMultipleTask omSubmitTrackerMultipleTask;
     private boolean showCompleteExportMessage;
 
@@ -86,6 +91,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
         // Prevent activity from going to sleep
 
         exportedFilesRecyclerView = findViewById(R.id.exported_files_list);
+        archivedFilesRecyclerView = findViewById(R.id.archived_files_list);
         exportBtn = findViewById(R.id.export_btn);
         submitBtn = findViewById(R.id.submit_btn);
         progressContainer = findViewById(R.id.progress_container);
@@ -124,23 +130,38 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
             }
         });
 
-        exportedFilesRecyclerView.setHasFixedSize(true);
         exportedFilesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         filesAdapter = new ExportedTrackersFileAdapter(files, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
-                Context ctx = ActivityLogActivity.this;
-                File toShare = files.get(position);
-                Intent share = ExternalResourceOpener.constructShareFileIntent(ctx, toShare);
-                ctx.startActivity(share);
+                shareFile(files.get(position));
+
             }
         });
         exportedFilesRecyclerView.setAdapter(filesAdapter);
         exportedFilesRecyclerView.addItemDecoration(
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
+
+        archivedFilesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        archivedFilesAdapter = new ExportedTrackersFileAdapter(archivedFiles, new ListInnerBtnOnClickListener() {
+            @Override
+            public void onClick(int position) {
+                shareFile(archivedFiles.get(position));
+
+            }
+        });
+        archivedFilesRecyclerView.setAdapter(archivedFilesAdapter);
+        archivedFilesRecyclerView.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
         updateActions(true);
 
+    }
+
+    private void shareFile(File toShare){
+        Intent share = ExternalResourceOpener.constructShareFileIntent(this, toShare);
+        startActivity(share);
     }
 
     private void exportActivities() {
@@ -194,6 +215,16 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
             filesAdapter.notifyDataSetChanged();
         }
 
+        File archivedFolder = new File(Storage.getActivityArchivePath(this));
+        if (archivedFolder.exists()) {
+            archivedFiles.clear();
+            String[] children = archivedFolder.list();
+            for (String dirFiles : children) {
+                File exportedActivity = new File(archivedFolder, dirFiles);
+                archivedFiles.add(exportedActivity);
+            }
+            archivedFilesAdapter.notifyDataSetChanged();
+        }
     }
 
 

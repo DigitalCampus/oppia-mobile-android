@@ -446,6 +446,7 @@
     <string name="bluetooth.btn_disconnect">Disconnect</string>
     <string name="bluetooth.enable_discovery">Enable discovery mode</string>
     <string name="title_activitylog">Activity log</string>
+    <string name="archived_activities">Archived (already transferred) trackers</string>
 
 
 </resources>
