@@ -72,7 +72,7 @@ public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdap
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(ctx).inflate(R.layout.scorecard_quiz_item, parent, false);
+        View v = LayoutInflater.from(ctx).inflate(R.layout.row_quiz_scorecard, parent, false);
         return new ViewHolder(v);
     }
 

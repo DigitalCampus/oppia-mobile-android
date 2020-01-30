@@ -176,7 +176,11 @@ public class CourseIntallViewAdapter extends Course {
             }
 
             if (json_obj.has(JSON_PROPERTY_ORGANISATION)) {
-                course.setOrganisationName(json.getString(JSON_PROPERTY_ORGANISATION));
+                try {
+                    course.setOrganisationName(json.getString(JSON_PROPERTY_ORGANISATION));
+                } catch (JSONException jsone) {
+                    // do nothing
+                }
             }
 
             if (downloadingCourses != null && downloadingCourses.contains(course.getDownloadUrl())) {

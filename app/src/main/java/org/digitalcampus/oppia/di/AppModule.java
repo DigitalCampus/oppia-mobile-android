@@ -15,6 +15,7 @@ import org.digitalcampus.oppia.model.CompleteCourseProvider;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
 import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.Points;
+import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.TagRepository;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstallerServiceDelegate;
@@ -97,5 +98,10 @@ public class AppModule {
         return new CourseInstallerServiceDelegate();
     }
 
+    @Provides
+    @Singleton
+    public QuizAttemptRepository provideQuizAttemptRepository() {
+        return new QuizAttemptRepository();
+    }
 
 }
