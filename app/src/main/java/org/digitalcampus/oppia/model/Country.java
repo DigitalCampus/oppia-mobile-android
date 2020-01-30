@@ -28,7 +28,7 @@ public class Country {
 
             List<District> districts = new ArrayList<>();
             for (int j = 1; j <= 4; j++) {
-                districts.add(new District(j, i, "District " + (i + j)));
+                districts.add(new District(j, i, "District " + (((i-1) * 4) + j)));
             }
 
             countries.add(new Country(i, "Country " + i, districts));
