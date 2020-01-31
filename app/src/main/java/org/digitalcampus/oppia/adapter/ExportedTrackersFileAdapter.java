@@ -52,7 +52,7 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
     @Override
     public EtfaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.exported_activity_item, parent, false);
+                .inflate(R.layout.row_activitylog, parent, false);
         return new EtfaViewHolder(v);
 
     }

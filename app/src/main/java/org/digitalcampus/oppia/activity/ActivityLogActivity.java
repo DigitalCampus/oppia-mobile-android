@@ -1,57 +1,28 @@
 package org.digitalcampus.oppia.activity;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.tabs.TabLayout;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
-import org.digitalcampus.oppia.adapter.TransferCourseListAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.fragments.ExportActivityFragment;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
-import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
-import org.digitalcampus.oppia.model.CourseTransferableFile;
-import org.digitalcampus.oppia.model.DownloadProgress;
-import org.digitalcampus.oppia.service.bluetooth.BluetoothBroadcastReceiver;
-import org.digitalcampus.oppia.service.bluetooth.BluetoothConnectionManager;
-import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService;
-import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferServiceDelegate;
 import org.digitalcampus.oppia.task.ExportActivityTask;
-import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
-import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
-import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;

@@ -22,10 +22,6 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TransferCourseListAdapter;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
@@ -42,12 +38,14 @@ import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.storage.Storage;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SyncActivity extends AppActivity implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener, TabLayout.BaseOnTabSelectedListener, ExportActivityListener {
 
@@ -257,9 +255,13 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
     private void connectDevice(Intent data) {
         // Get the device MAC address
-        String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-        bluetoothManager.connect(device);
+        Bundle extras = data.getExtras();
+        if (extras != null){
+            String address = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+            BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+            bluetoothManager.connect(device);
+        }
+
     }
 
     private void setupBluetoothConnection() {
@@ -629,11 +631,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             Log.d(TAG, "Handle message");
             switch (msg.what) {
                 case BluetoothConnectionManager.UI_MESSAGE_STATE_CHANGE:
-                    self.updateStatus(true);
-                    break;
-
                 case BluetoothConnectionManager.UI_MESSAGE_DEVICE_NAME:
-                    // save the connected device's name
                     self.updateStatus(true);
                     break;
 
