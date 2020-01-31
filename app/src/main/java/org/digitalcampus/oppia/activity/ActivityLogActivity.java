@@ -1,5 +1,7 @@
 package org.digitalcampus.oppia.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,10 +15,13 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
+import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.ExportActivityTask;
+import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
@@ -27,11 +32,12 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ActivityLogActivity extends AppActivity implements TrackerServiceListener, ExportActivityListener {
+public class ActivityLogActivity extends AppActivity implements TrackerServiceListener, ExportActivityListener, ExportedTrackersFileAdapter.OnItemClickListener {
 
     // Intent request codes
     private Button exportBtn;
@@ -102,26 +108,14 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
         });
 
         exportedFilesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        filesAdapter = new ExportedTrackersFileAdapter(files, new ListInnerBtnOnClickListener() {
-            @Override
-            public void onClick(int position) {
-                shareFile(files.get(position));
-
-            }
-        });
+        filesAdapter = new ExportedTrackersFileAdapter(files, this);
         exportedFilesRecyclerView.setAdapter(filesAdapter);
         exportedFilesRecyclerView.addItemDecoration(
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
 
         archivedFilesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        archivedFilesAdapter = new ExportedTrackersFileAdapter(archivedFiles, new ListInnerBtnOnClickListener() {
-            @Override
-            public void onClick(int position) {
-                shareFile(archivedFiles.get(position));
-
-            }
-        });
+        archivedFilesAdapter = new ExportedTrackersFileAdapter(archivedFiles, this, true);
         archivedFilesRecyclerView.setAdapter(archivedFilesAdapter);
         archivedFilesRecyclerView.addItemDecoration(
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -247,4 +241,27 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
     }
 
 
+    @Override
+    public void onItemShareClick(File fileToShare) {
+        shareFile(fileToShare);
+    }
+
+    @Override
+    public void onItemToDelete(final File fileToDelete) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Oppia_AlertDialogStyle);
+        builder.setTitle(R.string.activitylog_delete);
+        builder.setMessage(R.string.activitylog_delete_confirm);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+               boolean success = fileToDelete.delete();
+               if (!success){
+                   Toast.makeText(ActivityLogActivity.this,
+                           R.string.activitylog_delete_failed, Toast.LENGTH_SHORT).show();
+               }
+               refreshFileList();
+            }
+        });
+        builder.setNegativeButton(R.string.no, null);
+        builder.show();
+    }
 }

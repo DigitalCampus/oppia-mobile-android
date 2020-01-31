@@ -16,9 +16,9 @@ import org.digitalcampus.oppia.model.CourseTransferableFile;
 
 import java.util.ArrayList;
 
-public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCourseListAdapter.TclaViewHolder> {
+public class TransferableFileListAdapter extends RecyclerView.Adapter<TransferableFileListAdapter.TclaViewHolder> {
 
-    public static final String TAG = TransferCourseListAdapter.class.getSimpleName();
+    public static final String TAG = TransferableFileListAdapter.class.getSimpleName();
     private ArrayList<CourseTransferableFile> transferableFiles;
     private ArrayList<CourseTransferableFile> courseFiles = new ArrayList<>();
     private final ListInnerBtnOnClickListener listener;
@@ -70,11 +70,11 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
     }
 
 
-    public TransferCourseListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener){
+    public TransferableFileListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener){
         this(files, listener, false);
     }
 
-    public TransferCourseListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener, boolean filterCourses){
+    public TransferableFileListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener, boolean filterCourses){
 
         this.listener = listener;
 
@@ -116,8 +116,6 @@ public class TransferCourseListAdapter extends RecyclerView.Adapter<TransferCour
         else{
             holder.fileTitle.setVisibility(View.GONE);
         }
-
-
 
         if (current.getType().equals(CourseTransferableFile.TYPE_ACTIVITY_LOG)){
             holder.fileSubtitle.setText(current.getDisplayDateTimeFromFilename());

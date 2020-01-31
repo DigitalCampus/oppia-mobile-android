@@ -347,6 +347,8 @@
     <string name="submit_trackers_success">Trackers successfully submitted to server.</string>
     <string name="activity_not_transferred_message">You have exported log files not transferred yet.</string>
     <string name="tab_title_transfer">Transfer</string>
+
+    <!-- Strings for Bluetooth transfer -->
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled</string>
     <string name="paired_devices">Paired devices</string>
     <string name="other_devices">Other devices</string>
@@ -366,6 +368,13 @@
     <string name="bluetooth_communication_closed">Bluetooth communication was closed.</string>
     <string name="bluetooth.files_pending">%1$d files pending</string>
     <string name="bluetooth_all_transfers_complete">All Bluetooth pending transfers were completed</string>
+    <string name="bluetooth.btn_connect">Connect</string>
+    <string name="bluetooth.device_name">This device name:</string>
+    <string name="bluetooth.tab_course">courses</string>
+    <string name="bluetooth.tab_activitylog">activity logs</string>
+    <string name="bluetooth.send_all">Send all</string>
+    <string name="bluetooth.btn_disconnect">Disconnect</string>
+    <string name="bluetooth.enable_discovery">Enable discovery mode</string>
 
 
     <!-- Strings for quiz attempts -->
@@ -438,16 +447,11 @@
     <string name="register_username_exists">Username already exists</string>
     <string name="collapse_all_sections">Collapse all sections</string>
     <string name="expand_all_sections">Expand all sections</string>
-    <string name="bluetooth.btn_connect">Connect</string>
-    <string name="bluetooth.device_name">This device name:</string>
-    <string name="bluetooth.tab_course">courses</string>
-    <string name="bluetooth.tab_activitylog">activity logs</string>
-    <string name="bluetooth.send_all">Send all</string>
-    <string name="bluetooth.btn_disconnect">Disconnect</string>
-    <string name="bluetooth.enable_discovery">Enable discovery mode</string>
+
     <string name="title_activitylog">Activity log</string>
     <string name="archived_activities">Archived (already transferred) trackers</string>
-
-
+    <string name="activitylog_delete">Delete</string>
+    <string name="activitylog_delete_confirm">Are you sure you want to delete this activity log file?</string>
+    <string name="activitylog_delete_failed">Could not delete activity log file</string>
 </resources>
 

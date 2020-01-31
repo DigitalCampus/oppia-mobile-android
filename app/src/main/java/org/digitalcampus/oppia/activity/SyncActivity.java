@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.TransferCourseListAdapter;
+import org.digitalcampus.oppia.adapter.TransferableFileListAdapter;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
@@ -134,7 +134,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
         coursesRecyclerView.setHasFixedSize(true);
         coursesRecyclerView.setLayoutManager( new LinearLayoutManager(this));
-        coursesAdapter = new TransferCourseListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
+        coursesAdapter = new TransferableFileListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
                 final CourseTransferableFile toShare = transferableFiles.get(position);
@@ -152,7 +152,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
         activitylogsRecyclerView.setHasFixedSize(true);
         activitylogsRecyclerView.setLayoutManager( new LinearLayoutManager(this));
-        activitylogsAdapter = new TransferCourseListAdapter(activityLogs, new ListInnerBtnOnClickListener() {
+        activitylogsAdapter = new TransferableFileListAdapter(activityLogs, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
                 if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){

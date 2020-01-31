@@ -361,7 +361,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		for (QuizAttempt qa: quizAttempts){
 			// data back to json obj
 			try {
-				JSONObject jsonData = new JSONObject(qa.getData());
+				String data = qa.getData();
+				if (data == null || data.length()==0 )
+					continue;
+				JSONObject jsonData = new JSONObject();
 				qa.setMaxscore((float) jsonData.getDouble("maxscore"));
 				qa.setScore((float) jsonData.getDouble("score"));
 				
