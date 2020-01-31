@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.model;
 
+import android.content.ContentValues;
+
 import org.digitalcampus.oppia.utils.CryptoUtils;
 
 public class User {
@@ -39,10 +41,14 @@ public class User {
 	private int badges = 0;
 	private boolean offlineRegister = false;
 
-	private String employeeID;
-	private String county;
-	private String district;
 
+	public static final String CUSTOM_FIELD_COUNTY = "county";
+	public static final String CUSTOM_FIELD_DISTRICT = "district";
+	public static final String CUSTOM_FIELD_EMPLOYEE_ID = "employee_id";
+
+
+	private ContentValues userCustomFields = new ContentValues();
+//	private Map<String, CustomValue> userCustomFields = new HashMap<>();
 	
 	public String getUsername() {
 		return username;
@@ -170,32 +176,41 @@ public class User {
 	}
 
 	public String getEmployeeID() {
-		return employeeID;
+		return userCustomFields.getAsString(CUSTOM_FIELD_EMPLOYEE_ID);
 	}
 
 	public void setEmployeeID(String employeeID) {
-		this.employeeID = employeeID;
+		userCustomFields.put(CUSTOM_FIELD_EMPLOYEE_ID, employeeID);
 	}
 
 	public String getCounty() {
-		return county;
+		return userCustomFields.getAsString(CUSTOM_FIELD_COUNTY);
 	}
 
 	public void setCounty(String county) {
-		this.county = county;
+		userCustomFields.put(CUSTOM_FIELD_COUNTY, county);
 	}
 
+
 	public String getDistrict() {
-		return district;
+		return userCustomFields.getAsString(CUSTOM_FIELD_DISTRICT);
 	}
 
 	public void setDistrict(String district) {
-		this.district = district;
+		userCustomFields.put(CUSTOM_FIELD_DISTRICT, district);
 	}
+
 
 	public void autogenerateUsername() {
 		this.username = (getFirstname() + getLastname() + getEmployeeID()).replace(" ", "").toLowerCase();
 	}
 
 
+	public ContentValues getUserCustomFields() {
+		return userCustomFields;
+	}
+
+	public void setUserCustomFields(ContentValues userCustomFields) {
+		this.userCustomFields = userCustomFields;
+	}
 }

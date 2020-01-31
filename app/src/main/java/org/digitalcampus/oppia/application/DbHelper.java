@@ -28,7 +28,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -58,6 +57,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
@@ -70,7 +70,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 30;
+	private static final int DB_VERSION = 31;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -174,6 +174,17 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_ORGANIZATION = "organisation";
 	private static final String USER_C_PHONE = "phoneNo";
 
+	// User Custom Fields
+	private static final String USER_CF_TABLE = "user_cf";
+	private static final String USER_CF_ID = BaseColumns._ID;
+	private static final String USER_CF_USER_ID = "user_id";
+	private static final String USER_CF_USERNAME = "username";
+	private static final String USER_CF_FIELD_KEY = "field_key";
+	private static final String USER_CF_VALUE_STR = "value_str";
+	private static final String USER_CF_VALUE_INT = "value_int";
+	private static final String USER_CF_VALUE_BOOL = "value_bool";
+	private static final String USER_CF_VALUE_FLOAT = "value_float";
+
 	private static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
     private static final String USER_PREFS_C_PREFKEY = "preference";
@@ -221,6 +232,8 @@ public class DbHelper extends SQLiteOpenHelper {
         createCourseGamificationTable(db);
 		createActivityGamificationTable(db);
 		createLeaderboardTable(db);
+
+		createUserCustomFieldsTable(db);
 	}
 
     public void beginTransaction(){
@@ -325,6 +338,23 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_BADGES +"] integer default 0, " +
 				 "["+USER_C_OFFLINE_REGISTER+"] integer default 0 "+
             ");";
+		db.execSQL(sql);
+	}
+
+
+	private void createUserCustomFieldsTable(SQLiteDatabase db) {
+
+		String sql = "CREATE TABLE ["+USER_CF_TABLE+"] (" +
+				"["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
+				"["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
+				"["+USER_CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
+
+				"["+USER_CF_VALUE_STR +"]" + STR_TEXT_COMMA +
+				"["+USER_CF_VALUE_INT +"]" + STR_INT_COMMA +
+				"["+USER_CF_VALUE_BOOL+"] BOOLEAN, " +
+				"["+USER_CF_VALUE_FLOAT+"] FLOAT, " +
+				"CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ USER_CF_FIELD_KEY +")" +
+				");";
 		db.execSQL(sql);
 	}
 
@@ -551,6 +581,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_JOBTITLE + " text null;");
 			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
 		}
+
+
+		if (oldVersion < 31) {
+			createUserCustomFieldsTable(db);
+		}
 	}
 
 	public void updateV43(long userId){
@@ -667,7 +702,23 @@ public class DbHelper extends SQLiteOpenHelper {
 			String[] args = new String[] { String.valueOf(userId) };
 			db.update(USER_TABLE, values, s, args);
 		}
+
+		insertOrUpdateCustomFields(user);
+
 		return userId;
+	}
+
+	private void insertOrUpdateCustomFields(User user) {
+
+		// TODO test this
+
+		String s = USER_C_ID + "=?";
+		String[] args = new String[] { String.valueOf(user.getUserId()) };
+		try {
+			db.insertOrThrow(USER_CF_TABLE, null, user.getUserCustomFields());
+		} catch (SQLiteException e) {
+			db.update(USER_CF_TABLE, user.getUserCustomFields(), s, args);
+		}
 	}
 
 	public void deleteUser(String username) {
@@ -675,6 +726,14 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = USER_C_USERNAME + "=?";
 		String[] args = new String[]{String.valueOf(username)};
 		db.delete(USER_TABLE, s, args);
+
+		deleteUserCF(username);
+	}
+
+	private void deleteUserCF(String username) {
+		String s = USER_CF_USERNAME + "=?";
+		String[] args = new String[]{String.valueOf(username)};
+		db.delete(USER_CF_TABLE, s, args);
 	}
 
 	public long isUser(String username){
@@ -1180,6 +1239,8 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setPassword(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
 			u.setPasswordAgain(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
 		}
+
+		// Todo fetch custom values
 
 		return u;
 	}

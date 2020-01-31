@@ -159,6 +159,8 @@ public class MobileLearning extends Application {
         super.onCreate();
 
 
+        DbHelper.getInstance(this).getReadableDatabase(); // To force migration if needed
+
         // this method fires once at application start
         Log.d(TAG, "Application start");
 
