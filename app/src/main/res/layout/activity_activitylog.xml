@@ -209,7 +209,7 @@
             android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="3"
-            tools:listitem="@layout/exported_activity_item" />
+            tools:listitem="@layout/row_activitylog" />
     </FrameLayout>
 
         <TextView
@@ -239,7 +239,7 @@
             android:orientation="vertical"
             android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/exported_activity_item"/>
+            tools:listitem="@layout/row_activitylog"/>
     </FrameLayout>
 
 </LinearLayout>
