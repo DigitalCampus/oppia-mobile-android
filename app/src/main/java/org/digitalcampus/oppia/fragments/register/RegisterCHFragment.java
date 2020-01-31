@@ -169,7 +169,9 @@ public class RegisterCHFragment extends RegisterBaseFragment implements View.OnC
                 break;
 
             case R.id.btn_register_perform:
-                ((RegisterMainFragment) getParentFragment()).registerUser(getUserData());
+                if (validateFieldsOfCurrentScreen()) {
+                    ((RegisterMainFragment) getParentFragment()).registerUser(getUserData());
+                }
                 break;
         }
 
