@@ -5,12 +5,12 @@ import androidx.annotation.NonNull;
 public class District {
 
     private long id;
-    private long countryId;
+    private long countyId;
     private String name;
 
-    public District(long id, long countryId, String name) {
+    public District(long id, long countyId, String name) {
         this.id = id;
-        this.countryId = countryId;
+        this.countyId = countyId;
         this.name = name;
     }
 
@@ -32,12 +32,12 @@ public class District {
         this.id = id;
     }
 
-    public long getCountryId() {
-        return countryId;
+    public long getCountyId() {
+        return countyId;
     }
 
-    public void setCountryId(long countryId) {
-        this.countryId = countryId;
+    public void setCountyId(long countyId) {
+        this.countyId = countyId;
     }
 
     public String getName() {

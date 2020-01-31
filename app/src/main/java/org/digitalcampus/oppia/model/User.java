@@ -40,7 +40,7 @@ public class User {
 	private boolean offlineRegister = false;
 
 	private String employeeID;
-	private String country;
+	private String county;
 	private String district;
 
 	
@@ -177,12 +177,12 @@ public class User {
 		this.employeeID = employeeID;
 	}
 
-	public String getCountry() {
-		return country;
+	public String getCounty() {
+		return county;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+	public void setCounty(String county) {
+		this.county = county;
 	}
 
 	public String getDistrict() {

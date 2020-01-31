@@ -17,7 +17,7 @@ import com.badoualy.stepperindicator.StepperIndicator;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
-import org.digitalcampus.oppia.model.Country;
+import org.digitalcampus.oppia.model.County;
 import org.digitalcampus.oppia.model.District;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.ui.ValidableTextInputLayout;
@@ -40,12 +40,12 @@ public class RegisterCHFragment extends RegisterBaseFragment implements View.OnC
     private ValidableTextInputLayout editRegChPassword;
     private ValidableTextInputLayout editRegChPasswordAgain;
     private LinearLayout viewRegChScreen3;
-    private AppCompatSpinner spinnerCountries;
+    private AppCompatSpinner spinnerCounties;
     private AppCompatSpinner spinnerDistricts;
     private TextView btnRegisterChPrevious;
     private TextView btnRegisterChNext;
-    private List<Country> countries = new ArrayList<>();
-    private ArrayAdapter<Country> adapterCountries;
+    private List<County> counties = new ArrayList<>();
+    private ArrayAdapter<County> adapterCounties;
     private List<District> districts = new ArrayList<>();
     private ArrayAdapter<District> adapterDistricts;
     private StepperIndicator stepperIndicator;
@@ -62,7 +62,7 @@ public class RegisterCHFragment extends RegisterBaseFragment implements View.OnC
         editRegChPassword = layout.findViewById(R.id.edit_reg_ch_password);
         editRegChPasswordAgain = layout.findViewById(R.id.edit_reg_ch_password_again);
         viewRegChScreen3 = layout.findViewById(R.id.view_reg_ch_screen_3);
-        spinnerCountries = layout.findViewById(R.id.spinner_countries);
+        spinnerCounties = layout.findViewById(R.id.spinner_counties);
         spinnerDistricts = layout.findViewById(R.id.spinner_districts);
         btnRegisterChPrevious = layout.findViewById(R.id.btn_register_ch_previous);
         stepperIndicator = layout.findViewById(R.id.stepper_indicator);
@@ -99,22 +99,22 @@ public class RegisterCHFragment extends RegisterBaseFragment implements View.OnC
             throw new IllegalArgumentException("Role argument missing");
         }
 
-        configureCountries();
+        configureCounties();
 
         updateScreen();
 
         return layout;
     }
 
-    private void configureCountries() {
+    private void configureCounties() {
 
-        countries.clear();
-        countries.addAll(Country.getDemoCountries());
-        countries.add(0, new Country(getString(R.string.select_country)));
+        counties.clear();
+        counties.addAll(County.getDemoCountries());
+        counties.add(0, new County(getString(R.string.select_county)));
 
-        adapterCountries = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, countries);
-        spinnerCountries.setAdapter(adapterCountries);
-        spinnerCountries.setOnItemSelectedListener(this);
+        adapterCounties = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, counties);
+        spinnerCounties.setAdapter(adapterCounties);
+        spinnerCounties.setOnItemSelectedListener(this);
 
         adapterDistricts = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, districts);
         districts.add(0, new District(getString(R.string.select_district)));
@@ -185,7 +185,7 @@ public class RegisterCHFragment extends RegisterBaseFragment implements View.OnC
         user.setPassword(editRegChPassword.getCleanedValue());
         user.setPasswordAgain(editRegChPasswordAgain.getCleanedValue());
         user.setJobTitle(role);
-        user.setCountry(countries.get(spinnerCountries.getSelectedItemPosition()).getName());
+        user.setCounty(counties.get(spinnerCounties.getSelectedItemPosition()).getName());
         user.setDistrict(districts.get(spinnerDistricts.getSelectedItemPosition()).getName());
         return user;
 
@@ -202,10 +202,10 @@ public class RegisterCHFragment extends RegisterBaseFragment implements View.OnC
             spinnerDistricts.setEnabled(false);
         } else {
             spinnerDistricts.setEnabled(true);
-            Country country = countries.get(position);
+            County county = counties.get(position);
 
             districts.clear();
-            districts.addAll(country.getDistricts());
+            districts.addAll(county.getDistricts());
             districts.add(0, new District(getString(R.string.select_district)));
             adapterDistricts.notifyDataSetChanged();
 
@@ -251,8 +251,8 @@ public class RegisterCHFragment extends RegisterBaseFragment implements View.OnC
                 break;
 
             case 2:
-                if (spinnerCountries.getSelectedItemPosition() == 0 || spinnerDistricts.getSelectedItemPosition() == 0) {
-                    toast(R.string.please_select_country_district);
+                if (spinnerCounties.getSelectedItemPosition() == 0 || spinnerDistricts.getSelectedItemPosition() == 0) {
+                    toast(R.string.please_select_county_district);
                 } else {
                     return true;
                 }

@@ -7,9 +7,9 @@
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="employee_id">Employee ID</string>
-    <string name="select_country">Select country …</string>
+    <string name="select_county">Select county …</string>
     <string name="select_district">Select district …</string>
-    <string name="please_select_country_district">Please select country and district</string>
+    <string name="please_select_county_district">Please select county and district</string>
     <string name="back">Back</string>
 
     <string name="register_select_role_explanation">Please select your role</string>

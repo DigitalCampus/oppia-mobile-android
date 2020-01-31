@@ -5,24 +5,24 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Country {
+public class County {
 
     private long id;
     private String name;
     private List<District> districts;
 
-    public Country(long id, String name, List<District> districts) {
+    public County(long id, String name, List<District> districts) {
         this.id = id;
         this.name = name;
         this.districts = districts;
     }
 
-    public Country(String name) {
+    public County(String name) {
         this.name = name;
     }
 
-    public static List<Country> getDemoCountries() {
-        List<Country> countries = new ArrayList<>();
+    public static List<County> getDemoCountries() {
+        List<County> counties = new ArrayList<>();
 
         for (int i = 1; i <= 5; i++) {
 
@@ -31,10 +31,10 @@ public class Country {
                 districts.add(new District(j, i, "District " + (((i-1) * 4) + j)));
             }
 
-            countries.add(new Country(i, "Country " + i, districts));
+            counties.add(new County(i, "County " + i, districts));
         }
 
-        return countries;
+        return counties;
     }
 
     @NonNull
