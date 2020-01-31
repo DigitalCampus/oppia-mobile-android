@@ -1,6 +1,10 @@
 package org.digitalcampus.oppia.model;
 
+import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.Serializable;
@@ -39,7 +43,7 @@ public class CourseTransferableFile implements Serializable {
 
 
     public String getTitle() {
-        return title;
+        return title.trim();
     }
 
     public void setTitle(String title) {
@@ -80,6 +84,12 @@ public class CourseTransferableFile implements Serializable {
 
     public String getDisplayFileSize(){
         return FileUtils.readableFileSize(fileSize + relatedFilesize);
+    }
+
+    public String getDisplayDateTimeFromFilename(){
+        DateTimeFormatter f = DateTimeFormat.forPattern("yyyyMMddHHmm");
+        DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf("_")+1, filename.lastIndexOf('.')));
+        return MobileLearning.DISPLAY_DATETIME_FORMAT.print(dateTime);
     }
 
     public String getType() {

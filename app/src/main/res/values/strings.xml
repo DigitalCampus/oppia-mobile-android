@@ -438,6 +438,15 @@
     <string name="register_username_exists">Username already exists</string>
     <string name="collapse_all_sections">Collapse all sections</string>
     <string name="expand_all_sections">Expand all sections</string>
+    <string name="bluetooth.btn_connect">Connect</string>
+    <string name="bluetooth.device_name">This device name:</string>
+    <string name="bluetooth.tab_course">courses</string>
+    <string name="bluetooth.tab_activitylog">activity logs</string>
+    <string name="bluetooth.send_all">Send all</string>
+    <string name="bluetooth.btn_disconnect">Disconnect</string>
+    <string name="bluetooth.enable_discovery">Enable discovery mode</string>
+    <string name="title_activitylog">Activity log</string>
+    <string name="archived_activities">Archived (already transferred) trackers</string>
 
 
 </resources>
