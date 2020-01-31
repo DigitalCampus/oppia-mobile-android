@@ -114,6 +114,11 @@
             android:label="@string/title_sync"
             android:theme="@style/Oppia.ToolbarTheme" />
         <activity
+            android:name="org.digitalcampus.oppia.activity.ActivityLogActivity"
+            android:label="@string/title_activitylog"
+            android:theme="@style/Oppia.ToolbarTheme"
+            />
+        <activity
             android:name="org.digitalcampus.oppia.activity.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/bluetooth.select_device"

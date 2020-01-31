@@ -409,7 +409,7 @@ public class TransferFragment extends AppFragment implements InstallCourseListen
             }
 
             @Override
-            public void onFetchComplete(List<CourseTransferableFile> backups) {
+            public void onFetchComplete(List<CourseTransferableFile> backups, List<CourseTransferableFile> logs) {
                 transferableFiles.clear();
                 transferableFiles.addAll(backups);
                 coursesAdapter.notifyDataSetChanged();

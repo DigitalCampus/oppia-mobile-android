@@ -322,8 +322,11 @@ public class BluetoothTransferService extends Service {
             Log.d(TAG, totalBytes + " bytes sent via bluetooth.");
 
             if (trFile.getType().equals(CourseTransferableFile.TYPE_ACTIVITY_LOG)){
-                //If it was an activity log, remove the local one
-                FileUtils.deleteFile(trFile.getFile());
+                //If it was an activity log, archive the local one
+                FileUtils.moveFileToDir(
+                        trFile.getFile(),
+                        new File(Storage.getActivityArchivePath(BluetoothTransferService.this)),
+                        true);
             }
 
             localIntent = new Intent(BROADCAST_ACTION);
