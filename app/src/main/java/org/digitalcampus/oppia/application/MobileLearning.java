@@ -36,6 +36,9 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
+import org.digitalcampus.oppia.exception.UserNotFoundException;
+import org.digitalcampus.oppia.model.CustomValue;
+import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.service.TrackerWorker;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
@@ -158,8 +161,28 @@ public class MobileLearning extends Application {
     public void onCreate() {
         super.onCreate();
 
+        DbHelper dbHelper = DbHelper.getInstance(this);
 
-        DbHelper.getInstance(this).getReadableDatabase(); // To force migration if needed
+        dbHelper.getReadableDatabase(); // To force migration if needed
+
+        User user = new User();
+        user.setUsername("esprueba2");
+        user.setPassword("aaabbb");
+        user.setEmail("xxx2@yyy.zzz");
+        user.setCounty("españa");
+        user.setDistrict("alcala");
+        user.getUserCustomFields().put("unfloat", new CustomValue(0.8f));
+        user.getUserCustomFields().put("unbool", new CustomValue(false));
+
+        dbHelper.addOrUpdateUser(user);
+
+        try {
+            User user1 = dbHelper.getUser(user.getUsername());
+            user.toString();
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
+
 
         // this method fires once at application start
         Log.d(TAG, "Application start");

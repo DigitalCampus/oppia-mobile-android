@@ -17,9 +17,10 @@
 
 package org.digitalcampus.oppia.model;
 
-import android.content.ContentValues;
-
 import org.digitalcampus.oppia.utils.CryptoUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class User {
 
@@ -46,9 +47,7 @@ public class User {
 	public static final String CUSTOM_FIELD_DISTRICT = "district";
 	public static final String CUSTOM_FIELD_EMPLOYEE_ID = "employee_id";
 
-
-	private ContentValues userCustomFields = new ContentValues();
-//	private Map<String, CustomValue> userCustomFields = new HashMap<>();
+	private Map<String, CustomValue> userCustomFields = new HashMap<>();
 	
 	public String getUsername() {
 		return username;
@@ -176,28 +175,28 @@ public class User {
 	}
 
 	public String getEmployeeID() {
-		return userCustomFields.getAsString(CUSTOM_FIELD_EMPLOYEE_ID);
+		return CustomValue.getSecureValue(userCustomFields, CUSTOM_FIELD_EMPLOYEE_ID);
 	}
 
 	public void setEmployeeID(String employeeID) {
-		userCustomFields.put(CUSTOM_FIELD_EMPLOYEE_ID, employeeID);
+		userCustomFields.put(CUSTOM_FIELD_EMPLOYEE_ID, new CustomValue(employeeID));
 	}
 
 	public String getCounty() {
-		return userCustomFields.getAsString(CUSTOM_FIELD_COUNTY);
+		return CustomValue.getSecureValue(userCustomFields, CUSTOM_FIELD_COUNTY);
 	}
 
 	public void setCounty(String county) {
-		userCustomFields.put(CUSTOM_FIELD_COUNTY, county);
+		userCustomFields.put(CUSTOM_FIELD_COUNTY, new CustomValue(county));
 	}
 
 
 	public String getDistrict() {
-		return userCustomFields.getAsString(CUSTOM_FIELD_DISTRICT);
+		return CustomValue.getSecureValue(userCustomFields, CUSTOM_FIELD_DISTRICT);
 	}
 
 	public void setDistrict(String district) {
-		userCustomFields.put(CUSTOM_FIELD_DISTRICT, district);
+		userCustomFields.put(CUSTOM_FIELD_DISTRICT, new CustomValue(district));
 	}
 
 
@@ -205,12 +204,12 @@ public class User {
 		this.username = (getFirstname() + getLastname() + getEmployeeID()).replace(" ", "").toLowerCase();
 	}
 
-
-	public ContentValues getUserCustomFields() {
+	public Map<String, CustomValue> getUserCustomFields() {
 		return userCustomFields;
 	}
 
-	public void setUserCustomFields(ContentValues userCustomFields) {
+	public void setUserCustomFields(Map<String, CustomValue> userCustomFields) {
 		this.userCustomFields = userCustomFields;
 	}
+
 }

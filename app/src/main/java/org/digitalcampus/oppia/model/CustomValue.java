@@ -1,5 +1,7 @@
 package org.digitalcampus.oppia.model;
 
+import androidx.annotation.NonNull;
+
 import java.util.Map;
 
 public class CustomValue<T> {
@@ -8,7 +10,7 @@ public class CustomValue<T> {
 
 
     public CustomValue(T value) {
-        this.value = value;
+        setValue(value);
     }
 
     public T getValue() {
@@ -16,7 +18,11 @@ public class CustomValue<T> {
     }
 
     public void setValue(T value) {
-        this.value = value;
+        if (value instanceof String || value instanceof Boolean || value instanceof Integer || value instanceof Float) {
+            this.value = value;
+        } else {
+            throw new IllegalArgumentException("value must one of these types: String, int, float or boolean");
+        }
     }
 
     public static <TT> TT getSecureValue(Map<String, CustomValue> customFieldsMap, String key) {
@@ -25,5 +31,11 @@ public class CustomValue<T> {
         } else {
             return null;
         }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return String.valueOf(value);
     }
 }

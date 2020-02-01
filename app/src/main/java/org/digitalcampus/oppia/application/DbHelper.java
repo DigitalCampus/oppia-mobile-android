@@ -38,6 +38,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.LeaderboardPosition;
 import org.digitalcampus.oppia.model.Points;
@@ -179,11 +180,12 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_CF_ID = BaseColumns._ID;
 	private static final String USER_CF_USER_ID = "user_id";
 	private static final String USER_CF_USERNAME = "username";
-	private static final String USER_CF_FIELD_KEY = "field_key";
-	private static final String USER_CF_VALUE_STR = "value_str";
-	private static final String USER_CF_VALUE_INT = "value_int";
-	private static final String USER_CF_VALUE_BOOL = "value_bool";
-	private static final String USER_CF_VALUE_FLOAT = "value_float";
+
+	private static final String CF_FIELD_KEY = "field_key";
+	private static final String CF_VALUE_STR = "value_str";
+	private static final String CF_VALUE_INT = "value_int";
+	private static final String CF_VALUE_BOOL = "value_bool";
+	private static final String CF_VALUE_FLOAT = "value_float";
 
 	private static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
@@ -347,13 +349,13 @@ public class DbHelper extends SQLiteOpenHelper {
 		String sql = "CREATE TABLE ["+USER_CF_TABLE+"] (" +
 				"["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
 				"["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
-				"["+USER_CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
+				"["+ CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
 
-				"["+USER_CF_VALUE_STR +"]" + STR_TEXT_COMMA +
-				"["+USER_CF_VALUE_INT +"]" + STR_INT_COMMA +
-				"["+USER_CF_VALUE_BOOL+"] BOOLEAN, " +
-				"["+USER_CF_VALUE_FLOAT+"] FLOAT, " +
-				"CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ USER_CF_FIELD_KEY +")" +
+				"["+ CF_VALUE_STR +"]" + STR_TEXT_COMMA +
+				"["+ CF_VALUE_INT +"]" + STR_INT_COMMA +
+				"["+ CF_VALUE_BOOL +"] BOOLEAN, " +
+				"["+ CF_VALUE_FLOAT +"] FLOAT, " +
+				"CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ CF_FIELD_KEY +")" +
 				");";
 		db.execSQL(sql);
 	}
@@ -710,15 +712,48 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private void insertOrUpdateCustomFields(User user) {
 
-		// TODO test this
+		List<ContentValues> contenValuesList = convertCFtoCV(user.getUserCustomFields());
 
-		String s = USER_C_ID + "=?";
-		String[] args = new String[] { String.valueOf(user.getUserId()) };
-		try {
-			db.insertOrThrow(USER_CF_TABLE, null, user.getUserCustomFields());
-		} catch (SQLiteException e) {
-			db.update(USER_CF_TABLE, user.getUserCustomFields(), s, args);
+		for (ContentValues contentValues : contenValuesList) {
+
+			contentValues.put(USER_CF_USERNAME, user.getUsername());
+
+			try {
+				db.insertOrThrow(USER_CF_TABLE, null, contentValues);
+			} catch (SQLiteException e) {
+				String s = USER_CF_USERNAME + "=? AND " + CF_FIELD_KEY + "=?";
+				String[] args = new String[] { String.valueOf(user.getUsername()), contentValues.getAsString(CF_FIELD_KEY) };
+				db.update(USER_CF_TABLE, contentValues, s, args);
+			}
 		}
+
+	}
+
+	private List<ContentValues> convertCFtoCV(Map<String, CustomValue> customFields) {
+
+		List<ContentValues> contentValuesList = new ArrayList<>();
+		for (Map.Entry<String, CustomValue> entry : customFields.entrySet()) {
+		    String key = entry.getKey();
+			CustomValue customValue = entry.getValue();
+			Object value = customValue.getValue();
+
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(CF_FIELD_KEY, key);
+
+			if (value instanceof String) {
+				contentValues.put(CF_VALUE_STR, (String) value);
+			} else if (value instanceof Integer) {
+				contentValues.put(CF_VALUE_INT, (Integer) value);
+			} else if (value instanceof Float) {
+				contentValues.put(CF_VALUE_FLOAT, (Float) value);
+			} else if (value instanceof Boolean) {
+				contentValues.put(CF_VALUE_BOOL, (Boolean) value);
+			}
+
+			contentValuesList.add(contentValues);
+		}
+
+		return contentValuesList;
 	}
 
 	public void deleteUser(String username) {
@@ -727,10 +762,10 @@ public class DbHelper extends SQLiteOpenHelper {
 		String[] args = new String[]{String.valueOf(username)};
 		db.delete(USER_TABLE, s, args);
 
-		deleteUserCF(username);
+		deleteUserCustomFields(username);
 	}
 
-	private void deleteUserCF(String username) {
+	private void deleteUserCustomFields(String username) {
 		String s = USER_CF_USERNAME + "=?";
 		String[] args = new String[]{String.valueOf(username)};
 		db.delete(USER_CF_TABLE, s, args);
@@ -1240,9 +1275,49 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setPasswordAgain(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
 		}
 
-		// Todo fetch custom values
+		fetchUserCustomFields(u);
 
 		return u;
+	}
+
+	private void fetchUserCustomFields(User u) {
+
+		String[] CF_COLUMNS = new String[]{CF_VALUE_STR, CF_VALUE_INT, CF_VALUE_FLOAT, CF_VALUE_BOOL};
+
+		String s = USER_C_USERNAME + "=? ";
+		String[] args = new String[] { u.getUsername() };
+		Cursor c = db.query(USER_CF_TABLE, null, s, args, null, null, null);
+
+		// TODO Since here a refactor can be done to do a generic process for others models (throug interface to get customFields object)
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			String key = c.getString(c.getColumnIndex(CF_FIELD_KEY));
+			for (String columnName : CF_COLUMNS) {
+				String value = c.getString(c.getColumnIndex(columnName));
+				if (value != null) {
+					switch (columnName) {
+						case CF_VALUE_STR:
+							u.getUserCustomFields().put(key, new CustomValue(value));
+							break;
+
+						case CF_VALUE_INT:
+							u.getUserCustomFields().put(key, new CustomValue(Integer.parseInt(value)));
+							break;
+
+						case CF_VALUE_BOOL:
+							boolean valueBool = Integer.parseInt(value) == 1;
+							u.getUserCustomFields().put(key, new CustomValue(valueBool));
+							break;
+
+						case CF_VALUE_FLOAT:
+							u.getUserCustomFields().put(key, new CustomValue(Float.parseFloat(value)));
+							break;
+					}
+				}
+			}
+			c.moveToNext();
+		}
+		c.close();
 	}
 
 	private User getUser(Cursor c) throws UserNotFoundException {
