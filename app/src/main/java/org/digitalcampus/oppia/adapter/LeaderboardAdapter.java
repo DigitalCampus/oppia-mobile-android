@@ -54,7 +54,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.leaderboard_item, parent, false);
+                .inflate(R.layout.row_leaderboard, parent, false);
         return new ViewHolder(v);
 
     }

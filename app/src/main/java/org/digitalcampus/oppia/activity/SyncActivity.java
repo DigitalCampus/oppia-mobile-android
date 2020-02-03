@@ -22,12 +22,8 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.adapter.TransferCourseListAdapter;
+import org.digitalcampus.oppia.adapter.TransferableFileListAdapter;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
 import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
@@ -42,12 +38,14 @@ import org.digitalcampus.oppia.task.FetchCourseTransferableFilesTask;
 import org.digitalcampus.oppia.task.InstallDownloadedCoursesTask;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
-import org.digitalcampus.oppia.utils.storage.Storage;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SyncActivity extends AppActivity implements InstallCourseListener, BluetoothBroadcastReceiver.BluetoothTransferListener, TabLayout.BaseOnTabSelectedListener, ExportActivityListener {
 
@@ -136,7 +134,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
         coursesRecyclerView.setHasFixedSize(true);
         coursesRecyclerView.setLayoutManager( new LinearLayoutManager(this));
-        coursesAdapter = new TransferCourseListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
+        coursesAdapter = new TransferableFileListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
                 final CourseTransferableFile toShare = transferableFiles.get(position);
@@ -154,7 +152,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
         activitylogsRecyclerView.setHasFixedSize(true);
         activitylogsRecyclerView.setLayoutManager( new LinearLayoutManager(this));
-        activitylogsAdapter = new TransferCourseListAdapter(activityLogs, new ListInnerBtnOnClickListener() {
+        activitylogsAdapter = new TransferableFileListAdapter(activityLogs, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
                 if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
@@ -257,9 +255,13 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
     private void connectDevice(Intent data) {
         // Get the device MAC address
-        String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-        bluetoothManager.connect(device);
+        Bundle extras = data.getExtras();
+        if (extras != null){
+            String address = extras.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+            BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+            bluetoothManager.connect(device);
+        }
+
     }
 
     private void setupBluetoothConnection() {
@@ -404,9 +406,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         if (isBluetoothAvailable()){
             bluetoothManager.disconnect(false);
         }
-        else{
-            super.onBackPressed();
-        }
+        super.onBackPressed();
 
     }
 
@@ -469,6 +469,9 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         if (progressDialog != null){
             progressDialog.dismiss();
             progressDialog = null;
+        }
+        if (!p.isResult()){
+            Toast.makeText(this, p.getResultResponse(), Toast.LENGTH_SHORT).show();
         }
         refreshFileList(false);
         //Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
@@ -629,11 +632,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             Log.d(TAG, "Handle message");
             switch (msg.what) {
                 case BluetoothConnectionManager.UI_MESSAGE_STATE_CHANGE:
-                    self.updateStatus(true);
-                    break;
-
                 case BluetoothConnectionManager.UI_MESSAGE_DEVICE_NAME:
-                    // save the connected device's name
                     self.updateStatus(true);
                     break;
 
@@ -669,8 +668,11 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             case R.id.menu_disconnect:
                 bluetoothManager.disconnect(true);
                 break;
-        }
 
+            case android.R.id.home:
+                this.onBackPressed();
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
