@@ -1,6 +1,5 @@
 package org.digitalcampus.oppia.activity;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,13 +14,9 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ExportedTrackersFileAdapter;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.listener.ExportActivityListener;
-import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
-import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.ExportActivityTask;
-import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.SubmitTrackerMultipleTask;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.resources.ExternalResourceOpener;
