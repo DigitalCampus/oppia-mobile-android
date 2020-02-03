@@ -406,9 +406,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         if (isBluetoothAvailable()){
             bluetoothManager.disconnect(false);
         }
-        else{
-            super.onBackPressed();
-        }
+        super.onBackPressed();
 
     }
 
@@ -670,8 +668,11 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             case R.id.menu_disconnect:
                 bluetoothManager.disconnect(true);
                 break;
-        }
 
+            case android.R.id.home:
+                this.onBackPressed();
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
