@@ -50,5 +50,10 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+    <string-array name="registration_screens_explanations">
+        <item>Please enter your firstname, lastname and ID number (all fields are required)</item>
+        <item>Please enter a password. It must have at least 6 characters</item>
+        <item>Please select your county and then select your district</item>
+    </string-array>
 
 </resources>

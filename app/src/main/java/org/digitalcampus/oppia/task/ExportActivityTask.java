@@ -71,6 +71,8 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             }
             userJSON += "\"firstname\":\"" + u.getFirstname() + "\", ";
             userJSON += "\"lastname\":\"" + u.getLastname() + "\", ";
+            userJSON += "\"county\":\"" + u.getCounty() + "\", ";
+            userJSON += "\"district\":\"" + u.getDistrict() + "\", ";
             userJSON += "\"organisation\":\"" + u.getOrganisation() + "\", ";
             userJSON += "\"jobtitle\":\"" + u.getJobTitle() + "\", ";
             userJSON += "\"phoneno\":\"" + u.getPhoneNo() + "\", ";

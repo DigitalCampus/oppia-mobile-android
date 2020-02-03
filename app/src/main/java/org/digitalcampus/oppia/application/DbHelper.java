@@ -28,7 +28,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -39,6 +38,7 @@ import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.GamificationEvent;
 import org.digitalcampus.oppia.model.LeaderboardPosition;
 import org.digitalcampus.oppia.model.Points;
@@ -58,6 +58,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
@@ -70,7 +71,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 30;
+	private static final int DB_VERSION = 31;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -174,6 +175,18 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_ORGANIZATION = "organisation";
 	private static final String USER_C_PHONE = "phoneNo";
 
+	// User Custom Fields
+	private static final String USER_CF_TABLE = "user_cf";
+	private static final String USER_CF_ID = BaseColumns._ID;
+	private static final String USER_CF_USER_ID = "user_id";
+	private static final String USER_CF_USERNAME = "username";
+
+	private static final String CF_FIELD_KEY = "field_key";
+	private static final String CF_VALUE_STR = "value_str";
+	private static final String CF_VALUE_INT = "value_int";
+	private static final String CF_VALUE_BOOL = "value_bool";
+	private static final String CF_VALUE_FLOAT = "value_float";
+
 	private static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
     private static final String USER_PREFS_C_PREFKEY = "preference";
@@ -221,6 +234,8 @@ public class DbHelper extends SQLiteOpenHelper {
         createCourseGamificationTable(db);
 		createActivityGamificationTable(db);
 		createLeaderboardTable(db);
+
+		createUserCustomFieldsTable(db);
 	}
 
     public void beginTransaction(){
@@ -325,6 +340,23 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_BADGES +"] integer default 0, " +
 				 "["+USER_C_OFFLINE_REGISTER+"] integer default 0 "+
             ");";
+		db.execSQL(sql);
+	}
+
+
+	private void createUserCustomFieldsTable(SQLiteDatabase db) {
+
+		String sql = "CREATE TABLE ["+USER_CF_TABLE+"] (" +
+				"["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
+				"["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
+				"["+ CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
+
+				"["+ CF_VALUE_STR +"]" + STR_TEXT_COMMA +
+				"["+ CF_VALUE_INT +"]" + STR_INT_COMMA +
+				"["+ CF_VALUE_BOOL +"] BOOLEAN, " +
+				"["+ CF_VALUE_FLOAT +"] FLOAT, " +
+				"CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ CF_FIELD_KEY +")" +
+				");";
 		db.execSQL(sql);
 	}
 
@@ -551,6 +583,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_JOBTITLE + " text null;");
 			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
 		}
+
+
+		if (oldVersion < 31) {
+			createUserCustomFieldsTable(db);
+		}
 	}
 
 	public void updateV43(long userId){
@@ -667,7 +704,56 @@ public class DbHelper extends SQLiteOpenHelper {
 			String[] args = new String[] { String.valueOf(userId) };
 			db.update(USER_TABLE, values, s, args);
 		}
+
+		insertOrUpdateCustomFields(user);
+
 		return userId;
+	}
+
+	private void insertOrUpdateCustomFields(User user) {
+
+		List<ContentValues> contenValuesList = convertCFtoCV(user.getUserCustomFields());
+
+		for (ContentValues contentValues : contenValuesList) {
+
+			contentValues.put(USER_CF_USERNAME, user.getUsername());
+
+			try {
+				db.insertOrThrow(USER_CF_TABLE, null, contentValues);
+			} catch (SQLiteException e) {
+				String s = USER_CF_USERNAME + "=? AND " + CF_FIELD_KEY + "=?";
+				String[] args = new String[] { String.valueOf(user.getUsername()), contentValues.getAsString(CF_FIELD_KEY) };
+				db.update(USER_CF_TABLE, contentValues, s, args);
+			}
+		}
+
+	}
+
+	private List<ContentValues> convertCFtoCV(Map<String, CustomValue> customFields) {
+
+		List<ContentValues> contentValuesList = new ArrayList<>();
+		for (Map.Entry<String, CustomValue> entry : customFields.entrySet()) {
+		    String key = entry.getKey();
+			CustomValue customValue = entry.getValue();
+			Object value = customValue.getValue();
+
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(CF_FIELD_KEY, key);
+
+			if (value instanceof String) {
+				contentValues.put(CF_VALUE_STR, (String) value);
+			} else if (value instanceof Integer) {
+				contentValues.put(CF_VALUE_INT, (Integer) value);
+			} else if (value instanceof Float) {
+				contentValues.put(CF_VALUE_FLOAT, (Float) value);
+			} else if (value instanceof Boolean) {
+				contentValues.put(CF_VALUE_BOOL, (Boolean) value);
+			}
+
+			contentValuesList.add(contentValues);
+		}
+
+		return contentValuesList;
 	}
 
 	public void deleteUser(String username) {
@@ -675,6 +761,14 @@ public class DbHelper extends SQLiteOpenHelper {
 		String s = USER_C_USERNAME + "=?";
 		String[] args = new String[]{String.valueOf(username)};
 		db.delete(USER_TABLE, s, args);
+
+		deleteUserCustomFields(username);
+	}
+
+	private void deleteUserCustomFields(String username) {
+		String s = USER_CF_USERNAME + "=?";
+		String[] args = new String[]{String.valueOf(username)};
+		db.delete(USER_CF_TABLE, s, args);
 	}
 
 	public long isUser(String username){
@@ -1181,7 +1275,49 @@ public class DbHelper extends SQLiteOpenHelper {
 			u.setPasswordAgain(c.getString(c.getColumnIndex(USER_C_PASSWORDPLAIN)));
 		}
 
+		fetchUserCustomFields(u);
+
 		return u;
+	}
+
+	private void fetchUserCustomFields(User u) {
+
+		String[] CF_COLUMNS = new String[]{CF_VALUE_STR, CF_VALUE_INT, CF_VALUE_FLOAT, CF_VALUE_BOOL};
+
+		String s = USER_C_USERNAME + "=? ";
+		String[] args = new String[] { u.getUsername() };
+		Cursor c = db.query(USER_CF_TABLE, null, s, args, null, null, null);
+
+		// TODO Since here a refactor can be done to do a generic process for others models (throug interface to get customFields object)
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			String key = c.getString(c.getColumnIndex(CF_FIELD_KEY));
+			for (String columnName : CF_COLUMNS) {
+				String value = c.getString(c.getColumnIndex(columnName));
+				if (value != null) {
+					switch (columnName) {
+						case CF_VALUE_STR:
+							u.getUserCustomFields().put(key, new CustomValue(value));
+							break;
+
+						case CF_VALUE_INT:
+							u.getUserCustomFields().put(key, new CustomValue(Integer.parseInt(value)));
+							break;
+
+						case CF_VALUE_BOOL:
+							boolean valueBool = Integer.parseInt(value) == 1;
+							u.getUserCustomFields().put(key, new CustomValue(valueBool));
+							break;
+
+						case CF_VALUE_FLOAT:
+							u.getUserCustomFields().put(key, new CustomValue(Float.parseFloat(value)));
+							break;
+					}
+				}
+			}
+			c.moveToNext();
+		}
+		c.close();
 	}
 
 	private User getUser(Cursor c) throws UserNotFoundException {

@@ -291,5 +291,32 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="EditValidableForm">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="ExpansorHoriz">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="ExpansorVert">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="ButtonSelectRole">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:padding">15dp</item>
+        <item name="backgroundTint">@color/theme_secondary_light</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 
 </resources>
