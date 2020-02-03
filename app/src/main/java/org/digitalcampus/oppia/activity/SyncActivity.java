@@ -472,6 +472,9 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             progressDialog.dismiss();
             progressDialog = null;
         }
+        if (!p.isResult()){
+            Toast.makeText(this, p.getResultResponse(), Toast.LENGTH_SHORT).show();
+        }
         refreshFileList(false);
         //Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
     }
