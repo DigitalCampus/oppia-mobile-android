@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
 
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
@@ -130,7 +131,7 @@ public class RegisterMainFragment extends AppFragment implements SubmitListener,
         formBottom.setVisibility(View.GONE);
     }
 
-    private void setFragment(RegisterBaseFragment fragment) {
+    private void setFragment(Fragment fragment) {
         getChildFragmentManager().beginTransaction().replace(R.id.frame_register_main, fragment).addToBackStack(null).commit();
     }
 

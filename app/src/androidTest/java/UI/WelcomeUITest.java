@@ -1,7 +1,7 @@
 package UI;
 
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
@@ -41,7 +41,7 @@ public class WelcomeUITest {
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
 
-        onView(withId(R.id.register_btn))
+        onView(withText(R.string.register_select_role_explanation))
                 .check(matches(isDisplayed()));
     }
 

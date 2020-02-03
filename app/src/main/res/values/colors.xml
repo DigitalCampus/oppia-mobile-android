@@ -29,9 +29,12 @@
 
     <color name="white">#FFF</color>
     <color name="black">#000</color>
-    <color name="grey_light">#e2e2e2</color>
+    <color name="grey_light">#E2E2E2</color>
+    <color name="grey_light_2">#F0F0F0</color>
     <color name="grey_dark">#7E7E7E</color>
     <color name="red">#E53935</color>
+
+    <color name="default_bg_color">#fafafa</color>
 
     <color name="chart_points_circle_color">@color/theme_primary</color>
 

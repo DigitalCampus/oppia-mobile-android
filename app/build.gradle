@@ -274,7 +274,7 @@ dependencies {
     implementation 'javax.xml.stream:stax-api:1.0-2'
 
 //    implementation 'androidx.multidex:multidex:2.0.1'
-    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
+//    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 
 }
 

@@ -49,7 +49,7 @@
                 android:textSize="17sp" />
 
             <LinearLayout
-                android:id="@+id/view_reg_ch_screen_1"
+                android:id="@+id/view_reg_ch_screen_0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -96,7 +96,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/view_reg_ch_screen_2"
+                android:id="@+id/view_reg_ch_screen_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -130,7 +130,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/view_reg_ch_screen_3"
+                android:id="@+id/view_reg_ch_screen_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">

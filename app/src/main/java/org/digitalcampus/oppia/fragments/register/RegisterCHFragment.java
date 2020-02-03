@@ -17,6 +17,7 @@ import com.badoualy.stepperindicator.StepperIndicator;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.fragments.AppFragment;
 import org.digitalcampus.oppia.model.County;
 import org.digitalcampus.oppia.model.District;
 import org.digitalcampus.oppia.model.User;
@@ -26,20 +27,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RegisterCHFragment extends RegisterBaseFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class RegisterCHFragment extends AppFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String ARG_ROLE = "arg_role";
     private int currentScreen = 0;
 
     private TextView tvExplanationRegScreen;
-    private LinearLayout viewRegChScreen1;
+    private LinearLayout viewRegChScreen0;
     private ValidableTextInputLayout editRegChFirstName;
     private ValidableTextInputLayout editRegChLastName;
     private ValidableTextInputLayout editRegChEmployeeId;
-    private LinearLayout viewRegChScreen2;
+    private LinearLayout viewRegChScreen1;
     private ValidableTextInputLayout editRegChPassword;
     private ValidableTextInputLayout editRegChPasswordAgain;
-    private LinearLayout viewRegChScreen3;
+    private LinearLayout viewRegChScreen2;
     private AppCompatSpinner spinnerCounties;
     private AppCompatSpinner spinnerDistricts;
     private TextView btnRegisterChPrevious;
@@ -54,14 +55,14 @@ public class RegisterCHFragment extends RegisterBaseFragment implements View.OnC
 
     private void findViews(View layout) {
         tvExplanationRegScreen = layout.findViewById(R.id.tv_explanation_reg_screen);
-        viewRegChScreen1 = layout.findViewById(R.id.view_reg_ch_screen_1);
+        viewRegChScreen0 = layout.findViewById(R.id.view_reg_ch_screen_0);
         editRegChFirstName = layout.findViewById(R.id.edit_reg_ch_first_name);
         editRegChLastName = layout.findViewById(R.id.edit_reg_ch_last_name);
         editRegChEmployeeId = layout.findViewById(R.id.edit_reg_ch_employee_id);
-        viewRegChScreen2 = layout.findViewById(R.id.view_reg_ch_screen_2);
+        viewRegChScreen1 = layout.findViewById(R.id.view_reg_ch_screen_1);
         editRegChPassword = layout.findViewById(R.id.edit_reg_ch_password);
         editRegChPasswordAgain = layout.findViewById(R.id.edit_reg_ch_password_again);
-        viewRegChScreen3 = layout.findViewById(R.id.view_reg_ch_screen_3);
+        viewRegChScreen2 = layout.findViewById(R.id.view_reg_ch_screen_2);
         spinnerCounties = layout.findViewById(R.id.spinner_counties);
         spinnerDistricts = layout.findViewById(R.id.spinner_districts);
         btnRegisterChPrevious = layout.findViewById(R.id.btn_register_ch_previous);
@@ -125,9 +126,9 @@ public class RegisterCHFragment extends RegisterBaseFragment implements View.OnC
 
     private void updateScreen() {
 
-        viewRegChScreen1.setVisibility(currentScreen == 0 ? View.VISIBLE : View.GONE);
-        viewRegChScreen2.setVisibility(currentScreen == 1 ? View.VISIBLE : View.GONE);
-        viewRegChScreen3.setVisibility(currentScreen == 2 ? View.VISIBLE : View.GONE);
+        viewRegChScreen0.setVisibility(currentScreen == 0 ? View.VISIBLE : View.GONE);
+        viewRegChScreen1.setVisibility(currentScreen == 1 ? View.VISIBLE : View.GONE);
+        viewRegChScreen2.setVisibility(currentScreen == 2 ? View.VISIBLE : View.GONE);
 
 
         stepperIndicator.setCurrentStep(currentScreen);

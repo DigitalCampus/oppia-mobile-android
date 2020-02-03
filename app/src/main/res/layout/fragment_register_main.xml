@@ -30,44 +30,29 @@
 
 
         <TextView
-            style="@style/SubheaderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register_select_role_explanation"
             android:layout_gravity="left"
             android:textSize="17sp"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_reg_cha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="CHA" />
+            android:text="@string/cha_role"
+            style="@style/ButtonSelectRole" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_reg_chss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="CHSS" />
+            android:text="@string/chss_role"
+            style="@style/ButtonSelectRole" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_reg_other"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Other" />
+            android:text="@string/other_role"
+            style="@style/ButtonSelectRole" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+        <View style="@style/ExpansorVert" />
     </LinearLayout>
 
     <FrameLayout
@@ -86,6 +71,7 @@
         android:layout_centerHorizontal="true"
         android:background="@color/background_light"
         android:orientation="horizontal"
+        android:gravity="center"
         android:paddingLeft="@dimen/padding_large"
         android:paddingTop="@dimen/padding_medium"
         android:paddingRight="@dimen/padding_large"
@@ -95,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:weightSum="0">
+            android:gravity="center">
 
             <TextView
                 style="@style/SubheaderText"
@@ -111,16 +97,6 @@
                 android:layout_gravity="bottom"
                 android:text="@string/tab_title_login" />
         </LinearLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/register_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_weight="2"
-            android:text="@string/register_btn_text"
-            android:theme="@style/PrimaryButton"
-            android:visibility="gone" />
 
     </LinearLayout>
 

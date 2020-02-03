@@ -309,5 +309,14 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <style name="ButtonSelectRole">
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:padding">15dp</item>
+        <item name="backgroundTint">@color/theme_secondary_light</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 
 </resources>
