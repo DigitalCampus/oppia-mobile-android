@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Section;
@@ -47,7 +47,7 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         prefLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         showSectionNumbers = prefs.getBoolean(PrefsActivity.PREF_SHOW_SECTION_NOS, false);
-        highlightCompleted = prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, MobileLearning.DEFAULT_DISPLAY_COMPLETED);
+        highlightCompleted = prefs.getBoolean(PrefsActivity.PREF_HIGHLIGHT_COMPLETED, App.DEFAULT_DISPLAY_COMPLETED);
         boolean startCollapsed = prefs.getBoolean(PrefsActivity.PREF_START_COURSEINDEX_COLLAPSED, false);
 
         this.startExpanded = !startCollapsed;

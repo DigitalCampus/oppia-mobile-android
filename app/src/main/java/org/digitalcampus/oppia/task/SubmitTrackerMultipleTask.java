@@ -28,7 +28,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
@@ -95,7 +95,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                     submitAttempted = true;
 
                     @SuppressWarnings("unchecked")
-                    Collection<Collection<TrackerLog>> userTrackers = split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
+                    Collection<Collection<TrackerLog>> userTrackers = split((Collection<Object>) payload.getData(), App.MAX_TRACKER_SUBMIT);
                     sendTrackerBatch(userTrackers, u, payload);
                 }
             }

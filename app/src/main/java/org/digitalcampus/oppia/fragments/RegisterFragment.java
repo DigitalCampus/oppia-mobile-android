@@ -34,7 +34,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
@@ -169,9 +169,9 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		}
 
 		// check password length
-		if (password.length() < MobileLearning.PASSWORD_MIN_LENGTH) {
+		if (password.length() < App.PASSWORD_MIN_LENGTH) {
 			passwordField.setErrorEnabled(true);
-			passwordField.setError(getString(R.string.error_register_password,  MobileLearning.PASSWORD_MIN_LENGTH ));
+			passwordField.setError(getString(R.string.error_register_password,  App.PASSWORD_MIN_LENGTH ));
 			passwordField.requestFocus();
 		    return;
 		}

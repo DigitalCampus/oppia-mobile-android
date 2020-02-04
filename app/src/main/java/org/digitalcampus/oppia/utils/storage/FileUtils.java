@@ -22,7 +22,7 @@ import android.webkit.MimeTypeMap;
 
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -321,7 +321,7 @@ public class FileUtils {
 		if (mimeType == null) {
 			return false;
 		}
-		for (String s: MobileLearning.SUPPORTED_MEDIA_TYPES){
+		for (String s: App.SUPPORTED_MEDIA_TYPES){
 			if(mimeType.equals(s)){
 				return true;
 			}

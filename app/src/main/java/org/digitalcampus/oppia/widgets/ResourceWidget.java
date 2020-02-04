@@ -23,7 +23,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +39,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
@@ -55,7 +53,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class ResourceWidget extends WidgetFactory {
@@ -234,7 +231,7 @@ public class ResourceWidget extends WidgetFactory {
 	@Override
 	public void saveTracker(){
 		long timetaken = this.getSpentTime();
-		if (activity == null || timetaken < MobileLearning.RESOURCE_READ_TIME) {
+		if (activity == null || timetaken < App.RESOURCE_READ_TIME) {
 			return;
 		}
 

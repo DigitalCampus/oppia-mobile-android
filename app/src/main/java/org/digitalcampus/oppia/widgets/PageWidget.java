@@ -21,7 +21,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
@@ -48,7 +47,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class PageWidget extends WidgetFactory {
 
@@ -178,7 +176,7 @@ public class PageWidget extends WidgetFactory {
 		}
 		long timetaken = this.getSpentTime();
 		// only save tracker if over the time
-		if (timetaken < MobileLearning.PAGE_READ_TIME) {
+		if (timetaken < App.PAGE_READ_TIME) {
 			return;
 		}
 

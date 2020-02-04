@@ -32,7 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.PermissionsManager;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.InstallCourseListener;
@@ -62,7 +62,7 @@ public class StartUpActivity extends Activity implements UpgradeListener, PostIn
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mint.disableNetworkMonitoring();
-        Mint.initAndStartSession(this, MobileLearning.MINT_API_KEY);
+        Mint.initAndStartSession(this, App.MINT_API_KEY);
         setContentView(R.layout.activity_start_up);
 
         tvProgress = this.findViewById(R.id.start_up_progress);

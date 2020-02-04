@@ -16,7 +16,7 @@ import androidx.core.app.NotificationCompat;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -68,7 +68,7 @@ public class OppiaNotificationUtils {
             notifBuilder.setColor(color);
         } else {
             //in older versions, we show the App logo
-            notifBuilder.setLargeIcon(BitmapFactory.decodeResource(ctx.getResources(), MobileLearning.APP_LOGO));
+            notifBuilder.setLargeIcon(BitmapFactory.decodeResource(ctx.getResources(), App.APP_LOGO));
         }
 
         return notifBuilder;
