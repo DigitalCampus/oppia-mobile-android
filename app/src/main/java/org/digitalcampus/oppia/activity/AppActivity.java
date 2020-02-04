@@ -183,8 +183,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
                 logoutAndRestartApp();
             }
         }
-
-//        onGamificationEvent("esprueba", 20);
     }
 
     @Override

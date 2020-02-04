@@ -128,8 +128,6 @@ public class GamificationService  extends IntentService {
                     qa.setPassed(isCompleted);
                     qa.setSent(false);
                     qa.setEvent(event.getEvent());
-                    //don't save points twice
-                    //qa.setPoints(event.getPoints());
                     db.insertQuizAttempt(qa);
 
                     long now = System.currentTimeMillis()/1000;

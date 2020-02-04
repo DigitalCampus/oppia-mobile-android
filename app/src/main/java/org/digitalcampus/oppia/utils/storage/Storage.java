@@ -82,8 +82,6 @@ public class Storage {
             return false;
         }
 
-        //BUFFER_SIZE_CONFIG = 21;
-
         String[] dirs = {
                 Storage.getCoursesPath(ctx),
                 Storage.getMediaPath(ctx),

@@ -136,7 +136,6 @@ public class MobileLearning extends Application {
     public static final DateTimeFormatter DISPLAY_DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
 
     public static final int MAX_TRACKER_SUBMIT = 10;
-    //	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v", "video/mp4", "audio/mpeg", "video/3gp", "video/3gpp"}; //NOSONAR
 
     public static final String DEVICEADMIN_ADD_PATH = OPPIAMOBILE_API + "device/register/";
@@ -144,12 +143,6 @@ public class MobileLearning extends Application {
     // only used in case a course doesn't have any lang specified
     public static final String DEFAULT_LANG = "en";
     private static final String NAME_TRACKER_SEND_WORK = "tracker_send_work";
-
-    // for tracking if SubmitTrackerMultipleTask is already running
-//	public SubmitTrackerMultipleTask omSubmitTrackerMultipleTask = null;
-//
-//	// for tracking if SubmitQuizAttemptsTask is already running
-//	public SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = null;
 
 
     private AppComponent appComponent;

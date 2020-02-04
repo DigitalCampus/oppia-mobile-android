@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.widgets;
 
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +42,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Locale;
 
 public class UrlWidget extends WidgetFactory {
 

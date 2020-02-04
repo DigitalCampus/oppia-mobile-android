@@ -16,7 +16,6 @@ public class XMLSecurityHelper {
     public static DocumentBuilder getNewSecureDocumentBuilder() throws ParserConfigurationException {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         factory.setExpandEntityReferences(false);
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder;
@@ -24,8 +23,6 @@ public class XMLSecurityHelper {
 
 
     public static void makeParserSecure(XMLReader reader) throws SAXNotRecognizedException, SAXNotSupportedException {
-
-//        reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         reader.setFeature("http://xml.org/sax/features/external-general-entities", false);
     }
 }
