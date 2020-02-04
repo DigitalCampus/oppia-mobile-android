@@ -1,6 +1,6 @@
 package org.digitalcampus.oppia.model;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 
 public class ActivitySchedule {
@@ -22,7 +22,7 @@ public class ActivitySchedule {
 	}
 	
 	public String getStartTimeString() {
-		return MobileLearning.DATETIME_FORMAT.print(startTime);
+		return DateUtils.DATETIME_FORMAT.print(startTime);
 	}
 	
 	public void setStartTime(DateTime startTime) {
@@ -34,7 +34,7 @@ public class ActivitySchedule {
 	}
 	
 	public String getEndTimeString () {
-		return MobileLearning.DATETIME_FORMAT.print(endTime);
+		return DateUtils.DATETIME_FORMAT.print(endTime);
 	}
 	
 	public void setEndTime(DateTime endTime) {

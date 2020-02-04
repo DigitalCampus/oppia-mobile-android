@@ -17,6 +17,7 @@
 
 package org.digitalcampus.oppia.model;
 
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.CourseNotFoundException;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
@@ -110,7 +111,7 @@ public class Course extends MultiLangInfoModel implements Serializable {
     }
 
     public String getTrackerLogUrl() {
-        return String.format(MobileLearning.COURSE_ACTIVITY_PATH, this.getShortname());
+        return String.format(Paths.COURSE_ACTIVITY_PATH, this.getShortname());
     }
 
     public Double getVersionId() {

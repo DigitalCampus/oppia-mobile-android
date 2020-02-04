@@ -7,7 +7,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -100,7 +100,7 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
         }
         DateTimeFormatter f = DateTimeFormat.forPattern("yyyyMMddHHmm");
         DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf("_")+1, filename.lastIndexOf('.')));
-        String date = MobileLearning.DISPLAY_DATETIME_FORMAT.print(dateTime);
+        String date = DateUtils.DISPLAY_DATETIME_FORMAT.print(dateTime);
 
         holder.fileName.setText(username);
         holder.fileSize.setText( org.apache.commons.io.FileUtils.byteCountToDisplaySize(current.length()));

@@ -31,8 +31,8 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiChoice;
 import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.GamificationEvent;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -408,7 +408,7 @@ public class Quiz implements Serializable {
         try {
             json.put("quiz_id", this.getID());
             DateTime now = new DateTime();
-            json.put("attempt_date", MobileLearning.DATETIME_FORMAT.print(now));
+            json.put("attempt_date", DateUtils.DATETIME_FORMAT.print(now));
             json.put(JSON_PROPERTY_SCORE, this.getUserscore());
             json.put(JSON_PROPERTY_MAXSCORE, this.getMaxscore());
             json.put("instance_id",this.getInstanceID());

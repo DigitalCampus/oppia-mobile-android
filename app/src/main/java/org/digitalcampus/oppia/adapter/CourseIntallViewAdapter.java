@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.adapter;
 import android.content.Context;
 
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
@@ -48,6 +47,9 @@ public class CourseIntallViewAdapter extends Course {
     private String authorUsername;
     private String authorName;
     private String organisationName;
+
+
+    public static final String SERVER_COURSES_NAME = "courses";
 
     private static final String JSON_PROPERTY_DESCRIPTION = "description";
     private static final String JSON_PROPERTY_TITLE = "title";
@@ -117,7 +119,7 @@ public class CourseIntallViewAdapter extends Course {
         ArrayList<String> downloadingCourses = CourseIntallerService.getTasksDownloading();
         ArrayList<CourseIntallViewAdapter> courses = new ArrayList<>();
 
-        JSONArray coursesArray = json.getJSONArray(MobileLearning.SERVER_COURSES_NAME);
+        JSONArray coursesArray = json.getJSONArray(SERVER_COURSES_NAME);
         for (int i = 0; i < coursesArray.length(); i++) {
             JSONObject json_obj = coursesArray.getJSONObject(i);
             CourseIntallViewAdapter course = new CourseIntallViewAdapter(location);

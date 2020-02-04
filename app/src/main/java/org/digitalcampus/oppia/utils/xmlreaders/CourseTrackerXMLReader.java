@@ -19,11 +19,11 @@ package org.digitalcampus.oppia.utils.xmlreaders;
 
 import android.util.Log;
 
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.TrackerLog;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -99,7 +99,7 @@ public class CourseTrackerXMLReader {
 			NamedNodeMap attrs = actTrackers.item(i).getAttributes();
 			String digest = attrs.getNamedItem(NODE_DIGEST).getTextContent();
 			String submittedDateString = attrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
-			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
+			DateTime sdt = DateUtils.DATETIME_FORMAT.parseDateTime(submittedDateString);
 			
 			boolean completed;
 			try {
@@ -187,7 +187,7 @@ public class CourseTrackerXMLReader {
                     }
 
 					String submittedDateString = quizAttrs.getNamedItem(NODE_SUBMITTEDDATE).getTextContent();
-					DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(submittedDateString);
+					DateTime sdt = DateUtils.DATETIME_FORMAT.parseDateTime(submittedDateString);
 					
 					boolean passed;
 					try {

@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.QuizAttempt;
+import org.digitalcampus.oppia.utils.DateUtils;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
         String course = quiz.getCourseTitle();
         viewHolder.course_title.setText(course == null ? ctx.getString(R.string.quiz_attempts_unkwnown_course) : course);
         //viewHolder.timetaken.setText(quiz.getHumanTimetaken());
-        viewHolder.date.setText(MobileLearning.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
+        viewHolder.date.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
         viewHolder.score.setText(quiz.getScorePercentLabel());
         viewHolder.score.setBackgroundResource(
                 quiz.isPassed()

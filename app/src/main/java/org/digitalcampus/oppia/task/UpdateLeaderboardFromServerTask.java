@@ -7,7 +7,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.digitalcampus.oppia.gamification.Leaderboard;
 import org.digitalcampus.oppia.listener.SubmitListener;
@@ -39,7 +39,7 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
 
         try {
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
-            Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, MobileLearning.LEADERBOARD_PATH));
+            Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.LEADERBOARD_PATH));
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
                 String json = response.body().string();

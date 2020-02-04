@@ -35,6 +35,7 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
@@ -88,14 +89,14 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         if (bundle != null) {
             Tag t = (Tag) bundle.getSerializable(Tag.TAG);
             if (t != null){
-                this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
+                this.url = Paths.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
                 TextView tagTitle = findViewById(R.id.category_title);
                 tagTitle.setVisibility(View.VISIBLE);
                 tagTitle.setText(t.getName());
             }
 
         } else {
-            this.url = MobileLearning.SERVER_COURSES_PATH;
+            this.url = Paths.SERVER_COURSES_PATH;
             this.showUpdatesOnly = true;
         }
 
