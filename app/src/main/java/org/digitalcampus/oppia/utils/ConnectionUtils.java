@@ -19,9 +19,16 @@ public class ConnectionUtils {
 	}
 
 	public static boolean isNetworkConnected(Context context) {
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		return (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isAvailable() && cm
+		return isNetworkConnected(getConnectivityManager(context));
+	}
+
+	public static boolean isNetworkConnected(ConnectivityManager manager) {
+		return (manager.getActiveNetworkInfo() != null && manager.getActiveNetworkInfo().isAvailable() && manager
 				.getActiveNetworkInfo().isConnected());
+	}
+
+	public static ConnectivityManager getConnectivityManager(Context ctx){
+		return (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 
 }

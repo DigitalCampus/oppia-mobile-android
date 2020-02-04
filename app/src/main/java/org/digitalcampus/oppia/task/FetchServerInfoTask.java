@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.task;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -35,6 +36,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
     }
 
     private FetchServerInfoListener listener;
+    private ConnectivityManager connectivityManager;
 
     public FetchServerInfoTask(Context ctx) {
         super(ctx);
@@ -42,6 +44,12 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
 
     public FetchServerInfoTask(Context ctx, ApiEndpoint api) {
         super(ctx, api);
+        connectivityManager = ConnectionUtils.getConnectivityManager(ctx);
+    }
+
+    public FetchServerInfoTask(Context ctx, ApiEndpoint api, ConnectivityManager connectivityManager){
+        super(ctx, api);
+        this.connectivityManager = connectivityManager != null ? connectivityManager: ConnectionUtils.getConnectivityManager(ctx);
     }
 
     @Override
@@ -49,7 +57,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
 
         HashMap<String, String> result = new HashMap<>();
 
-        if (!ConnectionUtils.isNetworkConnected(ctx)){
+        if (!ConnectionUtils.isNetworkConnected(connectivityManager)){
             // If there is no connection available right now, we don't try to fetch info (to avoid setting a server as invalid)
             result.put("result", "noInternet");
             return result;
