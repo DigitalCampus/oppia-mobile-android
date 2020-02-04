@@ -48,7 +48,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.gamification.Gamification;
@@ -84,7 +84,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     }
 
     public AppComponent getAppComponent(){
-        MobileLearning app = (MobileLearning) getApplication();
+        App app = (App) getApplication();
         return app.getComponent();
     }
 
@@ -176,14 +176,14 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         registerReceiver(gamificationReceiver, broadcastFilter);
 
         //We check if the user session time has expired to log him out
-        if (MobileLearning.SESSION_EXPIRATION_ENABLED) {
+        if (App.SESSION_EXPIRATION_ENABLED) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             long now = System.currentTimeMillis() / 1000;
             long lastTimeActive = prefs.getLong(PrefsActivity.LAST_ACTIVE_TIME, now);
             long timePassed = now - lastTimeActive;
 
             prefs.edit().putLong(PrefsActivity.LAST_ACTIVE_TIME, now).apply();
-            if (timePassed > MobileLearning.SESSION_EXPIRATION_TIMEOUT) {
+            if (timePassed > App.SESSION_EXPIRATION_TIMEOUT) {
                 Log.d(TAG, "Session timeout (passed " + timePassed + " seconds), logging out");
                 logoutAndRestartApp();
             }
@@ -195,7 +195,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Override
     public void onPause() {
         super.onPause();
-        if (MobileLearning.SESSION_EXPIRATION_ENABLED) {
+        if (App.SESSION_EXPIRATION_ENABLED) {
             long now = System.currentTimeMillis() / 1000;
             PreferenceManager
                     .getDefaultSharedPreferences(this).edit()

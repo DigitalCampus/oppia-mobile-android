@@ -43,7 +43,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.SyncActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 
 import java.util.HashMap;
@@ -124,10 +124,10 @@ public class DrawerMenuManager {
         }
 
         SharedPreferences prefs = drawerAct.getPrefs();
-        itemSettings.setVisible(MobileLearning.MENU_ALLOW_SETTINGS);
-        itemCourseDownload.setVisible(prefs.getBoolean(PrefsActivity.PREF_DOWNLOAD_ENABLED, MobileLearning.MENU_ALLOW_COURSE_DOWNLOAD));
-        itemLanguageDialog.setVisible(customOptions.containsKey(R.id.menu_language) && prefs.getBoolean(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED, MobileLearning.MENU_ALLOW_LANGUAGE));
-        itemSync.setVisible(MobileLearning.MENU_ALLOW_SYNC);
+        itemSettings.setVisible(App.MENU_ALLOW_SETTINGS);
+        itemCourseDownload.setVisible(prefs.getBoolean(PrefsActivity.PREF_DOWNLOAD_ENABLED, App.MENU_ALLOW_COURSE_DOWNLOAD));
+        itemLanguageDialog.setVisible(customOptions.containsKey(R.id.menu_language) && prefs.getBoolean(PrefsActivity.PREF_CHANGE_LANGUAGE_ENABLED, App.MENU_ALLOW_LANGUAGE));
+        itemSync.setVisible(App.MENU_ALLOW_SYNC);
     }
 
     public void onPostCreate(Bundle savedInstanceState) {

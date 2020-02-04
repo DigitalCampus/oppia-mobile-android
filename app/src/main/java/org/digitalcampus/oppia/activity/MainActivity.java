@@ -20,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.MainPointsFragment;
 import org.digitalcampus.oppia.fragments.MainScorecardFragment;
@@ -126,7 +126,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     private void updateUserTotalPoints() {
 
-        MobileLearning app = (MobileLearning) getApplicationContext();
+        App app = (App) getApplicationContext();
         User u = app.getComponent().getUser();
 
         tvBadgeNumber.setText(String.valueOf(u.getPoints()));
@@ -220,7 +220,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     // CONFIGURATIONS
     private void configureLogoutOption() {
-        boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT);
+        boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
         btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         btnExpandProfileOptions.setVisibility(logoutVisible ? View.VISIBLE : View.GONE); // TODO Edit profile feature.
         if (!logoutVisible) {

@@ -15,7 +15,7 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
 
 import java.util.List;
@@ -62,7 +62,7 @@ public class ScorecardsGridAdapter extends RecyclerView.Adapter<ScorecardsGridAd
         viewHolder.activitiesTotal.setText(String.valueOf(totalActivities));
 
         viewHolder.circularProgressBar.setProgressMax(totalActivities);
-        viewHolder.circularProgressBar.setProgressWithAnimation(completedActivities, MobileLearning.SCORECARD_ANIM_DURATION);
+        viewHolder.circularProgressBar.setProgressWithAnimation(completedActivities, App.SCORECARD_ANIM_DURATION);
 
     }
 

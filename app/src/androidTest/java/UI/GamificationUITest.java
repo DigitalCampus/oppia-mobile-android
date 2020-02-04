@@ -13,7 +13,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.model.Badges;
@@ -47,14 +47,14 @@ public class GamificationUITest {
 
     @Rule
     public DaggerMockRule<AppComponent> daggerRule =
-            new DaggerMockRule<>(AppComponent.class, new AppModule((MobileLearning) InstrumentationRegistry.getInstrumentation()
+            new DaggerMockRule<>(AppComponent.class, new AppModule((App) InstrumentationRegistry.getInstrumentation()
                     .getTargetContext()
                     .getApplicationContext())).set(
                     new DaggerMockRule.ComponentSetter<AppComponent>() {
                         @Override
                         public void setComponent(AppComponent component) {
-                            MobileLearning app =
-                                    (MobileLearning) InstrumentationRegistry.getInstrumentation()
+                            App app =
+                                    (App) InstrumentationRegistry.getInstrumentation()
                                             .getTargetContext()
                                             .getApplicationContext();
                             app.setComponent(component);

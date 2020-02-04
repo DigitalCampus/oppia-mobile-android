@@ -14,7 +14,7 @@ import android.webkit.URLUtil;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
@@ -69,7 +69,7 @@ public class PreferencesFragment extends PreferenceFragment {
         findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN).setOnPreferenceChangeListener(maxIntListener);
         findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP).setOnPreferenceChangeListener(maxIntListener);
 
-        if (!MobileLearning.ADMIN_PROTECT_SETTINGS){
+        if (!App.ADMIN_PROTECT_SETTINGS){
             // If the whole settings activity is not protected by password, we need to protect admin settings
             protectAdminPreferences();
         }
@@ -227,7 +227,7 @@ public class PreferencesFragment extends PreferenceFragment {
                 @Override
                 public boolean onPreferenceChange(final Preference preference, final Object newValue) {
 
-                    if (!MobileLearning.getPrefs(getActivity()).getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
+                    if (!App.getPrefs(getActivity()).getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
                         return true;
                     }
 

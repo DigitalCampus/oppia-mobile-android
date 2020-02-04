@@ -1,25 +1,18 @@
 package UI;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import it.cosenonjaviste.daggermock.DaggerMockRule;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.api.MockApiEndpoint;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
-import org.digitalcampus.oppia.model.CoursesRepository;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +20,10 @@ import org.mockito.Mock;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import it.cosenonjaviste.daggermock.DaggerMockRule;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -64,8 +61,8 @@ public class LoginUITest {
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<>(WelcomeActivity.class, false, false);
 
-    private MobileLearning getApp() {
-        return (MobileLearning) InstrumentationRegistry.getInstrumentation()
+    private App getApp() {
+        return (App) InstrumentationRegistry.getInstrumentation()
                 .getTargetContext().getApplicationContext();
     }
 

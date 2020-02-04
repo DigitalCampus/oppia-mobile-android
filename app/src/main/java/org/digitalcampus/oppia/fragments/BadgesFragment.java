@@ -30,7 +30,6 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.BadgesAdapter;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.task.APIUserRequestTask;

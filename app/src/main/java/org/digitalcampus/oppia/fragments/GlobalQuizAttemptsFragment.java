@@ -7,13 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.activity.QuizAttemptActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
 import org.digitalcampus.oppia.adapter.GlobalQuizAttemptsAdapter;
-import org.digitalcampus.oppia.adapter.QuizAttemptAdapter;
-import org.digitalcampus.oppia.adapter.ScorecardsGridAdapter;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
 
