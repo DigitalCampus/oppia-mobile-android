@@ -55,6 +55,7 @@ public class WelcomeActivity extends AppActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_welcome);
 		viewPager = findViewById(R.id.activity_welcome_pager);
+		getAppComponent().inject(this);
 	}
 	
 	@Override

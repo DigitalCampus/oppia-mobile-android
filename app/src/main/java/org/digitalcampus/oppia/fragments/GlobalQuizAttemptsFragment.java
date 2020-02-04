@@ -38,7 +38,7 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_global_quiz_attempts, container, false);
-        initializeDagger();
+        getAppComponent().inject(this);
 
         attempts = attemptsRepository.getGlobalQuizAttempts(this.getContext());
         GlobalQuizAttemptsAdapter adapter = new GlobalQuizAttemptsAdapter(this.getContext(), attempts);
@@ -61,8 +61,4 @@ public class GlobalQuizAttemptsFragment extends AppFragment {
         return layout;
     }
 
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getActivity().getApplication();
-        app.getComponent().inject(this);
-    }
 }

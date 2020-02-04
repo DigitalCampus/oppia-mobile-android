@@ -66,7 +66,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		initializeDagger();
+		getAppComponent().inject(this);
 
         adapterBadges = new BadgesAdapter(super.getActivity(), badges);
 		RecyclerView recyclerBadges = this.getView().findViewById(R.id.recycler_badges);
@@ -75,10 +75,6 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		getBadges();
 	}
 
-	private void initializeDagger() {
-		MobileLearning app = (MobileLearning) getActivity().getApplication();
-		app.getComponent().inject(this);
-	}
 
 	private void getBadges(){		
 		APIUserRequestTask task = new APIUserRequestTask(super.getActivity());
