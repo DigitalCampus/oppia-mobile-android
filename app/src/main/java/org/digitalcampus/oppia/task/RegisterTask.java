@@ -101,13 +101,19 @@ public class RegisterTask extends APIRequestTask<Payload, Object, Payload> {
             JSONObject json = new JSONObject();
             json.put("username", u.getUsername());
             json.put("password", u.getPassword());
-            json.put("passwordagain",u.getPasswordAgain());
-            json.put("email",u.getEmail());
-            json.put("firstname",u.getFirstname());
-            json.put("lastname",u.getLastname());
-            json.put("jobtitle",u.getJobTitle());
-            json.put("organisation",u.getOrganisation());
-            json.put("phoneno",u.getPhoneNo());
+            json.put("passwordagain", u.getPasswordAgain());
+            json.put("email", u.getEmail());
+            json.put("firstname", u.getFirstname());
+            json.put("lastname", u.getLastname());
+            json.put("jobtitle", u.getJobTitle());
+            json.put("organisation", u.getOrganisation());
+            json.put("phoneno", u.getPhoneNo());
+            if (u.getCounty() != null){
+                json.put("county", u.getCounty());
+            }
+            if (u.getDistrict() != null){
+                json.put("district", u.getDistrict());
+            }
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
