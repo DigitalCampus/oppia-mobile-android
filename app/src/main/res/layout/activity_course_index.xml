@@ -27,7 +27,7 @@
         android:foreground="?android:windowContentOverlay"
         android:orientation="vertical"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/section_item" />
+        tools:listitem="@layout/row_course_index_section_item" />
 
     <LinearLayout
         android:id="@+id/loading_course"

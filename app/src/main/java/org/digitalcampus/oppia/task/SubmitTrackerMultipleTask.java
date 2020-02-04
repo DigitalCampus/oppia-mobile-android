@@ -26,6 +26,7 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -166,7 +167,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
         try {
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
-                    .url(apiEndpoint.getFullURL(ctx, isRaw ? MobileLearning.ACTIVITYLOG_PATH : MobileLearning.TRACKER_PATH))
+                    .url(apiEndpoint.getFullURL(ctx, isRaw ? Paths.ACTIVITYLOG_PATH : Paths.TRACKER_PATH))
                     .addHeader(HTTPClientUtils.HEADER_AUTH,
                             HTTPClientUtils.getAuthHeaderValue(user.getUsername(), user.getApiKey()))
                     .patch(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, dataToSend))

@@ -24,8 +24,8 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.SubmitListener;
@@ -84,7 +84,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
-                    .url(apiEndpoint.getFullURL(ctx, MobileLearning.LOGIN_PATH))
+                    .url(apiEndpoint.getFullURL(ctx, Paths.LOGIN_PATH))
                     .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
                     .build();
 

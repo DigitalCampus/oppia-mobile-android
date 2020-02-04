@@ -26,8 +26,8 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
@@ -58,7 +58,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 				Log.d(TAG, qa.getData());
                 OkHttpClient client = HTTPClientUtils.getClient(ctx);
                 Request request = new Request.Builder()
-                        .url(apiEndpoint.getFullURL(ctx, MobileLearning.QUIZ_SUBMIT_PATH))
+                        .url(apiEndpoint.getFullURL(ctx, Paths.QUIZ_SUBMIT_PATH))
                         .addHeader(HTTPClientUtils.HEADER_AUTH,
                                 HTTPClientUtils.getAuthHeaderValue(qa.getUser().getUsername(), qa.getUser().getApiKey()))
                         .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, qa.getData()))

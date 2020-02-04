@@ -29,6 +29,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.BadgesAdapter;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badges;
@@ -81,7 +82,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 
 	private void getBadges(){		
 		APIUserRequestTask task = new APIUserRequestTask(super.getActivity());
-		Payload p = new Payload(MobileLearning.SERVER_AWARDS_PATH);
+		Payload p = new Payload(Paths.SERVER_AWARDS_PATH);
 		task.setAPIRequestListener(this);
 		task.execute(p);
 	}

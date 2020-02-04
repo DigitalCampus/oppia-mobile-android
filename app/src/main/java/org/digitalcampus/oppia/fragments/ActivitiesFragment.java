@@ -47,6 +47,7 @@ import org.digitalcampus.oppia.model.ActivityCount;
 import org.digitalcampus.oppia.model.ActivityType;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Points;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -226,7 +227,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
         switch (currentDatesRangePosition) {
             case POSITION_TAB_LAST_WEEK:
-                datetimeFormatter = MobileLearning.DATE_FORMAT_DAY_MONTH;
+                datetimeFormatter = DateUtils.DATE_FORMAT_DAY_MONTH;
                 calendarIterate.add(Calendar.DAY_OF_MONTH, -7);
                 while (calendarIterate.before(calendarNow)) {
                     activitiesGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), ActivityCount.initialize(activityTypes));
@@ -236,7 +237,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
             case POSITION_TAB_LAST_MONTH:
 
-                datetimeFormatter = MobileLearning.DATE_FORMAT_DAY_MONTH;
+                datetimeFormatter = DateUtils.DATE_FORMAT_DAY_MONTH;
                 calendarIterate.add(Calendar.MONTH, -1);
                 while (calendarIterate.before(calendarNow)) {
                     activitiesGrouped.put(datetimeFormatter.print(calendarIterate.getTimeInMillis()), ActivityCount.initialize(activityTypes));
@@ -246,7 +247,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
             case POSITION_TAB_LAST_YEAR:
 
-                datetimeFormatter = MobileLearning.MONTH_FORMAT;
+                datetimeFormatter = DateUtils.MONTH_FORMAT;
                 calendarIterate.add(Calendar.YEAR, -1);
                 calendarIterate.add(Calendar.MONTH, 1);
                 while (calendarIterate.before(calendarNow)) {
@@ -400,7 +401,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         for (int i = 0; i < 366; i++) {
 
             Points mockPoint = new Points();
-            mockPoint.setDateTime(MobileLearning.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
+            mockPoint.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
             int random = new Random().nextInt(70);
             mockPoint.setPoints(random);
             mockPoint.setEvent(eventTypes[random % eventTypes.length]); // random event type
@@ -416,7 +417,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
             if (i % 7 == 0) {
                 // to add some days with more than one number of points
                 Points mockPointExtra = new Points();
-                mockPointExtra.setDateTime(MobileLearning.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
+                mockPointExtra.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
                 mockPointExtra.setPoints(new Random().nextInt(70));
                 mockPointExtra.setEvent("Event extra " + i);
                 mockPointExtra.setDescription("Description extra " + i);
