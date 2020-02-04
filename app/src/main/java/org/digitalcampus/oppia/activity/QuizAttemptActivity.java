@@ -115,7 +115,7 @@ public class QuizAttemptActivity extends AppActivity {
 		try {
 			jsonData = new JSONObject(quizAttempt.getData());
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.d(TAG,"Invalid json for quiz attempt", e);
 			return;
 		}
 		List<QuizFeedback> quizFeedback = new ArrayList<>();
@@ -157,7 +157,7 @@ public class QuizAttemptActivity extends AppActivity {
 			}
 
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Log.d(TAG,"Invalid json for quiz attempt response", e);
 		}
 	}
 	
