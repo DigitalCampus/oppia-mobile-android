@@ -51,7 +51,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.course_download_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_course_download, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(contactView);

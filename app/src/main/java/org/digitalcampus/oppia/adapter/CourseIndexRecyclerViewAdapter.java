@@ -101,13 +101,13 @@ public class CourseIndexRecyclerViewAdapter extends ExpandableRecyclerView.Adapt
 
     @Override
     protected SectionViewHolder onCreateGroupViewHolder(ViewGroup parent) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.section_header, parent, false);
+        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_course_index_section_header, parent, false);
         return new SectionViewHolder(rootView);
     }
 
     @Override
     protected ChildViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.section_item, parent, false);
+        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_course_index_section_item, parent, false);
         return new ChildViewHolder(rootView);
     }
 

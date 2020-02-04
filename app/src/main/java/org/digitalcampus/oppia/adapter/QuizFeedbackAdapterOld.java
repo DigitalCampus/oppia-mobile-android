@@ -41,7 +41,7 @@ public class QuizFeedbackAdapterOld extends ArrayAdapter<QuizFeedback> {
 	private final ArrayList<QuizFeedback> quizFeedbackList;
 	
 	public QuizFeedbackAdapterOld(Activity context, ArrayList<QuizFeedback> quizFeedbackList) {
-		super(context, R.layout.widget_quiz_feedback_row, quizFeedbackList);
+		super(context, R.layout.row_widget_quiz_feedback, quizFeedbackList);
 		this.ctx = context;
 		this.quizFeedbackList = quizFeedbackList;
 	}
@@ -61,7 +61,7 @@ public class QuizFeedbackAdapterOld extends ArrayAdapter<QuizFeedback> {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView  = inflater.inflate(R.layout.widget_quiz_feedback_row, parent, false);
+            convertView  = inflater.inflate(R.layout.row_widget_quiz_feedback, parent, false);
             viewHolder = new QuizFeedbackViewHolder();
             viewHolder.quizQuestion = convertView.findViewById(R.id.quiz_question_text);
             viewHolder.quizUserResponse = convertView.findViewById(R.id.quiz_question_user_response_text);

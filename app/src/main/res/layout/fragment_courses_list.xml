@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:listitem="@layout/course_list_row" />
+                tools:listitem="@layout/row_course_list" />
 
             <LinearLayout
                 android:id="@+id/no_courses"
