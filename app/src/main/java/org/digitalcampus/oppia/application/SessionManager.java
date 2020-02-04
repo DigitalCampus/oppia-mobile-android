@@ -25,6 +25,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.splunk.mint.Mint;
+import com.splunk.mint.MintLogLevel;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -86,7 +87,7 @@ public class SessionManager {
             return u.getDisplayName();
 
         } catch (UserNotFoundException e) {
-            Mint.logException(e);
+            Mint.logEvent(e.getMessage(), MintLogLevel.Info);
             Log.d(TAG, "User not found: ", e);
             return null;
         }
