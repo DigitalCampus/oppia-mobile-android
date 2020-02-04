@@ -111,7 +111,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         findViews();
-        initializeDagger();
+        getAppComponent().inject(this);
         configureChart();
 
         course = (Course) getArguments().getSerializable(ARG_COURSE);
@@ -343,11 +343,6 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
             pointsGrouped.put(key, newPoints);
         }
 
-    }
-
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getActivity().getApplication();
-        app.getComponent().inject(this);
     }
 
     private void loadPoints() {

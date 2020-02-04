@@ -23,9 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -58,6 +55,9 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.inject.Inject;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnTabSelectedListener, ActivityTypesAdapter.OnItemClickListener {
 
@@ -108,16 +108,14 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         findViews();
-        initializeDagger();
+        getAppComponent().inject(this);
         configureActivityTypes();
         configureChart();
 
         course = (Course) getArguments().getSerializable(ARG_COURSE);
 
         loadPoints();
-
         showPointsFiltered(POSITION_TAB_LAST_WEEK);
-
 
     }
 
@@ -372,11 +370,6 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         chart.invalidate(); // refresh
     }
 
-
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getActivity().getApplication();
-        app.getComponent().inject(this);
-    }
 
     private void loadPoints() {
         DbHelper db = DbHelper.getInstance(super.getActivity());

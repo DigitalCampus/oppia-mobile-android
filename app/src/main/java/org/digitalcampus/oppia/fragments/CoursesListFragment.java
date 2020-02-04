@@ -102,8 +102,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         View layout = inflater.inflate(R.layout.fragment_courses_list, container, false);
         findViews(layout);
-
-        initializeDagger();
+        getAppComponent().inject(this);
 
         prefs.registerOnSharedPreferenceChangeListener(this);
 
@@ -128,10 +127,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         return layout;
     }
 
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getActivity().getApplication();
-        app.getComponent().inject(this);
-    }
 
     @Override
     public void onStart() {
