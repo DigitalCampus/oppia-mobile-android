@@ -21,7 +21,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -61,11 +61,11 @@ public class QuizAttempt implements Serializable {
 	}
 
 	public void setDateTime(String date) {
-		this.datetime = MobileLearning.DATETIME_FORMAT.parseDateTime(date);
+		this.datetime = DateUtils.DATETIME_FORMAT.parseDateTime(date);
 	}
 
 	public String getDateTimeString() {
-		return MobileLearning.DATETIME_FORMAT.print(datetime);
+		return DateUtils.DATETIME_FORMAT.print(datetime);
 	}
 	
 	public long getId() {

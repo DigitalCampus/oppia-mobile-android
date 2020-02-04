@@ -50,6 +50,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationBroadcastReceiver;
 import org.digitalcampus.oppia.gamification.GamificationService;
@@ -82,9 +83,13 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         initializeDaggerBase();
     }
 
-    private void initializeDaggerBase() {
+    public AppComponent getAppComponent(){
         MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
+        return app.getComponent();
+    }
+
+    private void initializeDaggerBase() {
+        getAppComponent().inject(this);
     }
 
     @Override

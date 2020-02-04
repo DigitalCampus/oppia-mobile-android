@@ -9,7 +9,6 @@ import android.widget.TextView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
 import org.digitalcampus.oppia.adapter.QuizAttemptAdapter;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizAttemptRepository;
 import org.digitalcampus.oppia.model.QuizStats;
@@ -37,7 +36,7 @@ public class CourseQuizAttemptsActivity extends AppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_quiz_attempts);
-        initializeDagger();
+        getAppComponent().inject(this);
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle == null) {
@@ -92,11 +91,6 @@ public class CourseQuizAttemptsActivity extends AppActivity {
             }
         });
         attemptsList.setAdapter(adapter);
-    }
-
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
     }
 
     private void takeQuiz(){

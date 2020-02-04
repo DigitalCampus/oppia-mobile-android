@@ -28,15 +28,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.work.Constraints;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIndexRecyclerViewAdapter;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.CompleteCourseProvider;
@@ -55,6 +48,12 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 public class CourseIndexActivity extends AppActivity implements OnSharedPreferenceChangeListener, ParseCourseXMLTask.OnParseXmlListener {
 
@@ -85,7 +84,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_index);
-        initializeDagger();
+        getAppComponent().inject(this);
 
         prefs.registerOnSharedPreferenceChangeListener(this);
         loadingCourseView = findViewById(R.id.loading_course);
@@ -116,11 +115,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             }
         }
 
-    }
-
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
     }
 
     @Override

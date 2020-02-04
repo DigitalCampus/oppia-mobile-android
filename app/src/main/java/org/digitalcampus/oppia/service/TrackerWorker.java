@@ -18,6 +18,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
@@ -93,7 +94,7 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
         long now = System.currentTimeMillis() / 1000;
         if ((lastRun + (TimeUnit.HOURS.toSeconds(12))) < now) {
             APIUserRequestTask task = new APIUserRequestTask(getApplicationContext());
-            Payload p = new Payload(MobileLearning.SERVER_COURSES_PATH);
+            Payload p = new Payload(Paths.SERVER_COURSES_PATH);
             task.setAPIRequestListener(this);
             task.setAPIRequestFinishListener(this, "APIUserRequestTask");
             task.execute(p);

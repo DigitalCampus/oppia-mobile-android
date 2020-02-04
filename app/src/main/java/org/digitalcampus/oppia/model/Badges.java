@@ -17,7 +17,7 @@
 
 package org.digitalcampus.oppia.model;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 
 public class Badges {
@@ -36,15 +36,15 @@ public class Badges {
 	}
 
 	public String getDateAsString() {
-		return MobileLearning.DATE_FORMAT.print(datetime);
+		return DateUtils.DATE_FORMAT.print(datetime);
 	}
 	
 	public String getTimeAsString() {
-		return MobileLearning.TIME_FORMAT.print(datetime);
+		return DateUtils.TIME_FORMAT.print(datetime);
 	}
 	
 	public void setDateTime(String date) {
-		this.datetime = MobileLearning.DATETIME_FORMAT.parseDateTime(date);
+		this.datetime = DateUtils.DATETIME_FORMAT.parseDateTime(date);
 	}
 	
 	public String getDescription() {

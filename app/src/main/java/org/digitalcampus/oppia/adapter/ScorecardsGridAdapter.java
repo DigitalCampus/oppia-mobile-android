@@ -40,7 +40,7 @@ public class ScorecardsGridAdapter extends RecyclerView.Adapter<ScorecardsGridAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.scorecard_list_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_scorecard, parent, false);
 
         // Return a new holder instance
         ViewHolder viewHolder = new ViewHolder(contactView);

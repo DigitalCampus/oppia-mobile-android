@@ -28,7 +28,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -48,6 +47,7 @@ import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
 import org.json.JSONException;
@@ -1880,7 +1880,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		
 		ArrayList<Activity> activities = new ArrayList<>();
 		DateTime now = new DateTime();
-		String nowDateString = MobileLearning.DATETIME_FORMAT.print(now);
+		String nowDateString = DateUtils.DATETIME_FORMAT.print(now);
 		String sql = "SELECT a.* FROM "+ ACTIVITY_TABLE + " a " +
 					" INNER JOIN " + COURSE_TABLE + " m ON a."+ ACTIVITY_C_COURSEID + " = m."+COURSE_C_ID +
 					" LEFT OUTER JOIN (SELECT * FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1 AND "+ TRACKER_LOG_C_USERID +"="+ userId + ") tl ON a."+ ACTIVITY_C_ACTIVITYDIGEST + " = tl."+ TRACKER_LOG_C_ACTIVITYDIGEST +
@@ -2212,7 +2212,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		String whereClause = LEADERBOARD_C_USERNAME + "=? ";
 		String[] args = new String[] { username };
 		boolean updated;
-		String lastUpdateStr = MobileLearning.DATETIME_FORMAT.print(lastUpdate);
+		String lastUpdateStr = DateUtils.DATETIME_FORMAT.print(lastUpdate);
 
 		ContentValues values = new ContentValues();
 		values.put(LEADERBOARD_C_FULLNAME, fullname);

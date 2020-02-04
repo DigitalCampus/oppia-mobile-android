@@ -8,7 +8,7 @@ import android.util.Log;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -58,7 +58,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         OkHttpClient client = HTTPClientUtils.getClient(ctx);
         boolean validServer = false;
-        Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, MobileLearning.SERVER_INFO_PATH));
+        Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.SERVER_INFO_PATH));
         try {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){

@@ -140,7 +140,7 @@
                 android:overScrollMode="never"
                 android:padding="@dimen/padding_medium"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/widget_quiz_feedback_row" />
+                tools:listitem="@layout/row_widget_quiz_feedback" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.adapter.LeaderboardAdapter;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.Leaderboard;
@@ -28,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 
 public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
@@ -39,6 +42,9 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
     TextView rankingPosition;
     TextView totalPoints;
     ProgressBar loadingSpinner;
+
+    @Inject
+    ApiEndpoint apiEndpoint;
 
     LeaderboardAdapter adapter;
     List<LeaderboardPosition> leaderboard;
@@ -70,7 +76,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (Leaderboard.shouldFetchLeaderboard(prefs)){
             Payload p = new Payload();
-            UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity());
+            UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity(), apiEndpoint);
             task.seListener(this);
             task.execute(p);
         }

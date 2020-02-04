@@ -24,7 +24,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
@@ -61,7 +61,7 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
 
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
-                    .url(apiEndpoint.getFullURL(ctx, MobileLearning.RESET_PATH))
+                    .url(apiEndpoint.getFullURL(ctx, Paths.RESET_PATH))
                     .post(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, json.toString()))
                     .build();
 

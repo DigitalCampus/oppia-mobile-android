@@ -28,6 +28,7 @@ import org.digitalcampus.oppia.activity.DownloadMediaActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.CoursesListAdapter;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.MobileLearning;
@@ -76,6 +77,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     @Inject CoursesRepository coursesRepository;
     @Inject SharedPreferences prefs;
+    @Inject ApiEndpoint apiEndpoint;
     private LinearLayout llLoading;
     private TextView tvManageCourses;
     private Button manageBtn;
@@ -102,8 +104,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         View layout = inflater.inflate(R.layout.fragment_courses_list, container, false);
         findViews(layout);
-
-        initializeDagger();
+        getAppComponent().inject(this);
 
         prefs.registerOnSharedPreferenceChangeListener(this);
 
@@ -128,10 +129,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         return layout;
     }
 
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getActivity().getApplication();
-        app.getComponent().inject(this);
-    }
 
     @Override
     public void onStart() {
@@ -294,7 +291,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
-        UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(), SessionManager.getUserId(getActivity()));
+        UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
+                SessionManager.getUserId(getActivity()), apiEndpoint);
         ArrayList<Object> payloadData = new ArrayList<>();
         payloadData.add(tempCourse);
         Payload p = new Payload(payloadData);

@@ -156,16 +156,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         initialize();
     }
 
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
-    }
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
-        initializeDagger();
+        getAppComponent().inject(this);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentManager mFragmentManager = getFragmentManager();
