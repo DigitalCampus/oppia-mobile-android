@@ -147,7 +147,7 @@ public class CourseInstall {
 
             // move from temp to courses dir
             try {
-                org.apache.commons.io.FileUtils.copyDirectory(src, new File(dest, src.getName()));
+                org.apache.commons.io.FileUtils.copyDirectory(src, new File(dest, src.getName().toLowerCase(Locale.US)));
                 success = true;
             } catch (IOException e) {
                 Mint.logException(e);
