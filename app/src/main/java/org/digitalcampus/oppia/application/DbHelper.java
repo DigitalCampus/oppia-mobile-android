@@ -70,7 +70,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
 	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 30;
+	private static final int DB_VERSION = 31;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -174,6 +174,18 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String USER_C_ORGANIZATION = "organisation";
 	private static final String USER_C_PHONE = "phoneNo";
 
+	// User Custom Fields
+	private static final String USER_CF_TABLE = "user_cf";
+	private static final String USER_CF_ID = BaseColumns._ID;
+	private static final String USER_CF_USER_ID = "user_id";
+	private static final String USER_CF_USERNAME = "username";
+
+	private static final String CF_FIELD_KEY = "field_key";
+	private static final String CF_VALUE_STR = "value_str";
+	private static final String CF_VALUE_INT = "value_int";
+	private static final String CF_VALUE_BOOL = "value_bool";
+	private static final String CF_VALUE_FLOAT = "value_float";
+
 	private static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
     private static final String USER_PREFS_C_PREFKEY = "preference";
@@ -221,6 +233,8 @@ public class DbHelper extends SQLiteOpenHelper {
         createCourseGamificationTable(db);
 		createActivityGamificationTable(db);
 		createLeaderboardTable(db);
+
+		createUserCustomFieldsTable(db);
 	}
 
     public void beginTransaction(){
@@ -325,6 +339,23 @@ public class DbHelper extends SQLiteOpenHelper {
                 "["+USER_C_BADGES +"] integer default 0, " +
 				 "["+USER_C_OFFLINE_REGISTER+"] integer default 0 "+
             ");";
+		db.execSQL(sql);
+	}
+
+
+	private void createUserCustomFieldsTable(SQLiteDatabase db) {
+
+		String sql = "CREATE TABLE ["+USER_CF_TABLE+"] (" +
+				"["+USER_CF_ID+"]" + STR_INT_PRIMARY_KEY_AUTO +
+				"["+ USER_CF_USERNAME +"]" + STR_TEXT_COMMA+
+				"["+ CF_FIELD_KEY +"]" + STR_TEXT_COMMA +
+
+				"["+ CF_VALUE_STR +"]" + STR_TEXT_COMMA +
+				"["+ CF_VALUE_INT +"]" + STR_INT_COMMA +
+				"["+ CF_VALUE_BOOL +"] BOOLEAN, " +
+				"["+ CF_VALUE_FLOAT +"] FLOAT, " +
+				"CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", "+ CF_FIELD_KEY +")" +
+				");";
 		db.execSQL(sql);
 	}
 
@@ -550,6 +581,11 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_PHONE + " text null;");
 			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_JOBTITLE + " text null;");
 			db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
+		}
+
+
+		if (oldVersion < 31) {
+			createUserCustomFieldsTable(db);
 		}
 	}
 

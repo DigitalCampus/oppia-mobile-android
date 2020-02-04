@@ -158,6 +158,10 @@ public class MobileLearning extends Application {
     public void onCreate() {
         super.onCreate();
 
+        DbHelper dbHelper = DbHelper.getInstance(this);
+        dbHelper.getReadableDatabase(); // To force migration if needed
+
+
         // this method fires once at application start
         Log.d(TAG, "Application start");
 
