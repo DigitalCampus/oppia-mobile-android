@@ -33,6 +33,7 @@ import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
@@ -49,8 +50,9 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 
-public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
+import javax.inject.Inject;
 
+public class RegisterFragment extends AppFragment implements SubmitListener, RegisterTask.RegisterListener {
 
 	private ValidableTextInputLayout usernameField;
 	private ValidableTextInputLayout emailField;
@@ -66,7 +68,10 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	private Button registerButton;
 	private Button loginButton;
 	private ProgressDialog pDialog;
-	
+
+	@Inject
+	ApiEndpoint apiEndpoint;
+
 	public static RegisterFragment newInstance() {
 	    return new RegisterFragment();
 	}
@@ -99,6 +104,8 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		getAppComponent().inject(this);
+
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
@@ -259,7 +266,7 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 		pDialog.show();
 
 		Payload p = new Payload(Arrays.asList(u));
-		RegisterTask rt = new RegisterTask(super.getActivity());
+		RegisterTask rt = new RegisterTask(super.getActivity(), apiEndpoint);
 		rt.setRegisterListener(this);
 		rt.execute(p);
 	}

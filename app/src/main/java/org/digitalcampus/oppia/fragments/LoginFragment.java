@@ -30,6 +30,7 @@ import android.widget.EditText;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
@@ -39,12 +40,17 @@ import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 public class LoginFragment extends AppFragment implements SubmitListener {
 
     private EditText usernameField;
 	private EditText passwordField;
 	private ProgressDialog pDialog;
     private Context appContext;
+
+	@Inject
+	ApiEndpoint apiEndpoint;
 
     private Button registerBtn;
     private Button loginBtn;
@@ -71,6 +77,7 @@ public class LoginFragment extends AppFragment implements SubmitListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		appContext = super.getActivity().getApplicationContext();
+		getAppComponent().inject(this);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -127,7 +134,7 @@ public class LoginFragment extends AppFragment implements SubmitListener {
     	users.add(u);
     	
     	Payload p = new Payload(users);
-    	LoginTask lt = new LoginTask(super.getActivity());
+    	LoginTask lt = new LoginTask(super.getActivity(), apiEndpoint);
     	lt.setLoginListener(this);
     	lt.execute(p);
 	}
