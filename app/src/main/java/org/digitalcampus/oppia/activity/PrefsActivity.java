@@ -28,8 +28,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
@@ -39,8 +37,8 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.fragments.PreferencesFragment;
-import org.digitalcampus.oppia.fragments.prefs.SecurityPrefsFragment;
+import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
+import org.digitalcampus.oppia.fragments.prefs.PreferenceChangedCallback;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
 import org.digitalcampus.oppia.model.Course;
@@ -61,7 +59,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener,
-        MoveStorageListener, PreferenceFragmentCompat.OnPreferenceStartScreenCallback, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback{
+        MoveStorageListener, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback{
 	
 	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
 	
@@ -86,7 +84,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_METADATA_NETWORK_CONNECTED = "NETWORK_CONNECTED";
     public static final String PREF_METADATA_BATTERY_LEVEL = "BATTERY_LEVEL";
     public static final String PREF_METADATA_GPS = "GPS";
-
 
 	public static final String PREF_BACKGROUND_DATA_CONNECT = "prefBackgroundDataConnect";
 
@@ -137,7 +134,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String PREF_TEST_ACTION_PROTECTED = "prefTestActionProtected";
 
     private ProgressDialog pDialog;
-    private PreferencesFragment mPrefsFragment;
+    private PreferenceChangedCallback currentPrefScreen;
 
     @Inject
     CoursesRepository coursesRepository;
@@ -159,9 +156,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         if (savedInstanceState == null) {
             // Create the fragment only when the activity is created for the first time.
             // ie. not after orientation changes
-            mPrefsFragment = (PreferencesFragment) getSupportFragmentManager().findFragmentByTag(PreferencesFragment.FRAGMENT_TAG);
+            MainPreferencesFragment mPrefsFragment = (MainPreferencesFragment) getSupportFragmentManager().findFragmentByTag(MainPreferencesFragment.FRAGMENT_TAG);
             if (mPrefsFragment == null) {
-                mPrefsFragment = PreferencesFragment.newInstance("SettingsAct");
+                mPrefsFragment = MainPreferencesFragment.newInstance("SettingsAct");
                 Bundle bundle = this.getIntent().getExtras();
                 if(bundle == null) {
                     bundle = new Bundle();
@@ -172,7 +169,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.root_layout, mPrefsFragment, PreferencesFragment.FRAGMENT_TAG)
+                    .replace(R.id.root_layout, mPrefsFragment, MainPreferencesFragment.FRAGMENT_TAG)
                     .commit();
         }
 
@@ -246,26 +243,34 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             }
 
             fetchServerInfoTask = new FetchServerInfoTask(this);
-            /*fetchServerInfoTask.setListener(new FetchServerInfoTask.FetchServerInfoListener() {
+            fetchServerInfoTask.setListener(new FetchServerInfoTask.FetchServerInfoListener() {
                 @Override
                 public void onError(String message) {
                     Toast.makeText(PrefsActivity.this, message, Toast.LENGTH_LONG).show();
-                    mPrefsFragment.updateServerPref();
+                    if (currentPrefScreen != null){
+                        currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
+                    }
                 }
 
                 @Override
                 public void onValidServer(String version, String name) {
-                    mPrefsFragment.updateServerPref();
+                    if (currentPrefScreen != null){
+                        currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
+                    }
                 }
 
                 @Override
                 public void onUnchecked() {
-                    mPrefsFragment.updateServerPref();
+                    if (currentPrefScreen != null){
+                        currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
+                    }
                 }
             });
             fetchServerInfoTask.execute();
 
-            mPrefsFragment.updateServerPref();*/
+            if (currentPrefScreen != null){
+                currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_SERVER, null);
+            }
 
         }
         else if (key.equalsIgnoreCase(PREF_STORAGE_OPTION)) {
@@ -308,7 +313,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                                 String currentStorageOpt = Storage.getStorageStrategy().getStorageType();
                                 SharedPreferences.Editor editor = prefs.edit();
                                 editor.putString(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt).apply();
-                                //mPrefsFragment.updateStoragePref(currentStorageOpt);
+                                if (currentPrefScreen != null){
+                                    currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_STORAGE_OPTION, currentStorageOpt);
+                                }
                             }
 
                         }
@@ -346,11 +353,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                         else{
                             //Update the password preference
                             editor.putString(PrefsActivity.PREF_ADMIN_PASSWORD, password).apply();
-                            //Update the UI value of the PreferencesFragment
-                            EditTextPreference passwordPref = (EditTextPreference) mPrefsFragment.findPreference(PREF_ADMIN_PASSWORD);
-                            passwordPref.setText(password);
+                            //Update the UI value of the fragment
+                            currentPrefScreen.onPreferenceUpdated(PREF_ADMIN_PASSWORD, password);
                         }
-
                     }
                 });
             }
@@ -367,9 +372,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     private void disableAdminProtection(SharedPreferences prefs){
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false).apply();
-        //Update the UI value of the PreferencesFragment
-        CheckBoxPreference passwordPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_ADMIN_PROTECTION);
-        passwordPref.setChecked(false);
+        //Update the UI value of the MainPreferencesFragment
+        currentPrefScreen.onPreferenceUpdated(PREF_ADMIN_PROTECTION, "false");
     }
 
     private void executeChangeStorageTask(String path, String storageOption){
@@ -402,7 +406,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             Log.d(TAG, "Move storage failed:" + p.getResultResponse());
             UIUtils.showAlert(this, R.string.error, p.getResultResponse());
             //We set the actual storage option (remove the one set by the user)
-            //mPrefsFragment.updateStoragePref(storageOption);
+            if (currentPrefScreen != null){
+                currentPrefScreen.onPreferenceUpdated(PrefsActivity.PREF_STORAGE_OPTION, storageOption);
+            }
         }
 
         //Finally, to handle the possibility that is in an inconsistent state
@@ -417,35 +423,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         // no need to show storage progress in this activity
     }
 
-
-    @Override
-    public boolean onPreferenceStartScreen(PreferenceFragmentCompat prefFragment,
-                                           PreferenceScreen preferenceScreen) {
-
-        Log.d(TAG, "Hola!");
-        Log.d(TAG, prefFragment.getTag());
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        PreferencesFragment fragment = new PreferencesFragment();
-        Bundle args = new Bundle();
-        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, preferenceScreen.getKey());
-        fragment.setArguments(args);
-        ft.add(R.id.root_layout, fragment, preferenceScreen.getKey());
-        ft.addToBackStack(preferenceScreen.getKey());
-        ft.commit();
-        return false;
-    }
-
-
     @Override
     public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
-        int prefTitleId = getResources().getIdentifier(pref.getKey()+"_title", "string", getPackageName());
-        setTitle(pref.getTitle());
-        Log.d(TAG, pref.getFragment());
-
         PreferenceFragmentCompat fragment = null;
         try {
-            Class PrefFragment = Class.forName(pref.getFragment());
             fragment = (PreferenceFragmentCompat) Class.forName(pref.getFragment()).newInstance();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -459,12 +440,15 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         Bundle args = new Bundle();
         args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, caller.getTag());
         fragment.setArguments(args);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+
+        ft.setCustomAnimations(R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim, R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim);
         ft.replace(R.id.root_layout, fragment, fragment.getTag());
         ft.addToBackStack( caller.getTag());
         ft.commit();
 
-        Log.d(TAG, caller.getTag());
+        currentPrefScreen = (PreferenceChangedCallback) fragment;
+        setTitle(pref.getTitle());
+
         return true;
     }
 }

@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-public abstract class AdminProtectedPreferenceFragment extends PreferenceFragmentCompat {
+public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     protected List<String> adminProtectedValues = new ArrayList<>();
 
@@ -27,7 +28,6 @@ public abstract class AdminProtectedPreferenceFragment extends PreferenceFragmen
     }
 
     void protectAdminEditTextPreferences() {
-
         for (String prefKey : adminProtectedValues) {
 
             final EditTextPreference editTextPreference = findPreference(prefKey);
@@ -53,6 +53,24 @@ public abstract class AdminProtectedPreferenceFragment extends PreferenceFragmen
                 }
             });
         }
+    }
+
+    protected void liveUpdateSummary(String prefKey){
+        final ListPreference pref = findPreference(prefKey);
+        pref.setSummary(pref.getEntry());
+        pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                CharSequence[] entryValues = pref.getEntryValues();
+                for (int i=0; i< entryValues.length; i++){
+                    if (entryValues[i].equals(newValue)){
+                        pref.setSummary(pref.getEntries()[i]);
+                        break;
+                    }
+                }
+                return true;
+            }
+        });
     }
 
 }

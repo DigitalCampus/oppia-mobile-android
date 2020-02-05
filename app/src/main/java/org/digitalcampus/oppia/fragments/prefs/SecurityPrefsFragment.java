@@ -12,9 +12,8 @@ import java.util.Arrays;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 
-public class SecurityPrefsFragment extends AdminProtectedPreferenceFragment {
+public class SecurityPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
 
@@ -66,5 +65,15 @@ public class SecurityPrefsFragment extends AdminProtectedPreferenceFragment {
     }
 
 
-
+    @Override
+    public void onPreferenceUpdated(String pref, String newValue) {
+        if (pref.equals(PrefsActivity.PREF_ADMIN_PASSWORD)){
+            EditTextPreference passwordPref = findPreference(PrefsActivity.PREF_ADMIN_PASSWORD);
+            passwordPref.setText(newValue);
+        }
+        else if (pref.equals(PrefsActivity.PREF_ADMIN_PROTECTION)){
+            CheckBoxPreference passwordPref = findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
+            passwordPref.setChecked("true".equals(newValue));
+        }
+    }
 }

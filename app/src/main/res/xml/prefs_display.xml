@@ -6,12 +6,16 @@
     >
 
     <ListPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:iconSpaceReserved="false"
         android:key="prefLanguage"
         android:title="@string/prefLanguage" >
     </ListPreference>
 
     <ListPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:iconSpaceReserved="false"
         android:defaultValue="16"
         android:entries="@array/TextSize"
@@ -20,29 +24,40 @@
         android:title="@string/prefTextSize" />
 
     <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:iconSpaceReserved="false"
         android:defaultValue="true"
         android:key="prefHighlightCompleted"
         android:title="@string/prefHighlightCompleted" />
 
     <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:iconSpaceReserved="false"
         android:defaultValue="false"
         android:key="prefShowSectionNumbers"
         android:title="@string/prefShowSectionNumbers" />
 
     <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:iconSpaceReserved="false"
         android:defaultValue="true"
         android:key="prefShowProgressBar"
         android:title="@string/prefShowProgressBar" />
 
     <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
         android:defaultValue="@string/SHOW_COURSE_DESCRIPTION"
         android:key="prefShowCourseDescription"
         android:title="@string/prefShowCourseDescription" />
 
     <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:iconSpaceReserved="false"
         android:defaultValue="@string/START_COURSEINDEX_COLLAPSED"
         android:key="prefStartCourseIndexCollapsed"

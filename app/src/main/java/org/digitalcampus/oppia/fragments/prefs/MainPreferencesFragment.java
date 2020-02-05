@@ -1,54 +1,49 @@
-package org.digitalcampus.oppia.fragments;
+package org.digitalcampus.oppia.fragments.prefs;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import android.util.Patterns;
-import android.webkit.URLUtil;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
-import org.digitalcampus.oppia.utils.storage.StorageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.preference.CheckBoxPreference;
-import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-public class PreferencesFragment extends PreferenceFragmentCompat {
+public class MainPreferencesFragment extends BasePreferenceFragment {
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
     public static final String FRAGMENT_TAG = "main_prefs_fragment";
     public static final String PAGE_ID = "page_id";
 
-    public static PreferencesFragment newInstance(String pageId) {
+    public static MainPreferencesFragment newInstance(String pageId) {
 
-        PreferencesFragment f = new PreferencesFragment();
+        MainPreferencesFragment f = new MainPreferencesFragment();
         Bundle args = new Bundle();
         args.putString(PAGE_ID, pageId);
         f.setArguments(args);
         return f;
     }
 
-    public PreferencesFragment(){
+    public MainPreferencesFragment(){
         // Required empty public constructor
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!isHidden()){
+            getActivity().setTitle(R.string.menu_settings);
+        }
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Load the preferences from XML resources
-        setPreferencesFromResource(R.xml.common_prefs, rootKey);
+        setPreferencesFromResource(R.xml.prefs_main, rootKey);
     }
 
 

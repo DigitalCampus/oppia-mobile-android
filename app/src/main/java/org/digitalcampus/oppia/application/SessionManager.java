@@ -191,7 +191,7 @@ public class SessionManager {
         if (!prefsToSave.isEmpty()) {
             for (String pref : prefsToSave) prefsEditor.remove(pref);
             //Then we set the default values again (only empty values, will not overwrite the others)
-            PreferenceManager.setDefaultValues(ctx, R.xml.prefs, true);
+            App.loadDefaultPreferenceValues(ctx, true);
         }
     }
 

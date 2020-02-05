@@ -1,26 +1,14 @@
 package org.digitalcampus.oppia.fragments.prefs;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Patterns;
-import android.webkit.URLUtil;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.utils.UIUtils;
-import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
-import org.digitalcampus.oppia.utils.storage.StorageUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
-import androidx.preference.Preference;
 
-public class DisplayPrefsFragment extends AdminProtectedPreferenceFragment {
+public class DisplayPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
     private ListPreference storagePref;
@@ -40,5 +28,15 @@ public class DisplayPrefsFragment extends AdminProtectedPreferenceFragment {
         addPreferencesFromResource(R.xml.prefs_display);
     }
 
+    @Override
+    public void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+        liveUpdateSummary(PrefsActivity.PREF_LANGUAGE);
+        liveUpdateSummary(PrefsActivity.PREF_TEXT_SIZE);
+    }
 
+    @Override
+    public void onPreferenceUpdated(String pref, String newValue) {
+
+    }
 }

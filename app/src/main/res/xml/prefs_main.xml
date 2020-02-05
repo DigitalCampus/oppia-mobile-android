@@ -3,33 +3,43 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:key="main_prefs_fragment">
-
     <Preference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:fragment="org.digitalcampus.oppia.fragments.prefs.DisplayPrefsFragment"
         app:title="@string/prefDisplay_title"
         app:key="prefDisplay"
-        app:icon="@drawable/ic_notification"
+        app:icon="@drawable/ic_settings_display"
+        app:summary="Control how courses and contents are displayed"
         />
 
     <Preference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:fragment="org.digitalcampus.oppia.fragments.prefs.NotificationsPrefsFragment"
         app:title="@string/prefNotifications_title"
         app:key="prefNotifications"
-        app:icon="@drawable/ic_notification"
+        app:icon="@drawable/ic_settings_notif"
+        app:summary="System notifications and in-app gamification messages"
     />
 
     <Preference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:fragment="org.digitalcampus.oppia.fragments.prefs.SecurityPrefsFragment"
         app:title="@string/prefSecurity_title"
         app:key="prefSecurity"
-        app:icon="@drawable/ic_notification"
+        app:icon="@drawable/ic_settings_security"
+        app:summary="Admin protection of special actions and enabling/disabling certain functionalities from the screen"
         />
 
     <Preference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
         app:fragment="org.digitalcampus.oppia.fragments.prefs.AdvancedPrefsFragment"
         app:title="@string/prefAdvanced_title"
         app:key="prefAdvanced"
-        app:icon="@drawable/ic_notification"
+        app:icon="@drawable/ic_settings_advanced"
+        app:summary="More advanced/technical settings"
         />
-
 </androidx.preference.PreferenceScreen>

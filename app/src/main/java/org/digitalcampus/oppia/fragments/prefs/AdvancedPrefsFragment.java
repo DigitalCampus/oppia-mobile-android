@@ -8,10 +8,6 @@ import android.webkit.URLUtil;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.fragments.PreferencesFragment;
-import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
@@ -20,12 +16,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 
-public class AdvancedPrefsFragment extends AdminProtectedPreferenceFragment {
+public class AdvancedPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
     private ListPreference storagePref;
@@ -75,7 +70,7 @@ public class AdvancedPrefsFragment extends AdminProtectedPreferenceFragment {
 
         updateServerPref();
         updateStorageList(this.getActivity());
-
+        liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
         EditTextPreference username = findPreference(PrefsActivity.PREF_USER_NAME);
         username.setSummary( username.getText().equals("") ?
                 getString(R.string.about_not_logged_in) :
@@ -153,6 +148,16 @@ public class AdvancedPrefsFragment extends AdminProtectedPreferenceFragment {
                 storagePref.setEntries(entries.toArray(new CharSequence[0]));
                 storagePref.setValue((currentPath.equals(""))? PrefsActivity.STORAGE_OPTION_INTERNAL : currentPath);
             }
+        }
+    }
+
+    @Override
+    public void onPreferenceUpdated(String pref, String newValue) {
+        if (pref.equals(PrefsActivity.PREF_SERVER)){
+            updateServerPref();
+        }
+        else if(pref.equals(PrefsActivity.PREF_STORAGE_OPTION) && (newValue!=null)){
+            updateStoragePref(newValue);
         }
     }
 
