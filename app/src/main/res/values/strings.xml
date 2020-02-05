@@ -113,6 +113,11 @@
     <string name="prefDownloadViaCellularEnabled">Download media via cellular network</string>
     <string name="prefDisableNotifications">Disable notifications</string>
 
+    <string name="prefNotifications_title">Notifications</string>
+    <string name="prefSecurity_title">Security</string>
+    <string name="prefAdvanced_title">Advanced</string>
+    <string name="prefDisplay_title">Display</string>
+
     <!-- Strings relative to Storage -->
     <string name="prefStorageLocation">Storage Location</string>
     <string name="prefStorageOptionInternal">Internal</string>
@@ -454,5 +459,6 @@
     <string name="activitylog_delete">Delete</string>
     <string name="activitylog_delete_confirm">Are you sure you want to delete this activity log file?</string>
     <string name="activitylog_delete_failed">Could not delete activity log file</string>
+
 </resources>
 

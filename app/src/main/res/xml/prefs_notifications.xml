@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="prefDisableNotifications"
+        android:title="@string/prefDisableNotifications" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="prefShowGamificationEvents"
+        android:title="@string/prefShowGamificationEvents" />
+
+    <ListPreference
+        android:dependency="prefShowGamificationEvents"
+        android:key="prefGamificationPointsAnimation"
+        android:title="@string/prefAnimationTypeGamificationPoints"
+        android:entries="@array/GamificationPointsAnimation"
+        android:entryValues="@array/GamificationPointsAnimationValues"
+        android:defaultValue="@string/prefGamificationPointsAnimationDefault"/>
+
+    <EditTextPreference
+        android:dependency="prefShowGamificationEvents"
+        android:key="prefDurationGamificationPointsView"
+        android:title="@string/prefDurationAnimationTypeGamificationPointsView"
+        android:defaultValue="@string/prefDurationGamificationPointsViewDefault"
+        android:inputType="number" />
+</androidx.preference.PreferenceScreen>

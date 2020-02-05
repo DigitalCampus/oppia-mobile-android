@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="prefAdvanced"
+    app:title="@string/prefAdvanced_title" >
+
+    <ListPreference
+        android:key="prefStorageOption"
+        android:title="@string/prefStorageLocation"
+        android:entries="@array/StorageOptions"
+        android:entryValues="@array/StorageOptionValues">
+    </ListPreference>
+
+    <EditTextPreference
+        android:key="prefUsername"
+        android:title="@string/prefUser"
+        android:selectable="false" />
+
+    <EditTextPreference
+        android:defaultValue="@string/prefServerDefault"
+        android:key="prefServer"
+        android:title="@string/prefServer" />
+
+    <EditTextPreference
+        android:defaultValue="@string/prefServerTimeoutConnectionDefault"
+        android:key="prefServerTimeoutConnection"
+        android:title="@string/prefServerTimeoutConnection"
+        android:inputType="number" />
+
+    <EditTextPreference
+        android:defaultValue="@string/prefServerTimeoutResponseDefault"
+        android:key="prefServerTimeoutResponse"
+        android:title="@string/prefServerTimeoutResponse"
+        android:inputType="number" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="prefBackgroundDataConnect"
+        android:summary="@string/prefBackgroudDataConnect_summary"
+        android:title="@string/prefBackgroudDataConnect" />
+
+    <CheckBoxPreference
+        android:defaultValue="@string/MENU_ALLOW_LOGOUT_DEFAULT_VALUE"
+        android:key="prefLogoutEnabled"
+        android:title="@string/prefLogoutEnabled" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="prefDownloadViaCellularEnabled"
+        android:title="@string/prefDownloadViaCellularEnabled"
+        android:summary="@string/warning_download_via_cellular_enabled" />
+
+</androidx.preference.PreferenceScreen>
