@@ -2,6 +2,7 @@ package UI;
 
 import android.content.Context;
 
+import Utils.MockedApiEndpointTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -35,65 +36,18 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+
 
 @RunWith(AndroidJUnit4.class)
-public class LoginUITest {
-
-    private MockWebServer mockServer;
+public class LoginUITest extends MockedApiEndpointTest {
 
     private static final String VALID_LOGIN_RESPONSE = "responses/response_200_login.json";
     private static final String WRONG_CREDENTIALS_RESPONSE = "responses/response_400_login.json";
 
     @Rule
-    public DaggerMockRule<AppComponent> daggerRule =
-                new DaggerMockRule<>(AppComponent.class, new AppModule(getApp())).set(
-                    new DaggerMockRule.ComponentSetter<AppComponent>() {
-                        @Override
-                        public void setComponent(AppComponent component) {
-                            getApp().setComponent(component);
-                        }
-                    });
-
-    @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
             new ActivityTestRule<>(WelcomeActivity.class, false, false);
 
-    private App getApp() {
-        return (App) InstrumentationRegistry.getInstrumentation()
-                .getTargetContext().getApplicationContext();
-    }
-
-    @Mock
-    ApiEndpoint apiEndpoint;
-
-
-    private void startServer(int responseCode, String responseAsset, int timeoutDelay){
-        try {
-            mockServer = new MockWebServer();
-            MockResponse response = new MockResponse();
-            response.setResponseCode(responseCode);
-            String responseBody = Utils.FileUtils.getStringFromFile(
-                    InstrumentationRegistry.getInstrumentation().getContext(), responseAsset);
-
-            if (responseBody!=null) { response.setBody(responseBody); }
-            if (timeoutDelay > 0){
-                response.setBodyDelay(timeoutDelay, TimeUnit.MILLISECONDS);
-
-            }
-            mockServer.enqueue(response);
-            mockServer.start();
-
-            when(apiEndpoint.getFullURL((Context) any(), anyString())).thenReturn(mockServer.url("").toString());
-
-        }catch(IOException ioe) {
-            ioe.printStackTrace();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws Exception{

@@ -40,6 +40,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
 
     public FetchServerInfoTask(Context ctx) {
         super(ctx);
+        connectivityManager = ConnectionUtils.getConnectivityManager(ctx);
     }
 
     public FetchServerInfoTask(Context ctx, ApiEndpoint api) {

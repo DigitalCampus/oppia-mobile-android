@@ -17,6 +17,7 @@ import org.digitalcampus.oppia.fragments.GlobalScorecardFragment;
 import org.digitalcampus.oppia.fragments.LoginFragment;
 import org.digitalcampus.oppia.fragments.PointsFragment;
 import org.digitalcampus.oppia.fragments.RegisterFragment;
+import org.digitalcampus.oppia.fragments.ResetFragment;
 import org.digitalcampus.oppia.model.User;
 
 import javax.inject.Singleton;
@@ -34,6 +35,7 @@ public interface AppComponent {
     void inject(PrefsActivity activity);
     void inject(CourseQuizAttemptsActivity activity);
     void inject(LoginFragment fragment);
+    void inject(ResetFragment fragment);
     void inject(GlobalScorecardFragment fragment);
     void inject(PointsFragment fragment);
     void inject(ActivitiesFragment fragment);

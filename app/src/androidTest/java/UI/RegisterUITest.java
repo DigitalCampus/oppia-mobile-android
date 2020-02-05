@@ -1,5 +1,6 @@
 package UI;
 
+import Utils.MockedApiEndpointTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -29,15 +30,20 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class RegisterUITest {
+public class RegisterUITest extends MockedApiEndpointTest {
+
+    private static final String VALID_REGISTER_RESPONSE = "responses/response_200_register.json";
+
 
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<>(WelcomeActivity.class);
+            new ActivityTestRule<>(WelcomeActivity.class, false, false);
+
 
 
     @Test
     public void showsErrorMessageWhenThereIsNoUsername() throws  Exception {
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
@@ -55,6 +61,7 @@ public class RegisterUITest {
 
     @Test
     public void showsErrorMessageWhenTheUsernameContainsSpaces() throws  Exception {
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
@@ -72,6 +79,7 @@ public class RegisterUITest {
 
     @Test
     public void showsErrorMessageWhenThereIsNoEmail() throws  Exception {
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
@@ -91,6 +99,9 @@ public class RegisterUITest {
 
     @Test
     public void showErrorMessageWhenTheEmailIsWrong() throws Exception {
+
+        welcomeActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
 
@@ -118,12 +129,15 @@ public class RegisterUITest {
         onView(withId(R.id.register_btn))
                 .perform(click());
 
-        onView(withText("Error"))   //String "Please enter a valid e-mail address."
-                .check(matches(isDisplayed()));
+        onErrorViewWithinTextInputLayoutWithId(R.id.register_form_email_field)
+                .check(matches(withText(R.string.error_register_email)));
     }
 
     @Test
     public void showErrorMessageWhenTheEmailContainsSpaces() throws Exception {
+
+        welcomeActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
 
@@ -157,6 +171,7 @@ public class RegisterUITest {
 
     @Test
     public void showsErrorMessageWhenThePasswordIsTooShort() throws Exception {
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
@@ -182,6 +197,7 @@ public class RegisterUITest {
 
     @Test
     public void showsErrorMessageWhenThePasswordsDoNotMatch() throws Exception{
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
@@ -207,6 +223,7 @@ public class RegisterUITest {
 
     @Test
     public void showsErrorMessageWhenThereIsNoFirstName() throws Exception {
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
@@ -235,6 +252,8 @@ public class RegisterUITest {
 
     @Test
     public void showsErrorMessageWhenThereIsNoLastName() throws Exception {
+
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
@@ -266,6 +285,7 @@ public class RegisterUITest {
 
     @Test
     public void showsErrorMessageWhenThePhoneNumberIsNotValid() throws Exception {
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
@@ -310,6 +330,9 @@ public class RegisterUITest {
 
     @Test
     public void changeActivityWhenAllTheFieldsAreCorrect() throws Exception {
+
+        startServer(200, VALID_REGISTER_RESPONSE, 0);
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_register))
                 .perform(scrollTo(), click());
