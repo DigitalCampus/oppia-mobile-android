@@ -2,24 +2,24 @@ package org.digitalcampus.oppia.database;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
-import androidx.room.migration.Migration;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import org.digitalcampus.oppia.model.UserCustomField;
+import org.digitalcampus.oppia.model.db_model.Leaderboard;
+import org.digitalcampus.oppia.model.db_model.UserCustomField;
+import org.digitalcampus.oppia.model.db_model.UserPreference;
 
-@Database(entities = {UserCustomField.class}, version = DbHelper.DB_VERSION, exportSchema = false)
+@Database(version = MyDatabase.DB_VERSION_ROOM, exportSchema = false,
+        entities = {
+                UserCustomField.class,
+                UserPreference.class,
+                Leaderboard.class})
 public abstract class MyDatabase extends RoomDatabase {
 
-//    public abstract UserPreferenceDao userPreferenceDao();
+    public static final int DB_VERSION_ROOM = 1;
+    public static final String DB_NAME_ROOM = "oppia.db";
+
+    public abstract UserPreferenceDao userPreferenceDao();
+
     public abstract UserCustomFieldDao userCustomFieldDao();
 
-
-    public static final Migration MIGRATION_34_35 = new Migration(39,40) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-
-
-        }
-    };
 
 }

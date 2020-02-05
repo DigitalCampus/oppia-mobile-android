@@ -18,7 +18,7 @@ import org.digitalcampus.oppia.adapter.LeaderboardAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.gamification.Leaderboard;
+import org.digitalcampus.oppia.gamification.LeaderboardUtils;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.LeaderboardPosition;
 import org.digitalcampus.oppia.task.Payload;
@@ -74,7 +74,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         leaderboard_view.setAdapter(adapter);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (Leaderboard.shouldFetchLeaderboard(prefs)){
+        if (LeaderboardUtils.shouldFetchLeaderboard(prefs)){
             Payload p = new Payload();
             UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity(), apiEndpoint);
             task.seListener(this);

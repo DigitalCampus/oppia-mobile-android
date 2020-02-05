@@ -27,11 +27,13 @@ import android.util.Pair;
 import com.splunk.mint.Mint;
 import com.splunk.mint.MintLogLevel;
 
+import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -143,58 +145,62 @@ public class SessionManager {
 
     private static void saveUserPrefs(Context ctx, String username, SharedPreferences prefs) {
 
-        ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
+//        ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
+        List<UserPreference> userPreferences = new ArrayList<>();
 
         for (String prefID : USER_STRING_PREFS) {
             String prefValue = prefs.getString(prefID, "");
             if (!TextUtils.isEmpty(prefValue)) {
-                Pair<String, String> userPref = new Pair<>(prefID, prefValue);
-                userPrefs.add(userPref);
+//                Pair<String, String> userPref = new Pair<>(prefID, prefValue);
+//                userPrefs.add(userPref);
+                userPreferences.add(new UserPreference(username, prefID, prefValue));
             }
         }
 
         for (String prefID : USER_BOOLEAN_PREFS) {
             if (prefs.contains(prefID)) {
                 boolean prefValue = prefs.getBoolean(prefID, false);
-                Pair<String, String> userPref = new Pair<>(prefID, prefValue ? "true" : "false");
-                userPrefs.add(userPref);
+//                Pair<String, String> userPref = new Pair<>(prefID, prefValue ? "true" : "false");
+//                userPrefs.add(userPref);
+                userPreferences.add(new UserPreference(username, prefID, prefValue ? "true" : "false"));
             }
         }
 
+        App.getDb().userPreferenceDao().insertAll(userPreferences);
 
-        DbHelper db = DbHelper.getInstance(ctx);
-        db.insertUserPreferences(username, userPrefs);
+//        DbHelper db = DbHelper.getInstance(ctx);
+//        db.insertUserPreferences(username, userPrefs);
     }
 
     //Warning: this method doesn't call prefs.apply()
     private static void loadUserPrefs(Context ctx, String username, SharedPreferences.Editor prefsEditor) {
 
-//        List<UserPreference> userPrefs = App.getDb().userPrefsDao().getAllForUser(username);
-//
-////        DbHelper db = DbHelper.getInstance(ctx);
-////        List<Pair<String, String>> userPrefs = db.getUserPreferences(username);
-//
-//        ArrayList<String> prefsToSave = new ArrayList<>();
-//        prefsToSave.addAll(USER_STRING_PREFS);
-//        prefsToSave.addAll(USER_BOOLEAN_PREFS);
-//
-//        for (UserPreference userPref : userPrefs) {
-//            String prefKey = userPref.getPreference();
-//            String prefValue = userPref.getValue();
-//            if (USER_STRING_PREFS.contains(prefKey)) {
-//                prefsEditor.putString(prefKey, prefValue);
-//            } else if (USER_BOOLEAN_PREFS.contains(prefKey)) {
-//                prefsEditor.putBoolean(prefKey, "true".equals(prefValue));
-//            }
-//            prefsToSave.remove(prefKey);
-//        }
-//
-//        //If there were prefKeys not previously saved, we clear them from the SharedPreferences
-//        if (!prefsToSave.isEmpty()) {
-//            for (String pref : prefsToSave) prefsEditor.remove(pref);
-//            //Then we set the default values again (only empty values, will not overwrite the others)
-//            PreferenceManager.setDefaultValues(ctx, R.xml.prefs, true);
-//        }
+        List<UserPreference> userPrefs = App.getDb().userPreferenceDao().getAllForUser(username);
+
+//        DbHelper db = DbHelper.getInstance(ctx);
+//        List<Pair<String, String>> userPrefs = db.getUserPreferences(username);
+
+        ArrayList<String> prefsToSave = new ArrayList<>();
+        prefsToSave.addAll(USER_STRING_PREFS);
+        prefsToSave.addAll(USER_BOOLEAN_PREFS);
+
+        for (UserPreference userPref : userPrefs) {
+            String prefKey = userPref.getPreference();
+            String prefValue = userPref.getValue();
+            if (USER_STRING_PREFS.contains(prefKey)) {
+                prefsEditor.putString(prefKey, prefValue);
+            } else if (USER_BOOLEAN_PREFS.contains(prefKey)) {
+                prefsEditor.putBoolean(prefKey, "true".equals(prefValue));
+            }
+            prefsToSave.remove(prefKey);
+        }
+
+        //If there were prefKeys not previously saved, we clear them from the SharedPreferences
+        if (!prefsToSave.isEmpty()) {
+            for (String pref : prefsToSave) prefsEditor.remove(pref);
+            //Then we set the default values again (only empty values, will not overwrite the others)
+            PreferenceManager.setDefaultValues(ctx, R.xml.prefs, true);
+        }
     }
 
     public static void setUserApiKeyValid(Context ctx, User user, boolean valid) {
@@ -202,7 +208,10 @@ public class SessionManager {
         Pair<String, String> userPref = new Pair<>(APIKEY_VALID, valid ? "true" : "false");
         userPrefs.add(userPref);
 
-        DbHelper.getInstance(ctx).insertUserPreferences(user.getUsername(), userPrefs);
+        UserPreference userPreference = new UserPreference(user.getUsername(), APIKEY_VALID, valid ? "true" : "false");
+        App.getDb().userPreferenceDao().insert(userPreference);
+
+//        DbHelper.getInstance(ctx).insertUserPreferences(user.getUsername(), userPrefs);
     }
 
     public static boolean isUserApiKeyValid(Context ctx) {
@@ -216,11 +225,10 @@ public class SessionManager {
     public static boolean isUserApiKeyValid(Context ctx, String username) {
 //        DbHelper db = DbHelper.getInstance(ctx);
 //        String prefValue = db.getUserPreference(username, APIKEY_VALID);
+//        return (prefValue == null || "true".equals(prefValue));
 
-//        UserPreference userPref = App.getDb().userPrefsDao().getPref(username, APIKEY_VALID);
-//        return (userPref == null || "true".equals(userPref.getValue()));
-
-        return "remove_this".equals("remove_that");
+        UserPreference userPref = App.getDb().userPreferenceDao().getPref(username, APIKEY_VALID);
+        return (userPref == null || "true".equals(userPref.getValue()));
     }
 
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener) {

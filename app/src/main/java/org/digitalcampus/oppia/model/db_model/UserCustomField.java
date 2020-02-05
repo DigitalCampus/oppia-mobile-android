@@ -1,11 +1,11 @@
-package org.digitalcampus.oppia.model;
+package org.digitalcampus.oppia.model.db_model;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "user_cf")
+@Entity(tableName = "user_custom_field")
 public class UserCustomField {
 
 

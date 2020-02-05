@@ -46,6 +46,7 @@ import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
@@ -187,7 +188,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String CF_VALUE_BOOL = "value_bool";
 	private static final String CF_VALUE_FLOAT = "value_float";
 
-	private static final String USER_PREFS_TABLE = "userprefs";
+	public static final String USER_PREFS_TABLE = "userprefs";
     private static final String USER_PREFS_C_USERNAME = "username";
     private static final String USER_PREFS_C_PREFKEY = "preference";
     private static final String USER_PREFS_C_PREFVALUE = "value";
@@ -237,7 +238,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		createUserCustomFieldsTable(db);
 
-		createAlternativeUserPrefsTable(db);
+//		createAlternativeUserPrefsTable(db);
 	}
 
     public void beginTransaction(){
@@ -591,35 +592,35 @@ public class DbHelper extends SQLiteOpenHelper {
 			createUserCustomFieldsTable(db);
 		}
 
-		if (oldVersion < 35) {
-			createAlternativeUserPrefsTable(db);
-		}
+//		if (oldVersion < 35) {
+//			createAlternativeUserPrefsTable(db);
+//		}
 	}
 
-	private void createAlternativeUserPrefsTable(SQLiteDatabase database) {
-
-		database.beginTransaction();
-		try {
-
-			database.execSQL("CREATE TABLE 'user_preference' (" +
-					"'_id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , " +
-					"'username' text not null, " +
-					"'preference' text not null, " +
-					"'value' text );");
-
-//			database.execSQL("CREATE UNIQUE INDEX idx ON 'user_preference' ('username', 'preference');");
-
-			database.execSQL("INSERT INTO 'user_preference' ('username', 'preference', 'value') SELECT * FROM 'userprefs'");
-
-			database.execSQL("DROP TABLE 'userprefs'");
-
-			database.setTransactionSuccessful();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			database.endTransaction();
-		}
-	}
+//	private void createAlternativeUserPrefsTable(SQLiteDatabase database) {
+//
+//		database.beginTransaction();
+//		try {
+//
+//			database.execSQL("CREATE TABLE 'user_preference' (" +
+//					"'_id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , " +
+//					"'username' text not null, " +
+//					"'preference' text not null, " +
+//					"'value' text );");
+//
+////			database.execSQL("CREATE UNIQUE INDEX idx ON 'user_preference' ('username', 'preference');");
+//
+//			database.execSQL("INSERT INTO 'user_preference' ('username', 'preference', 'value') SELECT * FROM 'userprefs'");
+//
+//			database.execSQL("DROP TABLE 'userprefs'");
+//
+//			database.setTransactionSuccessful();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			database.endTransaction();
+//		}
+//	}
 
 	public void updateV43(long userId){
 		// update existing trackers
@@ -2188,53 +2189,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	    return completed;
 	}
 
-    public void insertUserPreferences(String username, List<Pair<String, String>> preferences){
-        beginTransaction();
-        for (Pair<String, String> prefence : preferences) {
-            ContentValues values = new ContentValues();
-            values.put(USER_PREFS_C_USERNAME, username);
-            values.put(USER_PREFS_C_PREFKEY, prefence.first);
-            values.put(USER_PREFS_C_PREFVALUE, prefence.second);
-            db.insertWithOnConflict(USER_PREFS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        }
-        endTransaction(true);
-    }
-
-    public List<Pair<String, String>> getUserPreferences(String username){
-        ArrayList<Pair<String, String>> localPrefs = new ArrayList<>();
-        String whereClause = USER_PREFS_C_USERNAME + "=? ";
-        String[] args = new String[] { username };
-
-        Cursor c = db.query(USER_PREFS_TABLE, null, whereClause, args, null, null, null);
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-
-            String prefKey = c.getString(c.getColumnIndex(USER_PREFS_C_PREFKEY));
-            String prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
-            Pair<String, String> pref = new Pair<>(prefKey, prefValue);
-            localPrefs.add(pref);
-
-            c.moveToNext();
-        }
-        c.close();
-
-        return localPrefs;
-    }
-
-    public String getUserPreference(String username, String preferenceKey){
-        String whereClause = USER_PREFS_C_USERNAME + "=? AND " + USER_PREFS_C_PREFKEY + "=? ";
-        String[] args = new String[] { username, preferenceKey };
-
-        String prefValue = null;
-        Cursor c = db.query(USER_PREFS_TABLE, null, whereClause, args, null, null, null);
-        if (c.getCount() > 0){
-            c.moveToFirst();
-            prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
-        }
-
-        c.close();
-        return prefValue;
-    }
 
     public boolean insertOrUpdateUserLeaderboard(String username, String fullname, int points, DateTime lastUpdate){
 
@@ -2290,4 +2244,78 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    // METHODS PREPARED TO COMPLETELY REMOVE
+
+//    public void insertUserPreferences(String username, List<Pair<String, String>> preferences){
+//        beginTransaction();
+//        for (Pair<String, String> prefence : preferences) {
+//            ContentValues values = new ContentValues();
+//            values.put(USER_PREFS_C_USERNAME, username);
+//            values.put(USER_PREFS_C_PREFKEY, prefence.first);
+//            values.put(USER_PREFS_C_PREFVALUE, prefence.second);
+//            db.insertWithOnConflict(USER_PREFS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+//        }
+//        endTransaction(true);
+//    }
+
+//    public List<Pair<String, String>> getUserPreferences(String username){
+//        ArrayList<Pair<String, String>> localPrefs = new ArrayList<>();
+//        String whereClause = USER_PREFS_C_USERNAME + "=? ";
+//        String[] args = new String[] { username };
+//
+//        Cursor c = db.query(USER_PREFS_TABLE, null, whereClause, args, null, null, null);
+//        c.moveToFirst();
+//        while (!c.isAfterLast()) {
+//
+//            String prefKey = c.getString(c.getColumnIndex(USER_PREFS_C_PREFKEY));
+//            String prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
+//            Pair<String, String> pref = new Pair<>(prefKey, prefValue);
+//            localPrefs.add(pref);
+//
+//            c.moveToNext();
+//        }
+//        c.close();
+//
+//        return localPrefs;
+//    }
+
+
+//    public String getUserPreference(String username, String preferenceKey){
+//        String whereClause = USER_PREFS_C_USERNAME + "=? AND " + USER_PREFS_C_PREFKEY + "=? ";
+//        String[] args = new String[] { username, preferenceKey };
+//
+//        String prefValue = null;
+//        Cursor c = db.query(USER_PREFS_TABLE, null, whereClause, args, null, null, null);
+//        if (c.getCount() > 0){
+//            c.moveToFirst();
+//            prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
+//        }
+//
+//        c.close();
+//        return prefValue;
+//    }
+
+    // METHODS FOR DB ROOM MIGRATION
+
+	public List<UserPreference> getAllUserPreferences(){
+		List<UserPreference> userPreferences = new ArrayList<>();
+		Cursor c = db.query(USER_PREFS_TABLE, null, null, null, null, null, null);
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+
+			String username = c.getString(c.getColumnIndex(USER_PREFS_C_USERNAME));
+			String prefKey = c.getString(c.getColumnIndex(USER_PREFS_C_PREFKEY));
+			String prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
+			userPreferences.add(new UserPreference(username, prefKey, prefValue));
+
+			c.moveToNext();
+		}
+		c.close();
+
+		return userPreferences;
+	}
+
+	public void dropTable(String table) {
+		db.execSQL("drop table if exists " + table);
+	}
 }

@@ -1,11 +1,12 @@
-package org.digitalcampus.oppia.model;
+package org.digitalcampus.oppia.model.db_model;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "user_preference"/*, indices = {@Index(name = "idx", value = {"username", "preference"}, unique = true)}*/)
+@Entity(tableName = "user_preference", indices = {@Index(name = "idx", value = {"username", "preference"}, unique = true)})
 public class UserPreference {
 
     @PrimaryKey(autoGenerate = true)
@@ -14,6 +15,12 @@ public class UserPreference {
     private @NonNull String username;
     private @NonNull String preference;
     private String value;
+
+    public UserPreference(@NonNull String username, @NonNull String preference, String value) {
+        this.username = username;
+        this.preference = preference;
+        this.value = value;
+    }
 
     public String getUsername() {
         return username;

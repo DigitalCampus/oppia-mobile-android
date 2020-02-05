@@ -130,6 +130,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     //Google Cloud Messaging preferences
     public static final String PREF_TEST_ACTION_PROTECTED = "prefTestActionProtected";
 
+    public static final String PREF_DATA_ROOM_MIGRATON_VERSION= "prefDataRoomMigrationVersion";
+
+
+
+
     private SharedPreferences prefs;
     private ProgressDialog pDialog;
     private PreferencesFragment mPrefsFragment;

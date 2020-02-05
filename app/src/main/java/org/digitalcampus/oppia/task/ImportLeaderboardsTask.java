@@ -7,7 +7,7 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.exception.WrongServerException;
-import org.digitalcampus.oppia.gamification.Leaderboard;
+import org.digitalcampus.oppia.gamification.LeaderboardUtils;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -54,7 +54,7 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                 if (json_file.exists()){
                     try {
                         String json = FileUtils.readFile(json_file);
-                        updatedPositions += Leaderboard.importLeaderboardJSON(ctx, json);
+                        updatedPositions += LeaderboardUtils.importLeaderboardJSON(ctx, json);
                     } catch (IOException e) {
                         Mint.logException(e);
                         Log.d(TAG, "IOException: ", e);

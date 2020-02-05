@@ -6,9 +6,11 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import org.digitalcampus.oppia.model.UserPreference;
+import org.digitalcampus.oppia.model.db_model.UserPreference;
 
 import java.util.List;
+
+import static androidx.room.OnConflictStrategy.REPLACE;
 
 @Dao
 public interface UserPreferenceDao {
@@ -23,10 +25,10 @@ public interface UserPreferenceDao {
     @Query("SELECT * FROM user_preference WHERE username = :username AND preference = :preferenceKey")
     UserPreference getPref(String username, String preferenceKey);
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     void insertAll(List<UserPreference> userPrefs);
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     void insert(UserPreference userPref);
 
     @Update

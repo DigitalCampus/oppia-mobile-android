@@ -124,8 +124,8 @@ public class App extends Application {
         super.onCreate();
 
         db = Room.databaseBuilder(getApplicationContext(),
-                MyDatabase.class, DbHelper.DB_NAME)
-                .addMigrations(MyDatabase.MIGRATION_34_35)
+                MyDatabase.class, MyDatabase.DB_NAME_ROOM)
+//                .addMigrations(MyDatabase.MIGRATION_)
 //                .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()
                 .build();

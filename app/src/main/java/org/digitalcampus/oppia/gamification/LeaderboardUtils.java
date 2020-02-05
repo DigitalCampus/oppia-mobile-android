@@ -18,9 +18,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Leaderboard {
+public class LeaderboardUtils {
 
-    public static final String TAG = Leaderboard.class.getSimpleName();
+    public static final String TAG = LeaderboardUtils.class.getSimpleName();
 
     public static int importLeaderboardJSON(Context ctx, String json) throws JSONException, ParseException, WrongServerException {
 

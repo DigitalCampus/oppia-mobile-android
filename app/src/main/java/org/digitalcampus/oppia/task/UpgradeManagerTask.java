@@ -32,9 +32,10 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DBMigration;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
@@ -145,6 +146,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			publishProgress(this.ctx.getString(R.string.info_upgrading,"v54a"));
 			payload.setResult(true);
 		}
+
+		DBMigration.newInstance(ctx).checkMigrationStatus();
 
 		overrideAdminPasswordTask();
 		
