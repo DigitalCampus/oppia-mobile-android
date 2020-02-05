@@ -98,15 +98,11 @@
 <string name="prefBackgroudDataConnect_summary">أرسل سجل الأنشطة حتى إذا كان التطبيق في وضع توقف مؤقت</string>
 <string name="prefLanguage">اللغة المفضلة</string>
 <string name="prefHighlightCompleted">إبراز الأنشطة المنتهية</string>
-<string name="prefNoScheduleReminders">عرض عدد الأنشطة المقترحة</string>
-<string name="prefNoScheduleReminders_summary">عرض عدد الأنشطة المقترحة</string>
 <string name="prefServer">الخادم</string>
 <string name="prefServerTimeoutConnection">مهلة الإتصال</string>
 <string name="prefServerTimeoutResponse">مدة الإجابة</string>
 <string name="prefShowCourseDescription">عرض وصف الدروس</string>
 <string name="prefShowProgressBar">عرض شريط التقدم</string>
-<string name="prefShowScheduleReminders">عرض الأنشطة المقترحة</string>
-<string name="prefShowScheduleReminders_summary">عرض الأنشطة التي يجب إكمالها لاحقا</string>
 <string name="prefShowSectionNumbers">عرض أرقام الأقسام</string>
 <string name="prefTextSize">حجم النص</string>
 <string name="prefUser">إسم المستخدم</string>
@@ -183,7 +179,6 @@
 
 <string name="publisher">الناشر</string>
 <string name="update">تحديث</string>
-<string name="update_schedule">جدول التحديثات</string>
 <string name="installed">تم تنزيله بنجاح</string>
 <string name="install">تنزيل الدرس</string>
 
@@ -191,9 +186,7 @@
 <string name="downloading">جاري التحميل &#8230;</string>
 <string name="download_complete">إكتمل التحميل</string>
 
-<string name="update_starting">تحديثات انتظامية</string>
 <string name="updating">جاري التحديث &#8230;</string>
-<string name="update_complete">اكتمل التحديث</string>
 
 <string name="installing_course">تنزيل  %1$s:</string>
 <string name="install_complete">إاكتمل التنزيل</string>

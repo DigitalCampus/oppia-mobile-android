@@ -85,10 +85,6 @@
     <string name="prefTextSize">Tamaño del texto</string>
     <string name="prefUser">Usuario</string>
 	<string name="prefHighlightCompleted">Resaltar actividades completadas</string>
-	<string name="prefNoScheduleReminders">Numero de actividades recomendadas</string>
-	<string name="prefNoScheduleReminders_summary">Cuántas actividades recomendadas mostrar</string>
-	<string name="prefShowScheduleReminders">Mostrar actividades recomendadas</string>
-	<string name="prefShowScheduleReminders_summary">Mostrar qué actividades deben completarse a continuación</string>
 	<string name="prefShowSectionNumbers">Mostrar número de sección</string>
     <string name="prefShowCourseDescription">Mostrar descripción de cursos</string>
     <string name="prefShowProgressBar">Mostrar barra de progreso</string>
@@ -143,17 +139,14 @@
 	<string name="alt_activity_icon">Icono de actividad</string>
 	
 	<string name="update">Actualización</string>
-	<string name="update_schedule">Actualizar planificación</string>
 	<string name="installed">Instalado</string>
 	<string name="install">Instalar</string>
 	
 	<string name="download_starting">Inicio descarga</string>
 	<string name="downloading">Descargando…</string>
 	<string name="download_complete">Descarga completa</string>
-	
-	<string name="update_starting">Obtener actualizaciones de planificación</string>
+
 	<string name="updating">Actualizando …</string>
-	<string name="update_complete">Actualización de planificación completa</string>
 	
 	<string name="installing_course">Instalando: %1$s</string>
 	<string name="install_complete">Instalación completa</string>
