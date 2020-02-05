@@ -71,6 +71,8 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         updateServerPref();
         updateStorageList(this.getActivity());
         liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
+        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_CONN, " ms");
+        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_RESP, " ms");
         EditTextPreference username = findPreference(PrefsActivity.PREF_USER_NAME);
         username.setSummary( username.getText().equals("") ?
                 getString(R.string.about_not_logged_in) :

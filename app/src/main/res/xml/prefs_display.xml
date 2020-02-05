@@ -8,7 +8,7 @@
     <ListPreference
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
-        app:iconSpaceReserved="false"
+        app:icon="@drawable/ic_settings_language"
         android:key="prefLanguage"
         android:title="@string/prefLanguage" >
     </ListPreference>
@@ -16,7 +16,7 @@
     <ListPreference
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"
-        app:iconSpaceReserved="false"
+        app:icon="@drawable/ic_settings_text_size"
         android:defaultValue="16"
         android:entries="@array/TextSize"
         android:entryValues="@array/TextSizeValues"

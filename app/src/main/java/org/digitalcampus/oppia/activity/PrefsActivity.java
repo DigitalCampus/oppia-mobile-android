@@ -132,6 +132,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     //Google Cloud Messaging preferences
     public static final String PREF_TEST_ACTION_PROTECTED = "prefTestActionProtected";
+    private static final String PREF_DISPLAY_SCREEN = "prefDisplay";
+    private static final String PREF_SECURITY_SCREEN = "prefSecurity";
+    private static final String PREF_NOTIFICATIONS_SCREEN = "prefNotifications";
+    private static final String PREF_ADVANCED_SCREEN = "prefsAdvanced";
 
     private ProgressDialog pDialog;
     private PreferenceChangedCallback currentPrefScreen;
@@ -160,11 +164,9 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             if (mPrefsFragment == null) {
                 mPrefsFragment = MainPreferencesFragment.newInstance("SettingsAct");
                 Bundle bundle = this.getIntent().getExtras();
-                if(bundle == null) {
-                    bundle = new Bundle();
+                if(bundle != null) {
+                    mPrefsFragment.setArguments(bundle);
                 }
-                bundle.putSerializable("langs", getLanguagesCourses());
-                mPrefsFragment.setArguments(bundle);
             }
 
             getSupportFragmentManager()
@@ -188,7 +190,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 }
             }
         }
-
         return langs;
     }
 
@@ -224,7 +225,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             fetchServerInfoTask.setListener(null);
         }
     }
-
 
 
     public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, String key) {
@@ -439,6 +439,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Bundle args = new Bundle();
         args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, caller.getTag());
+        if (pref.getKey().equals(PrefsActivity.PREF_DISPLAY_SCREEN)){
+            args.putSerializable("langs", getLanguagesCourses());
+            Log.d(TAG, "Langs added!");
+        }
+
         fragment.setArguments(args);
 
         ft.setCustomAnimations(R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim, R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim);

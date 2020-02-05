@@ -27,7 +27,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         }
     }
 
-    void protectAdminEditTextPreferences() {
+    private void protectAdminEditTextPreferences() {
         for (String prefKey : adminProtectedValues) {
 
             final EditTextPreference editTextPreference = findPreference(prefKey);
@@ -55,22 +55,42 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         }
     }
 
-    protected void liveUpdateSummary(String prefKey){
-        final ListPreference pref = findPreference(prefKey);
-        pref.setSummary(pref.getEntry());
-        pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                CharSequence[] entryValues = pref.getEntryValues();
-                for (int i=0; i< entryValues.length; i++){
-                    if (entryValues[i].equals(newValue)){
-                        pref.setSummary(pref.getEntries()[i]);
-                        break;
+    void liveUpdateSummary(String prefKey){
+        liveUpdateSummary(prefKey, "");
+    }
+
+    void liveUpdateSummary(String prefKey, final String append){
+
+        Preference pref = findPreference(prefKey);
+        if (pref instanceof ListPreference){
+            final ListPreference listPref = (ListPreference) pref;
+            listPref.setSummary(listPref.getEntry() + append);
+            listPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    CharSequence[] entryValues = listPref.getEntryValues();
+                    for (int i=0; i< entryValues.length; i++){
+                        if (entryValues[i].equals(newValue)){
+                            listPref.setSummary(listPref.getEntries()[i] + append);
+                            break;
+                        }
                     }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
+        else if (pref instanceof EditTextPreference){
+            final EditTextPreference editPref = (EditTextPreference) pref;
+            editPref.setSummary(editPref.getText() + append) ;
+            editPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    editPref.setText(newValue + append);
+                    return true;
+                }
+            });
+        }
+
     }
 
 }
