@@ -69,7 +69,6 @@ public class App extends Application {
     public static final boolean ADMIN_PROTECT_ACTIVITY_SYNC = BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC;
     public static final boolean ADMIN_PROTECT_ACTIVITY_EXPORT = BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT;
 
-
     // tracker metadata settings
     public static final boolean METADATA_INCLUDE_NETWORK = BuildConfig.METADATA_INCLUDE_NETWORK;
     public static final boolean METADATA_INCLUDE_DEVICE_ID = BuildConfig.METADATA_INCLUDE_DEVICE_ID;
