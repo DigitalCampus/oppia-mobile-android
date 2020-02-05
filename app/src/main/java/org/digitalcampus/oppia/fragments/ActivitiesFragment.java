@@ -144,30 +144,22 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
         chart.setPinchZoom(true);
 
-//        chart.setViewPortOffsets(40f, 0f, 40f, 0f);
         chart.offsetLeftAndRight(getResources().getDimensionPixelSize(R.dimen.offset_chart_horizontal));
 
         Legend l = chart.getLegend();
         l.setEnabled(false);
 
         chart.getAxisRight().setEnabled(false);
-//        chart.getXAxis().setEnabled(false);
 
         chart.getAxisLeft().setAxisMinimum(0);
 
         XAxis xAxis = chart.getXAxis();
 
-//        xAxis.setSpaceMin(data.getBarWidth()/2);
-//        xAxis.setSpaceMax(data.getBarWidth()/2);
-
-//        xAxis.setXOffset(widthBetweenObservations);
         xAxis.setGranularity(1);
         xAxis.setGranularityEnabled(true);
-//        xAxis.setCenterAxisLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setLabelRotationAngle(40);
-//        xAxis.setLabelCount(2);
 
     }
 
@@ -175,7 +167,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
         currentDatesRangePosition = position;
 
-        DateTime initialDateTime = new DateTime();
+        DateTime initialDateTime;
         DateTime initialNowAtEndOfDay = new DateTime();
         initialNowAtEndOfDay.withHourOfDay(23);
         initialNowAtEndOfDay.withMinuteOfHour(59);
@@ -260,7 +252,6 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
         for (Points point : pointsFiltered) {
 
-
             String key = datetimeFormatter.print(point.getDateTime());
             if (activitiesGrouped.containsKey(key)) {
                 if (activitiesGrouped.get(key).hasValidEvent(point.getEvent())) {
@@ -269,7 +260,6 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
                 }
             } else {
                 Log.e(TAG, "groupPoints: this should not happen. Just in case avoids exception");
-                continue;
             }
 
         }
@@ -364,7 +354,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
                 return hasDecimals ? "" : String.valueOf((int) value);
             }
         });
-//        yAxis.setDrawTopYLabelEntry(true);
+
         yAxis.setSpaceTop(0);
 
         chart.invalidate(); // refresh
@@ -375,8 +365,6 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(super.getActivity()));
         pointsFull = db.getUserPoints(userId, course, true);
-
-//        pointsFull = getMockPoints();
     }
 
     // Useful for testing

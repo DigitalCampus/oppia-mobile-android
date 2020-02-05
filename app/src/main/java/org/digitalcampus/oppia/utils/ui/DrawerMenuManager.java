@@ -96,10 +96,6 @@ public class DrawerMenuManager {
         drawerToggle.syncState();
     }
 
-    public void onPrepareOptionsMenu(Menu menu, int currentOption) {
-        this.onPrepareOptionsMenu(menu, currentOption, null);
-    }
-
     public void onPrepareOptionsMenu(Menu menu, Map<Integer, MenuOption> options) {
         this.onPrepareOptionsMenu(menu, null, options);
     }
@@ -155,10 +151,6 @@ public class DrawerMenuManager {
                     launchIntentForActivity(ActivityLogActivity.class);
                 } else if (itemId == R.id.menu_about) {
                     launchIntentForActivity(AboutActivity.class);
-//                } else if (itemId == R.id.menu_scorecard) {
-//                    launchIntentForActivity(ScorecardActivity.class);
-//                } else if (itemId == R.id.menu_search) {
-//                    launchIntentForActivity(SearchActivity.class);
                 } else if (itemId == R.id.menu_settings) {
                     launchIntentForActivity(PrefsActivity.class);
                 } else if (itemId == R.id.menu_sync) {

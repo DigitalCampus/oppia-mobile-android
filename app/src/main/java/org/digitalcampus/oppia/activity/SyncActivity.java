@@ -474,7 +474,6 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             Toast.makeText(this, p.getResultResponse(), Toast.LENGTH_SHORT).show();
         }
         refreshFileList(false);
-        //Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
     }
 
     @Override

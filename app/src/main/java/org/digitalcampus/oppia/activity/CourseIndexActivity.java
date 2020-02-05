@@ -65,7 +65,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     private ArrayList<Section> sections;
     @Inject SharedPreferences prefs;
     private Activity baselineActivity;
-    //	private AlertDialog aDialog;
     private View loadingCourseView;
     private CourseIndexRecyclerViewAdapter adapter;
     private String digestJumpTo;
@@ -175,11 +174,6 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
             aDialog.dismiss();
             aDialog = null;
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override

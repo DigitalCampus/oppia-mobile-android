@@ -69,7 +69,6 @@ public class DeviceListActivity extends Activity {
     private BluetoothAdapter mBtAdapter;
     private DevicesBTAdapter adapterNewDevices;
     private List<String> newDevicesNames = new ArrayList<>();
-    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +88,7 @@ public class DeviceListActivity extends Activity {
             public void onClick(View v) {
 
                 final List<String> notGrantedPerms = PermissionsManager.filterNotGrantedPermissions(DeviceListActivity.this, BLUETOOTH_PERMISSIONS);
-                if (notGrantedPerms.size() > 0) {
+                if (!notGrantedPerms.isEmpty()) {
                     if (PermissionsManager.canAskForAllPermissions(DeviceListActivity.this, notGrantedPerms)) {
                         UIUtils.showAlert(
                                 DeviceListActivity.this,
@@ -171,10 +170,8 @@ public class DeviceListActivity extends Activity {
         super.onDestroy();
 
         // Make sure we're not doing discovery anymore
-        if (mBtAdapter != null) {
-            if (mBtAdapter.isDiscovering()) {
-                mBtAdapter.cancelDiscovery();
-            }
+        if (mBtAdapter != null && mBtAdapter.isDiscovering()) {
+            mBtAdapter.cancelDiscovery();
         }
 
         // Unregister broadcast listeners
@@ -268,7 +265,7 @@ public class DeviceListActivity extends Activity {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
                 setTitle(R.string.bluetooth_select_device);
-                if (newDevicesNames.size() == 0) {
+                if (newDevicesNames.isEmpty()) {
                     String noDevices = getResources().getText(R.string.bluetooth_no_devices_found).toString();
                     newDevicesNames.add(noDevices);
                 }

@@ -118,7 +118,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
             CourseTransferableFile log = new CourseTransferableFile();
             log.setFilename(file.getName());
             log.setFile(file);
-            log.setTitle(filename.substring(0, filename.indexOf("_")));
+            log.setTitle(filename.substring(0, filename.indexOf('_')));
             log.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
             log.setFileSize(file.length());
             log.setShortname("");

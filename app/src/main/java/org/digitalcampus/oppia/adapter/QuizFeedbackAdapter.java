@@ -36,8 +36,7 @@ public class QuizFeedbackAdapter extends RecyclerView.Adapter<QuizFeedbackAdapte
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_widget_quiz_feedback, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 

@@ -291,8 +291,6 @@
 <string name="download_via_pc_intro">تحميل كافة الملفات أدناه على الحاسوب إضغط على زر الفأرة الأيمن واختار العبارة حفظ بإسم</string>
 <string name="download_via_pc_final">بعد تحميل الملفات إنسخها على الدليل  \'%1$s\' من بطاقة الذاكرة الرقمية للجهاز المستعمل</string>
 
-<string name="schedule_reminders">الأنشطة اللاحقة المقترحة</string>
-
 <string name="course_draft">(مسودة)</string>
 
 <string name="search.activity_title">إبحث</string>

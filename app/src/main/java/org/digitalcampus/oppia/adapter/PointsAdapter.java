@@ -33,8 +33,7 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_fragment_points_list, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 

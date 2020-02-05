@@ -269,8 +269,6 @@
     <string name="download_via_pc_intro">Téléchargez tous les fichiers ci-dessous sur votre ordinateur (utiliser le bouton droit de la souris et choisissez enregistrer-sous)</string>
     <string name="download_via_pc_final">Une fois que vous aurez téléchargé les fichiers, copiez-les sur le repertoire \'%1$s\' de la carte SD de votre appareil.</string>
 
-    <string name="schedule_reminders">Prochaines activité proposées :</string>
-
     <string name="course_draft">(Brouillon)</string>
 
     <string name="search.activity_title">Rechercher</string>

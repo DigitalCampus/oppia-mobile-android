@@ -55,10 +55,7 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
 
         Log.i(TAG, "startWork");
 
-//        boolean backgroundData = getInputData().getBoolean("backgroundData", true);
-
         future = SettableFuture.create();
-
 
         boolean isLoggedIn = SessionManager.isLoggedIn(getApplicationContext());
         if (isLoggedIn) {

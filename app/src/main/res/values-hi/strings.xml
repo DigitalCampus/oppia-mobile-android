@@ -213,8 +213,6 @@
 	<string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
 	<string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
 	
-	<string name="schedule_reminders">Suggested next activities:</string>
-	
 	<string name="course_draft">(Draft version)</string>
 	
 	<string name="search.result_summary">%1$d results for \"%2$s\"</string>

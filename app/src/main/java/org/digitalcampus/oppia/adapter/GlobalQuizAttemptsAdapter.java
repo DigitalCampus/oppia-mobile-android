@@ -31,14 +31,12 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView date;
-        //private TextView timetaken;
         private TextView score;
         private TextView course_title;
         private TextView quiz_title;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            //timetaken = itemView.findViewById(R.id.attempt_timetaken);
             date = itemView.findViewById(R.id.attempt_date);
             score = itemView.findViewById(R.id.score);
             course_title = itemView.findViewById(R.id.course_title);
@@ -78,7 +76,6 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
         viewHolder.quiz_title.setText(quiz.getDisplayTitle(ctx));
         String course = quiz.getCourseTitle();
         viewHolder.course_title.setText(course == null ? ctx.getString(R.string.quiz_attempts_unkwnown_course) : course);
-        //viewHolder.timetaken.setText(quiz.getHumanTimetaken());
         viewHolder.date.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
         viewHolder.score.setText(quiz.getScorePercentLabel());
         viewHolder.score.setBackgroundResource(

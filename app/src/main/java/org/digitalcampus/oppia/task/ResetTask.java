@@ -81,10 +81,7 @@ public class ResetTask extends APIRequestTask<Payload, Object, Payload> {
                 }
             }
 
-		} catch (UnsupportedEncodingException  e) {
-			payload.setResult(false);
-			payload.setResultResponse(ctx.getString(R.string.error_connection));
-		} catch (IOException e) {
+		} catch (IOException  e) {
 			payload.setResult(false);
 			payload.setResultResponse(ctx.getString(R.string.error_connection));
 		} catch (JSONException e) {

@@ -208,7 +208,7 @@ public class CourseInstall {
         String[] backups = backupDir.list();
         if (backups.length > 0){
             for (String backup : backups) {
-                String backup_shortname = backup.substring(0, backup.lastIndexOf("_"));
+                String backup_shortname = backup.substring(0, backup.lastIndexOf('_'));
                 if (backup_shortname.equalsIgnoreCase(shortname)){
                     previousBackup = new File(Storage.getCourseBackupPath(ctx), backup);
                 }

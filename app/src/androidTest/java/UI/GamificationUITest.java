@@ -112,7 +112,7 @@ public class GamificationUITest {
 
         if (true) {
             //Working on this test
-            Assert.assertEquals(coursesRepository.getCourses((Context) any()).size(), 1);
+            Assert.assertEquals(1, coursesRepository.getCourses((Context) any()).size());
             return;
         }
 

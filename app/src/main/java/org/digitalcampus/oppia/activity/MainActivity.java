@@ -89,21 +89,9 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         btnEditProfile.setVisibility(View.GONE); // TODO Edit profile feature.
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
-
-//        startActivity(new Intent(this, ScorecardActivity.class));
-
-
     }
 
     private void configureBadgePointsView() {
-
-        // Not available yet. It cannot let you customize text size of badge
-//        BadgeDrawable badge = navBottomView.getOrCreateBadge(R.id.nav_bottom_points);
-//        badge.setMaxCharacterCount(8);
-//        badge.setNumber(5003);
-
-
-        // Workaround alternative:
 
         BottomNavigationMenuView bottomNavigationMenuView =
                 (BottomNavigationMenuView) navBottomView.getChildAt(0);

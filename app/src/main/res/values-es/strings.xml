@@ -220,9 +220,6 @@
 	<string name="download_via_pc_title">Descargar Multimedia</string>
 	<string name="download_via_pc_intro">Descarga cada uno de los ficheros a continuación en tu PC (usa botón derecho, guardar como)</string>
 	<string name="download_via_pc_final">Una vez hayas descargado los archivos cópialoes en el directorio \'%1$s\' de tu tarjeta SD.</string>
-	
-	<string name="schedule_reminders">Siguientes actividades recomendadas:</string>
-
 
     <string name="search.result_summary">%1$d resultados para \"%2$s\"</string>
     <string name="search.message.searching">Buscando…</string>
