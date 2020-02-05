@@ -33,7 +33,7 @@ import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
@@ -165,9 +165,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
                 String courseTrackerXMLPath = "";
                 // check that it's unzipped etc correctly
                 try {
-                    courseXMLPath = dir + File.separator + course + File.separator + MobileLearning.COURSE_XML;
-                    courseScheduleXMLPath = dir + File.separator + course + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
-                    courseTrackerXMLPath = dir + File.separator + course + File.separator + MobileLearning.COURSE_TRACKER_XML;
+                    courseXMLPath = dir + File.separator + course + File.separator + App.COURSE_XML;
+                    courseScheduleXMLPath = dir + File.separator + course + File.separator + App.COURSE_SCHEDULE_XML;
+                    courseTrackerXMLPath = dir + File.separator + course + File.separator + App.COURSE_TRACKER_XML;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     FileUtils.cleanUp(dir, Storage.getDownloadPath(ctx) + course);
                     break;

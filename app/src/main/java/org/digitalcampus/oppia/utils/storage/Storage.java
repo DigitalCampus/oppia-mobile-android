@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.Tracker;
 
 import java.io.File;
@@ -183,7 +183,7 @@ public class Storage {
             Log.d(TAG,FILE_READ_ERROR+ localeFilePath, ioe);
         }
 
-        String defaultFilePath = "www" + File.separator + MobileLearning.DEFAULT_LANG + File.separator + fileName;
+        String defaultFilePath = "www" + File.separator + App.DEFAULT_LANG + File.separator + fileName;
         try {
             InputStream stream = act.getAssets().open(defaultFilePath);
             stream.close();

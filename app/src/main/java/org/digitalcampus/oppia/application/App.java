@@ -33,7 +33,6 @@ import androidx.work.WorkManager;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
@@ -49,9 +48,9 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 
-public class MobileLearning extends Application {
+public class App extends Application {
 
-    public static final String TAG = MobileLearning.class.getSimpleName();
+    public static final String TAG = App.class.getSimpleName();
 
     public static final int APP_LOGO = R.drawable.dc_logo;
 
@@ -70,7 +69,6 @@ public class MobileLearning extends Application {
     public static final boolean ADMIN_PROTECT_ACTIVITY_SYNC = BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC;
     public static final boolean ADMIN_PROTECT_ACTIVITY_EXPORT = BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT;
 
-
     // tracker metadata settings
     public static final boolean METADATA_INCLUDE_NETWORK = BuildConfig.METADATA_INCLUDE_NETWORK;
     public static final boolean METADATA_INCLUDE_DEVICE_ID = BuildConfig.METADATA_INCLUDE_DEVICE_ID;
@@ -87,7 +85,6 @@ public class MobileLearning extends Application {
     public static final int PAGE_READ_TIME = 3;
     public static final int RESOURCE_READ_TIME = 3;
     public static final int URL_READ_TIME = 5;
-    public static final String USER_AGENT = "OppiaMobile Android: ";
     public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_EXTERNAL;
 
     public static final long SCORECARD_ANIM_DURATION = 800;
@@ -110,8 +107,6 @@ public class MobileLearning extends Application {
     public static final int MAX_TRACKER_SUBMIT = 10;
     //	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v", "video/mp4", "audio/mpeg", "video/3gp", "video/3gpp"}; //NOSONAR
-
-    public static final String DEVICEADMIN_ADD_PATH = Paths.OPPIAMOBILE_API + "device/register/";
 
     // only used in case a course doesn't have any lang specified
     public static final String DEFAULT_LANG = "en";

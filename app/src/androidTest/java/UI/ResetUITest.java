@@ -1,5 +1,6 @@
 package UI;
 
+import Utils.MockedApiEndpointTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -20,15 +21,19 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class ResetUITest {
+public class ResetUITest extends MockedApiEndpointTest {
+
+    private static final String ERROR_RESET_RESPONSE = "responses/response_400_reset.json";
+
 
     @Rule
     public ActivityTestRule<WelcomeActivity> welcomeActivityTestRule =
-            new ActivityTestRule<WelcomeActivity>(WelcomeActivity.class);
+            new ActivityTestRule<>(WelcomeActivity.class, false, false);
 
 
     @Test
     public void  showsErrorMessageWhenThereIsNoUsername() throws  Exception {
+        welcomeActivityTestRule.launchActivity(null);
 
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
@@ -47,6 +52,10 @@ public class ResetUITest {
 
     @Test
     public void clickResetButton_WrongUsername() throws  Exception {
+
+        startServer(400, ERROR_RESET_RESPONSE, 0);
+        welcomeActivityTestRule.launchActivity(null);
+
         onView(withId(R.id.welcome_login))
                 .perform(scrollTo(), click());
         onView(withId(R.id.forgot_btn))

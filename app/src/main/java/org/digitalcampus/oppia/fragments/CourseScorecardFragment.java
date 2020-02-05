@@ -33,7 +33,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -116,7 +116,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         int totalActivities = course.getNoActivities();
         int completedActivities = course.getNoActivitiesCompleted();
         cpbScorecard.setProgressMax(totalActivities);
-        cpbScorecard.setProgressWithAnimation(completedActivities, MobileLearning.SCORECARD_ANIM_DURATION);
+        cpbScorecard.setProgressWithAnimation(completedActivities, App.SCORECARD_ANIM_DURATION);
 
         activitiesTotal.setText(String.valueOf(course.getNoActivities()));
         activitiesCompleted.setText(String.valueOf(course.getNoActivitiesCompleted()));

@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.gamification.GamificationEngine;
@@ -168,28 +169,45 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			valid = field.validate() && valid;
 		}
 
+		//If the rest of email validations passed, check that the email is valid
+		if (emailField.validate() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+			emailField.setErrorEnabled(true);
+			emailField.setError(getString(R.string.error_register_email));
+			if (valid){
+				emailField.requestFocus();
+			}
+			valid = false;
+		}
+
 		// check password length
-		if (password.length() < MobileLearning.PASSWORD_MIN_LENGTH) {
+		if (password.length() < App.PASSWORD_MIN_LENGTH) {
 			passwordField.setErrorEnabled(true);
-			passwordField.setError(getString(R.string.error_register_password,  MobileLearning.PASSWORD_MIN_LENGTH ));
-			passwordField.requestFocus();
-		    return;
+			passwordField.setError(getString(R.string.error_register_password,  App.PASSWORD_MIN_LENGTH ));
+			if (valid){
+				passwordField.requestFocus();
+			}
+			valid = false;
+
+
 		}
-		
-		// check password match
-		if (!password.equals(passwordAgain)) {
-            passwordField.setErrorEnabled(true);
-            passwordField.setError(getString(R.string.error_register_password_no_match ));
-			passwordField.requestFocus();
-            return;
+		else if (!password.equals(passwordAgain)) {
+			passwordField.setErrorEnabled(true);
+			passwordField.setError(getString(R.string.error_register_password_no_match ));
+			if (valid){
+				passwordField.requestFocus();
+			}
+			valid = false;
 		}
+
 
 		// check phone no
 		if (phoneNo.length() < 8) {
             phoneNoField.setErrorEnabled(true);
             phoneNoField.setError(getString(R.string.error_register_no_phoneno ));
-			phoneNoField.requestFocus();
-			return;
+			if (valid){
+				phoneNoField.requestFocus();
+			}
+			valid = false;
 		}
 
 		if (valid){

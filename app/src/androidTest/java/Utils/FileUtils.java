@@ -1,6 +1,10 @@
 package Utils;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -64,6 +68,17 @@ public class FileUtils {
             os.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void copyFileToDir(File file, File mediaDir, boolean deleteOnError) {
+        try {
+            org.apache.commons.io.FileUtils.copyFileToDirectory(file, mediaDir, true);
+        }catch (IOException e) {
+            Mint.logException(e);
+            if (deleteOnError){
+                org.digitalcampus.oppia.utils.storage.FileUtils.deleteFile(file);
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -66,7 +66,7 @@ public class Leaderboard {
     public static boolean shouldFetchLeaderboard(SharedPreferences prefs){
         long now = System.currentTimeMillis()/1000;
         long lastScan = prefs.getLong(PrefsActivity.PREF_LAST_LEADERBOARD_FETCH, 0);
-        return (lastScan + MobileLearning.LEADERBOARD_FETCH_EXPIRATION <= now);
+        return (lastScan + App.LEADERBOARD_FETCH_EXPIRATION <= now);
     }
 
 

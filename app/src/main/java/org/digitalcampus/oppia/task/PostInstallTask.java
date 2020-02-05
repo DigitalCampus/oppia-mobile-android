@@ -22,7 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.listener.PostInstallListener;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -49,7 +49,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
 		
 		// copy over any courses not already installed
         try {
-            courseDirectory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_COURSES_DIR);
+            courseDirectory = this.ctx.getAssets().list(App.PRE_INSTALL_COURSES_DIR);
         } catch (IOException e) {
             Log.d(TAG,"couldn't open pre-install course directory", e);
         }
@@ -61,7 +61,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
                     InputStream is = null;
                     try {
                         f = new FileOutputStream(new File(Storage.getDownloadPath(ctx), file));
-                        is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_COURSES_DIR + File.separator + file);
+                        is = this.ctx.getAssets().open(App.PRE_INSTALL_COURSES_DIR + File.separator + file);
                         byte[] buffer = new byte[1024];
                         int len;
                         while ((len = is.read(buffer)) > 0) {
@@ -92,7 +92,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
         String[] mediaDirectory = null;
 
         try {
-            mediaDirectory = this.ctx.getAssets().list(MobileLearning.PRE_INSTALL_MEDIA_DIR);
+            mediaDirectory = this.ctx.getAssets().list(App.PRE_INSTALL_MEDIA_DIR);
         } catch (IOException e) {
             Log.d(TAG,"couldn't open pre-install media directory", e);
         }
@@ -104,7 +104,7 @@ public class PostInstallTask extends AsyncTask<Payload, DownloadProgress, Payloa
                     InputStream is = null;
                     try {
                         f = new FileOutputStream(new File(Storage.getMediaPath(ctx), file));
-                        is = this.ctx.getAssets().open(MobileLearning.PRE_INSTALL_MEDIA_DIR + File.separator + file);
+                        is = this.ctx.getAssets().open(App.PRE_INSTALL_MEDIA_DIR + File.separator + file);
                         byte[] buffer = new byte[1024];
                         int len;
                         while ((len = is.read(buffer)) > 0) {

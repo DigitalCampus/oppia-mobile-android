@@ -50,7 +50,7 @@ public class AdminSecurityManager {
     }
 
     private void initializeDaggerBase() {
-        MobileLearning app = (MobileLearning) context.getApplication();
+        App app = (App) context.getApplication();
         app.getComponent().inject(this);
     }
 
@@ -82,13 +82,13 @@ public class AdminSecurityManager {
         if(testForzeActionProtected()) return getTestActionProtectedValue();
 
         switch (actionId){
-            case R.id.course_context_delete: return MobileLearning.ADMIN_PROTECT_COURSE_DELETE;
-            case R.id.course_context_reset: return MobileLearning.ADMIN_PROTECT_COURSE_RESET;
-            case R.id.course_context_update_activity: return MobileLearning.ADMIN_PROTECT_COURSE_UPDATE;
-            case R.id.menu_download: return MobileLearning.ADMIN_PROTECT_COURSE_INSTALL;
-            case R.id.menu_settings: return MobileLearning.ADMIN_PROTECT_SETTINGS;
-            case R.id.menu_sync: return MobileLearning.ADMIN_PROTECT_ACTIVITY_SYNC;
-            case R.id.action_export_activity: return MobileLearning.ADMIN_PROTECT_ACTIVITY_EXPORT;
+            case R.id.course_context_delete: return App.ADMIN_PROTECT_COURSE_DELETE;
+            case R.id.course_context_reset: return App.ADMIN_PROTECT_COURSE_RESET;
+            case R.id.course_context_update_activity: return App.ADMIN_PROTECT_COURSE_UPDATE;
+            case R.id.menu_download: return App.ADMIN_PROTECT_COURSE_INSTALL;
+            case R.id.menu_settings: return App.ADMIN_PROTECT_SETTINGS;
+            case R.id.menu_sync: return App.ADMIN_PROTECT_ACTIVITY_SYNC;
+            case R.id.action_export_activity: return App.ADMIN_PROTECT_ACTIVITY_EXPORT;
             default: return false;
         }
     }

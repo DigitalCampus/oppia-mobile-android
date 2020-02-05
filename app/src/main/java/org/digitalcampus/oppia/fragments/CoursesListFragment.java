@@ -31,7 +31,7 @@ import org.digitalcampus.oppia.adapter.CoursesListAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
@@ -163,7 +163,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         llLoading.setVisibility(View.GONE);
 
-        if (courses.size() < MobileLearning.DOWNLOAD_COURSES_DISPLAY){
+        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             displayDownloadSection();
         } else {
             tvManageCourses.setText(R.string.no_courses);

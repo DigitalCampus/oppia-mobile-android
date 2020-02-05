@@ -49,7 +49,6 @@ public class DeleteCourseTest {
 
     private Context context;
     private SharedPreferences prefs;
-    private Payload response;
     private StorageAccessStrategy storageStrategy;
 
     @Rule
@@ -105,7 +104,6 @@ public class DeleteCourseTest {
         String[] children = modulesPath.list();
         assertEquals(1, children.length);  //Check that the course exists in the "modules" directory
 
-
         DbHelper db = DbHelper.getInstance(context);
         long userId = db.getUserId(SessionManager.getUsername(context));
         String shortName = children.length != 0 ? children[0].toLowerCase(Locale.US) : "";
@@ -113,7 +111,7 @@ public class DeleteCourseTest {
         Course c = db.getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
-        deleteTestCourse(c);
+        deleteTestCourse(c, context);
 
 //        assertTrue(response.isResult());
 
@@ -144,7 +142,7 @@ public class DeleteCourseTest {
         Course c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
 
-        deleteTestCourse(c);
+        deleteTestCourse(c, context);
 
         c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
@@ -172,7 +170,7 @@ public class DeleteCourseTest {
         Course c = db.getCourse(courseId, userId);
         assertNotNull(c);   //Check that the course exists in the database
 
-        deleteTestCourse(c);
+        deleteTestCourse(c, context);
 
         c = db.getCourse(courseId, userId);
         assertNull(c);   //Check that the course does not exists in the database
@@ -210,7 +208,6 @@ public class DeleteCourseTest {
 
             @Override
             public void installComplete(Payload r) {
-                response = r;
                 signal.countDown();
             }
 
@@ -228,7 +225,7 @@ public class DeleteCourseTest {
 
     }
 
-    private void deleteTestCourse(Course course) {
+    public static void deleteTestCourse(Course course, Context context) {
 
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
 
@@ -239,7 +236,6 @@ public class DeleteCourseTest {
         task.setOnDeleteCourseListener(new DeleteCourseListener() {
             @Override
             public void onCourseDeletionComplete(Payload r) {
-                response = r;
                 signal.countDown();
             }
         });

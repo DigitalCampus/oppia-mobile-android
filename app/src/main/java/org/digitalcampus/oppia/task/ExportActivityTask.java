@@ -49,7 +49,6 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
     @Override
     protected String doInBackground(Payload... payloads) {
 
-
         DbHelper db = DbHelper.getInstance(ctx);
         List<User> users = db.getAllUsers();
 
@@ -71,7 +70,9 @@ public class ExportActivityTask extends AsyncTask<Payload, Integer, String> {
             }
             userJSON += "\"firstname\":\"" + u.getFirstname() + "\", ";
             userJSON += "\"lastname\":\"" + u.getLastname() + "\", ";
-            userJSON += "\"organisation\":\"" + u.getOrganisation() + "\", ";
+            if (u.getOrganisation() != null && !u.getOrganisation().equals("")){
+                userJSON += "\"organisation\":\"" + u.getOrganisation() + "\", ";
+            }
             userJSON += "\"jobtitle\":\"" + u.getJobTitle() + "\", ";
             userJSON += "\"phoneno\":\"" + u.getPhoneNo() + "\", ";
             userJSON += "\"trackers\":" + TrackerLog.asJSONCollectionString(userTrackers) + ", ";

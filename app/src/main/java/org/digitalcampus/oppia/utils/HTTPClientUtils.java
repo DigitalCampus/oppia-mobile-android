@@ -24,7 +24,6 @@ import android.preference.PreferenceManager;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +45,7 @@ public class HTTPClientUtils {
     public static final String HEADER_AUTH = "Authorization";
     public static final String HEADER_USER_AGENT = "User-Agent";
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+    public static final String USER_AGENT = "OppiaMobile Android: ";
 
     private static OkHttpClient client;
 
@@ -103,7 +103,7 @@ public class HTTPClientUtils {
 
             Request originalRequest = chain.request();
             Request requestWithUserAgent = originalRequest.newBuilder()
-                    .header(HEADER_USER_AGENT, MobileLearning.USER_AGENT + v)
+                    .header(HEADER_USER_AGENT, USER_AGENT + v)
                     .build();
             return chain.proceed(requestWithUserAgent);
         }
