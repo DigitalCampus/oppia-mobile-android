@@ -3,7 +3,7 @@ package org.digitalcampus.oppia.task;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.service.courseinstall.CourseInstall;

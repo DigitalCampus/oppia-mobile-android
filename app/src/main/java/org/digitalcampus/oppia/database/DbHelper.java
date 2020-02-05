@@ -15,7 +15,7 @@
  * along with OppiaMobile. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.digitalcampus.oppia.application;
+package org.digitalcampus.oppia.database;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +57,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
@@ -69,8 +70,8 @@ import com.splunk.mint.Mint;
 public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = DbHelper.class.getSimpleName();
-	private static final String DB_NAME = "mobilelearning.db";
-	private static final int DB_VERSION = 31;
+	public static final String DB_NAME = "mobilelearning.db";
+	public static final int DB_VERSION = 40;
 
     private static DbHelper instance;
 	private SQLiteDatabase db;
@@ -235,6 +236,8 @@ public class DbHelper extends SQLiteOpenHelper {
 		createLeaderboardTable(db);
 
 		createUserCustomFieldsTable(db);
+
+		createAlternativeUserPrefsTable(db);
 	}
 
     public void beginTransaction(){
@@ -586,6 +589,35 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		if (oldVersion < 31) {
 			createUserCustomFieldsTable(db);
+		}
+
+		if (oldVersion < 35) {
+			createAlternativeUserPrefsTable(db);
+		}
+	}
+
+	private void createAlternativeUserPrefsTable(SQLiteDatabase database) {
+
+		database.beginTransaction();
+		try {
+
+			database.execSQL("CREATE TABLE 'user_preference' (" +
+					"'_id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , " +
+					"'username' text not null, " +
+					"'preference' text not null, " +
+					"'value' text );");
+
+//			database.execSQL("CREATE UNIQUE INDEX idx ON 'user_preference' ('username', 'preference');");
+
+			database.execSQL("INSERT INTO 'user_preference' ('username', 'preference', 'value') SELECT * FROM 'userprefs'");
+
+			database.execSQL("DROP TABLE 'userprefs'");
+
+			database.setTransactionSuccessful();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			database.endTransaction();
 		}
 	}
 

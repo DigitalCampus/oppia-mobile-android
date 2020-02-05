@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import androidx.room.Room;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -33,6 +34,8 @@ import androidx.work.WorkManager;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.database.MyDatabase;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
@@ -113,13 +116,24 @@ public class App extends Application {
     private static final String NAME_TRACKER_SEND_WORK = "tracker_send_work";
 
     private AppComponent appComponent;
+    private static MyDatabase db;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        DbHelper dbHelper = DbHelper.getInstance(this);
-        dbHelper.getReadableDatabase(); // To force migration if needed
+        db = Room.databaseBuilder(getApplicationContext(),
+                MyDatabase.class, DbHelper.DB_NAME)
+                .addMigrations(MyDatabase.MIGRATION_34_35)
+//                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
+
+        DbHelper.getInstance(this).getReadableDatabase();
+
+
+//        App.getDb().userCustomFieldDao().getAll();
 
 
         // this method fires once at application start
@@ -170,6 +184,9 @@ public class App extends Application {
 
     }
 
+    public static MyDatabase getDb() {
+        return db;
+    }
 
     private void setupPeriodicTrackerWorker() {
 
