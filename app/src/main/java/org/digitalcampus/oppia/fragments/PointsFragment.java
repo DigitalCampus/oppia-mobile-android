@@ -72,7 +72,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     @Inject
     List<Points> pointsFull;
     List<Points> pointsFiltered = new ArrayList<>();
-    private Map<String, Integer> pointsGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
+    private Map<String, Integer> pointsGrouped = new LinkedHashMap<>();
     private int totalPoints;
     private RecyclerView recyclerPoints;
     private TextView tvTotalPoints;
@@ -134,31 +134,20 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         chart.getDescription().setEnabled(false);
 
         chart.setPinchZoom(true);
-
-//        chart.setViewPortOffsets(40f, 0f, 40f, 0f);
         chart.offsetLeftAndRight(getResources().getDimensionPixelSize(R.dimen.offset_chart_horizontal));
 
         Legend l = chart.getLegend();
         l.setEnabled(false);
 
         chart.getAxisRight().setEnabled(false);
-//        chart.getXAxis().setEnabled(false);
-
         chart.getAxisLeft().setAxisMinimum(0);
 
         XAxis xAxis = chart.getXAxis();
-
-//        xAxis.setSpaceMin(data.getBarWidth()/2);
-//        xAxis.setSpaceMax(data.getBarWidth()/2);
-
-//        xAxis.setXOffset(widthBetweenObservations);
         xAxis.setGranularity(1);
         xAxis.setGranularityEnabled(true);
-//        xAxis.setCenterAxisLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setLabelRotationAngle(40);
-//        xAxis.setLabelCount(2);
 
     }
 
@@ -252,7 +241,6 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                     Log.i(TAG, "getFormattedValue: exception. value: " + (int) value);
                     return "MAL";
                 }
-//                return String.valueOf(value);
             }
         });
 

@@ -95,6 +95,12 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
         });
 
     }
+
+    @Override
+    public void setQuestionResponses(List<String> currentAnswers) {
+        // not used for this widget
+    }
+
     @Override
     public void setQuestionResponses(List<Response> responses, List<String> currentAnswers) {
 
@@ -164,6 +170,11 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
         }
         recalculateView();
 
+    }
+
+    @Override
+    public List<String> getQuestionResponses() {
+        return new ArrayList<>();
     }
 
     @Override
