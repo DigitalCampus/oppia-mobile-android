@@ -204,7 +204,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 if (response.code() == 400) {
                     // submitted but invalid digest - returned 400 Bad Request -
                     // so record as submitted so doesn't keep trying
-                    return true; //TODO: Have more meaningful bad request handling
+                    return true; // OPPIA-217
                 } else{
                     Log.d(TAG, "Error sending trackers:" + response.code());
                     Log.d(TAG, "Msg:" + response.body().string());

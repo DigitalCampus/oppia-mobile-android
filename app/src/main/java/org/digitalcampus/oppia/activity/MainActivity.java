@@ -86,7 +86,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         viewProfileOptions.setVisibility(View.GONE);
 
-        btnEditProfile.setVisibility(View.GONE); // TODO Edit profile feature.
+        btnEditProfile.setVisibility(View.GONE);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
     }
@@ -210,7 +210,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private void configureLogoutOption() {
         boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
         btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
-        btnExpandProfileOptions.setVisibility(logoutVisible ? View.VISIBLE : View.GONE); // TODO Edit profile feature.
+        btnExpandProfileOptions.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         if (!logoutVisible) {
             setupProfileOptionsView(false);
         }
@@ -265,7 +265,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 break;
 
             case R.id.btn_edit_profile:
-                // TODO Edit profile feature.
                 break;
 
             case R.id.btn_logout:
@@ -294,7 +293,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         // update the points/badges by invalidating the menu
         if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
-            // TODO adapt this
         }
 
     }
