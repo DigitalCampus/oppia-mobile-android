@@ -17,8 +17,7 @@ public class XMLSecurityHelper {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setExpandEntityReferences(false);
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        return builder;
+        return factory.newDocumentBuilder();
     }
 
 

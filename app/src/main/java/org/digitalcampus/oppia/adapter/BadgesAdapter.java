@@ -32,8 +32,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_fragment_badges_list, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 

@@ -101,7 +101,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
             }
 
             List<File> unsentLogs = getActivityLogsToSend();
-            if (unsentLogs.size() > 0){
+            if (!unsentLogs.isEmpty()){
                 for (File activityLog : unsentLogs){
                     sendTrackerLog(activityLog, payload);
                 }

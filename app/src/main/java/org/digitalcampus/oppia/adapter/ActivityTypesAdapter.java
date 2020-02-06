@@ -36,8 +36,7 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_activity_type, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 

@@ -114,7 +114,7 @@ public class DownloadService extends IntentService {
 
     private void notifyDownloads(String action) {
         //If there are no more pending downloads after the completion of this one, send a Notification
-        if (action.equals(ACTION_COMPLETE) && (tasksDownloading==null || tasksDownloading.size() == 0)){
+        if (action.equals(ACTION_COMPLETE) && (tasksDownloading==null || tasksDownloading.isEmpty())){
             Log.d(TAG, "Sending notification from Service for the completion of all pending media downloads");
 
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
