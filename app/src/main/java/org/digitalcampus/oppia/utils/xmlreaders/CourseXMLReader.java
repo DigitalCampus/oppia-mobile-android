@@ -154,7 +154,7 @@ public class CourseXMLReader {
     }
 
 	public ArrayList<Media> getMedia() throws InvalidXMLException {
-        return getMediaResponses().getCourseMedia();
+        return (ArrayList<Media>) getMediaResponses().getCourseMedia();
 	}
 
 }

@@ -15,12 +15,13 @@ import org.digitalcampus.oppia.listener.ListInnerBtnOnClickListener;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TransferableFileListAdapter extends RecyclerView.Adapter<TransferableFileListAdapter.TclaViewHolder> {
 
     public static final String TAG = TransferableFileListAdapter.class.getSimpleName();
-    private ArrayList<CourseTransferableFile> transferableFiles;
-    private ArrayList<CourseTransferableFile> courseFiles = new ArrayList<>();
+    private List<CourseTransferableFile> transferableFiles;
+    private List<CourseTransferableFile> courseFiles = new ArrayList<>();
     private final ListInnerBtnOnClickListener listener;
 
     public class TclaViewHolder extends RecyclerView.ViewHolder {
@@ -70,11 +71,11 @@ public class TransferableFileListAdapter extends RecyclerView.Adapter<Transferab
     }
 
 
-    public TransferableFileListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener){
+    public TransferableFileListAdapter(List<CourseTransferableFile> files, ListInnerBtnOnClickListener listener){
         this(files, listener, false);
     }
 
-    public TransferableFileListAdapter(ArrayList<CourseTransferableFile> files, ListInnerBtnOnClickListener listener, boolean filterCourses){
+    public TransferableFileListAdapter(List<CourseTransferableFile> files, ListInnerBtnOnClickListener listener, boolean filterCourses){
 
         this.listener = listener;
 

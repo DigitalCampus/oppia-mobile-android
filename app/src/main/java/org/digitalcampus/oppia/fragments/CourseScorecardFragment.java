@@ -130,7 +130,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
     //@Override
     public void onParseComplete(CompleteCourse parsedCourse) {
 
-        ArrayList<Activity> baseline = parsedCourse.getBaselineActivities();
+        ArrayList<Activity> baseline = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
         
     	DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));

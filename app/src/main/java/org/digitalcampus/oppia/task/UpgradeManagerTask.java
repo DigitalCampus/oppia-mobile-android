@@ -318,7 +318,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
                 CompleteCourse parsedCourse = cxr.getParsedCourse();
 
-				ArrayList<Activity> baseActs = parsedCourse.getBaselineActivities();
+				ArrayList<Activity> baseActs = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
 				for (Activity a: baseActs){
 					if (a.getActType().equalsIgnoreCase("quiz")){
 						String quizContent = a.getContents("en");
@@ -336,7 +336,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				}
 				
 				// now add the standard activities
-				ArrayList<Activity> acts = parsedCourse.getActivities(c.getCourseId());
+				ArrayList<Activity> acts = (ArrayList<Activity>) parsedCourse.getActivities(c.getCourseId());
 				for (Activity a: acts){
 					if (a.getActType().equalsIgnoreCase("quiz")){
 						String quizContent = a.getContents("en");

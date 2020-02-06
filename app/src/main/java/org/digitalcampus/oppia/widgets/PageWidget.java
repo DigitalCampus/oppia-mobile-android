@@ -155,7 +155,7 @@ public class PageWidget extends WidgetFactory {
 	public boolean getActivityCompleted() {
 		// only show as being complete if all the videos on this page have been played
 		if (this.activity.hasMedia()) {
-			ArrayList<Media> mediaList = this.activity.getMedia();
+			ArrayList<Media> mediaList = (ArrayList<Media>) this.activity.getMedia();
 			boolean completed = true;
 			DbHelper db = DbHelper.getInstance(super.getActivity());
 			long userId = db.getUserId(SessionManager.getUsername(getActivity()));
