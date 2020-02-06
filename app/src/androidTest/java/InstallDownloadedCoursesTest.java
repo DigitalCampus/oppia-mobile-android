@@ -1,7 +1,6 @@
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import androidx.test.platform.app.InstrumentationRegistry;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
@@ -22,7 +21,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -30,6 +28,7 @@ import java.util.concurrent.CountDownLatch;
 
 import Utils.CourseUtils;
 import Utils.FileUtils;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -86,8 +85,8 @@ public class InstallDownloadedCoursesTest {
     public void installCourse_correctCourse()throws Exception{
 
         CourseUtils.cleanUp();
-
-        runInstallCourseTask(CORRECT_COURSE);//Run test task
+        copyCourseFromAssets(CORRECT_COURSE);
+        response = runInstallCourseTask(context);//Run test task
 
         //Check if result is true
         assertTrue(response.isResult());
@@ -113,8 +112,10 @@ public class InstallDownloadedCoursesTest {
 
         CourseUtils.cleanUp();
 
-        runInstallCourseTask(EXISTING_COURSE);
-        runInstallCourseTask(EXISTING_COURSE);
+        copyCourseFromAssets(EXISTING_COURSE);
+        response = runInstallCourseTask(context);
+        copyCourseFromAssets(EXISTING_COURSE);
+        response = runInstallCourseTask(context);
 
         //Check that it failed
         assertFalse(response.isResult());
@@ -142,8 +143,8 @@ public class InstallDownloadedCoursesTest {
     public void installCourse_noXMLCourse()throws Exception{
 
         CourseUtils.cleanUp();
-
-        runInstallCourseTask(NOXML_COURSE);
+        copyCourseFromAssets(NOXML_COURSE);
+        response = runInstallCourseTask(context);
 
         //Check if result is true
         assertFalse(response.isResult());
@@ -203,8 +204,8 @@ public class InstallDownloadedCoursesTest {
     public void installCourse_errorInstallingCourse()throws Exception{
 
         CourseUtils.cleanUp();
-
-        runInstallCourseTask(INCORRECT_COURSE);
+        copyCourseFromAssets(INCORRECT_COURSE);
+        response = runInstallCourseTask(context);
 
         //Check if result is false
         assertFalse(response.isResult());
@@ -263,8 +264,8 @@ public class InstallDownloadedCoursesTest {
     public void installCourse_courseAlreadyInStorage()throws Exception {
         //Install a course that is already in storage system but not in database
         CourseUtils.cleanUp();
-
-        runInstallCourseTask(CORRECT_COURSE);
+        copyCourseFromAssets(CORRECT_COURSE);
+        response = runInstallCourseTask(context);
 
         File modulesPath = new File(Storage.getCoursesPath(InstrumentationRegistry.getInstrumentation().getTargetContext()));
         assertTrue(modulesPath.exists());
@@ -284,30 +285,40 @@ public class InstallDownloadedCoursesTest {
         installCourse_correctCourse();
     }
 
-    private void runInstallCourseTask(String filename){
+    private void copyCourseFromAssets(String filename){
+        FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
+    }
+
+    public static Payload runInstallCourseTask(Context context){
 
         final CountDownLatch signal = new CountDownLatch(1);  //Control AsyncTask sincronization for testing
-
-        FileUtils.copyZipFromAssets(context, filename);  //Copy course zip from assets to download path
-
         ArrayList<Object> data = new ArrayList<>();
         Payload payload = new Payload(data);
+        final Payload[] response = new Payload[1];
+        response[0] = null;
         InstallDownloadedCoursesTask imTask = new InstallDownloadedCoursesTask(context);
         imTask.setInstallerListener(new InstallCourseListener() {
             @Override
             public void downloadComplete(Payload p) {  }
 
             @Override
-            public void downloadProgressUpdate(DownloadProgress dp) {  }
+            public void downloadProgressUpdate(DownloadProgress dp) {
+                Log.d(TAG, "Course download progress: " + dp.getProgress());
+
+            }
 
             @Override
             public void installComplete(Payload r) {
-                response = r;
+                Log.d(TAG, "Course installation complete!");
+                response[0] = r;
                 signal.countDown();
             }
 
             @Override
-            public void installProgressUpdate(DownloadProgress dp) {  }
+            public void installProgressUpdate(DownloadProgress dp) {
+                Log.d(TAG, "Course installation progress: " + dp.getProgress());
+
+            }
         });
         imTask.execute(payload);
 
@@ -317,6 +328,7 @@ public class InstallDownloadedCoursesTest {
             e.printStackTrace();
         }
 
+        return response[0];
     }
 
 }

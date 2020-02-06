@@ -23,6 +23,7 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -47,8 +48,8 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
     private boolean APIKeyInvalidated = false;
 	private long userId;
 
-	public UpdateCourseActivityTask(Context ctx, long userId) {
-        super(ctx);
+	public UpdateCourseActivityTask(Context ctx, long userId, ApiEndpoint apiEndpoint) {
+        super(ctx, apiEndpoint);
 		this.userId = userId;
 	}
 

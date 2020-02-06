@@ -26,8 +26,9 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.TrackerServiceListener;
@@ -94,13 +95,13 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                     submitAttempted = true;
 
                     @SuppressWarnings("unchecked")
-                    Collection<Collection<TrackerLog>> userTrackers = split((Collection<Object>) payload.getData(), MobileLearning.MAX_TRACKER_SUBMIT);
+                    Collection<Collection<TrackerLog>> userTrackers = split((Collection<Object>) payload.getData(), App.MAX_TRACKER_SUBMIT);
                     sendTrackerBatch(userTrackers, u, payload);
                 }
             }
 
             List<File> unsentLogs = getActivityLogsToSend();
-            if (unsentLogs.size() > 0){
+            if (!unsentLogs.isEmpty()){
                 for (File activityLog : unsentLogs){
                     sendTrackerLog(activityLog, payload);
                 }
@@ -166,7 +167,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
         try {
             OkHttpClient client = HTTPClientUtils.getClient(ctx);
             Request request = new Request.Builder()
-                    .url(apiEndpoint.getFullURL(ctx, isRaw ? MobileLearning.ACTIVITYLOG_PATH : MobileLearning.TRACKER_PATH))
+                    .url(apiEndpoint.getFullURL(ctx, isRaw ? Paths.ACTIVITYLOG_PATH : Paths.TRACKER_PATH))
                     .addHeader(HTTPClientUtils.HEADER_AUTH,
                             HTTPClientUtils.getAuthHeaderValue(user.getUsername(), user.getApiKey()))
                     .patch(RequestBody.create(HTTPClientUtils.MEDIA_TYPE_JSON, dataToSend))
@@ -203,7 +204,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                 if (response.code() == 400) {
                     // submitted but invalid digest - returned 400 Bad Request -
                     // so record as submitted so doesn't keep trying
-                    return true; //TODO: Have more meaningful bad request handling
+                    return true; // OPPIA-217
                 } else{
                     Log.d(TAG, "Error sending trackers:" + response.code());
                     Log.d(TAG, "Msg:" + response.body().string());

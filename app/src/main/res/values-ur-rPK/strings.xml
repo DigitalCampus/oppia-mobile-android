@@ -93,15 +93,11 @@
 	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
 	<string name="prefLanguage">پسندیدہ زبان</string>
 	<string name="prefHighlightCompleted">Highlight completed activities</string>
-	<string name="prefNoScheduleReminders">Number of suggested activities</string>
-	<string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
 	<string name="prefServer">سرور</string>
 	<string name="prefServerTimeoutConnection">Connection timeout</string>
 	<string name="prefServerTimeoutResponse">Response timeout</string>
 	<string name="prefShowCourseDescription">Show course description</string>
 	<string name="prefShowProgressBar">Show progress bar</string>
-	<string name="prefShowScheduleReminders">Display suggested activities</string>
-	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
 	<string name="prefShowSectionNumbers">Show section numbers</string>
 	<string name="prefTextSize">Text size</string>
 	<string name="prefUser">Username</string>
@@ -149,17 +145,14 @@
 	<string name="alt_activity_icon">Activity icon</string>
 	
 	<string name="update">Update</string>
-	<string name="update_schedule">Update Schedule</string>
 	<string name="installed">قائم</string>
 	<string name="install">انسٹال کریں</string>
 	
 	<string name="download_starting">ڈاؤن لوڈشروع</string>
 	<string name="downloading">ڈاؤن لوڈجاری &#8230;</string>
 	<string name="download_complete">ختم ڈاؤن لوڈ</string>
-	
-	<string name="update_starting">Getting schedule updates</string>
+
 	<string name="updating">Updating &#8230;</string>
-	<string name="update_complete">Schedule update complete</string>
 	
 	<string name="installing_course">قائم ہو رہا ہے: %1$s</string>
 	<string name="install_complete">قیام مکمل</string>
@@ -232,8 +225,6 @@
 	<string name="download_via_pc_title">فلمز ڈاؤن لوڈ کریں</string>
 	<string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
 	<string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
-	
-	<string name="schedule_reminders">Suggested next activities:</string>
 	
 	<string name="course_draft">(Draft version)</string>
 	

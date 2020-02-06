@@ -21,7 +21,6 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
     private Context context;
     private OnItemClickListener itemClickListener;
 
-
     public BadgesAdapter(Context context, List<Badges> badges) {
         this.context = context;
         this.badges = badges;
@@ -30,11 +29,10 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.fragment_badges_list_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_fragment_badges_list, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 
@@ -72,17 +70,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
             badgeDate = itemView.findViewById(R.id.badges_date);
 
             rootView = itemView;
-
-//            rootView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (itemClickListener != null) {
-//                        itemClickListener.onItemClick(v, getAdapterPosition());
-//                    }
-//                }
-//            });
         }
-
     }
 
 

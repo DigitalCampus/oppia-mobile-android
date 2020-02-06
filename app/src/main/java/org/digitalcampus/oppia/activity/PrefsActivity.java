@@ -17,15 +17,10 @@
 
 package org.digitalcampus.oppia.activity;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.app.admin.DevicePolicyManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -39,10 +34,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.AdminReceiver;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.fragments.PreferencesFragment;
 import org.digitalcampus.oppia.listener.MoveStorageListener;
 import org.digitalcampus.oppia.listener.StorageAccessListener;
@@ -136,10 +128,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     public static final String LAST_ACTIVE_TIME = "prefLastActiveTime";
 
     //Google Cloud Messaging preferences
-    public static final String GCM_TOKEN_SENT = "prefGCMTokenSent";
-    public static final String GCM_TOKEN_ID = "prefGCMRegistration_id";
-    public static final String PREF_REMOTE_ADMIN = "prefRemoteAdminEnabled";
-    public static final int ADMIN_ACTIVATION_REQUEST = 45;
     public static final String PREF_TEST_ACTION_PROTECTED = "prefTestActionProtected";
 
     private SharedPreferences prefs;
@@ -156,16 +144,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         initialize();
     }
 
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
-    }
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
-        initializeDagger();
+        getAppComponent().inject(this);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentManager mFragmentManager = getFragmentManager();
@@ -369,22 +352,6 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                 disableAdminProtection(sharedPreferences);
             }
         }
-        else if (key.equalsIgnoreCase(PREF_REMOTE_ADMIN) && BuildConfig.FLAVOR.equals("admin")) {
-            boolean adminEnabled = sharedPreferences.getBoolean(PrefsActivity.PREF_REMOTE_ADMIN, false);
-            ComponentName adminReceiver = new ComponentName(this, AdminReceiver.class);
-            if (adminEnabled) {
-                // Activate device administration
-                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminReceiver);
-                startActivityForResult(intent, ADMIN_ACTIVATION_REQUEST);
-            } else {
-                DevicePolicyManager dpm = (DevicePolicyManager) this.getSystemService(Context.DEVICE_POLICY_SERVICE);
-                dpm.removeActiveAdmin(adminReceiver);
-            }
-        }
-//        else if (key.equalsIgnoreCase(PREF_SHOW_GAMIFICATION_EVENTS)){
-//
-//        }
     }
 
     private void disableAdminProtection(SharedPreferences prefs){
@@ -440,22 +407,5 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         // no need to show storage progress in this activity
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        switch (requestCode) {
-            case ADMIN_ACTIVATION_REQUEST:
-
-                boolean adminEnabled = (resultCode == Activity.RESULT_OK);
-                Log.i(TAG, "Remote admin " + (adminEnabled?"allowed":"denied") + " by the user.");
-                prefs.edit().putBoolean(PrefsActivity.PREF_REMOTE_ADMIN, adminEnabled).apply();
-                CheckBoxPreference adminPref = (CheckBoxPreference) mPrefsFragment.findPreference(PREF_REMOTE_ADMIN);
-                adminPref.setChecked(adminEnabled);
-                return;
-            default:
-                break;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
 }

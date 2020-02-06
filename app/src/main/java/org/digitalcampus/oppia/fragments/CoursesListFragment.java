@@ -28,9 +28,10 @@ import org.digitalcampus.oppia.activity.DownloadMediaActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.CoursesListAdapter;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.listener.DeleteCourseListener;
@@ -76,6 +77,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     @Inject CoursesRepository coursesRepository;
     @Inject SharedPreferences prefs;
+    @Inject ApiEndpoint apiEndpoint;
     private LinearLayout llLoading;
     private TextView tvManageCourses;
     private Button manageBtn;
@@ -102,8 +104,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         View layout = inflater.inflate(R.layout.fragment_courses_list, container, false);
         findViews(layout);
-
-        initializeDagger();
+        getAppComponent().inject(this);
 
         prefs.registerOnSharedPreferenceChangeListener(this);
 
@@ -128,10 +129,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         return layout;
     }
 
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getActivity().getApplication();
-        app.getComponent().inject(this);
-    }
 
     @Override
     public void onStart() {
@@ -166,7 +163,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         llLoading.setVisibility(View.GONE);
 
-        if (courses.size() < MobileLearning.DOWNLOAD_COURSES_DISPLAY){
+        if (courses.size() < App.DOWNLOAD_COURSES_DISPLAY){
             displayDownloadSection();
         } else {
             tvManageCourses.setText(R.string.no_courses);
@@ -239,7 +236,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseDelete() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-//        builder.setCancelable(false);
         builder.setTitle(R.string.course_context_delete);
         builder.setMessage(R.string.course_context_delete_confirm);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -268,7 +264,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
     private void confirmCourseReset() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Oppia_AlertDialogStyle);
-//        builder.setCancelable(false);
         builder.setTitle(R.string.course_context_reset);
         builder.setMessage(R.string.course_context_reset_confirm);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -294,7 +289,8 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
-        UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(), SessionManager.getUserId(getActivity()));
+        UpdateCourseActivityTask task = new UpdateCourseActivityTask(getActivity(),
+                SessionManager.getUserId(getActivity()), apiEndpoint);
         ArrayList<Object> payloadData = new ArrayList<>();
         payloadData.add(tempCourse);
         Payload p = new Payload(payloadData);
@@ -339,7 +335,6 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 recyclerCourses.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-//                recyclerCourses.setSelectionAfterHeaderView();
             }
         });
         animator.setStartDelay(200);

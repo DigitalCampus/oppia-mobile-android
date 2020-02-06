@@ -9,7 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import org.digitalcampus.oppia.activity.AppActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.listener.APIKeyRequestListener;
 
 import javax.inject.Inject;
@@ -27,8 +28,14 @@ public class AppFragment extends Fragment implements APIKeyRequestListener{
         initializeDaggerBase();
     }
 
+    public AppComponent getAppComponent(){
+        App app = (App) getActivity().getApplication();
+        return app.getComponent();
+    }
+
+
     private void initializeDaggerBase() {
-        MobileLearning app = (MobileLearning) getActivity().getApplication();
+        App app = (App) getActivity().getApplication();
         app.getComponent().inject(this);
     }
 

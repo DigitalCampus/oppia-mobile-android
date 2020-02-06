@@ -48,8 +48,9 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.GamificationBroadcastReceiver;
 import org.digitalcampus.oppia.gamification.GamificationService;
@@ -82,9 +83,13 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         initializeDaggerBase();
     }
 
+    public AppComponent getAppComponent(){
+        App app = (App) getApplication();
+        return app.getComponent();
+    }
+
     private void initializeDaggerBase() {
-        MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
+        getAppComponent().inject(this);
     }
 
     @Override
@@ -171,26 +176,24 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         registerReceiver(gamificationReceiver, broadcastFilter);
 
         //We check if the user session time has expired to log him out
-        if (MobileLearning.SESSION_EXPIRATION_ENABLED) {
+        if (App.SESSION_EXPIRATION_ENABLED) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             long now = System.currentTimeMillis() / 1000;
             long lastTimeActive = prefs.getLong(PrefsActivity.LAST_ACTIVE_TIME, now);
             long timePassed = now - lastTimeActive;
 
             prefs.edit().putLong(PrefsActivity.LAST_ACTIVE_TIME, now).apply();
-            if (timePassed > MobileLearning.SESSION_EXPIRATION_TIMEOUT) {
+            if (timePassed > App.SESSION_EXPIRATION_TIMEOUT) {
                 Log.d(TAG, "Session timeout (passed " + timePassed + " seconds), logging out");
                 logoutAndRestartApp();
             }
         }
-
-//        onGamificationEvent("esprueba", 20);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (MobileLearning.SESSION_EXPIRATION_ENABLED) {
+        if (App.SESSION_EXPIRATION_ENABLED) {
             long now = System.currentTimeMillis() / 1000;
             PreferenceManager
                     .getDefaultSharedPreferences(this).edit()
@@ -311,8 +314,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
         if (optionsMenu != null && optionsMenu.findItem(R.id.points) != null) {
 
-            AnimatorSet animXY = new AnimatorSet();
-
             ObjectAnimator animY = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "y",
                     tvGamificationNotifPoints.getTop(), 50);
             animY.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -327,7 +328,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             ObjectAnimator animX = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "x",
                     tvGamificationNotifPoints.getLeft(), itemX);
 
-            animXY = new AnimatorSet();
+            AnimatorSet animXY = new AnimatorSet();
             animXY.playTogether(animX, animY);
             animXY.setDuration(1200);
 

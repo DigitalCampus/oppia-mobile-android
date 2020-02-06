@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.Tracker;
 
 import java.io.File;
@@ -30,6 +30,10 @@ public class Storage {
     public static final String APP_BACKUP_DIR_NAME = "backup";
     public static final String APP_TMP_TRANSFER_DIR_NAME = "tmpbt";
     public static final String APP_LEADERBOARD_DIR_NAME = "leaderboard";
+
+    private static final String FILE_ASSETS_ROOT = "file:///android_asset/";
+    private static final String FILE_NOT_FOUND = "file not found for:";
+    private static final String FILE_READ_ERROR = "Error reading file: ";
 
     private static StorageAccessStrategy storageStrategy;
     public static void setStorageStrategy(StorageAccessStrategy strategy){
@@ -81,8 +85,6 @@ public class Storage {
             Log.d(TAG, "Storage not available");
             return false;
         }
-
-        //BUFFER_SIZE_CONFIG = 21;
 
         String[] dirs = {
                 Storage.getCoursesPath(ctx),
@@ -163,33 +165,33 @@ public class Storage {
         try {
             InputStream stream = act.getAssets().open(filePath);
             stream.close();
-            return "file:///android_asset/" + filePath;
+            return FILE_ASSETS_ROOT + filePath;
         } catch (FileNotFoundException fnfe) {
-            Log.d(TAG,"file not found for:"+ filePath, fnfe);
+            Log.d(TAG,FILE_NOT_FOUND+ filePath, fnfe);
         } catch (IOException ioe) {
-            Log.d(TAG,"Error reading file: "+ filePath, ioe);
+            Log.d(TAG,FILE_READ_ERROR+ filePath, ioe);
         }
 
         String localeFilePath = "www" + File.separator + Locale.getDefault().getLanguage() + File.separator + fileName;
         try {
             InputStream stream = act.getAssets().open(localeFilePath);
             stream.close();
-            return "file:///android_asset/" + localeFilePath;
+            return FILE_ASSETS_ROOT + localeFilePath;
         } catch (FileNotFoundException fnfe) {
-            Log.d(TAG,"file not found for:"+ localeFilePath, fnfe);
+            Log.d(TAG,FILE_NOT_FOUND+ localeFilePath, fnfe);
         } catch (IOException ioe) {
-            Log.d(TAG,"Error reading file: "+ localeFilePath, ioe);
+            Log.d(TAG,FILE_READ_ERROR+ localeFilePath, ioe);
         }
 
-        String defaultFilePath = "www" + File.separator + MobileLearning.DEFAULT_LANG + File.separator + fileName;
+        String defaultFilePath = "www" + File.separator + App.DEFAULT_LANG + File.separator + fileName;
         try {
             InputStream stream = act.getAssets().open(defaultFilePath);
             stream.close();
-            return "file:///android_asset/" + defaultFilePath;
+            return FILE_ASSETS_ROOT + defaultFilePath;
         } catch (FileNotFoundException fnfe) {
-            Log.d(TAG,"file not found for:"+ defaultFilePath, fnfe);
+            Log.d(TAG,FILE_NOT_FOUND+ defaultFilePath, fnfe);
         } catch (IOException ioe) {
-            Log.d(TAG,"Error reading file: "+ defaultFilePath, ioe);
+            Log.d(TAG,FILE_READ_ERROR+ defaultFilePath, ioe);
         }
         return "";
 

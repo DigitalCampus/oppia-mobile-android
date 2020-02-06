@@ -99,11 +99,6 @@ public class ScorecardActivity extends AppActivity {
 		Fragment fScorecard;
 		if(this.course != null){
 			fScorecard = CourseScorecardFragment.newInstance(course);
-			/*ActionBar actionBar = getSupportActionBar();
-            if ((actionBar != null) && (course.getImageFile() != null)) {
-                BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), R.drawable.dc_logo);
-                actionBar.setHomeAsUpIndicator(bm);
-            }*/
 		} else {
 			fScorecard = GlobalScorecardFragment.newInstance();
 		}

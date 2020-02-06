@@ -42,7 +42,7 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.ScorecardActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
@@ -84,7 +84,7 @@ public class UIUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         //Get User from AppModule with dagger
-        MobileLearning app = (MobileLearning) ctx.getApplicationContext();
+        App app = (App) ctx.getApplicationContext();
         User u = app.getComponent().getUser();
 
         Log.d(TAG, "username: " + u.getUsername());

@@ -41,8 +41,6 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategy;
 import org.digitalcampus.oppia.utils.storage.StorageAccessStrategyFactory;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.concurrent.TimeUnit;
 
@@ -50,9 +48,9 @@ import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
 import io.github.inflationx.viewpump.ViewPump;
 
-public class MobileLearning extends Application {
+public class App extends Application {
 
-    public static final String TAG = MobileLearning.class.getSimpleName();
+    public static final String TAG = App.class.getSimpleName();
 
     public static final int APP_LOGO = R.drawable.dc_logo;
 
@@ -62,24 +60,6 @@ public class MobileLearning extends Application {
     public static final String PRE_INSTALL_COURSES_DIR = "www/preload/courses"; // don't include leading or trailing slash
     public static final String PRE_INSTALL_MEDIA_DIR = "www/preload/media"; // don't include leading or trailing slash
 
-    // server path vars - new version
-    public static final String OPPIAMOBILE_API = "api/v1/";
-    public static final String LOGIN_PATH = OPPIAMOBILE_API + "user/";
-    public static final String REGISTER_PATH = OPPIAMOBILE_API + "register/";
-    public static final String RESET_PATH = OPPIAMOBILE_API + "reset/";
-    public static final String QUIZ_SUBMIT_PATH = OPPIAMOBILE_API + "quizattempt/";
-    public static final String SERVER_COURSES_PATH = OPPIAMOBILE_API + "course/";
-    public static final String SERVER_TAG_PATH = OPPIAMOBILE_API + "tag/";
-    public static final String TRACKER_PATH = OPPIAMOBILE_API + "tracker/";
-    public static final String ACTIVITYLOG_PATH = "api/activitylog/";
-    public static final String SERVER_POINTS_PATH = OPPIAMOBILE_API + "points/";
-    public static final String SERVER_AWARDS_PATH = OPPIAMOBILE_API + "awards/";
-    public static final String SERVER_COURSES_NAME = "courses";
-    public static final String COURSE_ACTIVITY_PATH = SERVER_COURSES_PATH + "%s/activity/";
-    public static final String LEADERBOARD_PATH = OPPIAMOBILE_API + "leaderboard/";
-    public static final String SERVER_INFO_PATH = "server/";
-
-
     // admin security settings
     public static final boolean ADMIN_PROTECT_SETTINGS = BuildConfig.ADMIN_PROTECT_SETTINGS;
     public static final boolean ADMIN_PROTECT_COURSE_DELETE = BuildConfig.ADMIN_PROTECT_COURSE_DELETE;
@@ -88,7 +68,6 @@ public class MobileLearning extends Application {
     public static final boolean ADMIN_PROTECT_COURSE_UPDATE = BuildConfig.ADMIN_PROTECT_COURSE_UPDATE;
     public static final boolean ADMIN_PROTECT_ACTIVITY_SYNC = BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC;
     public static final boolean ADMIN_PROTECT_ACTIVITY_EXPORT = BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT;
-
 
     // tracker metadata settings
     public static final boolean METADATA_INCLUDE_NETWORK = BuildConfig.METADATA_INCLUDE_NETWORK;
@@ -106,7 +85,6 @@ public class MobileLearning extends Application {
     public static final int PAGE_READ_TIME = 3;
     public static final int RESOURCE_READ_TIME = 3;
     public static final int URL_READ_TIME = 5;
-    public static final String USER_AGENT = "OppiaMobile Android: ";
     public static final String DEFAULT_STORAGE_OPTION = PrefsActivity.STORAGE_OPTION_EXTERNAL;
 
     public static final long SCORECARD_ANIM_DURATION = 800;
@@ -126,31 +104,13 @@ public class MobileLearning extends Application {
     public static final boolean SESSION_EXPIRATION_ENABLED = BuildConfig.SESSION_EXPIRATION_ENABLED; // whether to force users to be logged out after inactivity
     public static final int SESSION_EXPIRATION_TIMEOUT = BuildConfig.SESSION_EXPIRATION_TIMEOUT; // no seconds before user is logged out for inactivity
 
-    public static final DateTimeFormatter DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
-    public static final DateTimeFormatter MONTH_FORMAT = DateTimeFormat.forPattern("MMM");
-    public static final DateTimeFormatter TIME_FORMAT = DateTimeFormat.forPattern("HH:mm:ss");
-    public static final DateTimeFormatter DATE_FORMAT_DAY_MONTH = DateTimeFormat.forPattern("d MMM");
-    public static final DateTimeFormatter TIME_FORMAT_HOURS_MINUTES = DateTimeFormat.forPattern("HH:mm");
-
-    public static final DateTimeFormatter DISPLAY_DATETIME_FORMAT = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
-
     public static final int MAX_TRACKER_SUBMIT = 10;
     //	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v", "video/mp4", "audio/mpeg", "video/3gp", "video/3gpp"}; //NOSONAR
 
-    public static final String DEVICEADMIN_ADD_PATH = OPPIAMOBILE_API + "device/register/";
-
     // only used in case a course doesn't have any lang specified
     public static final String DEFAULT_LANG = "en";
     private static final String NAME_TRACKER_SEND_WORK = "tracker_send_work";
-
-    // for tracking if SubmitTrackerMultipleTask is already running
-//	public SubmitTrackerMultipleTask omSubmitTrackerMultipleTask = null;
-//
-//	// for tracking if SubmitQuizAttemptsTask is already running
-//	public SubmitQuizAttemptsTask omSubmitQuizAttemptsTask = null;
-
 
     private AppComponent appComponent;
 

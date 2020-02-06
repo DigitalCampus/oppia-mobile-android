@@ -2,13 +2,14 @@ package org.digitalcampus.oppia.task;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.utils.ConnectionUtils;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -35,13 +36,21 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
     }
 
     private FetchServerInfoListener listener;
+    private ConnectivityManager connectivityManager;
 
     public FetchServerInfoTask(Context ctx) {
         super(ctx);
+        connectivityManager = ConnectionUtils.getConnectivityManager(ctx);
     }
 
     public FetchServerInfoTask(Context ctx, ApiEndpoint api) {
         super(ctx, api);
+        connectivityManager = ConnectionUtils.getConnectivityManager(ctx);
+    }
+
+    public FetchServerInfoTask(Context ctx, ApiEndpoint api, ConnectivityManager connectivityManager){
+        super(ctx, api);
+        this.connectivityManager = connectivityManager != null ? connectivityManager: ConnectionUtils.getConnectivityManager(ctx);
     }
 
     @Override
@@ -49,7 +58,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
 
         HashMap<String, String> result = new HashMap<>();
 
-        if (!ConnectionUtils.isNetworkConnected(ctx)){
+        if (!ConnectionUtils.isNetworkConnected(connectivityManager)){
             // If there is no connection available right now, we don't try to fetch info (to avoid setting a server as invalid)
             result.put("result", "noInternet");
             return result;
@@ -58,7 +67,7 @@ public class FetchServerInfoTask extends APIRequestTask<Void, Object, HashMap<St
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         OkHttpClient client = HTTPClientUtils.getClient(ctx);
         boolean validServer = false;
-        Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, MobileLearning.SERVER_INFO_PATH));
+        Request request = createRequestWithUserAuth(apiEndpoint.getFullURL(ctx, Paths.SERVER_INFO_PATH));
         try {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){

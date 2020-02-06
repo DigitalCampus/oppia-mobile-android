@@ -85,9 +85,6 @@ public class SearchActivity extends AppActivity {
                 SearchActivity.this.startActivity(i);
             }
         });
-
-
-
 	}
 	
 	@Override
@@ -206,7 +203,6 @@ public class SearchActivity extends AppActivity {
             results.clear();
             results.addAll(searchResults);
             adapterResults.notifyDataSetChanged();
-//            resultsList.setSelectionAfterHeaderView();
             SimpleAnimator.fadeFromTop(recyclerResults, SimpleAnimator.FADE_IN);
             loadingSpinner.setVisibility(View.GONE);
             searchButton.setEnabled(true);

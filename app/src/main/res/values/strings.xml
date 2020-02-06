@@ -236,6 +236,7 @@
     <string name="error_register_no_phoneno">Please enter a valid phone number</string>
     <string name="error_register_no_username">Please enter a username</string>
     <string name="error_register_username_spaces">Your username cannot contain spaces</string>
+    <string name="error_register_email">Email not valid</string>
     <string name="error_resource_app_not_found">You don\'t seem to have an app installed to open \'%1$s\'. Please install an app capable of opening this type of file.</string>
     <string name="error_resource_not_found">File: \'%1$s\' not found.</string>
     <string name="error_preloading_accounts">Error preloading accounts from CSV file</string>

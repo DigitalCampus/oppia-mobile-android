@@ -29,7 +29,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.BadgesAdapter;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Badges;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
@@ -65,7 +65,7 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		initializeDagger();
+		getAppComponent().inject(this);
 
         adapterBadges = new BadgesAdapter(super.getActivity(), badges);
 		RecyclerView recyclerBadges = this.getView().findViewById(R.id.recycler_badges);
@@ -74,14 +74,10 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 		getBadges();
 	}
 
-	private void initializeDagger() {
-		MobileLearning app = (MobileLearning) getActivity().getApplication();
-		app.getComponent().inject(this);
-	}
 
 	private void getBadges(){		
 		APIUserRequestTask task = new APIUserRequestTask(super.getActivity());
-		Payload p = new Payload(MobileLearning.SERVER_AWARDS_PATH);
+		Payload p = new Payload(Paths.SERVER_AWARDS_PATH);
 		task.setAPIRequestListener(this);
 		task.execute(p);
 	}
@@ -96,7 +92,6 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			this.getView().findViewById(R.id.error_state).setVisibility(View.GONE);
 
 			if(json.getJSONArray("objects").length() == 0){
-				//tv.setText(R.string.info_no_badges);
 				this.getView().findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
 				return;
 			}

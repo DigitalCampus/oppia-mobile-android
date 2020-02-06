@@ -17,9 +17,9 @@
 
 package org.digitalcampus.oppia.utils.xmlreaders;
 
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.ActivitySchedule;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -95,8 +95,8 @@ public class CourseScheduleXMLReader {
 			String startDateString = attrs.getNamedItem("startdate").getTextContent();
 			String endDateString = attrs.getNamedItem("enddate").getTextContent();
 		
-			DateTime sdt = MobileLearning.DATETIME_FORMAT.parseDateTime(startDateString);
-			DateTime edt = MobileLearning.DATETIME_FORMAT.parseDateTime(endDateString);
+			DateTime sdt = DateUtils.DATETIME_FORMAT.parseDateTime(startDateString);
+			DateTime edt = DateUtils.DATETIME_FORMAT.parseDateTime(endDateString);
 			
 			ActivitySchedule as = new ActivitySchedule();
 			as.setDigest(digest);

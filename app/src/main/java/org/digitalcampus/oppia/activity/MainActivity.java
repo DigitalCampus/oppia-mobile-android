@@ -20,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.fragments.CoursesListFragment;
 import org.digitalcampus.oppia.fragments.MainPointsFragment;
 import org.digitalcampus.oppia.fragments.MainScorecardFragment;
@@ -80,40 +80,18 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
-        initializeDagger();
+        getAppComponent().inject(this);
 
         configureBadgePointsView();
 
         viewProfileOptions.setVisibility(View.GONE);
 
-        btnEditProfile.setVisibility(View.GONE); // TODO Edit profile feature.
+        btnEditProfile.setVisibility(View.GONE);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
-
-//        startActivity(new Intent(this, ScorecardActivity.class));
-
-//        Log.i(TAG, "Screen width: " + getResources().getConfiguration().screenWidthDp);
-//        Log.i(TAG, "Screen height: " + getResources().getConfiguration().screenHeightDp);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//            Log.i(TAG, "Screen density: " + getResources().getConfiguration().densityDpi);
-//        }
-
-    }
-
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
     }
 
     private void configureBadgePointsView() {
-
-        // Not available yet. It cannot let you customize text size of badge
-//        BadgeDrawable badge = navBottomView.getOrCreateBadge(R.id.nav_bottom_points);
-//        badge.setMaxCharacterCount(8);
-//        badge.setNumber(5003);
-
-
-        // Workaround alternative:
 
         BottomNavigationMenuView bottomNavigationMenuView =
                 (BottomNavigationMenuView) navBottomView.getChildAt(0);
@@ -136,7 +114,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     private void updateUserTotalPoints() {
 
-        MobileLearning app = (MobileLearning) getApplicationContext();
+        App app = (App) getApplicationContext();
         User u = app.getComponent().getUser();
 
         tvBadgeNumber.setText(String.valueOf(u.getPoints()));
@@ -230,9 +208,9 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
     // CONFIGURATIONS
     private void configureLogoutOption() {
-        boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, MobileLearning.MENU_ALLOW_LOGOUT);
+        boolean logoutVisible = getPrefs().getBoolean(PrefsActivity.PREF_LOGOUT_ENABLED, App.MENU_ALLOW_LOGOUT);
         btnLogout.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
-        btnExpandProfileOptions.setVisibility(logoutVisible ? View.VISIBLE : View.GONE); // TODO Edit profile feature.
+        btnExpandProfileOptions.setVisibility(logoutVisible ? View.VISIBLE : View.GONE);
         if (!logoutVisible) {
             setupProfileOptionsView(false);
         }
@@ -287,7 +265,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                 break;
 
             case R.id.btn_edit_profile:
-                // TODO Edit profile feature.
                 break;
 
             case R.id.btn_logout:
@@ -316,7 +293,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
 
         // update the points/badges by invalidating the menu
         if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
-            // TODO adapt this
         }
 
     }

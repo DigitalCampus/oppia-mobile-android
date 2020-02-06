@@ -21,8 +21,9 @@ public class BuildChecksOppiaCore {
         String oppiaServerDefault = prefs.getString("prefServer", null);
         String oppiaServerHost = context.getString(R.string.oppiaServerHost);
 
-        assertEquals(oppiaServerDefault, "https://demo.oppia-mobile.org/");
-        assertEquals(oppiaServerHost, "demo.oppia-mobile.org");
+        assertEquals("https://demo.oppia-mobile.org/", oppiaServerDefault);
+        assertEquals("demo.oppia-mobile.org", oppiaServerHost);
+
         assertEquals(false, BuildConfig.ADMIN_PROTECT_SETTINGS);
         assertEquals(false, BuildConfig.ADMIN_PROTECT_ACTIVITY_SYNC);
         assertEquals(false, BuildConfig.ADMIN_PROTECT_ACTIVITY_EXPORT);

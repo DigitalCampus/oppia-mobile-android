@@ -36,8 +36,7 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_activity_type, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 
@@ -51,18 +50,13 @@ public class ActivityTypesAdapter extends RecyclerView.Adapter<ActivityTypesAdap
         holder.imgShowHide.getBackground().setColorFilter(activityType.getColor(), PorterDuff.Mode.SRC_ATOP);
         if (activityType.isEnabled()) {
             holder.imgShowHide.setImageResource(R.drawable.ic_eye_show);
-//            holder.imgShowHide.setBackgroundResource(android.R.drawable.btn_default);
             holder.imgShowHide.getBackground().setAlpha(255);
             holder.imgShowHide.setColorFilter(Color.WHITE);
-//            holder.imgShowHide.setBackgroundColor(activityType.getColor());
         } else {
             holder.imgShowHide.setImageResource(R.drawable.ic_eye_hide);
             holder.imgShowHide.getBackground().setAlpha(0);
             holder.imgShowHide.setColorFilter(activityType.getColor());
-//            holder.imgShowHide.setBackgroundDrawable(null);
         }
-
-
     }
 
     @Override

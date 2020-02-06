@@ -35,7 +35,7 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.CourseIntallViewAdapter;
 import org.digitalcampus.oppia.adapter.DownloadCoursesAdapter;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
 import org.digitalcampus.oppia.model.CourseInstallRepository;
@@ -79,8 +79,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
-
-        initializeDagger();
+        getAppComponent().inject(this);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -88,14 +87,14 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         if (bundle != null) {
             Tag t = (Tag) bundle.getSerializable(Tag.TAG);
             if (t != null){
-                this.url = MobileLearning.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
+                this.url = Paths.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
                 TextView tagTitle = findViewById(R.id.category_title);
                 tagTitle.setVisibility(View.VISIBLE);
                 tagTitle.setText(t.getName());
             }
 
         } else {
-            this.url = MobileLearning.SERVER_COURSES_PATH;
+            this.url = Paths.SERVER_COURSES_PATH;
             this.showUpdatesOnly = true;
         }
 
@@ -116,30 +115,25 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                 // When installing, don't do anything on click
                 if (courseSelected.isInstalling()) return;
 
-
                 Intent mServiceIntent = new Intent(DownloadActivity.this, CourseIntallerService.class);
 
                 if (!courseSelected.isDownloading()){
                     if(!courseSelected.isInstalled() || courseSelected.isToUpdate()){
                         courseInstallerServiceDelegate.installCourse(DownloadActivity.this, mServiceIntent, courseSelected);
-
                         resetCourseProgress(courseSelected, true, false);
                     }
                     else if(courseSelected.isToUpdateSchedule()){
                         courseInstallerServiceDelegate.updateCourse(DownloadActivity.this, mServiceIntent, courseSelected);
-
                         resetCourseProgress(courseSelected, false, true);
                     }
                 }
                 else{
                     //If it's already downloading, send an intent to cancel the task
                     courseInstallerServiceDelegate.cancelCourseInstall(DownloadActivity.this, mServiceIntent, courseSelected);
-
                     resetCourseProgress(courseSelected, false, false);
                 }
             }
         });
-
 
         RecyclerView recyclerCourses = findViewById(R.id.recycler_tags);
         if (recyclerCourses != null) {
@@ -148,10 +142,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
     }
 
-    private void initializeDagger() {
-        MobileLearning app = (MobileLearning) getApplication();
-        app.getComponent().inject(this);
-    }
 	
 	@Override
 	public void onResume(){
@@ -184,11 +174,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		super.onPause();
         unregisterReceiver(receiver);
 	}
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-    }
 	
 	@SuppressWarnings("unchecked")
 	@Override

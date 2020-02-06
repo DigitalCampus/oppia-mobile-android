@@ -31,7 +31,6 @@ sonarqube {
 
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
-apply plugin: "org.sonarqube"
 
 repositories {
     maven { url "https://mint.splunk.com/gradle/" }
@@ -43,17 +42,14 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        versionCode 74
-        versionName "7.0.4"
+        versionCode 75
+        versionName "7.0.5"
 
         applicationId "org.lastmilehealth.oppiamobile"
         minSdkVersion 14
         targetSdkVersion 28
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-
-//        multiDexEnabled true
-
     }
 
     //Add the version_name value to strings resources
@@ -170,7 +166,6 @@ android {
 
     productFlavors {
         normal { dimension "main" }
-        admin { dimension "main" }
     }
 
 
@@ -179,18 +174,11 @@ android {
 
 }
 
-// Setup Jacoco version. It's recomended way to exclude conflicts beetwen components
+// Setup Jacoco version. It's recommended way to exclude conflicts between components
 jacoco {
     toolVersion = "0.8.3"
 }
 
-// Setup jacoco report format. We need xml for Sonarqube
-jacocoAndroidUnitTestReport {
-    csv.enabled false
-    html.enabled true
-    xml.enabled true
-
-}
 
 dependencies {
 
@@ -238,7 +226,6 @@ dependencies {
         exclude group: 'androidx.test', module: 'core'
     }
     //Mockito Dependencies
-    androidTestImplementation 'org.mockito:mockito-core:1.10.19'
     androidTestImplementation 'com.google.dexmaker:dexmaker:1.2'
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.2'
 
@@ -247,18 +234,12 @@ dependencies {
     testImplementation 'org.powermock:powermock-module-junit4:1.7.0RC2'
     testImplementation 'org.powermock:powermock-api-mockito2:1.7.0RC2'
 
-//    androidTestImplementation 'org.powermock:powermock-mockito-release-full:1.6.4'
-//    testImplementation 'org.powermock:powermock:1.6.6'
-
     //Dagger Dependencies
     implementation "com.google.dagger:dagger:2.11"
     implementation "com.google.dagger:dagger-android-support:2.11"
     annotationProcessor "com.google.dagger:dagger-android-processor:2.11"
     annotationProcessor "com.google.dagger:dagger-compiler:2.11"
 
-//    implementation 'javax.annotation:jsr250-api:1.0' /*compileOnly*/
-    implementation 'org.glassfish:javax.annotation:10.0-b28'
-//    androidTestImplementation 'com.github.fabioCollini:DaggerMock:0.8.2'
     androidTestImplementation 'com.github.fabioCollini.daggermock:daggermock:0.8.5'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
@@ -272,10 +253,6 @@ dependencies {
     androidTestImplementation "androidx.work:work-testing:$work_version"
 
     implementation 'javax.xml.stream:stax-api:1.0-2'
-
-//    implementation 'androidx.multidex:multidex:2.0.1'
-//    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
-
 }
 
 
@@ -291,8 +268,6 @@ task grantPermissions(type: Exec, dependsOn: 'installNormalDebug') {
     }
 
     commandLine "${adb} shell pm grant ${android.defaultConfig.applicationId} android.permission.SET_ANIMATION_SCALE".split(' ')
-    // commandLine "${adb} shell pm grant org.digitalcampus.mobile.learning android.permission.SET_ANIMATION_SCALE --stacktrace".split(" ")
-
 }
 
 tasks.whenTaskAdded { task ->
@@ -304,43 +279,19 @@ tasks.whenTaskAdded { task ->
     }
 }
 
-// Test coverage tasks
-def androidExclusion = [
-        '**/databinding/**/*.*',
-        '**/android/databinding/*Binding.*',
-        '**/BR.*',
-        '**/R.*',
-        '**/R$*.*',
-        '**/BuildConfig.*',
-        '**/Manifest*.*',
-        '**/*_MembersInjector.*',
-        '**/Dagger*Component.*',
-        '**/Dagger*Component$Builder.*',
-        '**/*Module_*Factory.*',
-        '**/*Fragment*.*',
-        '**/*Activity*.*',
-        '**/*Adapter*.*',
-        '**/*ViewPager*.*',
-        '**/*ViewHolder*.*',
-        '**/*Module*.*'
-]
+sonarqube {
+    properties {
+        property "sonar.projectKey", "org.digitalcampus.mobile.learning"
+        property "sonar.projectName", "Oppia-Android"
+        property "sonar.projectVersion", "1.0"
+        property "sonar.host.url", "https://sonarcloud.io"
 
-task codeCoverageReport(type: JacocoReport, dependsOn: 'testNormalDebugUnitTest') {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports after running tests."
-    reports {
-        xml.enabled = true
-        html.enabled = true
+        property "sonar.sources", "src/main/java"
+        property "sonar.binaries", "build/intermediates/app_classes/normalDebug"
+        property "sonar.java.binaries", "build/intermediates/app_classes/normalDebug"
+        property "sonar.tests", "src/test/java, src/androidTest/java"
+        property "sonar.java.test.binaries", "build/intermediates/app_classes/normalDebug"
+
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/coverage/normal/debug/report.xml"
     }
-    classDirectories = fileTree(
-            dir: 'build/intermediates/classes/normal/debug/org/digitalcampus',
-            excludes: androidExclusion
-    )
-    sourceDirectories = files('src/main/java/org/digitalcampus')
-    executionData = files('build/jacoco/testNormalDebugUnitTest.exec')
-}
-
-task getCoverage(type: Exec, dependsOn: 'codeCoverageReport') {
-    group = "Reporting"
-    //commandLine "open", "$buildDir/reports/jacoco/codeCoverageReport/html/index.html"
 }

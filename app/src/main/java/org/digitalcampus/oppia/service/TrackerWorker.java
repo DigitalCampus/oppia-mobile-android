@@ -18,8 +18,9 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.APIRequestFinishListener;
 import org.digitalcampus.oppia.listener.APIRequestListener;
@@ -54,10 +55,7 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
 
         Log.i(TAG, "startWork");
 
-//        boolean backgroundData = getInputData().getBoolean("backgroundData", true);
-
         future = SettableFuture.create();
-
 
         boolean isLoggedIn = SessionManager.isLoggedIn(getApplicationContext());
         if (isLoggedIn) {
@@ -88,12 +86,12 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
 
         // check for updated courses
         // should only do this once a day or so....
-        SharedPreferences prefs = MobileLearning.getPrefs(getApplicationContext());
+        SharedPreferences prefs = App.getPrefs(getApplicationContext());
         long lastRun = prefs.getLong("lastCourseUpdateCheck", 0);
         long now = System.currentTimeMillis() / 1000;
         if ((lastRun + (TimeUnit.HOURS.toSeconds(12))) < now) {
             APIUserRequestTask task = new APIUserRequestTask(getApplicationContext());
-            Payload p = new Payload(MobileLearning.SERVER_COURSES_PATH);
+            Payload p = new Payload(Paths.SERVER_COURSES_PATH);
             task.setAPIRequestListener(this);
             task.setAPIRequestFinishListener(this, "APIUserRequestTask");
             task.execute(p);

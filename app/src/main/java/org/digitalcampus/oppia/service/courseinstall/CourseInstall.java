@@ -26,7 +26,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.application.DbHelper;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
@@ -90,9 +90,9 @@ public class CourseInstall {
         String courseTrackerXMLPath;
         // check that it's unzipped etc correctly
         try {
-            courseXMLPath = tempdir + File.separator + courseDir + File.separator + MobileLearning.COURSE_XML;
-            courseScheduleXMLPath = tempdir + File.separator + courseDir + File.separator + MobileLearning.COURSE_SCHEDULE_XML;
-            courseTrackerXMLPath = tempdir + File.separator + courseDir + File.separator + MobileLearning.COURSE_TRACKER_XML;
+            courseXMLPath = tempdir + File.separator + courseDir + File.separator + App.COURSE_XML;
+            courseScheduleXMLPath = tempdir + File.separator + courseDir + File.separator + App.COURSE_SCHEDULE_XML;
+            courseTrackerXMLPath = tempdir + File.separator + courseDir + File.separator + App.COURSE_TRACKER_XML;
         } catch (ArrayIndexOutOfBoundsException aioobe){
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
             Mint.logException(aioobe);
@@ -208,7 +208,7 @@ public class CourseInstall {
         String[] backups = backupDir.list();
         if (backups.length > 0){
             for (String backup : backups) {
-                String backup_shortname = backup.substring(0, backup.lastIndexOf("_"));
+                String backup_shortname = backup.substring(0, backup.lastIndexOf('_'));
                 if (backup_shortname.equalsIgnoreCase(shortname)){
                     previousBackup = new File(Storage.getCourseBackupPath(ctx), backup);
                 }
@@ -228,8 +228,8 @@ public class CourseInstall {
         String filename = shortname + "_" + version + ".zip";
         File destination = new File(Storage.getCourseBackupPath(ctx), filename);
 
-        FileUtils.deleteFile(new File(courseFolder, MobileLearning.COURSE_TRACKER_XML));
-        FileUtils.deleteFile(new File(courseFolder, MobileLearning.COURSE_SCHEDULE_XML));
+        FileUtils.deleteFile(new File(courseFolder, App.COURSE_TRACKER_XML));
+        FileUtils.deleteFile(new File(courseFolder, App.COURSE_SCHEDULE_XML));
 
         Log.d(TAG, courseFolder.getAbsolutePath());
 

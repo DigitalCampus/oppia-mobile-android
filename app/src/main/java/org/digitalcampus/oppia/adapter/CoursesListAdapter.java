@@ -23,7 +23,7 @@ import com.squareup.picasso.Picasso;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.utils.CircleTransform;
 
@@ -54,11 +54,10 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View contactView = LayoutInflater.from(context).inflate(R.layout.course_list_row, parent, false);
+        View contactView = LayoutInflater.from(context).inflate(R.layout.row_course_list, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 
@@ -77,7 +76,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
             viewHolder.courseDescription.setVisibility(View.GONE);
         }
 
-        if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, MobileLearning.DEFAULT_DISPLAY_PROGRESS_BAR)) {
+        if (prefs.getBoolean(PrefsActivity.PREF_SHOW_PROGRESS_BAR, App.DEFAULT_DISPLAY_PROGRESS_BAR)) {
             int courseProgress = (int) c.getProgressPercent();
             viewHolder.circularProgressBar.setVisibility(View.VISIBLE);
             viewHolder.circularProgressBar.setProgressWithAnimation(courseProgress, 1000l);

@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.digitalcampus.mobile.learning.R;
+import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.task.Payload;
@@ -37,11 +38,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 public class ResetFragment extends AppFragment implements SubmitListener{
 
 	private EditText usernameField;
     private ProgressDialog pDialog;
     private Button resetButton;
+
+	@Inject
+	ApiEndpoint apiEndpoint;
 	
 	public static ResetFragment newInstance() {
         return new ResetFragment();
@@ -54,6 +60,7 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_reset, container, false);
+		getAppComponent().inject(this);
 
 		usernameField = v.findViewById(R.id.reset_username_field);
 		resetButton = v.findViewById(R.id.reset_btn);
@@ -110,7 +117,7 @@ public class ResetFragment extends AppFragment implements SubmitListener{
 		u.setUsername(username);
 		users.add(u);
 		Payload p = new Payload(users);
-		ResetTask rt = new ResetTask(super.getActivity());
+		ResetTask rt = new ResetTask(super.getActivity(), apiEndpoint);
 		rt.setResetListener(this);
 		rt.execute(p);
 	}

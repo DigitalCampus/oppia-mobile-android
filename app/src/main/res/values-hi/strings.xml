@@ -84,16 +84,11 @@
 	<string name="prefBackgroudDataConnect_summary">Send activity logs even when this application isn\'t running</string>
 	<string name="prefLanguage">पसंदीदा भाषा </string>
 	<string name="prefHighlightCompleted">Highlight completed activities</string>
-	<string name="prefNoScheduleReminders">Number of suggested activities</string>
-	<string name="prefNoScheduleReminders_summary">How many suggested activities to display</string>
 	<string name="prefServer">सर्वर </string>
 	<string name="prefServerTimeoutConnection">Connection timeout</string>
 	<string name="prefServerTimeoutResponse">Response timeout</string>
 	<string name="prefShowProgressBar">Show progress bar</string>
-	<string name="prefShowScheduleReminders">Display suggested activities</string>
-	<string name="prefShowScheduleReminders_summary">Show which activities you are due to complete next</string>
 	<string name="prefShowSectionNumbers">Show section numbers</string>
-	
 	<string name="notification_course_update_title">New course updates</string>
 	<string name="notification_course_update_text">Updates are available for your courses.</string>
 	
@@ -136,17 +131,14 @@
 	<string name="alt_activity_icon">Activity icon</string>
 	
 	<string name="update">Update</string>
-	<string name="update_schedule">Update Schedule</string>
 	<string name="installed">स्थापित</string>
 	<string name="install">स्थापित करें</string>
 	
 	<string name="download_starting">डाउनलोड शुरू हो रहा है</string>
 	<string name="downloading">Downloading &#8230;</string>
 	<string name="download_complete">डाउनलोड सम्पूर्ण</string>
-	
-	<string name="update_starting">Getting schedule updates</string>
+
 	<string name="updating">Updating &#8230;</string>
-	<string name="update_complete">Schedule update complete</string>
 	
 	<string name="installing_course">स्थापित हो रहा है: %1$s</string>
 	<string name="install_complete">स्थापना सम्पूर्ण</string>
@@ -220,8 +212,6 @@
 	<string name="download_via_pc_title">फिमें डाउनलोड करें</string>
 	<string name="download_via_pc_intro">Download each of the files below to your PC (use right click, save-as)</string>
 	<string name="download_via_pc_final">Once you have downloaded the files copy them to the \'%1$s\' directory on your phone SD card.</string>
-	
-	<string name="schedule_reminders">Suggested next activities:</string>
 	
 	<string name="course_draft">(Draft version)</string>
 	

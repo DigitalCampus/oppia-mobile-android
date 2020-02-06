@@ -20,7 +20,7 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.task.APIUserRequestTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -44,7 +44,7 @@ public class TagRepository {
 
     public void getTagList(Context ctx){
         APIUserRequestTask task = new APIUserRequestTask(ctx);
-        Payload p = new Payload(MobileLearning.SERVER_TAG_PATH);
+        Payload p = new Payload(Paths.SERVER_TAG_PATH);
         task.setAPIRequestListener((APIRequestListener) ctx);
         task.execute(p);
     }

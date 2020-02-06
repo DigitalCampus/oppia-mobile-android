@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.model;
 
 import android.text.TextUtils;
 
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.utils.DateUtils;
 import org.joda.time.DateTime;
 
 import java.util.Collection;
@@ -71,7 +71,7 @@ public class TrackerLog {
 	}
 	
 	public String getDateTimeString() {
-		return MobileLearning.DATETIME_FORMAT.print(datetime);
+		return DateUtils.DATETIME_FORMAT.print(datetime);
 	}
 	public boolean isCompleted() {
 		return completed;

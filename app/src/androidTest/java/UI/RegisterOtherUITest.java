@@ -9,7 +9,7 @@ import junit.framework.AssertionFailedError;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.MainActivity;
 import org.digitalcampus.oppia.activity.WelcomeActivity;
-import org.digitalcampus.oppia.application.MobileLearning;
+import org.digitalcampus.oppia.application.App;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -134,7 +134,7 @@ public class RegisterOtherUITest {
                 .perform(click());
 
         String passwordError = InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getString(
-                R.string.error_register_password, MobileLearning.PASSWORD_MIN_LENGTH);
+                R.string.error_register_password, App.PASSWORD_MIN_LENGTH);
 
         onErrorViewWithinTextInputLayoutWithId(R.id.register_form_password_field)
                 .check(matches(withText(passwordError)));

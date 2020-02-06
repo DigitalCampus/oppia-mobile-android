@@ -30,7 +30,6 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.TagsAdapter;
-import org.digitalcampus.oppia.application.MobileLearning;
 import org.digitalcampus.oppia.listener.APIRequestListener;
 import org.digitalcampus.oppia.model.Tag;
 import org.digitalcampus.oppia.model.TagRepository;
@@ -67,7 +66,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 		setContentView(R.layout.activity_download);
 		TextView tagTitle = findViewById(R.id.category_title);
 		tagTitle.setVisibility(View.GONE);
-		initializeDagger();
+		getAppComponent().inject(this);
 
         tags = new ArrayList<>();
         adapterTags = new TagsAdapter(this, tags);
@@ -88,10 +87,6 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
 
 	}
 
-	private void initializeDagger() {
-		MobileLearning app = (MobileLearning) getApplication();
-		app.getComponent().inject(this);
-	}
 	
 	@Override
 	public void onResume(){
