@@ -310,7 +310,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		long userId = db.getUserId(SessionManager.getUsername(ctx));
 		
 		List<Course> courses = db.getAllCourses();
-		ArrayList<v54UpgradeQuizObj> quizzes = new ArrayList<>();
+		ArrayList<V54UpgradeQuizObj> quizzes = new ArrayList<>();
 		
 		for (Course c: courses){
 			try {
@@ -324,7 +324,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 						String quizContent = a.getContents("en");
 						try {
 							JSONObject quizJson = new JSONObject(quizContent);
-							v54UpgradeQuizObj q = new v54UpgradeQuizObj();
+							V54UpgradeQuizObj q = new V54UpgradeQuizObj();
 							q.id = quizJson.getInt("id");
 							q.digest = quizJson.getJSONObject("props").getString("digest");
 							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
@@ -342,7 +342,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 						String quizContent = a.getContents("en");
 						try {
 							JSONObject quizJson = new JSONObject(quizContent);
-							v54UpgradeQuizObj q = new v54UpgradeQuizObj();
+							V54UpgradeQuizObj q = new V54UpgradeQuizObj();
 							q.id = quizJson.getInt("id");
 							q.digest = quizJson.getJSONObject("props").getString("digest");
 							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
@@ -370,10 +370,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				
 				int quizId = jsonData.getInt("quiz_id");
 				
-				v54UpgradeQuizObj currentQuiz = null;
+				V54UpgradeQuizObj currentQuiz = null;
 				
 				// find the relevant quiz in quizzes
-				for (v54UpgradeQuizObj tmpQuiz: quizzes){
+				for (V54UpgradeQuizObj tmpQuiz: quizzes){
 					if (tmpQuiz.id == quizId){
 						currentQuiz = tmpQuiz;
 						break;
@@ -420,8 +420,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	private void overrideAdminPasswordTask(){
 		if (BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION == BuildConfig.VERSION_CODE){
 			String overrideConfig = "password_overriden_" + BuildConfig.VERSION_CODE;
-			boolean already_overriden = prefs.getBoolean(overrideConfig, false);
-			if (!already_overriden){
+			boolean alreadyOverriden = prefs.getBoolean(overrideConfig, false);
+			if (!alreadyOverriden){
 				publishProgress(ctx.getString(R.string.info_override_password));
 				prefs.edit()
 					.putString(PrefsActivity.PREF_ADMIN_PASSWORD, BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD)
@@ -432,7 +432,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 
 	}
 	
-	private class v54UpgradeQuizObj{
+	private class V54UpgradeQuizObj {
 		private int id;
 		private String digest;
 		private int threshold;

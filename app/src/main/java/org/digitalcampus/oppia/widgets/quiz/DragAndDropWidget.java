@@ -27,7 +27,8 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.DragAndDrop;
 
 public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserver.OnGlobalLayoutListener {
 
-    private ViewGroup draggablesContainer, dropsContainer;
+    private ViewGroup draggablesContainer;
+    private ViewGroup dropsContainer;
 
     private List<Dropzone> dropzones = new ArrayList<>();
     private List<Draggable> draggables = new ArrayList<>();
@@ -35,7 +36,9 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
 
 
 
-    private int backgroundWidth = 0, maxDragWidth = 0, maxDragHeight = 0;
+    private int backgroundWidth = 0;
+    private int maxDragWidth = 0;
+    private int maxDragHeight = 0;
 
     public DragAndDropWidget(Activity activity, View v, ViewGroup container, QuizQuestion q, String courseLocation) {
         super(activity, v, container, R.layout.widget_quiz_dragandrop);
@@ -259,8 +262,8 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
 
     class Dropzone extends FrameLayout {
 
-        private static final int activeState = R.drawable.dropzone_active;
-        private static final int hoverState = R.drawable.dropzone_hover;
+        private static final int ACTIVE_STATE = R.drawable.dropzone_active;
+        private static final int HOVER_STATE = R.drawable.dropzone_hover;
 
         private String dragSolution;
         private int topY;
@@ -318,15 +321,15 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
 
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
-                    setBackgroundResource(activeState);
+                    setBackgroundResource(ACTIVE_STATE);
                     return true;
 
                 case DragEvent.ACTION_DRAG_ENTERED:
-                    setBackgroundResource(hoverState);
+                    setBackgroundResource(HOVER_STATE);
                     return true;
 
                 case DragEvent.ACTION_DRAG_EXITED:
-                    setBackgroundResource(activeState);
+                    setBackgroundResource(ACTIVE_STATE);
                     return true;
 
                 case DragEvent.ACTION_DROP:

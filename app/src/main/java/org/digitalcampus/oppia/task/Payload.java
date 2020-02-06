@@ -27,7 +27,7 @@ import java.util.List;
 
 public class Payload {
 
-	protected final String TAG = this.getClass().getSimpleName();
+	protected static final String TAG = Payload.class.getSimpleName();
 	private List<?> data;
 	private boolean result = false;
 	private String resultResponse;

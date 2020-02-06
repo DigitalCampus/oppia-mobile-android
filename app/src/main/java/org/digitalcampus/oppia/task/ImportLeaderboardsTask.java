@@ -48,12 +48,12 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
 
         int updatedPositions = 0;
         if (children != null) {
-            for (final String leaderboard_file : children) {
+            for (final String leaderboardFile : children) {
 
-                File json_file = new File(dir, leaderboard_file);
-                if (json_file.exists()){
+                File jsonFile = new File(dir, leaderboardFile);
+                if (jsonFile.exists()){
                     try {
-                        String json = FileUtils.readFile(json_file);
+                        String json = FileUtils.readFile(jsonFile);
                         updatedPositions += Leaderboard.importLeaderboardJSON(ctx, json);
                     } catch (IOException e) {
                         Mint.logException(e);
@@ -69,7 +69,7 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                         Log.d(TAG, "WrongServerException: ", e);
                     }
 
-                    FileUtils.deleteFile(json_file);
+                    FileUtils.deleteFile(jsonFile);
                 }
             }
         }

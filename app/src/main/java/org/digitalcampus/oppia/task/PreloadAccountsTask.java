@@ -44,7 +44,7 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
 
     private static final String CSV_SEPARATOR = ",";
     private static final String CSV_USERNAME_COLUMN = "username";
-    private static final String CSV_PASSWORD_COLUMN = "password"; //NOSONAR
+    private static final String CSV_PASSWORD_COLUMN = "password";
     private static final String CSV_APIKEY_COLUMN = "apikey";
     private static final String CSV_EMAIL_COLUMN = "email";
     private static final String CSV_FIRSTNAME_COLUMN = "first_name";
@@ -67,8 +67,12 @@ public class PreloadAccountsTask extends AsyncTask<Payload, DownloadProgress, Pa
                 String line;
                 reader = new BufferedReader(new FileReader(csvAccounts));
                 DbHelper db = DbHelper.getInstance(ctx);
-                int usernameColumn = -1, apikeyColumn = -1, passwordColumn = -1;
-                int emailColumn = -1, firstNameColumn = -1, lastNameColumn = -1;
+                int usernameColumn = -1;
+                int apikeyColumn = -1;
+                int passwordColumn = -1;
+                int emailColumn = -1;
+                int firstNameColumn = -1;
+                int lastNameColumn = -1;
                 int usersAdded = 0;
 
                 line = reader.readLine(); //We read first line to get headers

@@ -147,7 +147,8 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         	quizzes.add(qs);
         }
 
-        int quizzesAttempted = 0, quizzesPassed = 0;
+        int quizzesAttempted = 0;
+        int quizzesPassed = 0;
 
         for (QuizStats qs: quizzes){
         	if (qs.isAttempted()){

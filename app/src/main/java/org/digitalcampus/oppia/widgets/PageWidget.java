@@ -104,7 +104,7 @@ public class PageWidget extends WidgetFactory {
             //We inject the interface to launch intents from the HTML
             wv.addJavascriptInterface(
                     new JSInterfaceForResourceImages(this.getActivity(), course.getLocation()),
-                    JSInterfaceForResourceImages.InterfaceExposedName);
+                    JSInterfaceForResourceImages.INTERFACE_EXPOSED_NAME);
 
 			wv.loadDataWithBaseURL("file://" + course.getLocation() + File.separator, FileUtils.readFile(url), "text/html", "utf-8", null);
 		} catch (IOException e) {
@@ -117,7 +117,7 @@ public class PageWidget extends WidgetFactory {
             @Override
             public void onPageFinished(WebView view, String url) {
                 //We execute the necessary JS code to bind click on images with our JavascriptInterface
-                view.loadUrl(JSInterfaceForResourceImages.JSInjection);
+                view.loadUrl(JSInterfaceForResourceImages.JS_INJECTION);
             }
 
             // set up the page to intercept videos

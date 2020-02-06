@@ -65,9 +65,9 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
     private static final int DURATION_CHART_Y_VALUES_ANIMATION = 1000;
 
-    private final int POSITION_TAB_LAST_WEEK = 0;
-    private final int POSITION_TAB_LAST_MONTH = 1;
-    private final int POSITION_TAB_LAST_YEAR = 2;
+    private static final int POSITION_TAB_LAST_WEEK = 0;
+    private static final int POSITION_TAB_LAST_MONTH = 1;
+    private static final int POSITION_TAB_LAST_YEAR = 2;
 
     @Inject
     List<Points> pointsFull;

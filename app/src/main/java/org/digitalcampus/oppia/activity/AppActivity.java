@@ -69,7 +69,7 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 
-    protected final String TAG = this.getClass().getSimpleName();
+    protected static final String TAG = AppActivity.class.getSimpleName();
 
     GamificationBroadcastReceiver gamificationReceiver;
     private Menu optionsMenu;

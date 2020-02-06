@@ -54,8 +54,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     private static final int REQUEST_ENABLE_BT = 3;
     private static final int BLUETOOTH_DISCOVERABLE_TIME = 300;
 
-    private final int TAB_ACTIVITYLOGS = 0;
-    private final int TAB_COURSES = 1;
+    private static final int TAB_ACTIVITYLOGS = 0;
+    private static final int TAB_COURSES = 1;
 
     private RecyclerView coursesRecyclerView;
     private RecyclerView.Adapter coursesAdapter;
@@ -293,8 +293,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
     }
 
-    private void setStatus(int status_title, String connectedDevice) {
-        statusTitle.setText(status_title);
+    private void setStatus(int statusTitle, String connectedDevice) {
+        this.statusTitle.setText(statusTitle);
         if (connectedDevice == null){
             statusSubtitle.setText(R.string.bluetooth_no_device_connected);
             notConnectedInfo.setVisibility(View.VISIBLE);
