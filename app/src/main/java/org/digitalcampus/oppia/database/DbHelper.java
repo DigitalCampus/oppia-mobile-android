@@ -17,15 +17,17 @@
 
 package org.digitalcampus.oppia.database;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
+import android.provider.BaseColumns;
+import android.util.Log;
+
+import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -39,13 +41,13 @@ import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
-import org.digitalcampus.oppia.model.LeaderboardPosition;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
 import org.digitalcampus.oppia.model.SearchResult;
 import org.digitalcampus.oppia.model.TrackerLog;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.utils.DateUtils;
@@ -54,19 +56,15 @@ import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.preference.PreferenceManager;
-import android.provider.BaseColumns;
-import android.util.Log;
-import android.util.Pair;
-
-import com.splunk.mint.Mint;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -193,7 +191,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String USER_PREFS_C_PREFKEY = "preference";
     private static final String USER_PREFS_C_PREFVALUE = "value";
 
-	private static final String LEADERBOARD_TABLE = "leaderboard";
+	public static final String LEADERBOARD_TABLE = "leaderboard";
 	private static final String LEADERBOARD_C_USERNAME = "username";
 	private static final String LEADERBOARD_C_FULLNAME = "fullname";
 	private static final String LEADERBOARD_C_POINTS = "points";
@@ -2225,23 +2223,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		return updated;
 	}
 
-	public List<LeaderboardPosition> getLeaderboard(){
-        ArrayList<LeaderboardPosition> leaderboard = new ArrayList<>();
-        String order = LEADERBOARD_C_POINTS + " DESC ";
-        Cursor c = db.query(LEADERBOARD_TABLE, null, null, null, null, null, order);
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            LeaderboardPosition pos = new LeaderboardPosition();
-            pos.setUsername(c.getString(c.getColumnIndex(LEADERBOARD_C_USERNAME)));
-            pos.setFullname(c.getString(c.getColumnIndex(LEADERBOARD_C_FULLNAME)));
-            pos.setPoints(c.getInt(c.getColumnIndex(LEADERBOARD_C_POINTS)));
-            leaderboard.add(pos);
-            c.moveToNext();
-        }
-
-        c.close();
-        return leaderboard;
-    }
 
 
     // METHODS PREPARED TO COMPLETELY REMOVE
@@ -2295,7 +2276,13 @@ public class DbHelper extends SQLiteOpenHelper {
 //        return prefValue;
 //    }
 
+
     // METHODS FOR DB ROOM MIGRATION
+
+	public void dropTable(String table) {
+		db.execSQL("drop table if exists " + table);
+	}
+
 
 	public List<UserPreference> getAllUserPreferences(){
 		List<UserPreference> userPreferences = new ArrayList<>();
@@ -2315,7 +2302,21 @@ public class DbHelper extends SQLiteOpenHelper {
 		return userPreferences;
 	}
 
-	public void dropTable(String table) {
-		db.execSQL("drop table if exists " + table);
+	public List<Leaderboard> getLeaderboardList(){
+		ArrayList<Leaderboard> leaderboard = new ArrayList<>();
+		Cursor c = db.query(LEADERBOARD_TABLE, null, null, null, null, null, null);
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			Leaderboard leaderboardItem = new Leaderboard();
+			leaderboardItem.setUsername(c.getString(c.getColumnIndex(LEADERBOARD_C_USERNAME)));
+			leaderboardItem.setFullname(c.getString(c.getColumnIndex(LEADERBOARD_C_FULLNAME)));
+			leaderboardItem.setPoints(c.getInt(c.getColumnIndex(LEADERBOARD_C_POINTS)));
+			leaderboardItem.setLastupdateStr(c.getString(c.getColumnIndex(LEADERBOARD_C_LASTUPDATE)));
+			leaderboard.add(leaderboardItem);
+			c.moveToNext();
+		}
+
+		c.close();
+		return leaderboard;
 	}
 }

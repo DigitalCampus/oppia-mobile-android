@@ -11,14 +11,14 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.model.LeaderboardPosition;
+import org.digitalcampus.oppia.model.db_model.Leaderboard;
 
 import java.util.List;
 import java.util.Locale;
 
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
 
-    private List<LeaderboardPosition> leaderboard;
+    private List<Leaderboard> leaderboard;
     private int highlightBgColor;
     private int normalBgColor;
     private int highlightTextColor;
@@ -43,7 +43,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     }
 
 
-    public LeaderboardAdapter(Context ctx, List<LeaderboardPosition> leaderboard){
+    public LeaderboardAdapter(Context ctx, List<Leaderboard> leaderboard) {
         this.leaderboard = leaderboard;
         normalBgColor = ContextCompat.getColor(ctx, R.color.text_light);
         highlightBgColor = ContextCompat.getColor(ctx, R.color.theme_secondary_light);
@@ -61,17 +61,16 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        LeaderboardPosition pos = leaderboard.get(position);
+        Leaderboard pos = leaderboard.get(position);
         holder.fullname.setText(pos.getFullname());
         holder.username.setText(pos.getUsername());
         holder.points.setText(String.format(Locale.getDefault(), "%d", pos.getPoints()));
         holder.pos.setText(String.format(Locale.getDefault(), "%d", (position + 1)));
 
-        if (pos.isUser()){
+        if (pos.isUser()) {
             holder.userCard.setCardBackgroundColor(highlightBgColor);
             holder.fullname.setTextColor(highlightTextColor);
-        }
-        else{
+        } else {
             holder.userCard.setCardBackgroundColor(normalBgColor);
             holder.fullname.setTextColor(normalTextColor);
         }

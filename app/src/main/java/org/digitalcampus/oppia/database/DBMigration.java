@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteException;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
+import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import javax.inject.Inject;
 
 public class DBMigration {
 
-    public static final int DATA_MIGRATION_LAST_VERSION = 1;
+    public static final int DATA_MIGRATION_LAST_VERSION = 2;
 
     private final Context context;
 
@@ -61,17 +62,27 @@ public class DBMigration {
             copyUserCustomFieldsData(dbHelper);
         }
 
+        if (currentVersion < 2) {
+            copyLeaderboardData(dbHelper);
+        }
+
+    }
+
+    private void copyLeaderboardData(DbHelper dbHelper) {
+
+        List<Leaderboard> leaderboardList = dbHelper.getLeaderboardList();
+        App.getDb().leaderboardDao().insertAll(leaderboardList);
+        dbHelper.dropTable(DbHelper.LEADERBOARD_TABLE);
+
     }
 
 
     private static void copyUserPreferencesData(DbHelper dbHelper) throws SQLiteException {
-        try {
-            List<UserPreference> userPreferences = dbHelper.getAllUserPreferences();
-            App.getDb().userPreferenceDao().insertAll(userPreferences);
-            dbHelper.dropTable(DbHelper.USER_PREFS_TABLE);
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-        }
+
+        List<UserPreference> userPreferences = dbHelper.getAllUserPreferences();
+        App.getDb().userPreferenceDao().insertAll(userPreferences);
+        dbHelper.dropTable(DbHelper.USER_PREFS_TABLE);
+
     }
 
     private static void copyUserCustomFieldsData(DbHelper dbHelper) {
