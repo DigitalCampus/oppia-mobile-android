@@ -8,8 +8,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import org.digitalcampus.oppia.database.converters.TimestampConverter;
-
-import java.util.Date;
+import org.joda.time.DateTime;
 
 @Entity(tableName = "leaderboard")
 public class Leaderboard  implements Comparable<Leaderboard>{
@@ -23,11 +22,30 @@ public class Leaderboard  implements Comparable<Leaderboard>{
     private Integer points = 0;
 
     @TypeConverters(TimestampConverter.class)
-    private Date lastupdate = new Date();
+    private DateTime lastupdate = new DateTime();
 
     @Ignore
     private boolean isUser;
 
+
+    @Ignore
+    public Leaderboard(@NonNull String username, String fullname, Integer points, DateTime lastupdate) {
+        this.username = username;
+        this.fullname = fullname;
+        this.points = points;
+        this.lastupdate = lastupdate;
+    }
+
+    @Ignore
+    public Leaderboard(@NonNull String username, String fullname, Integer points, String lastupdateStr) {
+        this.username = username;
+        this.fullname = fullname;
+        this.points = points;
+        setLastupdateStr(lastupdateStr);
+    }
+
+    public Leaderboard() {
+    }
 
     @Override
     public int compareTo(@NonNull Leaderboard other) {
@@ -77,11 +95,11 @@ public class Leaderboard  implements Comparable<Leaderboard>{
         this.points = points;
     }
 
-    public Date getLastupdate() {
+    public DateTime getLastupdate() {
         return lastupdate;
     }
 
-    public void setLastupdate(Date lastupdate) {
+    public void setLastupdate(DateTime lastupdate) {
         this.lastupdate = lastupdate;
     }
 

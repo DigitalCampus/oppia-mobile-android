@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.model.db_model.Leaderboard;
+import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
 
 public class DBMigration {
 
-    public static final int DATA_MIGRATION_LAST_VERSION = 2;
+    public static final int DATA_MIGRATION_LAST_VERSION = 1;
 
     private final Context context;
 
@@ -34,7 +35,8 @@ public class DBMigration {
     }
 
     /**
-     * For new Room database migration. If there is new data prepared to migrate, proper method will be called
+     * For new Room database migration. If there is new data prepared to migrate, increment DATA_MIGRATION_LAST_VERSION
+     * and add corresponding data migration function
      */
     public void checkMigrationStatus() {
 
@@ -59,11 +61,14 @@ public class DBMigration {
 
         if (currentVersion < 1) {
             copyUserPreferencesData(dbHelper);
+            copyLeaderboardData(dbHelper);
             copyUserCustomFieldsData(dbHelper);
         }
 
         if (currentVersion < 2) {
-            copyLeaderboardData(dbHelper);
+        }
+
+        if (currentVersion < 3) {
         }
 
     }
@@ -87,5 +92,8 @@ public class DBMigration {
 
     private static void copyUserCustomFieldsData(DbHelper dbHelper) {
 
+        List<UserCustomField> userCustomFields = dbHelper.getUserCustomFields();
+        App.getDb().userCustomFieldDao().insertAll(userCustomFields);
+        dbHelper.dropTable(DbHelper.USER_CF_TABLE);
     }
 }

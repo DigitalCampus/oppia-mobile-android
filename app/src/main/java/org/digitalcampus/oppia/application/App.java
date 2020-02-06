@@ -132,7 +132,6 @@ public class App extends Application {
 
         DbHelper.getInstance(this).getReadableDatabase();
 
-
 //        App.getDb().userCustomFieldDao().getAll();
 
 

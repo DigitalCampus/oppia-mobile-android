@@ -14,4 +14,7 @@ public interface LeaderboardDao extends BaseDao<Leaderboard> {
     @Query("SELECT * FROM leaderboard")
     List<Leaderboard> getAll();
 
+    @Query("SELECT * FROM leaderboard WHERE username = :username")
+    Leaderboard getLeaderboard(String username);
+
 }

@@ -13,18 +13,28 @@ public interface BaseDao<T> {
     @Insert(onConflict = REPLACE)
     void insertAll(List<T> list);
 
+    /**
+     * If the item is replaced, a new _id will be assigned automatically. It is internally a delete/insert operation
+     * @return the row id assigned
+     */
     @Insert(onConflict = REPLACE)
-    void insert(T item);
+    long insert(T item);
 
+    /**
+     * @return number of rows updated (1 or 0)
+     */
     @Update
-    void update(T item);
+    int update(T... item);
 
+    /**
+     * @return number of rows updated
+     */
     @Update
-    void updateAll(List<T> list);
+    int updateAll(List<T> list);
 
     @Delete
-    void delete(T item);
+    int delete(T... item);
 
     @Delete
-    void deleteAll(List<T> list);
+    int deleteAll(List<T> list);
 }

@@ -18,16 +18,16 @@ public class UserCustomField {
     private @NonNull String fieldKey;
 
     @ColumnInfo(name = "value_str")
-    private @NonNull String valueStr;
+    private String valueStr;
 
     @ColumnInfo(name = "value_int")
-    private @NonNull Integer valueInt;
+    private Integer valueInt;
 
     @ColumnInfo(name = "value_bool")
-    private @NonNull Boolean valueBool;
+    private Boolean valueBool;
 
     @ColumnInfo(name = "value_float")
-    private @NonNull Float valueFloat;
+    private Float valueFloat;
 
 
     public long getId() {

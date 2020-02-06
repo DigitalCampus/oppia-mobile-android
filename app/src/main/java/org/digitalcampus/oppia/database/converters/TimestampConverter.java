@@ -2,26 +2,23 @@ package org.digitalcampus.oppia.database.converters;
 
 import androidx.room.TypeConverter;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.digitalcampus.oppia.utils.DateUtils;
+import org.joda.time.DateTime;
 
 public class TimestampConverter {
-    static DateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @TypeConverter
-    public static Date fromTimestamp(String value) {
+    public static DateTime fromTimestamp(String value) {
         try {
-            return value == null ? null : datetimeFormat.parse(value);
-        } catch (ParseException e) {
+            return value == null ? null : DateUtils.DATETIME_FORMAT.parseDateTime(value);
+        } catch (UnsupportedOperationException e) {
             return null;
         }
     }
 
     @TypeConverter
-    public static String toTimestamp(Date date) {
-        return datetimeFormat.format(date);
+    public static String toTimestamp(DateTime dateTime) {
+        return DateUtils.DATETIME_FORMAT.print(dateTime);
     }
 
 }
