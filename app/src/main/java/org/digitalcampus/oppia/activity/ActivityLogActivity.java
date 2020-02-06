@@ -158,7 +158,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
         submittedTrackers.setText(NumberFormat.getNumberInstance().format(db.getSentTrackersCount()));
 
         Log.d(TAG, "files " + files.size());
-        submitBtn.setEnabled((unsent > 0) || files.size() > 0);
+        submitBtn.setEnabled((unsent > 0) || !files.isEmpty());
         exportBtn.setEnabled((unexported > 0));
 
     }
@@ -201,7 +201,7 @@ public class ActivityLogActivity extends AppActivity implements TrackerServiceLi
             msg = getString(success ?  R.string.submit_trackers_success : R.string.error_connection);
         }
 
-        if (failures.size() > 0){
+        if (!failures.isEmpty()){
             msg += "\nErrors: \n";
             msg += TextUtils.join("\n", failures);
         }

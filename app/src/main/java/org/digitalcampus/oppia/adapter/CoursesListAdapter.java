@@ -57,8 +57,7 @@ public class CoursesListAdapter extends RecyclerView.Adapter<CoursesListAdapter.
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_course_list, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 

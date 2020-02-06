@@ -314,8 +314,6 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
         if (optionsMenu != null && optionsMenu.findItem(R.id.points) != null) {
 
-            AnimatorSet animXY = new AnimatorSet();
-
             ObjectAnimator animY = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "y",
                     tvGamificationNotifPoints.getTop(), 50);
             animY.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -330,7 +328,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
             ObjectAnimator animX = ObjectAnimator.ofFloat(tvGamificationNotifPoints, "x",
                     tvGamificationNotifPoints.getLeft(), itemX);
 
-            animXY = new AnimatorSet();
+            AnimatorSet animXY = new AnimatorSet();
             animXY.playTogether(animX, animY);
             animXY.setDuration(1200);
 

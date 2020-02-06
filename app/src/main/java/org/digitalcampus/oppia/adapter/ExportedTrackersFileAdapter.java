@@ -94,12 +94,12 @@ public class ExportedTrackersFileAdapter extends RecyclerView.Adapter<ExportedTr
     public void onBindViewHolder(EtfaViewHolder holder, int position) {
         File current = fileList.get(position);
         String filename = current.getName();
-        String username = filename.substring(0, filename.indexOf("_"));
+        String username = filename.substring(0, filename.indexOf('_'));
         if (username.equals("activity")){
             username = "Multiple users";
         }
         DateTimeFormatter f = DateTimeFormat.forPattern("yyyyMMddHHmm");
-        DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf("_")+1, filename.lastIndexOf('.')));
+        DateTime dateTime = f.parseDateTime(filename.substring(filename.lastIndexOf('_')+1, filename.lastIndexOf('.')));
         String date = DateUtils.DISPLAY_DATETIME_FORMAT.print(dateTime);
 
         holder.fileName.setText(username);

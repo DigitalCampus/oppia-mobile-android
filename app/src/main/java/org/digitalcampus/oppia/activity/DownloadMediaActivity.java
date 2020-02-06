@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -69,7 +68,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
     private SharedPreferences prefs;
     private ArrayList<Media> missingMedia;
-//    private DownloadMediaListAdapter dmla;
     private DownloadBroadcastReceiver receiver;
     Button downloadViaPCBtn;
     private TextView emptyState;
@@ -78,7 +76,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     private View missingMediaContainer;
     private RecyclerView recyclerMedia;
     private ArrayList<Media> mediaSelected;
-    private ActionMode actionMode;
     private DownloadMediaAdapter adapterMedia;
     private MultiChoiceHelper multiChoiceHelper;
 
@@ -189,19 +186,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             @Override
             public boolean onActionItemClicked(androidx.appcompat.view.ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
-//                    case R.id.menu_sort_by:
-//                        if (isSortByCourse) {
-////                            dmla.sortByFilename();
-//                            isSortByCourse = false;
-//                            item.setTitle(getString(R.string.menu_sort_by_course));
-//                        } else {
-////                            dmla.sortByCourse();
-//                            isSortByCourse = true;
-//                            item.setTitle(getString(R.string.menu_sort_by_filename));
-//                        }
-//                        invalidateOptionsMenu();
-//                        return true;
-
                     case R.id.menu_select_all:
                         for (int i = 0; i < adapterMedia.getItemCount(); i++) {
                             if (!multiChoiceHelper.isItemChecked(i)) {
@@ -265,8 +249,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
     public void onResume() {
         super.onResume();
         if ((missingMedia != null) && !missingMedia.isEmpty()) {
-            //We already have loaded media (coming from orientationchange)
-//            dmla.sortByFilename();
+            // We already have loaded media (coming from orientation change)
             isSortByCourse = false;
             adapterMedia.notifyDataSetChanged();
             emptyState.setVisibility(View.GONE);
@@ -530,7 +513,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-//                recyclerMedia.setSelectionAfterHeaderView();
             }
         });
         animator.setStartDelay(200);
@@ -550,7 +532,6 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
             //@Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 recyclerMedia.setPadding(0, (Integer) valueAnimator.getAnimatedValue(), 0, 0);
-//                recyclerMedia.setSelectionAfterHeaderView();
             }
         });
         animator.setStartDelay(0);

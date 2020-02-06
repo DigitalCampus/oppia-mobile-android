@@ -107,13 +107,6 @@ public class CourseXMLReader {
 
     private void parseComplete() throws ParserConfigurationException, SAXException, IOException {
 
-//        SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
-//
-//        XMLSecurityHelper.makeParserSecure(parserFactory);
-//
-//        SAXParser parser = parserFactory.newSAXParser();
-//        reader = parser.getXMLReader();
-
         DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
         completeParseHandler = new CourseXMLHandler(courseId, userId, db);

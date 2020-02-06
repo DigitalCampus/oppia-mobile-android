@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.widgets;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,7 +45,6 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.MultiSelect;
 import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
-import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.Gamification;
@@ -65,7 +63,6 @@ import org.digitalcampus.oppia.widgets.quiz.ShortAnswerWidget;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class FeedbackWidget extends WidgetFactory {
 

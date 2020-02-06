@@ -172,7 +172,7 @@ public class DragAndDropWidget extends QuestionWidget implements ViewTreeObserve
             if (response != null)
                 userResponses.add(response);
         }
-        return (userResponses.size() > 0 ? userResponses : null);
+        return (!userResponses.isEmpty() ? userResponses : null);
     }
 
     @Override

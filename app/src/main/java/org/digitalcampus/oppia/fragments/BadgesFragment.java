@@ -92,7 +92,6 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			this.getView().findViewById(R.id.error_state).setVisibility(View.GONE);
 
 			if(json.getJSONArray("objects").length() == 0){
-				//tv.setText(R.string.info_no_badges);
 				this.getView().findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
 				return;
 			}
