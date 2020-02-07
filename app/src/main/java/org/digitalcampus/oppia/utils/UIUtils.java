@@ -187,12 +187,12 @@ public class UIUtils {
 
     /**
      * @param ctx
-     * @param Res
+     * @param res
      * @param msg
      * @return
      */
-    public static AlertDialog showAlert(Context ctx, int Res, String msg) {
-        return UIUtils.showAlert(ctx, ctx.getString(Res), msg, ctx.getString(R.string.close));
+    public static AlertDialog showAlert(Context ctx, int res, String msg) {
+        return UIUtils.showAlert(ctx, ctx.getString(res), msg, ctx.getString(R.string.close));
     }
 
     public static AlertDialog showAlert(Context ctx, String title, String msg) {
@@ -236,13 +236,13 @@ public class UIUtils {
 
     /**
      * @param ctx
-     * @param R
+     * @param res
      * @param msg
      * @param funct
      * @return
      */
-    public static void showAlert(Context ctx, int R, CharSequence msg, Callable<Boolean> funct) {
-        UIUtils.showAlert(ctx, ctx.getString(R), msg, funct);
+    public static void showAlert(Context ctx, int res, CharSequence msg, Callable<Boolean> funct) {
+        UIUtils.showAlert(ctx, ctx.getString(res), msg, funct);
     }
 
     public static void showAlert(Context ctx, String title, CharSequence msg, final Callable<Boolean> funct) {

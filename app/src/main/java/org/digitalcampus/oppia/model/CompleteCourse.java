@@ -24,12 +24,13 @@ import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.utils.xmlreaders.IMediaXMLHandler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CompleteCourse extends Course implements IMediaXMLHandler{
 
-    private ArrayList<Activity> baseline = new ArrayList<>();
-    private ArrayList<Section> sections = new ArrayList<>();
-    private ArrayList<GamificationEvent> gamification = new ArrayList<>();
+    private List<Activity> baseline = new ArrayList<>();
+    private List<Section> sections = new ArrayList<>();
+    private List<GamificationEvent> gamification = new ArrayList<>();
 
     public CompleteCourse(){
         super("");
@@ -38,17 +39,17 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
         super(root);
     }
 
-    public void setBaselineActivities(ArrayList<Activity> baseline) {
+    public void setBaselineActivities(List<Activity> baseline) {
         this.baseline = baseline;
     }
-    public ArrayList<Activity> getBaselineActivities() {
+    public List<Activity> getBaselineActivities() {
         return baseline;
     }
 
-    public void setSections(ArrayList<Section> sections) { this.sections = sections; }
-    public void setGamification(ArrayList<GamificationEvent> gamification) { this.gamification = gamification; }
+    public void setSections(List<Section> sections) { this.sections = sections; }
+    public void setGamification(List<GamificationEvent> gamification) { this.gamification = gamification; }
 
-    public ArrayList<Section> getSections() {
+    public List<Section> getSections() {
         return sections;
     }
 
@@ -77,7 +78,7 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
         return null;
     }
 
-    public ArrayList<GamificationEvent> getGamification() {
+    public List<GamificationEvent> getGamification() {
         return gamification;
     }
 
@@ -97,7 +98,7 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
     }
 
 
-    public ArrayList<Activity> getActivities(long courseId) {
+    public List<Activity> getActivities(long courseId) {
         ArrayList<Activity> activities = new ArrayList<>();
         for (Section section : sections){
             for (Activity act : section.getActivities()){
@@ -109,7 +110,7 @@ public class CompleteCourse extends Course implements IMediaXMLHandler{
     }
 
     @Override
-    public ArrayList<Media> getCourseMedia() {
+    public List<Media> getCourseMedia() {
         return getMedia();
     }
 }

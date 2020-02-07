@@ -78,7 +78,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
                 try {
                     cxr = new CourseXMLReader(course.getCourseXMLLocation(), course.getCourseId(), ctx);
                     cxr.parse(CourseXMLReader.ParseMode.ONLY_MEDIA);
-                    ArrayList<Media> media = cxr.getMediaResponses().getCourseMedia();
+                    ArrayList<Media> media = (ArrayList<Media>) cxr.getMediaResponses().getCourseMedia();
                     for(Media m: media){
                         courseRelatedMedia.add(m.getFilename());
                     }
@@ -118,7 +118,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
             CourseTransferableFile log = new CourseTransferableFile();
             log.setFilename(file.getName());
             log.setFile(file);
-            log.setTitle(filename.substring(0, filename.indexOf("_")));
+            log.setTitle(filename.substring(0, filename.indexOf('_')));
             log.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
             log.setFileSize(file.length());
             log.setShortname("");

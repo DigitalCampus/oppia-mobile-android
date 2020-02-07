@@ -38,7 +38,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         return new LeaderboardFragment();
     }
 
-    RecyclerView leaderboard_view;
+    RecyclerView leaderboardView;
     TextView rankingPosition;
     TextView totalPoints;
     ProgressBar loadingSpinner;
@@ -53,7 +53,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vv = inflater.inflate(R.layout.fragment_leaderboard, container, false);
 
-        leaderboard_view = vv.findViewById(R.id.list_leaderboard);
+        leaderboardView = vv.findViewById(R.id.list_leaderboard);
         rankingPosition = vv.findViewById(R.id.tv_ranking);
         totalPoints= vv.findViewById(R.id.tv_total_points);
 
@@ -70,8 +70,8 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         leaderboard = new ArrayList<>();
 
         adapter = new LeaderboardAdapter(this.getContext(), leaderboard);
-        leaderboard_view.setLayoutManager( new LinearLayoutManager(this.getContext()));
-        leaderboard_view.setAdapter(adapter);
+        leaderboardView.setLayoutManager( new LinearLayoutManager(this.getContext()));
+        leaderboardView.setAdapter(adapter);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (LeaderboardUtils.shouldFetchLeaderboard(prefs)){
@@ -117,7 +117,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         adapter.notifyDataSetChanged();
 
         loadingSpinner.setVisibility(View.GONE);
-        leaderboard_view.setVisibility(View.VISIBLE);
+        leaderboardView.setVisibility(View.VISIBLE);
     }
 
     @Override

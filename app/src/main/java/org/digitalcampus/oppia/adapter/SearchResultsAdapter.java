@@ -48,8 +48,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_search_results, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 

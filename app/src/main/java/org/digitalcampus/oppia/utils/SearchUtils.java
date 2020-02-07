@@ -48,7 +48,7 @@ public class SearchUtils {
 	}
 
     public static void indexAddCourse(Context ctx, Course course, CompleteCourse parsedCourse){
-        ArrayList<Activity> activities = parsedCourse.getActivities(course.getCourseId());
+        ArrayList<Activity> activities = (ArrayList<Activity>) parsedCourse.getActivities(course.getCourseId());
         DbHelper db = DbHelper.getInstance(ctx);
 
         db.beginTransaction();

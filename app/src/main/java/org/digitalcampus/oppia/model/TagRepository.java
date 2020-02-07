@@ -52,26 +52,26 @@ public class TagRepository {
     public void refreshTagList(ArrayList<Tag> tags, JSONObject json) throws JSONException{
 
         for (int i = 0; i < (json.getJSONArray(JSON_PROPERTY_TAGS).length()); i++) {
-            JSONObject json_obj = (JSONObject) json.getJSONArray(JSON_PROPERTY_TAGS).get(i);
+            JSONObject jsonObj = (JSONObject) json.getJSONArray(JSON_PROPERTY_TAGS).get(i);
             Tag t = new Tag();
-            t.setName(json_obj.getString(JSON_PROPERTY_NAME));
-            t.setId(json_obj.getInt(JSON_PROPERTY_ID));
-            t.setCount(json_obj.getInt(JSON_PROPERTY_COUNT));
+            t.setName(jsonObj.getString(JSON_PROPERTY_NAME));
+            t.setId(jsonObj.getInt(JSON_PROPERTY_ID));
+            t.setCount(jsonObj.getInt(JSON_PROPERTY_COUNT));
             // Description
-            if (json_obj.has(JSON_PROPERTY_DESCRIPTION) && !json_obj.isNull(JSON_PROPERTY_DESCRIPTION)){
-                t.setDescription(json_obj.getString(JSON_PROPERTY_DESCRIPTION));
+            if (jsonObj.has(JSON_PROPERTY_DESCRIPTION) && !jsonObj.isNull(JSON_PROPERTY_DESCRIPTION)){
+                t.setDescription(jsonObj.getString(JSON_PROPERTY_DESCRIPTION));
             }
             // icon
-            if (json_obj.has(JSON_PROPERTY_ICON) && !json_obj.isNull(JSON_PROPERTY_ICON)){
-                t.setIcon(json_obj.getString(JSON_PROPERTY_ICON));
+            if (jsonObj.has(JSON_PROPERTY_ICON) && !jsonObj.isNull(JSON_PROPERTY_ICON)){
+                t.setIcon(jsonObj.getString(JSON_PROPERTY_ICON));
             }
             // highlight
-            if (json_obj.has(JSON_PROPERTY_HIGHLIGHT) && !json_obj.isNull(JSON_PROPERTY_HIGHLIGHT)){
-                t.setHighlight(json_obj.getBoolean(JSON_PROPERTY_HIGHLIGHT));
+            if (jsonObj.has(JSON_PROPERTY_HIGHLIGHT) && !jsonObj.isNull(JSON_PROPERTY_HIGHLIGHT)){
+                t.setHighlight(jsonObj.getBoolean(JSON_PROPERTY_HIGHLIGHT));
             }
             // order priority
-            if (json_obj.has(JSON_PROPERTY_ORDER_PRIORITY) && !json_obj.isNull(JSON_PROPERTY_ORDER_PRIORITY)){
-                t.setOrderPriority(json_obj.getInt(JSON_PROPERTY_ORDER_PRIORITY));
+            if (jsonObj.has(JSON_PROPERTY_ORDER_PRIORITY) && !jsonObj.isNull(JSON_PROPERTY_ORDER_PRIORITY)){
+                t.setOrderPriority(jsonObj.getInt(JSON_PROPERTY_ORDER_PRIORITY));
             }
             tags.add(t);
         }

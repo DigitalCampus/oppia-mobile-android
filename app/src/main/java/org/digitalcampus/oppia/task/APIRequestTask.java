@@ -20,9 +20,9 @@ import org.digitalcampus.oppia.utils.HTTPClientUtils;
 
 import okhttp3.Request;
 
-public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
+public abstract class APIRequestTask<PARAMS, PROGRESS, RESULT> extends AsyncTask<PARAMS, PROGRESS, RESULT> {
 
-    public final String TAG = this.getClass().getSimpleName();
+    public static final String TAG = APIRequestTask.class.getSimpleName();
 
     private APIRequestFinishListener listener;
 
@@ -66,7 +66,7 @@ public abstract class APIRequestTask<Params, Progress, Result> extends AsyncTask
     }
 
     @Override
-    protected void onPostExecute(Result result) {
+    protected void onPostExecute(RESULT result) {
         super.onPostExecute(result);
 
         if (listener != null) {

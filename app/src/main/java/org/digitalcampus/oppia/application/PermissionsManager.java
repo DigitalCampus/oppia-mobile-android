@@ -38,7 +38,7 @@ import java.util.List;
 
 public class PermissionsManager {
 
-    public final static String TAG = PermissionsManager.class.getSimpleName();
+    public static final String TAG = PermissionsManager.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST = 1246;
     private static final List<String> PERMISSIONS_REQUIRED = Arrays.asList(
         //Remember to update this when the Manifest permisssions change!
@@ -56,7 +56,7 @@ public class PermissionsManager {
          prefs.edit().putBoolean(permission + "_asked", true).apply();
     }
 
-    public static boolean CheckPermissionsAndInform(final Activity act){
+    public static boolean checkPermissionsAndInform(final Activity act){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             //If sdk version prior to 23 (Android M), the permissions are granted by manifest
             return true;

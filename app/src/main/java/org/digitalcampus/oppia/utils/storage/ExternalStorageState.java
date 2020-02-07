@@ -4,13 +4,13 @@ import android.os.Environment;
 
 public class ExternalStorageState {
 
-    private static ExternalStorageState _instance = new ExternalStorageState();
+    private static ExternalStorageState externalStorageState = new ExternalStorageState();
 
-    public static String getExternalStorageState(){ return _instance.getState();  }
+    public static String getExternalStorageState(){ return externalStorageState.getState();  }
 
     protected String getState() { return Environment.getExternalStorageState();}
 
     public static void setExternalStorageState(ExternalStorageState state){
-        _instance = state;
+        externalStorageState = state;
     }
 }

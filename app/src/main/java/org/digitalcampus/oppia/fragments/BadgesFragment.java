@@ -92,15 +92,14 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 			this.getView().findViewById(R.id.error_state).setVisibility(View.GONE);
 
 			if(json.getJSONArray("objects").length() == 0){
-				//tv.setText(R.string.info_no_badges);
 				this.getView().findViewById(R.id.empty_state).setVisibility(View.VISIBLE);
 				return;
 			}
 			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
-				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
+				JSONObject jsonObj = (JSONObject) json.getJSONArray("objects").get(i);
 				Badges b = new Badges();
-				b.setDescription(json_obj.getString("description"));
-				b.setDateTime(json_obj.getString("award_date"));
+				b.setDescription(jsonObj.getString("description"));
+				b.setDateTime(jsonObj.getString("award_date"));
 				badges.add(b);
 			}
 

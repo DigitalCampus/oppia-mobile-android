@@ -210,9 +210,6 @@ public class GamificationEngine {
         return new GamificationEvent(Gamification.EVENT_NAME_MEDIA_PLAYED, totalPoints, completed);
     }
 
-
-
-    // TODO GAMIFICATION - allow adding specific points for particular course
     // needs to be able to access the course object at the point the tracker is triggered
     public GamificationEvent processEventCourseDownloaded(){
         return Gamification.GAMIFICATION_COURSE_DOWNLOADED;
@@ -230,7 +227,6 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventResourceActivity(Course course, Activity activity){
-        // TODO GAMIFICATION - add specific event for this - now just using default activity completed
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
@@ -239,12 +235,10 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventResourceStoppedActivity(){
-        // TODO GAMIFICATION - add specific event for this - eg using time taken
         return Gamification.GAMIFICATION_UNDEFINED;
     }
 
     public GamificationEvent processEventFeedbackActivity(Course course, Activity activity){
-        // TODO GAMIFICATION - add specific event for this - now just using default activity completed
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {
@@ -253,7 +247,6 @@ public class GamificationEngine {
     }
 
     public GamificationEvent processEventURLActivity(Course course, Activity activity){
-        // TODO GAMIFICATION - add specific event for this - now just using default activity completed
         try{
             return this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_ACTIVITY_COMPLETED);
         } catch (GamificationEventNotFound genf) {

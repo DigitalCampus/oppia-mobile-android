@@ -174,11 +174,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		super.onPause();
         unregisterReceiver(receiver);
 	}
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-    }
 	
 	@SuppressWarnings("unchecked")
 	@Override

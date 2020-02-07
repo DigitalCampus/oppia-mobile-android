@@ -51,8 +51,7 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_media_download, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 

@@ -54,8 +54,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_course_download, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
 
@@ -165,15 +164,6 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
             courseAuthor = itemView.findViewById(R.id.course_author);
             labelAuthor = itemView.findViewById(R.id.label_author);
             rootView = itemView;
-
-//            rootView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (itemClickListener != null) {
-//                        itemClickListener.onItemClick(v, getAdapterPosition());
-//                    }
-//                }
-//            });
 
             actionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

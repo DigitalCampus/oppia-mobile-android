@@ -109,7 +109,7 @@ public class BluetoothTransferService extends Service {
 
             @Override
             public void onFail(CourseTransferableFile file, String error) {
-                //TODO: Notify the error?
+                // do nothing for now
             }
 
             @Override

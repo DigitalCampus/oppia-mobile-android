@@ -77,7 +77,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     private boolean isBaseline = false;
     private long userID;
 
-    private static int TTS_CHECK = 0;
+    private static int ttsCheck = 0;
     private static TextToSpeech myTTS;
     private boolean ttsRunning = false;
 
@@ -213,7 +213,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 // check for TTS data
                 Intent checkTTSIntent = new Intent();
                 checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-                startActivityForResult(checkTTSIntent, TTS_CHECK);
+                startActivityForResult(checkTTSIntent, ttsCheck);
             } else if (myTTS != null && ttsRunning) {
                 this.stopReading();
             } else {
@@ -378,7 +378,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TTS_CHECK && resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+        if (requestCode == ttsCheck && resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
             // the user has the necessary data - create the TTS
             myTTS = new TextToSpeech(this, this);
         }

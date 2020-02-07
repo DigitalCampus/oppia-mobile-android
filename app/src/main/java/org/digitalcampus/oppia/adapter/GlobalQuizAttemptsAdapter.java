@@ -31,18 +31,16 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView date;
-        //private TextView timetaken;
         private TextView score;
-        private TextView course_title;
-        private TextView quiz_title;
+        private TextView courseTitle;
+        private TextView quizTitle;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            //timetaken = itemView.findViewById(R.id.attempt_timetaken);
             date = itemView.findViewById(R.id.attempt_date);
             score = itemView.findViewById(R.id.score);
-            course_title = itemView.findViewById(R.id.course_title);
-            quiz_title = itemView.findViewById(R.id.quiz_title);
+            courseTitle = itemView.findViewById(R.id.course_title);
+            quizTitle = itemView.findViewById(R.id.quiz_title);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -75,10 +73,9 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         final QuizAttempt quiz = getItemAtPosition(position);
 
-        viewHolder.quiz_title.setText(quiz.getDisplayTitle(ctx));
+        viewHolder.quizTitle.setText(quiz.getDisplayTitle(ctx));
         String course = quiz.getCourseTitle();
-        viewHolder.course_title.setText(course == null ? ctx.getString(R.string.quiz_attempts_unkwnown_course) : course);
-        //viewHolder.timetaken.setText(quiz.getHumanTimetaken());
+        viewHolder.courseTitle.setText(course == null ? ctx.getString(R.string.quiz_attempts_unkwnown_course) : course);
         viewHolder.date.setText(DateUtils.DISPLAY_DATETIME_FORMAT.print(quiz.getDatetime()));
         viewHolder.score.setText(quiz.getScorePercentLabel());
         viewHolder.score.setBackgroundResource(
