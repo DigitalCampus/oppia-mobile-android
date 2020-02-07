@@ -27,6 +27,7 @@ import org.digitalcampus.oppia.application.App;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -118,37 +119,34 @@ public class FileUtils {
                         dest.write(data, 0, count);
                         counter++;
                         if (counter > 11000) {
-                            dest.flush();
-                            dest.close();
                             return false;
                         }
                     }
-                    // close the output streams
-                    dest.flush();
-                    dest.close();
                 }
             }
-
-            // we are done with all the files
-            // close the zip file
-            zis.close();
 
         } catch (Exception e) {
             Mint.logException(e);
             Log.d(TAG, "Exception:", e);
             return false;
         } finally {
-            try {
-                if (dest != null) dest.close();
-                if (fos != null) fos.close();
-                if (zis != null) zis.close();
-                if (fis != null) fis.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            closeSafely(dest);
+            closeSafely(fos);
+            closeSafely(zis);
+            closeSafely(fis);
         }
 
         return true;
+    }
+
+    private static void closeSafely(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static boolean zipFileAtPath(File sourceFile, File zipDestination) {
@@ -179,14 +177,10 @@ public class FileUtils {
             Log.d(TAG, "Exception:", e);
             return false;
         } finally {
-            try {
-                if (out != null) out.close();
-                if (dest != null) dest.close();
-                if (origin != null) origin.close();
-                if (fi != null) fi.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            closeSafely(out);
+            closeSafely(dest);
+            closeSafely(origin);
+            closeSafely(fi);
         }
         return true;
     }
@@ -221,8 +215,8 @@ public class FileUtils {
                     }
                 }
             } finally {
-                if (origin != null) origin.close();
-                if (fi != null) fi.close();
+                closeSafely(origin);
+                closeSafely(fi);
             }
         }
     }
@@ -309,15 +303,23 @@ public class FileUtils {
     }
 
     public static String readFile(InputStream fileStream) throws IOException {
-        DataInputStream in = new DataInputStream(fileStream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String strLine;
-        StringBuilder stringBuilder = new StringBuilder();
-        while ((strLine = br.readLine()) != null) {
-            stringBuilder.append(strLine);
+
+        DataInputStream in = null;
+        BufferedReader br = null;
+
+        try {
+            in = new DataInputStream(fileStream);
+            br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((strLine = br.readLine()) != null) {
+                stringBuilder.append(strLine);
+            }
+            return stringBuilder.toString();
+        } finally {
+            closeSafely(br);
+            closeSafely(in);
         }
-        in.close();
-        return stringBuilder.toString();
     }
 
     public static boolean deleteFile(File file) {
