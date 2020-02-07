@@ -170,12 +170,6 @@ public class CourseIntallViewAdapter extends Course {
             DbHelper db = DbHelper.getInstance(ctx);
             course.setInstalled(db.isInstalled(course.getShortname()));
             course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
-            if (jsonObj.has(JSON_PROPERTY_SCHEDULE_URI)) {
-                course.setScheduleVersionID(jsonObj.getDouble(JSON_PROPERTY_SCHEDULE));
-                course.setScheduleURI(jsonObj.getString(JSON_PROPERTY_SCHEDULE_URI));
-                course.setToUpdateSchedule(
-                        db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
-            }
 
             if (jsonObj.has(JSON_PROPERTY_ORGANISATION)) {
                 try {

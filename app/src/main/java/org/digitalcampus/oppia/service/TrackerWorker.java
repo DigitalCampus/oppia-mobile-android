@@ -142,12 +142,6 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
                 if (db.toUpdate(shortName, version)) {
                     updateAvailable = true;
                 }
-                if (jsonObj.has("schedule")) {
-                    Double scheduleVersion = jsonObj.getDouble("schedule");
-                    if (db.toUpdateSchedule(shortName, scheduleVersion)) {
-                        updateAvailable = true;
-                    }
-                }
             }
 
         } catch (JSONException e) {

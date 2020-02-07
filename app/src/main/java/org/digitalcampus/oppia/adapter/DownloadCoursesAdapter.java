@@ -112,10 +112,6 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
                     viewHolder.actionBtn.setImageResource(R.drawable.ic_action_refresh);
                     viewHolder.actionBtn.setContentDescription(updateDescription);
                     viewHolder.actionBtn.setEnabled(true);
-                } else if (c.isToUpdateSchedule()){
-                    viewHolder.actionBtn.setImageResource(R.drawable.ic_action_refresh);
-                    viewHolder.actionBtn.setContentDescription(updateSchedDescription);
-                    viewHolder.actionBtn.setEnabled(true);
                 } else {
                     viewHolder.actionBtn.setImageResource(R.drawable.ic_action_accept);
                     viewHolder.actionBtn.setContentDescription(installedDescription);
