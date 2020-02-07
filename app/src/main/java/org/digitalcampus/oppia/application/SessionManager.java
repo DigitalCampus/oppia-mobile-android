@@ -29,9 +29,11 @@ import com.splunk.mint.MintLogLevel;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.PreloadAccountsListener;
 import org.digitalcampus.oppia.model.User;
+import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.PreloadAccountsTask;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -143,42 +145,37 @@ public class SessionManager {
 
     private static void saveUserPrefs(Context ctx, String username, SharedPreferences prefs) {
 
-        ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
+        List<UserPreference> userPreferences = new ArrayList<>();
 
         for (String prefID : USER_STRING_PREFS) {
             String prefValue = prefs.getString(prefID, "");
             if (!TextUtils.isEmpty(prefValue)) {
-                Pair<String, String> userPref = new Pair<>(prefID, prefValue);
-                userPrefs.add(userPref);
+                userPreferences.add(new UserPreference(username, prefID, prefValue));
             }
         }
 
         for (String prefID : USER_BOOLEAN_PREFS) {
             if (prefs.contains(prefID)) {
                 boolean prefValue = prefs.getBoolean(prefID, false);
-                Pair<String, String> userPref = new Pair<>(prefID, prefValue ? "true" : "false");
-                userPrefs.add(userPref);
+                userPreferences.add(new UserPreference(username, prefID, prefValue ? "true" : "false"));
             }
         }
 
-
-        DbHelper db = DbHelper.getInstance(ctx);
-        db.insertUserPreferences(username, userPrefs);
+        App.getDb().userPreferenceDao().insertAll(userPreferences);
     }
 
     //Warning: this method doesn't call prefs.apply()
     private static void loadUserPrefs(Context ctx, String username, SharedPreferences.Editor prefsEditor) {
 
-        DbHelper db = DbHelper.getInstance(ctx);
-        List<Pair<String, String>> userPrefs = db.getUserPreferences(username);
+        List<UserPreference> userPrefs = App.getDb().userPreferenceDao().getAllForUser(username);
 
         ArrayList<String> prefsToSave = new ArrayList<>();
         prefsToSave.addAll(USER_STRING_PREFS);
         prefsToSave.addAll(USER_BOOLEAN_PREFS);
 
-        for (Pair<String, String> pref : userPrefs) {
-            String prefKey = pref.first;
-            String prefValue = pref.second;
+        for (UserPreference userPref : userPrefs) {
+            String prefKey = userPref.getPreference();
+            String prefValue = userPref.getValue();
             if (USER_STRING_PREFS.contains(prefKey)) {
                 prefsEditor.putString(prefKey, prefValue);
             } else if (USER_BOOLEAN_PREFS.contains(prefKey)) {
@@ -200,7 +197,8 @@ public class SessionManager {
         Pair<String, String> userPref = new Pair<>(APIKEY_VALID, valid ? "true" : "false");
         userPrefs.add(userPref);
 
-        DbHelper.getInstance(ctx).insertUserPreferences(user.getUsername(), userPrefs);
+        UserPreference userPreference = new UserPreference(user.getUsername(), APIKEY_VALID, valid ? "true" : "false");
+        App.getDb().userPreferenceDao().insert(userPreference);
     }
 
     public static boolean isUserApiKeyValid(Context ctx) {
@@ -212,9 +210,9 @@ public class SessionManager {
     }
 
     public static boolean isUserApiKeyValid(Context ctx, String username) {
-        DbHelper db = DbHelper.getInstance(ctx);
-        String prefValue = db.getUserPreference(username, APIKEY_VALID);
-        return (prefValue == null || "true".equals(prefValue));
+
+        UserPreference userPref = App.getDb().userPreferenceDao().getUserPreference(username, APIKEY_VALID);
+        return (userPref == null || "true".equals(userPref.getValue()));
     }
 
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener) {

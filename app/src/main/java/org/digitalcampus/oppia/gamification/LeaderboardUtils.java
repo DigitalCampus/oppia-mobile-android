@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.exception.WrongServerException;
 import org.joda.time.DateTime;
@@ -18,9 +18,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Leaderboard {
+public class LeaderboardUtils {
 
-    public static final String TAG = Leaderboard.class.getSimpleName();
+    public static final String TAG = LeaderboardUtils.class.getSimpleName();
 
     public static int importLeaderboardJSON(Context ctx, String json) throws JSONException, ParseException, WrongServerException {
 

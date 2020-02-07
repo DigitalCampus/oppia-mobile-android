@@ -9,7 +9,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
 import org.digitalcampus.oppia.exception.WrongServerException;
-import org.digitalcampus.oppia.gamification.Leaderboard;
+import org.digitalcampus.oppia.gamification.LeaderboardUtils;
 import org.digitalcampus.oppia.listener.SubmitListener;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.json.JSONException;
@@ -45,7 +45,7 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
                 String json = response.body().string();
                 int updatedPositions = 0;
                 try {
-                    updatedPositions += Leaderboard.importLeaderboardJSON(ctx, json);
+                    updatedPositions += LeaderboardUtils.importLeaderboardJSON(ctx, json);
                     payload.setResult(true);
                     payload.setResultResponse(updatedPositions + " updated.");
                 } catch (ParseException e) {
@@ -84,7 +84,7 @@ public class UpdateLeaderboardFromServerTask extends APIRequestTask<Payload, Obj
     @Override
     protected void onPostExecute(Payload response) {
 
-        Leaderboard.updateLeaderboardFetchTime(prefs);
+        LeaderboardUtils.updateLeaderboardFetchTime(prefs);
         synchronized (this) {
             if (listener != null) {
                 listener.submitComplete(response);

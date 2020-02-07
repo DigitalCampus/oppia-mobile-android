@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
-import org.joda.time.DateTime;
 
 
 public class Activity extends MultiLangInfoModel implements Serializable{

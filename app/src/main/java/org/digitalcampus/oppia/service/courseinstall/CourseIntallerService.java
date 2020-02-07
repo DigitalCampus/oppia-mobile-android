@@ -21,25 +21,17 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.RemoteApiEndpoint;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
-import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.User;
-import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -90,10 +82,6 @@ public class CourseIntallerService extends IntentService {
             }
         }
         return new ArrayList<>();
-    }
-
-    public CourseIntallerService() {
-        this(new RemoteApiEndpoint());
     }
 
     public CourseIntallerService(ApiEndpoint api) {
@@ -184,7 +172,6 @@ public class CourseIntallerService extends IntentService {
         else if (intent.getStringExtra(SERVICE_ACTION).equals(ACTION_UPDATE)){
             String scheduleURL = intent.getStringExtra(SERVICE_SCHEDULEURL);
             String shortname = intent.getStringExtra(SERVICE_SHORTNAME);
-            updateCourseSchedule(scheduleURL, shortname);
         }
 
     }
@@ -343,77 +330,6 @@ public class CourseIntallerService extends IntentService {
 
         long estimatedTime = System.currentTimeMillis() - startTime;
         Log.d(TAG, "MeasureTime - " + ": " + estimatedTime + "ms");
-        return true;
-    }
-
-    private boolean updateCourseSchedule(String scheduleUrl, String shortname){
-        sendBroadcast(scheduleUrl, ACTION_INSTALL, "" + 0);
-        try {
-        	
-        	DbHelper db = DbHelper.getInstance(this);
-        	User u = db.getUser(SessionManager.getUsername(this));
-
-            OkHttpClient client = HTTPClientUtils.getClient(this);
-            Request request = new Request.Builder()
-                    .url(apiEndpoint.getFullURL(this, scheduleUrl))
-                    .addHeader(HTTPClientUtils.HEADER_AUTH,
-                            HTTPClientUtils.getAuthHeaderValue(u.getUsername(), u.getApiKey()))
-                    .build();
-
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()){
-                JSONObject jsonObj = new JSONObject(response.body().string());
-                long scheduleVersion = jsonObj.getLong("version");
-                JSONArray schedule = jsonObj.getJSONArray("activityschedule");
-                ArrayList<ActivitySchedule> activitySchedule = new ArrayList<>();
-                int lastProgress = 0;
-                for (int i = 0; i < (schedule.length()); i++) {
-
-                    int progress = (i+1)*100/schedule.length();
-                    if ((progress - (progress%10) > lastProgress)){
-                        sendBroadcast(scheduleUrl, ACTION_INSTALL, ""+progress);
-                        lastProgress = progress;
-                    }
-
-                    JSONObject acts = (JSONObject) schedule.get(i);
-                    ActivitySchedule as = new ActivitySchedule();
-                    as.setDigest(acts.getString("digest"));
-                    DateTime sdt = DateUtils.DATETIME_FORMAT.parseDateTime(acts.getString("start_date"));
-                    DateTime edt = DateUtils.DATETIME_FORMAT.parseDateTime(acts.getString("end_date"));
-                    as.setStartTime(sdt);
-                    as.setEndTime(edt);
-                    activitySchedule.add(as);
-                }
-            }
-            else{
-                switch (response.code()) {
-                    case 400:
-                    case 401: // unauthorised
-                        sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_login));
-                        removeDownloading(scheduleUrl);
-                        SessionManager.setUserApiKeyValid(this, u, false);
-                        return false;
-
-                    default:
-                        sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
-                        removeDownloading(scheduleUrl);
-                        return false;
-                }
-            }
-
-        } catch (JSONException e) {
-            Mint.logException(e);
-            Log.d(TAG, "JSON error: ", e);
-            sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_processing_response));
-            removeDownloading(scheduleUrl);
-        } catch (UserNotFoundException | IOException e) {
-            sendBroadcast(scheduleUrl, ACTION_FAILED, getString(R.string.error_connection));
-            removeDownloading(scheduleUrl);
-        }
-
-        Log.d(TAG, scheduleUrl + " successfully downloaded");
-        removeDownloading(scheduleUrl);
-        sendBroadcast(scheduleUrl, ACTION_COMPLETE, null);
         return true;
     }
 

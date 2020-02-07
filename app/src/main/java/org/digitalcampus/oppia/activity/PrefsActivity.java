@@ -17,6 +17,8 @@
 
 package org.digitalcampus.oppia.activity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -133,11 +135,13 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     //Google Cloud Messaging preferences
     public static final String PREF_TEST_ACTION_PROTECTED = "prefTestActionProtected";
+    public static final String PREF_DATA_ROOM_MIGRATON_VERSION= "prefDataRoomMigrationVersion";
     public static final String PREF_DISPLAY_SCREEN = "prefDisplay";
     public static final String PREF_SECURITY_SCREEN = "prefSecurity";
     public static final String PREF_NOTIFICATIONS_SCREEN = "prefNotifications";
     public static final String PREF_ADVANCED_SCREEN = "prefsAdvanced";
 
+    private SharedPreferences prefs;
     private ProgressDialog pDialog;
     private PreferenceChangedCallback currentPrefScreen;
 

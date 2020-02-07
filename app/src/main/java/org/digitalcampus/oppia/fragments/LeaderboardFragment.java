@@ -16,11 +16,11 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.AppActivity;
 import org.digitalcampus.oppia.adapter.LeaderboardAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
-import org.digitalcampus.oppia.gamification.Leaderboard;
+import org.digitalcampus.oppia.gamification.LeaderboardUtils;
 import org.digitalcampus.oppia.listener.SubmitListener;
-import org.digitalcampus.oppia.model.LeaderboardPosition;
+import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.task.Payload;
 import org.digitalcampus.oppia.task.UpdateLeaderboardFromServerTask;
 
@@ -47,7 +47,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
     ApiEndpoint apiEndpoint;
 
     LeaderboardAdapter adapter;
-    List<LeaderboardPosition> leaderboard;
+    List<Leaderboard> leaderboard;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
         leaderboardView.setAdapter(adapter);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (Leaderboard.shouldFetchLeaderboard(prefs)){
+        if (LeaderboardUtils.shouldFetchLeaderboard(prefs)){
             Payload p = new Payload();
             UpdateLeaderboardFromServerTask task = new UpdateLeaderboardFromServerTask(super.getActivity(), apiEndpoint);
             task.seListener(this);
@@ -90,19 +90,21 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
         leaderboard.clear();
 
-        DbHelper db = DbHelper.getInstance(getActivity());
-        leaderboard.addAll(db.getLeaderboard());
+//        DbHelper db = DbHelper.getInstance(getActivity());
+//        leaderboard.addAll(db.getLeaderboard());
+
+        leaderboard.addAll(App.getDb().leaderboardDao().getAll());
 
         String username = SessionManager.getUsername(this.getContext());
         Collections.sort(leaderboard);
 
-        LeaderboardPosition userPos = null;
+        Leaderboard userPos = null;
         int i;
         for (i=0; i<leaderboard.size(); i++){
-            LeaderboardPosition pos = leaderboard.get(i);
-            if (pos.getUsername().equals(username)){
-                pos.setUser(true);
-                userPos = pos;
+            Leaderboard leaderboardItem = leaderboard.get(i);
+            if (leaderboardItem.getUsername().equals(username)){
+                leaderboardItem.setUser(true);
+                userPos = leaderboardItem;
                 break;
             }
         }
