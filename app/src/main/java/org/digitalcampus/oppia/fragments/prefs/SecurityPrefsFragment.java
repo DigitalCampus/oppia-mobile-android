@@ -72,8 +72,10 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
             passwordPref.setText(newValue);
         }
         else if (pref.equals(PrefsActivity.PREF_ADMIN_PROTECTION)){
-            CheckBoxPreference passwordPref = findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
-            passwordPref.setChecked("true".equals(newValue));
+            CheckBoxPreference adminEnabled = findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
+            if (adminEnabled != null){
+                adminEnabled.setChecked("true".equals(newValue));
+            }
         }
     }
 }

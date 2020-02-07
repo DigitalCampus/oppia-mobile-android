@@ -231,9 +231,6 @@ public class AdminProtectedUITest {
     @Test
     public void checkAdminProtectionOnPrefsCheckboxAdminProtectionClick() throws Exception {
 
-        // This test dont need parametrization. This line avoid that
-//        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(true);
-
         prefsActivityTestRule.launchActivity(null);
 
         onView(withId(androidx.preference.R.id.recycler_view))
@@ -261,9 +258,6 @@ public class AdminProtectedUITest {
 
     @Test
     public void checkAdminProtectionOnPrefsEditTextChangeAdminPassClick() throws Exception {
-
-        // This test dont need parametrization. This line avoid that
-//        when(prefs.getBoolean(eq(PrefsActivity.PREF_ADMIN_PROTECTION), anyBoolean())).thenReturn(true);
 
         prefsActivityTestRule.launchActivity(null);
 

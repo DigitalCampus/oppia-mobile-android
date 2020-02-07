@@ -45,9 +45,15 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        loadPrefs();
+    }
 
+    private void loadPrefs(){
         storagePref = findPreference(PrefsActivity.PREF_STORAGE_OPTION);
         serverPref = findPreference(PrefsActivity.PREF_SERVER);
+        if (serverPref == null || storagePref == null){
+            return;
+        }
         serverPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -78,10 +84,16 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         username.setSummary( "".equals(username.getText()) ?
                 getString(R.string.about_not_logged_in) :
                 getString(R.string.about_logged_in, username.getText()) );
-
     }
 
     public void updateServerPref(){
+
+        if (serverPref == null){
+            loadPrefs();
+        }
+        if (serverPref == null || storagePref == null){
+            return;
+        }
 
         SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
         String server = prefs.getString(PrefsActivity.PREF_SERVER, "");
@@ -108,6 +120,9 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
     }
 
     public void updateStoragePref(String storageOption){
+        if (storagePref == null){
+            loadPrefs();
+        }
         if (PrefsActivity.STORAGE_OPTION_EXTERNAL.equals(storageOption)){
             storagePref.setValue(storagePref.getEntryValues()[1].toString());
         }
