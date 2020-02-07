@@ -17,8 +17,6 @@
 
 package org.digitalcampus.oppia.activity;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -28,15 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.CheckBoxPreference;
-import androidx.preference.EditTextPreference;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
-import androidx.preference.PreferenceScreen;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.fragments.prefs.MainPreferencesFragment;
@@ -59,6 +48,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 public class PrefsActivity extends AppActivity implements SharedPreferences.OnSharedPreferenceChangeListener,
         MoveStorageListener, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback{

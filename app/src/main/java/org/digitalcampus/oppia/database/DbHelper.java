@@ -38,7 +38,6 @@ import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.PointsComparator;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
@@ -773,18 +772,6 @@ public class DbHelper extends SQLiteOpenHelper {
             values.put(ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
             values.put(ACTIVITY_C_TITLE, a.getTitleJSONString());
             db.insertOrThrow(ACTIVITY_TABLE, null, values);
-        }
-        endTransaction(true);
-    }
-
-    public void insertSchedule(List<ActivitySchedule> actsched) {
-
-        beginTransaction();
-        for (ActivitySchedule as : actsched) {
-            ContentValues values = new ContentValues();
-            values.put(ACTIVITY_C_STARTDATE, as.getStartTimeString());
-            values.put(ACTIVITY_C_ENDDATE, as.getEndTimeString());
-            db.update(ACTIVITY_TABLE, values, ACTIVITY_C_ACTIVITYDIGEST + "='" + as.getDigest() + "'", null);
         }
         endTransaction(true);
     }
