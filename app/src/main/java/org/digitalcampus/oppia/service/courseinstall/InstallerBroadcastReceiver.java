@@ -47,16 +47,14 @@ public class InstallerBroadcastReceiver extends BroadcastReceiver {
                     String message = intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE);
                     cListener.onInstallFailed(fileUrl, message);
                     break;
-                case CourseIntallerService.ACTION_DOWNLOAD: {
-                    int progress = Integer.parseInt(intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE));
-                    cListener.onDownloadProgress(fileUrl, progress);
+                case CourseIntallerService.ACTION_DOWNLOAD:
+                    int progressDownload = Integer.parseInt(intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE));
+                    cListener.onDownloadProgress(fileUrl, progressDownload);
                     break;
-                }
-                case CourseIntallerService.ACTION_INSTALL: {
-                    int progress = Integer.parseInt(intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE));
-                    cListener.onInstallProgress(fileUrl, progress);
+                case CourseIntallerService.ACTION_INSTALL:
+                    int progressInstall = Integer.parseInt(intent.getStringExtra(CourseIntallerService.SERVICE_MESSAGE));
+                    cListener.onInstallProgress(fileUrl, progressInstall);
                     break;
-                }
             }
         }
 

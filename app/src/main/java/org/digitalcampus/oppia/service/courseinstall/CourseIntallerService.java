@@ -384,10 +384,6 @@ public class CourseIntallerService extends IntentService {
                     as.setEndTime(edt);
                     activitySchedule.add(as);
                 }
-                int courseId = db.getCourseID(shortname);
-                db.resetSchedule(courseId);
-                db.insertSchedule(activitySchedule);
-                db.updateScheduleVersion(courseId, scheduleVersion);
             }
             else{
                 switch (response.code()) {

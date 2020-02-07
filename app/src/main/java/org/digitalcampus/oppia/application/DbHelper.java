@@ -35,7 +35,6 @@ import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.PointsComparator;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.GamificationEvent;
@@ -744,12 +743,6 @@ public class DbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public void updateScheduleVersion(long courseId, long scheduleVersion){
-		ContentValues values = new ContentValues();
-		values.put(COURSE_C_SCHEDULE, scheduleVersion);
-		db.update(COURSE_TABLE, values, COURSE_C_ID + "=" + courseId, null);
-	}
-	
 	public void insertActivities(List<Activity> acts) {
 
         beginTransaction();
@@ -762,18 +755,6 @@ public class DbHelper extends SQLiteOpenHelper {
 			values.put(ACTIVITY_C_ACTIVITYDIGEST, a.getDigest());
 			values.put(ACTIVITY_C_TITLE, a.getTitleJSONString());
 			db.insertOrThrow(ACTIVITY_TABLE, null, values);
-		}
-        endTransaction(true);
-	}
-
-	public void insertSchedule(List<ActivitySchedule> actsched) {
-
-        beginTransaction();
-		for (ActivitySchedule as : actsched) {
-			ContentValues values = new ContentValues();
-			values.put(ACTIVITY_C_STARTDATE, as.getStartTimeString());
-			values.put(ACTIVITY_C_ENDDATE, as.getEndTimeString());
-			db.update(ACTIVITY_TABLE, values, ACTIVITY_C_ACTIVITYDIGEST + "='" + as.getDigest() + "'", null);
 		}
         endTransaction(true);
 	}
@@ -791,13 +772,6 @@ public class DbHelper extends SQLiteOpenHelper {
 			db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 		}
         endTransaction(true);
-	}
-	
-	public void resetSchedule(int courseId){
-		ContentValues values = new ContentValues();
-		values.put(ACTIVITY_C_STARTDATE,"");
-		values.put(ACTIVITY_C_ENDDATE, "");
-		db.update(ACTIVITY_TABLE, values, ACTIVITY_C_COURSEID + "=" + courseId, null);
 	}
 	
 	public List<Course> getAllCourses() {
@@ -1168,15 +1142,6 @@ public class DbHelper extends SQLiteOpenHelper {
 	public boolean toUpdate(String shortname, Double version){
 		String s = COURSE_C_SHORTNAME + "=? AND "+ COURSE_C_VERSIONID + "< ?";
 		String[] args = new String[] { shortname, String.format("%.0f", version) };
-		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
-		boolean toUpdate = (c.getCount() > 0);
-		c.close();
-		return  toUpdate;
-	}
-	
-	public boolean toUpdateSchedule(String shortname, Double scheduleVersion){
-		String s = COURSE_C_SHORTNAME + "=? AND "+ COURSE_C_SCHEDULE + "< ?";
-		String[] args = new String[] { shortname, String.format("%.0f", scheduleVersion) };
 		Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
 		boolean toUpdate = (c.getCount() > 0);
 		c.close();

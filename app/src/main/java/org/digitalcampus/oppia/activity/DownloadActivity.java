@@ -122,10 +122,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
                         courseInstallerServiceDelegate.installCourse(DownloadActivity.this, mServiceIntent, courseSelected);
                         resetCourseProgress(courseSelected, true, false);
                     }
-                    else if(courseSelected.isToUpdateSchedule()){
-                        courseInstallerServiceDelegate.updateCourse(DownloadActivity.this, mServiceIntent, courseSelected);
-                        resetCourseProgress(courseSelected, false, true);
-                    }
                 }
                 else{
                     //If it's already downloading, send an intent to cancel the task
@@ -295,7 +291,6 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
             Toast.makeText(this, this.getString(R.string.install_course_complete, course.getShortname()), Toast.LENGTH_LONG).show();
             course.setInstalled(true);
             course.setToUpdate(false);
-            course.setToUpdateSchedule(false);
             resetCourseProgress(course, false, false);
         }
     }

@@ -18,7 +18,6 @@ public class CourseInstallerServiceDelegate {
 
     public void updateCourse(Context context, Intent intent, Course courseSelected){
         intent.putExtra(CourseIntallerService.SERVICE_ACTION, CourseIntallerService.ACTION_UPDATE);
-        intent.putExtra(CourseIntallerService.SERVICE_SCHEDULEURL, courseSelected.getScheduleURI());
         intent.putExtra(CourseIntallerService.SERVICE_SHORTNAME, courseSelected.getShortname());
         context.startService(intent);
     }
