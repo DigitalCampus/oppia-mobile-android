@@ -19,7 +19,7 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
