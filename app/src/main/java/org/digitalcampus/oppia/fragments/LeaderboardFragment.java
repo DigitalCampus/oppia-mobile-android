@@ -66,7 +66,7 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        getAppComponent().inject(this);
         leaderboard = new ArrayList<>();
 
         adapter = new LeaderboardAdapter(this.getContext(), leaderboard);

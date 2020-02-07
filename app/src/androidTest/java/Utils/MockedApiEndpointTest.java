@@ -21,7 +21,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-public class MockedApiEndpointTest {
+public abstract class MockedApiEndpointTest {
 
     @Rule
     public DaggerMockRule<AppComponent> daggerRule =

@@ -28,7 +28,6 @@
             android:background="@color/transparent"
             android:elevation="4dp"
             android:minHeight="?attr/actionBarSize"
-            android:paddingTop="@dimen/tool_bar_top_padding"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp"
             app:contentInsetStartWithNavigation="0dp"

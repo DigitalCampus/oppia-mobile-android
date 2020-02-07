@@ -148,8 +148,7 @@ public class App extends Application {
 
         Context ctx = getApplicationContext();
         // Load the preferences from XML resources
-        PreferenceManager.setDefaultValues(ctx, R.xml.common_prefs, false);
-        PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
+        loadDefaultPreferenceValues(ctx, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         // First run or Updates configurations
@@ -234,6 +233,9 @@ public class App extends Application {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static void loadDefaultPreferenceValues(Context ctx, boolean readAgain){
+        PreferenceManager.setDefaultValues(ctx, R.xml.prefs, readAgain);
+    }
 
     private void checkAdminProtectionOnFirstRun(SharedPreferences prefs) {
         if (prefs.getBoolean(PrefsActivity.PREF_APPLICATION_FIRST_RUN, true)) {
