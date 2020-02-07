@@ -27,7 +27,7 @@ import org.digitalcampus.oppia.task.Payload;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TagRepository {
 
@@ -49,7 +49,7 @@ public class TagRepository {
         task.execute(p);
     }
 
-    public void refreshTagList(ArrayList<Tag> tags, JSONObject json) throws JSONException{
+    public void refreshTagList(List<Tag> tags, JSONObject json) throws JSONException{
 
         for (int i = 0; i < (json.getJSONArray(JSON_PROPERTY_TAGS).length()); i++) {
             JSONObject jsonObj = (JSONObject) json.getJSONArray(JSON_PROPERTY_TAGS).get(i);

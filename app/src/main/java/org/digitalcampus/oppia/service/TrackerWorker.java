@@ -19,7 +19,7 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.APIRequestFinishListener;
@@ -141,12 +141,6 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
 
                 if (db.toUpdate(shortName, version)) {
                     updateAvailable = true;
-                }
-                if (jsonObj.has("schedule")) {
-                    Double scheduleVersion = jsonObj.getDouble("schedule");
-                    if (db.toUpdateSchedule(shortName, scheduleVersion)) {
-                        updateAvailable = true;
-                    }
                 }
             }
 

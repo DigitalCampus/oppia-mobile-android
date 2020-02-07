@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="prefNotifications" >
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        android:title="@string/prefSectionSystemNotifs" >
+
+    <CheckBoxPreference
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        android:defaultValue="false"
+        android:key="prefDisableNotifications"
+        android:title="@string/prefDisableNotifications" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        android:title="@string/prefSectionGamification" >
+
+    <CheckBoxPreference
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="true"
+        android:defaultValue="true"
+        android:key="prefShowGamificationEvents"
+        android:title="@string/prefShowGamificationEvents" />
+
+    <ListPreference
+        app:iconSpaceReserved="false"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        android:dependency="prefShowGamificationEvents"
+        android:key="prefGamificationPointsAnimation"
+        android:title="@string/prefAnimationTypeGamificationPoints"
+        android:entries="@array/GamificationPointsAnimation"
+        android:entryValues="@array/GamificationPointsAnimationValues"
+        android:defaultValue="@string/prefGamificationPointsAnimationDefault"/>
+
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        android:dependency="prefShowGamificationEvents"
+        android:key="prefDurationGamificationPointsView"
+        android:title="@string/prefDurationAnimationTypeGamificationPointsView"
+        app:summary="@string/prefDurationAnimation_summary"
+        android:defaultValue="@string/prefDurationGamificationPointsViewDefault"
+        android:inputType="number" />
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

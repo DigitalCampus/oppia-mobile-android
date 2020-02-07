@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CourseTransferableFile;
@@ -120,6 +120,7 @@ public class FetchCourseTransferableFilesTask extends AsyncTask<Payload, Boolean
             log.setFile(file);
             log.setTitle(filename.substring(0, filename.indexOf('_')));
             log.setType(CourseTransferableFile.TYPE_ACTIVITY_LOG);
+            log.setTitleFromFilename();
             log.setFileSize(file.length());
             log.setShortname("");
             activityLogs.add(log);

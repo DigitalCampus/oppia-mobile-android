@@ -17,7 +17,7 @@
 
 package org.digitalcampus.oppia.exception;
 
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 
 import android.app.Activity;
 

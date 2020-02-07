@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import androidx.room.Room;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -33,6 +34,8 @@ import androidx.work.WorkManager;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.database.MyDatabase;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
@@ -113,13 +116,23 @@ public class App extends Application {
     private static final String NAME_TRACKER_SEND_WORK = "tracker_send_work";
 
     private AppComponent appComponent;
+    private static MyDatabase db;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        DbHelper dbHelper = DbHelper.getInstance(this);
-        dbHelper.getReadableDatabase(); // To force migration if needed
+        db = Room.databaseBuilder(getApplicationContext(),
+                MyDatabase.class, MyDatabase.DB_NAME_ROOM)
+//                .addMigrations(MyDatabase.MIGRATION_)
+//                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
+
+        DbHelper.getInstance(this).getReadableDatabase();
+
+//        App.getDb().userCustomFieldDao().getAll();
 
 
         // this method fires once at application start
@@ -135,8 +148,7 @@ public class App extends Application {
 
         Context ctx = getApplicationContext();
         // Load the preferences from XML resources
-        PreferenceManager.setDefaultValues(ctx, R.xml.common_prefs, false);
-        PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
+        loadDefaultPreferenceValues(ctx, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         // First run or Updates configurations
@@ -170,6 +182,9 @@ public class App extends Application {
 
     }
 
+    public static MyDatabase getDb() {
+        return db;
+    }
 
     private void setupPeriodicTrackerWorker() {
 
@@ -218,6 +233,9 @@ public class App extends Application {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static void loadDefaultPreferenceValues(Context ctx, boolean readAgain){
+        PreferenceManager.setDefaultValues(ctx, R.xml.prefs, readAgain);
+    }
 
     private void checkAdminProtectionOnFirstRun(SharedPreferences prefs) {
         if (prefs.getBoolean(PrefsActivity.PREF_APPLICATION_FIRST_RUN, true)) {
