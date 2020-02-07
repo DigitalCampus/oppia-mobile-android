@@ -45,6 +45,10 @@ public class FileUtils {
     public static final String TAG = FileUtils.class.getSimpleName();
     public static final int BUFFER_SIZE = 1024;
 
+    private FileUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     // This function converts the zip file into uncompressed files which are
     // placed in the destination directory
     // destination directory should be created first
@@ -91,8 +95,8 @@ public class FileUtils {
             }
 
             // now start with unzip process
-            fis = new FileInputStream(sourceFile);
-            zis = new ZipInputStream(new BufferedInputStream(fis));
+            fis = new FileInputStream(sourceFile); //NOSONAR (Sonar is not understanding closeSafely() method
+            zis = new ZipInputStream(new BufferedInputStream(fis)); //NOSONAR
             ZipEntry entry;
 
             while ((entry = zis.getNextEntry()) != null) {
@@ -108,8 +112,8 @@ public class FileUtils {
 
                 // write the file to the disk
                 if (!f.isDirectory()) {
-                    fos = new FileOutputStream(f);
-                    dest = new BufferedOutputStream(fos, BUFFER_SIZE);
+                    fos = new FileOutputStream(f); //NOSONAR
+                    dest = new BufferedOutputStream(fos, BUFFER_SIZE); //NOSONAR
 
                     // this counter is a hack to prevent getting stuck when
                     // installing corrupted or not fully downloaded course
@@ -139,15 +143,6 @@ public class FileUtils {
         return true;
     }
 
-    private static void closeSafely(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public static boolean zipFileAtPath(File sourceFile, File zipDestination) {
         final int BUFFER = 2048;
@@ -157,14 +152,14 @@ public class FileUtils {
         BufferedInputStream origin = null;
         FileInputStream fi = null;
         try {
-            dest = new FileOutputStream(zipDestination);
-            out = new ZipOutputStream(new BufferedOutputStream(dest));
+            dest = new FileOutputStream(zipDestination); //NOSONAR
+            out = new ZipOutputStream(new BufferedOutputStream(dest)); //NOSONAR
             if (sourceFile.isDirectory()) {
                 zipSubFolder(out, sourceFile, sourceFile.getParent().length());
             } else {
                 byte data[] = new byte[BUFFER];
-                fi = new FileInputStream(zipDestination);
-                origin = new BufferedInputStream(fi, BUFFER);
+                fi = new FileInputStream(zipDestination); //NOSONAR
+                origin = new BufferedInputStream(fi, BUFFER); //NOSONAR
                 ZipEntry entry = new ZipEntry(getLastPathComponent(zipDestination.getPath()));
                 out.putNextEntry(entry);
                 int count;
@@ -205,8 +200,8 @@ public class FileUtils {
                     String unmodifiedFilePath = file.getPath();
                     String relativePath = unmodifiedFilePath
                             .substring(basePathLength);
-                    fi = new FileInputStream(unmodifiedFilePath);
-                    origin = new BufferedInputStream(fi, BUFFER);
+                    fi = new FileInputStream(unmodifiedFilePath); //NOSONAR
+                    origin = new BufferedInputStream(fi, BUFFER); //NOSONAR
                     ZipEntry entry = new ZipEntry(relativePath);
                     out.putNextEntry(entry);
                     int count;
@@ -319,6 +314,16 @@ public class FileUtils {
         } finally {
             closeSafely(br);
             closeSafely(in);
+        }
+    }
+
+    private static void closeSafely(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                Log.e(TAG, "closeSafely: ", e);
+            }
         }
     }
 
