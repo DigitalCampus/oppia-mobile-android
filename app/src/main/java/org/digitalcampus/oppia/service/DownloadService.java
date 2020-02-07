@@ -44,6 +44,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -76,7 +77,7 @@ public class DownloadService extends IntentService {
         currentInstance = instance;
     }
 
-    public static ArrayList<String> getTasksDownloading(){
+    public static List<String> getTasksDownloading(){
         if (currentInstance != null){
             synchronized (currentInstance){
                 return currentInstance.tasksDownloading;
@@ -214,7 +215,8 @@ public class DownloadService extends IntentService {
             byte[] buffer = new byte[8192];
             int len1;
             long total = 0;
-            int previousProgress = 0, progress = 0;
+            int previousProgress = 0;
+            int progress = 0;
             while ((len1 = in.read(buffer)) > 0) {
                 //If received a cancel action while downloading, stop it
                 if (isCancelled(fileUrl)) {

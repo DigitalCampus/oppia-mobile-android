@@ -24,7 +24,8 @@ public class CryptoUtils {
 
     private static String encryptWithAlgorithm(String password, Pair<String, String> algorithm) throws NoSuchAlgorithmException {
         final MessageDigest digest = MessageDigest.getInstance(algorithm.second);
-        byte[] result, passBytes;
+        byte[] result;
+        byte[] passBytes;
         try {
             passBytes = password.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {

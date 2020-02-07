@@ -291,7 +291,8 @@ public class CourseIntallerService extends IntentService {
             byte[] buffer = new byte[8192];
             int len1;
             long total = 0;
-            int previousProgress = 0, progress;
+            int previousProgress = 0;
+            int progress;
             while ((len1 = in.read(buffer)) > 0) {
                 //If received a cancel action while downloading, stop it
                 if (isCancelled(fileUrl)) {
@@ -383,10 +384,6 @@ public class CourseIntallerService extends IntentService {
                     as.setEndTime(edt);
                     activitySchedule.add(as);
                 }
-                int courseId = db.getCourseID(shortname);
-                db.resetSchedule(courseId);
-                db.insertSchedule(activitySchedule);
-                db.updateScheduleVersion(courseId, scheduleVersion);
             }
             else{
                 switch (response.code()) {

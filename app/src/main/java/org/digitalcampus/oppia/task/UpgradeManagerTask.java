@@ -45,7 +45,6 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONException;
@@ -161,12 +160,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
             for (String course : children) {
                 publishProgress("checking: " + course);
                 String courseXMLPath = "";
-                String courseScheduleXMLPath = "";
                 String courseTrackerXMLPath = "";
                 // check that it's unzipped etc correctly
                 try {
                     courseXMLPath = dir + File.separator + course + File.separator + App.COURSE_XML;
-                    courseScheduleXMLPath = dir + File.separator + course + File.separator + App.COURSE_SCHEDULE_XML;
                     courseTrackerXMLPath = dir + File.separator + course + File.separator + App.COURSE_TRACKER_XML;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     FileUtils.cleanUp(dir, Storage.getDownloadPath(ctx) + course);
@@ -175,7 +172,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 
                 // check a module.xml file exists and is a readable XML file
                 CourseXMLReader cxr;
-                CourseScheduleXMLReader csxr;
                 CourseTrackerXMLReader ctxr;
 				CompleteCourse c;
                 try {
@@ -183,7 +179,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
 					c = cxr.getParsedCourse();
 
-                    csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
                     ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
                 } catch (InvalidXMLException e) {
 					Mint.logException(e);
@@ -202,12 +197,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
                     db.insertActivities(c.getActivities(courseId));
                     db.insertTrackers(ctxr.getTrackers(courseId, 0));
                 }
-
-                // add schedule
-                // put this here so even if the course content isn't updated the schedule will be
-                db.insertSchedule(csxr.getSchedule());
-                db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
-
             }
 		}
 	}
@@ -310,7 +299,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 		long userId = db.getUserId(SessionManager.getUsername(ctx));
 		
 		List<Course> courses = db.getAllCourses();
-		ArrayList<v54UpgradeQuizObj> quizzes = new ArrayList<>();
+		ArrayList<V54UpgradeQuizObj> quizzes = new ArrayList<>();
 		
 		for (Course c: courses){
 			try {
@@ -318,13 +307,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
                 CompleteCourse parsedCourse = cxr.getParsedCourse();
 
-				ArrayList<Activity> baseActs = parsedCourse.getBaselineActivities();
+				ArrayList<Activity> baseActs = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
 				for (Activity a: baseActs){
 					if (a.getActType().equalsIgnoreCase("quiz")){
 						String quizContent = a.getContents("en");
 						try {
 							JSONObject quizJson = new JSONObject(quizContent);
-							v54UpgradeQuizObj q = new v54UpgradeQuizObj();
+							V54UpgradeQuizObj q = new V54UpgradeQuizObj();
 							q.id = quizJson.getInt("id");
 							q.digest = quizJson.getJSONObject("props").getString("digest");
 							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
@@ -336,13 +325,13 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				}
 				
 				// now add the standard activities
-				ArrayList<Activity> acts = parsedCourse.getActivities(c.getCourseId());
+				ArrayList<Activity> acts = (ArrayList<Activity>) parsedCourse.getActivities(c.getCourseId());
 				for (Activity a: acts){
 					if (a.getActType().equalsIgnoreCase("quiz")){
 						String quizContent = a.getContents("en");
 						try {
 							JSONObject quizJson = new JSONObject(quizContent);
-							v54UpgradeQuizObj q = new v54UpgradeQuizObj();
+							V54UpgradeQuizObj q = new V54UpgradeQuizObj();
 							q.id = quizJson.getInt("id");
 							q.digest = quizJson.getJSONObject("props").getString("digest");
 							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
@@ -370,10 +359,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				
 				int quizId = jsonData.getInt("quiz_id");
 				
-				v54UpgradeQuizObj currentQuiz = null;
+				V54UpgradeQuizObj currentQuiz = null;
 				
 				// find the relevant quiz in quizzes
-				for (v54UpgradeQuizObj tmpQuiz: quizzes){
+				for (V54UpgradeQuizObj tmpQuiz: quizzes){
 					if (tmpQuiz.id == quizId){
 						currentQuiz = tmpQuiz;
 						break;
@@ -420,8 +409,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	private void overrideAdminPasswordTask(){
 		if (BuildConfig.ADMIN_PASSWORD_OVERRIDE_VERSION == BuildConfig.VERSION_CODE){
 			String overrideConfig = "password_overriden_" + BuildConfig.VERSION_CODE;
-			boolean already_overriden = prefs.getBoolean(overrideConfig, false);
-			if (!already_overriden){
+			boolean alreadyOverriden = prefs.getBoolean(overrideConfig, false);
+			if (!alreadyOverriden){
 				publishProgress(ctx.getString(R.string.info_override_password));
 				prefs.edit()
 					.putString(PrefsActivity.PREF_ADMIN_PASSWORD, BuildConfig.ADMIN_PROTECT_INITIAL_PASSWORD)
@@ -432,7 +421,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 
 	}
 	
-	private class v54UpgradeQuizObj{
+	private class V54UpgradeQuizObj {
 		private int id;
 		private String digest;
 		private int threshold;

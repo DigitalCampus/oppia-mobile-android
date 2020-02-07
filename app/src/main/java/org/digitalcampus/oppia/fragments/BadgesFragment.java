@@ -96,10 +96,10 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 				return;
 			}
 			for (int i = 0; i < (json.getJSONArray("objects").length()); i++) {
-				JSONObject json_obj = (JSONObject) json.getJSONArray("objects").get(i);
+				JSONObject jsonObj = (JSONObject) json.getJSONArray("objects").get(i);
 				Badges b = new Badges();
-				b.setDescription(json_obj.getString("description"));
-				b.setDateTime(json_obj.getString("award_date"));
+				b.setDescription(jsonObj.getString("description"));
+				b.setDateTime(jsonObj.getString("award_date"));
 				badges.add(b);
 			}
 

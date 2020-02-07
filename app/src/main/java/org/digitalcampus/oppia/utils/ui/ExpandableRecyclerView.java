@@ -319,15 +319,12 @@ public class ExpandableRecyclerView extends RecyclerView
         {
             Log.d("Expand", "type:" + viewType);
             switch (viewType){
-                case TYPE_HEADER: {
+                case TYPE_HEADER:
                     return onCreateHeaderViewHolder(parent);
-                }
-                case TYPE_GROUP_HEADER: {
+                case TYPE_GROUP_HEADER:
                     return onCreateGroupViewHolder(parent);
-                }
-                default:{
+                default:
                     return onCreateChildViewHolder(parent, viewType);
-                }
             }
         }
 

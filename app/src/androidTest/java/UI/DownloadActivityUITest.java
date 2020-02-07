@@ -440,44 +440,6 @@ public class DownloadActivityUITest {
     }
 
     @Test
-    public void showUpdateButtonIfCourseIsToUpdateSchedule() throws Exception {
-
-        CourseIntallViewAdapter c = getBaseCourse();
-        c.setDownloading(false);
-        c.setInstalled(true);
-        c.setToUpdate(false);
-        c.setToUpdateSchedule(true);
-
-        givenThereAreSomeCourses(2, c);
-
-        downloadActivityTestRule.launchActivity(null);
-
-        onView(withRecyclerView(R.id.recycler_tags)
-                .atPositionOnView(0, R.id.download_course_btn))
-                .check(matches(withDrawable(R.drawable.ic_action_refresh)));
-
-    }
-
-    @Test
-    public void buttonEnabledIfCourseIsToUpdateSchedule() throws Exception {
-
-        CourseIntallViewAdapter c = getBaseCourse();
-        c.setDownloading(false);
-        c.setInstalled(true);
-        c.setToUpdate(false);
-        c.setToUpdateSchedule(true);
-
-        givenThereAreSomeCourses(2, c);
-
-        downloadActivityTestRule.launchActivity(null);
-
-        onView(withRecyclerView(R.id.recycler_tags)
-                .atPositionOnView(0, R.id.download_course_btn))
-                .check(matches(isEnabled()));
-
-    }
-
-    @Test
     public void showAcceptButtonOnInstallComplete() throws Exception {
 
         givenThereAreSomeCourses(2, getBaseCourse());
@@ -537,25 +499,6 @@ public class DownloadActivityUITest {
                 .atPositionOnView(0, R.id.download_course_btn))
                 .perform(click())
                 .check(matches(withDrawable(R.drawable.ic_action_accept)));
-
-    }
-
-    @Test
-    public void buttonDisabledIfCourseIsNotToUpdateNorToUpdateSchedule() throws Exception {
-
-        CourseIntallViewAdapter c = getBaseCourse();
-        c.setDownloading(false);
-        c.setInstalled(true);
-        c.setToUpdate(false);
-        c.setToUpdateSchedule(false);
-
-        givenThereAreSomeCourses(2, c);
-
-        downloadActivityTestRule.launchActivity(null);
-
-        onView(withRecyclerView(R.id.recycler_tags)
-                .atPositionOnView(0, R.id.download_course_btn))
-                .check(matches(not(isEnabled())));
 
     }
 

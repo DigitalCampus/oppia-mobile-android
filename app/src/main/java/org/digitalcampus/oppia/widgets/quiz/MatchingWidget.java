@@ -49,6 +49,11 @@ public class MatchingWidget extends QuestionWidget {
 	}
 
 	@Override
+	public void setQuestionResponses(List<String> currentAnswers) {
+		// not used for this widget
+	}
+
+	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswer) {
 		responsesLL = view.findViewById(R.id.questionresponses);
     	responsesLL.removeAllViews();
@@ -127,6 +132,11 @@ public class MatchingWidget extends QuestionWidget {
 			return new ArrayList<>();
 		}
     	return userResponses;
+	}
+
+	@Override
+	public List<String> getQuestionResponses() {
+		return new ArrayList<>();
 	}
 
 }

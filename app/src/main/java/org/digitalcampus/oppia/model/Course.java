@@ -26,6 +26,7 @@ import org.digitalcampus.oppia.utils.storage.Storage;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class Course extends MultiLangInfoModel implements Serializable {
@@ -44,20 +45,17 @@ public class Course extends MultiLangInfoModel implements Serializable {
     private Double versionId;
     private boolean installed;
     private boolean toUpdate;
-    private boolean toUpdateSchedule;
     private String downloadUrl;
     private String imageFile;
-    private ArrayList<Media> media = new ArrayList<>();
-    private ArrayList<CourseMetaPage> metaPages = new ArrayList<>();
-    private Double scheduleVersionID;
-    private String scheduleURI;
+    private List<Media> media = new ArrayList<>();
+    private List<CourseMetaPage> metaPages = new ArrayList<>();
     private boolean isDraft = false;
     private int priority = 0;
     private int noActivities = 0;
     private int noActivitiesCompleted = 0;
     private int noActivitiesStarted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
-    private ArrayList<GamificationEvent> gamificationEvents = new ArrayList<>();
+    private List<GamificationEvent> gamificationEvents = new ArrayList<>();
 
     private String root;
 
@@ -74,19 +72,11 @@ public class Course extends MultiLangInfoModel implements Serializable {
         }
     }
 
-    public Double getScheduleVersionID() {
-        return scheduleVersionID;
-    }
-
-    public void setScheduleVersionID(Double scheduleVersionID) {
-        this.scheduleVersionID = scheduleVersionID;
-    }
-
-    public ArrayList<Media> getMedia() {
+    public List<Media> getMedia() {
         return media;
     }
 
-    public void setMedia(ArrayList<Media> media) {
+    public void setMedia(List<Media> media) {
         this.media = media;
     }
 
@@ -172,15 +162,11 @@ public class Course extends MultiLangInfoModel implements Serializable {
         return this.root + File.separator + Storage.APP_COURSES_DIR_NAME + File.separator + this.getShortname() + File.separator + App.COURSE_XML;
     }
 
-    public boolean hasMedia() {
-        return media.size() != 0;
-    }
-
-    public void setMetaPages(ArrayList<CourseMetaPage> ammp) {
+    public void setMetaPages(List<CourseMetaPage> ammp) {
         this.metaPages = ammp;
     }
 
-    public ArrayList<CourseMetaPage> getMetaPages() {
+    public List<CourseMetaPage> getMetaPages() {
         return this.metaPages;
     }
 
@@ -191,22 +177,6 @@ public class Course extends MultiLangInfoModel implements Serializable {
             }
         }
         return null;
-    }
-
-    public boolean isToUpdateSchedule() {
-        return toUpdateSchedule;
-    }
-
-    public void setToUpdateSchedule(boolean toUpdateSchedule) {
-        this.toUpdateSchedule = toUpdateSchedule;
-    }
-
-    public String getScheduleURI() {
-        return scheduleURI;
-    }
-
-    public void setScheduleURI(String scheduleURI) {
-        this.scheduleURI = scheduleURI;
     }
 
     public boolean isDraft() {
@@ -241,16 +211,8 @@ public class Course extends MultiLangInfoModel implements Serializable {
         this.noActivitiesCompleted = noActivitiesCompleted;
     }
 
-    public int getNoActivitiesStarted() {
-        return noActivitiesStarted;
-    }
-
     public void setNoActivitiesStarted(int noActivitiesStarted) {
         this.noActivitiesStarted = noActivitiesStarted;
-    }
-
-    public int getNoActivitiesNotStarted() {
-        return this.getNoActivities() - this.getNoActivitiesCompleted() - this.getNoActivitiesStarted();
     }
 
     public String getSequencingMode() {
@@ -265,11 +227,7 @@ public class Course extends MultiLangInfoModel implements Serializable {
         return shortname + "-" + String.format("%.0f", versionID) + ".zip";
     }
 
-    public void addGamificationEvent(GamificationEvent ge) {
-        gamificationEvents.add(ge);
-    }
-
-    public void setGamificationEvents(ArrayList<GamificationEvent> events) {
+    public void setGamificationEvents(List<GamificationEvent> events) {
         gamificationEvents = events;
     }
 
