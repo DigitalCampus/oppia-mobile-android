@@ -27,7 +27,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         }
     }
 
-    private void protectAdminEditTextPreferences() {
+    void protectAdminEditTextPreferences() {
         for (String prefKey : adminProtectedValues) {
 
             final EditTextPreference editTextPreference = findPreference(prefKey);

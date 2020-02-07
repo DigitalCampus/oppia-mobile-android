@@ -132,10 +132,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
 
     //Google Cloud Messaging preferences
     public static final String PREF_TEST_ACTION_PROTECTED = "prefTestActionProtected";
-    private static final String PREF_DISPLAY_SCREEN = "prefDisplay";
-    private static final String PREF_SECURITY_SCREEN = "prefSecurity";
-    private static final String PREF_NOTIFICATIONS_SCREEN = "prefNotifications";
-    private static final String PREF_ADVANCED_SCREEN = "prefsAdvanced";
+    public static final String PREF_DISPLAY_SCREEN = "prefDisplay";
+    public static final String PREF_SECURITY_SCREEN = "prefSecurity";
+    public static final String PREF_NOTIFICATIONS_SCREEN = "prefNotifications";
+    public static final String PREF_ADVANCED_SCREEN = "prefsAdvanced";
 
     private ProgressDialog pDialog;
     private PreferenceChangedCallback currentPrefScreen;
@@ -162,7 +162,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             // ie. not after orientation changes
             MainPreferencesFragment mPrefsFragment = (MainPreferencesFragment) getSupportFragmentManager().findFragmentByTag(MainPreferencesFragment.FRAGMENT_TAG);
             if (mPrefsFragment == null) {
-                mPrefsFragment = MainPreferencesFragment.newInstance("SettingsAct");
+                mPrefsFragment = MainPreferencesFragment.newInstance();
                 Bundle bundle = this.getIntent().getExtras();
                 if(bundle != null) {
                     mPrefsFragment.setArguments(bundle);
@@ -443,10 +443,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             args.putSerializable("langs", getLanguagesCourses());
             Log.d(TAG, "Langs added!");
         }
-
         fragment.setArguments(args);
-
-        ft.setCustomAnimations(R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim, R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim);
         ft.replace(R.id.root_layout, fragment, fragment.getTag());
         ft.addToBackStack( caller.getTag());
         ft.commit();

@@ -29,6 +29,7 @@
         app:fragment="org.digitalcampus.oppia.fragments.prefs.SecurityPrefsFragment"
         app:title="@string/prefSecurity_title"
         app:key="prefSecurity"
+        android:key="prefSecurity"
         app:icon="@drawable/ic_settings_security"
         app:summary="Admin protection of special actions and enabling/disabling certain functionalities from the screen"
         />

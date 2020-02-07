@@ -17,15 +17,9 @@ public class MainPreferencesFragment extends BasePreferenceFragment {
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
     public static final String FRAGMENT_TAG = "main_prefs_fragment";
-    public static final String PAGE_ID = "page_id";
 
-    public static MainPreferencesFragment newInstance(String pageId) {
-
-        MainPreferencesFragment f = new MainPreferencesFragment();
-        Bundle args = new Bundle();
-        args.putString(PAGE_ID, pageId);
-        f.setArguments(args);
-        return f;
+    public static MainPreferencesFragment newInstance() {
+        return new MainPreferencesFragment();
     }
 
     public MainPreferencesFragment(){
@@ -45,32 +39,5 @@ public class MainPreferencesFragment extends BasePreferenceFragment {
         // Load the preferences from XML resources
         setPreferencesFromResource(R.xml.prefs_main, rootKey);
     }
-
-
-    private void updateLangsList(ArrayList<Lang> langs){
-        List<String> entries = new ArrayList<>();
-        List<String> entryValues = new ArrayList<>();
-
-        for(Lang l: langs){
-            if(!entryValues.contains(l.getLang())){
-                entryValues.add(l.getLang());
-                Locale loc = new Locale(l.getLang());
-                entries.add(loc.getDisplayLanguage(loc));
-            }
-        }
-
-        ListPreference langsList = findPreference(PrefsActivity.PREF_LANGUAGE);
-        if (entries.size() > 1){
-            langsList.setEntries( entries.toArray(new CharSequence[0]) );
-            langsList.setEntryValues( entryValues.toArray(new CharSequence[0]) );
-        }
-        else{
-            getPreferenceScreen().removePreference(langsList);
-        }
-
-    }
-
-
-
 
 }

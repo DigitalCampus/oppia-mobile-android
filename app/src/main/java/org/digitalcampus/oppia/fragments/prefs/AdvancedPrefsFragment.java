@@ -63,6 +63,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
                 return true;
             }
         });
+        protectAdminEditTextPreferences();
 
         MaxIntOnStringPreferenceListener maxIntListener = new MaxIntOnStringPreferenceListener();
         findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN).setOnPreferenceChangeListener(maxIntListener);
@@ -74,7 +75,7 @@ public class AdvancedPrefsFragment extends BasePreferenceFragment implements Pre
         liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_CONN, " ms");
         liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_RESP, " ms");
         EditTextPreference username = findPreference(PrefsActivity.PREF_USER_NAME);
-        username.setSummary( username.getText().equals("") ?
+        username.setSummary( "".equals(username.getText()) ?
                 getString(R.string.about_not_logged_in) :
                 getString(R.string.about_logged_in, username.getText()) );
 

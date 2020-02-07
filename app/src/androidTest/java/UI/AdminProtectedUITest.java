@@ -50,6 +50,8 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerMatchers.isOpen;
 import static androidx.test.espresso.matcher.PreferenceMatchers.withKey;
+import static androidx.test.espresso.matcher.PreferenceMatchers.withTitle;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -234,8 +236,13 @@ public class AdminProtectedUITest {
 
         prefsActivityTestRule.launchActivity(null);
 
-        onData(withKey(PrefsActivity.PREF_ADMIN_PROTECTION))
-                .perform(scrollTo(), click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
+                        click()));
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminProtection)),
+                        click()));
 
         switch (adminProtectionOption) {
 
@@ -260,23 +267,25 @@ public class AdminProtectedUITest {
 
         prefsActivityTestRule.launchActivity(null);
 
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefSecurity_title)),
+                        click()));
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdminPassword)),
+                        click()));
+
         switch (adminProtectionOption) {
 
             case PROTECTION_OPTION_ADMIN_AND_ACTION:
-                onData(withKey(PrefsActivity.PREF_ADMIN_PASSWORD))
-                        .perform(scrollTo(), click());
                 onView(withId(android.R.id.edit)).perform(clearText(), typeText("any_pass"), closeSoftKeyboard());
                 onView(withId(android.R.id.button1)).perform(click());
                 checkAdminPasswordDialogIsDisplayed();
                 break;
             case PROTECTION_OPTION_ONLY_ACTION:
-                onData(withKey(PrefsActivity.PREF_ADMIN_PASSWORD))
-                        .perform(scrollTo(), click());
                 onView(withId(android.R.id.edit)).check(doesNotExist());
                 break;
             case PROTECTION_OPTION_ONLY_ADMIN:
-                onData(withKey(PrefsActivity.PREF_ADMIN_PASSWORD))
-                        .perform(scrollTo(), click());
                 onView(withId(android.R.id.edit)).perform(clearText(), typeText("any_pass"), closeSoftKeyboard());
                 onView(withId(android.R.id.button1)).perform(click());
                 checkAdminPasswordDialogIsDisplayed();
@@ -289,8 +298,13 @@ public class AdminProtectedUITest {
 
         prefsActivityTestRule.launchActivity(null);
 
-        onData(withKey(PrefsActivity.PREF_SERVER))
-                .perform(scrollTo(), click());
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefAdvanced_title)),
+                        click()));
+
+        onView(withId(androidx.preference.R.id.recycler_view))
+                .perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(R.string.prefServer)),
+                        click()));
 
         onView(withId(android.R.id.edit)).perform(clearText(), typeText("http://any.server"), closeSoftKeyboard());
         onView(withId(android.R.id.button1)).perform(click());
