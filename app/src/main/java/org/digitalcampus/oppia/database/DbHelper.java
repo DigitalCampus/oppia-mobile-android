@@ -2170,12 +2170,14 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    /* Methods SQLiteDatabase free. When all previous ones are migrated, DbHelper class can be used only for
+        common methods to access Room Database and remove the inheritance of SQLiteOpenHelper and all db logic
+     */
+
     public boolean insertOrUpdateUserLeaderboard(String username, String fullname, int points, DateTime lastUpdate) {
 
         if ((username == null) || ("".equals(username)))
             return false;
-
-        // TEMPORARY FIX
 
         boolean updated = false;
         Leaderboard leaderboard = App.getDb().leaderboardDao().getLeaderboard(username);
@@ -2200,7 +2202,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    // METHODS FOR DB ROOM MIGRATION
+    // METHODS FOR DB ROOM DATA MIGRATION
 
     public static final String LEADERBOARD_TABLE = "leaderboard";
     public static final String USER_PREFS_TABLE = "userprefs";

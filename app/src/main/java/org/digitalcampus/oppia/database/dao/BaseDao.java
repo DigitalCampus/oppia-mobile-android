@@ -21,7 +21,7 @@ public interface BaseDao<T> {
     long insert(T item);
 
     /**
-     * @return number of rows updated (1 or 0)
+     * @return number of rows updated
      */
     @Update
     int update(T... item);

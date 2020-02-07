@@ -145,14 +145,11 @@ public class SessionManager {
 
     private static void saveUserPrefs(Context ctx, String username, SharedPreferences prefs) {
 
-//        ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
         List<UserPreference> userPreferences = new ArrayList<>();
 
         for (String prefID : USER_STRING_PREFS) {
             String prefValue = prefs.getString(prefID, "");
             if (!TextUtils.isEmpty(prefValue)) {
-//                Pair<String, String> userPref = new Pair<>(prefID, prefValue);
-//                userPrefs.add(userPref);
                 userPreferences.add(new UserPreference(username, prefID, prefValue));
             }
         }
@@ -160,25 +157,17 @@ public class SessionManager {
         for (String prefID : USER_BOOLEAN_PREFS) {
             if (prefs.contains(prefID)) {
                 boolean prefValue = prefs.getBoolean(prefID, false);
-//                Pair<String, String> userPref = new Pair<>(prefID, prefValue ? "true" : "false");
-//                userPrefs.add(userPref);
                 userPreferences.add(new UserPreference(username, prefID, prefValue ? "true" : "false"));
             }
         }
 
         App.getDb().userPreferenceDao().insertAll(userPreferences);
-
-//        DbHelper db = DbHelper.getInstance(ctx);
-//        db.insertUserPreferences(username, userPrefs);
     }
 
     //Warning: this method doesn't call prefs.apply()
     private static void loadUserPrefs(Context ctx, String username, SharedPreferences.Editor prefsEditor) {
 
         List<UserPreference> userPrefs = App.getDb().userPreferenceDao().getAllForUser(username);
-
-//        DbHelper db = DbHelper.getInstance(ctx);
-//        List<Pair<String, String>> userPrefs = db.getUserPreferences(username);
 
         ArrayList<String> prefsToSave = new ArrayList<>();
         prefsToSave.addAll(USER_STRING_PREFS);
@@ -210,8 +199,6 @@ public class SessionManager {
 
         UserPreference userPreference = new UserPreference(user.getUsername(), APIKEY_VALID, valid ? "true" : "false");
         App.getDb().userPreferenceDao().insert(userPreference);
-
-//        DbHelper.getInstance(ctx).insertUserPreferences(user.getUsername(), userPrefs);
     }
 
     public static boolean isUserApiKeyValid(Context ctx) {
@@ -223,11 +210,8 @@ public class SessionManager {
     }
 
     public static boolean isUserApiKeyValid(Context ctx, String username) {
-//        DbHelper db = DbHelper.getInstance(ctx);
-//        String prefValue = db.getUserPreference(username, APIKEY_VALID);
-//        return (prefValue == null || "true".equals(prefValue));
 
-        UserPreference userPref = App.getDb().userPreferenceDao().getPref(username, APIKEY_VALID);
+        UserPreference userPref = App.getDb().userPreferenceDao().getUserPreference(username, APIKEY_VALID);
         return (userPref == null || "true".equals(userPref.getValue()));
     }
 

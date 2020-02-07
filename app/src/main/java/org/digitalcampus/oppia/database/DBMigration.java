@@ -65,11 +65,6 @@ public class DBMigration {
             copyUserCustomFieldsData(dbHelper);
         }
 
-        if (currentVersion < 2) {
-        }
-
-        if (currentVersion < 3) {
-        }
 
     }
 

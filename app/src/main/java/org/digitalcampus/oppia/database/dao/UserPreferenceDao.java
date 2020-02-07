@@ -18,7 +18,7 @@ public interface UserPreferenceDao extends BaseDao<UserPreference> {
     List<UserPreference> getAllForUser(String username);
 
     @Query("SELECT * FROM user_preference WHERE username = :username AND preference = :preferenceKey")
-    UserPreference getPref(String username, String preferenceKey);
+    UserPreference getUserPreference(String username, String preferenceKey);
 
 
 }
