@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.fragments.prefs;
 
 import android.os.Bundle;
 
+import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.model.Lang;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -24,6 +26,15 @@ public class MainPreferencesFragment extends BasePreferenceFragment {
 
     public MainPreferencesFragment(){
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstance) {
+        super.onCreate(savedInstance);
+
+        EditTextPreference info = findPreference(PrefsActivity.PREF_INFO);
+        info.setTitle("Current version:" + BuildConfig.VERSION_NAME);
+        info.setSummary(BuildConfig.APPLICATION_ID);
     }
 
     @Override

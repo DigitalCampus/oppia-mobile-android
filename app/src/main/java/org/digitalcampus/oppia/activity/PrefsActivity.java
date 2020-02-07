@@ -62,7 +62,8 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         MoveStorageListener, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback{
 	
 	public static final String PREF_STORAGE_LOCATION = "prefStorageLocation";
-	
+
+    public static final String PREF_INFO = "prefInfo";
 	public static final String PREF_USER_NAME = "prefUsername";
 	public static final String PREF_SERVER = "prefServer";
     public static final String PREF_SERVER_CHECKED = "prefServerChecked";
