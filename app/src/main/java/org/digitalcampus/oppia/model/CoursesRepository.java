@@ -2,7 +2,7 @@ package org.digitalcampus.oppia.model;
 
 import android.content.Context;
 
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 
 import java.util.List;

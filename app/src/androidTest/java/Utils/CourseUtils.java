@@ -5,7 +5,7 @@ import android.util.Log;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
