@@ -27,8 +27,8 @@
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:background="@drawable/actionbar_background_gradient"
                 android:paddingLeft="30dp"
-                android:paddingTop="@android:dimen/notification_large_icon_height"
-                android:paddingBottom="@dimen/padding_large"
+                android:paddingTop="@dimen/padding_medium_2"
+                android:paddingBottom="@dimen/padding_medium_2"
                 android:text="@string/tab_title_register"
                 android:textAppearance="@style/SectionHeader"
                 android:textColor="@color/text_light"/>
