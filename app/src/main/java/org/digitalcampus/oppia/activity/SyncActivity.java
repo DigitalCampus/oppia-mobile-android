@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +53,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
     private static final int REQUEST_ENABLE_BT = 3;
+    private static final int REQUEST_DISCOVERABLE_MODE = 4;
     private static final int BLUETOOTH_DISCOVERABLE_TIME = 300;
 
     private final int TAB_ACTIVITYLOGS = 0;
@@ -324,11 +326,13 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
 
     private void ensureDiscoverable() {
-        if (bluetoothAdapter.getScanMode() !=
-                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+        if (bluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, BLUETOOTH_DISCOVERABLE_TIME);
-            startActivity(discoverableIntent);
+            startActivityForResult(discoverableIntent, REQUEST_DISCOVERABLE_MODE);
+        }
+        else{
+            Toast.makeText(this, R.string.bluetooth_discovery_already_enabled, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -436,17 +440,21 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         refreshFileList(true);
         updateStatus(false);
 
+        if ((isReceiving) || (file.getType().equals(CourseTransferableFile.TYPE_ACTIVITY_LOG))){
+            Log.d(TAG, "Complete!");
+            String title = file.getNotificationName();
+            if ((file.getFile() == null) && !TextUtils.isEmpty(title)){
+                Toast.makeText(this, getString(R.string.bluetooth_transfer_complete, title), Toast.LENGTH_LONG).show();
+            }
+        }
         isReceiving = false;
-        Log.d(TAG, "Complete! ");
 
         Log.e(TAG, "File complete!");
         if (file.getType().equals(CourseTransferableFile.TYPE_COURSE_BACKUP) ){
             Log.e(TAG, "Installing new course!");
-
         }
 
         receivingCover.setVisibility(View.GONE);
-
     }
 
     @Override
@@ -474,7 +482,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             Toast.makeText(this, p.getResultResponse(), Toast.LENGTH_SHORT).show();
         }
         refreshFileList(false);
-        //Toast.makeText(this.getActivity(), R.string.install_complete, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.install_complete, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -542,6 +550,11 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             pendingSize.setText(FileUtils.readableFileSize(pendingProgress));
         }
 
+        if ((pending.size() == 0) && (pendingProgress == 0)){
+            //If we are sending and there are no transfers left, show the complete toast
+            Toast.makeText(this, R.string.bluetooth_all_transfers_complete, Toast.LENGTH_LONG).show();
+        }
+
     }
 
 
@@ -553,6 +566,16 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
                     connectDevice(data);
+                }
+                break;
+            case REQUEST_DISCOVERABLE_MODE:
+                // When DeviceListActivity returns with a device to connect
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    Toast.makeText(this, R.string.bluetooth_discovery_fail, Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    //In case os success, resultCode is the discoverability time
+                    Toast.makeText(this, getString(R.string.bluetooth_discovery_success, resultCode), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case REQUEST_ENABLE_BT:
