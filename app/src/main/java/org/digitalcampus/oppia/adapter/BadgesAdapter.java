@@ -58,7 +58,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private View rootView;
+        public View rootView;
         private TextView badgeDescription;
         private TextView badgeDate;
 
