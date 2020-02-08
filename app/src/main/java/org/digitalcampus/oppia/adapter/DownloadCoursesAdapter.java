@@ -139,7 +139,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private View rootView;
+        public View rootView;
         private TextView courseTitle;
         private TextView courseDraft;
         private TextView courseDescription;

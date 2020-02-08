@@ -330,11 +330,9 @@ public class MultiChoiceHelper {
             out.writeSparseBooleanArray(checkStates);
             final int n = checkedIdStates != null ? checkedIdStates.size() : -1;
             out.writeInt(n);
-            if (checkedIdStates != null) {
-                for (int i = 0; i < n; i++) {
-                    out.writeLong(checkedIdStates.keyAt(i));
-                    out.writeInt(checkedIdStates.valueAt(i));
-                }
+            for (int i = 0; i < n; i++) {
+                out.writeLong(checkedIdStates.keyAt(i));
+                out.writeInt(checkedIdStates.valueAt(i));
             }
         }
 
