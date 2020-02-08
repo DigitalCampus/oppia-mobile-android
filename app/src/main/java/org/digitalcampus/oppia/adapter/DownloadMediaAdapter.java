@@ -146,7 +146,7 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
 
     public class ViewHolder extends MultiChoiceHelper.ViewHolder {
 
-        public View rootView;
+        private View rootView;
         private TextView mediaCourses;
         private TextView mediaTitle;
         private TextView mediaPath;

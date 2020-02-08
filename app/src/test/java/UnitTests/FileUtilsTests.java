@@ -1,6 +1,8 @@
 package UnitTests;
 
 
+import android.util.Log;
+
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,12 +26,13 @@ import static junit.framework.Assert.assertTrue;
 
 public class FileUtilsTests {
 
+    private static final String TAG = "FileUtilsTests";
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     private static final int FILES_COUNT = 5;
 
     @Test
-    public void UnzipFiles_correctPaths(){
+    public void UnzipFiles_correctPaths() {
         File zipFile;
         boolean result = false;
         try {
@@ -45,13 +48,13 @@ public class FileUtilsTests {
             assertEquals(FILES_COUNT + 1, zipFile.getParentFile().listFiles().length);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "UnzipFiles_correctPaths: ", e);
         }
 
     }
 
     @Test
-    public void UnzipFiles_wrongPaths(){
+    public void UnzipFiles_wrongPaths() {
         File zipFile;
         boolean result;
         try {
@@ -86,7 +89,7 @@ public class FileUtilsTests {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "UnzipFiles_wrongPaths: ", e);
         }
     }
 
@@ -118,7 +121,7 @@ public class FileUtilsTests {
 
 
     @Test
-    public void CleanDir_correctPath(){
+    public void CleanDir_correctPath() {
 
         try {
             File tempFolder = folder.newFolder("tempFolder");
@@ -132,50 +135,50 @@ public class FileUtilsTests {
 
             assertEquals(0, tempFolder.listFiles().length);
 
-        }catch(IOException ioe){
-            ioe.printStackTrace();
+        } catch (IOException ioe) {
+            Log.e(TAG, "CleanDir_correctPath: ", ioe);
         }
     }
 
     @Test
-    public void CleanDir_wrongPath(){
+    public void CleanDir_wrongPath() {
         File tempFile = new File("tempFile");
         assertTrue(FileUtils.cleanDir(tempFile));
     }
 
     @Test
-    public void CleanDir_fileAsArgument(){
+    public void CleanDir_fileAsArgument() {
 
         try {
             File tempFile = folder.newFile("tempFile.txt");
 
             assertTrue(FileUtils.cleanDir(tempFile));
 
-        }catch(IOException ioe){
-            ioe.printStackTrace();
+        } catch (IOException ioe) {
+            Log.e(TAG, "CleanDir_fileAsArgument: ", ioe);
         }
     }
 
     @Test
-    public void DeleteDir_correctPath(){
-        try{
+    public void DeleteDir_correctPath() {
+        try {
             File tempFolder = folder.newFolder("tempFolder");
 
             assertTrue(FileUtils.deleteDir(tempFolder));
-        }catch(IOException ioe){
-            ioe.printStackTrace();
+        } catch (IOException ioe) {
+            Log.e(TAG, "DeleteDir_correctPath: ", ioe);
         }
 
     }
 
     @Test
-    public void DeleteDir_wrongPath(){
+    public void DeleteDir_wrongPath() {
         File tempFile = new File("tempFile");
         assertFalse(FileUtils.deleteDir(tempFile));
     }
 
     @Test
-    public void DirSize_correctSize(){
+    public void DirSize_correctSize() {
         //Case when the directory does not exists
         File f = new File("non_exists_dir");
         assertEquals(0, FileUtils.dirSize(f));
@@ -199,14 +202,14 @@ public class FileUtilsTests {
             }
 
             assertEquals(text.length() * FILES_COUNT, FileUtils.dirSize(tempFolder));
-        }catch(IOException ioe){
-            ioe.printStackTrace();
+        } catch (IOException ioe) {
+            Log.e(TAG, "DirSize_correctSize: ", ioe);
         }
 
     }
 
     @Test
-    public void CleanUp(){
+    public void CleanUp() {
         try {
             File dir = folder.newFolder("testFolder");
             File zipFile = folder.newFile("zipFile.zip");
@@ -217,13 +220,13 @@ public class FileUtilsTests {
             assertFalse(dir.exists());
             assertFalse(zipFile.exists());
 
-        }catch(IOException ioe){
-            ioe.printStackTrace();
+        } catch (IOException ioe) {
+            Log.e(TAG, "CleanUp: ", ioe);
         }
     }
 
     @Test
-    public void ReadFile_FileInputStream(){
+    public void ReadFile_FileInputStream() {
         String text = "The quick brown fox jumps over the lazy dog";
         String filename = "test_file.txt";
 
@@ -235,13 +238,13 @@ public class FileUtilsTests {
 
             FileInputStream fis = new FileInputStream(file);
             assertEquals(text, FileUtils.readFile(fis));
-        }catch(IOException ioe){
-            ioe.printStackTrace();
+        } catch (IOException ioe) {
+            Log.e(TAG, "ReadFile_FileInputStream: ", ioe);
         }
     }
 
     @Test
-    public void ReadFile_String(){
+    public void ReadFile_String() {
         String text = "The quick brown fox jumps over the lazy dog";
         String filename = "test_file.txt";
 
@@ -252,7 +255,7 @@ public class FileUtilsTests {
             fileWriter.close();
 
             assertEquals(text, FileUtils.readFile(file.getAbsolutePath()));
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
     }
@@ -296,27 +299,27 @@ public class FileUtilsTests {
 
             byte data[] = new byte[FileUtils.BUFFER_SIZE];
 
-            for(int i = 0; i < files.length; i++){
+            for (int i = 0; i < files.length; i++) {
                 FileInputStream fis = new FileInputStream(files[i]);
                 is = new BufferedInputStream(fis, FileUtils.BUFFER_SIZE);
-                try{
+                try {
                     ZipEntry entry = new ZipEntry(files[i].getName());
                     out.putNextEntry(entry);
 
                     int count;
-                    while ((count = is.read(data, 0, FileUtils.BUFFER_SIZE)) != -1){
+                    while ((count = is.read(data, 0, FileUtils.BUFFER_SIZE)) != -1) {
                         out.write(data, 0, count);
                     }
-                }catch(IOException ioe){
+                } catch (IOException ioe) {
                     ioe.printStackTrace();
-                }finally{
+                } finally {
                     is.close();
                     files[i].delete();
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             out.close();
         }
 

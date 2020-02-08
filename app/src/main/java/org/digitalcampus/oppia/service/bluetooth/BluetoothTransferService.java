@@ -79,8 +79,8 @@ public class BluetoothTransferService extends Service {
         BluetoothTransferService.socket = socket;
     }
 
-    private volatile HandlerThread receiveHandlerThread;
-    private volatile HandlerThread sendHandlerThread;
+    private volatile HandlerThread receiveHandlerThread; //NOSONAR
+    private volatile HandlerThread sendHandlerThread; //NOSONAR (Android bluetooth recomendations)
     private Handler receiveHandler;
     private Handler sendHandler;
     private BluetoothBroadcastReceiver alternateNotifier;
