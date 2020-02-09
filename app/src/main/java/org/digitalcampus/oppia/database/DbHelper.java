@@ -208,14 +208,8 @@ public class DbHelper extends SQLiteOpenHelper {
         createQuizAttemptsTable(db);
         createSearchTable(db);
         createUserTable(db);
-//        createUserPrefsTable(db);
         createCourseGamificationTable(db);
         createActivityGamificationTable(db);
-//		createLeaderboardTable(db);
-
-//		createUserCustomFieldsTable(db);
-
-//		createAlternativeUserPrefsTable(db);
     }
 
     public void beginTransaction() {
@@ -325,32 +319,6 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-//    private void createUserCustomFieldsTable(SQLiteDatabase db) {
-//
-//        String sql = "CREATE TABLE [" + USER_CF_TABLE + "] (" +
-//                "[" + USER_CF_ID + "]" + STR_INT_PRIMARY_KEY_AUTO +
-//                "[" + USER_CF_USERNAME + "]" + STR_TEXT_COMMA +
-//                "[" + CF_FIELD_KEY + "]" + STR_TEXT_COMMA +
-//
-//                "[" + CF_VALUE_STR + "]" + STR_TEXT_COMMA +
-//                "[" + CF_VALUE_INT + "]" + STR_INT_COMMA +
-//                "[" + CF_VALUE_BOOL + "] BOOLEAN, " +
-//                "[" + CF_VALUE_FLOAT + "] FLOAT, " +
-//                "CONSTRAINT unq UNIQUE (" + USER_CF_USERNAME + ", " + CF_FIELD_KEY + ")" +
-//                ");";
-//        db.execSQL(sql);
-//    }
-
-//    public void createUserPrefsTable(SQLiteDatabase db){
-//        String mSql = STR_CREATE_TABLE + USER_PREFS_TABLE + " ("
-//                + USER_PREFS_C_USERNAME + " text not null, "
-//                + USER_PREFS_C_PREFKEY + " text not null, "
-//                + USER_PREFS_C_PREFVALUE + STR_TEXT_COMMA
-//                + "primary key (" + USER_PREFS_C_USERNAME + ", " + USER_PREFS_C_PREFKEY + ") "
-//                +  ")";
-//        db.execSQL(mSql);
-//    }
-
     public void createCourseGamificationTable(SQLiteDatabase db) {
         String mSql = STR_CREATE_TABLE + COURSE_GAME_TABLE + " ("
                 + COURSE_GAME_C_ID + STR_INT_PRIMARY_KEY_AUTO
@@ -368,15 +336,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 + ACTIVITY_GAME_C_POINTS + " integer default 0 )";
         db.execSQL(mSql);
     }
-
-//	private void createLeaderboardTable(SQLiteDatabase db){
-//		String sql = STR_CREATE_TABLE + LEADERBOARD_TABLE + " (" +
-//				LEADERBOARD_C_USERNAME + STR_TEXT_COMMA +
-//				LEADERBOARD_C_FULLNAME + STR_TEXT_COMMA +
-//				LEADERBOARD_C_POINTS + " integer default 0, " +
-//				LEADERBOARD_C_LASTUPDATE + " datetime default current_timestamp )";
-//		db.execSQL(sql);
-//	}
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -502,12 +461,6 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL(sql2);
         }
 
-//        if(oldVersion <= 22 && newVersion >= 23){
-//            // add user preferences table
-//            db.execSQL("drop table if exists " + USER_PREFS_TABLE);
-//            createUserPrefsTable(db);
-//        }
-
         if (oldVersion <= 23 && newVersion >= 24) {
             // add field "sequencingMode" to Course table
             String sql1 = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "';";
@@ -549,12 +502,6 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL(sql4);
         }
 
-        //		if(oldVersion <= 28 && newVersion >= 29){
-//			// add leaderboard table
-//			db.execSQL("drop table if exists " + LEADERBOARD_TABLE);
-//			createLeaderboardTable(db);
-//		}
-
         if (oldVersion <= 29 && newVersion >= 30) {
             // add fields for offline_register to User table
             db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_OFFLINE_REGISTER + " integer default 0;");
@@ -565,40 +512,9 @@ public class DbHelper extends SQLiteOpenHelper {
             db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
         }
 
-
-//        if (oldVersion < 31) {
-//            createUserCustomFieldsTable(db);
-//        }
-
-//		if (oldVersion < 35) {
-//			createAlternativeUserPrefsTable(db);
-//		}
     }
 
-//	private void createAlternativeUserPrefsTable(SQLiteDatabase database) {
-//
-//		database.beginTransaction();
-//		try {
-//
-//			database.execSQL("CREATE TABLE 'user_preference' (" +
-//					"'_id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , " +
-//					"'username' text not null, " +
-//					"'preference' text not null, " +
-//					"'value' text );");
-//
-////			database.execSQL("CREATE UNIQUE INDEX idx ON 'user_preference' ('username', 'preference');");
-//
-//			database.execSQL("INSERT INTO 'user_preference' ('username', 'preference', 'value') SELECT * FROM 'userprefs'");
-//
-//			database.execSQL("DROP TABLE 'userprefs'");
-//
-//			database.setTransactionSuccessful();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			database.endTransaction();
-//		}
-//	}
+
 
     public void updateV43(long userId) {
         // update existing trackers

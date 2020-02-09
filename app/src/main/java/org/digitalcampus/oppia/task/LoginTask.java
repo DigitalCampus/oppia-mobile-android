@@ -64,7 +64,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 			Log.d(TAG,"logged pw: " + localUser.getPasswordEncrypted());
 			Log.d(TAG,"entered pw: " + u.getPasswordEncrypted());
 			
-			if (SessionManager.isUserApiKeyValid(ctx, u.getUsername()) &&
+			if (SessionManager.isUserApiKeyValid(u.getUsername()) &&
                     localUser.getPasswordEncrypted().equals(u.getPasswordEncrypted())){
 				payload.setResult(true);
 				payload.setResultResponse(ctx.getString(R.string.login_complete));

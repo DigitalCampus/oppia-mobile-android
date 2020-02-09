@@ -268,12 +268,12 @@ public class FileUtils {
 		return 0;
 	}
 
-	public static void cleanUp(File tempDir, String path) {
+	public static Boolean cleanUp(File tempDir, String path) {
 		FileUtils.deleteDir(tempDir);
 
 		// delete zip file from download dir
 		File zip = new File(path);
-		zip.delete();
+		return zip.delete();
 	}
 
 	public static String readFile(String file) throws IOException {

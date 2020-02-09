@@ -79,7 +79,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
                             db.markQuizSubmitted(qa.getId());
                             break;
                         case 401:
-                            SessionManager.setUserApiKeyValid(ctx, qa.getUser(), false);
+                            SessionManager.setUserApiKeyValid(qa.getUser(), false);
                             break;
                         case 500: // server error - so to prevent re-submitting over and
                             // over just mark as submitted

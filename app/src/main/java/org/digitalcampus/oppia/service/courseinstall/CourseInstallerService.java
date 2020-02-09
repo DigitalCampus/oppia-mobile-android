@@ -23,7 +23,6 @@ import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.api.RemoteApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -46,9 +45,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class CourseIntallerService extends IntentService {
+public class CourseInstallerService extends IntentService {
 
-    public static final String TAG = CourseIntallerService.class.getSimpleName();
+    public static final String TAG = CourseInstallerService.class.getSimpleName();
     public static final String BROADCAST_ACTION = "com.digitalcampus.oppia.COURSEINSTALLERSERVICE";
 
     public static final String SERVICE_ACTION = "action";
@@ -56,7 +55,6 @@ public class CourseIntallerService extends IntentService {
     public static final String SERVICE_SHORTNAME = "shortname"; //field for providing Course shortname
     public static final String SERVICE_VERSIONID = "versionid"; //field for providing file URL
     public static final String SERVICE_MESSAGE = "message";
-    public static final String SERVICE_SCHEDULEURL = "scheduleurl";
 
     public static final String ACTION_CANCEL = "cancel";
     public static final String ACTION_DOWNLOAD = "download";
@@ -67,11 +65,10 @@ public class CourseIntallerService extends IntentService {
 
     private ArrayList<String> tasksCancelled;
     private ArrayList<String> tasksDownloading;
-    private ApiEndpoint apiEndpoint;
 
-    private static CourseIntallerService currentInstance;
+    private static CourseInstallerService currentInstance;
 
-    private static void setInstance(CourseIntallerService instance){
+    private static void setInstance(CourseInstallerService instance){
         currentInstance = instance;
     }
 
@@ -84,15 +81,14 @@ public class CourseIntallerService extends IntentService {
         return new ArrayList<>();
     }
 
-    public CourseIntallerService(ApiEndpoint api) {
+    public CourseInstallerService(ApiEndpoint api) {
         super(TAG);
-        apiEndpoint = api;
     }
 
     @Override
     public void onCreate(){
         super.onCreate();
-        CourseIntallerService.setInstance(this);
+        CourseInstallerService.setInstance(this);
 
     }
 
@@ -169,18 +165,13 @@ public class CourseIntallerService extends IntentService {
 
             }
         }
-        else if (intent.getStringExtra(SERVICE_ACTION).equals(ACTION_UPDATE)){
-            String scheduleURL = intent.getStringExtra(SERVICE_SCHEDULEURL);
-            String shortname = intent.getStringExtra(SERVICE_SHORTNAME);
-        }
-
     }
 
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        CourseIntallerService.setInstance(null);
+        CourseInstallerService.setInstance(null);
     }
 
     private void logAndNotifyError(String fileUrl, Exception e){

@@ -210,7 +210,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                     Log.d(TAG, "Msg:" + response.body().string());
                     if (response.code() == 401) {
                         //The apiKey of this user is invalid
-                        SessionManager.setUserApiKeyValid(ctx, user, false);
+                        SessionManager.setUserApiKeyValid(user, false);
                         //We don't process more of this user trackers
                     }
                     return false;

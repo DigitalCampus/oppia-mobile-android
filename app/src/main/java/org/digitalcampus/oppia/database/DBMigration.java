@@ -3,6 +3,7 @@ package org.digitalcampus.oppia.database;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.application.App;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
 
 public class DBMigration {
 
+    public static final String TAG = DBMigration.class.getSimpleName();
     public static final int DATA_MIGRATION_LAST_VERSION = 1;
 
     private final Context context;
@@ -52,7 +54,7 @@ public class DBMigration {
             runMigrationsByVersion(currentVersion, dbHelper);
             prefs.edit().putInt(PrefsActivity.PREF_DATA_ROOM_MIGRATON_VERSION, DATA_MIGRATION_LAST_VERSION).apply();
         } catch (SQLiteException e) {
-            e.printStackTrace();
+            Log.d(TAG, "SQLiteException", e);
         }
 
     }

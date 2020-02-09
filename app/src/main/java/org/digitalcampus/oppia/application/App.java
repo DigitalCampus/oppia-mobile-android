@@ -58,7 +58,6 @@ public class App extends Application {
     public static final int APP_LOGO = R.drawable.dc_logo;
 
     public static final String COURSE_XML = "module.xml";
-    public static final String COURSE_SCHEDULE_XML = "schedule.xml";
     public static final String COURSE_TRACKER_XML = "tracker.xml";
     public static final String PRE_INSTALL_COURSES_DIR = "www/preload/courses"; // don't include leading or trailing slash
     public static final String PRE_INSTALL_MEDIA_DIR = "www/preload/media"; // don't include leading or trailing slash
@@ -100,7 +99,6 @@ public class App extends Application {
     public static final boolean MENU_ALLOW_COURSE_DOWNLOAD = BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD;
     public static final boolean MENU_ALLOW_LANGUAGE = BuildConfig.MENU_ALLOW_LANGUAGE;
     public static final boolean MENU_ALLOW_SETTINGS = BuildConfig.MENU_ALLOW_SETTINGS;
-    public static final boolean MENU_ALLOW_MONITOR = BuildConfig.MENU_ALLOW_MONITOR;
     public static final boolean MENU_ALLOW_SYNC = BuildConfig.MENU_ALLOW_SYNC;
     public static final boolean MENU_ALLOW_LOGOUT = BuildConfig.MENU_ALLOW_LOGOUT;
 
@@ -108,7 +106,6 @@ public class App extends Application {
     public static final int SESSION_EXPIRATION_TIMEOUT = BuildConfig.SESSION_EXPIRATION_TIMEOUT; // no seconds before user is logged out for inactivity
 
     public static final int MAX_TRACKER_SUBMIT = 10;
-    //	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v", "video/mp4", "audio/mpeg", "video/3gp", "video/3gpp"}; //NOSONAR
 
     // only used in case a course doesn't have any lang specified
@@ -125,15 +122,10 @@ public class App extends Application {
 
         db = Room.databaseBuilder(getApplicationContext(),
                 MyDatabase.class, MyDatabase.DB_NAME_ROOM)
-//                .addMigrations(MyDatabase.MIGRATION_)
-//                .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()
                 .build();
 
         DbHelper.getInstance(this).getReadableDatabase();
-
-//        App.getDb().userCustomFieldDao().getAll();
-
 
         // this method fires once at application start
         Log.d(TAG, "Application start");
@@ -155,7 +147,6 @@ public class App extends Application {
         checkAdminProtectionOnFirstRun(prefs);
         checkShowDescriptionOverrideUpdate();
 
-        //----
 
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
 
@@ -195,26 +186,16 @@ public class App extends Application {
         } else {
             cancelTrackerWork();
         }
-
-
-        // To test worker alone
-//        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(TrackerWorker.class).build();
-//        WorkManager.getInstance(this).enqueue(oneTimeWorkRequest);
     }
 
 
     private void scheduleTrackerWork() {
-
-//		Data inputData = new Data.Builder()
-//				.putBoolean("backgroundData", backgroundData)
-//				.build();
 
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
         PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(TrackerWorker.class, 1, TimeUnit.HOURS)
-//				.setInputData(inputData)
                 .setConstraints(constraints)
                 .setInitialDelay(1, TimeUnit.HOURS)
                 .build();

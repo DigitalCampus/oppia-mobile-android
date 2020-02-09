@@ -290,11 +290,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
             Log.d(TAG, PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED + ": " + newPref);
         }
-
-        // update the points/badges by invalidating the menu
-        if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
-        }
-
     }
 
 }

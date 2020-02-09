@@ -5,15 +5,8 @@ import android.os.Bundle;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.model.Lang;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import androidx.preference.EditTextPreference;
-import androidx.preference.ListPreference;
-import androidx.preference.PreferenceFragmentCompat;
 
 public class MainPreferencesFragment extends BasePreferenceFragment {
 

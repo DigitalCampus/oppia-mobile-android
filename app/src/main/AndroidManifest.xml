@@ -155,7 +155,7 @@
             android:exported="false"
             android:icon="@drawable/dc_logo" />
         <service
-            android:name="org.digitalcampus.oppia.service.courseinstall.CourseIntallerService"
+            android:name="org.digitalcampus.oppia.service.courseinstall.CourseInstallerService"
             android:exported="false"
             android:icon="@drawable/dc_logo" />
         <service

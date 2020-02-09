@@ -90,9 +90,6 @@ public class LeaderboardFragment extends AppFragment implements SubmitListener {
 
         leaderboard.clear();
 
-//        DbHelper db = DbHelper.getInstance(getActivity());
-//        leaderboard.addAll(db.getLeaderboard());
-
         leaderboard.addAll(App.getDb().leaderboardDao().getAll());
 
         String username = SessionManager.getUsername(this.getContext());

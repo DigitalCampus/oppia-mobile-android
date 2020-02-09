@@ -429,11 +429,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         try {
             fragment = (PreferenceFragmentCompat) Class.forName(pref.getFragment()).newInstance();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.d(TAG, "Class not found exception", e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.d(TAG, "IllegalAccessException", e);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            Log.d(TAG, "InstantiationException", e);
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

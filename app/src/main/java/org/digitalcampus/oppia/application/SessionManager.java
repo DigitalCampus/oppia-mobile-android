@@ -122,7 +122,7 @@ public class SessionManager {
         editor.putBoolean(PrefsActivity.PREF_BADGING_ENABLED, user.isBadgingEnabled());
 
         loadUserPrefs(ctx, username, editor);
-        setUserApiKeyValid(ctx, user, true);
+        setUserApiKeyValid(user, true);
         Mint.setUserIdentifier(username);
         editor.apply();
     }
@@ -134,7 +134,7 @@ public class SessionManager {
 
         //If there was a logged in user, we save her Preferences in the DB
         if (!TextUtils.isEmpty(username)) {
-            saveUserPrefs(ctx, username, prefs);
+            saveUserPrefs(username, prefs);
         }
 
         //Logout the user (unregister from Preferences)
@@ -143,7 +143,7 @@ public class SessionManager {
         editor.apply();
     }
 
-    private static void saveUserPrefs(Context ctx, String username, SharedPreferences prefs) {
+    private static void saveUserPrefs(String username, SharedPreferences prefs) {
 
         List<UserPreference> userPreferences = new ArrayList<>();
 
@@ -192,7 +192,7 @@ public class SessionManager {
         }
     }
 
-    public static void setUserApiKeyValid(Context ctx, User user, boolean valid) {
+    public static void setUserApiKeyValid(User user, boolean valid) {
         ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
         Pair<String, String> userPref = new Pair<>(APIKEY_VALID, valid ? "true" : "false");
         userPrefs.add(userPref);
@@ -204,12 +204,12 @@ public class SessionManager {
     public static boolean isUserApiKeyValid(Context ctx) {
         if (isLoggedIn(ctx)) {
             String user = getUsername(ctx);
-            return isUserApiKeyValid(ctx, user);
+            return isUserApiKeyValid(user);
         }
         return true;
     }
 
-    public static boolean isUserApiKeyValid(Context ctx, String username) {
+    public static boolean isUserApiKeyValid(String username) {
 
         UserPreference userPref = App.getDb().userPreferenceDao().getUserPreference(username, APIKEY_VALID);
         return (userPref == null || "true".equals(userPref.getValue()));

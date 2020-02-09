@@ -75,7 +75,7 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
             if (!response.isSuccessful()){
                 payload.setResult(false);
                 if (response.code() == 401){
-                    SessionManager.setUserApiKeyValid(ctx, u, false);
+                    SessionManager.setUserApiKeyValid(u, false);
                     APIKeyInvalidated = true;
                 }
                 payload.setResultResponse(ctx.getString(

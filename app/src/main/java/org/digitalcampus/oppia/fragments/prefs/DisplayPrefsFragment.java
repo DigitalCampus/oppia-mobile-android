@@ -16,8 +16,6 @@ import androidx.preference.ListPreference;
 public class DisplayPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
-    private ListPreference storagePref;
-    private EditTextPreference serverPref;
 
     public static DisplayPrefsFragment newInstance() {
         return new DisplayPrefsFragment();
@@ -75,6 +73,6 @@ public class DisplayPrefsFragment extends BasePreferenceFragment implements Pref
 
     @Override
     public void onPreferenceUpdated(String pref, String newValue) {
-
+        // do nothing
     }
 }
