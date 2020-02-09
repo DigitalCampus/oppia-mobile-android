@@ -18,8 +18,6 @@ public class ViewDigestActivity extends AppActivity {
 
     private TextView errorText;
     private View activityDetail;
-    private Activity activity;
-    private Course activityCourse;
 
     @Override
     public void onStart() {
@@ -42,7 +40,7 @@ public class ViewDigestActivity extends AppActivity {
         if (validDigest){
             Log.d(TAG, "Digest valid, checking activity");
             DbHelper db = DbHelper.getInstance(this);
-            activity = db.getActivityByDigest(digest);
+            Activity activity = db.getActivityByDigest(digest);
 
             if (activity == null){
                 errorText.setText(this.getText(R.string.open_digest_errors_activity_not_found));
@@ -51,7 +49,7 @@ public class ViewDigestActivity extends AppActivity {
             }
             else{
                 long userID = db.getUserId(SessionManager.getUsername(this));
-                activityCourse = db.getCourse(activity.getCourseId(), userID);
+                Course activityCourse = db.getCourse(activity.getCourseId(), userID);
                 activity.setCompleted(db.activityCompleted(activityCourse.getCourseId(), digest, userID));
                 Intent i = new Intent(ViewDigestActivity.this, CourseIndexActivity.class);
                 Bundle tb = new Bundle();

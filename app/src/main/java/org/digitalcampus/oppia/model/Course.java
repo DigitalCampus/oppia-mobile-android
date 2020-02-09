@@ -53,7 +53,6 @@ public class Course extends MultiLangInfoModel implements Serializable {
     private int priority = 0;
     private int noActivities = 0;
     private int noActivitiesCompleted = 0;
-    private int noActivitiesStarted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
     private List<GamificationEvent> gamificationEvents = new ArrayList<>();
 
@@ -209,10 +208,6 @@ public class Course extends MultiLangInfoModel implements Serializable {
 
     public void setNoActivitiesCompleted(int noActivitiesCompleted) {
         this.noActivitiesCompleted = noActivitiesCompleted;
-    }
-
-    public void setNoActivitiesStarted(int noActivitiesStarted) {
-        this.noActivitiesStarted = noActivitiesStarted;
     }
 
     public String getSequencingMode() {

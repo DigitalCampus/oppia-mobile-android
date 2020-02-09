@@ -825,17 +825,6 @@ public class DbHelper extends SQLiteOpenHelper {
         course.setNoActivitiesCompleted(c.getCount());
         c.close();
 
-        // get no started
-        String sqlStarted = "SELECT DISTINCT " + TRACKER_LOG_C_ACTIVITYDIGEST + " FROM " + TRACKER_LOG_TABLE +
-                " WHERE " + TRACKER_LOG_C_COURSEID + "=" + course.getCourseId() +
-                " AND " + TRACKER_LOG_C_USERID + "=" + userId +
-                " AND " + TRACKER_LOG_C_COMPLETED + "=0" +
-                " AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " NOT IN (" + sqlCompleted + ")" +
-                " AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " IN ( SELECT " + ACTIVITY_C_ACTIVITYDIGEST + " FROM " + ACTIVITY_TABLE + " WHERE " + ACTIVITY_C_COURSEID + "=" + course.getCourseId() + ")";
-        c = db.rawQuery(sqlStarted, null);
-        course.setNoActivitiesStarted(c.getCount());
-        c.close();
-
         return course;
     }
 
@@ -855,23 +844,6 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         c.close();
         return activities;
-    }
-
-    public List<GamificationEvent> getCourseGamification(long courseId) {
-        ArrayList<GamificationEvent> events = new ArrayList<>();
-        String s = COURSE_GAME_C_COURSEID + "=?";
-        String[] args = new String[]{String.valueOf(courseId)};
-        Cursor c = db.query(COURSE_GAME_TABLE, null, s, args, null, null, null);
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            GamificationEvent event = new GamificationEvent();
-            event.setEvent(c.getString(c.getColumnIndex(COURSE_GAME_C_EVENT)));
-            event.setPoints(c.getInt(c.getColumnIndex(COURSE_GAME_C_POINTS)));
-            events.add(event);
-            c.moveToNext();
-        }
-        c.close();
-        return events;
     }
 
     public ArrayList<Activity> getCourseQuizzes(long courseId) {
@@ -1040,7 +1012,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(TRACKER_LOG_C_TYPE, type);
         values.put(TRACKER_LOG_C_EVENT, event);
         values.put(TRACKER_LOG_C_POINTS, points);
-        long id = db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
+        db.insertOrThrow(TRACKER_LOG_TABLE, null, values);
 
         this.incrementUserPoints(userId, points);
 
@@ -1081,15 +1053,6 @@ public class DbHelper extends SQLiteOpenHelper {
     public boolean toUpdate(String shortname, Double version) {
         String s = COURSE_C_SHORTNAME + "=? AND " + COURSE_C_VERSIONID + "< ?";
         String[] args = new String[]{shortname, String.format("%.0f", version)};
-        Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
-        boolean toUpdate = (c.getCount() > 0);
-        c.close();
-        return toUpdate;
-    }
-
-    public boolean toUpdateSchedule(String shortname, Double scheduleVersion) {
-        String s = COURSE_C_SHORTNAME + "=? AND " + COURSE_C_SCHEDULE + "< ?";
-        String[] args = new String[]{shortname, String.format("%.0f", scheduleVersion)};
         Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
         boolean toUpdate = (c.getCount() > 0);
         c.close();
@@ -2116,8 +2079,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<UserPreference> getAllUserPreferences() {
 
-        String USER_PREFS_C_PREFKEY = "preference";
-        String USER_PREFS_C_PREFVALUE = "value";
+        String userPrefsCPrefkey = "preference";
+        String userPrefsCPrefvalue = "value";
 
         List<UserPreference> userPreferences = new ArrayList<>();
         Cursor c = db.query(USER_PREFS_TABLE, null, null, null, null, null, null);
@@ -2125,8 +2088,8 @@ public class DbHelper extends SQLiteOpenHelper {
         while (!c.isAfterLast()) {
 
             String username = c.getString(c.getColumnIndex(USER_C_USERNAME));
-            String prefKey = c.getString(c.getColumnIndex(USER_PREFS_C_PREFKEY));
-            String prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
+            String prefKey = c.getString(c.getColumnIndex(userPrefsCPrefkey));
+            String prefValue = c.getString(c.getColumnIndex(userPrefsCPrefvalue));
             userPreferences.add(new UserPreference(username, prefKey, prefValue));
 
             c.moveToNext();

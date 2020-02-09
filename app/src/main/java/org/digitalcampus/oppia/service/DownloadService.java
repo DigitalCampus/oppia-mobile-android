@@ -251,23 +251,16 @@ public class DownloadService extends IntentService {
                     this.deleteFile(downloadedFile);
                     sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
                     removeDownloading(fileUrl);
-                    return;
                 }
             }
 
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException|NoSuchAlgorithmException e) {
             Mint.logException(e);
             logAndNotifyError(fileUrl, e);
-            return;
         } catch (IOException e) {
             Mint.logException(e);
             this.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
-            return;
-        } catch (NoSuchAlgorithmException e) {
-            Mint.logException(e);
-            logAndNotifyError(fileUrl, e);
-            return;
         } finally {
             if (f != null){
                try {

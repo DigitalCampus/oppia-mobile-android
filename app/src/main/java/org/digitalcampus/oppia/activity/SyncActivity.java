@@ -183,18 +183,14 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         sendAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (currentSelectedTab){
-                    case TAB_ACTIVITYLOGS:
-                        for (CourseTransferableFile file : activityLogs){
-                            btServiceDelegate.sendFile(file);
-                        }
-                        break;
-
-                    case TAB_COURSES:
-                        for (CourseTransferableFile file : transferableFiles){
-                            btServiceDelegate.sendFile(file);
-                        }
-                        break;
+                if(currentSelectedTab == TAB_ACTIVITYLOGS) {
+                    for (CourseTransferableFile file : activityLogs) {
+                        btServiceDelegate.sendFile(file);
+                    }
+                } else if (currentSelectedTab == TAB_COURSES) {
+                    for (CourseTransferableFile file : transferableFiles){
+                        btServiceDelegate.sendFile(file);
+                    }
                 }
 
             }
@@ -596,24 +592,20 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
 
     private void updateTabs(){
         boolean connected = connectedPanel.getVisibility() == View.VISIBLE;
-        switch (currentSelectedTab) {
-            case TAB_ACTIVITYLOGS:
-                activitylogsRecyclerView.setVisibility(View.VISIBLE);
-                coursesRecyclerView.setVisibility(View.GONE);
-                if (connected){
-                    boolean hide = activityLogs.isEmpty() || pendingFiles.getVisibility() == View.VISIBLE;
-                    sendAllButton.setVisibility(hide ? View.GONE : View.VISIBLE);
-                }
-                break;
-
-            case TAB_COURSES:
-                activitylogsRecyclerView.setVisibility(View.GONE);
-                coursesRecyclerView.setVisibility(View.VISIBLE);
-                if (connected){
-                    boolean hide = transferableFiles.isEmpty() || pendingFiles.getVisibility() == View.VISIBLE;
-                    sendAllButton.setVisibility( hide ? View.GONE : View.VISIBLE);
-                }
-                break;
+        if(currentSelectedTab == TAB_ACTIVITYLOGS) {
+            activitylogsRecyclerView.setVisibility(View.VISIBLE);
+            coursesRecyclerView.setVisibility(View.GONE);
+            if (connected) {
+                boolean hide = activityLogs.isEmpty() || pendingFiles.getVisibility() == View.VISIBLE;
+                sendAllButton.setVisibility(hide ? View.GONE : View.VISIBLE);
+            }
+        } else if (currentSelectedTab == TAB_COURSES) {
+            activitylogsRecyclerView.setVisibility(View.GONE);
+            coursesRecyclerView.setVisibility(View.VISIBLE);
+            if (connected){
+                boolean hide = transferableFiles.isEmpty() || pendingFiles.getVisibility() == View.VISIBLE;
+                sendAllButton.setVisibility( hide ? View.GONE : View.VISIBLE);
+            }
         }
     }
 

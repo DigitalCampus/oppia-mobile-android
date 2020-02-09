@@ -76,7 +76,6 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private int totalPoints;
     private RecyclerView recyclerPoints;
     private TextView tvTotalPoints;
-    private TabLayout tabsFilterPoints;
     private LineChart chart;
     List<Integer> yVals = new ArrayList<>();
     List<String> labels = new ArrayList<>();
@@ -95,7 +94,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private void findViews() {
         recyclerPoints = getView().findViewById(R.id.recycler_points);
         tvTotalPoints = getView().findViewById(R.id.tv_total_points);
-        tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
+        TabLayout tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
         chart = getView().findViewById(R.id.chart);
 
         tabsFilterPoints.addOnTabSelectedListener(this);

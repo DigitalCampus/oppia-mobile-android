@@ -51,7 +51,6 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
     private ArrayList<Tag> tags;
 
 	@Inject TagRepository tagRepository;
-	private RecyclerView recyclerTags;
 	private TagsAdapter adapterTags;
 
 	@Override
@@ -71,7 +70,7 @@ public class TagSelectActivity extends AppActivity implements APIRequestListener
         tags = new ArrayList<>();
         adapterTags = new TagsAdapter(this, tags);
 
-        recyclerTags = findViewById(R.id.recycler_tags);
+		RecyclerView recyclerTags = findViewById(R.id.recycler_tags);
 		recyclerTags.setAdapter(adapterTags);
 		adapterTags.setOnItemClickListener(new TagsAdapter.OnItemClickListener() {
 			@Override

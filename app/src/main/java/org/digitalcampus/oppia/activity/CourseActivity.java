@@ -106,7 +106,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             }
             // set image
             if (actionBar != null) {
-                BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), App.APP_LOGO);
+                BitmapDrawable bm = ImageUtils.loadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), App.APP_LOGO);
                 actionBar.setHomeAsUpIndicator(bm);
                 actionBar.setDisplayShowHomeEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);

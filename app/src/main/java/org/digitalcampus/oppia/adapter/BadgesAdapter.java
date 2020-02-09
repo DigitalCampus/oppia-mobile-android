@@ -19,7 +19,6 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
 
     private List<Badges> badges;
     private Context context;
-    private OnItemClickListener itemClickListener;
 
     public BadgesAdapter(Context context, List<Badges> badges) {
         this.context = context;
@@ -71,11 +70,6 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
 
             rootView = itemView;
         }
-    }
-
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.itemClickListener = listener;
     }
 
     public interface OnItemClickListener {

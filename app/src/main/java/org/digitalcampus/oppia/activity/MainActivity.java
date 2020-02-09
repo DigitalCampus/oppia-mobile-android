@@ -46,7 +46,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private DrawerMenuManager drawer;
     private View btnEditProfile;
     private View btnLogout;
-    private NavigationView navDrawerView;
     private View btnExpandProfileOptions;
     private View viewProfileOptions;
     private MenuItem searchMenuItem;
@@ -58,7 +57,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private void findViews() {
 
         navBottomView = findViewById(R.id.nav_bottom_view);
-        navDrawerView = findViewById(R.id.navigation_view);
+        NavigationView navDrawerView = findViewById(R.id.navigation_view);
 
         View headerDrawer = navDrawerView.getHeaderView(0);
         btnEditProfile = headerDrawer.findViewById(R.id.btn_edit_profile);
