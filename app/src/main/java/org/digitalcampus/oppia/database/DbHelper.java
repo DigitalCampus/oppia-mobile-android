@@ -940,7 +940,6 @@ public class DbHelper extends SQLiteOpenHelper {
         Cursor c = db.query(QUIZATTEMPTS_TABLE, null, s1, args1, null, null, order);
 
         ArrayList<QuizAttempt> attempts = new ArrayList<>();
-        long startTime = System.currentTimeMillis();
         Map<Long, Course> fetchedCourses = new HashMap<>();
         Map<Long, CompleteCourse> fetchedXMLCourses = new HashMap<>();
 
@@ -1010,7 +1009,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         ArrayList<QuizAttempt> attempts = new ArrayList<>();
 
-        float scoreSum = 0;
         c.moveToFirst();
         while (!c.isAfterLast()) {
             QuizAttempt qa = new QuizAttempt();
@@ -2118,7 +2116,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<UserPreference> getAllUserPreferences() {
 
-        String USER_PREFS_C_USERNAME = "username";
         String USER_PREFS_C_PREFKEY = "preference";
         String USER_PREFS_C_PREFVALUE = "value";
 
@@ -2127,7 +2124,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.moveToFirst();
         while (!c.isAfterLast()) {
 
-            String username = c.getString(c.getColumnIndex(USER_PREFS_C_USERNAME));
+            String username = c.getString(c.getColumnIndex(USER_C_USERNAME));
             String prefKey = c.getString(c.getColumnIndex(USER_PREFS_C_PREFKEY));
             String prefValue = c.getString(c.getColumnIndex(USER_PREFS_C_PREFVALUE));
             userPreferences.add(new UserPreference(username, prefKey, prefValue));
@@ -2141,20 +2138,19 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<Leaderboard> getLeaderboardList() {
 
-        String LEADERBOARD_C_USERNAME = "username";
-        String LEADERBOARD_C_FULLNAME = "fullname";
-        String LEADERBOARD_C_POINTS = "points";
-        String LEADERBOARD_C_LASTUPDATE = "lastupdate";
+        String leaderboardCFullname = "fullname";
+        String leaderboardCPoints = "points";
+        String leaderboardCLastupdate = "lastupdate";
 
         ArrayList<Leaderboard> leaderboard = new ArrayList<>();
         Cursor c = db.query(LEADERBOARD_TABLE, null, null, null, null, null, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Leaderboard leaderboardItem = new Leaderboard();
-            leaderboardItem.setUsername(c.getString(c.getColumnIndex(LEADERBOARD_C_USERNAME)));
-            leaderboardItem.setFullname(c.getString(c.getColumnIndex(LEADERBOARD_C_FULLNAME)));
-            leaderboardItem.setPoints(c.getInt(c.getColumnIndex(LEADERBOARD_C_POINTS)));
-            leaderboardItem.setLastupdateStr(c.getString(c.getColumnIndex(LEADERBOARD_C_LASTUPDATE)));
+            leaderboardItem.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+            leaderboardItem.setFullname(c.getString(c.getColumnIndex(leaderboardCFullname)));
+            leaderboardItem.setPoints(c.getInt(c.getColumnIndex(leaderboardCPoints)));
+            leaderboardItem.setLastupdateStr(c.getString(c.getColumnIndex(leaderboardCLastupdate)));
             leaderboard.add(leaderboardItem);
             c.moveToNext();
         }
@@ -2165,34 +2161,32 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<UserCustomField> getUserCustomFields() {
 
-        String USER_CF_ID = BaseColumns._ID;
-        String USER_CF_USERNAME = "username";
-        String CF_FIELD_KEY = "field_key";
-        String CF_VALUE_STR = "value_str";
-        String CF_VALUE_INT = "value_int";
-        String CF_VALUE_BOOL = "value_bool";
-        String CF_VALUE_FLOAT = "value_float";
+        String cfFieldKey = "field_key";
+        String cfValueStr = "value_str";
+        String cfValueInt = "value_int";
+        String cfValueBool = "value_bool";
+        String cfValueFloat = "value_float";
 
         ArrayList<UserCustomField> userCustomFields = new ArrayList<>();
         Cursor c = db.query(USER_CF_TABLE, null, null, null, null, null, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
             UserCustomField userCustomField = new UserCustomField();
-            userCustomField.setUsername(c.getString(c.getColumnIndex(USER_CF_USERNAME)));
-            userCustomField.setFieldKey(c.getString(c.getColumnIndex(CF_FIELD_KEY)));
-            userCustomField.setValueStr(c.getString(c.getColumnIndex(CF_VALUE_STR)));
+            userCustomField.setUsername(c.getString(c.getColumnIndex(USER_C_USERNAME)));
+            userCustomField.setFieldKey(c.getString(c.getColumnIndex(cfFieldKey)));
+            userCustomField.setValueStr(c.getString(c.getColumnIndex(cfValueStr)));
 
-            String valueIntStr = c.getString(c.getColumnIndex(CF_VALUE_INT));
+            String valueIntStr = c.getString(c.getColumnIndex(cfValueInt));
             if (valueIntStr != null) {
                 userCustomField.setValueInt(Integer.parseInt(valueIntStr));
             }
 
-            String valueBoolStr = c.getString(c.getColumnIndex(CF_VALUE_BOOL));
+            String valueBoolStr = c.getString(c.getColumnIndex(cfValueBool));
             if (valueBoolStr != null) {
                 userCustomField.setValueBool(Integer.parseInt(valueBoolStr) == 1);
             }
 
-            String valueFloatStr = c.getString(c.getColumnIndex(CF_VALUE_FLOAT));
+            String valueFloatStr = c.getString(c.getColumnIndex(cfValueFloat));
             if (valueFloatStr != null) {
                 userCustomField.setValueFloat(Float.parseFloat(valueFloatStr));
             }

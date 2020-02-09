@@ -197,13 +197,12 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
     @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				this.onBackPressed();
-				return true;
-            default:
-                return false;
-		}
+        if (item.getItemId() == android.R.id.home) {
+            this.onBackPressed();
+            return true;
+        } else {
+            return false;
+        }
 	}
 
     @Override

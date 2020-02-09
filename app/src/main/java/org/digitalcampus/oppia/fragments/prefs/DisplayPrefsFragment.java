@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 
 public class DisplayPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{

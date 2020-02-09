@@ -47,7 +47,7 @@ public class SecurityPrefsFragment extends BasePreferenceFragment implements Pre
             @Override
             public boolean onPreferenceChange(final Preference preference, final Object newValue) {
                 final Boolean enableProtection = (Boolean) newValue;
-                if (enableProtection) {
+                if (Boolean.TRUE.equals(enableProtection)) {
                     //If we are going to re-enable the preference, there is no need to prompt for the previous password
                     return true;
                 }

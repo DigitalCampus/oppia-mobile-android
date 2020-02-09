@@ -270,15 +270,16 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             case R.id.btn_logout:
                 drawer.logout();
                 break;
+
+            default:
+                // do nothing
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_search:
-                drawer.launchIntentForActivity(SearchActivity.class);
-                break;
+        if(item.getItemId() ==  R.id.menu_search) {
+            drawer.launchIntentForActivity(SearchActivity.class);
         }
         return super.onOptionsItemSelected(item);
     }

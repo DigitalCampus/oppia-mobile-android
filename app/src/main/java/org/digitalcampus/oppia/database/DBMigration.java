@@ -59,7 +59,7 @@ public class DBMigration {
 
     }
 
-    private void runMigrationsByVersion(int currentVersion, DbHelper dbHelper) throws SQLiteException {
+    private void runMigrationsByVersion(int currentVersion, DbHelper dbHelper) {
 
         if (currentVersion < 1) {
             copyUserPreferencesData(dbHelper);
@@ -79,7 +79,7 @@ public class DBMigration {
     }
 
 
-    private static void copyUserPreferencesData(DbHelper dbHelper) throws SQLiteException {
+    private static void copyUserPreferencesData(DbHelper dbHelper) {
 
         List<UserPreference> userPreferences = dbHelper.getAllUserPreferences();
         App.getDb().userPreferenceDao().insertAll(userPreferences);
