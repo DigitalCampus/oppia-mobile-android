@@ -53,7 +53,7 @@ public class SearchUtils {
 
         db.beginTransaction();
         for( Activity a : activities) {
-            ArrayList<Lang> langs = course.getLangs();
+            ArrayList<Lang> langs = (ArrayList<Lang>) course.getLangs();
             String fileContent = "";
             for (Lang l : langs) {
                 if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")) {

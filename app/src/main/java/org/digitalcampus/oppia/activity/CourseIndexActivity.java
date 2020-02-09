@@ -248,7 +248,7 @@ public class CourseIndexActivity extends AppActivity implements OnSharedPreferen
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, (ArrayList<Lang>) course.getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() {
                 CourseIndexActivity.this.initialize(false);
                 return true;

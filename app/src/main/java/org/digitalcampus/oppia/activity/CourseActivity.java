@@ -45,6 +45,7 @@ import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ImageUtils;
@@ -282,7 +283,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, (ArrayList<Lang>) course.getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() {
                 CourseActivity.this.loadActivities();
                 return true;
