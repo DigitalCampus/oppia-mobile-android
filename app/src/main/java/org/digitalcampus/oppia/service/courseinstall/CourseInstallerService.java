@@ -81,6 +81,10 @@ public class CourseInstallerService extends IntentService {
         return new ArrayList<>();
     }
 
+    public CourseInstallerService() {
+        super(TAG);
+    }
+
     public CourseInstallerService(ApiEndpoint api) {
         super(TAG);
     }
