@@ -260,17 +260,29 @@ tasks.whenTaskAdded { task ->
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "org.digitalcampus.mobile.learning"
+        property "sonar.projectVersion", android.defaultConfig.versionName
         property "sonar.projectName", "Oppia-Android"
-        property "sonar.projectVersion", "1.0"
         property "sonar.host.url", "https://sonarcloud.io"
-
         property "sonar.sources", "src/main/java"
         property "sonar.binaries", "build/intermediates/app_classes/normalDebug"
         property "sonar.java.binaries", "build/intermediates/app_classes/normalDebug"
         property "sonar.tests", "src/test/java, src/androidTest/java"
         property "sonar.java.test.binaries", "build/intermediates/app_classes/normalDebug"
-
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/coverage/normal/debug/report.xml"
+
+        def sonarqubePropsFile = rootProject.file('sonarqube.properties')
+        if (sonarqubePropsFile.canRead()) {
+            println 'Fetching Sonarqube properties...'
+            def sonarqubeProps = new Properties()
+            sonarqubeProps.load(new FileInputStream(sonarqubePropsFile))
+
+            property "sonar.projectKey", sonarqubeProps["sonar.projectKey"]
+            property "sonar.organization", sonarqubeProps["sonar.organization"]
+            property "sonar.login", sonarqubeProps["sonar.login"]
+        }
+
+
     }
 }
+tasks.sonarqube.dependsOn connectedCheck
+tasks.sonarqube.dependsOn jacocoTestReport
