@@ -10,8 +10,8 @@
         <item name="colorAccent">@color/theme_secondary</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@color/theme_primary</item>
+        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:textAppearanceButton">@style/TextAppearanceButtonBorderless</item>
         <item name="android:buttonStyle">@style/RaisedButton</item>
     </style>

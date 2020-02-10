@@ -23,7 +23,7 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -48,12 +48,12 @@ public class SearchUtils {
 	}
 
     public static void indexAddCourse(Context ctx, Course course, CompleteCourse parsedCourse){
-        ArrayList<Activity> activities = parsedCourse.getActivities(course.getCourseId());
+        ArrayList<Activity> activities = (ArrayList<Activity>) parsedCourse.getActivities(course.getCourseId());
         DbHelper db = DbHelper.getInstance(ctx);
 
         db.beginTransaction();
         for( Activity a : activities) {
-            ArrayList<Lang> langs = course.getLangs();
+            ArrayList<Lang> langs = (ArrayList<Lang>) course.getLangs();
             String fileContent = "";
             for (Lang l : langs) {
                 if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")) {

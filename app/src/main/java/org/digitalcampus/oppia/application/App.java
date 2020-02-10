@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import androidx.room.Room;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.NetworkType;
@@ -33,6 +34,8 @@ import androidx.work.WorkManager;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
+import org.digitalcampus.oppia.database.DbHelper;
+import org.digitalcampus.oppia.database.MyDatabase;
 import org.digitalcampus.oppia.di.AppComponent;
 import org.digitalcampus.oppia.di.AppModule;
 import org.digitalcampus.oppia.di.DaggerAppComponent;
@@ -55,7 +58,6 @@ public class App extends Application {
     public static final int APP_LOGO = R.drawable.dc_logo;
 
     public static final String COURSE_XML = "module.xml";
-    public static final String COURSE_SCHEDULE_XML = "schedule.xml";
     public static final String COURSE_TRACKER_XML = "tracker.xml";
     public static final String PRE_INSTALL_COURSES_DIR = "www/preload/courses"; // don't include leading or trailing slash
     public static final String PRE_INSTALL_MEDIA_DIR = "www/preload/media"; // don't include leading or trailing slash
@@ -97,7 +99,6 @@ public class App extends Application {
     public static final boolean MENU_ALLOW_COURSE_DOWNLOAD = BuildConfig.MENU_ALLOW_COURSE_DOWNLOAD;
     public static final boolean MENU_ALLOW_LANGUAGE = BuildConfig.MENU_ALLOW_LANGUAGE;
     public static final boolean MENU_ALLOW_SETTINGS = BuildConfig.MENU_ALLOW_SETTINGS;
-    public static final boolean MENU_ALLOW_MONITOR = BuildConfig.MENU_ALLOW_MONITOR;
     public static final boolean MENU_ALLOW_SYNC = BuildConfig.MENU_ALLOW_SYNC;
     public static final boolean MENU_ALLOW_LOGOUT = BuildConfig.MENU_ALLOW_LOGOUT;
 
@@ -105,7 +106,6 @@ public class App extends Application {
     public static final int SESSION_EXPIRATION_TIMEOUT = BuildConfig.SESSION_EXPIRATION_TIMEOUT; // no seconds before user is logged out for inactivity
 
     public static final int MAX_TRACKER_SUBMIT = 10;
-    //	public static final String[] SUPPORTED_ACTIVITY_TYPES = {"page","quiz","resource","feedback","url"};
     public static final String[] SUPPORTED_MEDIA_TYPES = {"video/m4v", "video/mp4", "audio/mpeg", "video/3gp", "video/3gpp"}; //NOSONAR
 
     // only used in case a course doesn't have any lang specified
@@ -113,14 +113,19 @@ public class App extends Application {
     private static final String NAME_TRACKER_SEND_WORK = "tracker_send_work";
 
     private AppComponent appComponent;
+    private static MyDatabase db;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        DbHelper dbHelper = DbHelper.getInstance(this);
-        dbHelper.getReadableDatabase(); // To force migration if needed
+        db = Room.databaseBuilder(getApplicationContext(),
+                MyDatabase.class, MyDatabase.DB_NAME_ROOM)
+                .allowMainThreadQueries()
+                .build();
 
+        DbHelper.getInstance(this).getReadableDatabase();
 
         // this method fires once at application start
         Log.d(TAG, "Application start");
@@ -135,15 +140,13 @@ public class App extends Application {
 
         Context ctx = getApplicationContext();
         // Load the preferences from XML resources
-        PreferenceManager.setDefaultValues(ctx, R.xml.common_prefs, false);
-        PreferenceManager.setDefaultValues(ctx, R.xml.prefs, false);
+        loadDefaultPreferenceValues(ctx, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         // First run or Updates configurations
         checkAdminProtectionOnFirstRun(prefs);
         checkShowDescriptionOverrideUpdate();
 
-        //----
 
         String storageOption = prefs.getString(PrefsActivity.PREF_STORAGE_OPTION, "");
 
@@ -170,6 +173,9 @@ public class App extends Application {
 
     }
 
+    public static MyDatabase getDb() {
+        return db;
+    }
 
     private void setupPeriodicTrackerWorker() {
 
@@ -180,26 +186,16 @@ public class App extends Application {
         } else {
             cancelTrackerWork();
         }
-
-
-        // To test worker alone
-//        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(TrackerWorker.class).build();
-//        WorkManager.getInstance(this).enqueue(oneTimeWorkRequest);
     }
 
 
     private void scheduleTrackerWork() {
-
-//		Data inputData = new Data.Builder()
-//				.putBoolean("backgroundData", backgroundData)
-//				.build();
 
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
         PeriodicWorkRequest trackerSendWork = new PeriodicWorkRequest.Builder(TrackerWorker.class, 1, TimeUnit.HOURS)
-//				.setInputData(inputData)
                 .setConstraints(constraints)
                 .setInitialDelay(1, TimeUnit.HOURS)
                 .build();
@@ -218,6 +214,9 @@ public class App extends Application {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static void loadDefaultPreferenceValues(Context ctx, boolean readAgain){
+        PreferenceManager.setDefaultValues(ctx, R.xml.prefs, readAgain);
+    }
 
     private void checkAdminProtectionOnFirstRun(SharedPreferences prefs) {
         if (prefs.getBoolean(PrefsActivity.PREF_APPLICATION_FIRST_RUN, true)) {

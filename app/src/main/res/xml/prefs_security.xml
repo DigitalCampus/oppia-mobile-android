@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="prefSecurity"
+    app:title="@string/prefAdvanced_title">
+
+    <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        android:defaultValue="@string/MENU_ALLOW_LOGOUT_DEFAULT_VALUE"
+        android:key="prefLogoutEnabled"
+        android:title="@string/prefLogoutEnabled" />
+
+    <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        android:defaultValue="@string/MENU_ALLOW_COURSE_DOWNLOAD_DEFAULT_VALUE"
+        android:key="prefDownloadEnabled"
+        android:title="@string/prefDownloadEnabled" />
+
+    <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        android:defaultValue="@string/MENU_ALLOW_LANGUAGE_DEFAULT_VALUE"
+        android:key="prefChangeLanguageEnabled"
+        android:title="@string/prefChangeLanguageEnabled" />
+
+    <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        android:defaultValue="true"
+        android:key="prefDeleteCourseEnabled"
+        android:title="@string/prefDeleteCourseEnabled" />
+
+    <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        android:defaultValue="false"
+        android:key="prefAdminProtection"
+
+        android:title="@string/prefAdminProtection" />
+
+    <EditTextPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        android:defaultValue="@string/prefAdminPasswordDefault"
+        android:key="prefAdminPassword"
+        android:title="@string/prefAdminPassword"
+        android:inputType="textPassword"
+        android:dependency="prefAdminProtection" />
+
+</androidx.preference.PreferenceScreen>

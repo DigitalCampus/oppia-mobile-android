@@ -69,7 +69,7 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class AppActivity extends AppCompatActivity implements APIKeyRequestListener, GamificationEventListener {
 
-    protected final String TAG = this.getClass().getSimpleName();
+    protected static final String TAG = AppActivity.class.getSimpleName();
 
     GamificationBroadcastReceiver gamificationReceiver;
     private Menu optionsMenu;
@@ -112,12 +112,11 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-            default:
-                return false;
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        } else {
+            return false;
         }
     }
 

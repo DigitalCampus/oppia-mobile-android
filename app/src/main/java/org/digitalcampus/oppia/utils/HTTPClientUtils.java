@@ -94,6 +94,7 @@ public class HTTPClientUtils {
     public static class UserAgentInterceptor implements Interceptor {
 
         public UserAgentInterceptor() {
+            // required constructor
         }
 
         @Override

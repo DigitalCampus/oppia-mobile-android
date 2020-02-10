@@ -61,8 +61,6 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     private Course course;
 
     private View endContainer;
-    private ImageButton replayBtn;
-    private ImageButton continueBtn;
 
     protected SharedPreferences prefs;
 
@@ -111,8 +109,8 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
         super.onStart();
         videoSurface = findViewById(R.id.videoSurface);
         endContainer = findViewById(R.id.end_container);
-        replayBtn = findViewById(R.id.replay_button);
-        continueBtn = findViewById(R.id.continue_button);
+        ImageButton replayBtn = findViewById(R.id.replay_button);
+        ImageButton continueBtn = findViewById(R.id.continue_button);
 
         replayBtn.setOnClickListener(new View.OnClickListener() {
             @Override

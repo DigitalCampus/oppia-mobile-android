@@ -7,7 +7,7 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.oppia.exception.WrongServerException;
-import org.digitalcampus.oppia.gamification.Leaderboard;
+import org.digitalcampus.oppia.gamification.LeaderboardUtils;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
@@ -48,13 +48,15 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
 
         int updatedPositions = 0;
         if (children != null) {
-            for (final String leaderboard_file : children) {
+            for (final String leaderboardFile : children) {
 
-                File json_file = new File(dir, leaderboard_file);
-                if (json_file.exists()){
+                File jsonFile = new File(dir, leaderboardFile);
+                if (jsonFile.exists()){
                     try {
-                        String json = FileUtils.readFile(json_file);
-                        updatedPositions += Leaderboard.importLeaderboardJSON(ctx, json);
+
+                        String json = FileUtils.readFile(jsonFile);
+                        updatedPositions += LeaderboardUtils.importLeaderboardJSON(ctx, json);
+
                     } catch (IOException e) {
                         Mint.logException(e);
                         Log.d(TAG, "IOException: ", e);
@@ -69,7 +71,7 @@ public class ImportLeaderboardsTask extends AsyncTask<Payload, DownloadProgress,
                         Log.d(TAG, "WrongServerException: ", e);
                     }
 
-                    FileUtils.deleteFile(json_file);
+                    FileUtils.deleteFile(jsonFile);
                 }
             }
         }

@@ -24,7 +24,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -75,7 +75,7 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
             if (!response.isSuccessful()){
                 payload.setResult(false);
                 if (response.code() == 401){
-                    SessionManager.setUserApiKeyValid(ctx, u, false);
+                    SessionManager.setUserApiKeyValid(u, false);
                     APIKeyInvalidated = true;
                 }
                 payload.setResultResponse(ctx.getString(

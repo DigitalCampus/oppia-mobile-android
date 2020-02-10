@@ -23,7 +23,7 @@ import java.util.Locale;
 public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCoursesAdapter.ViewHolder> {
 
 
-    private List<CourseIntallViewAdapter> courses;
+    private List<CourseInstallViewAdapter> courses;
     private Context context;
     private OnItemClickListener itemClickListener;
     private String prefLang;
@@ -35,7 +35,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     private String cancelDescription;
 
 
-    public DownloadCoursesAdapter(Context context, List<CourseIntallViewAdapter> courses) {
+    public DownloadCoursesAdapter(Context context, List<CourseInstallViewAdapter> courses) {
         this.context = context;
         this.courses = courses;
 
@@ -61,7 +61,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
 
-        final CourseIntallViewAdapter c = getItemAtPosition(position);
+        final CourseInstallViewAdapter c = getItemAtPosition(position);
 
         viewHolder.courseTitle.setText(c.getTitle(prefLang));
 
@@ -112,10 +112,6 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
                     viewHolder.actionBtn.setImageResource(R.drawable.ic_action_refresh);
                     viewHolder.actionBtn.setContentDescription(updateDescription);
                     viewHolder.actionBtn.setEnabled(true);
-                } else if (c.isToUpdateSchedule()){
-                    viewHolder.actionBtn.setImageResource(R.drawable.ic_action_refresh);
-                    viewHolder.actionBtn.setContentDescription(updateSchedDescription);
-                    viewHolder.actionBtn.setEnabled(true);
                 } else {
                     viewHolder.actionBtn.setImageResource(R.drawable.ic_action_accept);
                     viewHolder.actionBtn.setContentDescription(installedDescription);
@@ -136,7 +132,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
         return courses.size();
     }
 
-    public CourseIntallViewAdapter getItemAtPosition(int position) {
+    public CourseInstallViewAdapter getItemAtPosition(int position) {
         return courses.get(position);
     }
 

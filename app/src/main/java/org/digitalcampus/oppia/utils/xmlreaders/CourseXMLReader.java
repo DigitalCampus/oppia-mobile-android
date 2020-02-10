@@ -26,7 +26,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.CompleteCourse;
@@ -85,10 +85,10 @@ public class CourseXMLReader {
         }
     }
 
-    public boolean parse(ParseMode PARSE_MODE) throws InvalidXMLException {
+    public boolean parse(ParseMode parseMode) throws InvalidXMLException {
         if (courseXML.exists()) {
             try {
-                if (PARSE_MODE == ParseMode.ONLY_MEDIA)
+                if (parseMode == ParseMode.ONLY_MEDIA)
                     parseMedia();
                 else
                     parseComplete();
@@ -154,7 +154,7 @@ public class CourseXMLReader {
     }
 
 	public ArrayList<Media> getMedia() throws InvalidXMLException {
-        return getMediaResponses().getCourseMedia();
+        return (ArrayList<Media>) getMediaResponses().getCourseMedia();
 	}
 
 }

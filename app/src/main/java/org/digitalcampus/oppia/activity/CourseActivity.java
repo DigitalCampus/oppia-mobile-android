@@ -40,11 +40,12 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityPagerAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
 import org.digitalcampus.oppia.model.Course;
+import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.MultiLangInfoModel;
 import org.digitalcampus.oppia.model.Section;
 import org.digitalcampus.oppia.utils.ImageUtils;
@@ -77,7 +78,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     private boolean isBaseline = false;
     private long userID;
 
-    private static int TTS_CHECK = 0;
+    private static int ttsCheck = 0;
     private static TextToSpeech myTTS;
     private boolean ttsRunning = false;
 
@@ -106,7 +107,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             }
             // set image
             if (actionBar != null) {
-                BitmapDrawable bm = ImageUtils.LoadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), App.APP_LOGO);
+                BitmapDrawable bm = ImageUtils.loadBMPsdcard(course.getImageFileFromRoot(), this.getResources(), App.APP_LOGO);
                 actionBar.setHomeAsUpIndicator(bm);
                 actionBar.setDisplayShowHomeEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
@@ -213,7 +214,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
                 // check for TTS data
                 Intent checkTTSIntent = new Intent();
                 checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-                startActivityForResult(checkTTSIntent, TTS_CHECK);
+                startActivityForResult(checkTTSIntent, ttsCheck);
             } else if (myTTS != null && ttsRunning) {
                 this.stopReading();
             } else {
@@ -282,7 +283,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, course.getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, (ArrayList<Lang>) course.getLangs(), prefs, new Callable<Boolean>() {
             public Boolean call() {
                 CourseActivity.this.loadActivities();
                 return true;
@@ -378,7 +379,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TTS_CHECK && resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+        if (requestCode == ttsCheck && resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
             // the user has the necessary data - create the TTS
             myTTS = new TextToSpeech(this, this);
         }

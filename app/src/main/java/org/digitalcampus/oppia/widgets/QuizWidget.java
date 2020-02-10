@@ -58,7 +58,7 @@ import org.digitalcampus.mobile.quiz.model.questiontypes.Numerical;
 import org.digitalcampus.mobile.quiz.model.questiontypes.ShortAnswer;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.adapter.QuizFeedbackAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.GamificationServiceDelegate;
 import org.digitalcampus.oppia.model.Activity;
@@ -484,12 +484,12 @@ public class QuizWidget extends WidgetFactory {
         View quizResultsLayout = getView()==null ? null : getView().findViewById(R.id.widget_quiz_results);
         if (quizResultsLayout == null){
             // load new layout
-            View C = getView().findViewById(R.id.progress_container);
-            ViewGroup parent = (ViewGroup) C.getParent();
-            int index = parent.indexOfChild(C);
-            parent.removeView(C);
-            C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz_results, parent, false);
-            parent.addView(C, index);
+            View progressContainer = getView().findViewById(R.id.progress_container);
+            ViewGroup parent = (ViewGroup) progressContainer.getParent();
+            int index = parent.indexOfChild(progressContainer);
+            parent.removeView(progressContainer);
+            progressContainer = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz_results, parent, false);
+            parent.addView(progressContainer, index);
         }
 
 		TextView title = getView().findViewById(R.id.quiz_results_score);
@@ -571,12 +571,12 @@ public class QuizWidget extends WidgetFactory {
 		this.quizAttemptSaved = false;
 		
 		// reload quiz layout
-		View C = getView().findViewById(R.id.widget_quiz_results);
-	    ViewGroup parent = (ViewGroup) C.getParent();
-	    int index = parent.indexOfChild(C);
-	    parent.removeView(C);
-	    C = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz, parent, false);
-	    parent.addView(C, index);
+		View quizResultsView = getView().findViewById(R.id.widget_quiz_results);
+	    ViewGroup parent = (ViewGroup) quizResultsView.getParent();
+	    int index = parent.indexOfChild(quizResultsView);
+	    parent.removeView(quizResultsView);
+	    quizResultsView = super.getActivity().getLayoutInflater().inflate(R.layout.widget_quiz, parent, false);
+	    parent.addView(quizResultsView, index);
 
 		fetchViews();
 		showQuestion();

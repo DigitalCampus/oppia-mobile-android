@@ -45,16 +45,16 @@ public class QuizFeedbackAdapter extends RecyclerView.Adapter<QuizFeedbackAdapte
 
         final QuizFeedback qf = getItemAtPosition(position);
 
-        String userResponseText = "";
+        StringBuilder userResponseText = new StringBuilder();
         for (int i=0; i<qf.getUserResponse().size();i++){
-            userResponseText += qf.getUserResponse().get(i);
+            userResponseText.append(qf.getUserResponse().get(i));
             if (i+1<qf.getUserResponse().size()){
-                userResponseText += "\n";
+                userResponseText.append("\n");
             }
         }
 
         viewHolder.quizQuestion.setText(Html.fromHtml(qf.getQuestionText()));
-        viewHolder.quizUserResponse.setText(Html.fromHtml(userResponseText));
+        viewHolder.quizUserResponse.setText(Html.fromHtml(userResponseText.toString()));
 
         if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
             viewHolder.quizFeedbackTitle.setVisibility(View.VISIBLE);

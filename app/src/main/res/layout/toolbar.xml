@@ -11,6 +11,5 @@
     app:contentInsetStart="0dp"
     app:contentInsetStartWithNavigation="0dp"
     style="@style/ActionBar.Solid.Om"
-    android:paddingTop="@dimen/tool_bar_top_padding"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 </androidx.appcompat.widget.Toolbar>

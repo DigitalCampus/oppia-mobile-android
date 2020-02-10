@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:key="prefAdvanced"
+    app:title="@string/prefAdvanced_title" >
+
+    <ListPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        android:key="prefStorageOption"
+        android:title="@string/prefStorageLocation"
+        app:icon="@drawable/ic_settings_storage"
+        android:entries="@array/StorageOptions"
+        android:entryValues="@array/StorageOptionValues">
+    </ListPreference>
+
+    <EditTextPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        android:key="prefUsername"
+        android:title="@string/prefUser"
+        app:icon="@drawable/ic_settings_user"
+        android:selectable="false" />
+
+    <EditTextPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:icon="@drawable/ic_settings_server"
+        android:defaultValue="@string/prefServerDefault"
+        android:key="prefServer"
+        android:title="@string/prefServer" />
+
+    <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        android:defaultValue="false"
+        android:key="prefDownloadViaCellularEnabled"
+        android:title="@string/prefDownloadViaCellularEnabled"
+        android:summary="@string/warning_download_via_cellular_enabled" />
+
+    <CheckBoxPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        android:defaultValue="true"
+        app:iconSpaceReserved="false"
+        android:key="prefBackgroundDataConnect"
+        android:summary="@string/prefBackgroudDataConnect_summary"
+        android:title="@string/prefBackgroudDataConnect" />
+
+    <EditTextPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        android:defaultValue="@string/prefServerTimeoutConnectionDefault"
+        android:key="prefServerTimeoutConnection"
+        android:title="@string/prefServerTimeoutConnection"
+        android:inputType="number" />
+
+    <EditTextPreference
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        app:iconSpaceReserved="false"
+        android:defaultValue="@string/prefServerTimeoutResponseDefault"
+        android:key="prefServerTimeoutResponse"
+        android:title="@string/prefServerTimeoutResponse"
+        android:inputType="number" />
+
+</androidx.preference.PreferenceScreen>

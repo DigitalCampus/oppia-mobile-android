@@ -35,12 +35,10 @@ import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.gamification.PointsComparator;
 import org.digitalcampus.oppia.listener.DBListener;
 import org.digitalcampus.oppia.model.Activity;
-import org.digitalcampus.oppia.model.ActivitySchedule;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.CustomValue;
 import org.digitalcampus.oppia.model.GamificationEvent;
-import org.digitalcampus.oppia.model.LeaderboardPosition;
 import org.digitalcampus.oppia.model.Points;
 import org.digitalcampus.oppia.model.QuizAttempt;
 import org.digitalcampus.oppia.model.QuizStats;
@@ -825,17 +823,6 @@ public class DbHelper extends SQLiteOpenHelper {
         endTransaction(true);
 	}
 
-	public void insertSchedule(List<ActivitySchedule> actsched) {
-
-        beginTransaction();
-		for (ActivitySchedule as : actsched) {
-			ContentValues values = new ContentValues();
-			values.put(ACTIVITY_C_STARTDATE, as.getStartTimeString());
-			values.put(ACTIVITY_C_ENDDATE, as.getEndTimeString());
-			db.update(ACTIVITY_TABLE, values, ACTIVITY_C_ACTIVITYDIGEST + "='" + as.getDigest() + "'", null);
-		}
-        endTransaction(true);
-	}
 	
 	public void insertTrackers(List<TrackerLog> trackers) {
         beginTransaction();
@@ -978,7 +965,6 @@ public class DbHelper extends SQLiteOpenHelper {
 				" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " NOT IN (" + sqlCompleted + ")" +
 				" AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " IN ( SELECT " + ACTIVITY_C_ACTIVITYDIGEST + " FROM " + ACTIVITY_TABLE + " WHERE " + ACTIVITY_C_COURSEID + "=" + course.getCourseId() + ")";
 		c = db.rawQuery(sqlStarted,null);
-		course.setNoActivitiesStarted(c.getCount());
 		c.close();
 		
 		return course;
@@ -2339,24 +2325,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
 		return updated;
 	}
-
-	public List<LeaderboardPosition> getLeaderboard(){
-        ArrayList<LeaderboardPosition> leaderboard = new ArrayList<>();
-        String order = LEADERBOARD_C_POINTS + " DESC ";
-        Cursor c = db.query(LEADERBOARD_TABLE, null, null, null, null, null, order);
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            LeaderboardPosition pos = new LeaderboardPosition();
-            pos.setUsername(c.getString(c.getColumnIndex(LEADERBOARD_C_USERNAME)));
-            pos.setFullname(c.getString(c.getColumnIndex(LEADERBOARD_C_FULLNAME)));
-            pos.setPoints(c.getInt(c.getColumnIndex(LEADERBOARD_C_POINTS)));
-            leaderboard.add(pos);
-            c.moveToNext();
-        }
-
-        c.close();
-        return leaderboard;
-    }
 
 
 }

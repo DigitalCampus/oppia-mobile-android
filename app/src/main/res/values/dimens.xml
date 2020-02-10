@@ -3,6 +3,7 @@
     <bool name="is_tablet">false</bool>
 
     <dimen name="padding_medium">8dp</dimen>
+    <dimen name="padding_medium_2">16dp</dimen>
     <dimen name="quiz_response_margin">12dp</dimen>
     <dimen name="margin_medium">13dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
@@ -20,7 +21,6 @@
     <dimen name="range_tick_label_font_size">15dp</dimen>
     <dimen name="domain_tick_label_font_size">15dp</dimen>
     <dimen name="legend_text_font_size">20dp</dimen>
-    <dimen name="tool_bar_top_padding">0dp</dimen>
     <dimen name="toolbar_tab_width">130dp</dimen>
 
     <dimen name="listitem_icon_size">32dp</dimen>

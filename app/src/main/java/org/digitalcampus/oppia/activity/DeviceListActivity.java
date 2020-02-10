@@ -38,6 +38,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.DevicesBTAdapter;
 import org.digitalcampus.oppia.application.PermissionsManager;
+import org.digitalcampus.oppia.model.CourseTransferableFile;
+import org.digitalcampus.oppia.service.bluetooth.BluetoothBroadcastReceiver;
+import org.digitalcampus.oppia.service.bluetooth.BluetoothTransferService;
 import org.digitalcampus.oppia.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -52,7 +55,7 @@ import java.util.concurrent.Callable;
  * by the user, the MAC address of the device is sent back to the parent
  * Activity in the result Intent.
  */
-public class DeviceListActivity extends Activity {
+public class DeviceListActivity extends Activity implements BluetoothBroadcastReceiver.BluetoothTransferListener {
 
     private static final String TAG = "DeviceListActivity";
 
@@ -66,6 +69,7 @@ public class DeviceListActivity extends Activity {
     private Button scanButton;
     private View scanningMessage;
 
+    private BluetoothBroadcastReceiver receiver;
     private BluetoothAdapter mBtAdapter;
     private DevicesBTAdapter adapterNewDevices;
     private List<String> newDevicesNames = new ArrayList<>();
@@ -178,6 +182,16 @@ public class DeviceListActivity extends Activity {
         this.unregisterReceiver(mReceiver);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        receiver = new BluetoothBroadcastReceiver();
+        receiver.setListener(this);
+        IntentFilter broadcastFilter = new IntentFilter(BluetoothTransferService.BROADCAST_ACTION);
+        broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        registerReceiver(receiver, broadcastFilter);
+    }
+
     /**
      * Start device discover with the BluetoothAdapter
      */
@@ -278,6 +292,12 @@ public class DeviceListActivity extends Activity {
     };
 
     @Override
+    public void onPause(){
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (PermissionsManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults)) {
@@ -285,4 +305,43 @@ public class DeviceListActivity extends Activity {
         }
     }
 
+
+    // We subscribe to the Bluetooth broadcast in case the two devices try to connect at
+    // the same time. Once the connection is established, the best strategy is to close the
+    // select device dialog so we avoid the double connection.
+    
+    @Override
+    public void onCommunicationStarted() {
+        this.finish();
+    }
+
+    @Override
+    public void onFail(CourseTransferableFile file, String error) {
+        this.finish();
+    }
+
+    @Override
+    public void onStartTransfer(CourseTransferableFile file) {
+        this.finish();
+    }
+
+    @Override
+    public void onSendProgress(CourseTransferableFile file, int progress) {
+        this.finish();
+    }
+
+    @Override
+    public void onReceiveProgress(CourseTransferableFile file, int progress) {
+        this.finish();
+    }
+
+    @Override
+    public void onTransferComplete(CourseTransferableFile file) {
+        this.finish();
+    }
+
+    @Override
+    public void onCommunicationClosed(String error) {
+        this.finish();
+    }
 }

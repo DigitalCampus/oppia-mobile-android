@@ -37,6 +37,10 @@ public class EssayWidget extends TextInputQuizWidget{
 		super(activity, v, container ,R.layout.widget_quiz_shortanswer);
 	}
 
+	@Override
+	public void setQuestionResponses(List<String> currentAnswers) {
+		// not used for this widget
+	}
 
 	@Override
 	public void setQuestionResponses(List<Response> responses, List<String> currentAnswers) {
@@ -58,5 +62,10 @@ public class EssayWidget extends TextInputQuizWidget{
 			response.add(et.getText().toString());
 			return response;
 		}
+	}
+
+	@Override
+	public List<String> getQuestionResponses() {
+		return new ArrayList<>();
 	}
 }

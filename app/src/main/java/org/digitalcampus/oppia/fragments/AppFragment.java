@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 public class AppFragment extends Fragment implements APIKeyRequestListener{
 
-    public final String TAG = this.getClass().getSimpleName();
+    public static final String TAG = AppFragment.class.getSimpleName();
 
     @Inject
     SharedPreferences prefs;

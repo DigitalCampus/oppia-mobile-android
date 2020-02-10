@@ -44,7 +44,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.PointsAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Points;
@@ -65,18 +65,17 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     private static final String ARG_COURSE = "arg_course";
 
-    private final int POSITION_TAB_LAST_WEEK = 0;
-    private final int POSITION_TAB_LAST_MONTH = 1;
-    private final int POSITION_TAB_LAST_YEAR = 2;
+    private static final int POSITION_TAB_LAST_WEEK = 0;
+    private static final int POSITION_TAB_LAST_MONTH = 1;
+    private static final int POSITION_TAB_LAST_YEAR = 2;
 
     @Inject
     List<Points> pointsFull;
     List<Points> pointsFiltered = new ArrayList<>();
-    private Map<String, Integer> pointsGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
+    private Map<String, Integer> pointsGrouped = new LinkedHashMap<>();
     private int totalPoints;
     private RecyclerView recyclerPoints;
     private TextView tvTotalPoints;
-    private TabLayout tabsFilterPoints;
     private LineChart chart;
     List<Integer> yVals = new ArrayList<>();
     List<String> labels = new ArrayList<>();
@@ -95,7 +94,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private void findViews() {
         recyclerPoints = getView().findViewById(R.id.recycler_points);
         tvTotalPoints = getView().findViewById(R.id.tv_total_points);
-        tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
+        TabLayout tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
         chart = getView().findViewById(R.id.chart);
 
         tabsFilterPoints.addOnTabSelectedListener(this);
@@ -134,31 +133,20 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         chart.getDescription().setEnabled(false);
 
         chart.setPinchZoom(true);
-
-//        chart.setViewPortOffsets(40f, 0f, 40f, 0f);
         chart.offsetLeftAndRight(getResources().getDimensionPixelSize(R.dimen.offset_chart_horizontal));
 
         Legend l = chart.getLegend();
         l.setEnabled(false);
 
         chart.getAxisRight().setEnabled(false);
-//        chart.getXAxis().setEnabled(false);
-
         chart.getAxisLeft().setAxisMinimum(0);
 
         XAxis xAxis = chart.getXAxis();
-
-//        xAxis.setSpaceMin(data.getBarWidth()/2);
-//        xAxis.setSpaceMax(data.getBarWidth()/2);
-
-//        xAxis.setXOffset(widthBetweenObservations);
         xAxis.setGranularity(1);
         xAxis.setGranularityEnabled(true);
-//        xAxis.setCenterAxisLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setLabelRotationAngle(40);
-//        xAxis.setLabelCount(2);
 
     }
 
@@ -252,7 +240,6 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                     Log.i(TAG, "getFormattedValue: exception. value: " + (int) value);
                     return "MAL";
                 }
-//                return String.valueOf(value);
             }
         });
 

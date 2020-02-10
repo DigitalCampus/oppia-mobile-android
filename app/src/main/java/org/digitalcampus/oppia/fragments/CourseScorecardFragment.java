@@ -32,7 +32,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.activity.CourseQuizAttemptsActivity;
 import org.digitalcampus.oppia.adapter.CourseQuizzesAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Activity;
@@ -130,7 +130,7 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
     //@Override
     public void onParseComplete(CompleteCourse parsedCourse) {
 
-        ArrayList<Activity> baseline = parsedCourse.getBaselineActivities();
+        ArrayList<Activity> baseline = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
         
     	DbHelper db = DbHelper.getInstance(super.getActivity());
         long userId = db.getUserId(SessionManager.getUsername(getActivity()));
@@ -147,7 +147,8 @@ public class CourseScorecardFragment extends AppFragment implements ParseCourseX
         	quizzes.add(qs);
         }
 
-        int quizzesAttempted = 0, quizzesPassed = 0;
+        int quizzesAttempted = 0;
+        int quizzesPassed = 0;
 
         for (QuizStats qs: quizzes){
         	if (qs.isAttempted()){

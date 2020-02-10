@@ -27,7 +27,7 @@ import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -210,7 +210,7 @@ public class SubmitTrackerMultipleTask extends APIRequestTask<Payload, Integer, 
                     Log.d(TAG, "Msg:" + response.body().string());
                     if (response.code() == 401) {
                         //The apiKey of this user is invalid
-                        SessionManager.setUserApiKeyValid(ctx, user, false);
+                        SessionManager.setUserApiKeyValid(user, false);
                         //We don't process more of this user trackers
                     }
                     return false;

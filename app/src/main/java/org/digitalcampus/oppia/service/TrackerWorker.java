@@ -19,7 +19,7 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.DownloadActivity;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.APIRequestFinishListener;
@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 public class TrackerWorker extends ListenableWorker implements APIRequestFinishListener, APIRequestListener {
 
 
-    private final String TAG = "TrackerWorker";
+    private static final String TAG = TrackerWorker.class.getSimpleName();
     private SettableFuture<Result> future;
     private int pendingTasks;
 
@@ -135,18 +135,12 @@ public class TrackerWorker extends ListenableWorker implements APIRequestFinishL
             Log.d(TAG, json.toString(4));
             DbHelper db = DbHelper.getInstance(getApplicationContext());
             for (int i = 0; i < (json.getJSONArray("courses").length()); i++) {
-                JSONObject json_obj = (JSONObject) json.getJSONArray("courses").get(i);
-                String shortName = json_obj.getString("shortname");
-                Double version = json_obj.getDouble("version");
+                JSONObject jsonObj = (JSONObject) json.getJSONArray("courses").get(i);
+                String shortName = jsonObj.getString("shortname");
+                Double version = jsonObj.getDouble("version");
 
                 if (db.toUpdate(shortName, version)) {
                     updateAvailable = true;
-                }
-                if (json_obj.has("schedule")) {
-                    Double scheduleVersion = json_obj.getDouble("schedule");
-                    if (db.toUpdateSchedule(shortName, scheduleVersion)) {
-                        updateAvailable = true;
-                    }
                 }
             }
 

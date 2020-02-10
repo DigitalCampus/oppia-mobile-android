@@ -30,7 +30,7 @@ import org.digitalcampus.oppia.activity.TagSelectActivity;
 import org.digitalcampus.oppia.adapter.CoursesListAdapter;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.listener.CourseInstallerListener;
@@ -42,7 +42,7 @@ import org.digitalcampus.oppia.model.CoursesRepository;
 import org.digitalcampus.oppia.model.DownloadProgress;
 import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.Media;
-import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.digitalcampus.oppia.service.courseinstall.InstallerBroadcastReceiver;
 import org.digitalcampus.oppia.task.DeleteCourseTask;
 import org.digitalcampus.oppia.task.Payload;
@@ -142,7 +142,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
 
         receiver = new InstallerBroadcastReceiver();
         receiver.setCourseInstallerListener(this);
-        IntentFilter broadcastFilter = new IntentFilter(CourseIntallerService.BROADCAST_ACTION);
+        IntentFilter broadcastFilter = new IntentFilter(CourseInstallerService.BROADCAST_ACTION);
         broadcastFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(receiver, broadcastFilter);
 

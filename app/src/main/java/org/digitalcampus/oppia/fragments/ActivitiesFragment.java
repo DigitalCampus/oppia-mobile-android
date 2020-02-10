@@ -36,7 +36,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.ActivityTypesAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.gamification.Gamification;
 import org.digitalcampus.oppia.model.ActivityCount;
@@ -65,21 +65,19 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
     private static final int DURATION_CHART_Y_VALUES_ANIMATION = 1000;
 
-    private final int POSITION_TAB_LAST_WEEK = 0;
-    private final int POSITION_TAB_LAST_MONTH = 1;
-    private final int POSITION_TAB_LAST_YEAR = 2;
+    private static final int POSITION_TAB_LAST_WEEK = 0;
+    private static final int POSITION_TAB_LAST_MONTH = 1;
+    private static final int POSITION_TAB_LAST_YEAR = 2;
 
     @Inject
     List<Points> pointsFull;
     List<Points> pointsFiltered = new ArrayList<>();
     private Map<String, ActivityCount> activitiesGrouped = new LinkedHashMap<>(); // LinkedHashMap: ordered by insertion. TreeMap: sorts naturally by key
-    private TabLayout tabsFilterPoints;
     private LineChart chart;
     List<String> labels = new ArrayList<>();
     private int currentDatesRangePosition;
     private Course course;
     private RecyclerView recyclerActivityTypes;
-    private ActivityTypesAdapter adapterActivityTypes;
     private ArrayList<ActivityType> activityTypes;
 
     public static ActivitiesFragment newInstance(Course course) {
@@ -92,7 +90,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
     private void findViews() {
         recyclerActivityTypes = getView().findViewById(R.id.recycler_activity_types);
-        tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
+        TabLayout tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
         chart = getView().findViewById(R.id.chart);
 
         tabsFilterPoints.addOnTabSelectedListener(this);
@@ -132,7 +130,7 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
         activityTypes.add(new ActivityType(getString(R.string.event_quiz_attempt), Gamification.EVENT_NAME_QUIZ_ATTEMPT,
                 ContextCompat.getColor(getActivity(), R.color.chart_line_quiz_attempt), false));
 
-        adapterActivityTypes = new ActivityTypesAdapter(getActivity(), activityTypes);
+        ActivityTypesAdapter adapterActivityTypes = new ActivityTypesAdapter(getActivity(), activityTypes);
         adapterActivityTypes.setOnItemClickListener(this);
         recyclerActivityTypes.setAdapter(adapterActivityTypes);
     }

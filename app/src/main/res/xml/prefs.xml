@@ -3,13 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ListPreference
-        android:defaultValue=""
         android:key="prefLanguage"
         android:title="@string/prefLanguage" >
     </ListPreference>
 
     <ListPreference
-        android:defaultValue=""
         android:key="prefStorageOption"
         android:title="@string/prefStorageLocation"
         android:entries="@array/StorageOptions"
@@ -88,7 +86,6 @@
 
     <PreferenceCategory android:title="@string/prefAdvanced" >
         <EditTextPreference
-            android:defaultValue=""
             android:key="prefUsername"
             android:title="@string/prefUser"
             android:selectable="false">
