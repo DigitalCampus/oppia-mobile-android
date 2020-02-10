@@ -203,9 +203,6 @@ public class FileUtils {
 
 	/*
 	 * gets the last path component
-	 *
-	 * Example: getLastPathComponent("downloads/example/fileToZip");
-	 * Result: "fileToZip"
 	 */
 	private static String getLastPathComponent(String filePath) {
 		String[] segments = filePath.split("/");
