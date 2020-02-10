@@ -336,7 +336,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
                     .setPositiveButton(R.string.ok, null)
                     .create();
                 passwordDialog.show();
-                passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                passwordDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         String password = passwordInput.getText().toString();
                         if (!password.equals("")) { passwordDialog.dismiss(); }

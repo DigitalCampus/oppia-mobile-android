@@ -135,7 +135,7 @@ public class ResourceWidget extends WidgetFactory {
 			ImageView iv = new ImageView(super.getActivity());
 			Bitmap myBitmap = BitmapFactory.decodeFile(fileUrl);
 			iv.setImageBitmap(myBitmap);
-			LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			ll.addView(iv, lp);
 			iv.setTag(file);
 			iv.setOnClickListener(orcl);

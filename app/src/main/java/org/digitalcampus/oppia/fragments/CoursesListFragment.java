@@ -329,7 +329,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
         anim.setDuration(900);
         messageContainer.startAnimation(anim);
 
-        messageContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        messageContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(initialCourseListPadding, messageContainer.getMeasuredHeight());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override

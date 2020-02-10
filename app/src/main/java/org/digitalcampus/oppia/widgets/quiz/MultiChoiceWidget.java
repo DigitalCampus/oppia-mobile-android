@@ -64,7 +64,7 @@ public class MultiChoiceWidget extends QuestionWidget{
     	for (Response r : responses){
     		RadioButton rb = new RadioButton(ctx);
 			RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
-					RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.MATCH_PARENT);
+				ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);
     		rb.setId(id);
 			rb.setText(r.getTitle(currentUserLang));
