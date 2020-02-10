@@ -297,6 +297,8 @@ public class BluetoothConnectionManager {
                                     Log.e(TAG, "Could not close unwanted socket", e);
                                 }
                                 break;
+                            default:
+                                // do nothing
                         }
                     }
                 }

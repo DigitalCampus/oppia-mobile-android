@@ -1254,6 +1254,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     description = this.ctx.getString(R.string.points_event_course_downloaded,
                             course == null ? "" : course.getTitle(prefLang));
                     break;
+                default:
+                    // do nothing
             }
 
             p.setDescription(description);
