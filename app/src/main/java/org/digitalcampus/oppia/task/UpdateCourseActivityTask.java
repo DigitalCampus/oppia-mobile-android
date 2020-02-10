@@ -45,7 +45,7 @@ import okhttp3.Response;
 public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadProgress, Payload> {
 
 	private UpdateActivityListener mStateListener;
-    private boolean APIKeyInvalidated = false;
+    private boolean apiKeyInvalidated = false;
 	private long userId;
 
 	public UpdateCourseActivityTask(Context ctx, long userId, ApiEndpoint apiEndpoint) {
@@ -76,7 +76,7 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
                 payload.setResult(false);
                 if (response.code() == 401){
                     SessionManager.setUserApiKeyValid(u, false);
-                    APIKeyInvalidated = true;
+                    apiKeyInvalidated = true;
                 }
                 payload.setResultResponse(ctx.getString(
                         (response.code()==401) ? R.string.error_apikey_expired : R.string.error_connection));
@@ -137,7 +137,7 @@ public class UpdateCourseActivityTask extends APIRequestTask<Payload, DownloadPr
 	protected void onPostExecute(Payload results) {
 		synchronized (this) {
             if (mStateListener != null) {
-                if (APIKeyInvalidated)
+                if (apiKeyInvalidated)
                     mStateListener.apiKeyInvalidated();
                 else
                     mStateListener.updateActivityComplete(results);

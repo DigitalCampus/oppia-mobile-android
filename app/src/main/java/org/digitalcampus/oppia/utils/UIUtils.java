@@ -48,6 +48,7 @@ import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.model.User;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
@@ -295,7 +296,7 @@ public class UIUtils {
      * @param prefs
      * @param funct
      */
-    public static void createLanguageDialog(Context ctx, ArrayList<Lang> langs, final SharedPreferences prefs, final Callable<Boolean> funct) {
+    public static void createLanguageDialog(Context ctx, List<Lang> langs, final SharedPreferences prefs, final Callable<Boolean> funct) {
         ArrayList<String> langStringList = new ArrayList<>();
         final ArrayList<Lang> languagesList = new ArrayList<>();
 

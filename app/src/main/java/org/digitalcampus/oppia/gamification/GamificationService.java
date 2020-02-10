@@ -108,7 +108,7 @@ public class GamificationService  extends IntentService {
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     Quiz quiz = (Quiz) intent.getSerializableExtra(SERVICE_QUIZ);
                     float score = intent.getFloatExtra(SERVICE_QUIZ_SCORE, 0f);
-                    event = gEngine.processEventQuizAttempt(c, act, quiz, score);
+                    event = gEngine.processEventQuizAttempt(c, act, score);
 
                     DbHelper db = DbHelper.getInstance(this);
                     long userId = db.getUserId(SessionManager.getUsername(this));
