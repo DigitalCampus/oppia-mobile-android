@@ -52,6 +52,7 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 	private List<GamificationEvent> gamificationEvents = new ArrayList<>();
 
 	public Activity(){
+		// do nothing
 	}
 	
 	public boolean hasCustomImage(){

@@ -221,7 +221,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         adapterMedia.setOnItemClickListener(new DownloadMediaAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                // do nothing
             }
 
             @Override

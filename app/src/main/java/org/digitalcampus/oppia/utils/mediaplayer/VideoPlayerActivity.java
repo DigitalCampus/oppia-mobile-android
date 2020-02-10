@@ -222,13 +222,13 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     }
 
     public void toggleFullScreen() {
-        
+        // do nothing
     }
     // End VideoMediaController.MediaPlayerControl
 
     // Implement SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        
+        // do nothing
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
@@ -259,7 +259,7 @@ public class VideoPlayerActivity extends AppActivity implements SurfaceHolder.Ca
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        // do nothing
     }
 
     @Override

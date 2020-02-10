@@ -388,11 +388,11 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-
+        // do nothing
     }
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-
+        // do nothing
     }
 }

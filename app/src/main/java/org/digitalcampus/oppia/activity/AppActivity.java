@@ -358,7 +358,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         animSetGlobal.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                // do nothing
             }
 
             @Override
@@ -369,12 +369,12 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
+                // do nothing
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-
+                // do nothing
             }
         });
 

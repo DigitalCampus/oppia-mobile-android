@@ -17,7 +17,7 @@ public class MainScorecardFragment extends TabsFragment {
     }
 
     public MainScorecardFragment() {
-
+        // do nothing
     }
 
     @Override

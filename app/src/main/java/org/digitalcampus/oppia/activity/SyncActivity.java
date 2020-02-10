@@ -463,9 +463,14 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void downloadComplete(Payload p) { }
+    public void downloadComplete(Payload p) {
+        // do nothing
+    }
+
     @Override
-    public void downloadProgressUpdate(DownloadProgress dp) { }
+    public void downloadProgressUpdate(DownloadProgress dp) {
+        // do nothing
+    }
 
     @Override
     public void installComplete(Payload p) {
@@ -616,10 +621,14 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void onTabUnselected(TabLayout.Tab tab) { }
+    public void onTabUnselected(TabLayout.Tab tab) {
+        // do nothing
+    }
 
     @Override
-    public void onTabReselected(TabLayout.Tab tab) { }
+    public void onTabReselected(TabLayout.Tab tab) {
+        // do nothing
+    }
 
 
 

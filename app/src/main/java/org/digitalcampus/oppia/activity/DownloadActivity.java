@@ -103,7 +103,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         adapterDownloadCourses.setOnItemClickListener(new DownloadCoursesAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                // do nothing
             }
 
             @Override

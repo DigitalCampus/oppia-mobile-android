@@ -98,7 +98,9 @@ public class GrantStorageAccessFragment extends Fragment implements ListInnerBtn
 
     public static class InfoDialog extends DialogFragment implements View.OnClickListener {
 
-        public InfoDialog(){ }
+        public InfoDialog(){
+            // do nothing
+        }
 
         private ListInnerBtnOnClickListener listener;
         public void setListener(ListInnerBtnOnClickListener listener){

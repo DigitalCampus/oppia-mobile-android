@@ -105,7 +105,7 @@ public class SubmitQuizAttemptsTask extends APIRequestTask<Payload, Object, Payl
 	}
 
 	protected void onProgressUpdate(String... obj) {
-		
+		// do nothing
 	}
 
 }

@@ -417,12 +417,12 @@ public class ActivitiesFragment extends AppFragment implements TabLayout.BaseOnT
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-
+        // do nothing
     }
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-
+        // do nothing
     }
 
     // Event types list

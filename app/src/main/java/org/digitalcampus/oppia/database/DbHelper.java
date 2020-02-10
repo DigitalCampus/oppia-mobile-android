@@ -921,7 +921,7 @@ public class DbHelper extends SQLiteOpenHelper {
             qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
             qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
             qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
-            qa.setDateTime(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
+            qa.setDateTimeFromString(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
             qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
             qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
             qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
@@ -987,7 +987,7 @@ public class DbHelper extends SQLiteOpenHelper {
             qa.setId(c.getInt(c.getColumnIndex(QUIZATTEMPTS_C_ID)));
             qa.setActivityDigest(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_ACTIVITY_DIGEST)));
             qa.setData(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATA)));
-            qa.setDateTime(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
+            qa.setDateTimeFromString(c.getString(c.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
             qa.setCourseId(c.getLong(c.getColumnIndex(QUIZATTEMPTS_C_COURSEID)));
             qa.setScore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_SCORE)));
             qa.setMaxscore(c.getFloat(c.getColumnIndex(QUIZATTEMPTS_C_MAXSCORE)));
