@@ -13,6 +13,10 @@ public class XMLSecurityHelper {
     // https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#jaxp-documentbuilderfactory-saxparserfactory-and-dom4j
     // https://xerces.apache.org/xerces2-j/features.html
 
+    private XMLSecurityHelper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static DocumentBuilder getNewSecureDocumentBuilder() throws ParserConfigurationException {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

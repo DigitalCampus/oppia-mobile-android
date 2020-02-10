@@ -48,6 +48,10 @@ public class PermissionsManager {
         Manifest.permission.ACCESS_FINE_LOCATION
     );
 
+    private PermissionsManager() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static boolean isFirstTimeAsked(SharedPreferences prefs, String permission){
         return !prefs.getBoolean(permission + "_asked", false);
     }

@@ -22,6 +22,10 @@ public class CryptoUtils {
 
     );
 
+    private CryptoUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static String encryptWithAlgorithm(String password, Pair<String, String> algorithm) throws NoSuchAlgorithmException {
         final MessageDigest digest = MessageDigest.getInstance(algorithm.second);
         byte[] result;

@@ -25,6 +25,10 @@ public class OppiaNotificationUtils {
     public static final String CHANNEL_INTERNAL_NOTIFICATIONS = "channel_internal_notifications";
     public static final int NOTIF_ID_SIMPLE_MESSAGE = 0;
 
+    private OppiaNotificationUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void initializeOreoNotificationChannels(Context context) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library

@@ -70,6 +70,9 @@ public class SessionManager {
             PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS);
 
 
+    private SessionManager() {
+        throw new IllegalStateException("Utility class");
+    }
     public static boolean isLoggedIn(Context ctx) {
         String username = getUsername(ctx);
         return !username.trim().equals("");

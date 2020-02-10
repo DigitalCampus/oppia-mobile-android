@@ -261,6 +261,7 @@ public class BluetoothConnectionManager {
             state = STATE_LISTEN;
         }
 
+        @Override
         public void run() {
             Log.d(TAG, "Socket BEGIN mAcceptThread " + this);
             setName("AcceptThread");
@@ -339,6 +340,7 @@ public class BluetoothConnectionManager {
             state = STATE_CONNECTING;
         }
 
+        @Override
         public void run() {
             Log.i(TAG, "BEGIN connectThread " );
             setName("ConnectThread");

@@ -57,6 +57,10 @@ public class UIUtils {
     public static final String TAG = UIUtils.class.getSimpleName();
     private static int pointsToSubstractForAnimationSaved;
 
+    private UIUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * Displays the users points and badges scores in the app header
      *

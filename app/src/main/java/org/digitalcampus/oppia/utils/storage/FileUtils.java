@@ -44,6 +44,10 @@ public class FileUtils {
 	public static final String TAG = FileUtils.class.getSimpleName();
 	public static final int BUFFER_SIZE = 1024;
 
+	private FileUtils() {
+		throw new IllegalStateException("Utility class");
+	}
+
 	// This function converts the zip file into uncompressed files which are
 	// placed in the destination directory
 	// destination directory should be created first

@@ -59,8 +59,6 @@ public class CourseInstallViewAdapter extends Course {
     private static final String JSON_PROPERTY_IS_DRAFT = "is_draft";
     private static final String JSON_PROPERTY_AUTHOR = "author";
     private static final String JSON_PROPERTY_USERNAME = "username";
-    private static final String JSON_PROPERTY_SCHEDULE_URI = "schedule_uri";
-    private static final String JSON_PROPERTY_SCHEDULE = "schedule";
     private static final String JSON_PROPERTY_ORGANISATION = "organisation";
 
     public boolean isDownloading() {

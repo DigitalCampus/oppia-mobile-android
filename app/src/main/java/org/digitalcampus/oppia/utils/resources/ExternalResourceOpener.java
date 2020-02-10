@@ -17,6 +17,10 @@ public class ExternalResourceOpener {
 
     private static final String FILEPROVIDER_AUTHORITY = BuildConfig.APPLICATION_ID  + ".provider";
 
+    private ExternalResourceOpener() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Intent getIntentToOpenResource(Context ctx, File resourceFile){
 
         Uri resourceUri = FileProvider.getUriForFile(ctx, FILEPROVIDER_AUTHORITY, resourceFile);

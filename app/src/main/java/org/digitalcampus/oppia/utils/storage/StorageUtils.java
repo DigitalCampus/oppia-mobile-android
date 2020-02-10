@@ -34,6 +34,10 @@ public class StorageUtils {
     private static DeviceFile mExternalDrive;
     private static DeviceFile mInternalDrive;
 
+    private StorageUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static DeviceFile getInternalMemoryDrive() {
         DeviceFile ret = null;
         if (mInternalDrive != null)
