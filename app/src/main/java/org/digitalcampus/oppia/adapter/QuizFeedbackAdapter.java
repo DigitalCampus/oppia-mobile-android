@@ -2,6 +2,7 @@ package org.digitalcampus.oppia.adapter;
 
 
 import android.content.Context;
+import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,13 +54,22 @@ public class QuizFeedbackAdapter extends RecyclerView.Adapter<QuizFeedbackAdapte
             }
         }
 
-        viewHolder.quizQuestion.setText(Html.fromHtml(qf.getQuestionText()));
-        viewHolder.quizUserResponse.setText(Html.fromHtml(userResponseText.toString()));
+        if (Build.VERSION.SDK_INT >= 24){
+            viewHolder.quizQuestion.setText(Html.fromHtml(qf.getQuestionText(), Html.FROM_HTML_MODE_LEGACY));
+            viewHolder.quizUserResponse.setText(Html.fromHtml(userResponseText.toString(), Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            viewHolder.quizQuestion.setText(Html.fromHtml(qf.getQuestionText()));
+            viewHolder.quizUserResponse.setText(Html.fromHtml(userResponseText.toString()));
+        }
 
         if (qf.getFeedbackText() != null && !qf.getFeedbackText().equals("")){
             viewHolder.quizFeedbackTitle.setVisibility(View.VISIBLE);
             viewHolder.quizFeedbackText.setVisibility(View.VISIBLE);
-            viewHolder.quizFeedbackText.setText(Html.fromHtml(qf.getFeedbackText()));
+            if (Build.VERSION.SDK_INT >= 24) {
+                viewHolder.quizFeedbackText.setText(Html.fromHtml(qf.getFeedbackText(), Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                viewHolder.quizFeedbackText.setText(Html.fromHtml(qf.getFeedbackText()));
+            }
         } else {
             //If there's no feedback to show, hide both text and title
             viewHolder.quizFeedbackTitle.setVisibility(View.GONE);

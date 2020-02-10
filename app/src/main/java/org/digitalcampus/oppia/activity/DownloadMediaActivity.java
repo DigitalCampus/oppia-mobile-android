@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -506,7 +507,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         anim.setDuration(900);
         missingMediaContainer.startAnimation(anim);
 
-        missingMediaContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(0, missingMediaContainer.getMeasuredHeight());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override
@@ -525,7 +526,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         anim.setDuration(900);
         missingMediaContainer.startAnimation(anim);
 
-        missingMediaContainer.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        missingMediaContainer.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ValueAnimator animator = ValueAnimator.ofInt(missingMediaContainer.getMeasuredHeight(), 0);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             //@Override

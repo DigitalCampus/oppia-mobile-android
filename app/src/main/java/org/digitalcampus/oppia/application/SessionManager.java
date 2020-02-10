@@ -69,6 +69,8 @@ public class SessionManager {
             PrefsActivity.PREF_DISABLE_NOTIFICATIONS,
             PrefsActivity.PREF_SHOW_GAMIFICATION_EVENTS);
 
+    private static final String STR_FALSE = "false";
+    private static final String STR_TRUE = "true";
 
     private SessionManager() {
         throw new IllegalStateException("Utility class");
@@ -160,7 +162,7 @@ public class SessionManager {
         for (String prefID : USER_BOOLEAN_PREFS) {
             if (prefs.contains(prefID)) {
                 boolean prefValue = prefs.getBoolean(prefID, false);
-                userPreferences.add(new UserPreference(username, prefID, prefValue ? "true" : "false"));
+                userPreferences.add(new UserPreference(username, prefID, prefValue ? STR_TRUE : STR_FALSE));
             }
         }
 
@@ -182,7 +184,7 @@ public class SessionManager {
             if (USER_STRING_PREFS.contains(prefKey)) {
                 prefsEditor.putString(prefKey, prefValue);
             } else if (USER_BOOLEAN_PREFS.contains(prefKey)) {
-                prefsEditor.putBoolean(prefKey, "true".equals(prefValue));
+                prefsEditor.putBoolean(prefKey, STR_TRUE.equals(prefValue));
             }
             prefsToSave.remove(prefKey);
         }
@@ -197,10 +199,10 @@ public class SessionManager {
 
     public static void setUserApiKeyValid(User user, boolean valid) {
         ArrayList<Pair<String, String>> userPrefs = new ArrayList<>();
-        Pair<String, String> userPref = new Pair<>(APIKEY_VALID, valid ? "true" : "false");
+        Pair<String, String> userPref = new Pair<>(APIKEY_VALID, valid ? STR_TRUE : STR_FALSE);
         userPrefs.add(userPref);
 
-        UserPreference userPreference = new UserPreference(user.getUsername(), APIKEY_VALID, valid ? "true" : "false");
+        UserPreference userPreference = new UserPreference(user.getUsername(), APIKEY_VALID, valid ? STR_TRUE : STR_FALSE);
         App.getDb().userPreferenceDao().insert(userPreference);
     }
 
@@ -215,7 +217,7 @@ public class SessionManager {
     public static boolean isUserApiKeyValid(String username) {
 
         UserPreference userPref = App.getDb().userPreferenceDao().getUserPreference(username, APIKEY_VALID);
-        return (userPref == null || "true".equals(userPref.getValue()));
+        return (userPref == null || STR_TRUE    .equals(userPref.getValue()));
     }
 
     public static void preloadUserAccounts(Context ctx, PreloadAccountsListener listener) {
