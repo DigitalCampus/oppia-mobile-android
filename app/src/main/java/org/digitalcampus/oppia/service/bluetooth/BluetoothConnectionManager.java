@@ -261,6 +261,7 @@ public class BluetoothConnectionManager {
             state = STATE_LISTEN;
         }
 
+        @Override
         public void run() {
             Log.d(TAG, "Socket BEGIN mAcceptThread " + this);
             setName("AcceptThread");
@@ -296,6 +297,8 @@ public class BluetoothConnectionManager {
                                     Log.e(TAG, "Could not close unwanted socket", e);
                                 }
                                 break;
+                            default:
+                                // do nothing
                         }
                     }
                 }
@@ -339,6 +342,7 @@ public class BluetoothConnectionManager {
             state = STATE_CONNECTING;
         }
 
+        @Override
         public void run() {
             Log.i(TAG, "BEGIN connectThread " );
             setName("ConnectThread");

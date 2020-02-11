@@ -117,8 +117,8 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
 
     public void sortByCourse() {
         //Sort the media list by filename
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        final String lang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        SharedPreferences prefsCourse = PreferenceManager.getDefaultSharedPreferences(context);
+        final String lang = prefsCourse.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         Collections.sort(this.mediaList, new Comparator<Object>() {
             @Override
             public int compare(Object o1, Object o2) {

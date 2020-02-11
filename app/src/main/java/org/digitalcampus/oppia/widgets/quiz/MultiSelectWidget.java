@@ -62,7 +62,7 @@ public class MultiSelectWidget extends QuestionWidget {
     		CheckBox chk= new CheckBox(ctx);
 			chk.setText(Html.fromHtml(r.getTitle(currentUserLang)));
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+					ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
 			setResponseMarginInLayoutParams(params);
 			responsesLL.addView(chk, params);
 			for (String a : currentAnswer) {

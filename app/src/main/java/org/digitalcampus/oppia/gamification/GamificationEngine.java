@@ -22,7 +22,6 @@ import android.util.Log;
 
 import com.splunk.mint.Mint;
 
-import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.GamificationEventNotFound;
 import org.digitalcampus.oppia.model.Activity;

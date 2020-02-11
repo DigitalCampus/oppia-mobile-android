@@ -29,7 +29,6 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     private String prefLang;
 
     private String updateDescription;
-    private String updateSchedDescription;
     private String installDescription;
     private String installedDescription;
     private String cancelDescription;

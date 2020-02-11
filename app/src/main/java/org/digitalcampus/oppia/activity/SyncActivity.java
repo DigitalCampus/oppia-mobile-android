@@ -287,6 +287,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                     sendTransferProgress.setVisibility(View.GONE);
                 startBluetooth();
                 break;
+            default:
+                // do nothing
         }
 
     }
@@ -592,6 +594,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                             Toast.LENGTH_SHORT).show();
                     this.finish();
                 }
+            default:
+                // do nothing
         }
     }
 
@@ -665,6 +669,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
                     Toast.makeText(self, msg.getData().getString(BluetoothConnectionManager.TOAST),
                             Toast.LENGTH_SHORT).show();
                     break;
+                default:
+                    // do nothing
             }
         }
     }
@@ -697,6 +703,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             case android.R.id.home:
                 this.onBackPressed();
                 break;
+            default:
+                // do nothing
         }
 
         return super.onOptionsItemSelected(item);

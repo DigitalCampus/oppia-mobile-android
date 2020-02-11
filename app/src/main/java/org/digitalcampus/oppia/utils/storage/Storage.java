@@ -36,6 +36,11 @@ public class Storage {
     private static final String FILE_READ_ERROR = "Error reading file: ";
 
     private static StorageAccessStrategy storageStrategy;
+
+    private Storage() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void setStorageStrategy(StorageAccessStrategy strategy){
         storageStrategy = strategy;
     }

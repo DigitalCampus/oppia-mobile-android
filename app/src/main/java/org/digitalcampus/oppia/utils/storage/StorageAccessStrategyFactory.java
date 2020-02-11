@@ -20,6 +20,11 @@ package org.digitalcampus.oppia.utils.storage;
 import org.digitalcampus.oppia.activity.PrefsActivity;
 
 public class StorageAccessStrategyFactory {
+
+    private StorageAccessStrategyFactory() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static StorageAccessStrategy createStrategy(String type){
         if ((type!=null)&&(type.equals(PrefsActivity.STORAGE_OPTION_INTERNAL))){
             return new InternalStorageStrategy();

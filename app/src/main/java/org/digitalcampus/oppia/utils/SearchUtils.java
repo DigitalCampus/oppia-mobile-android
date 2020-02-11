@@ -40,7 +40,11 @@ import java.util.List;
 public class SearchUtils {
 
 	public static final String TAG = SearchUtils.class.getSimpleName();
-	
+
+    private SearchUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
 	public static void reindexAll(Context ctx){
 		SearchReIndexTask task = new SearchReIndexTask(ctx);
 		Payload p = new Payload();
