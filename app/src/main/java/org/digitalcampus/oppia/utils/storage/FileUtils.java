@@ -126,6 +126,8 @@ public class FileUtils {
                             return false;
                         }
                     }
+
+                    closeSafely(dest);
                 }
             }
 
