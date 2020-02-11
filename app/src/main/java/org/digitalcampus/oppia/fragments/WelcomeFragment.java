@@ -36,7 +36,7 @@ public class WelcomeFragment extends AppFragment {
     private Button registerButton;
 
 	public WelcomeFragment() {
-
+        // do nothing
 	}
 
 	@Override

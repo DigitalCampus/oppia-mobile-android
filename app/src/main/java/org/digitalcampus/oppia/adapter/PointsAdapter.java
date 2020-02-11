@@ -16,11 +16,8 @@ import java.util.List;
 
 public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder> {
 
-
     private List<Points> points;
     private Context context;
-    private OnItemClickListener itemClickListener;
-
 
     public PointsAdapter(Context context, List<Points> points) {
         this.context = context;
@@ -61,7 +58,7 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private View rootView;
+        public View rootView;
         private TextView pointsDescription;
         private TextView pointsTime;
         private TextView pointsDate;
@@ -79,11 +76,6 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder
             rootView = itemView;
         }
 
-    }
-
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.itemClickListener = listener;
     }
 
     public interface OnItemClickListener {

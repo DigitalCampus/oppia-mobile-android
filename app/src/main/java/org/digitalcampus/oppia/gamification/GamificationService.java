@@ -10,7 +10,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.application.Tracker;
 import org.digitalcampus.oppia.model.Activity;
@@ -108,7 +108,7 @@ public class GamificationService  extends IntentService {
                     c = (Course) intent.getSerializableExtra(SERVICE_COURSE);
                     Quiz quiz = (Quiz) intent.getSerializableExtra(SERVICE_QUIZ);
                     float score = intent.getFloatExtra(SERVICE_QUIZ_SCORE, 0f);
-                    event = gEngine.processEventQuizAttempt(c, act, quiz, score);
+                    event = gEngine.processEventQuizAttempt(c, act, score);
 
                     DbHelper db = DbHelper.getInstance(this);
                     long userId = db.getUserId(SessionManager.getUsername(this));

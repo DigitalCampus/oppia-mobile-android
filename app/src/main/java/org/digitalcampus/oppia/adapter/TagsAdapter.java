@@ -70,7 +70,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private View rootView;
+        public View rootView;
         private TextView tagName;
         private TextView tagDescription;
         private TextView tagCount;

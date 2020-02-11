@@ -21,7 +21,7 @@ public class GamificationEventNotFound extends Exception {
 
     public static final String TAG = GamificationEventNotFound.class.getSimpleName();
 
-    private String eventName;
+    private final String eventName;
 
     public GamificationEventNotFound(String eventName){
         this.eventName = eventName;

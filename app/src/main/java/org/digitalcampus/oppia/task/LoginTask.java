@@ -25,7 +25,7 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.api.Paths;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
 import org.digitalcampus.oppia.listener.SubmitListener;
@@ -64,7 +64,7 @@ public class LoginTask extends APIRequestTask<Payload, Object, Payload> {
 			Log.d(TAG,"logged pw: " + localUser.getPasswordEncrypted());
 			Log.d(TAG,"entered pw: " + u.getPasswordEncrypted());
 			
-			if (SessionManager.isUserApiKeyValid(ctx, u.getUsername()) &&
+			if (SessionManager.isUserApiKeyValid(u.getUsername()) &&
                     localUser.getPasswordEncrypted().equals(u.getPasswordEncrypted())){
 				payload.setResult(true);
 				payload.setResultResponse(ctx.getString(R.string.login_complete));

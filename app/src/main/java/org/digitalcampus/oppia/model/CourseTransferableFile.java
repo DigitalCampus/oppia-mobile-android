@@ -107,11 +107,7 @@ public class CourseTransferableFile implements Serializable {
     public void setFile(File file) {
         this.file = file;
     }
-
-    public long getRelatedFilesize() {
-        return relatedFilesize;
-    }
-
+    
     public void setRelatedFilesize(long relatedFilesize) {
         this.relatedFilesize = relatedFilesize;
     }
@@ -128,5 +124,27 @@ public class CourseTransferableFile implements Serializable {
     @Override
     public int hashCode() {
         return filename != null ? filename.hashCode() : 0;
+    }
+
+    public String getNotificationName() {
+        if (type.equals(TYPE_COURSE_BACKUP)){
+            return getShortname();
+        }
+        else if(type.equals(TYPE_ACTIVITY_LOG)){
+            return getActivityLogUsername() + " log";
+        }
+        return null;
+    }
+
+    public String getActivityLogUsername(){
+        return filename.substring(0, filename.indexOf('_'));
+    }
+
+    public void setTitleFromFilename() {
+        String filenameTitle = "";
+        if (type.equals(TYPE_ACTIVITY_LOG)){
+            filenameTitle = getActivityLogUsername();
+        }
+        setTitle(filenameTitle);
     }
 }

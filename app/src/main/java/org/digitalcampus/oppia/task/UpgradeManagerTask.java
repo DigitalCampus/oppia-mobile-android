@@ -32,9 +32,10 @@ import com.splunk.mint.Mint;
 import org.digitalcampus.mobile.learning.BuildConfig;
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DBMigration;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.listener.UpgradeListener;
 import org.digitalcampus.oppia.model.Activity;
@@ -45,7 +46,6 @@ import org.digitalcampus.oppia.model.User;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.json.JSONException;
@@ -146,6 +146,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			payload.setResult(true);
 		}
 
+		DBMigration.newInstance(ctx).checkMigrationStatus();
+
 		overrideAdminPasswordTask();
 		
 		return payload;
@@ -161,12 +163,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
             for (String course : children) {
                 publishProgress("checking: " + course);
                 String courseXMLPath = "";
-                String courseScheduleXMLPath = "";
                 String courseTrackerXMLPath = "";
                 // check that it's unzipped etc correctly
                 try {
                     courseXMLPath = dir + File.separator + course + File.separator + App.COURSE_XML;
-                    courseScheduleXMLPath = dir + File.separator + course + File.separator + App.COURSE_SCHEDULE_XML;
                     courseTrackerXMLPath = dir + File.separator + course + File.separator + App.COURSE_TRACKER_XML;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     FileUtils.cleanUp(dir, Storage.getDownloadPath(ctx) + course);
@@ -175,7 +175,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 
                 // check a module.xml file exists and is a readable XML file
                 CourseXMLReader cxr;
-                CourseScheduleXMLReader csxr;
                 CourseTrackerXMLReader ctxr;
 				CompleteCourse c;
                 try {
@@ -183,7 +182,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 					cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
 					c = cxr.getParsedCourse();
 
-                    csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
                     ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
                 } catch (InvalidXMLException e) {
 					Mint.logException(e);
@@ -202,12 +200,6 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
                     db.insertActivities(c.getActivities(courseId));
                     db.insertTrackers(ctxr.getTrackers(courseId, 0));
                 }
-
-                // add schedule
-                // put this here so even if the course content isn't updated the schedule will be
-                db.insertSchedule(csxr.getSchedule());
-                db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
-
             }
 		}
 	}

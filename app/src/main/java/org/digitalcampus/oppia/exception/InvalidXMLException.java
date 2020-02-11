@@ -18,8 +18,6 @@
 
 package org.digitalcampus.oppia.exception;
 
-import android.util.Log;
-
 import com.splunk.mint.Mint;
 
 public class InvalidXMLException extends Exception {
@@ -35,7 +33,7 @@ public class InvalidXMLException extends Exception {
 		this(message);
 
 		Mint.logException(e);
-		Log.e(TAG, "InvalidXMLException: ", e);
+		e.printStackTrace();
 	}
 
 	public InvalidXMLException(Exception e){

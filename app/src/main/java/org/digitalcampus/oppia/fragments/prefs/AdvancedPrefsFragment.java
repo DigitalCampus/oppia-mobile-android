@@ -1,54 +1,59 @@
-package org.digitalcampus.oppia.fragments;
+package org.digitalcampus.oppia.fragments.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.AdminSecurityManager;
-import org.digitalcampus.oppia.application.App;
-import org.digitalcampus.oppia.model.Lang;
 import org.digitalcampus.oppia.utils.UIUtils;
 import org.digitalcampus.oppia.utils.storage.StorageLocationInfo;
 import org.digitalcampus.oppia.utils.storage.StorageUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
-public class PreferencesFragment extends PreferenceFragment {
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+
+public class AdvancedPrefsFragment extends BasePreferenceFragment implements PreferenceChangedCallback{
 
     public static final String TAG = PrefsActivity.class.getSimpleName();
-
     private ListPreference storagePref;
     private EditTextPreference serverPref;
 
-    public static PreferencesFragment newInstance() {
-        return new PreferencesFragment();
+    public static AdvancedPrefsFragment newInstance() {
+        return new AdvancedPrefsFragment();
     }
 
-    public PreferencesFragment(){
+    public AdvancedPrefsFragment(){
         // Required empty public constructor
+        this.adminProtectedValues = Arrays.asList(PrefsActivity.PREF_SERVER);
     }
+
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        // Load the preferences from XML resources
+        addPreferencesFromResource(R.xml.prefs_advanced);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        loadPrefs();
+    }
 
-        // Load the preferences from XML resources
-        addPreferencesFromResource(R.xml.common_prefs);
-        addPreferencesFromResource(R.xml.prefs);
-
-        storagePref = (ListPreference) findPreference(PrefsActivity.PREF_STORAGE_OPTION);
-        serverPref = (EditTextPreference) findPreference(PrefsActivity.PREF_SERVER);
+    private void loadPrefs(){
+        storagePref = findPreference(PrefsActivity.PREF_STORAGE_OPTION);
+        serverPref = findPreference(PrefsActivity.PREF_SERVER);
+        if (serverPref == null || storagePref == null){
+            return;
+        }
         serverPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -64,38 +69,31 @@ public class PreferencesFragment extends PreferenceFragment {
                 return true;
             }
         });
+        protectAdminEditTextPreferences();
 
         MaxIntOnStringPreferenceListener maxIntListener = new MaxIntOnStringPreferenceListener();
         findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_CONN).setOnPreferenceChangeListener(maxIntListener);
         findPreference(PrefsActivity.PREF_SERVER_TIMEOUT_RESP).setOnPreferenceChangeListener(maxIntListener);
 
-        if (!App.ADMIN_PROTECT_SETTINGS){
-            // If the whole settings activity is not protected by password, we need to protect admin settings
-            protectAdminPreferences();
-        }
-
-        Bundle bundle = getArguments();
-        ArrayList<Lang> langs;
-        if ((bundle != null) && bundle.getSerializable("langs") != null) {
-	        langs = (ArrayList<Lang>) bundle.getSerializable("langs");
-	        if (langs != null){
-                updateLangsList(langs);
-            }
-
-        }
-
         updateServerPref();
-
         updateStorageList(this.getActivity());
-
-        EditTextPreference username = (EditTextPreference) findPreference(PrefsActivity.PREF_USER_NAME);
-        username.setSummary( username.getText().equals("") ?
+        liveUpdateSummary(PrefsActivity.PREF_STORAGE_OPTION);
+        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_CONN, " ms");
+        liveUpdateSummary(PrefsActivity.PREF_SERVER_TIMEOUT_RESP, " ms");
+        EditTextPreference username = findPreference(PrefsActivity.PREF_USER_NAME);
+        username.setSummary( "".equals(username.getText()) ?
                 getString(R.string.about_not_logged_in) :
                 getString(R.string.about_logged_in, username.getText()) );
-
     }
 
     public void updateServerPref(){
+
+        if (serverPref == null){
+            loadPrefs();
+        }
+        if (serverPref == null || storagePref == null){
+            return;
+        }
 
         SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
         String server = prefs.getString(PrefsActivity.PREF_SERVER, "");
@@ -122,6 +120,9 @@ public class PreferencesFragment extends PreferenceFragment {
     }
 
     public void updateStoragePref(String storageOption){
+        if (storagePref == null){
+            loadPrefs();
+        }
         if (PrefsActivity.STORAGE_OPTION_EXTERNAL.equals(storageOption)){
             storagePref.setValue(storagePref.getEntryValues()[1].toString());
         }
@@ -130,7 +131,7 @@ public class PreferencesFragment extends PreferenceFragment {
         }
     }
 
-    public void updateStorageList(Context ctx){
+    private void updateStorageList(Context ctx){
 
         List<StorageLocationInfo> storageLocations = StorageUtils.getStorageList(ctx);
         if (storageLocations.size() > 1){
@@ -166,86 +167,19 @@ public class PreferencesFragment extends PreferenceFragment {
                 storagePref.setValue((currentPath.equals(""))? PrefsActivity.STORAGE_OPTION_INTERNAL : currentPath);
             }
         }
-
     }
 
-    private void updateLangsList(ArrayList<Lang> langs){
-        List<String> entries = new ArrayList<>();
-        List<String> entryValues = new ArrayList<>();
-
-        for(Lang l: langs){
-            if(!entryValues.contains(l.getLang())){
-                entryValues.add(l.getLang());
-                Locale loc = new Locale(l.getLang());
-                entries.add(loc.getDisplayLanguage(loc));
-            }
+    @Override
+    public void onPreferenceUpdated(String pref, String newValue) {
+        if (pref.equals(PrefsActivity.PREF_SERVER)){
+            updateServerPref();
         }
-
-        ListPreference langsList = (ListPreference) findPreference(PrefsActivity.PREF_LANGUAGE);
-        if (entries.size() > 1){
-            langsList.setEntries( entries.toArray(new CharSequence[0]) );
-            langsList.setEntryValues( entryValues.toArray(new CharSequence[0]) );
-        }
-        else{
-            getPreferenceScreen().removePreference(langsList);
-        }
-
-    }
-
-    private void protectAdminPreferences(){
-        final CheckBoxPreference adminEnabled = (CheckBoxPreference) findPreference(PrefsActivity.PREF_ADMIN_PROTECTION);
-        protectAdminEditTextPreferences(PrefsActivity.PREF_ADMIN_PASSWORD, PrefsActivity.PREF_SERVER);
-
-        adminEnabled.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                final Boolean enableProtection = (Boolean) newValue;
-                if (enableProtection) {
-                    //If we are going to re-enable the preference, there is no need to prompt for the previous password
-                    return true;
-                }
-                AdminSecurityManager.with(getActivity()).promptAdminPassword(new AdminSecurityManager.AuthListener() {
-                    @Override
-                    public void onPermissionGranted() {
-                        adminEnabled.setChecked(enableProtection);
-                        preference.getEditor().putBoolean(preference.getKey(), enableProtection);
-                    }
-                });
-                return false;
-            }
-        });
-
-    }
-
-    private void protectAdminEditTextPreferences(String... prefsKeys) {
-
-        for (String prefKey : prefsKeys) {
-
-            final EditTextPreference editTextPreference = (EditTextPreference) findPreference(prefKey);
-
-            editTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-
-                    if (!App.getPrefs(getActivity()).getBoolean(PrefsActivity.PREF_ADMIN_PROTECTION, false)) {
-                        return true;
-                    }
-
-                    AdminSecurityManager.with(getActivity()).promptAdminPassword( new AdminSecurityManager.AuthListener() {
-                        @Override
-                        public void onPermissionGranted() {
-                            editTextPreference.setText((String) newValue);
-                            preference.getEditor().putString(preference.getKey(), (String) newValue);
-                        }
-                    });
-                    return false;
-                }
-            });
+        else if(pref.equals(PrefsActivity.PREF_STORAGE_OPTION) && (newValue!=null)){
+            updateStoragePref(newValue);
         }
     }
 
     public class MaxIntOnStringPreferenceListener implements Preference.OnPreferenceChangeListener{
-
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
 
@@ -266,4 +200,6 @@ public class PreferencesFragment extends PreferenceFragment {
             return valid;
         }
     }
+
+
 }

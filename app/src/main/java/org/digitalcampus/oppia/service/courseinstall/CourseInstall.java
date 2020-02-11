@@ -25,7 +25,7 @@ import android.util.Log;
 import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.App;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
@@ -35,7 +35,6 @@ import org.digitalcampus.oppia.model.Media;
 import org.digitalcampus.oppia.utils.SearchUtils;
 import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
-import org.digitalcampus.oppia.utils.xmlreaders.CourseScheduleXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseTrackerXMLReader;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 
@@ -86,12 +85,10 @@ public class CourseInstall {
         listener.onInstallProgress(10);
 
         String courseXMLPath;
-        String courseScheduleXMLPath;
         String courseTrackerXMLPath;
         // check that it's unzipped etc correctly
         try {
             courseXMLPath = tempdir + File.separator + courseDir + File.separator + App.COURSE_XML;
-            courseScheduleXMLPath = tempdir + File.separator + courseDir + File.separator + App.COURSE_SCHEDULE_XML;
             courseTrackerXMLPath = tempdir + File.separator + courseDir + File.separator + App.COURSE_TRACKER_XML;
         } catch (ArrayIndexOutOfBoundsException aioobe){
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
@@ -103,7 +100,6 @@ public class CourseInstall {
 
         // check a module.xml file exists and is a readable XML file
         CourseXMLReader cxr;
-        CourseScheduleXMLReader csxr;
         CourseTrackerXMLReader ctxr;
         CompleteCourse c;
         try {
@@ -111,7 +107,6 @@ public class CourseInstall {
             cxr.parse(CourseXMLReader.ParseMode.COMPLETE);
             c = cxr.getParsedCourse();
 
-            csxr = new CourseScheduleXMLReader(new File(courseScheduleXMLPath));
             ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
         } catch (InvalidXMLException e) {
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
@@ -160,10 +155,6 @@ public class CourseInstall {
         }  else {
             listener.onFail(ctx.getString(R.string.error_latest_already_installed, title) );
         }
-        // add schedule
-        // put this here so even if the course content isn't updated the schedule will be
-        db.insertSchedule(csxr.getSchedule());
-        db.updateScheduleVersion(courseId, csxr.getScheduleVersion());
 
         listener.onInstallProgress(70);
         if (success){
@@ -229,7 +220,6 @@ public class CourseInstall {
         File destination = new File(Storage.getCourseBackupPath(ctx), filename);
 
         FileUtils.deleteFile(new File(courseFolder, App.COURSE_TRACKER_XML));
-        FileUtils.deleteFile(new File(courseFolder, App.COURSE_SCHEDULE_XML));
 
         Log.d(TAG, courseFolder.getAbsolutePath());
 

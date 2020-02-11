@@ -45,18 +45,14 @@ public class Course extends MultiLangInfoModel implements Serializable {
     private Double versionId;
     private boolean installed;
     private boolean toUpdate;
-    private boolean toUpdateSchedule;
     private String downloadUrl;
     private String imageFile;
     private List<Media> media = new ArrayList<>();
     private List<CourseMetaPage> metaPages = new ArrayList<>();
-    private Double scheduleVersionID;
-    private String scheduleURI;
     private boolean isDraft = false;
     private int priority = 0;
     private int noActivities = 0;
     private int noActivitiesCompleted = 0;
-    private int noActivitiesStarted = 0;
     private String sequencingMode = SEQUENCING_MODE_NONE;
     private List<GamificationEvent> gamificationEvents = new ArrayList<>();
 
@@ -73,14 +69,6 @@ public class Course extends MultiLangInfoModel implements Serializable {
         } else {
             return true;
         }
-    }
-
-    public Double getScheduleVersionID() {
-        return scheduleVersionID;
-    }
-
-    public void setScheduleVersionID(Double scheduleVersionID) {
-        this.scheduleVersionID = scheduleVersionID;
     }
 
     public List<Media> getMedia() {
@@ -190,22 +178,6 @@ public class Course extends MultiLangInfoModel implements Serializable {
         return null;
     }
 
-    public boolean isToUpdateSchedule() {
-        return toUpdateSchedule;
-    }
-
-    public void setToUpdateSchedule(boolean toUpdateSchedule) {
-        this.toUpdateSchedule = toUpdateSchedule;
-    }
-
-    public String getScheduleURI() {
-        return scheduleURI;
-    }
-
-    public void setScheduleURI(String scheduleURI) {
-        this.scheduleURI = scheduleURI;
-    }
-
     public boolean isDraft() {
         return isDraft;
     }
@@ -236,10 +208,6 @@ public class Course extends MultiLangInfoModel implements Serializable {
 
     public void setNoActivitiesCompleted(int noActivitiesCompleted) {
         this.noActivitiesCompleted = noActivitiesCompleted;
-    }
-
-    public void setNoActivitiesStarted(int noActivitiesStarted) {
-        this.noActivitiesStarted = noActivitiesStarted;
     }
 
     public String getSequencingMode() {

@@ -221,7 +221,7 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
         adapterMedia.setOnItemClickListener(new DownloadMediaAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                // do nothing
             }
 
             @Override
@@ -311,14 +311,13 @@ public class DownloadMediaActivity extends AppActivity implements DownloadMediaL
 
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.menu_sort_by: {
+            case R.id.menu_sort_by:
                 if (isSortByCourse) {
                     adapterMedia.sortByFilename();
                     isSortByCourse = false;
                 } else {
                     adapterMedia.sortByCourse();
                     isSortByCourse = true;
-                }
                 invalidateOptionsMenu();
                 return true;
             }

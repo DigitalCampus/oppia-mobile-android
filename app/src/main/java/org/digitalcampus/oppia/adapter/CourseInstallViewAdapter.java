@@ -19,10 +19,10 @@ package org.digitalcampus.oppia.adapter;
 
 import android.content.Context;
 
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Lang;
-import org.digitalcampus.oppia.service.courseinstall.CourseIntallerService;
+import org.digitalcampus.oppia.service.courseinstall.CourseInstallerService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,11 +31,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class CourseIntallViewAdapter extends Course {
+public class CourseInstallViewAdapter extends Course {
 
     private static final long serialVersionUID = -4251898143809197224L;
 
-    public CourseIntallViewAdapter(String root) {
+    public CourseInstallViewAdapter(String root) {
         super(root);
     }
 
@@ -112,17 +112,17 @@ public class CourseIntallViewAdapter extends Course {
     }
 
 
-    public static List<CourseIntallViewAdapter> parseCoursesJSON(
+    public static List<CourseInstallViewAdapter> parseCoursesJSON(
             Context ctx, JSONObject json, String location, boolean onlyAddUpdates)
             throws JSONException {
 
-        ArrayList<String> downloadingCourses = CourseIntallerService.getTasksDownloading();
-        ArrayList<CourseIntallViewAdapter> courses = new ArrayList<>();
+        ArrayList<String> downloadingCourses = CourseInstallerService.getTasksDownloading();
+        ArrayList<CourseInstallViewAdapter> courses = new ArrayList<>();
 
         JSONArray coursesArray = json.getJSONArray(SERVER_COURSES_NAME);
         for (int i = 0; i < coursesArray.length(); i++) {
             JSONObject jsonObj = coursesArray.getJSONObject(i);
-            CourseIntallViewAdapter course = new CourseIntallViewAdapter(location);
+            CourseInstallViewAdapter course = new CourseInstallViewAdapter(location);
 
             ArrayList<Lang> titles = new ArrayList<>();
             JSONObject jsonTitles = jsonObj.getJSONObject(JSON_PROPERTY_TITLE);
@@ -170,12 +170,6 @@ public class CourseIntallViewAdapter extends Course {
             DbHelper db = DbHelper.getInstance(ctx);
             course.setInstalled(db.isInstalled(course.getShortname()));
             course.setToUpdate(db.toUpdate(course.getShortname(), course.getVersionId()));
-            if (jsonObj.has(JSON_PROPERTY_SCHEDULE_URI)) {
-                course.setScheduleVersionID(jsonObj.getDouble(JSON_PROPERTY_SCHEDULE));
-                course.setScheduleURI(jsonObj.getString(JSON_PROPERTY_SCHEDULE_URI));
-                course.setToUpdateSchedule(
-                        db.toUpdateSchedule(course.getShortname(), course.getScheduleVersionID()));
-            }
 
             if (jsonObj.has(JSON_PROPERTY_ORGANISATION)) {
                 try {

@@ -60,14 +60,14 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
 
         final Media m = getItemAtPosition(position);
 
-        String courses = "";
+        StringBuilder courses =  new StringBuilder();
         for (int i = 0; i < m.getCourses().size(); i++) {
             Course c = m.getCourses().get(i);
             String title = c.getTitle(prefs);
-            courses += i != 0 ? ", " + title : title;
+            courses.append( i != 0 ? ", " + title : title);
         }
 
-        viewHolder.mediaCourses.setText(courses);
+        viewHolder.mediaCourses.setText(courses.toString());
         viewHolder.mediaTitle.setText(m.getFilename());
         viewHolder.mediaPath.setText(m.getDownloadUrl());
         if (m.getFileSize() != 0) {
@@ -146,7 +146,7 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
 
     public class ViewHolder extends MultiChoiceHelper.ViewHolder {
 
-        private View rootView;
+        public View rootView;
         private TextView mediaCourses;
         private TextView mediaTitle;
         private TextView mediaPath;

@@ -44,7 +44,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.adapter.PointsAdapter;
-import org.digitalcampus.oppia.application.DbHelper;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.model.Course;
 import org.digitalcampus.oppia.model.Points;
@@ -76,7 +76,6 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private int totalPoints;
     private RecyclerView recyclerPoints;
     private TextView tvTotalPoints;
-    private TabLayout tabsFilterPoints;
     private LineChart chart;
     List<Integer> yVals = new ArrayList<>();
     List<String> labels = new ArrayList<>();
@@ -95,7 +94,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
     private void findViews() {
         recyclerPoints = getView().findViewById(R.id.recycler_points);
         tvTotalPoints = getView().findViewById(R.id.tv_total_points);
-        tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
+        TabLayout tabsFilterPoints = getView().findViewById(R.id.tabs_filter_points);
         chart = getView().findViewById(R.id.chart);
 
         tabsFilterPoints.addOnTabSelectedListener(this);
@@ -389,11 +388,11 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-
+        // do nothing
     }
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-
+        // do nothing
     }
 }

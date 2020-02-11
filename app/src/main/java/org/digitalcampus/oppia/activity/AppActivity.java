@@ -112,12 +112,11 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-            default:
-                return false;
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -359,7 +358,7 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
         animSetGlobal.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                // do nothing
             }
 
             @Override
@@ -370,12 +369,12 @@ public class AppActivity extends AppCompatActivity implements APIKeyRequestListe
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
+                // do nothing
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-
+                // do nothing
             }
         });
 

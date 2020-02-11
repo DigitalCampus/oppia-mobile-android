@@ -25,6 +25,7 @@ import org.digitalcampus.oppia.application.App;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Media implements Serializable{
 
@@ -88,7 +89,7 @@ public class Media implements Serializable{
 		return downloaded;
 	}
 
-	public ArrayList<Course> getCourses(){ return courses; }
+	public List<Course> getCourses(){ return courses; }
 
     //ONLY FOR UI PURPOSES
     private boolean downloading;

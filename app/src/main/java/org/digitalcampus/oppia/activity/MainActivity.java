@@ -46,7 +46,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private DrawerMenuManager drawer;
     private View btnEditProfile;
     private View btnLogout;
-    private NavigationView navDrawerView;
     private View btnExpandProfileOptions;
     private View viewProfileOptions;
     private MenuItem searchMenuItem;
@@ -58,7 +57,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
     private void findViews() {
 
         navBottomView = findViewById(R.id.nav_bottom_view);
-        navDrawerView = findViewById(R.id.navigation_view);
+        NavigationView navDrawerView = findViewById(R.id.navigation_view);
 
         View headerDrawer = navDrawerView.getHeaderView(0);
         btnEditProfile = headerDrawer.findViewById(R.id.btn_edit_profile);
@@ -270,15 +269,16 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             case R.id.btn_logout:
                 drawer.logout();
                 break;
+
+            default:
+                // do nothing
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_search:
-                drawer.launchIntentForActivity(SearchActivity.class);
-                break;
+        if(item.getItemId() ==  R.id.menu_search) {
+            drawer.launchIntentForActivity(SearchActivity.class);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -290,11 +290,6 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
             boolean newPref = sharedPreferences.getBoolean(PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED, false);
             Log.d(TAG, PrefsActivity.PREF_DOWNLOAD_VIA_CELLULAR_ENABLED + ": " + newPref);
         }
-
-        // update the points/badges by invalidating the menu
-        if(key.equalsIgnoreCase(PrefsActivity.PREF_TRIGGER_POINTS_REFRESH)){
-        }
-
     }
 
 }
