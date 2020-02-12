@@ -125,6 +125,8 @@ public class CourseXMLReader {
         mediaParseHandler = new CourseMediaXMLHandler();
         SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
         SAXParser parser = parserFactory.newSAXParser();
+        parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        parser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         reader = parser.getXMLReader();
         reader.setContentHandler(mediaParseHandler);
         reader.setProperty("http://xml.org/sax/properties/lexical-handler", mediaParseHandler);
