@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -70,6 +71,8 @@ public class CourseXMLReader {
             try {
                 SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
                 SAXParser parser = parserFactory.newSAXParser();
+                parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                parser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
                 reader = parser.getXMLReader();
 
                 XMLSecurityHelper.makeParserSecure(reader);
