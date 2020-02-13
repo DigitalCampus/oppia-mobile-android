@@ -114,7 +114,7 @@ public class CourseInstallViewAdapter extends Course {
             Context ctx, JSONObject json, String location, boolean onlyAddUpdates)
             throws JSONException {
 
-        ArrayList<String> downloadingCourses = CourseInstallerService.getTasksDownloading();
+        ArrayList<String> downloadingCourses = (ArrayList<String>) CourseInstallerService.getTasksDownloading();
         ArrayList<CourseInstallViewAdapter> courses = new ArrayList<>();
 
         JSONArray coursesArray = json.getJSONArray(SERVER_COURSES_NAME);

@@ -28,7 +28,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class DragAndDrop extends QuizQuestion implements Serializable {
 
@@ -83,14 +82,6 @@ public class DragAndDrop extends QuizQuestion implements Serializable {
         else{
             userscore = 1;
         }
-    }
-
-    @Override
-    public void setUserResponses(List<String> str) {
-        if (!str.equals(this.userResponses)){
-            this.setFeedbackDisplayed(false);
-        }
-        this.userResponses = str;
     }
 
     @Override

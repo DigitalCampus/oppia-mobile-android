@@ -100,7 +100,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
             section = (Section) bundle.getSerializable(Section.TAG);
             course = (Course) bundle.getSerializable(Course.TAG);
 
-            activities = section.getActivities();
+            activities = (ArrayList<Activity>) section.getActivities();
             currentActivityNo = bundle.getInt(NUM_ACTIVITY_TAG);
             if (bundle.getSerializable(CourseActivity.BASELINE_TAG) != null) {
                 this.isBaseline = bundle.getBoolean(CourseActivity.BASELINE_TAG);
@@ -234,7 +234,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         if (actionBarTitle != null && !actionBarTitle.equals(MultiLangInfoModel.DEFAULT_NOTITLE)) {
             setTitle(actionBarTitle);
         } else {
-            ArrayList<Activity> sectionActivities = section.getActivities();
+            ArrayList<Activity> sectionActivities = (ArrayList<Activity>) section.getActivities();
             String preTestTitle = getString(R.string.alert_pretest);
             setTitle(!sectionActivities.isEmpty() && sectionActivities.get(0).getTitle(currentLang).equalsIgnoreCase(preTestTitle) ?
                     preTestTitle : isBaseline ? getString(R.string.title_baseline) : "");
