@@ -23,7 +23,6 @@ import com.splunk.mint.Mint;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.List;
 
 import org.digitalcampus.mobile.quiz.Quiz;
 import org.digitalcampus.mobile.quiz.model.QuizQuestion;
@@ -65,15 +64,6 @@ public class Matching extends QuizQuestion implements Serializable {
             userscore = total;
         }
     }
-
-    @Override
-    public void setUserResponses(List<String> str) {
-        if (!str.equals(this.userResponses)){
-            this.setFeedbackDisplayed(false);
-        }
-        this.userResponses = str;
-    }
-
 
     @Override
     public String getFeedback(String lang) {

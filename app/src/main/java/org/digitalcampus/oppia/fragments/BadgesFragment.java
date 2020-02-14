@@ -38,7 +38,7 @@ import org.digitalcampus.oppia.utils.UIUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -49,7 +49,8 @@ public class BadgesFragment extends AppFragment implements APIRequestListener {
 	private JSONObject json;
     private BadgesAdapter adapterBadges;
 
-	@Inject ArrayList<Badges> badges;
+	@Inject
+	List<Badges> badges;
 	
 	public static BadgesFragment newInstance() {
 	    return new BadgesFragment();

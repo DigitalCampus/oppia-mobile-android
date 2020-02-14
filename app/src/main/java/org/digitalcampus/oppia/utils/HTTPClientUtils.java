@@ -67,7 +67,7 @@ public class HTTPClientUtils {
                     .hostnameVerifier(new HostnameVerifier() {
                         @Override
                         public boolean verify(String hostname, SSLSession session) {
-                            return true;
+                            return hostname.equalsIgnoreCase(session.getPeerHost());
                         }
                     })
                     .build();

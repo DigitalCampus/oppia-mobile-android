@@ -19,6 +19,7 @@ package org.digitalcampus.oppia.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class 	Tag implements Serializable{
 
@@ -50,11 +51,11 @@ public class 	Tag implements Serializable{
 	public void setCount(int count) {
 		this.count = count;
 	}
-	public ArrayList<Course> getCourses() {
+	public List<Course> getCourses() {
 		return courses;
 	}
-	public void setCourses(ArrayList<Course> courses) {
-		this.courses = courses;
+	public void setCourses(List<Course> courses) {
+		this.courses = (ArrayList<Course>) courses;
 	}
 	public int getId() {
 		return id;

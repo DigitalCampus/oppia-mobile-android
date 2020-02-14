@@ -27,20 +27,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class MultiChoice extends QuizQuestion implements Serializable  {
 
     private static final long serialVersionUID = -6605393327170759582L;
     public static final String TAG = MultiChoice.class.getSimpleName();
-
-    @Override
-    public void setUserResponses(List<String> str) {
-        if (!str.equals(this.userResponses)){
-            this.setFeedbackDisplayed(false);
-        }
-        this.userResponses = str;
-    }
 
     @Override
     public String getFeedback(String lang) {

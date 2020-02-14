@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -72,7 +73,7 @@ public class CourseInstallerService extends IntentService {
         currentInstance = instance;
     }
 
-    public static ArrayList<String> getTasksDownloading(){
+    public static List<String> getTasksDownloading(){
         if (currentInstance != null){
             synchronized (currentInstance){
                 return currentInstance.tasksDownloading;
@@ -82,10 +83,6 @@ public class CourseInstallerService extends IntentService {
     }
 
     public CourseInstallerService() {
-        super(TAG);
-    }
-
-    public CourseInstallerService(ApiEndpoint api) {
         super(TAG);
     }
 

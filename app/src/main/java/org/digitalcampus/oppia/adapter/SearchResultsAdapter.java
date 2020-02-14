@@ -96,7 +96,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
+        private View rootView;
         private TextView activityTitle;
         private TextView sectionTitle;
         private TextView courseTitle;
