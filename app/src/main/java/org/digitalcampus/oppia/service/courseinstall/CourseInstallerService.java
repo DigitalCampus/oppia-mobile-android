@@ -76,17 +76,13 @@ public class CourseInstallerService extends IntentService {
     public static List<String> getTasksDownloading(){
         if (currentInstance != null){
             synchronized (currentInstance){
-                return (List<String>) currentInstance.tasksDownloading;
+                return currentInstance.tasksDownloading;
             }
         }
         return new ArrayList<>();
     }
 
     public CourseInstallerService() {
-        super(TAG);
-    }
-
-    public CourseInstallerService(ApiEndpoint api) {
         super(TAG);
     }
 
