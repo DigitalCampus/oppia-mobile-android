@@ -40,11 +40,6 @@ public class Essay extends QuizQuestion implements Serializable {
     }
 
     @Override
-    public int getMaxScore() {
-        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
-    }
-
-    @Override
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
 
