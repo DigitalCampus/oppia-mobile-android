@@ -146,7 +146,6 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
 
     public class ViewHolder extends MultiChoiceHelper.ViewHolder {
 
-        public View rootView;
         private TextView mediaCourses;
         private TextView mediaTitle;
         private TextView mediaPath;
@@ -164,8 +163,6 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
             mediaFileSize = itemView.findViewById(R.id.media_file_size);
             downloadBtn = itemView.findViewById(R.id.action_btn);
             downloadProgress = itemView.findViewById(R.id.download_progress);
-
-            rootView = itemView;
 
             downloadBtn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {

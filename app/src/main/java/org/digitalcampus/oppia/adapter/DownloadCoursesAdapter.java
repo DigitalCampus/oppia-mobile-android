@@ -138,7 +138,6 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
         private TextView courseTitle;
         private TextView courseDraft;
         private TextView courseDescription;
@@ -158,7 +157,6 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
             actionProgress = itemView.findViewById(R.id.download_progress);
             courseAuthor = itemView.findViewById(R.id.course_author);
             labelAuthor = itemView.findViewById(R.id.label_author);
-            rootView = itemView;
 
             actionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

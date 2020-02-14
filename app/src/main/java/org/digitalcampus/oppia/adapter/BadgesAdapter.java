@@ -57,7 +57,6 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
         private TextView badgeDescription;
         private TextView badgeDate;
 
@@ -67,8 +66,6 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.ViewHolder
 
             badgeDescription = itemView.findViewById(R.id.badges_description);
             badgeDate = itemView.findViewById(R.id.badges_date);
-
-            rootView = itemView;
         }
     }
 

@@ -58,7 +58,6 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
         private TextView pointsDescription;
         private TextView pointsTime;
         private TextView pointsDate;
@@ -72,8 +71,6 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder
             pointsTime = itemView.findViewById(R.id.points_time);
             pointsDate = itemView.findViewById(R.id.points_date);
             pointsPoints = itemView.findViewById(R.id.points_points);
-
-            rootView = itemView;
         }
 
     }

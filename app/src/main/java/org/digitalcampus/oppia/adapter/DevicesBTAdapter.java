@@ -57,7 +57,7 @@ public class DevicesBTAdapter extends RecyclerView.Adapter<DevicesBTAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView rootView;
+        private TextView rootView;
 
         public ViewHolder(View itemView) {
 

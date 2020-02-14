@@ -96,7 +96,7 @@ public class QuizFeedbackAdapter extends RecyclerView.Adapter<QuizFeedbackAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public View rootView;
+        private View rootView;
         private TextView quizQuestion;
         private TextView quizUserResponse;
         private TextView quizFeedbackTitle;
