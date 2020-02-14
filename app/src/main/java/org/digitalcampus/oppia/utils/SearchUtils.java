@@ -58,12 +58,13 @@ public class SearchUtils {
         db.beginTransaction();
         for( Activity a : activities) {
             ArrayList<Lang> langs = (ArrayList<Lang>) course.getLangs();
-            String fileContent = "";
+            StringBuilder fileContent = new StringBuilder();
             for (Lang l : langs) {
                 if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")) {
                     String url = course.getLocation() + a.getLocation(l.getLang());
                     try {
-                        fileContent += " " + FileUtils.readFile(url);
+                        fileContent.append(" ");
+                        fileContent.append(FileUtils.readFile(url));
                     } catch (IOException e) {
                         Mint.logException(e);
                         Log.d(TAG, "IOException:", e);
@@ -72,12 +73,12 @@ public class SearchUtils {
             }
 
 		Activity act = db.getActivityByDigest(a.getDigest());
-            if ((act != null) && !fileContent.equals("")) {
+            if ((act != null) && !fileContent.toString().equals("")) {
                 db.insertActivityIntoSearchTable(course.getTitleJSONString(),
                         parsedCourse.getSection(a.getSectionId()).getTitleJSONString(),
                         a.getTitleJSONString(),
                         act.getDbId(),
-                        fileContent);
+                        fileContent.toString());
             }
         }
         db.endTransaction(true);

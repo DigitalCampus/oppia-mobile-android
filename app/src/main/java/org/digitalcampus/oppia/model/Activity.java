@@ -143,10 +143,12 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 				return l.getContent();
 			}
 		}
-		if(locations.size() > 0){
+		if(locations.isEmpty()){
+			return null;
+		} else {
 			return locations.get(0).getContent();
 		}
-		return null;
+
 	}
 	
 	public void setLocations(List<Lang> locations) {
@@ -159,10 +161,12 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 				return l.getContent();
 			}
 		}
-		if(contents.size() > 0){
+		if(contents.isEmpty()) {
+			return "No content";
+		} else {
 			return contents.get(0).getContent();
 		}
-		return "No content";
+
 	}
 	
 	public void setContents(List<Lang> contents) {
@@ -170,7 +174,7 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 	}
 
 	public boolean hasMedia(){
-		return media.size() != 0;
+		return !media.isEmpty();
 	}
 	
 	public void setCompleted(boolean completed){

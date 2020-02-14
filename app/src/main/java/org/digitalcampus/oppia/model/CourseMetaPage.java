@@ -49,10 +49,10 @@ public class CourseMetaPage implements Serializable{
 				return l;
 			}
 		}
-		if(langs.size()> 0){
-			return langs.get(0);
-		} else {
+		if(langs.isEmpty()){
 			return null;
+		} else {
+			return langs.get(0);
 		}
 	}
 }

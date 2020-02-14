@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.digitalcampus.mobile.learning.R;
-import org.digitalcampus.oppia.api.ApiEndpoint;
 import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
 import org.digitalcampus.oppia.exception.UserNotFoundException;
@@ -37,7 +36,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,8 +151,7 @@ public class CourseInstallerService extends IntentService {
 
                     @Override
                     public void onFail(String message) {
-                        sendBroadcast(fileUrl, ACTION_FAILED, message);
-                        removeDownloading(fileUrl);
+                        onError(message);
                     }
 
                     @Override
@@ -293,10 +290,6 @@ public class CourseInstallerService extends IntentService {
             in.close();
             f.flush();
         } catch (MalformedURLException e) {
-            logAndNotifyError(fileUrl, e);
-            return false;
-        } catch (ProtocolException e) {
-            FileUtils.deleteFile(downloadedFile);
             logAndNotifyError(fileUrl, e);
             return false;
         } catch (IOException e) {

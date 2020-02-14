@@ -52,6 +52,7 @@ public class CourseInstall {
     }
 
     public static final String TAG = CourseInstall.class.getSimpleName();
+    private static final String STR_ERROR = "Error: ";
 
     public static void installDownloadedCourse(Context ctx, String filename, String shortname, CourseInstallingListener listener) {
 
@@ -78,7 +79,7 @@ public class CourseInstall {
         } catch (ArrayIndexOutOfBoundsException aioobe) {
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
             Mint.logException(aioobe);
-            Log.d(TAG, "Error: ", aioobe);
+            Log.d(TAG, STR_ERROR, aioobe);
             listener.onError(ctx.getString(R.string.error_installing_course, shortname));
             return;
         }
@@ -93,7 +94,7 @@ public class CourseInstall {
         } catch (ArrayIndexOutOfBoundsException aioobe){
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
             Mint.logException(aioobe);
-            Log.d(TAG, "Error: ", aioobe);
+            Log.d(TAG, STR_ERROR, aioobe);
             listener.onError(ctx.getString(R.string.error_media_download));
             return;
         }
@@ -110,7 +111,7 @@ public class CourseInstall {
             ctxr = new CourseTrackerXMLReader(new File(courseTrackerXMLPath));
         } catch (InvalidXMLException e) {
             FileUtils.cleanUp(tempdir, Storage.getDownloadPath(ctx) + filename);
-            listener.onError("Error: " + e.getMessage());
+            listener.onError(STR_ERROR + e.getMessage());
             return;
         }
 

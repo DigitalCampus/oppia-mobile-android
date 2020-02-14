@@ -85,7 +85,7 @@ public class BluetoothTransferService extends Service {
     private Handler sendHandler;
     private BluetoothBroadcastReceiver alternateNotifier;
 
-    public synchronized static List<CourseTransferableFile> getTasksTransferring(){
+    public static synchronized List<CourseTransferableFile> getTasksTransferring(){
         if (currentInstance != null){
             return currentInstance.tasksDownloading;
         }
@@ -130,7 +130,7 @@ public class BluetoothTransferService extends Service {
 
             @Override
             public void onTransferComplete(CourseTransferableFile file) {
-                if (tasksDownloading.size() == 0){
+                if (tasksDownloading.isEmpty()){
                     OppiaNotificationUtils.sendSimpleMessage(BluetoothTransferService.this, true, 0,
                             getString(R.string.bluetooth_all_transfers_complete));
                 }

@@ -31,7 +31,7 @@ public class MultiChoiceHelper {
      * A handy ViewHolder base class which works with the MultiChoiceHelper
      * and reproduces the default behavior of a ListView.
      */
-    public static abstract class ViewHolder extends RecyclerView.ViewHolder {
+    public abstract static class ViewHolder extends RecyclerView.ViewHolder {
 
         View.OnClickListener clickListener;
         MultiChoiceHelper multiChoiceHelper;
