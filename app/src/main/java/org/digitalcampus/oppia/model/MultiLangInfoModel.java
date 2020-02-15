@@ -102,7 +102,7 @@ public class MultiLangInfoModel implements Serializable {
 
     private String getInfo(String lang, ArrayList<Lang> values){
         for(Lang l: values){
-            if(l.getLang().equals(lang)){
+            if(l.getLanguage().equals(lang)){
                 return l.getContent().trim();
             }
         }
@@ -118,7 +118,7 @@ public class MultiLangInfoModel implements Serializable {
         for(Lang l: values){
             JSONObject obj = new JSONObject();
             try {
-                obj.put(l.getLang(), l.getContent());
+                obj.put(l.getLanguage(), l.getContent());
             } catch (JSONException e) {
                 Mint.logException(e);
                 Log.d(TAG, "JSON error: ", e);

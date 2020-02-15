@@ -83,6 +83,11 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String STR_INT_PRIMARY_KEY_AUTO = " integer primary key autoincrement, ";
     private static final String STR_INT_COMMA = " int, ";
     private static final String STR_TEXT_COMMA = " text, ";
+    private static final String STR_INT_DEFAULT_O = " integer default 0";
+    private static final String STR_DROP_IF_EXISTS = "drop table if exists ";
+    private static final String STR_ADD_COLUMN = " ADD COLUMN ";
+    private static final String STR_TEXT_NULL = " text null";
+    private static final String STR_DATETIME_NULL = " datetime null";
 
 
     private static final String COURSE_TABLE = "Module";
@@ -229,7 +234,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 + COURSE_C_SHORTNAME + STR_TEXT_COMMA + COURSE_C_SCHEDULE + STR_INT_COMMA
                 + COURSE_C_IMAGE + STR_TEXT_COMMA
                 + COURSE_C_DESC + STR_TEXT_COMMA
-                + COURSE_C_ORDER_PRIORITY + " integer default 0, "
+                + COURSE_C_ORDER_PRIORITY + STR_INT_DEFAULT_O + ", "
                 + COURSE_C_LANGS + STR_TEXT_COMMA
                 + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "' )";
         db.execSQL(mSql);
@@ -256,14 +261,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 TRACKER_LOG_C_DATETIME + " datetime default current_timestamp, " +
                 TRACKER_LOG_C_ACTIVITYDIGEST + STR_TEXT_COMMA +
                 TRACKER_LOG_C_DATA + STR_TEXT_COMMA +
-                TRACKER_LOG_C_SUBMITTED + " integer default 0, " +
-                TRACKER_LOG_C_INPROGRESS + " integer default 0, " +
-                TRACKER_LOG_C_COMPLETED + " integer default 0, " +
-                TRACKER_LOG_C_USERID + " integer default 0, " +
+                TRACKER_LOG_C_SUBMITTED + STR_INT_DEFAULT_O + ", " +
+                TRACKER_LOG_C_INPROGRESS + STR_INT_DEFAULT_O + ", " +
+                TRACKER_LOG_C_COMPLETED + STR_INT_DEFAULT_O + ", " +
+                TRACKER_LOG_C_USERID + STR_INT_DEFAULT_O + ", " +
                 TRACKER_LOG_C_TYPE + STR_TEXT_COMMA +
-                TRACKER_LOG_C_EXPORTED + " integer default 0, " +
+                TRACKER_LOG_C_EXPORTED + STR_INT_DEFAULT_O + ", " +
                 TRACKER_LOG_C_EVENT + STR_TEXT_COMMA +
-                TRACKER_LOG_C_POINTS + " integer default 0 " +
+                TRACKER_LOG_C_POINTS + STR_INT_DEFAULT_O +
                 ")";
         db.execSQL(lSql);
     }
@@ -274,15 +279,15 @@ public class DbHelper extends SQLiteOpenHelper {
                 QUIZATTEMPTS_C_DATETIME + " datetime default current_timestamp, " +
                 QUIZATTEMPTS_C_DATA + STR_TEXT_COMMA +
                 QUIZATTEMPTS_C_ACTIVITY_DIGEST + STR_TEXT_COMMA +
-                QUIZATTEMPTS_C_SENT + " integer default 0, " +
+                QUIZATTEMPTS_C_SENT + STR_INT_DEFAULT_O + ", " +
                 QUIZATTEMPTS_C_COURSEID + " integer, " +
-                QUIZATTEMPTS_C_USERID + " integer default 0, " +
+                QUIZATTEMPTS_C_USERID + STR_INT_DEFAULT_O + ", " +
                 QUIZATTEMPTS_C_SCORE + " real default 0, " +
                 QUIZATTEMPTS_C_MAXSCORE + " real default 0, " +
-                QUIZATTEMPTS_C_PASSED + " integer default 0, " +
-                QUIZATTEMPTS_C_EXPORTED + " integer default 0," +
+                QUIZATTEMPTS_C_PASSED + STR_INT_DEFAULT_O + ", " +
+                QUIZATTEMPTS_C_EXPORTED + STR_INT_DEFAULT_O + ", " +
                 QUIZATTEMPTS_C_EVENT + STR_TEXT_COMMA +
-                QUIZATTEMPTS_C_POINTS + " integer default 0 )";
+                QUIZATTEMPTS_C_POINTS + STR_INT_DEFAULT_O + ")";
         db.execSQL(sql);
     }
 
@@ -297,18 +302,20 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void createUserTable(SQLiteDatabase db) {
+
+        String text = "] TEXT, ";
         String sql = "CREATE TABLE [" + USER_TABLE + "] (" +
                 "[" + USER_C_ID + "]" + STR_INT_PRIMARY_KEY_AUTO +
                 "[" + USER_C_USERNAME + "]" + STR_TEXT_COMMA +
-                "[" + USER_C_FIRSTNAME + "] TEXT, " +
-                "[" + USER_C_LASTNAME + "] TEXT, " +
-                "[" + USER_C_PASSWORDENCRYPTED + "] TEXT, " +
-                "[" + USER_C_PASSWORDPLAIN + "] TEXT, " +
-                "[" + USER_C_APIKEY + "] TEXT, " +
-                "[" + USER_C_EMAIL + "] TEXT, " +
-                "[" + USER_C_PHONE + "] TEXT, " +
-                "[" + USER_C_JOBTITLE + "] TEXT, " +
-                "[" + USER_C_ORGANIZATION + "] TEXT, " +
+                "[" + USER_C_FIRSTNAME + text +
+                "[" + USER_C_LASTNAME + text +
+                "[" + USER_C_PASSWORDENCRYPTED + text +
+                "[" + USER_C_PASSWORDPLAIN + text +
+                "[" + USER_C_APIKEY + text +
+                "[" + USER_C_EMAIL + text +
+                "[" + USER_C_PHONE + text +
+                "[" + USER_C_JOBTITLE + text +
+                "[" + USER_C_ORGANIZATION + text +
                 "[" + USER_C_LAST_LOGIN_DATE + "] datetime null, " +
                 "[" + USER_C_NO_LOGINS + "] integer default 0,  " +
                 "[" + USER_C_POINTS + "] integer default 0,  " +
@@ -340,10 +347,10 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         if (oldVersion < 7) {
-            db.execSQL("drop table if exists " + COURSE_TABLE);
-            db.execSQL("drop table if exists " + ACTIVITY_TABLE);
-            db.execSQL("drop table if exists " + TRACKER_LOG_TABLE);
-            db.execSQL("drop table if exists " + QUIZATTEMPTS_TABLE);
+            db.execSQL(STR_DROP_IF_EXISTS + COURSE_TABLE);
+            db.execSQL(STR_DROP_IF_EXISTS + ACTIVITY_TABLE);
+            db.execSQL(STR_DROP_IF_EXISTS + TRACKER_LOG_TABLE);
+            db.execSQL(STR_DROP_IF_EXISTS + QUIZATTEMPTS_TABLE);
             createCourseTable(db);
             createActivityTable(db);
             createLogTable(db);
@@ -352,28 +359,28 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion <= 7 && newVersion >= 8) {
-            String sql = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
+            String sql = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_STARTDATE + STR_DATETIME_NULL +";";
             db.execSQL(sql);
-            sql = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
+            sql = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_ENDDATE + STR_DATETIME_NULL +";";
             db.execSQL(sql);
         }
 
         if (oldVersion <= 8 && newVersion >= 9) {
-            String sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SCHEDULE + " int null;";
+            String sql = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_SCHEDULE + " int null;";
             db.execSQL(sql);
         }
 
         if (oldVersion <= 9 && newVersion >= 10) {
-            String sql = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE + " text null;";
+            String sql = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_TITLE + STR_TEXT_NULL + ";";
             db.execSQL(sql);
         }
 
         // This is a fix as previous versions may not have upgraded db tables correctly
         if (oldVersion <= 10 && newVersion >= 11) {
-            String sql1 = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_STARTDATE + " datetime null;";
-            String sql2 = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_ENDDATE + " datetime null;";
-            String sql3 = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SCHEDULE + " int null;";
-            String sql4 = STR_ALTER_TABLE + ACTIVITY_TABLE + " ADD COLUMN " + ACTIVITY_C_TITLE + " text null;";
+            String sql1 = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_STARTDATE + STR_DATETIME_NULL +";";
+            String sql2 = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_ENDDATE + STR_DATETIME_NULL +";";
+            String sql3 = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_SCHEDULE + " int null;";
+            String sql4 = STR_ALTER_TABLE + ACTIVITY_TABLE + STR_ADD_COLUMN + ACTIVITY_C_TITLE + STR_TEXT_NULL + ";";
 
             db.execSQL(sql1);
             db.execSQL(sql2);
@@ -382,14 +389,14 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion <= 11 && newVersion >= 12) {
-            String sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_LANGS + " text null;";
+            String sql = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_LANGS + STR_TEXT_NULL + ";";
             db.execSQL(sql);
-            sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_IMAGE + " text null;";
+            sql = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_IMAGE + STR_TEXT_NULL + ";";
             db.execSQL(sql);
         }
 
         if (oldVersion <= 12 && newVersion >= 13) {
-            String sql = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_COMPLETED + " integer default 0;";
+            String sql = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_COMPLETED + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql);
         }
         // skip jump from 13 to 14
@@ -400,12 +407,12 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion <= 15 && newVersion >= 16) {
-            String sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_DESC + " text null;";
+            String sql = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_DESC + STR_TEXT_NULL + ";";
             db.execSQL(sql);
         }
 
         if (oldVersion <= 16 && newVersion >= 17) {
-            String sql = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_ORDER_PRIORITY + " integer default 0;";
+            String sql = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_ORDER_PRIORITY  + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql);
         }
 
@@ -414,11 +421,11 @@ public class DbHelper extends SQLiteOpenHelper {
             this.createSearchTable(db);
 
             // alter quiz results table
-            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_USERID + " integer default 0;";
+            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_USERID  + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql1);
 
             // alter tracker table
-            String sql2 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_USERID + " integer default 0;";
+            String sql2 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_USERID  + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql2);
 
             // create user table
@@ -429,59 +436,59 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion <= 18 && newVersion >= 19) {
 
             // alter quiz results table
-            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_SCORE + " real default 0;";
+            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_SCORE + " real default 0;";
             db.execSQL(sql1);
-            String sql2 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_PASSED + " integer default 0;";
+            String sql2 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_PASSED  + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql2);
 
             // alter user table
-            String sql3 = STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_LAST_LOGIN_DATE + " datetime null;";
+            String sql3 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_LAST_LOGIN_DATE + STR_DATETIME_NULL +";";
             db.execSQL(sql3);
-            String sql4 = STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_NO_LOGINS + " integer default 0;";
+            String sql4 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_NO_LOGINS  + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql4);
         }
 
         if (oldVersion <= 19 && newVersion >= 20) {
             // alter quiz results table
-            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_MAXSCORE + " real default 0;";
+            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_MAXSCORE + " real default 0;";
             db.execSQL(sql1);
         }
 
         if (oldVersion <= 20 && newVersion >= 21) {
             // alter quiz results table
-            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_ACTIVITY_DIGEST + " text;";
+            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_ACTIVITY_DIGEST + " text;";
             db.execSQL(sql1);
         }
 
         if (oldVersion <= 21 && newVersion >= 22) {
             // add points and badges columns
-            String sql1 = STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_POINTS + " integer default 0;";
+            String sql1 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_POINTS  + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql1);
-            String sql2 = STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_BADGES + " integer default 0;";
+            String sql2 = STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_BADGES  + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql2);
         }
 
         if (oldVersion <= 23 && newVersion >= 24) {
             // add field "sequencingMode" to Course table
-            String sql1 = STR_ALTER_TABLE + COURSE_TABLE + " ADD COLUMN " + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "';";
+            String sql1 = STR_ALTER_TABLE + COURSE_TABLE + STR_ADD_COLUMN + COURSE_C_SEQUENCING + " text default '" + Course.SEQUENCING_MODE_NONE + "';";
             db.execSQL(sql1);
         }
 
         if (oldVersion <= 24 && newVersion >= 25) {
             // add field "type" to Tracker table
-            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_TYPE + " text ;";
+            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_TYPE + " text ;";
             db.execSQL(sql1);
         }
 
         if (oldVersion <= 25 && newVersion >= 26) {
             // add field "exported" to Tracker table
-            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_EXPORTED + " integer default 0;";
+            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_EXPORTED  + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql1);
         }
 
         if (oldVersion <= 26 && newVersion >= 27) {
             // add field "exported" to Tracker table
-            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_EXPORTED + " integer default 0;";
+            String sql1 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_EXPORTED  + STR_INT_DEFAULT_O + ";";
             db.execSQL(sql1);
         }
 
@@ -490,26 +497,26 @@ public class DbHelper extends SQLiteOpenHelper {
             createActivityGamificationTable(db);
 
             // update tracker table
-            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_POINTS + " integer default 0;";
-            String sql2 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + " ADD COLUMN " + TRACKER_LOG_C_EVENT + " text null;";
+            String sql1 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_POINTS  + STR_INT_DEFAULT_O + ";";
+            String sql2 = STR_ALTER_TABLE + TRACKER_LOG_TABLE + STR_ADD_COLUMN + TRACKER_LOG_C_EVENT + STR_TEXT_NULL + ";";
             db.execSQL(sql1);
             db.execSQL(sql2);
 
             // update quizattempt table
-            String sql3 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_POINTS + " integer default 0;";
-            String sql4 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + " ADD COLUMN " + QUIZATTEMPTS_C_EVENT + " text null;";
+            String sql3 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_POINTS  + STR_INT_DEFAULT_O + ";";
+            String sql4 = STR_ALTER_TABLE + QUIZATTEMPTS_TABLE + STR_ADD_COLUMN + QUIZATTEMPTS_C_EVENT + STR_TEXT_NULL + ";";
             db.execSQL(sql3);
             db.execSQL(sql4);
         }
 
         if (oldVersion <= 29 && newVersion >= 30) {
             // add fields for offline_register to User table
-            db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_OFFLINE_REGISTER + " integer default 0;");
-            db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_PASSWORDPLAIN + " text null;");
-            db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_EMAIL + " text null;");
-            db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_PHONE + " text null;");
-            db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_JOBTITLE + " text null;");
-            db.execSQL(STR_ALTER_TABLE + USER_TABLE + " ADD COLUMN " + USER_C_ORGANIZATION + " text null;");
+            db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_OFFLINE_REGISTER + " integer default 0;");
+            db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_PASSWORDPLAIN + STR_TEXT_NULL + ";");
+            db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_EMAIL + STR_TEXT_NULL + ";");
+            db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_PHONE + STR_TEXT_NULL + ";");
+            db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_JOBTITLE + STR_TEXT_NULL + ";");
+            db.execSQL(STR_ALTER_TABLE + USER_TABLE + STR_ADD_COLUMN + USER_C_ORGANIZATION + STR_TEXT_NULL + ";");
         }
 
     }
@@ -775,7 +782,7 @@ public class DbHelper extends SQLiteOpenHelper {
             course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
             course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
             course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
-            course = this.courseSetProgress(course, userId);
+            this.courseSetProgress(course, userId);
             courses.add(course);
             c.moveToNext();
         }
@@ -800,7 +807,7 @@ public class DbHelper extends SQLiteOpenHelper {
             course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
             course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
             course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
-            course = this.courseSetProgress(course, userId);
+            this.courseSetProgress(course, userId);
             c.moveToNext();
         }
         c.close();
@@ -1194,11 +1201,9 @@ public class DbHelper extends SQLiteOpenHelper {
             Activity activity = this.getActivityByDigest(c.getString(c.getColumnIndex(TRACKER_LOG_C_ACTIVITYDIGEST)));
             Course course = this.getCourse(c.getInt(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
 
-            if (courseFilter != null && course != null) {
-                if (courseFilter.getCourseId() != course.getCourseId()) {
+            if (courseFilter != null && course != null && courseFilter.getCourseId() != course.getCourseId()) {
                     c.moveToNext();
                     continue;
-                }
             }
 
             Points p = new Points();
@@ -1288,11 +1293,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
             if (activity != null) {
 
-                if (courseFilter != null) {
-                    if (courseFilter.getCourseId() != activity.getCourseId()) {
-                        qac.moveToNext();
-                        continue;
-                    }
+                if (courseFilter != null && courseFilter.getCourseId() != activity.getCourseId()) {
+                    qac.moveToNext();
+                    continue;
                 }
 
                 Course course = this.getCourse(activity.getCourseId(), userId);
@@ -1376,10 +1379,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 JSONObject json = new JSONObject();
                 json.put("data", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA)));
                 json.put("tracker_date", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
-                json.put("completed", c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
-                json.put("digest", (digest != null) ? digest : "");
-                json.put("event", c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
-                json.put("points", c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
+                json.put(TRACKER_LOG_C_COMPLETED, c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
+                json.put(TRACKER_LOG_C_ACTIVITYDIGEST, (digest != null) ? digest : "");
+                json.put(TRACKER_LOG_C_EVENT, c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
+                json.put(TRACKER_LOG_C_POINTS, c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
                 Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
                 if (m != null) {
                     json.put("course", m.getShortname());
@@ -1421,10 +1424,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 JSONObject json = new JSONObject();
                 json.put("data", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATA)));
                 json.put("tracker_date", c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
-                json.put("completed", c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
-                json.put("digest", (digest != null) ? digest : "");
-                json.put("event", c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
-                json.put("points", c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
+                json.put(TRACKER_LOG_C_COMPLETED, c.getInt(c.getColumnIndex(TRACKER_LOG_C_COMPLETED)));
+                json.put(TRACKER_LOG_C_ACTIVITYDIGEST, (digest != null) ? digest : "");
+                json.put(TRACKER_LOG_C_EVENT, c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
+                json.put(TRACKER_LOG_C_POINTS, c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
                 Course m = this.getCourse(c.getLong(c.getColumnIndex(TRACKER_LOG_C_COURSEID)), userId);
                 if (m != null) {
                     json.put("course", m.getShortname());
@@ -2075,7 +2078,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String USER_CF_TABLE = "user_cf";
 
     public void dropTable(String table) {
-        db.execSQL("drop table if exists " + table);
+        db.execSQL(STR_DROP_IF_EXISTS + table);
     }
 
 

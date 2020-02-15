@@ -179,7 +179,7 @@ public class MainActivity extends AppActivity implements BottomNavigationView.On
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_main, new CoursesListFragment()).commit();
                 }
 
-                return null;
+                return false;
             }
         });
     }

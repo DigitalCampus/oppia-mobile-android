@@ -139,7 +139,7 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 
 	public String getLocation(String lang) {
 		for(Lang l: locations){
-			if(l.getLang().equals(lang)){
+			if(l.getLanguage().equals(lang)){
 				return l.getContent();
 			}
 		}
@@ -157,7 +157,7 @@ public class Activity extends MultiLangInfoModel implements Serializable{
 	
 	public String getContents(String lang) {
 		for(Lang l: contents){
-			if(l.getLang().equals(lang)){
+			if(l.getLanguage().equals(lang)){
 				return l.getContent();
 			}
 		}

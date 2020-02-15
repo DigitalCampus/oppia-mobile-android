@@ -60,8 +60,8 @@ public class SearchUtils {
             ArrayList<Lang> langs = (ArrayList<Lang>) course.getLangs();
             StringBuilder fileContent = new StringBuilder();
             for (Lang l : langs) {
-                if (a.getLocation(l.getLang()) != null && !a.getActType().equals("url")) {
-                    String url = course.getLocation() + a.getLocation(l.getLang());
+                if (a.getLocation(l.getLanguage()) != null && !a.getActType().equals("url")) {
+                    String url = course.getLocation() + a.getLocation(l.getLanguage());
                     try {
                         fileContent.append(" ");
                         fileContent.append(FileUtils.readFile(url));

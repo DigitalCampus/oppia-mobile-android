@@ -73,7 +73,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
     private int currentActivityNo = 0;
 
-    private SharedPreferences prefs;
+    private SharedPreferences sharedPreferences;
     private ArrayList<Activity> activities;
     private boolean isBaseline = false;
     private long userID;
@@ -92,7 +92,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
 
         setContentView(R.layout.activity_course);
         ActionBar actionBar = getSupportActionBar();
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         viewPager = findViewById(R.id.activity_widget_pager);
 
         Bundle bundle = this.getIntent().getExtras();
@@ -150,6 +150,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         currentWidget.saveTracker();
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         WidgetFactory currentWidget = (WidgetFactory) apAdapter.getItem(currentActivityNo);
@@ -229,7 +230,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void loadActivities() {
-        String currentLang = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
+        String currentLang = sharedPreferences.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         String actionBarTitle = section.getTitle(currentLang);
         if (actionBarTitle != null && !actionBarTitle.equals(MultiLangInfoModel.DEFAULT_NOTITLE)) {
             setTitle(actionBarTitle);
@@ -283,7 +284,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     }
 
     private void createLanguageDialog() {
-        UIUtils.createLanguageDialog(this, (ArrayList<Lang>) course.getLangs(), prefs, new Callable<Boolean>() {
+        UIUtils.createLanguageDialog(this, (ArrayList<Lang>) course.getLangs(), sharedPreferences, new Callable<Boolean>() {
             public Boolean call() {
                 CourseActivity.this.loadActivities();
                 return true;

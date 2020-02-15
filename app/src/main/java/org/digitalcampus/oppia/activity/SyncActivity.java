@@ -428,7 +428,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     @Override
     public void onTransferComplete(CourseTransferableFile file) {
 
-        if (BluetoothTransferService.getTasksTransferring().size() == 0){
+        if (BluetoothTransferService.getTasksTransferring().isEmpty()){
             sendTransferProgress.setVisibility(View.GONE);
             pendingSize.setVisibility(View.GONE);
             pendingFiles.setVisibility(View.GONE);
@@ -538,7 +538,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             pendingProgress += pendingFile.getFileSize();
         }
         pendingProgress = Math.max(0, pendingProgress - progress);
-        if ((pending.size() == 0) || (pendingProgress == 0)){
+        if (pending.isEmpty() || pendingProgress == 0){
             sendTransferProgress.setVisibility(View.GONE);
             pendingFiles.setVisibility(View.GONE);
             pendingSize.setVisibility(View.GONE);
@@ -554,7 +554,7 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             pendingSize.setText(FileUtils.readableFileSize(pendingProgress));
         }
 
-        if ((pending.size() == 0) && (pendingProgress == 0)){
+        if (pending.isEmpty() && pendingProgress == 0){
             //If we are sending and there are no transfers left, show the complete toast
             Toast.makeText(this, R.string.bluetooth_all_transfers_complete, Toast.LENGTH_LONG).show();
         }

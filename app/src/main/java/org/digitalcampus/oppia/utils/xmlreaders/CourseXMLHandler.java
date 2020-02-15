@@ -303,7 +303,7 @@ class CourseXMLHandler extends DefaultLexicalHandler implements IMediaXMLHandler
         else if (NODE_PAGE.equals(aQName)){
             for (Lang title : pageTitles){
                 for (Lang location : pageLocations){
-                    if (title.getLang().equals(location.getLang())){
+                    if (title.getLanguage().equals(location.getLanguage())){
                         title.setLocation(location.getContent());
                         currentPage.addLang(title);
                     }

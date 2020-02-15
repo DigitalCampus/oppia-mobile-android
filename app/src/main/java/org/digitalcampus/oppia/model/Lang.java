@@ -31,25 +31,25 @@ public class Lang implements Serializable {
      */
     private static final long serialVersionUID = -8960131611429444591L;
     public static final String TAG = Lang.class.getSimpleName();
-    private String lang;
+    private String language;
     private String content;
     private String location;
 
     public Lang(String lang, String content){
-        this.setLang(lang);
+        this.setLanguage(lang);
         this.setContent(content);
     }
 
 
-    public String getLang() {
-        String[] langCountry = this.lang.split("_|-");
+    public String getLanguage() {
+        String[] langCountry = this.language.split("_|-");
         return langCountry[0];
     }
 
-    public void setLang(String lang) {
+    public void setLanguage(String lang) {
         // only set the first part of the lang - not the full localisation
         String[] langCountry = lang.split("_|-");
-        this.lang = langCountry[0];
+        this.language = langCountry[0];
     }
 
     public String getContent() {
@@ -76,11 +76,11 @@ public class Lang implements Serializable {
         if (this.getClass() != obj.getClass())
             return false;
 
-        return TextUtils.equals(getLang(), ((Lang) obj).getLang());
+        return TextUtils.equals(getLanguage(), ((Lang) obj).getLanguage());
     }
 
     @Override
     public int hashCode() {
-        return getLang() != null ? getLang().hashCode() : 0;
+        return getLanguage() != null ? getLanguage().hashCode() : 0;
     }
 }

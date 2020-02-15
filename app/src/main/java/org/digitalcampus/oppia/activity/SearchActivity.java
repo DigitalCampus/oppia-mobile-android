@@ -49,7 +49,7 @@ import java.util.List;
 
 public class SearchActivity extends AppActivity {
 
-    private SharedPreferences prefs;
+    private SharedPreferences sharedPreferences;
     private long userId = 0;
 
 	private EditText searchText;
@@ -67,7 +67,7 @@ public class SearchActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         adapterResults = new SearchResultsAdapter(this, results);
         recyclerResults = findViewById(R.id.recycler_results_search);
         recyclerResults.setAdapter(adapterResults);
@@ -93,7 +93,7 @@ public class SearchActivity extends AppActivity {
         initialize();
 
 		DbHelper db = DbHelper.getInstance(this);
-		userId = db.getUserId(prefs.getString("preUsername", ""));
+		userId = db.getUserId(sharedPreferences.getString("preUsername", ""));
 		
 		searchText = findViewById(R.id.search_string);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
