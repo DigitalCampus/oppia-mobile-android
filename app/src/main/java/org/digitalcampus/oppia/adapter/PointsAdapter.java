@@ -42,7 +42,7 @@ public class PointsAdapter extends RecyclerView.Adapter<PointsAdapter.ViewHolder
         viewHolder.pointsDescription.setText(point.getDescription());
         viewHolder.pointsTime.setText(point.getTimeHoursMinutes());
         viewHolder.pointsDate.setText(point.getDateDayMonth());
-        viewHolder.pointsPoints.setText(String.valueOf(point.getPoints()));
+        viewHolder.pointsPoints.setText(String.valueOf(point.getPointsAwarded()));
 
     }
 

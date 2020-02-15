@@ -1189,7 +1189,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
             Points p = new Points();
             p.setDateTime(c.getString(c.getColumnIndex(TRACKER_LOG_C_DATETIME)));
-            p.setPoints(c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
+            p.setPointsAwarded(c.getInt(c.getColumnIndex(TRACKER_LOG_C_POINTS)));
             p.setEvent(c.getString(c.getColumnIndex(TRACKER_LOG_C_EVENT)));
 
             // get course and activity title
@@ -1265,7 +1265,7 @@ public class DbHelper extends SQLiteOpenHelper {
         while (!qac.isAfterLast()) {
             Points p = new Points();
             p.setDateTime(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_DATETIME)));
-            p.setPoints(qac.getInt(qac.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
+            p.setPointsAwarded(qac.getInt(qac.getColumnIndex(QUIZATTEMPTS_C_POINTS)));
             p.setEvent(qac.getString(qac.getColumnIndex(QUIZATTEMPTS_C_EVENT)));
 
             // get course and activity title
