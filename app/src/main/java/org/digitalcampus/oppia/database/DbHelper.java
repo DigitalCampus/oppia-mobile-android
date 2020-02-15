@@ -51,7 +51,6 @@ import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import org.digitalcampus.oppia.model.db_model.UserCustomField;
 import org.digitalcampus.oppia.model.db_model.UserPreference;
 import org.digitalcampus.oppia.task.Payload;
-import org.digitalcampus.oppia.utils.DateUtils;
 import org.digitalcampus.oppia.utils.xmlreaders.CourseXMLReader;
 import org.joda.time.DateTime;
 import org.json.JSONException;
@@ -88,6 +87,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String STR_ADD_COLUMN = " ADD COLUMN ";
     private static final String STR_TEXT_NULL = " text null";
     private static final String STR_DATETIME_NULL = " datetime null";
+    private static final String STR_WHERE = " WHERE ";
 
 
     private static final String COURSE_TABLE = "Module";
@@ -714,12 +714,6 @@ public class DbHelper extends SQLiteOpenHelper {
         endTransaction(true);
     }
 
-    public void resetSchedule(int courseId) {
-        ContentValues values = new ContentValues();
-        values.put(ACTIVITY_C_STARTDATE, "");
-        values.put(ACTIVITY_C_ENDDATE, "");
-        db.update(ACTIVITY_TABLE, values, ACTIVITY_C_COURSEID + "=" + courseId, null);
-    }
 
     public List<Course> getAllCourses() {
         ArrayList<Course> courses = new ArrayList<>();
@@ -727,15 +721,7 @@ public class DbHelper extends SQLiteOpenHelper {
         Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-            course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-            course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
-            course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
-            course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
-            course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
-            course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
-            course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
-            course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
+            Course course = setupCourseObject(c);
             courses.add(course);
             c.moveToNext();
         }
@@ -765,23 +751,13 @@ public class DbHelper extends SQLiteOpenHelper {
         return quizAttempts;
     }
 
-    public List<Course> getCourses(long userId) {
+    public List<Course> getCoursesForUser(long userId) {
         ArrayList<Course> courses = new ArrayList<>();
         String order = COURSE_C_ORDER_PRIORITY + " DESC, " + COURSE_C_TITLE + " ASC";
         Cursor c = db.query(COURSE_TABLE, null, null, null, null, null, order);
         c.moveToFirst();
         while (!c.isAfterLast()) {
-
-            Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-            course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-            course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
-            course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
-            course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
-            course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
-            course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
-            course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
-            course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
-            course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
+            Course course = setupCourseObject(c);
             this.courseSetProgress(course, userId);
             courses.add(course);
             c.moveToNext();
@@ -797,20 +773,25 @@ public class DbHelper extends SQLiteOpenHelper {
         Cursor c = db.query(COURSE_TABLE, null, s, args, null, null, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
-            course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
-            course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
-            course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
-            course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
-            course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
-            course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
-            course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
-            course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
-            course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
+            course = setupCourseObject(c);
             this.courseSetProgress(course, userId);
             c.moveToNext();
         }
         c.close();
+        return course;
+    }
+
+    private Course setupCourseObject(Cursor c){
+        Course course = new Course(prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, ""));
+        course.setCourseId(c.getInt(c.getColumnIndex(COURSE_C_ID)));
+        course.setVersionId(c.getDouble(c.getColumnIndex(COURSE_C_VERSIONID)));
+        course.setTitlesFromJSONString(c.getString(c.getColumnIndex(COURSE_C_TITLE)));
+        course.setImageFile(c.getString(c.getColumnIndex(COURSE_C_IMAGE)));
+        course.setLangsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_LANGS)));
+        course.setShortname(c.getString(c.getColumnIndex(COURSE_C_SHORTNAME)));
+        course.setPriority(c.getInt(c.getColumnIndex(COURSE_C_ORDER_PRIORITY)));
+        course.setDescriptionsFromJSONString(c.getString(c.getColumnIndex(COURSE_C_DESC)));
+        course.setSequencingMode(c.getString(c.getColumnIndex(COURSE_C_SEQUENCING)));
         return course;
     }
 
@@ -824,10 +805,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // get no completed
         String sqlCompleted = "SELECT DISTINCT " + TRACKER_LOG_C_ACTIVITYDIGEST + " FROM " + TRACKER_LOG_TABLE +
-                " WHERE " + TRACKER_LOG_C_COURSEID + "=" + course.getCourseId() +
+                STR_WHERE + TRACKER_LOG_C_COURSEID + "=" + course.getCourseId() +
                 " AND " + TRACKER_LOG_C_USERID + "=" + userId +
                 " AND " + TRACKER_LOG_C_COMPLETED + "=1" +
-                " AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " IN ( SELECT " + ACTIVITY_C_ACTIVITYDIGEST + " FROM " + ACTIVITY_TABLE + " WHERE " + ACTIVITY_C_COURSEID + "=" + course.getCourseId() + ")";
+                " AND " + TRACKER_LOG_C_ACTIVITYDIGEST + " IN ( SELECT " + ACTIVITY_C_ACTIVITYDIGEST + " FROM " + ACTIVITY_TABLE + STR_WHERE + ACTIVITY_C_COURSEID + "=" + course.getCourseId() + ")";
         c = db.rawQuery(sqlCompleted, null);
         course.setNoActivitiesCompleted(c.getCount());
         c.close();
@@ -853,7 +834,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return activities;
     }
 
-    public ArrayList<Activity> getCourseQuizzes(long courseId) {
+    public List<Activity> getCourseQuizzes(long courseId) {
         ArrayList<Activity> quizzes = new ArrayList<>();
         String s = ACTIVITY_C_COURSEID + "=? AND " + ACTIVITY_C_ACTTYPE + "=? AND " + ACTIVITY_C_SECTIONID + ">0";
         String[] args = new String[]{String.valueOf(courseId), "quiz"};
@@ -1733,7 +1714,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public Activity getActivityByDigest(String digest) {
         String sql = "SELECT * FROM  " + ACTIVITY_TABLE + " a " +
-                " WHERE " + ACTIVITY_C_ACTIVITYDIGEST + "='" + digest + "'";
+                STR_WHERE + ACTIVITY_C_ACTIVITYDIGEST + "='" + digest + "'";
         Cursor c = db.rawQuery(sql, null);
 
         if (c.getCount() <= 0) {
@@ -1757,61 +1738,6 @@ public class DbHelper extends SQLiteOpenHelper {
         return a;
     }
 
-    public List<Activity> getActivitiesDue(int max, long userId) {
-
-        ArrayList<Activity> activities = new ArrayList<>();
-        DateTime now = new DateTime();
-        String nowDateString = DateUtils.DATETIME_FORMAT.print(now);
-        String sql = "SELECT a.* FROM " + ACTIVITY_TABLE + " a " +
-                " INNER JOIN " + COURSE_TABLE + " m ON a." + ACTIVITY_C_COURSEID + " = m." + COURSE_C_ID +
-                " LEFT OUTER JOIN (SELECT * FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1 AND " + TRACKER_LOG_C_USERID + "=" + userId + ") tl ON a." + ACTIVITY_C_ACTIVITYDIGEST + " = tl." + TRACKER_LOG_C_ACTIVITYDIGEST +
-                " WHERE tl." + TRACKER_LOG_C_ID + " IS NULL " +
-                " AND a." + ACTIVITY_C_STARTDATE + "<='" + nowDateString + "'" +
-                " AND a." + ACTIVITY_C_TITLE + " IS NOT NULL " +
-                " ORDER BY a." + ACTIVITY_C_ENDDATE + " ASC" +
-                " LIMIT " + max;
-
-
-        Cursor c = db.rawQuery(sql, null);
-        c.moveToFirst();
-        while (!c.isAfterLast()) {
-            Activity a = new Activity();
-            if (c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null) {
-                a.setTitlesFromJSONString(c.getString(c.getColumnIndex(ACTIVITY_C_TITLE)));
-                a.setCourseId(c.getLong(c.getColumnIndex(ACTIVITY_C_COURSEID)));
-                a.setDigest(c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
-                activities.add(a);
-            }
-            c.moveToNext();
-        }
-
-        if (c.getCount() < max) {
-            //just add in some extra suggested activities unrelated to the date/time
-            String sql2 = "SELECT a.* FROM " + ACTIVITY_TABLE + " a " +
-                    " INNER JOIN " + COURSE_TABLE + " m ON a." + ACTIVITY_C_COURSEID + " = m." + COURSE_C_ID +
-                    " LEFT OUTER JOIN (SELECT * FROM " + TRACKER_LOG_TABLE + " WHERE " + TRACKER_LOG_C_COMPLETED + "=1) tl ON a." + ACTIVITY_C_ACTIVITYDIGEST + " = tl." + TRACKER_LOG_C_ACTIVITYDIGEST +
-                    " WHERE (tl." + TRACKER_LOG_C_ID + " IS NULL " +
-                    " OR tl." + TRACKER_LOG_C_COMPLETED + "=0)" +
-                    " AND a." + ACTIVITY_C_TITLE + " IS NOT NULL " +
-                    " AND a." + ACTIVITY_C_ID + " NOT IN (SELECT " + ACTIVITY_C_ID + " FROM (" + sql + ") b)" +
-                    " LIMIT " + (max - c.getCount());
-            Cursor c2 = db.rawQuery(sql2, null);
-            c2.moveToFirst();
-            while (!c2.isAfterLast()) {
-                Activity a = new Activity();
-                if (c2.getString(c.getColumnIndex(ACTIVITY_C_TITLE)) != null) {
-                    a.setTitlesFromJSONString(c2.getString(c2.getColumnIndex(ACTIVITY_C_TITLE)));
-                    a.setCourseId(c2.getLong(c2.getColumnIndex(ACTIVITY_C_COURSEID)));
-                    a.setDigest(c2.getString(c2.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)));
-                    activities.add(a);
-                }
-                c2.moveToNext();
-            }
-            c2.close();
-        }
-        c.close();
-        return activities;
-    }
 
     /*
      * SEARCH Functions
@@ -1969,7 +1895,7 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(TAG, "this sectionid = " + activity.getSectionId());
         // get all the previous activities in this section
         String sql = String.format("SELECT * FROM " + ACTIVITY_TABLE +
-                " WHERE " + ACTIVITY_C_ACTID + " < %d " +
+                STR_WHERE + ACTIVITY_C_ACTID + " < %d " +
                 " AND " + ACTIVITY_C_COURSEID + " = %d " +
                 " AND " + ACTIVITY_C_SECTIONID + " = %d", activity.getActId(), activity.getCourseId(), activity.getSectionId());
 
@@ -1981,7 +1907,7 @@ public class DbHelper extends SQLiteOpenHelper {
             // check if each activity has been completed or not
             while (!c.isAfterLast()) {
                 String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
-                        " WHERE " + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
+                        STR_WHERE + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
                         " AND " + TRACKER_LOG_C_COMPLETED + " =1" +
                         " AND " + TRACKER_LOG_C_USERID + " = %d", c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)), userId);
                 Cursor c2 = db.rawQuery(sqlCheck, null);
@@ -2022,7 +1948,7 @@ public class DbHelper extends SQLiteOpenHelper {
             // check if each activity has been completed or not
             while (!c.isAfterLast()) {
                 String sqlCheck = String.format("SELECT * FROM " + TRACKER_LOG_TABLE +
-                        " WHERE " + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
+                        STR_WHERE + TRACKER_LOG_C_ACTIVITYDIGEST + " = '%s'" +
                         " AND " + TRACKER_LOG_C_COMPLETED + " =1" +
                         " AND " + TRACKER_LOG_C_USERID + " = %d", c.getString(c.getColumnIndex(ACTIVITY_C_ACTIVITYDIGEST)), userId);
                 Cursor c2 = db.rawQuery(sqlCheck, null);
