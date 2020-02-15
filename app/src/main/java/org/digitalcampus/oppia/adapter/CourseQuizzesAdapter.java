@@ -31,7 +31,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdapter.ViewHolder> {
+public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdapter.CourseQuizzesViewHolder> {
 
     private final Context ctx;
     private final List<QuizStats> quizzesList;
@@ -44,13 +44,13 @@ public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdap
         this.quizzesList = quizzesList;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class CourseQuizzesViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
         private TextView section;
         private TextView score;
 
-        public ViewHolder(View itemView) {
+        public CourseQuizzesViewHolder(View itemView) {
 
             super(itemView);
             section = itemView.findViewById(R.id.section_title);
@@ -70,13 +70,13 @@ public class CourseQuizzesAdapter extends RecyclerView.Adapter<CourseQuizzesAdap
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CourseQuizzesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(ctx).inflate(R.layout.row_quiz_scorecard, parent, false);
-        return new ViewHolder(v);
+        return new CourseQuizzesViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final CourseQuizzesViewHolder viewHolder, final int position) {
 
         final QuizStats quiz = getItemAtPosition(position);
 
