@@ -179,26 +179,8 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
 			valid = false;
 		}
 
-		// check password length
-		if (password.length() < App.PASSWORD_MIN_LENGTH) {
-			passwordField.setErrorEnabled(true);
-			passwordField.setError(getString(R.string.error_register_password,  App.PASSWORD_MIN_LENGTH ));
-			if (valid){
-				passwordField.requestFocus();
-			}
-			valid = false;
-
-
-		}
-		else if (!password.equals(passwordAgain)) {
-			passwordField.setErrorEnabled(true);
-			passwordField.setError(getString(R.string.error_register_password_no_match ));
-			if (valid){
-				passwordField.requestFocus();
-			}
-			valid = false;
-		}
-
+		// check password
+		valid = checkPasswordCriteria(valid, password, passwordAgain);
 
 		// check phone no
 		if (phoneNo.length() < 8) {
@@ -224,6 +206,28 @@ public class RegisterFragment extends AppFragment implements SubmitListener, Reg
             executeRegisterTask(u);
         }
 
+	}
+
+	private boolean checkPasswordCriteria(boolean currentValid, String password, String passwordAgain){
+		if (password.length() < App.PASSWORD_MIN_LENGTH) {
+			passwordField.setErrorEnabled(true);
+			passwordField.setError(getString(R.string.error_register_password,  App.PASSWORD_MIN_LENGTH ));
+			if (currentValid){
+				passwordField.requestFocus();
+			}
+			currentValid = false;
+
+
+		}
+		else if (!password.equals(passwordAgain)) {
+			passwordField.setErrorEnabled(true);
+			passwordField.setError(getString(R.string.error_register_password_no_match ));
+			if (currentValid){
+				passwordField.requestFocus();
+			}
+			currentValid = false;
+		}
+		return currentValid;
 	}
 
 	@Override

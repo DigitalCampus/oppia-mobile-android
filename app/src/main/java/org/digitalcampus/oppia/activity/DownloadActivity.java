@@ -85,7 +85,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
-            Tag t = (Tag) bundle.getSerializable(Tag.TAG);
+            Tag t = (Tag) bundle.getSerializable(Tag.TAG_CLASS);
             if (t != null){
                 this.url = Paths.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
                 TextView tagTitle = findViewById(R.id.category_title);
