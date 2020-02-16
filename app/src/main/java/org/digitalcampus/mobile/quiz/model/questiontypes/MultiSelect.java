@@ -39,6 +39,25 @@ public class MultiSelect extends QuizQuestion implements Serializable {
         // loop through the responses
         // find whichever are set as selected and add up the responses
 
+        float total = setFeedback(lang);
+
+        // fix marking so that if one of the incorrect scores is selected final mark is 0
+        for (Response r : responseOptions){
+            for(String ur: userResponses){
+                if (r.getTitle(lang).equals(ur) && r.getScore() == 0){
+                    total = 0;
+                }
+            }
+        }
+        int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
+        if (total > maxscore){
+            userscore = maxscore;
+        } else {
+            userscore = total;
+        }
+    }
+
+    private float setFeedback(String lang){
         float total = 0;
         StringBuilder questionFeedback = new StringBuilder();
         for (Response r : responseOptions){
@@ -55,21 +74,7 @@ public class MultiSelect extends QuizQuestion implements Serializable {
             }
         }
         this.feedback = questionFeedback.toString();
-
-        // fix marking so that if one of the incorrect scores is selected final mark is 0
-        for (Response r : responseOptions){
-            for(String ur: userResponses){
-                if (r.getTitle(lang).equals(ur) && r.getScore() == 0){
-                    total = 0;
-                }
-            }
-        }
-        int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
-        if (total > maxscore){
-            userscore = maxscore;
-        } else {
-            userscore = total;
-        }
+        return total;
     }
 
     @Override

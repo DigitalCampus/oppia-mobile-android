@@ -442,7 +442,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             args.putSerializable("langs", getLanguagesCourses());
             Log.d(TAG, "Langs added!");
         }
-        fragment.setArguments(args);
+        try {
+            fragment.setArguments(args);
+        } catch (NullPointerException npe){
+            Log.d(TAG, "Null pointer", npe);
+        }
         ft.replace(R.id.root_layout, fragment, fragment.getTag());
         ft.addToBackStack( caller.getTag());
         ft.commit();

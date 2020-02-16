@@ -15,9 +15,9 @@ public class Leaderboard  implements Comparable<Leaderboard>{
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
-    private @NonNull long id;
+    private long id;
 
-    private @NonNull String username;
+    private String username;
     private String fullname;
     private Integer points = 0;
 
@@ -49,7 +49,7 @@ public class Leaderboard  implements Comparable<Leaderboard>{
 
     @Override
     public int compareTo(@NonNull Leaderboard other) {
-        if (this.points == other.points)
+        if (this.points.equals(other.points))
             return 0;
         else if (this.points < other.points)
             return 1;
