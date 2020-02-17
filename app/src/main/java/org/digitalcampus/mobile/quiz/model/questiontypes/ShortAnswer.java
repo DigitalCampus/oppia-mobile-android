@@ -52,17 +52,16 @@ public class ShortAnswer extends QuizQuestion implements Serializable {
             }
         }
         if (total == 0){
-            for (Response r : responseOptions){
-                if (r.getTitle(lang).equalsIgnoreCase("*") && r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
-                    this.feedback = r.getFeedback(lang);
-                }
-            }
+            this.setFeedback(lang);
         }
-        int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
-        if (total > maxscore){
-            userscore = maxscore;
-        } else {
-            userscore = total;
+        this.calculateUserscore(total);
+    }
+
+    private void setFeedback(String lang){
+        for (Response r : responseOptions){
+            if (r.getTitle(lang).equalsIgnoreCase("*") && r.getFeedback(lang) != null && !(r.getFeedback(lang).equals(""))){
+                this.feedback = r.getFeedback(lang);
+            }
         }
     }
 

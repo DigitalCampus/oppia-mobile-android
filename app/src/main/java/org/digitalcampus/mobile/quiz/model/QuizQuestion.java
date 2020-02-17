@@ -81,7 +81,7 @@ public class QuizQuestion implements Serializable {
         this.calculateUserscore(total);
     }
 
-    private void calculateUserscore(float total){
+    public void calculateUserscore(float total){
         if (this.getProp(Quiz.JSON_PROPERTY_MAXSCORE) != null) {
             int maxscore = Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
             if (total > maxscore) {
@@ -137,7 +137,7 @@ public class QuizQuestion implements Serializable {
     }
 
     public int getMaxScore() {
-        return 0;
+        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
     }
 
     public JSONObject responsesToJSON() {

@@ -21,14 +21,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class 	Tag implements Serializable{
+public class Tag implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5144400570961137778L;
 	
-	public static final String TAG = Tag.class.getSimpleName();
+	public static final String TAG_CLASS = Tag.class.getSimpleName();
 	private String name;
 	private int count;
 	private int id;

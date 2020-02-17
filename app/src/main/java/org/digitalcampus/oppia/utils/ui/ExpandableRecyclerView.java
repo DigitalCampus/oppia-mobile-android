@@ -145,7 +145,7 @@ public class ExpandableRecyclerView extends RecyclerView
     }
 
 
-    public static abstract class Adapter<CVH extends ViewHolder, GVH extends ViewHolder, HVH extends ViewHolder, C, G> extends RecyclerView.Adapter<ViewHolder>
+    public abstract static class Adapter<CVH extends ViewHolder, GVH extends ViewHolder, HVH extends ViewHolder, C, G> extends RecyclerView.Adapter<ViewHolder>
     {
 
         private OnChildItemClickedListener onChildItemClickedListener;
@@ -414,7 +414,7 @@ public class ExpandableRecyclerView extends RecyclerView
         }
     }
 
-    public static abstract class GroupViewHolder extends RecyclerView.ViewHolder
+    public abstract static class GroupViewHolder extends RecyclerView.ViewHolder
     {
 
         ImageView expandedIndicator;

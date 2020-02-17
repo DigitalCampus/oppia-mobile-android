@@ -1,0 +1,58 @@
+{
+  "id": 3488,
+  "title": {
+    "fi": "Kysymykset",
+    "en": "Questions"
+  },
+  "description": {
+    "en": ""
+  },
+  "props": {
+    "digest": "595e067faa3a6f1cb85e03f0193ce677517cr0s2p80m0",
+    "courseversion": "20200216163021",
+    "showfeedback": 2,
+    "passthreshold": 80,
+    "maxattempts": 0,
+    "maxscore": 1
+  },
+  "questions": [
+    {
+      "order": 1,
+      "id": 36129,
+      "question": {
+        "id": 19768,
+        "type": "multichoice",
+        "title": {
+          "en": "The capital of Finland is Helsinki"
+        },
+        "props": {
+          "maxscore": 1
+        },
+        "responses": [
+          {
+            "order": 1,
+            "id": 103325,
+            "props": {
+              "id": 816
+            },
+            "title": {
+              "en": "True"
+            },
+            "score": "1.0000"
+          },
+          {
+            "order": 2,
+            "id": 103326,
+            "props": {
+              "id": 772
+            },
+            "title": {
+              "en": "False"
+            },
+            "score": "0.0000"
+          }
+        ]
+      }
+    }
+  ]
+}

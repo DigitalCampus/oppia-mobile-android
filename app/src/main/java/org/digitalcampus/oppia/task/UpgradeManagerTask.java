@@ -72,6 +72,8 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 	private static final String MSG_COMPLETED = "completed";
 	private static final String MSG_FAILED = "failed";
 
+	private static final String STR_PROPS = "props";
+
 	public UpgradeManagerTask(Context ctx){
 		this.ctx = ctx;
 		prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -313,16 +315,9 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				ArrayList<Activity> baseActs = (ArrayList<Activity>) parsedCourse.getBaselineActivities();
 				for (Activity a: baseActs){
 					if (a.getActType().equalsIgnoreCase("quiz")){
-						String quizContent = a.getContents("en");
-						try {
-							JSONObject quizJson = new JSONObject(quizContent);
-							V54UpgradeQuizObj q = new V54UpgradeQuizObj();
-							q.id = quizJson.getInt("id");
-							q.digest = quizJson.getJSONObject("props").getString("digest");
-							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
-							quizzes.add(q);
-						} catch (JSONException jsone) {
-                            Log.d(TAG,"failed to read json object", jsone);
+						V54UpgradeQuizObj quiz = v54ProcessQuiz(a);
+						if (quiz != null) {
+							quizzes.add(quiz);
 						}
 					}
 				}
@@ -331,17 +326,10 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				ArrayList<Activity> acts = (ArrayList<Activity>) parsedCourse.getActivities(c.getCourseId());
 				for (Activity a: acts){
 					if (a.getActType().equalsIgnoreCase("quiz")){
-						String quizContent = a.getContents("en");
-						try {
-							JSONObject quizJson = new JSONObject(quizContent);
-							V54UpgradeQuizObj q = new V54UpgradeQuizObj();
-							q.id = quizJson.getInt("id");
-							q.digest = quizJson.getJSONObject("props").getString("digest");
-							q.threshold = quizJson.getJSONObject("props").getInt("passthreshold");
-							quizzes.add(q);
-                        } catch (JSONException jsone) {
-                            Log.d(TAG,"failed to read json object", jsone);
-                        }
+						V54UpgradeQuizObj quiz = v54ProcessQuiz(a);
+						if (quiz != null) {
+							quizzes.add(quiz);
+						}
 					}
 				}
 			} catch (InvalidXMLException ixmle) {
@@ -377,11 +365,7 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 				} else {
 					Log.d(TAG,"Found");
 					qa.setActivityDigest(currentQuiz.digest);
-					if(qa.getScoreAsPercent() >= currentQuiz.threshold){
-						qa.setPassed(true);
-					} else {
-						qa.setPassed(false);
-					}
+					qa.setPassed(qa.getScoreAsPercent() >= currentQuiz.threshold);
 				}
 				
 				// make the actual updates
@@ -407,6 +391,21 @@ public class UpgradeManagerTask extends AsyncTask<Payload, String, Payload> {
 			Log.d(TAG, "passed: " + qa.isPassed());
 		}
 		
+	}
+
+	private V54UpgradeQuizObj v54ProcessQuiz(Activity activity){
+		String quizContent = activity.getContents("en");
+		try {
+			JSONObject quizJson = new JSONObject(quizContent);
+			V54UpgradeQuizObj q = new V54UpgradeQuizObj();
+			q.id = quizJson.getInt("id");
+			q.digest = quizJson.getJSONObject(STR_PROPS).getString("digest");
+			q.threshold = quizJson.getJSONObject(STR_PROPS).getInt("passthreshold");
+			return q;
+		} catch (JSONException jsone) {
+			Log.d(TAG,"failed to read json object", jsone);
+			return null;
+		}
 	}
 
 	private void overrideAdminPasswordTask(){

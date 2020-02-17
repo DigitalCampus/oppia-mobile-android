@@ -315,7 +315,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         }
 
         for (Points point : pointsFiltered) {
-            totalPoints += point.getPoints();
+            totalPoints += point.getPointsAwarded();
             int previousPoints = 0;
             String key = datetimeFormatter.print(point.getDateTime());
             if (pointsGrouped.containsKey(key)) {
@@ -325,7 +325,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 continue;
             }
 
-            int newPoints = previousPoints + point.getPoints();
+            int newPoints = previousPoints + point.getPointsAwarded();
 
             pointsGrouped.put(key, newPoints);
         }
@@ -352,13 +352,13 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
 
             Points mockPoint = new Points();
             mockPoint.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
-            mockPoint.setPoints(new Random().nextInt(70));
+            mockPoint.setPointsAwarded(new Random().nextInt(70));
             mockPoint.setEvent("Event mock " + i);
             mockPoint.setDescription("Description mock " + i);
 
             if (i % 13 == 0) {
                 // to add some days with 0 points
-                mockPoint.setPoints(0);
+                mockPoint.setPointsAwarded(0);
             }
 
             pointsMock.add(mockPoint);
@@ -367,7 +367,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
                 // to add some days with more than one number of points
                 Points mockPointExtra = new Points();
                 mockPointExtra.setDateTime(DateUtils.DATETIME_FORMAT.print(calendar.getTimeInMillis()));
-                mockPointExtra.setPoints(new Random().nextInt(70));
+                mockPointExtra.setPointsAwarded(new Random().nextInt(70));
                 mockPointExtra.setEvent("Event extra " + i);
                 mockPointExtra.setDescription("Description extra " + i);
                 pointsMock.add(mockPointExtra);

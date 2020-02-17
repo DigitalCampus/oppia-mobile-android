@@ -15,7 +15,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAttemptsAdapter.ViewHolder>{
+public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAttemptsAdapter.GlobalQuizAttemptsViewHolder>{
 
     private final Context ctx;
     private final List<QuizAttempt> quizAttempts;
@@ -28,14 +28,14 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class GlobalQuizAttemptsViewHolder extends RecyclerView.ViewHolder {
 
         private TextView date;
         private TextView score;
         private TextView courseTitle;
         private TextView quizTitle;
 
-        public ViewHolder(View itemView) {
+        public GlobalQuizAttemptsViewHolder(View itemView) {
             super(itemView);
             date = itemView.findViewById(R.id.attempt_date);
             score = itemView.findViewById(R.id.score);
@@ -64,13 +64,13 @@ public class GlobalQuizAttemptsAdapter extends RecyclerView.Adapter<GlobalQuizAt
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GlobalQuizAttemptsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(ctx).inflate(R.layout.row_quiz_attempt_global, parent, false);
-        return new GlobalQuizAttemptsAdapter.ViewHolder(v);
+        return new GlobalQuizAttemptsViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull GlobalQuizAttemptsViewHolder viewHolder, int position) {
         final QuizAttempt quiz = getItemAtPosition(position);
 
         viewHolder.quizTitle.setText(quiz.getDisplayTitle(ctx));

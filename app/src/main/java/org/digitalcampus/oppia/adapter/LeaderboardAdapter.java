@@ -16,7 +16,7 @@ import org.digitalcampus.oppia.model.db_model.Leaderboard;
 import java.util.List;
 import java.util.Locale;
 
-public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
+public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.GlobalQuizAttemptsViewHolder> {
 
     private List<Leaderboard> leaderboard;
     private int highlightBgColor;
@@ -24,7 +24,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     private int highlightTextColor;
     private int normalTextColor;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public class GlobalQuizAttemptsViewHolder extends RecyclerView.ViewHolder {
         private TextView points;
         private TextView pos;
         private TextView username;
@@ -32,7 +32,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         private CardView userCard;
 
 
-        ViewHolder(View v) {
+        public GlobalQuizAttemptsViewHolder(View v) {
             super(v);
             points = v.findViewById(R.id.leaderboard_points);
             pos = v.findViewById(R.id.leaderboard_position);
@@ -52,15 +52,15 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GlobalQuizAttemptsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_leaderboard, parent, false);
-        return new ViewHolder(v);
+        return new GlobalQuizAttemptsViewHolder(v);
 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(GlobalQuizAttemptsViewHolder holder, int position) {
         Leaderboard pos = leaderboard.get(position);
         holder.fullname.setText(pos.getFullname());
         holder.username.setText(pos.getUsername());

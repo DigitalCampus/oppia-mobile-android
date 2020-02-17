@@ -12,6 +12,6 @@ public class CoursesRepository {
     public List<Course> getCourses(Context ctx){
         DbHelper db = DbHelper.getInstance(ctx);
         long userId = db.getUserId(SessionManager.getUsername(ctx));
-        return db.getCourses(userId);
+        return db.getCoursesForUser(userId);
     }
 }

@@ -20,7 +20,7 @@ import org.digitalcampus.oppia.activity.PrefsActivity;
 import java.util.List;
 import java.util.Locale;
 
-public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCoursesAdapter.ViewHolder> {
+public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCoursesAdapter.DownloadCoursesViewHolder> {
 
 
     private List<CourseInstallViewAdapter> courses;
@@ -48,17 +48,17 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DownloadCoursesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_course_download, parent, false);
 
         // Return a new holder instance
-        return new ViewHolder(contactView);
+        return new DownloadCoursesViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final DownloadCoursesViewHolder viewHolder, final int position) {
 
         final CourseInstallViewAdapter c = getItemAtPosition(position);
 
@@ -136,7 +136,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class DownloadCoursesViewHolder extends RecyclerView.ViewHolder {
 
         private TextView courseTitle;
         private TextView courseDraft;
@@ -146,7 +146,7 @@ public class DownloadCoursesAdapter extends RecyclerView.Adapter<DownloadCourses
         private TextView courseAuthor;
         private TextView labelAuthor;
 
-        public ViewHolder(View itemView) {
+        public DownloadCoursesViewHolder(View itemView) {
 
             super(itemView);
 

@@ -308,7 +308,7 @@ public class UIUtils {
         for (Lang lang : langs) {
             boolean found = false;
             for (Lang ln : languagesList) {
-                if (ln.getLang().equals(lang.getLang())) {
+                if (ln.getLanguage().equals(lang.getLanguage())) {
                     found = true;
                     break;
                 }
@@ -323,10 +323,10 @@ public class UIUtils {
 
         String prefLanguage = prefs.getString(PrefsActivity.PREF_LANGUAGE, Locale.getDefault().getLanguage());
         for (Lang lang : languagesList) {
-            Locale locale = new Locale(lang.getLang());
+            Locale locale = new Locale(lang.getLanguage());
             String langDisp = locale.getDisplayLanguage(locale);
             langStringList.add(langDisp);
-            if (lang.getLang().equals(prefLanguage)) {
+            if (lang.getLanguage().equals(prefLanguage)) {
                 prefLangPosition = i;
             }
             i++;
@@ -338,7 +338,7 @@ public class UIUtils {
             AlertDialog mAlertDialog = new AlertDialog.Builder(ctx)
                     .setSingleChoiceItems(arr, prefLangPosition, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            String newLang = languagesList.get(whichButton).getLang();
+                            String newLang = languagesList.get(whichButton).getLanguage();
                             Editor editor = prefs.edit();
                             editor.putString(PrefsActivity.PREF_LANGUAGE, newLang);
                             editor.apply();

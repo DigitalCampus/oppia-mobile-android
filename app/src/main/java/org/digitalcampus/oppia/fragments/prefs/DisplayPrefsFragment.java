@@ -51,9 +51,9 @@ public class DisplayPrefsFragment extends BasePreferenceFragment implements Pref
         List<String> entryValues = new ArrayList<>();
 
         for(Lang l: langs){
-            if(!entryValues.contains(l.getLang())){
-                entryValues.add(l.getLang());
-                Locale loc = new Locale(l.getLang());
+            if(!entryValues.contains(l.getLanguage())){
+                entryValues.add(l.getLanguage());
+                Locale loc = new Locale(l.getLanguage());
                 entries.add(loc.getDisplayLanguage(loc));
             }
         }

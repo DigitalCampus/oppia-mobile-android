@@ -106,7 +106,7 @@ public class FileUtils {
 
                 int count;
 
-                byte data[] = new byte[BUFFER_SIZE];
+                byte[] data = new byte[BUFFER_SIZE];
 
                 File f = new File(outputFilename);
 
@@ -159,7 +159,7 @@ public class FileUtils {
             if (sourceFile.isDirectory()) {
                 zipSubFolder(out, sourceFile, sourceFile.getParent().length());
             } else {
-                byte data[] = new byte[BUFFER];
+                byte[] data = new byte[BUFFER];
                 fi = new FileInputStream(zipDestination); //NOSONAR
                 origin = new BufferedInputStream(fi, BUFFER); //NOSONAR
                 ZipEntry entry = new ZipEntry(getLastPathComponent(zipDestination.getPath()));
@@ -198,12 +198,12 @@ public class FileUtils {
                 if (file.isDirectory()) {
                     zipSubFolder(out, file, basePathLength);
                 } else {
-                    byte data[] = new byte[BUFFER];
+                    byte[] data = new byte[BUFFER];
                     String unmodifiedFilePath = file.getPath();
                     String relativePath = unmodifiedFilePath
                             .substring(basePathLength);
-                    fi = new FileInputStream(unmodifiedFilePath); //NOSONAR
-                    origin = new BufferedInputStream(fi, BUFFER); //NOSONAR
+                    fi = new FileInputStream(unmodifiedFilePath); // NOSONAR
+                    origin = new BufferedInputStream(fi, BUFFER); // NOSONAR
                     ZipEntry entry = new ZipEntry(relativePath);
                     out.putNextEntry(entry);
                     int count;

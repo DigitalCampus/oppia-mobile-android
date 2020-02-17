@@ -25,7 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdapter.ViewHolder> {
+public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdapter.DownloadMediaViewHolder> {
 
 
     private final SharedPreferences prefs;
@@ -46,17 +46,17 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DownloadMediaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View contactView = LayoutInflater.from(context).inflate(R.layout.row_media_download, parent, false);
 
         // Return a new holder instance
-        return new ViewHolder(contactView);
+        return new DownloadMediaViewHolder(contactView);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final DownloadMediaViewHolder viewHolder, final int position) {
 
         final Media m = getItemAtPosition(position);
 
@@ -144,7 +144,7 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
     }
 
 
-    public class ViewHolder extends MultiChoiceHelper.ViewHolder {
+    public class DownloadMediaViewHolder extends MultiChoiceHelper.ViewHolder {
 
         private TextView mediaCourses;
         private TextView mediaTitle;
@@ -153,7 +153,7 @@ public class DownloadMediaAdapter extends RecyclerView.Adapter<DownloadMediaAdap
         private ImageButton downloadBtn;
         private ProgressBar downloadProgress;
 
-        public ViewHolder(View itemView) {
+        public DownloadMediaViewHolder(View itemView) {
 
             super(itemView);
 

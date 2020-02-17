@@ -104,21 +104,17 @@ public class Matching extends QuizQuestion implements Serializable {
     }
 
     @Override
-    public int getMaxScore() {
-        return Integer.parseInt(this.getProp(Quiz.JSON_PROPERTY_MAXSCORE));
-    }
-
-    @Override
     public JSONObject responsesToJSON() {
         JSONObject jo = new JSONObject();
         try {
             jo.put(Quiz.JSON_PROPERTY_QUESTION_ID, this.id);
             jo.put(Quiz.JSON_PROPERTY_SCORE, this.getUserscore());
-            String qrtext = "";
+            StringBuilder qrtext = new StringBuilder();
             for (String ur : userResponses) {
-                qrtext += ur + Quiz.RESPONSE_SEPARATOR;
+                qrtext.append(ur);
+                qrtext.append(Quiz.RESPONSE_SEPARATOR);
             }
-            jo.put(Quiz.JSON_PROPERTY_TEXT, qrtext);
+            jo.put(Quiz.JSON_PROPERTY_TEXT, qrtext.toString());
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
             Mint.logException(jsone);

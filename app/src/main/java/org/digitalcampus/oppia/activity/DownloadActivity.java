@@ -56,7 +56,7 @@ import javax.inject.Inject;
 
 public class DownloadActivity extends AppActivity implements APIRequestListener, CourseInstallerListener {
 	
-	private SharedPreferences prefs;
+	private SharedPreferences sharedPreferences;
 	private ProgressDialog progressDialog;
 	private JSONObject json;
 	private String url;
@@ -81,11 +81,11 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
         setContentView(R.layout.activity_download);
         getAppComponent().inject(this);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
-            Tag t = (Tag) bundle.getSerializable(Tag.TAG);
+            Tag t = (Tag) bundle.getSerializable(Tag.TAG_CLASS);
             if (t != null){
                 this.url = Paths.SERVER_TAG_PATH + String.valueOf(t.getId()) + File.separator;
                 TextView tagTitle = findViewById(R.id.category_title);
@@ -210,7 +210,7 @@ public class DownloadActivity extends AppActivity implements APIRequestListener,
 		// process the response and display on screen in listview
 		// Create an array of courses, that will be put to our ListActivity
 		try {
-            String storage = prefs.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
+            String storage = sharedPreferences.getString(PrefsActivity.PREF_STORAGE_LOCATION, "");
             courses.clear();
 
             courseInstallRepository.refreshCourseList(this, courses, json, storage, showUpdatesOnly);
