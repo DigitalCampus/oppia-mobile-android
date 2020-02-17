@@ -259,6 +259,7 @@ sonarqube {
         property "sonar.tests", "src/test/java, src/androidTest/java"
         property "sonar.java.test.binaries", "build/intermediates/app_classes/normalDebug"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/coverage/normal/debug/report.xml"
+        property "sonar.exclusions", "app/src/test/java/**/*, app/src/androidTest/java/**/*"
 
         def sonarqubePropsFile = rootProject.file('sonarqube.properties')
         if (sonarqubePropsFile.canRead()) {
