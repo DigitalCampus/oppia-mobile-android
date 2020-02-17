@@ -19,8 +19,6 @@ package org.digitalcampus.mobile.quiz.model.questiontypes;
 
 import android.util.Log;
 
-import com.splunk.mint.Mint;
-
 import java.io.Serializable;
 
 import org.digitalcampus.mobile.quiz.Quiz;
@@ -99,7 +97,6 @@ public class MultiSelect extends QuizQuestion implements Serializable {
             jo.put(Quiz.JSON_PROPERTY_TEXT, qrtext.toString());
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
-            Mint.logException(jsone);
         }
         return jo;
     }

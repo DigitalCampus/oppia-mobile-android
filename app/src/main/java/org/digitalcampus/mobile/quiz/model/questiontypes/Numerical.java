@@ -41,9 +41,8 @@ public class Numerical extends QuizQuestion implements Serializable {
         for (String a : this.userResponses) {
             try {
                 userAnswer = Float.parseFloat(a);
-            } catch (NumberFormatException nfe) {
-                Log.d(TAG, "Response given is not recognised as a number", nfe);
-                Mint.logException(nfe);
+            } catch (NumberFormatException|NullPointerException e) {
+                Log.d(TAG, "Response given is not recognised as a number", e);
             }
         }
         float score = 0;
@@ -107,7 +106,6 @@ public class Numerical extends QuizQuestion implements Serializable {
             }
         } catch (JSONException jsone) {
             Log.d(TAG,"Error creating json object", jsone);
-            Mint.logException(jsone);
         }
         return jo;
     }
