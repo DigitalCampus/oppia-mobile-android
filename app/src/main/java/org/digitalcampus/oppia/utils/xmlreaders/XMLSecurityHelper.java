@@ -4,7 +4,6 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,11 +19,21 @@ public class XMLSecurityHelper {
 
     public static DocumentBuilder getNewSecureDocumentBuilder() throws ParserConfigurationException {
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-        factory.setExpandEntityReferences(false);
-        return factory.newDocumentBuilder();
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+
+            dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            dbf.setXIncludeAware(false);
+            dbf.setExpandEntityReferences(false);
+
+
+        } catch (ParserConfigurationException e) {
+            // This should catch a failed setFeature feature
+        }
+        return dbf.newDocumentBuilder();
     }
 
 
