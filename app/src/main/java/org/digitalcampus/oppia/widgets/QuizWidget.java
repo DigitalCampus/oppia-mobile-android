@@ -205,24 +205,18 @@ public class QuizWidget extends WidgetFactory {
 
     private int checkQuizAvailability(){
 
-        DbHelper db = null;
-        if (this.quiz.limitAttempts()){
-            //Check if the user has attempted the quiz the max allowed
-            db = DbHelper.getInstance(getActivity());
-            long userId = db.getUserId(SessionManager.getUsername(getActivity()));
-            QuizStats qs = db.getQuizAttempt(this.activity.getDigest(), userId);
-            if (qs.getNumAttempts() > quiz.getMaxAttempts()){
-                return R.string.widget_quiz_unavailable_attempts;
-            }
+        int userOverLimit = userOverLimitedAttempts();
+
+        if (userOverLimit != 0){
+            return userOverLimit;
         }
 
         // determine availability
         if (this.quiz.getAvailability() == Quiz.AVAILABILITY_ALWAYS){
             return QUIZ_AVAILABLE;
-
         } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_SECTION){
             // check to see if all previous section activities have been completed
-            if (db == null) db = DbHelper.getInstance(getActivity());
+            DbHelper db = DbHelper.getInstance(getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
 
             if( db.isPreviousSectionActivitiesCompleted(activity, userId) )
@@ -232,7 +226,7 @@ public class QuizWidget extends WidgetFactory {
 
         } else if (this.quiz.getAvailability() == Quiz.AVAILABILITY_COURSE){
             // check to see if all previous course activities have been completed
-            if (db == null) db = DbHelper.getInstance(getActivity());
+            DbHelper db = DbHelper.getInstance(getActivity());
             long userId = db.getUserId(SessionManager.getUsername(getActivity()));
             if (db.isPreviousCourseActivitiesCompleted(activity, userId))
                 return QUIZ_AVAILABLE;
@@ -241,6 +235,19 @@ public class QuizWidget extends WidgetFactory {
         }
         //If none of the conditions apply, set it as available
         return QUIZ_AVAILABLE;
+    }
+
+    private int userOverLimitedAttempts(){
+        if (this.quiz.limitAttempts()){
+            //Check if the user has attempted the quiz the max allowed
+            DbHelper db = DbHelper.getInstance(getActivity());
+            long userId = db.getUserId(SessionManager.getUsername(getActivity()));
+            QuizStats qs = db.getQuizAttempt(this.activity.getDigest(), userId);
+            if (qs.getNumAttempts() > quiz.getMaxAttempts()){
+                return R.string.widget_quiz_unavailable_attempts;
+            }
+        }
+        return 0;
     }
 
     public void showQuestion() {
@@ -363,7 +370,18 @@ public class QuizWidget extends WidgetFactory {
             prevBtn.setEnabled(false);
         }
 
-        nextBtn.setOnClickListener(new View.OnClickListener() {
+        nextBtn.setOnClickListener(nextBtnClickListener());
+
+        // set label on next button
+        if (quiz.hasNext()) {
+            nextBtn.setText(super.getActivity().getString(R.string.widget_quiz_next));
+        } else {
+            nextBtn.setText(super.getActivity().getString(R.string.widget_quiz_getresults));
+        }
+    }
+
+    private View.OnClickListener nextBtnClickListener(){
+        return new View.OnClickListener() {
             public void onClick(View v) {
                 // save answer
                 if (saveAnswer()) {
@@ -395,14 +413,7 @@ public class QuizWidget extends WidgetFactory {
                     toast.show();
                 }
             }
-        });
-
-        // set label on next button
-        if (quiz.hasNext()) {
-            nextBtn.setText(super.getActivity().getString(R.string.widget_quiz_next));
-        } else {
-            nextBtn.setText(super.getActivity().getString(R.string.widget_quiz_getresults));
-        }
+        };
     }
 
     private void setProgress() {
