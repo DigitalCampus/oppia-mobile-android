@@ -21,21 +21,22 @@ import static Utils.RecyclerViewMatcher.withRecyclerView;
 import static androidx.fragment.app.testing.FragmentScenario.launchInContainer;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.containsString;
 
 @RunWith(AndroidJUnit4.class)
-public class MultiselectNoFeedbackTest {
+public class NumericInexactNoFeedbackTest {
 
-    private static final String MULTISELECT_NOFEEDBACK_JSON =
-            "quizzes/multiselect_no_feedback.json";
-    private static final String FIRST_QUESTION_TITLE =
-            "What of the following are colours of the rainbow?";
-    private static final String CORRECT_ANSWER_1 = "Red";
-    private static final String CORRECT_ANSWER_2 = "Yellow";
-    private static final String INCORRECT_ANSWER_1 = "Black";
+    private static final String NUMERIC_CLOSE_NO_FEEDBACK_JSON =
+            "quizzes/numeric_close_no_feedback.json";
+    private static final String FIRST_QUESTION_TITLE = "How high in metres is Everest?";
+    private static final String CORRECT_ANSWER = "8848";
+    private static final String CLOSE_ANSWER = "8799";
+    private static final String INCORRECT_ANSWER = "8797";
 
     private Activity act;
     private Bundle args;
@@ -46,7 +47,7 @@ public class MultiselectNoFeedbackTest {
         act = new Activity();
         String quizContent = Utils.FileUtils.getStringFromFile(
                 InstrumentationRegistry.getInstrumentation().getContext(),
-                MULTISELECT_NOFEEDBACK_JSON);
+                NUMERIC_CLOSE_NO_FEEDBACK_JSON);
 
         ArrayList<Lang> contents = new ArrayList<>();
         contents.add(new Lang("en", quizContent));
@@ -64,8 +65,8 @@ public class MultiselectNoFeedbackTest {
         onView(withId(R.id.question_text))
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
 
-        onView(withText(CORRECT_ANSWER_1)).perform(click());
-        onView(withText(CORRECT_ANSWER_2)).perform(click());
+        onView(withId(R.id.responsetext))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(CORRECT_ANSWER));
         onView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String actual = Utils.TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 100);
@@ -77,10 +78,7 @@ public class MultiselectNoFeedbackTest {
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_user_response_text))
-                .check(matches(withText(containsString(CORRECT_ANSWER_1))));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-                .atPositionOnView(0, R.id.quiz_question_user_response_text))
-                .check(matches(withText(containsString(CORRECT_ANSWER_2))));
+                .check(matches(withText(CORRECT_ANSWER)));
 
         // TODO - check the image matches for question response
         // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
@@ -90,12 +88,40 @@ public class MultiselectNoFeedbackTest {
     }
 
     @Test
+    public void closeAnswer() {
+        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
+        onView(withId(R.id.question_text))
+                .check(matches(withText(FIRST_QUESTION_TITLE)));
+
+        onView(withId(R.id.responsetext))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(CLOSE_ANSWER));
+        onView(withId(R.id.mquiz_next_btn)).perform(click());
+
+        String actual = Utils.TestUtils.getCurrentActivity()
+                .getString(R.string.widget_quiz_results_score, (float) 60);
+        onView(withId(R.id.quiz_results_score))
+                .check(matches(withText(actual)));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_text))
+                .check(matches(withText(FIRST_QUESTION_TITLE)));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_user_response_text))
+                .check(matches(withText(CLOSE_ANSWER)));
+
+        // TODO - check the image matches for question response
+        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
+        // .check(matches(R.drawable.quiz_cross));
+    }
+
+    @Test
     public void incorrectAnswer() {
         launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
         onView(withId(R.id.question_text))
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
 
-        onView(withText(INCORRECT_ANSWER_1)).perform(click());
+        onView(withId(R.id.responsetext))
+                .perform(closeSoftKeyboard(), scrollTo(), typeText(INCORRECT_ANSWER));
         onView(withId(R.id.mquiz_next_btn)).perform(click());
 
         String actual = Utils.TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 0);
@@ -106,61 +132,7 @@ public class MultiselectNoFeedbackTest {
                 .check(matches(withText(FIRST_QUESTION_TITLE)));
         onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
                 .atPositionOnView(0, R.id.quiz_question_user_response_text))
-                .check(matches(withText(INCORRECT_ANSWER_1)));
-
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_cross));
-    }
-
-    @Test
-    public void oneCorrectAnswer() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
-        onView(withId(R.id.question_text))
-                .check(matches(withText(FIRST_QUESTION_TITLE)));
-
-        onView(withText(CORRECT_ANSWER_1)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
-
-        String actual = Utils.TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 50);
-        onView(withId(R.id.quiz_results_score))
-                .check(matches(withText(actual)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-                .atPositionOnView(0, R.id.quiz_question_text))
-                .check(matches(withText(FIRST_QUESTION_TITLE)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-                .atPositionOnView(0, R.id.quiz_question_user_response_text))
-                .check(matches(withText(CORRECT_ANSWER_1)));
-
-        // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
-        // .check(matches(R.drawable.quiz_cross));
-    }
-
-    @Test
-    public void oneCorrectOneIncorrectAnswer() {
-        launchInContainer(QuizWidget.class, args, R.style.Oppia_ToolbarTheme, null);
-        onView(withId(R.id.question_text))
-                .check(matches(withText(FIRST_QUESTION_TITLE)));
-
-        onView(withText(CORRECT_ANSWER_1)).perform(click());
-        onView(withText(INCORRECT_ANSWER_1)).perform(click());
-        onView(withId(R.id.mquiz_next_btn)).perform(click());
-
-        String actual = Utils.TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 0);
-        onView(withId(R.id.quiz_results_score))
-                .check(matches(withText(actual)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-                .atPositionOnView(0, R.id.quiz_question_text))
-                .check(matches(withText(FIRST_QUESTION_TITLE)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-                .atPositionOnView(0, R.id.quiz_question_user_response_text))
-                .check(matches(withText(containsString(CORRECT_ANSWER_1))));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
-                .atPositionOnView(0, R.id.quiz_question_user_response_text))
-                .check(matches(withText(containsString(INCORRECT_ANSWER_1))));
+                .check(matches(withText(INCORRECT_ANSWER)));
 
         // TODO - check the image matches for question response
         // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)

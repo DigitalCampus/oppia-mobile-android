@@ -60,7 +60,7 @@ public class Quiz implements Serializable {
 
     public static final int SHOW_FEEDBACK_ALWAYS = 1;
     public static final int SHOW_FEEDBACK_NEVER = 0;
-    public static final int SHOW_FEEDBACK_ATEND = 2;
+    public static final int SHOW_FEEDBACK_AT_END = 2;
 
     public static final int QUIZ_DEFAULT_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
     public static final int QUIZ_QUESTION_PASS_THRESHOLD = 99; // use 99 rather than 100 in case of rounding
@@ -436,27 +436,12 @@ public class Quiz implements Serializable {
         return propsSerializedGetInt("availability",AVAILABILITY_ALWAYS);
     }
 
-    public boolean isAllowTryAgain(){
-        return propsSerializedGetBoolean("allowtryagain",true);
-    }
-
     private int propsSerializedGetInt(String key, int defaultValue){
         try {
             JSONObject json = new JSONObject(propsSerialized);
             return json.getInt(key);
         } catch (JSONException jsone) {
             Log.d(TAG, "Error getting int from propsSerialized", jsone);
-        }
-        return defaultValue;
-    }
-
-    private boolean propsSerializedGetBoolean(String key, boolean defaultValue){
-        try {
-            JSONObject json = new JSONObject(propsSerialized);
-            return json.getBoolean(key);
-        } catch (JSONException jsone) {
-            Log.d(TAG, "Error getting boolean from propsSerialized", jsone);
-            Mint.logException(jsone);
         }
         return defaultValue;
     }

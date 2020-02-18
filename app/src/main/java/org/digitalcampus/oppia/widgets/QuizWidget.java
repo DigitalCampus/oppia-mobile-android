@@ -502,7 +502,7 @@ public class QuizWidget extends WidgetFactory {
         }
 
         // Show the detail of which questions were right/wrong
-        if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ATEND){
+        if (quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_ALWAYS || quiz.getShowFeedback() == Quiz.SHOW_FEEDBACK_AT_END){
             RecyclerView recyclerQuestionFeedbackLV = getView().findViewById(R.id.recycler_quiz_results_feedback);
             recyclerQuestionFeedbackLV.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
             ArrayList<QuizFeedback> quizFeedback = new ArrayList<>();

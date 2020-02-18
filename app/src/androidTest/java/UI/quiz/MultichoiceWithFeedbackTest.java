@@ -28,8 +28,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class MultichoiceWithFeedbackTest {
 
-    private static final String MULTICHOICE_WITHFEEDBACK_JSON = "quizzes/multichoice_with_feedback.json";
-    private static final String FIRST_QUESTION_TITLE = "Which of the following is a colour of the rainbow?";
+    private static final String MULTICHOICE_WITHFEEDBACK_JSON =
+            "quizzes/multichoice_with_feedback.json";
+    private static final String FIRST_QUESTION_TITLE =
+            "Which of the following is a colour of the rainbow?";
     private static final String CORRECT_ANSWER = "Red";
     private static final String INCORRECT_ANSWER = "Black";
     private static final String CORRECT_ANSWER_FEEDBACK = "correct";
@@ -43,7 +45,8 @@ public class MultichoiceWithFeedbackTest {
         // Setting up before every test
         act = new Activity();
         String quizContent = Utils.FileUtils.getStringFromFile(
-                InstrumentationRegistry.getInstrumentation().getContext(), MULTICHOICE_WITHFEEDBACK_JSON);
+                InstrumentationRegistry.getInstrumentation().getContext(),
+                MULTICHOICE_WITHFEEDBACK_JSON);
 
         ArrayList<Lang> contents = new ArrayList<>();
         contents.add(new Lang("en", quizContent));

@@ -97,7 +97,7 @@ public class QuizModelGeneralTest {
     // show feedback
     @Test
     public void test_getShowFeedback()throws Exception {
-        assertEquals(Quiz.SHOW_FEEDBACK_ATEND, quiz.getShowFeedback());
+        assertEquals(Quiz.SHOW_FEEDBACK_AT_END, quiz.getShowFeedback());
     }
 
     // with random select
@@ -131,7 +131,7 @@ public class QuizModelGeneralTest {
         quiz.load(quizContent, DEFAULT_LANG);
         assertEquals("Questions", quiz.getTitle(DEFAULT_LANG));
         assertEquals("Kysymykset", quiz.getTitle("fi"));
-        // this next assert should be updated when OPPIA-240 is fixed - it should fall back to the English
+        // TODO this next assert should be updated when OPPIA-240 is fixed - it should fall back to the English
         assertEquals("Kysymykset", quiz.getTitle("es"));
     }
 
