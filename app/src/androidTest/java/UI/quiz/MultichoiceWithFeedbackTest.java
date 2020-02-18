@@ -68,12 +68,20 @@ public class MultichoiceWithFeedbackTest {
         onView(withId(R.id.quiz_results_score))
                 .check(matches(withText(actual)));
 
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback).atPositionOnView(0, R.id.quiz_question_text)).check(matches(withText(FIRST_QUESTION_TITLE)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback).atPositionOnView(0, R.id.quiz_question_user_response_text)).check(matches(withText(CORRECT_ANSWER)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback).atPositionOnView(0, R.id.quiz_question_user_feedback_text)).check(matches(withText(CORRECT_ANSWER_FEEDBACK)));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_text))
+                .check(matches(withText(FIRST_QUESTION_TITLE)));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_user_response_text))
+                .check(matches(withText(CORRECT_ANSWER)));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
+                .check(matches(withText(CORRECT_ANSWER_FEEDBACK)));
 
         // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback).atPositionOnView(0, R.id.quiz_question_feedback_image)).check(matches(R.drawable.quiz_tick));
+        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
+        // .check(matches(R.drawable.quiz_tick));
 
     }
 
@@ -89,11 +97,19 @@ public class MultichoiceWithFeedbackTest {
         String actual = Utils.TestUtils.getCurrentActivity().getString(R.string.widget_quiz_results_score, (float) 0);
         onView(withId(R.id.quiz_results_score))
                 .check(matches(withText(actual)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback).atPositionOnView(0, R.id.quiz_question_text)).check(matches(withText(FIRST_QUESTION_TITLE)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback).atPositionOnView(0, R.id.quiz_question_user_response_text)).check(matches(withText(INCORRECT_ANSWER)));
-        onView(withRecyclerView(R.id.recycler_quiz_results_feedback).atPositionOnView(0, R.id.quiz_question_user_feedback_text)).check(matches(withText(INCORRECT_ANSWER_FEEDBACK)));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_text))
+                .check(matches(withText(FIRST_QUESTION_TITLE)));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_user_response_text))
+                .check(matches(withText(INCORRECT_ANSWER)));
+        onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+                .atPositionOnView(0, R.id.quiz_question_user_feedback_text))
+                .check(matches(withText(INCORRECT_ANSWER_FEEDBACK)));
 
         // TODO - check the image matches for question response
-        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback).atPositionOnView(0, R.id.quiz_question_feedback_image)).check(matches(R.drawable.quiz_cross));
+        // onView(withRecyclerView(R.id.recycler_quiz_results_feedback)
+        // .atPositionOnView(0, R.id.quiz_question_feedback_image))
+        // .check(matches(R.drawable.quiz_cross));
     }
 }
