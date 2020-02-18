@@ -21,12 +21,14 @@ import static junit.framework.Assert.assertFalse;
 @RunWith(AndroidJUnit4.class)
 public class NumericQuestionTest {
 
-    private static final String NUMERIC_CLOSE_NOFEEDBACK_JSON = "quizzes/numeric_close_nofeedback.json";
-    private static final String NUMERIC_EXACT_NOFEEDBACK_JSON = "quizzes/numeric_exact_nofeedback.json";
+    private static final String NUMERIC_CLOSE_NOFEEDBACK_JSON = "quizzes/numeric_close_no_feedback.json";
+    private static final String NUMERIC_EXACT_NOFEEDBACK_JSON = "quizzes/numeric_exact_no_feedback.json";
     private static final String NUMERIC_ERROR_CHECK_JSON = "quizzes/numeric_error_check.json";
+    private static final String NUMERIC_WITH_FEEDBACK_JSON = "quizzes/numeric_with_feedback.json";
     private static final String DEFAULT_LANG = "en";
     private Quiz quizCloseNoFeedback;
     private Quiz quizExactNoFeedback;
+    private Quiz quizWithFeedback;
     private static DecimalFormat df = new DecimalFormat("0.00");
 
     @Before
@@ -41,6 +43,11 @@ public class NumericQuestionTest {
                 InstrumentationRegistry.getInstrumentation().getContext(), NUMERIC_EXACT_NOFEEDBACK_JSON);
         quizExactNoFeedback = new Quiz();
         quizExactNoFeedback.load(quizExactNoFeedbackContent, DEFAULT_LANG);
+
+        String quizWithFeedbackContent = Utils.FileUtils.getStringFromFile(
+                InstrumentationRegistry.getInstrumentation().getContext(), NUMERIC_WITH_FEEDBACK_JSON);
+        quizWithFeedback = new Quiz();
+        quizWithFeedback.load(quizWithFeedbackContent, DEFAULT_LANG);
     }
 
     /*
@@ -328,7 +335,63 @@ public class NumericQuestionTest {
     /*
     with feedback
      */
-    // TODO
+    // correct
+    @Test
+    public void test_correctWithFeedback()throws Exception {
+        QuizQuestion quizQuestion = quizWithFeedback.getCurrentQuestion();
+        assertTrue(quizQuestion instanceof Numerical);
+
+        ArrayList<String> userResponses = new ArrayList<>();
+        userResponses.add("6");
+        quizQuestion.setUserResponses(userResponses);
+        assertEquals("correct", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals((float) 1, quizQuestion.getUserscore());
+        assertEquals(100, quizQuestion.getScoreAsPercent());
+
+        // check json response object
+        JSONObject responseJson = quizQuestion.responsesToJSON();
+        assertTrue(responseJson.has("question_id"));
+        assertTrue(responseJson.has("score"));
+        assertTrue(responseJson.has("text"));
+
+        assertEquals(19774, responseJson.get("question_id"));
+        assertEquals(1.0, responseJson.get("score"));
+        assertEquals("6", responseJson.get("text"));
+
+        // check for whole quiz
+        assertEquals((float) 0, quizWithFeedback.getUserscore());
+        quizWithFeedback.mark(DEFAULT_LANG);
+        assertEquals((float) 1, quizWithFeedback.getUserscore());
+    }
+
+    // wrong
+    @Test
+    public void test_incorrectWithFeedback()throws Exception {
+        QuizQuestion quizQuestion = quizWithFeedback.getCurrentQuestion();
+        assertTrue(quizQuestion instanceof Numerical);
+
+        ArrayList<String> userResponses = new ArrayList<>();
+        userResponses.add("7");
+        quizQuestion.setUserResponses(userResponses);
+        assertEquals("wrong", quizQuestion.getFeedback(DEFAULT_LANG));
+        assertEquals((float) 0, quizQuestion.getUserscore());
+        assertEquals(0, quizQuestion.getScoreAsPercent());
+
+        // check json response object
+        JSONObject responseJson = quizQuestion.responsesToJSON();
+        assertTrue(responseJson.has("question_id"));
+        assertTrue(responseJson.has("score"));
+        assertTrue(responseJson.has("text"));
+
+        assertEquals(19774, responseJson.get("question_id"));
+        assertEquals(0.0, responseJson.get("score"));
+        assertEquals("7", responseJson.get("text"));
+
+        // check for whole quiz
+        assertEquals((float) 0, quizWithFeedback.getUserscore());
+        quizWithFeedback.mark(DEFAULT_LANG);
+        assertEquals((float) 0, quizWithFeedback.getUserscore());
+    }
 
     /*
     Multilang - no feedback

@@ -19,8 +19,8 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class MultiSelectQuestionTest {
 
-    private static final String MULTISELECT_NOFEEDBACK_JSON = "quizzes/multiselect_nofeedback.json";
-    private static final String MULTISELECT_WITHFEEDBACK_JSON = "quizzes/multiselect_withfeedback.json";
+    private static final String MULTISELECT_NOFEEDBACK_JSON = "quizzes/multiselect_no_feedback.json";
+    private static final String MULTISELECT_WITHFEEDBACK_JSON = "quizzes/multiselect_with_feedback.json";
     private static final String DEFAULT_LANG = "en";
     private Quiz quizNoFeedback;
     private Quiz quizWithFeedback;

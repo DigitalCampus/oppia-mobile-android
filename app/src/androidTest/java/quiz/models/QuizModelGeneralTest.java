@@ -17,7 +17,7 @@ import static junit.framework.Assert.assertEquals;
 public class QuizModelGeneralTest {
 
     private static final String DEFAULT_LANG = "en";
-    private static final String MULTICHOICE_QUIZ_JSON = "quizzes/multichoice_nofeedback.json";
+    private static final String MULTICHOICE_QUIZ_JSON = "quizzes/multichoice_no_feedback.json";
     private static final String QUIZ_INVALID_JSON = "quizzes/quiz_invalid.json";
     private static final String QUIZ_RANDOM_JSON = "quizzes/quiz_random_selection.json";
     private static final String DESCRIPTION_QUIZ_JSON = "quizzes/quiz_random_selection.json";
