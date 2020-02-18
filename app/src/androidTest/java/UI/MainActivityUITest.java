@@ -341,13 +341,6 @@ public class MainActivityUITest {
         onView(withId(R.id.nav_bottom_points)).perform(click());
         onView(withId(R.id.tabs)).perform(selectTabAtPosition(2));
 
-//        onView(allOf(
-//                withText(R.string.tab_title_badges),
-//                isDescendantOfA(withId(R.id.tabs))))
-//                .perform(click());
-
-//        onView(withText(R.string.tab_title_badges)).perform(click());
-
         assertEquals(0, badgesList.size());
 
     }
