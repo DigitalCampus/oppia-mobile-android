@@ -79,7 +79,7 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
     private long userID;
 
     private static int ttsCheck = 0;
-    private static TextToSpeech myTTS;
+    private TextToSpeech myTTS;
     private boolean ttsRunning = false;
 
     TabLayout tabs;
@@ -237,40 +237,16 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         } else {
             ArrayList<Activity> sectionActivities = (ArrayList<Activity>) section.getActivities();
             String preTestTitle = getString(R.string.alert_pretest);
+            String actBaselineTitle = isBaseline ? getString(R.string.title_baseline) : "";
             setTitle(!sectionActivities.isEmpty() && sectionActivities.get(0).getTitle(currentLang).equalsIgnoreCase(preTestTitle) ?
-                    preTestTitle : isBaseline ? getString(R.string.title_baseline) : "");
+                    preTestTitle : actBaselineTitle);
         }
 
         List<Fragment> fragments = new ArrayList<>();
         List<String> titles = new ArrayList<>();
 
         for (int i = 0; i < activities.size(); i++) {
-            Activity activity = activities.get(i);
-            //Fragment creation
-            if (activity.getActType().equalsIgnoreCase("page")) {
-                fragments.add(PageWidget.newInstance(activity, course, isBaseline));
-            } else if (activity.getActType().equalsIgnoreCase("quiz")) {
-                QuizWidget newQuiz = QuizWidget.newInstance(activity, course, isBaseline);
-                if (apAdapter != null) {
-                    //If there was a previous quizWidget, we apply its current config to the new one
-                    QuizWidget previousQuiz = (QuizWidget) apAdapter.getItem(i);
-                    newQuiz.setWidgetConfig(previousQuiz.getWidgetConfig());
-                }
-                fragments.add(newQuiz);
-            } else if (activity.getActType().equalsIgnoreCase("resource")) {
-                fragments.add(ResourceWidget.newInstance(activity, course, isBaseline));
-            } else if (activity.getActType().equalsIgnoreCase("feedback")) {
-                FeedbackWidget newFeedback = FeedbackWidget.newInstance(activity, course, isBaseline);
-                if (apAdapter != null) {
-                    //If there was a previous feedbackWidget, we apply its current config to the new one
-                    FeedbackWidget previousWidget = (FeedbackWidget) apAdapter.getItem(i);
-                    newFeedback.setWidgetConfig(previousWidget.getWidgetConfig());
-                }
-                fragments.add(newFeedback);
-            } else if (activities.get(i).getActType().equalsIgnoreCase("url")) {
-                UrlWidget f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
-                fragments.add(f);
-            }
+            Activity activity = determineActivityType(i, fragments);
             titles.add(activity.getTitle(currentLang));
         }
 
@@ -281,6 +257,36 @@ public class CourseActivity extends AppActivity implements OnInitListener, TabLa
         tabs.addOnTabSelectedListener(this);
         apAdapter.updateTabViews(tabs);
         viewPager.setCurrentItem(currentActivityNo);
+    }
+
+    private Activity determineActivityType(int i, List<Fragment> fragments){
+        Activity activity = activities.get(i);
+        //Fragment creation
+        if (activity.getActType().equalsIgnoreCase("page")) {
+            fragments.add(PageWidget.newInstance(activity, course, isBaseline));
+        } else if (activity.getActType().equalsIgnoreCase("quiz")) {
+            QuizWidget newQuiz = QuizWidget.newInstance(activity, course, isBaseline);
+            if (apAdapter != null) {
+                //If there was a previous quizWidget, we apply its current config to the new one
+                QuizWidget previousQuiz = (QuizWidget) apAdapter.getItem(i);
+                newQuiz.setWidgetConfig(previousQuiz.getWidgetConfig());
+            }
+            fragments.add(newQuiz);
+        } else if (activity.getActType().equalsIgnoreCase("resource")) {
+            fragments.add(ResourceWidget.newInstance(activity, course, isBaseline));
+        } else if (activity.getActType().equalsIgnoreCase("feedback")) {
+            FeedbackWidget newFeedback = FeedbackWidget.newInstance(activity, course, isBaseline);
+            if (apAdapter != null) {
+                //If there was a previous feedbackWidget, we apply its current config to the new one
+                FeedbackWidget previousWidget = (FeedbackWidget) apAdapter.getItem(i);
+                newFeedback.setWidgetConfig(previousWidget.getWidgetConfig());
+            }
+            fragments.add(newFeedback);
+        } else if (activities.get(i).getActType().equalsIgnoreCase("url")) {
+            UrlWidget f = UrlWidget.newInstance(activities.get(i), course, isBaseline);
+            fragments.add(f);
+        }
+        return activity;
     }
 
     private void createLanguageDialog() {
