@@ -28,13 +28,13 @@ public class AboutUITest {
 
     @Test
     public void clickPrivacyTab() throws Exception {
-
+    // TODO
         /*onView(allOf(withText(R.string.tab_title_privacy), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
                 isDescendantOfA(withId(R.id.tabs_toolbar))))
                 .perform(click());*/
     }
 
-    /*
+    /* TODO
     @Test
     public void clickHelpTab() throws Exception {
 
@@ -43,7 +43,7 @@ public class AboutUITest {
                 .perform(click());
     }
 
-    @Test
+    @Test TODO
     public void clickAboutTab() throws Exception {
 
         onView(allOf(withText(R.string.tab_title_about), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),

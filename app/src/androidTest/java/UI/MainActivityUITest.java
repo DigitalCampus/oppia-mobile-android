@@ -417,11 +417,6 @@ public class MainActivityUITest {
                         Matchers.is(mainActivityTestRule.getActivity().getWindow().getDecorView())))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-//        onData(anything())
-//                .inAdapterView(withId(R.id.recycler_courses))
-//                .atPosition(0)
-//                .perform(longClick());
-
         onView(withId(R.id.course_context_delete))
                 .perform(click());
 

@@ -32,5 +32,6 @@ public class BadgesUITest {
     @Test
     public void displayBadges() {
         launchInContainer(BadgesFragment.class, args, R.style.Oppia_ToolbarTheme, null);
+        // TODO - should be some assertion/s here
     }
 }
