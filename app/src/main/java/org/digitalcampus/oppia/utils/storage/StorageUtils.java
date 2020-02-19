@@ -18,7 +18,6 @@
 package org.digitalcampus.oppia.utils.storage;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -70,25 +69,23 @@ public class StorageUtils {
             }
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            File[] dirs = ctx.getExternalFilesDirs(null);
-            if (dirs.length > 1){
+        File[] dirs = ctx.getExternalFilesDirs(null);
+        if (dirs.length > 1){
 
-                DeviceFile externalDrive = null;
-                for (int i=1; i<dirs.length; i++){
-                    if (dirs[i] != null){
-                        Log.d(TAG, "Filedirs: " + dirs[i].getPath() + ": " + (dirs[i].canWrite()?"writable":"not writable!"));
-                        if (dirs[i].canWrite() && externalDrive == null) externalDrive = new DeviceFile(dirs[i]);
-                    }
-                }
-
-                if ((externalDrive!=null) && externalDrive.canRead() && externalDrive.canWrite()){
-                    mExternalDrive = externalDrive;
-                    return externalDrive;
+            DeviceFile externalDrive = null;
+            for (int i=1; i<dirs.length; i++){
+                if (dirs[i] != null){
+                    Log.d(TAG, "Filedirs: " + dirs[i].getPath() + ": " + (dirs[i].canWrite()?"writable":"not writable!"));
+                    if (dirs[i].canWrite() && externalDrive == null) externalDrive = new DeviceFile(dirs[i]);
                 }
             }
 
+            if ((externalDrive!=null) && externalDrive.canRead() && externalDrive.canWrite()){
+                mExternalDrive = externalDrive;
+                return externalDrive;
+            }
         }
+
 
         DeviceFile mDaddy = getInternalMemoryDrive().getParent();
         while(mDaddy.getDepth() > 2)

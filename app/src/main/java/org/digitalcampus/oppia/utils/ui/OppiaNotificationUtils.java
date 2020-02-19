@@ -6,7 +6,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -16,7 +15,6 @@ import androidx.core.app.NotificationCompat;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.application.App;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -66,14 +64,8 @@ public class OppiaNotificationUtils {
         notifBuilder.setAutoCancel(setAutoCancel);
         notifBuilder.setSmallIcon(R.drawable.ic_notification);
 
-        //Notification styles changed since Lollipop
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int color = ctx.getResources().getColor(R.color.theme_primary);
-            notifBuilder.setColor(color);
-        } else {
-            //in older versions, we show the App logo
-            notifBuilder.setLargeIcon(BitmapFactory.decodeResource(ctx.getResources(), App.APP_LOGO));
-        }
+        int color = ctx.getResources().getColor(R.color.theme_primary);
+        notifBuilder.setColor(color);
 
         return notifBuilder;
     }

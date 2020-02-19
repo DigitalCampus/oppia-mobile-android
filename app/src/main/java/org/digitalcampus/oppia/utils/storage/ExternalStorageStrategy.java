@@ -23,7 +23,6 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import androidx.documentfile.provider.DocumentFile;
@@ -124,11 +123,6 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
     @Override
     public boolean needsUserPermissions(Context ctx) {
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            //Only in versions >= Lollipop we need to check write permissions
-            return false;
-        }
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         if (prefs.contains(PrefsActivity.STORAGE_NEEDS_PERMISSIONS)){
             return prefs.getBoolean(PrefsActivity.STORAGE_NEEDS_PERMISSIONS, false);
@@ -222,10 +216,6 @@ public class ExternalStorageStrategy implements StorageAccessStrategy{
     }
 
     public static boolean needsUserPermissions(Context ctx, String location){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            //Only in versions >= Lollipop we need to check write permissions
-            return false;
-        }
 
         DeviceFile internal = StorageUtils.getInternalMemoryDrive();
         if (internal.getPath().equals(location)){

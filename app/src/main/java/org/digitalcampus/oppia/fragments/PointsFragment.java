@@ -20,7 +20,6 @@ package org.digitalcampus.oppia.fragments;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -215,9 +214,7 @@ public class PointsFragment extends AppFragment implements TabLayout.BaseOnTabSe
         dataSet.setDrawValues(false);
         dataSet.setDrawFilled(true);
         dataSet.setCircleColor(ContextCompat.getColor(getActivity(), R.color.chart_points_circle_color));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            dataSet.setFillDrawable(getGradientDrawable());
-        }
+        dataSet.setFillDrawable(getGradientDrawable());
 
         LineData lineData = new LineData(dataSet);
 

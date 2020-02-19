@@ -2,7 +2,6 @@ package org.digitalcampus.oppia.utils.storage;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.StatFs;
 import android.util.Log;
 
@@ -150,14 +149,7 @@ public class Storage {
     public static long getAvailableStorageSize(Context ctx){
         String path = getStorageLocationRoot(ctx);
         StatFs stat = new StatFs(path);
-        long bytesAvailable;
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
-        }
-        else{
-            bytesAvailable = (long)stat.getBlockSize() * (long)stat.getAvailableBlocks();
-        }
-        return bytesAvailable;
+        return stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
     }
 
     public static long getTotalStorageUsed(Context ctx){

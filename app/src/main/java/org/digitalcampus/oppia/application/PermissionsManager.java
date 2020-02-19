@@ -41,7 +41,7 @@ public class PermissionsManager {
     public static final String TAG = PermissionsManager.class.getSimpleName();
     private static final int PERMISSIONS_REQUEST = 1246;
     private static final List<String> PERMISSIONS_REQUIRED = Arrays.asList(
-        //Remember to update this when the Manifest permisssions change!
+        //Remember to update this when the Manifest permissions change!
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -61,10 +61,6 @@ public class PermissionsManager {
     }
 
     public static boolean checkPermissionsAndInform(final Activity act){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            //If sdk version prior to 23 (Android M), the permissions are granted by manifest
-            return true;
-        }
 
         final List<String> permissionsToAsk = filterNotGrantedPermissions(act, PERMISSIONS_REQUIRED);
 
@@ -113,10 +109,6 @@ public class PermissionsManager {
 
 
     public static boolean canAskForAllPermissions(final Activity act, List<String> permissions){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            //If sdk version prior to 23 (Android M), the permissions are granted by manifest
-            return true;
-        }
 
         boolean canAsk = true;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(act.getApplicationContext());
@@ -136,10 +128,6 @@ public class PermissionsManager {
     public static List<String> filterNotGrantedPermissions(final Activity act, List<String> permissions){
 
         final List<String> permissionsToAsk = new ArrayList<>();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            //If sdk version prior to 23 (Android M), the permissions are granted by manifest
-            return permissionsToAsk;
-        }
 
         for (String permission : permissions){
             int permitted = act.checkSelfPermission( permission );
