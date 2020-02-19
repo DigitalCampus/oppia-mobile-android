@@ -95,7 +95,7 @@ public class ChangeStorageOptionTask extends AsyncTask<Payload, DownloadProgress
                 if (!makeDirs){
                     boolean canWrite = destDir.canWrite();
                     Log.d(TAG, "Error creating destination dir " + destPath + ": canWrite=" + canWrite);
-                    throw new Exception("No file created!"); }
+                    throw new IOException("No file created!"); }
             }
             Storage.createNoMediaFile(ctx);
 

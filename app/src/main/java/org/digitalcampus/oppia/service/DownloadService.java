@@ -337,10 +337,8 @@ public class DownloadService extends IntentService {
     }
 
     private void deleteFile(File file){
-        if ((file != null) && file.exists() && !file.isDirectory()){
-            if (!file.delete()) {
-                Log.e(TAG, "deleteFile: File could not be deleted: " + file.getAbsolutePath());
-            }
+        if ((file != null) && file.exists() && !file.isDirectory() && !file.delete()){
+            Log.e(TAG, "deleteFile: File could not be deleted: " + file.getAbsolutePath());
         }
     }
 
