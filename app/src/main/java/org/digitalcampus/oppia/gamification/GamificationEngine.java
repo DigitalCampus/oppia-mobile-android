@@ -165,24 +165,17 @@ public class GamificationEngine {
         if (m != null) {
             try {
                 String criteria = getMediaCompletionCriteriaFromHierarchy();
+                int threshold = getMediaCompletionThresholdFromHierarchy();
                 Log.d(TAG, "Video criteria: " + criteria);
-                if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD)){
+                if (criteria.equals(Gamification.MEDIA_CRITERIA_THRESHOLD) && ((timeTaken * 100 / m.getLength()) > threshold)){
 
-                    int threshold = getMediaCompletionThresholdFromHierarchy();
                     Log.d(TAG, "Threshold: " + threshold);
-                    if ((timeTaken * 100 / m.getLength()) > threshold){
-                        completed = true;
-                        Log.d(TAG, "Threshold passed!");
-                        if (!db.isMediaPlayed(activity.getDigest())){
-                            Log.d(TAG, "First view --> giving points");
-                            totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
-                        }
-                        else{
-                            Log.d(TAG, "Not first view --> not giving points");
-                        }
-
+                    completed = true;
+                    Log.d(TAG, "Threshold passed!");
+                    if (!db.isMediaPlayed(activity.getDigest())){
+                        Log.d(TAG, "First view --> giving points");
+                        totalPoints += this.getEventFromHierarchy(course, activity, Gamification.EVENT_NAME_MEDIA_THRESHOLD_PASSED).getPoints();
                     }
-
                 }
                 else{
                     //Using intervals media criteria
@@ -197,7 +190,6 @@ public class GamificationEngine {
                     totalPoints = Math.min(totalPoints, getEventFromHierarchy(course,activity,
                             Gamification.EVENT_NAME_MEDIA_MAX_POINTS).getPoints());
                 }
-
 
 
             } catch (GamificationEventNotFound genf) {

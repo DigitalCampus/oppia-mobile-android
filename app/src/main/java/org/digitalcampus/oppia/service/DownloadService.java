@@ -31,6 +31,7 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.utils.HTTPClientUtils;
+import org.digitalcampus.oppia.utils.storage.FileUtils;
 import org.digitalcampus.oppia.utils.storage.Storage;
 import org.digitalcampus.oppia.utils.ui.OppiaNotificationUtils;
 
@@ -216,7 +217,7 @@ public class DownloadService extends IntentService {
             int len1;
             long total = 0;
             int previousProgress = 0;
-            int progress = 0;
+            int progress;
             while ((len1 = in.read(buffer)) > 0) {
                 //If received a cancel action while downloading, stop it
                 if (isCancelled(fileUrl)) {
@@ -241,13 +242,8 @@ public class DownloadService extends IntentService {
             if (fileDigest != null){
                 // check the file digest matches, otherwise delete the file
                 // (it's either been a corrupted download or it's the wrong file)
-                byte[] digest = mDigest.digest();
-                StringBuilder resultMD5 = new StringBuilder();
-
-                for (byte aDigest : digest) {
-                    resultMD5.append(Integer.toString((aDigest & 0xff) + 0x100, 16).substring(1));
-                }
-                if(!resultMD5.toString().contains(fileDigest)){
+                String MD5Digest = FileUtils.getDigestFromMessage(mDigest);
+                if(!MD5Digest.contains(fileDigest)){
                     this.deleteFile(downloadedFile);
                     sendBroadcast(fileUrl, ACTION_FAILED, this.getString(R.string.error_media_download));
                     removeDownloading(fileUrl);
@@ -337,8 +333,11 @@ public class DownloadService extends IntentService {
     }
 
     private void deleteFile(File file){
-        if ((file != null) && file.exists() && !file.isDirectory() && !file.delete()){
-            Log.e(TAG, "deleteFile: File could not be deleted: " + file.getAbsolutePath());
+        if ((file != null) && file.exists() && !file.isDirectory()){
+            Log.e(TAG, "Removing file: " + file.getAbsolutePath());
+            if (!file.delete()){
+                Log.e(TAG, "deleteFile: File could not be deleted: " + file.getAbsolutePath());
+            }
         }
     }
 

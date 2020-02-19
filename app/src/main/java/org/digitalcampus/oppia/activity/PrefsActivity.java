@@ -21,6 +21,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -361,7 +362,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         }
         else if (key.equalsIgnoreCase(PREF_ADMIN_PASSWORD)){
             String newPassword = sharedPreferences.getString(PrefsActivity.PREF_ADMIN_PASSWORD, "");
-            if (newPassword.equals("")){
+            if (TextUtils.equals(newPassword, "")){
                 //If the user introduced an empty password, disable the password protection
                 disableAdminProtection(sharedPreferences);
             }
@@ -411,7 +412,7 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
         }
 
         //Finally, to handle the possibility that is in an inconsistent state
-        if (!storageOption.equals(STORAGE_OPTION_INTERNAL)){
+        if (!TextUtils.equals(storageOption, STORAGE_OPTION_INTERNAL)){
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(PrefsActivity.PREF_STORAGE_OPTION, STORAGE_OPTION_EXTERNAL).apply();
         }
@@ -435,6 +436,11 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             Log.d(TAG, "InstantiationException", e);
         }
 
+        if (fragment == null){
+            // The fragment creation is not handled
+            return false;
+        }
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Bundle args = new Bundle();
         args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, caller.getTag());
@@ -442,15 +448,10 @@ public class PrefsActivity extends AppActivity implements SharedPreferences.OnSh
             args.putSerializable("langs", getLanguagesCourses());
             Log.d(TAG, "Langs added!");
         }
-        try {
-            fragment.setArguments(args);
-        } catch (NullPointerException npe){
-            Log.d(TAG, "Null pointer", npe);
-        }
+        fragment.setArguments(args);
         ft.replace(R.id.root_layout, fragment, fragment.getTag());
         ft.addToBackStack( caller.getTag());
         ft.commit();
-
         currentPrefScreen = (PreferenceChangedCallback) fragment;
         setTitle(pref.getTitle());
 
