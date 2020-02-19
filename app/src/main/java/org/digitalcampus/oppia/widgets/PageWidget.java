@@ -28,6 +28,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.splunk.mint.Mint;
+
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.CourseActivity;
 import org.digitalcampus.oppia.activity.PrefsActivity;
@@ -47,6 +49,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import androidx.annotation.NonNull;
 
 public class PageWidget extends WidgetFactory {
 
@@ -84,7 +88,7 @@ public class PageWidget extends WidgetFactory {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(WidgetFactory.WIDGET_CONFIG, getWidgetConfig());
 	}
@@ -127,7 +131,7 @@ public class PageWidget extends WidgetFactory {
 				if (url.contains("/video/")) {
 					// extract video name from url
 					int startPos = url.indexOf("/video/") + 7;
-					String mediaFileName = url.substring(startPos, url.length());
+					String mediaFileName = url.substring(startPos);
 					PageWidget.super.startMediaPlayerWithFile(mediaFileName);
                     return true;
 					
@@ -212,12 +216,12 @@ public class PageWidget extends WidgetFactory {
 		File f = new File(File.separator + course.getLocation() + File.separator
 				+ activity.getLocation(prefLang));
 		StringBuilder text = new StringBuilder();
-		BufferedReader br = null;
+		BufferedReader reader = null;
 		try {
-			br = new BufferedReader(new FileReader(f));
+			reader = new BufferedReader(new FileReader(f));
 			String line;
 
-			while ((line = br.readLine()) != null) {
+			while ((line = reader.readLine()) != null) {
 				text.append(line);
 			}
 
@@ -225,7 +229,14 @@ public class PageWidget extends WidgetFactory {
 			Log.e(TAG, "getContentToRead: ", e);
 			return "";
 		} finally {
-			try { br.close();}catch (Exception e) {}
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					Log.e(TAG, e.getMessage());
+					Mint.logException(e);
+				}
+			}
 		}
 		return android.text.Html.fromHtml(text.toString()).toString();
 	}

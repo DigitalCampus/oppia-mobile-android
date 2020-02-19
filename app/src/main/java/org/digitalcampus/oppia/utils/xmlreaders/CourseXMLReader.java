@@ -26,8 +26,8 @@ import com.splunk.mint.Mint;
 
 import org.digitalcampus.mobile.learning.R;
 import org.digitalcampus.oppia.activity.PrefsActivity;
-import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.application.SessionManager;
+import org.digitalcampus.oppia.database.DbHelper;
 import org.digitalcampus.oppia.exception.InvalidXMLException;
 import org.digitalcampus.oppia.model.CompleteCourse;
 import org.digitalcampus.oppia.model.Media;
@@ -41,10 +41,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 public class CourseXMLReader {
 
@@ -65,36 +61,14 @@ public class CourseXMLReader {
         this.ctx = ctx;
         this.courseId = courseId;
         courseXML = new File(filename);
+        reader = XMLSecurityHelper.getSecureXMLReader();
 
-        if (courseXML.exists()) {
-            try {
-                SAXParserFactory parserFactory  = setupParser();
-                SAXParser parser = parserFactory.newSAXParser();
-                reader = parser.getXMLReader();
-                XMLSecurityHelper.makeParserSecure(reader);
-
-            } catch (ParserConfigurationException|SAXException e) {
-                throw new InvalidXMLException(e);
-            }
-        } else {
+        if (!courseXML.exists() || (reader == null)) {
             Log.d(TAG, "course XML not found at: " + filename);
             throw new InvalidXMLException("Course XML not found at: " + filename);
         }
     }
 
-    private SAXParserFactory setupParser(){
-        SAXParserFactory parserFactory  = SAXParserFactory.newInstance();
-        try {
-            parserFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            parserFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-            parserFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-            parserFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            parserFactory.setXIncludeAware(false);
-        } catch (ParserConfigurationException|SAXException e) {
-            // This should catch a failed setFeature feature
-        }
-        return parserFactory;
-    }
 
     public boolean parse(ParseMode parseMode) throws InvalidXMLException {
         if (courseXML.exists()) {
@@ -129,11 +103,8 @@ public class CourseXMLReader {
 
     }
 
-    private void parseMedia() throws ParserConfigurationException, SAXException, IOException {
+    private void parseMedia() throws SAXException, IOException {
         mediaParseHandler = new CourseMediaXMLHandler();
-        SAXParserFactory parserFactory  = setupParser();
-        SAXParser parser = parserFactory.newSAXParser();
-        reader = parser.getXMLReader();
         reader.setContentHandler(mediaParseHandler);
         reader.setProperty("http://xml.org/sax/properties/lexical-handler", mediaParseHandler);
         InputStream in = new BufferedInputStream(new FileInputStream(courseXML));

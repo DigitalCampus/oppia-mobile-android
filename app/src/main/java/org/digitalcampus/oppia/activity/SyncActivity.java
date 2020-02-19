@@ -139,15 +139,8 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
         coursesAdapter = new TransferableFileListAdapter(transferableFiles, new ListInnerBtnOnClickListener() {
             @Override
             public void onClick(int position) {
-                final CourseTransferableFile toShare = transferableFiles.get(position);
-                if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
-                    for (CourseTransferableFile file : transferableFiles){
-                        if (toShare.getRelatedMedia().contains(file.getFilename())){
-                            btServiceDelegate.sendFile(file);
-                        }
-                    }
-                    btServiceDelegate.sendFile(toShare);
-                }
+                CourseTransferableFile toShare = transferableFiles.get(position);
+                sendFile(toShare);
             }
         }, true);
         tabsFilter.addOnTabSelectedListener(this);
@@ -184,13 +177,9 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             @Override
             public void onClick(View view) {
                 if(currentSelectedTab == TAB_ACTIVITYLOGS) {
-                    for (CourseTransferableFile file : activityLogs) {
-                        btServiceDelegate.sendFile(file);
-                    }
+                    sendAll(activityLogs);
                 } else if (currentSelectedTab == TAB_COURSES) {
-                    for (CourseTransferableFile file : transferableFiles){
-                        btServiceDelegate.sendFile(file);
-                    }
+                    sendAll(transferableFiles);
                 }
 
             }
@@ -259,12 +248,30 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
             bluetoothManager.connect(device);
         }
-
     }
 
     private void setupBluetoothConnection() {
         Log.d(TAG, "setting up connection");
         bluetoothManager = new BluetoothConnectionManager(this, uiHandler);
+    }
+
+    private void sendFile(CourseTransferableFile toShare){
+        if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
+            for (CourseTransferableFile file : transferableFiles){
+                if (toShare.getRelatedMedia().contains(file.getFilename())){
+                    btServiceDelegate.sendFile(file);
+                }
+            }
+            btServiceDelegate.sendFile(toShare);
+        }
+    }
+
+    private void sendAll(List<CourseTransferableFile> files){
+        if (BluetoothConnectionManager.getState() == BluetoothConnectionManager.STATE_CONNECTED){
+            for (CourseTransferableFile file : files){
+                btServiceDelegate.sendFile(file);
+            }
+        }
     }
 
     private void updateStatus(boolean updateTransferProgress){
@@ -465,14 +472,10 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void downloadComplete(Payload p) {
-        // do nothing
-    }
+    public void downloadComplete(Payload p) { }
 
     @Override
-    public void downloadProgressUpdate(DownloadProgress dp) {
-        // do nothing
-    }
+    public void downloadProgressUpdate(DownloadProgress dp) { }
 
     @Override
     public void installComplete(Payload p) {
@@ -625,15 +628,10 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
     }
 
     @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-        // do nothing
-    }
+    public void onTabUnselected(TabLayout.Tab tab) { }
 
     @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-        // do nothing
-    }
-
+    public void onTabReselected(TabLayout.Tab tab) { }
 
 
     @Override
@@ -703,8 +701,6 @@ public class SyncActivity extends AppActivity implements InstallCourseListener, 
             case android.R.id.home:
                 this.onBackPressed();
                 break;
-            default:
-                // do nothing
         }
 
         return super.onOptionsItemSelected(item);
