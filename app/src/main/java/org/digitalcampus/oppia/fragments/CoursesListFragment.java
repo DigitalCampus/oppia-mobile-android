@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -404,6 +405,7 @@ public class CoursesListFragment extends AppFragment implements SharedPreference
     /* CourseInstallerListener implementation */
     public void onInstallComplete(String fileUrl) {
         toast(R.string.install_complete);
+        Log.d(TAG, fileUrl + ": Installation complete.");
         displayCourses();
     }
 
