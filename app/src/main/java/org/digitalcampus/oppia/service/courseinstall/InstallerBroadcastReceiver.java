@@ -55,6 +55,8 @@ public class InstallerBroadcastReceiver extends BroadcastReceiver {
                     int progressInstall = Integer.parseInt(intent.getStringExtra(CourseInstallerService.SERVICE_MESSAGE));
                     cListener.onInstallProgress(fileUrl, progressInstall);
                     break;
+                default:
+                    // do nothing
             }
         }
 
